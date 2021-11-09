@@ -1,0 +1,14 @@
+---
+tools:
+- name: githubactions
+  version: 0.0.1
+  options:
+    repo: https://github.com/ironcore864/go-hello-http
+    language:
+      name: go
+      version: 1.17
+    branch: master
+# - name: argocd
+#   version: 0.0.1
+#   options:
+#     k8s_url: https://api.com/abcde

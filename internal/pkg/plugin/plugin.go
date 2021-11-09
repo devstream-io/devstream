@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"plugin"
+
+	"github.com/ironcore864/openstream/internal/pkg/config"
 )
 
 type OpenStreamPlugin interface {
@@ -12,9 +14,9 @@ type OpenStreamPlugin interface {
 	Uninstall()
 }
 
-func loadPlugin(pkg string) OpenStreamPlugin {
-	pluginPathName := fmt.Sprintf("./plugins/%s.so", pkg)
-	plug, err := plugin.Open(pluginPathName)
+func loadPlugin(tool *config.Tool) OpenStreamPlugin {
+	mod := fmt.Sprintf("plugins/%s_%s.so", tool.Name, tool.Version)
+	plug, err := plugin.Open(mod)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -36,17 +38,17 @@ func loadPlugin(pkg string) OpenStreamPlugin {
 	return openStreamPlugin
 }
 
-func Install(pkg string) {
-	plugin := loadPlugin(pkg)
+func Install(tool *config.Tool) {
+	plugin := loadPlugin(tool)
 	plugin.Install()
 }
 
-func Reinstall(pkg string) {
-	plugin := loadPlugin(pkg)
+func Reinstall(tool *config.Tool) {
+	plugin := loadPlugin(tool)
 	plugin.Reinstall()
 }
 
-func Uninstall(pkg string) {
-	plugin := loadPlugin(pkg)
+func Uninstall(tool *config.Tool) {
+	plugin := loadPlugin(tool)
 	plugin.Uninstall()
 }

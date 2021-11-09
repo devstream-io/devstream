@@ -8,7 +8,7 @@
 *.dylib
 
 # build
-openstream
+/openstream
 
 # for local testing
 plugins 
