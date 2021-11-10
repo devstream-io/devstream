@@ -9,9 +9,9 @@ import (
 )
 
 type OpenStreamPlugin interface {
-	Install()
-	Reinstall()
-	Uninstall()
+	Install(*map[string]interface{})
+	Reinstall(*map[string]interface{})
+	Uninstall(*map[string]interface{})
 }
 
 func loadPlugin(tool *config.Tool) OpenStreamPlugin {
@@ -39,16 +39,16 @@ func loadPlugin(tool *config.Tool) OpenStreamPlugin {
 }
 
 func Install(tool *config.Tool) {
-	plugin := loadPlugin(tool)
-	plugin.Install()
+	p := loadPlugin(tool)
+	p.Install(&tool.Options)
 }
 
 func Reinstall(tool *config.Tool) {
-	plugin := loadPlugin(tool)
-	plugin.Reinstall()
+	p := loadPlugin(tool)
+	p.Reinstall(&tool.Options)
 }
 
 func Uninstall(tool *config.Tool) {
-	plugin := loadPlugin(tool)
-	plugin.Uninstall()
+	p := loadPlugin(tool)
+	p.Uninstall(&tool.Options)
 }

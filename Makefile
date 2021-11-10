@@ -3,7 +3,7 @@ build:
 
 copy:
 	mkdir -p plugins
-	cp ../openstream-plugin-repo-scaffolding-go/repo-scaffolding-go.so plugins
+	cp ../openstream-plugin-githubactions/githubactions_0.0.1.so plugins/
 
 test:
 	./openstream install repo-scaffolding-go
