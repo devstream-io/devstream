@@ -7,9 +7,17 @@ tools:
     repo: go-hello-http
     language:
       name: go
-      version: 1.17
+      version: "1.17"
     branch: master
-# - name: argocd
-#   version: 0.0.1
-#   options:
-#     k8s_url: https://api.com/abcde
+- name: argocd
+  version: 0.0.1
+  options:
+    repo:
+      name: argo
+      url: https://argoproj.github.io/argo-helm
+    chart:
+      name: argo/argo-cd
+      release_name: argocd
+      namespace: argocd
+      create_namespace: False
+
