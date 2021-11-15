@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/ironcore864/openstream/internal/pkg/config"
 	"github.com/ironcore864/openstream/internal/pkg/plugin"
 	"github.com/spf13/cobra"
@@ -16,6 +18,9 @@ var installCMD = &cobra.Command{
 func installCMDFunc(cmd *cobra.Command, args []string) {
 	conf := config.LoadConf(configFile)
 	for _, tool := range conf.Tools {
+		log.Printf("=== start to install plugin %s %s ===", tool.Name, tool.Version)
 		plugin.Install(&tool)
+		log.Printf("=== plugin %s %s installation done===", tool.Name, tool.Version)
+		log.Printf("===")
 	}
 }
