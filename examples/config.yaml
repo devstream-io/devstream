@@ -1,14 +1,14 @@
 ---
 tools:
-- name: githubactions
-  version: 0.0.1
-  options:
-    owner: ironcore864
-    repo: go-hello-http
-    language:
-      name: go
-      version: "1.17"
-    branch: master
+# - name: githubactions
+#   version: 0.0.1
+#   options:
+#     owner: ironcore864
+#     repo: go-hello-http
+#     language:
+#       name: go
+#       version: "1.17"
+#     branch: master
 - name: argocd
   version: 0.0.1
   options:
@@ -20,4 +20,16 @@ tools:
       release_name: argocd
       namespace: argocd
       create_namespace: False
-
+- name: argocdapp
+  version: 0.0.1
+  options:
+    app:
+      name: hello
+      namespace: argocd
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: default
+    source:
+      valuefile: values.yaml
+      path: go-hello-http
+      repoURL: https://github.com/ironcore864/openstream-gitops-test/charts/
