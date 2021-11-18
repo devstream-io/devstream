@@ -2,12 +2,14 @@
 
 Open source DevOps tool manager.
 
-Build:
+## Build
 
 ```bash
-make build
+make
+```
 
-# copy *.so to ./plugins/
+## Run
 
-make test
+```bash
+./openstream install -f examples/config.yaml
 ```
