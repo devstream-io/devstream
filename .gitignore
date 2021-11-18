@@ -10,9 +10,6 @@
 # build
 /openstream
 
-# for local testing
-plugins 
-
 # Test binary, build with `go test -c`
 *.test
 
