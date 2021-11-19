@@ -1,6 +1,6 @@
 ---
 Name: Documentation Issue
-About: Help Improve Our Documentation
+About: Help improve our documentation
 Title: ''
 Labels: docs
 Assignees: ''
