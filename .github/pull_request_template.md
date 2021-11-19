@@ -2,7 +2,7 @@
 
 Note: please complete **_ALL_** items in the following checklist, and **_remove this section before submitting_**.
 
-- I have read through the [CONTRIBUTING.md](../docs/CONTRIBUTING.md) documentation.
+- I have read through the [CONTRIBUTING.md](../CONTRIBUTING.md) documentation.
 - This PR is using a `label` (bug, feature, etc.)
 - My code has the necessary comments and documentation (if needed).
 - I have added relevant tests
