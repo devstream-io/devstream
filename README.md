@@ -1,6 +1,6 @@
-# OpenStream
+# DevStream
 
-Open source DevOps tool manager.
+Open-source DevOps tool manager (DTM).
 
 ## Build
 
