@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/ironcore864/openstream/internal/pkg/argocd"
+	"github.com/merico-dev/stream/internal/pkg/argocd"
 )
 
 const NAME = "argocd"
@@ -24,8 +24,8 @@ func (p Plugin) Uninstall(options *map[string]interface{}) {
 	log.Println("mock: argocd uninstall finished")
 }
 
-var OpenStreamPlugin Plugin
+var DevStreamPlugin Plugin
 
 func main() {
-	fmt.Println("This is a plugin for OpenStream. Use it with OpenStream.")
+	fmt.Println("This is a plugin for DevStream. Use it with DevStream.")
 }

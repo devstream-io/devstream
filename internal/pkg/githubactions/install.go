@@ -8,8 +8,8 @@ import (
 )
 
 var pipelines = []Pipeline{
-	Pipeline{"pr builder by openstream", "pr-builder.yaml", prBuilder},
-	Pipeline{"master builder by openstream", "master-builder.yaml", masterBuilder},
+	Pipeline{"pr builder by DevStream", "pr-builder.yaml", prBuilder},
+	Pipeline{"master builder by DevStream", "master-builder.yaml", masterBuilder},
 }
 
 func Install(options *map[string]interface{}) {

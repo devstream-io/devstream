@@ -1,8 +1,8 @@
-# Contributing to OpenStream
+# Contributing to DevStream
 
 Thanks for contributing, and thanks for reading this doc before doing it!
 
-This is a set of guidelines for contributing to OpenStream. These are only guidelines, not rules. So, use your best judgment, and feel free to propose changes to this document.
+This is a set of guidelines for contributing to DevStream. These are only guidelines, not rules. So, use your best judgment, and feel free to propose changes to this document.
 
 ## How Can I Contribute?
 
@@ -14,7 +14,7 @@ If you are only fixing a bug, it’s OK to submit a PR without an issue. In this
 
 ## Maintainer Team at Merico
 
-A group of engineers maintains OpenStream at Merico, led by [@ironcore864](https://github.com/ironcore864).
+A group of engineers maintains DevStream at Merico, led by [@ironcore864](https://github.com/ironcore864).
 
 We aim to reply to issues within 24 hours.
 
