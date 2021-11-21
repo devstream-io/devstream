@@ -14,6 +14,7 @@ var (
 	}
 )
 
+// Execute runs the rootCMD's Execute func.
 func Execute() error {
 	return rootCMD.Execute()
 }

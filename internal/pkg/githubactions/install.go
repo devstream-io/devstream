@@ -7,11 +7,12 @@ import (
 	"github.com/mitchellh/mapstructure"
 )
 
-var pipelines = []Pipeline{
+var workflows = []Workflow{
 	{"pr builder by DevStream", "pr-builder.yaml", prBuilder},
 	{"master builder by DevStream", "master-builder.yaml", masterBuilder},
 }
 
+// Install sets up GitHub Actions workflows.
 func Install(options *map[string]interface{}) {
 	ctx := context.Background()
 
@@ -21,7 +22,7 @@ func Install(options *map[string]interface{}) {
 		log.Fatalln(err)
 	}
 
-	for _, pipeline := range pipelines {
+	for _, pipeline := range workflows {
 		createFile(&Param{
 			&ctx,
 			getGitHubClient(&ctx),

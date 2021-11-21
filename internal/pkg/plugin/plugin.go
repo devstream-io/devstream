@@ -8,6 +8,7 @@ import (
 	"github.com/merico-dev/stream/internal/pkg/config"
 )
 
+// DevStreamPlugin is a struct, on which install/reinstall/uninstall interfaces are defined.
 type DevStreamPlugin interface {
 	Install(*map[string]interface{})
 	Reinstall(*map[string]interface{})
@@ -38,16 +39,19 @@ func loadPlugin(tool *config.Tool) DevStreamPlugin {
 	return devStreamPlugin
 }
 
+// Install loads the plugin and calls the Install method of that plugin.
 func Install(tool *config.Tool) {
 	p := loadPlugin(tool)
 	p.Install(&tool.Options)
 }
 
+// Reinstall loads the plugin and calls the Reinstall method of that plugin.
 func Reinstall(tool *config.Tool) {
 	p := loadPlugin(tool)
 	p.Reinstall(&tool.Options)
 }
 
+// Uninstall loads the plugin and calls the Uninstall method of that plugin.
 func Uninstall(tool *config.Tool) {
 	p := loadPlugin(tool)
 	p.Uninstall(&tool.Options)

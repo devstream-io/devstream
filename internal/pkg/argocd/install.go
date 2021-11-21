@@ -6,6 +6,7 @@ import (
 	"github.com/mitchellh/mapstructure"
 )
 
+// Install installs ArgoCD with provided options.
 func Install(options *map[string]interface{}) {
 	var param Param
 	err := mapstructure.Decode(*options, &param)
