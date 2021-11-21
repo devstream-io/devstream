@@ -8,8 +8,8 @@ import (
 )
 
 var workflows = []Workflow{
-	{"pr builder by DevStream", "pr-builder.yaml", prBuilder},
-	{"master builder by DevStream", "master-builder.yaml", masterBuilder},
+	{"pr builder by DevStream", "pr-builder.yml", prBuilder},
+	{"master builder by DevStream", "master-builder.yml", masterBuilder},
 }
 
 // Install sets up GitHub Actions workflows.
