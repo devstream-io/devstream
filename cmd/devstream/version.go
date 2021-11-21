@@ -10,8 +10,8 @@ import (
 
 var versionCMD = &cobra.Command{
 	Use:   "version",
-	Short: "Print the version number of devstream",
-	Long:  `All software has versions. This is devstream's`,
+	Short: "Print the version number of DevStream",
+	Long:  `All software has versions. This is DevStream's`,
 	Run:   versionCMDFunc,
 }
 
