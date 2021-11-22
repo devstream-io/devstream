@@ -1,8 +1,8 @@
-name: Master Builder
+name: main Builder
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
 
