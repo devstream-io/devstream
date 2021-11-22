@@ -1,4 +1,4 @@
-module github.com/ironcore864/openstream
+module github.com/merico-dev/stream
 
 go 1.17
 

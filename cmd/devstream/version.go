@@ -5,13 +5,13 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/ironcore864/openstream/internal/pkg/version"
+	"github.com/merico-dev/stream/internal/pkg/version"
 )
 
 var versionCMD = &cobra.Command{
 	Use:   "version",
-	Short: "Print the version number of openstream",
-	Long:  `All software has versions. This is openstream's`,
+	Short: "Print the version number of DevStream",
+	Long:  `All software has versions. This is DevStream's`,
 	Run:   versionCMDFunc,
 }
 

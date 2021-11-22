@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 
-	"github.com/ironcore864/openstream/internal/pkg/config"
-	"github.com/ironcore864/openstream/internal/pkg/plugin"
+	"github.com/merico-dev/stream/internal/pkg/config"
+	"github.com/merico-dev/stream/internal/pkg/plugin"
 	"github.com/spf13/cobra"
 )
 

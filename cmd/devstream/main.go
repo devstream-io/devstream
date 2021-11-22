@@ -8,12 +8,13 @@ var (
 	configFile string
 
 	rootCMD = &cobra.Command{
-		Use:   "openstream",
-		Short: "openstream is an open source DevOps tool manager",
-		Long:  `openstream is an open source DevOps tool manager`,
+		Use:   "dtm",
+		Short: "DevStream is an open-source DevOps tool manager",
+		Long:  `DevStream is an open-source DevOps tool manager`,
 	}
 )
 
+// Execute runs the rootCMD's Execute func.
 func Execute() error {
 	return rootCMD.Execute()
 }

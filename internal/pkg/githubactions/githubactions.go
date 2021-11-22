@@ -38,7 +38,7 @@ func fileExists(params *Param) bool {
 		*params.ctx,
 		params.options.Owner,
 		params.options.Repo,
-		generateGitHubWorkflowFileByName(params.pipeline.workflowFileName),
+		generateGitHubWorkflowFileByName(params.workflow.workflowFileName),
 		&github.RepositoryContentGetOptions{})
 
 	if err != nil {
@@ -51,36 +51,36 @@ func fileExists(params *Param) bool {
 
 	if resp.StatusCode == 200 {
 		return true
-	} else {
-		return false
 	}
+	return false
+
 }
 
 func createFile(params *Param) {
 	if fileExists(params) {
-		log.Printf("github actions workflow %s already exists\n", params.pipeline.workflowFileName)
+		log.Printf("github actions workflow %s already exists\n", params.workflow.workflowFileName)
 		return
 	}
 
 	// Note: the file needs to be absent from the repository as you are not
 	// specifying a SHA reference here.
 	opts := &github.RepositoryContentFileOptions{
-		Message: github.String(params.pipeline.commitMessage),
-		Content: []byte(params.pipeline.workflowContent),
+		Message: github.String(params.workflow.commitMessage),
+		Content: []byte(params.workflow.workflowContent),
 		Branch:  github.String("master"),
 	}
 
-	log.Printf("creating github actions workflow %s...\n", params.pipeline.workflowFileName)
+	log.Printf("creating github actions workflow %s...\n", params.workflow.workflowFileName)
 	_, _, err := params.client.Repositories.CreateFile(
 		*params.ctx,
 		params.options.Owner,
 		params.options.Repo,
-		generateGitHubWorkflowFileByName(params.pipeline.workflowFileName),
+		generateGitHubWorkflowFileByName(params.workflow.workflowFileName),
 		opts)
 
 	if err != nil {
 		fmt.Println(err.Error())
 		return
 	}
-	log.Printf("github actions workflow %s created\n", params.pipeline.workflowFileName)
+	log.Printf("github actions workflow %s created\n", params.workflow.workflowFileName)
 }
