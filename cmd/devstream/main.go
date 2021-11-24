@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/spf13/cobra"
 )
 
@@ -14,11 +16,6 @@ var (
 	}
 )
 
-// Execute runs the rootCMD's Execute func.
-func Execute() error {
-	return rootCMD.Execute()
-}
-
 func init() {
 	rootCMD.PersistentFlags().StringVarP(&configFile, "config-file", "f", "config.yaml", "config file")
 
@@ -27,5 +24,8 @@ func init() {
 }
 
 func main() {
-	rootCMD.Execute()
+	err := rootCMD.Execute()
+	if err != nil {
+		log.Fatal(err)
+	}
 }

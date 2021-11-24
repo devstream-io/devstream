@@ -15,12 +15,16 @@ func generateGitHubWorkflowFileByName(f string) string {
 }
 
 func getGitHubToken() string {
-	viper.BindEnv("github_token")
-	token, ok := viper.Get("github_token").(string)
+	err := viper.BindEnv("github_token")
+	if err != nil {
+		log.Fatalf("ENV var GITHUB_TOKEN is needed")
+	}
 
+	token, ok := viper.Get("github_token").(string)
 	if !ok {
 		log.Fatalf("ENV var GITHUB_TOKEN is needed")
 	}
+
 	return token
 }
 
