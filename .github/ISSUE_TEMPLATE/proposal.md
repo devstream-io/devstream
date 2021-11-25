@@ -1,9 +1,9 @@
 ---
-Name: Proposal
-About: Make a proposal, create a feature request, or suggest an idea about this project
-Title: ''
-Labels: proposal
-Assignees: ''
+name: Proposal
+about: Make a proposal, create a feature request, or suggest an idea about this project
+title: ''
+labels: proposal
+assignees: ''
 ---
 
 ## Description

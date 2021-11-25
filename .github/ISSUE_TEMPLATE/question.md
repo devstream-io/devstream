@@ -1,9 +1,9 @@
 ---
-Name: Question
-About: Ask a question
-Title: ''
-Labels: question
-Assignees: ''
+name: Question
+about: Ask a question
+title: ''
+labels: question
+assignees: ''
 ---
 
 ## Question
