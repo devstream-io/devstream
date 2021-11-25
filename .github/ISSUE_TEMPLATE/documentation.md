@@ -1,9 +1,9 @@
 ---
-Name: Documentation Issue
-About: Help improve our documentation
-Title: ''
-Labels: docs
-Assignees: ''
+name: Documentation Issue
+about: Help improve our documentation
+title: ''
+labels: docs
+assignees: ''
 ---
 
 ## Scope
