@@ -10,7 +10,7 @@ var (
 	configFile string
 
 	rootCMD = &cobra.Command{
-		Use:   "dtm",
+		Use:   "dsm",
 		Short: "DevStream is an open-source DevOps tool manager",
 		Long:  `DevStream is an open-source DevOps tool manager`,
 	}
