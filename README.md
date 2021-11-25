@@ -14,7 +14,7 @@
 
 ## DevStream, What Is It Anyway?
 
-DevStream is an open-source DevOps tool manager (DTM).
+DevStream is an open-source DevOps tool manager.
 
 Imagine you are in a new project. Before writing the first line of code, you would have to figure out the tools needed in the whole Software Development Life Cycle (SDLC). You would probably need the following pieces:
 
@@ -35,7 +35,7 @@ And, there are multiple challenges in creating YOUR ideal SDLC workflow:
 
 To be fair, there are a few integrated products out there that may contain everything you might need, but they might not suit your specific requirements perfectly. So, the chance is, you will still want to go out and do your research, find the best pieces for you, and integrate them. And, it would be a lot of operational overhead if all you had to do all day was install and uninstall and integrate things.
 
-You probably have already seen where we are going with this, and you are right: DevStream, an open-source DevOps tool manager (DTM), aims to be the solution here.
+You probably have already seen where we are going with this, and you are right: DevStream, an open-source DevOps tool manager, aims to be the solution here.
 
 Think of the Linux kernel V.S. different distributions. Different distros offer different packages so that you can always choose the best for your need.
 
@@ -67,8 +67,10 @@ See [examples/config.yaml](./examples/config.yaml).
 
 ## Run
 
+The CLI tool is named `dsm`, which is short for DevStream:
+
 ```bash
-./dtm install -f examples/config.yaml
+./dsm install -f examples/config.yaml
 ```
 
 ## Contribute

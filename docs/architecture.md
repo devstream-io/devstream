@@ -10,9 +10,11 @@ The following diagram shows an approximation of how DevStream executes a user co
 
 ## CLI (The `devstream` Package)
 
-Every time a user runs the `dtm` program, the execution transfers immediately into one of the "command" implementations in the [`devstream`](https://github.com/merico-dev/stream/tree/main/cmd/devstream) package, in which folder all commands' definitions reside. Then, each command calls the corresponding package under [`internal/pkg`](https://github.com/merico-dev/stream/tree/main/internal/pkg).
+For simplicity, the CLI is named `dsm` instead of the full name DevStream.
 
-The flow illustrated above applies to the main DevStream commands like `dtm install`, `dtm uninstall` (_TODO_), and `dtm reinstall` (_TODO_). For these commands, the role of the command is to parse all the config, load each plugin, and call the [predefined interface](https://github.com/merico-dev/stream/blob/main/internal/pkg/plugin/plugin.go#L12).
+Every time a user runs the `dsm` program, the execution transfers immediately into one of the "command" implementations in the [`devstream`](https://github.com/merico-dev/stream/tree/main/cmd/devstream) package, in which folder all commands' definitions reside. Then, each command calls the corresponding package under [`internal/pkg`](https://github.com/merico-dev/stream/tree/main/internal/pkg).
+
+The flow illustrated above applies to the main DevStream commands like `dsm install`, `dsm uninstall` (_TODO_), and `dsm reinstall` (_TODO_). For these commands, the role of the command is to parse all the config, load each plugin, and call the [predefined interface](https://github.com/merico-dev/stream/blob/main/internal/pkg/plugin/plugin.go#L12).
 
 ## Configuration Loader
 
