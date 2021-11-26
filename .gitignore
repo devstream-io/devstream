@@ -1,6 +1,9 @@
 # Mac OS X files
 .DS_Store
 
+# IDE files
+.idea
+
 # Binaries for programs and plugins
 *.exe
 *.dll
@@ -8,11 +11,13 @@
 *.dylib
 
 # build
-/dsm
+dsm
+build/
+output/
 
 # Test binary, build with `go test -c`
 *.test
-/plugins
+plugins/
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
