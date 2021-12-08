@@ -3,9 +3,10 @@ package main
 import (
 	"log"
 
+	"github.com/spf13/cobra"
+
 	"github.com/merico-dev/stream/internal/pkg/config"
 	"github.com/merico-dev/stream/internal/pkg/plugin"
-	"github.com/spf13/cobra"
 )
 
 var installCMD = &cobra.Command{
