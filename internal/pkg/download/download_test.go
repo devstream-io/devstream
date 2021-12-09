@@ -14,7 +14,11 @@ func TestGetAssetswithretry(t *testing.T) {
 	downloader.Filepath = "plugins/test_1.so"
 
 	os.Remove(downloader.Filepath)
-	downloader.GetAssetswithretry()
+	err := downloader.GetAssetswithretry()
+
+	if err != nil {
+		t.Fatal("downloaded error")
+	}
 
 	if !FileExist(downloader.Filepath) {
 		t.Fatal("no file downloaded")
