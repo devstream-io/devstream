@@ -23,3 +23,5 @@
 # YAML for testings
 *.yaml
 
+# IDE
+.idea
