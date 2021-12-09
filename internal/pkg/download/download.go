@@ -43,13 +43,15 @@ func NewDownloadClient() *DownloadClient {
 func (dc *DownloadClient) GetReleaseDetail() ([]ReleaseInfo, error) {
 	//github api get release details
 	details, err := dc.client.R().Get(dc.ReleaseUrl)
+	if err != nil {
+		return nil, err
+	}
 
 	//unmarshal to json
 	jsonDetails := []ReleaseInfo{}
-	json.Unmarshal(details.Body(), &jsonDetails)
-
-	if err != nil {
-		return nil, err
+	errums := json.Unmarshal(details.Body(), &jsonDetails)
+	if errums != nil {
+		return nil, errums
 	}
 
 	log.Print(jsonDetails)

@@ -50,7 +50,12 @@ func Install(tool *config.Tool) {
 		loader.AssetName = appname
 		loader.Version = tool.Version
 		loader.Filepath = path
-		loader.GetAssetswithretry()
+		err := loader.GetAssetswithretry()
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+
 	}
 
 	p := loadPlugin(tool)
