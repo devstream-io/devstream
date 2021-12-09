@@ -16,7 +16,7 @@ func TestGetAssetswithretry(t *testing.T) {
 	os.Remove(downloader.Filepath)
 	downloader.GetAssetswithretry()
 
-	if FileExist(downloader.Filepath) {
+	if !FileExist(downloader.Filepath) {
 		t.Fatal("no file downloaded")
 	}
 	os.Remove(downloader.Filepath)
