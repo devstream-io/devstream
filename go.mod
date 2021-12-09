@@ -3,6 +3,7 @@ module github.com/merico-dev/stream
 go 1.17
 
 require (
+	github.com/go-resty/resty/v2 v2.7.0
 	github.com/google/go-github/v40 v40.0.0
 	github.com/mitchellh/mapstructure v1.4.1
 	github.com/mittwald/go-helm-client v0.8.2
@@ -11,7 +12,6 @@ require (
 	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 	helm.sh/helm/v3 v3.7.1
-	github.com/go-resty/resty/v2 v2.7.0
 )
 
 require (

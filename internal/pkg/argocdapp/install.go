@@ -7,7 +7,7 @@ import (
 )
 
 // Install creates an ArgoCD app yaml and apply it.
-func Install(options *map[string]interface{}) {
+func Install(options *map[string]interface{}) (bool, error) {
 	var param Param
 	err := mapstructure.Decode(*options, &param)
 	if err != nil {
@@ -17,4 +17,6 @@ func Install(options *map[string]interface{}) {
 	file := "./app.yaml"
 	writeContentToTmpFile(file, appTemplate, &param)
 	kubectlApply(file)
+
+	return true, nil
 }

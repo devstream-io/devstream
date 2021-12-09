@@ -1,7 +1,6 @@
 package statemanager
 
 import (
-	"fmt"
 	"sync"
 
 	"github.com/merico-dev/stream/internal/pkg/backend"
@@ -16,7 +15,7 @@ type Manager interface {
 	SetStates(states States)
 
 	GetState(name string) *State
-	AddState(state *State) error
+	AddState(state *State)
 	UpdateState(state *State)
 	DeleteState(name string)
 }
@@ -53,15 +52,15 @@ func (m *manager) GetState(name string) *State {
 	return nil
 }
 
-func (m *manager) AddState(state *State) error {
+func (m *manager) AddState(state *State) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
-	if _, exist := m.states[state.Name]; exist {
-		return fmt.Errorf("statemanager already exists")
-	}
+	//if _, exist := m.states[state.Name]; exist {
+	//	return fmt.Errorf("statemanager already exists")
+	//}
 	m.states[state.Name] = state
-	return nil
+	//return nil
 }
 
 func (m *manager) UpdateState(state *State) {
