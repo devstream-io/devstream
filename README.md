@@ -67,11 +67,19 @@ See [examples/config.yaml](./examples/config.yaml).
 
 ## Run
 
-The CLI tool is named `dsm`, which is short for DevStream:
+The CLI tool is named `dtm`, which is short for DevStream:
 
 ```bash
-./dsm install -f examples/config.yaml
+./dtm install -f examples/config.yaml
 ```
+
+## Why `dtm`?
+
+Inspired by [`git`](https://github.com/git/git#readme), the name is (depending on your mood):
+
+- a symmetric, scientific acronym of **d**evs**t**rea**m**.
+- "devops tool manager": you're in a good mood, and it actually works for you.
+- "dead to me": when it breaks.
 
 ## Contribute
 
