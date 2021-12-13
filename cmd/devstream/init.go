@@ -16,5 +16,8 @@ var initCMD = &cobra.Command{
 
 func initCMDFunc(cmd *cobra.Command, args []string) {
 	conf := config.LoadConf(configFile)
-	pluginmanager.DownloadPlugins(conf)
+	err := pluginmanager.DownloadPlugins(conf)
+	if err != nil {
+		return
+	}
 }
