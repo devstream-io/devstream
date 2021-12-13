@@ -4,9 +4,11 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
-func TestGetAssetWithRetry(t *testing.T) {
+func TestDownload(t *testing.T) {
 	c := NewDownloadClient()
 
 	os.Remove(filepath.Join(".", "test.so"))
@@ -17,4 +19,10 @@ func TestGetAssetWithRetry(t *testing.T) {
 	}
 
 	os.Remove(filepath.Join(".", "argocdapp"))
+}
+
+func TestDownloadNotFound(t *testing.T) {
+	c := NewDownloadClient()
+	err := c.download(".", "doesntexist", "0.0.1")
+	assert.Contains(t, err.Error(), "404")
 }
