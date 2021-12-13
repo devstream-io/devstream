@@ -7,6 +7,7 @@ import (
 
 	"github.com/merico-dev/stream/internal/pkg/config"
 	"github.com/merico-dev/stream/internal/pkg/plugin"
+	"github.com/merico-dev/stream/internal/pkg/pluginmanager"
 )
 
 var installCMD = &cobra.Command{
@@ -18,6 +19,13 @@ var installCMD = &cobra.Command{
 
 func installCMDFunc(cmd *cobra.Command, args []string) {
 	conf := config.LoadConf(configFile)
+
+	// init before installation
+	err := pluginmanager.DownloadPlugins(conf)
+	if err != nil {
+		return
+	}
+
 	for _, tool := range conf.Tools {
 		log.Printf("=== start to install plugin %s %s ===", tool.Name, tool.Version)
 		plugin.Install(&tool)
