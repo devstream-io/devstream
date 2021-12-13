@@ -11,29 +11,11 @@ import (
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
 )
 
+
 // Plan is an "Actions" plan, it includes all changes should be take with plugins.
 type Plan struct {
 	Changes []*Change
-}
-
-// ExecutionResult holds the execution result with a single plugin.
-// The map's key is a plugin's name.
-type ExecutionResult map[string]*Change
-
-// Execute will execute all changes included in the Plan and put the execution result into a ExecutionResult channel.
-func (p *Plan) Execute(execResultChan chan<- ExecutionResult) {
-	for _, c := range p.Changes {
-		// We will consider how to execute Action concurrently later.
-		// It involves dependency management.
-		succeeded, err := c.Action(c.Tool)
-		c.Result = &ChangeResult{
-			Succeeded: succeeded,
-			Error:     err,
-			Time:      time.Now().Format("2006-01-02_15:04:05"),
-		}
-		execResultChan <- ExecutionResult{c.Tool.Name: c}
-	}
-	close(execResultChan)
+	smgr    statemanager.Manager
 }
 
 // ActionFunc is a function that Do Action with a plugin. like:
@@ -55,9 +37,9 @@ type ChangeResult struct {
 	Time      string
 }
 
-// MakePlan takes "State Manager" & "Config" then do some calculate and return a Plan.
+// NewPlan takes "State Manager" & "Config" then do some calculate and return a Plan.
 // All actions should be execute is included in this Plan.changes.
-func MakePlan(smgr statemanager.Manager, cfg *config.Config) *Plan {
+func NewPlan(smgr statemanager.Manager, cfg *config.Config) *Plan {
 	if cfg == nil {
 		return &Plan{Changes: make([]*Change, 0)}
 	}
@@ -74,21 +56,72 @@ func MakePlan(smgr statemanager.Manager, cfg *config.Config) *Plan {
 	log.Printf("failed to initialize States. %s", err)
 	log.Println("try to initialize the States.")
 
-	plan := &Plan{Changes: make([]*Change, 0)}
+	plan := &Plan{
+		Changes: make([]*Change, 0),
+		smgr:    smgr,
+	}
 	tmpStates := smgr.GetStates().DeepCopy()
 
-	generatePlanAccordingToConfig(smgr, plan, tmpStates, cfg)
-	removeNoLongerNeededToolsFromPlan(plan, tmpStates)
+	plan.generatePlanAccordingToConfig(tmpStates, cfg)
+	plan.removeNoLongerNeededToolsFromPlan(tmpStates)
 
 	return plan
 }
 
+// Execute will execute all changes included in the Plan and record results.
+// All errors will be return.
+func (p *Plan) Execute() []error {
+	errors := make([]error, 0)
+	for _, c := range p.Changes {
+		// We will consider how to execute Action concurrently later.
+		// It involves dependency management.
+		succeeded, err := c.Action(c.Tool)
+		if err != nil {
+			errors = append(errors, err)
+		}
+		c.Result.Succeeded = succeeded
+		c.Result.Error = err
+		c.Result.Time = time.Now().Format(time.RFC3339)
+
+		err = p.handleResult(c)
+		if err != nil {
+			errors = append(errors, err)
+		}
+	}
+	return errors
+}
+
+// handleResult is used to Write the latest States to Backend.
+func (p *Plan) handleResult(change *Change) error {
+	var state = statemanager.NewState(
+		change.Tool.Name,
+		change.Tool.Version,
+		[]string{},
+		statemanager.StatusRunning,
+		&statemanager.Operation{
+			Action:   change.ActionName,
+			Time:     change.Result.Time,
+			Metadata: change.Tool.Options,
+		},
+	)
+
+	if change.Result.Error != nil {
+		state.Status = statemanager.StatusFailed
+		log.Printf("=== plugin %s installation failed ===", change.Tool.Name)
+	} else {
+		log.Printf("=== plugin %s installation done ===", change.Tool.Name)
+	}
+
+	p.smgr.AddState(state)
+	return p.smgr.Write(p.smgr.GetStates().Format())
+}
+
 // generatePlanAccordingToConfig is to filter all the Tools in cfg that need some actions
-func generatePlanAccordingToConfig(smgr statemanager.Manager, plan *Plan, states statemanager.States, cfg *config.Config) {
+func (p *Plan) generatePlanAccordingToConfig(states statemanager.States, cfg *config.Config) {
 	for _, tool := range cfg.Tools {
-		state := smgr.GetState(tool.Name)
+		state := p.smgr.GetState(tool.Name)
 		if state == nil {
-			plan.Changes = append(plan.Changes, &Change{
+			p.Changes = append(p.Changes, &Change{
 				Tool:       &tool,
 				ActionName: statemanager.ActionInstall,
 				Action:     plugin.Install,
@@ -98,13 +131,13 @@ func generatePlanAccordingToConfig(smgr statemanager.Manager, plan *Plan, states
 
 		switch state.Status {
 		case statemanager.StatusUninstalled:
-			plan.Changes = append(plan.Changes, &Change{
+			p.Changes = append(p.Changes, &Change{
 				Tool:       &tool,
 				ActionName: statemanager.ActionInstall,
 				Action:     plugin.Install,
 			})
 		case statemanager.StatusFailed:
-			plan.Changes = append(plan.Changes, &Change{
+			p.Changes = append(p.Changes, &Change{
 				Tool:       &tool,
 				ActionName: statemanager.ActionReinstall,
 				Action:     plugin.Reinstall,
@@ -115,9 +148,9 @@ func generatePlanAccordingToConfig(smgr statemanager.Manager, plan *Plan, states
 }
 
 // Some tools have already been installed, but they are no longer needed, so they need to be uninstalled
-func removeNoLongerNeededToolsFromPlan(plan *Plan, states statemanager.States) {
+func (p *Plan) removeNoLongerNeededToolsFromPlan(states statemanager.States) {
 	for _, state := range states {
-		plan.Changes = append(plan.Changes, &Change{
+		p.Changes = append(p.Changes, &Change{
 			Tool: &config.Tool{
 				Name:    state.Name,
 				Version: state.Version,

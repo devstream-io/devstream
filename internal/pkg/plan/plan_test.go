@@ -32,7 +32,7 @@ func TestMakePlan(t *testing.T) {
 	}))
 
 	// tool_a should be installed and tool_b should be uninstalled.
-	plan := MakePlan(smgr, cfg)
+	plan := NewPlan(smgr, cfg)
 
 	if len(plan.Changes) != 2 {
 		t.Errorf("plan length error")
