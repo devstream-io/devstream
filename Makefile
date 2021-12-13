@@ -5,6 +5,10 @@ build: ## Build dsm & plugins local.
 	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o plugins/argocdapp_0.0.1.so ./cmd/argocdapp/
 	go build -trimpath -gcflags="all=-N -l" -o dsm ./cmd/devstream/
 
+core: ## Build dsm & plugins local.
+	go get ./...
+	go build -trimpath -gcflags="all=-N -l" -o dsm ./cmd/devstream/
+
 fmt: ## Run go fmt against code.
 	goimports -local="github.com/merico-dev/stream" -d -w cmd
 	goimports -local="github.com/merico-dev/stream" -d -w internal
