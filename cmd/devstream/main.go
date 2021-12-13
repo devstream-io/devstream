@@ -20,6 +20,7 @@ func init() {
 	rootCMD.PersistentFlags().StringVarP(&configFile, "config-file", "f", "config.yaml", "config file")
 
 	rootCMD.AddCommand(versionCMD)
+	rootCMD.AddCommand(initCMD)
 	rootCMD.AddCommand(installCMD)
 }
 
