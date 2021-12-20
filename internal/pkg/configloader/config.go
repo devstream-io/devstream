@@ -24,7 +24,7 @@ type Tool struct {
 func LoadConf(fname string) *Config {
 	f, err := ioutil.ReadFile(fname)
 	if err != nil {
-		log.Print("It seems you don't have a config file. Maybe you have it in another directory and forgot to use the -f option? See dsm -h for more help.")
+		log.Print("It seems you don't have a config file. Maybe you have it in another directory and forgot to use the -f option? See dtm -h for more help.")
 		log.Fatal(err)
 	}
 
