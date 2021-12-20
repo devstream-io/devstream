@@ -10,27 +10,28 @@ import (
 
 // DevStreamPlugin is a struct, on which install/reinstall/uninstall interfaces are defined.
 type DevStreamPlugin interface {
-	Install(*map[string]interface{})
-	Reinstall(*map[string]interface{})
-	Uninstall(*map[string]interface{})
+	// Install will return (true, nil) if there is no error occurred. Otherwise (false, error) will be returned.
+	Install(*map[string]interface{}) (bool, error)
+	Reinstall(*map[string]interface{}) (bool, error)
+	Uninstall(*map[string]interface{}) (bool, error)
 }
 
 // Install loads the plugin and calls the Install method of that plugin.
-func Install(tool *config.Tool) {
+func Install(tool *config.Tool) (bool, error) {
 	p := loadPlugin(tool)
-	p.Install(&tool.Options)
+	return p.Install(&tool.Options)
 }
 
 // Reinstall loads the plugin and calls the Reinstall method of that plugin.
-func Reinstall(tool *config.Tool) {
+func Reinstall(tool *config.Tool) (bool, error) {
 	p := loadPlugin(tool)
-	p.Reinstall(&tool.Options)
+	return p.Reinstall(&tool.Options)
 }
 
 // Uninstall loads the plugin and calls the Uninstall method of that plugin.
-func Uninstall(tool *config.Tool) {
+func Uninstall(tool *config.Tool) (bool, error) {
 	p := loadPlugin(tool)
-	p.Uninstall(&tool.Options)
+	return p.Uninstall(&tool.Options)
 }
 
 func loadPlugin(tool *config.Tool) DevStreamPlugin {
