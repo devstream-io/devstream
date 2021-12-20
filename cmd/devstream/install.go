@@ -6,8 +6,8 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/merico-dev/stream/internal/pkg/backend"
-	"github.com/merico-dev/stream/internal/pkg/config"
-	"github.com/merico-dev/stream/internal/pkg/plan"
+	"github.com/merico-dev/stream/internal/pkg/configloader"
+	"github.com/merico-dev/stream/internal/pkg/planmanager"
 	"github.com/merico-dev/stream/internal/pkg/pluginmanager"
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
 )
@@ -20,7 +20,7 @@ var installCMD = &cobra.Command{
 }
 
 func installCMDFunc(cmd *cobra.Command, args []string) {
-	conf := config.LoadConf(configFile)
+	conf := configloader.LoadConf(configFile)
 
 	// init before installation
 	err := pluginmanager.DownloadPlugins(conf)
@@ -36,7 +36,7 @@ func installCMDFunc(cmd *cobra.Command, args []string) {
 	}
 	smgr := statemanager.NewManager(b)
 
-	p := plan.NewPlan(smgr, conf)
+	p := planmanager.NewPlan(smgr, conf)
 	if len(p.Changes) == 0 {
 		log.Println("it is nothing to do here")
 		return

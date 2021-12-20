@@ -1,16 +1,16 @@
-package plan
+package planmanager
 
 import (
 	"testing"
 
 	"github.com/merico-dev/stream/internal/pkg/backend"
-	"github.com/merico-dev/stream/internal/pkg/config"
+	"github.com/merico-dev/stream/internal/pkg/configloader"
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
 )
 
 func TestMakePlan(t *testing.T) {
-	cfg := &config.Config{
-		Tools: []config.Tool{
+	cfg := &configloader.Config{
+		Tools: []configloader.Tool{
 			{
 				Name:    "tool_a",
 				Version: "v0.0.1",

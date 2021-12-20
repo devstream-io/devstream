@@ -1,11 +1,11 @@
-package plugin
+package pluginengine
 
 import (
 	"fmt"
 	"os"
 	"plugin"
 
-	"github.com/merico-dev/stream/internal/pkg/config"
+	"github.com/merico-dev/stream/internal/pkg/configloader"
 )
 
 // DevStreamPlugin is a struct, on which install/reinstall/uninstall interfaces are defined.
@@ -17,24 +17,24 @@ type DevStreamPlugin interface {
 }
 
 // Install loads the plugin and calls the Install method of that plugin.
-func Install(tool *config.Tool) (bool, error) {
+func Install(tool *configloader.Tool) (bool, error) {
 	p := loadPlugin(tool)
 	return p.Install(&tool.Options)
 }
 
 // Reinstall loads the plugin and calls the Reinstall method of that plugin.
-func Reinstall(tool *config.Tool) (bool, error) {
+func Reinstall(tool *configloader.Tool) (bool, error) {
 	p := loadPlugin(tool)
 	return p.Reinstall(&tool.Options)
 }
 
 // Uninstall loads the plugin and calls the Uninstall method of that plugin.
-func Uninstall(tool *config.Tool) (bool, error) {
+func Uninstall(tool *configloader.Tool) (bool, error) {
 	p := loadPlugin(tool)
 	return p.Uninstall(&tool.Options)
 }
 
-func loadPlugin(tool *config.Tool) DevStreamPlugin {
+func loadPlugin(tool *configloader.Tool) DevStreamPlugin {
 	mod := fmt.Sprintf("plugins/%s_%s.so", tool.Name, tool.Version)
 	plug, err := plugin.Open(mod)
 	if err != nil {

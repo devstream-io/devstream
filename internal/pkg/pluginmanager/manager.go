@@ -5,10 +5,10 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/merico-dev/stream/internal/pkg/config"
+	"github.com/merico-dev/stream/internal/pkg/configloader"
 )
 
-func DownloadPlugins(conf *config.Config) error {
+func DownloadPlugins(conf *configloader.Config) error {
 	// create plugins dir if not exist
 	pluginsDir := filepath.Join(".", "plugins")
 
@@ -16,7 +16,7 @@ func DownloadPlugins(conf *config.Config) error {
 	client := NewDownloadClient()
 
 	for _, tool := range conf.Tools {
-		pluginFileName := config.GetPluginFileName(&tool)
+		pluginFileName := configloader.GetPluginFileName(&tool)
 		if _, err := os.Stat(filepath.Join(pluginsDir, pluginFileName)); errors.Is(err, os.ErrNotExist) {
 			// plugin does not exist
 			err := client.download(pluginsDir, pluginFileName, tool.Version)

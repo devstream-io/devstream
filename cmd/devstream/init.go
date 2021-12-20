@@ -5,7 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/merico-dev/stream/internal/pkg/config"
+	"github.com/merico-dev/stream/internal/pkg/configloader"
 	"github.com/merico-dev/stream/internal/pkg/pluginmanager"
 )
 
@@ -17,7 +17,7 @@ var initCMD = &cobra.Command{
 }
 
 func initCMDFunc(cmd *cobra.Command, args []string) {
-	conf := config.LoadConf(configFile)
+	conf := configloader.LoadConf(configFile)
 	err := pluginmanager.DownloadPlugins(conf)
 	if err != nil {
 		log.Printf("Error: %s", err)
