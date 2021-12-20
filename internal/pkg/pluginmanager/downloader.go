@@ -1,6 +1,5 @@
 // 1. init download
-// 2. get github releases
-// 3. get assets .so
+// 2. get assets *.so
 
 package pluginmanager
 
@@ -26,8 +25,6 @@ type DownloadClient struct {
 	ReleaseUrl string
 	client     *resty.Client
 	RetryCount int
-	WaitTime   int64
-	TimeOut    int64
 }
 
 func NewDownloadClient() *DownloadClient {
@@ -35,8 +32,6 @@ func NewDownloadClient() *DownloadClient {
 		ReleaseUrl: defaultReleaseUrl,
 		client:     resty.New(),
 		RetryCount: 3,
-		WaitTime:   1000,
-		TimeOut:    1000,
 	}
 }
 
