@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/merico-dev/stream/internal/pkg/argocd"
 )
@@ -14,19 +13,18 @@ const NAME = "argocd"
 type Plugin string
 
 // Install implements the installation of ArgoCD.
-func (p Plugin) Install(options *map[string]interface{}) {
-	argocd.Install(options)
-	log.Printf("%s install finished", NAME)
+func (p Plugin) Install(options *map[string]interface{}) (bool, error) {
+	return argocd.Install(options)
 }
 
 // Reinstall implements the reinstallation of ArgoCD.
-func (p Plugin) Reinstall(options *map[string]interface{}) {
-	log.Printf("mock: %s reinstall finished", NAME)
+func (p Plugin) Reinstall(options *map[string]interface{}) (bool, error) {
+	return false, fmt.Errorf("mock: %s reinstall finished", NAME)
 }
 
 // Uninstall implements the uninstallation of ArgoCD.
-func (p Plugin) Uninstall(options *map[string]interface{}) {
-	log.Printf("mock: %s uninstall finished", NAME)
+func (p Plugin) Uninstall(options *map[string]interface{}) (bool, error) {
+	return false, fmt.Errorf("mock: %s uninstall finished", NAME)
 }
 
 // DevStreamPlugin is the exported variable used by the DevStream core.

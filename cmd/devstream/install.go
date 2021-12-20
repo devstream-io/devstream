@@ -5,8 +5,10 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/merico-dev/stream/internal/pkg/backend"
 	"github.com/merico-dev/stream/internal/pkg/config"
-	"github.com/merico-dev/stream/internal/pkg/plugin"
+	"github.com/merico-dev/stream/internal/pkg/plan"
+	"github.com/merico-dev/stream/internal/pkg/statemanager"
 )
 
 var installCMD = &cobra.Command{
@@ -18,10 +20,28 @@ var installCMD = &cobra.Command{
 
 func installCMDFunc(cmd *cobra.Command, args []string) {
 	conf := config.LoadConf(configFile)
-	for _, tool := range conf.Tools {
-		log.Printf("=== start to install plugin %s %s ===", tool.Name, tool.Version)
-		plugin.Install(&tool)
-		log.Printf("=== plugin %s %s installation done===", tool.Name, tool.Version)
-		log.Printf("===")
+	// use default local backend for now.
+	b, err := backend.GetBackend("local")
+	if err != nil {
+		log.Fatal(err)
 	}
+	smgr := statemanager.NewManager(b)
+
+	p := plan.NewPlan(smgr, conf)
+	if len(p.Changes) == 0 {
+		log.Println("it is nothing to do here")
+		return
+	}
+
+	errs := p.Execute()
+	if len(errs) == 0 {
+		log.Println("=== all plugins' installation are succeeded ===")
+		return
+	}
+
+	log.Println("=== some errors occurred during plugins installation ===")
+	for _, err := range errs {
+		log.Println(err)
+	}
+	log.Println("=== END ===")
 }
