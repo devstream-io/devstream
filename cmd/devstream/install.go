@@ -8,6 +8,7 @@ import (
 	"github.com/merico-dev/stream/internal/pkg/backend"
 	"github.com/merico-dev/stream/internal/pkg/config"
 	"github.com/merico-dev/stream/internal/pkg/plan"
+	"github.com/merico-dev/stream/internal/pkg/pluginmanager"
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
 )
 
@@ -20,6 +21,14 @@ var installCMD = &cobra.Command{
 
 func installCMDFunc(cmd *cobra.Command, args []string) {
 	conf := config.LoadConf(configFile)
+
+	// init before installation
+	err := pluginmanager.DownloadPlugins(conf)
+	if err != nil {
+		log.Printf("Error: %s", err)
+		return
+	}
+
 	// use default local backend for now.
 	b, err := backend.GetBackend("local")
 	if err != nil {
