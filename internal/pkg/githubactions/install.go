@@ -13,7 +13,7 @@ var workflows = []Workflow{
 }
 
 // Install sets up GitHub Actions workflows.
-func Install(options *map[string]interface{}) {
+func Install(options *map[string]interface{}) (bool, error) {
 	ctx := context.Background()
 
 	var opt Options
@@ -30,4 +30,6 @@ func Install(options *map[string]interface{}) {
 			&pipeline,
 		})
 	}
+
+	return true, nil
 }

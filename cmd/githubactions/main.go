@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/merico-dev/stream/internal/pkg/githubactions"
 )
@@ -14,19 +13,18 @@ const NAME = "githubactions"
 type Plugin string
 
 // Install implements the installation of some GitHub Actions workflows.
-func (p Plugin) Install(options *map[string]interface{}) {
-	githubactions.Install(options)
-	log.Printf("%s install finished", NAME)
+func (p Plugin) Install(options *map[string]interface{}) (bool, error) {
+	return githubactions.Install(options)
 }
 
 // Reinstall implements the installation of some GitHub Actions workflows.
-func (p Plugin) Reinstall(options *map[string]interface{}) {
-	log.Printf("mock: %s reinstall finished", NAME)
+func (p Plugin) Reinstall(options *map[string]interface{}) (bool, error) {
+	return false, fmt.Errorf("mock: %s reinstall finished", NAME)
 }
 
 // Uninstall implements the installation of some GitHub Actions workflows.
-func (p Plugin) Uninstall(options *map[string]interface{}) {
-	log.Printf("mock: %s uninstall finished", NAME)
+func (p Plugin) Uninstall(options *map[string]interface{}) (bool, error) {
+	return false, fmt.Errorf("mock: %s uninstall finished", NAME)
 }
 
 // DevStreamPlugin is the exported variable used by the DevStream core.

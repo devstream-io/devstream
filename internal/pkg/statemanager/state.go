@@ -11,6 +11,7 @@ type ComponentStatus string
 type ComponentAction string
 
 const (
+	// We should delete the state of the "uninstalled" tool at States.
 	StatusUninstalled ComponentStatus = "uninstalled"
 	StatusInstalled   ComponentStatus = "installed"
 	StatusRunning     ComponentStatus = "running"
@@ -50,7 +51,21 @@ func NewState(name, version string, deps []string, status ComponentStatus, lastO
 	}
 }
 
+func (s States) DeepCopy() States {
+	if s == nil {
+		return nil
+	}
+	newStates := make(States)
+	for k, v := range s {
+		newStates[k] = v
+	}
+	return newStates
+}
+
 func (s States) Format() []byte {
+	if len(s) == 0 {
+		return []byte{}
+	}
 	var buf bytes.Buffer
 	encoder := yaml.NewEncoder(&buf)
 	encoder.SetIndent(2)

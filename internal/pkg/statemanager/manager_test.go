@@ -38,10 +38,7 @@ func newState() *State {
 func TestManager_State(t *testing.T) {
 	setup(t)
 	stateA := newState()
-	err := smgr.AddState(stateA)
-	if err != nil {
-		t.Fatal(err)
-	}
+	smgr.AddState(stateA)
 
 	stateB := smgr.GetState("argocd")
 
@@ -58,7 +55,7 @@ func TestManager_State(t *testing.T) {
 func TestManager_Write(t *testing.T) {
 	setup(t)
 	stateA := newState()
-	_ = smgr.AddState(stateA)
+	smgr.AddState(stateA)
 	if err := smgr.Write(smgr.GetStates().Format()); err != nil {
 		t.Error("Failed to Write States to disk")
 	}
@@ -86,5 +83,5 @@ func TestManager_Read(t *testing.T) {
 }
 
 func teardown() {
-	os.Remove(local.DefaultStateFile)
+	_ = os.Remove(local.DefaultStateFile)
 }

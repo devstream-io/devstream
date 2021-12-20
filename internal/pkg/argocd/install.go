@@ -7,7 +7,7 @@ import (
 )
 
 // Install installs ArgoCD with provided options.
-func Install(options *map[string]interface{}) {
+func Install(options *map[string]interface{}) (bool, error) {
 	var param Param
 	err := mapstructure.Decode(*options, &param)
 	if err != nil {
@@ -20,4 +20,6 @@ func Install(options *map[string]interface{}) {
 	addArgoHelmRepo(&client, &param)
 	log.Println("installing or updating argocd helm chart")
 	installOrUpdateArgoHelmChart(&client, &param)
+
+	return true, nil
 }
