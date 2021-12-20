@@ -11,7 +11,6 @@ import (
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
 )
 
-
 // Plan is an "Actions" plan, it includes all changes should be take with plugins.
 type Plan struct {
 	Changes []*Change

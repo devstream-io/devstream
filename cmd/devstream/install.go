@@ -25,6 +25,7 @@ func installCMDFunc(cmd *cobra.Command, args []string) {
 	// init before installation
 	err := pluginmanager.DownloadPlugins(conf)
 	if err != nil {
+		log.Printf("Error: %s", err)
 		return
 	}
 
