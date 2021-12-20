@@ -1,4 +1,4 @@
-package plan
+package planmanager
 
 import (
 	"log"
@@ -6,8 +6,8 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/merico-dev/stream/internal/pkg/config"
-	"github.com/merico-dev/stream/internal/pkg/plugin"
+	"github.com/merico-dev/stream/internal/pkg/configloader"
+	"github.com/merico-dev/stream/internal/pkg/pluginengine"
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
 )
 
@@ -19,11 +19,11 @@ type Plan struct {
 
 // ActionFunc is a function that Do Action with a plugin. like:
 // plugin.Install() / plugin.Reinstall() / plugin.Uninstall()
-type ActionFunc func(tool *config.Tool) (bool, error)
+type ActionFunc func(tool *configloader.Tool) (bool, error)
 
 // Change is a wrapper with a single Tool and its Action should be execute.
 type Change struct {
-	Tool       *config.Tool
+	Tool       *configloader.Tool
 	ActionName statemanager.ComponentAction
 	Action     ActionFunc
 	Result     *ChangeResult
@@ -38,7 +38,7 @@ type ChangeResult struct {
 
 // NewPlan takes "State Manager" & "Config" then do some calculate and return a Plan.
 // All actions should be execute is included in this Plan.changes.
-func NewPlan(smgr statemanager.Manager, cfg *config.Config) *Plan {
+func NewPlan(smgr statemanager.Manager, cfg *configloader.Config) *Plan {
 	if cfg == nil {
 		return &Plan{Changes: make([]*Change, 0)}
 	}
@@ -116,14 +116,14 @@ func (p *Plan) handleResult(change *Change) error {
 }
 
 // generatePlanAccordingToConfig is to filter all the Tools in cfg that need some actions
-func (p *Plan) generatePlanAccordingToConfig(states statemanager.States, cfg *config.Config) {
+func (p *Plan) generatePlanAccordingToConfig(states statemanager.States, cfg *configloader.Config) {
 	for _, tool := range cfg.Tools {
 		state := p.smgr.GetState(tool.Name)
 		if state == nil {
 			p.Changes = append(p.Changes, &Change{
 				Tool:       &tool,
 				ActionName: statemanager.ActionInstall,
-				Action:     plugin.Install,
+				Action:     pluginengine.Install,
 			})
 			continue
 		}
@@ -133,13 +133,13 @@ func (p *Plan) generatePlanAccordingToConfig(states statemanager.States, cfg *co
 			p.Changes = append(p.Changes, &Change{
 				Tool:       &tool,
 				ActionName: statemanager.ActionInstall,
-				Action:     plugin.Install,
+				Action:     pluginengine.Install,
 			})
 		case statemanager.StatusFailed:
 			p.Changes = append(p.Changes, &Change{
 				Tool:       &tool,
 				ActionName: statemanager.ActionReinstall,
-				Action:     plugin.Reinstall,
+				Action:     pluginengine.Reinstall,
 			})
 		}
 		delete(states, tool.Name)
@@ -150,13 +150,13 @@ func (p *Plan) generatePlanAccordingToConfig(states statemanager.States, cfg *co
 func (p *Plan) removeNoLongerNeededToolsFromPlan(states statemanager.States) {
 	for _, state := range states {
 		p.Changes = append(p.Changes, &Change{
-			Tool: &config.Tool{
+			Tool: &configloader.Tool{
 				Name:    state.Name,
 				Version: state.Version,
 				Options: state.LastOperation.Metadata,
 			},
 			ActionName: statemanager.ActionUninstall,
-			Action:     plugin.Uninstall,
+			Action:     pluginengine.Uninstall,
 		})
 	}
 }
