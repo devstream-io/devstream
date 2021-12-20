@@ -14,7 +14,7 @@
 
 ## DevStream, What Is It Anyway?
 
-DevStream is an open-source DevOps tool manager.
+DevStream is an open-source DevOps toolchain manager.
 
 Imagine you are in a new project. Before writing the first line of code, you would have to figure out the tools needed in the whole Software Development Life Cycle (SDLC). You would probably need the following pieces:
 
@@ -25,7 +25,7 @@ Imagine you are in a new project. Before writing the first line of code, you wou
 - someplace serving as the single source of truth for secrets and credentials (secrets manager, e.g., Vault by HashiCorp);
 - some tools for centralized logging and monitoring (for example, ELK, Prometheus/Grafana);
 
-and maybe more. The list could go on for quite a bit.
+And maybe more. The list could go on for quite a bit.
 
 And, there are multiple challenges in creating YOUR ideal SDLC workflow:
 
@@ -35,7 +35,7 @@ And, there are multiple challenges in creating YOUR ideal SDLC workflow:
 
 To be fair, there are a few integrated products out there that may contain everything you might need, but they might not suit your specific requirements perfectly. So, the chance is, you will still want to go out and do your research, find the best pieces for you, and integrate them. And, it would be a lot of operational overhead if all you had to do all day was install and uninstall and integrate things.
 
-You probably have already seen where we are going with this, and you are right: DevStream, an open-source DevOps tool manager, aims to be the solution here.
+You probably have already seen where we are going with this, and you are right: DevStream, an open-source DevOps toolchain manager, aims to be the solution here.
 
 Think of the Linux kernel V.S. different distributions. Different distros offer different packages so that you can always choose the best for your need.
 
@@ -58,7 +58,10 @@ See [docs/architecture.md](./docs/architecture.md).
 ## Build
 
 ```bash
-make
+# build dtm & plugins
+make build
+# build dtm only
+make build-core
 ```
 
 ## Configuration
@@ -67,7 +70,7 @@ See [examples/config.yaml](./examples/config.yaml).
 
 ## Run
 
-The CLI tool is named `dtm`, which is short for DevStream:
+The CLI tool is named `dtm`, which is an acronym of **d**evs**t**rea**m** or *devops toolchain manager*:
 
 ```bash
 ./dtm install -f examples/config.yaml
@@ -78,7 +81,7 @@ The CLI tool is named `dtm`, which is short for DevStream:
 Inspired by [`git`](https://github.com/git/git#readme), the name is (depending on your mood):
 
 - a symmetric, scientific acronym of **d**evs**t**rea**m**.
-- "devops tool manager": you're in a good mood, and it actually works for you.
+- "devops toolchain manager": you're in a good mood, and it actually works for you.
 - "dead to me": when it breaks.
 
 ## Contribute
