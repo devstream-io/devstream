@@ -4,10 +4,14 @@ import (
 	"log"
 )
 
-// Install installs ArgoCD with provided options.
-func Install(options *map[string]interface{}) (bool, error) {
+func Reinstall(options *map[string]interface{}) (bool, error) {
 	acd, err := NewArgoCD(options)
 	if err != nil {
+		return false, err
+	}
+
+	log.Println("uninstalling argocd helm chart")
+	if err := acd.uninstallHelmChart(); err != nil {
 		return false, err
 	}
 

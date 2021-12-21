@@ -5,46 +5,79 @@ import (
 	"log"
 	"time"
 
+	"github.com/mitchellh/mapstructure"
 	helmClient "github.com/mittwald/go-helm-client"
 	"helm.sh/helm/v3/pkg/repo"
 )
 
-func createHelmClient(namespace string) helmClient.Client {
+type ArgoCD struct {
+	client *helmClient.Client
+	param  *Param
+}
+
+func NewArgoCD(options *map[string]interface{}) (*ArgoCD, error) {
+	var param Param
+	if err := mapstructure.Decode(*options, &param); err != nil {
+		return nil, err
+	}
+
 	client, err := helmClient.New(
 		&helmClient.Options{
-			Namespace:        namespace,
+			Namespace:        param.Chart.Namespace,
 			RepositoryCache:  "/tmp/.helmcache",
 			RepositoryConfig: "/tmp/.helmrepo",
 			Debug:            true,
 		},
 	)
 	if err != nil {
-		log.Fatalf(err.Error())
+		return nil, err
 	}
-	return client
+
+	return &ArgoCD{
+		client: &client,
+		param:  &param,
+	}, nil
 }
 
-func addArgoHelmRepo(c *helmClient.Client, param *Param) {
+func (a *ArgoCD) addHelmRepo() error {
 	chartRepo := repo.Entry{
-		Name: param.Repo.Name,
-		URL:  param.Repo.URL,
+		Name: a.param.Repo.Name,
+		URL:  a.param.Repo.URL,
 	}
 
-	if err := (*c).AddOrUpdateChartRepo(chartRepo); err != nil {
-		log.Fatalf(err.Error())
+	if err := (*a.client).AddOrUpdateChartRepo(chartRepo); err != nil {
+		return err
 	}
+	return nil
 }
 
-func installOrUpdateArgoHelmChart(c *helmClient.Client, param *Param) {
+func (a *ArgoCD) installOrUpgradeChart() error {
+	log.Println("adding and updating argocd helm chart repo")
+	if err := a.addHelmRepo(); err != nil {
+		return err
+	}
+
 	chartSpec := helmClient.ChartSpec{
-		ReleaseName: param.Chart.ReleaseName,
-		ChartName:   param.Chart.Name,
-		Namespace:   param.Chart.Namespace,
+		ReleaseName: a.param.Chart.ReleaseName,
+		ChartName:   a.param.Chart.Name,
+		Namespace:   a.param.Chart.Namespace,
 		UpgradeCRDs: true,
 		Wait:        true,
 		Timeout:     3 * time.Minute,
 	}
-	if _, err := (*c).InstallOrUpgradeChart(context.Background(), &chartSpec); err != nil {
-		log.Fatalf(err.Error())
+
+	_, err := (*a.client).InstallOrUpgradeChart(context.Background(), &chartSpec)
+	if err != nil {
+		return err
 	}
+
+	return nil
+}
+
+func (a *ArgoCD) uninstallHelmChart() error {
+	err := (*a.client).UninstallReleaseByName(a.param.Chart.ReleaseName)
+	if err != nil {
+		return err
+	}
+	return nil
 }
