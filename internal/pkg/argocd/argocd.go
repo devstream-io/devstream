@@ -58,12 +58,13 @@ func (a *ArgoCD) installOrUpgradeChart() error {
 	}
 
 	chartSpec := helmClient.ChartSpec{
-		ReleaseName: a.param.Chart.ReleaseName,
-		ChartName:   a.param.Chart.Name,
-		Namespace:   a.param.Chart.Namespace,
-		UpgradeCRDs: true,
-		Wait:        true,
-		Timeout:     3 * time.Minute,
+		ReleaseName:     a.param.Chart.ReleaseName,
+		ChartName:       a.param.Chart.Name,
+		Namespace:       a.param.Chart.Namespace,
+    CreateNamespace: a.param.Chart.CreateNamespace,
+		UpgradeCRDs:     true,
+		Wait:            true,
+		Timeout:         3 * time.Minute,
 	}
 
 	_, err := (*a.client).InstallOrUpgradeChart(context.Background(), &chartSpec)

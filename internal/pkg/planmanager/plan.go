@@ -53,8 +53,8 @@ func NewPlan(smgr statemanager.Manager, cfg *configloader.Config) *Plan {
 		smgr.SetStates(states)
 		log.Println("succeeded to initialize States")
 	} else {
-		log.Printf("failed to initialize States. %s", err)
-		log.Println("try to initialize the States.")
+		log.Printf("failed to initialize States. Error: (%s)", err)
+    log.Println("try to initialize the States.")
 	}
 
 	plan := &Plan{

@@ -5,7 +5,7 @@ build: ## Build dtm & plugins locally.
 	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o plugins/argocdapp_0.0.1.so ./cmd/argocdapp/
 	go build -trimpath -gcflags="all=-N -l" -o dtm ./cmd/devstream/
 
-core: ## Build dtm core only, locally.
+build-core: ## Build dtm core only, locally.
 	go get ./...
 	go build -trimpath -gcflags="all=-N -l" -o dtm ./cmd/devstream/
 
