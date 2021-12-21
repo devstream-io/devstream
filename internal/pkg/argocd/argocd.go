@@ -37,12 +37,13 @@ func addArgoHelmRepo(c *helmClient.Client, param *Param) {
 
 func installOrUpdateArgoHelmChart(c *helmClient.Client, param *Param) {
 	chartSpec := helmClient.ChartSpec{
-		ReleaseName: param.Chart.ReleaseName,
-		ChartName:   param.Chart.Name,
-		Namespace:   param.Chart.Namespace,
-		UpgradeCRDs: true,
-		Wait:        true,
-		Timeout:     3 * time.Minute,
+		ReleaseName:     param.Chart.ReleaseName,
+		ChartName:       param.Chart.Name,
+		Namespace:       param.Chart.Namespace,
+		CreateNamespace: param.Chart.CreateNamespace,
+		UpgradeCRDs:     true,
+		Wait:            true,
+		Timeout:         3 * time.Minute,
 	}
 	if _, err := (*c).InstallOrUpgradeChart(context.Background(), &chartSpec); err != nil {
 		log.Fatalf(err.Error())
