@@ -12,7 +12,7 @@ func Install(options *map[string]interface{}) (bool, error) {
 	}
 
 	log.Println("installing or updating argocd helm chart")
-	if err := acd.installOrUpgradeChart(); err != nil {
+	if err := acd.installOrUpgradeHelmChart(); err != nil {
 		return false, err
 	}
 

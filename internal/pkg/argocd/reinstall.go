@@ -15,8 +15,8 @@ func Reinstall(options *map[string]interface{}) (bool, error) {
 		return false, err
 	}
 
-	log.Println("installing or updating argocd helm chart")
-	if err := acd.installOrUpgradeChart(); err != nil {
+	log.Println("installing argocd helm chart")
+	if err := acd.installOrUpgradeHelmChart(); err != nil {
 		return false, err
 	}
 

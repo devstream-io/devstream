@@ -53,8 +53,7 @@ func NewPlan(smgr statemanager.Manager, cfg *configloader.Config) *Plan {
 		smgr.SetStates(states)
 		log.Println("succeeded to initialize States")
 	} else {
-		log.Printf("failed to initialize States. Error: (%s)", err)
-    log.Println("try to initialize the States.")
+		log.Printf("failed to initialize States. Error: (%s). try to initialize the States", err)
 	}
 
 	plan := &Plan{
@@ -73,7 +72,10 @@ func NewPlan(smgr statemanager.Manager, cfg *configloader.Config) *Plan {
 // All errors will be return.
 func (p *Plan) Execute() []error {
 	errors := make([]error, 0)
-	for _, c := range p.Changes {
+	log.Printf("changes count: %d", len(p.Changes))
+	for i, c := range p.Changes {
+		log.Printf("procprocessing progress: %d/%d", i+1, len(p.Changes))
+		log.Printf("processing: %s -> %s", c.Tool.Name, c.ActionName)
 		// We will consider how to execute Action concurrently later.
 		// It involves dependency management.
 		succeeded, err := c.Action(c.Tool)
@@ -97,6 +99,11 @@ func (p *Plan) Execute() []error {
 
 // handleResult is used to Write the latest States to Backend.
 func (p *Plan) handleResult(change *Change) error {
+	if change.ActionName == statemanager.ActionUninstall {
+		p.smgr.DeleteState(change.Tool.Name)
+		return p.smgr.Write(p.smgr.GetStates().Format())
+	}
+
 	var state = statemanager.NewState(
 		change.Tool.Name,
 		change.Tool.Version,
@@ -111,9 +118,9 @@ func (p *Plan) handleResult(change *Change) error {
 
 	if change.Result.Error != nil {
 		state.Status = statemanager.StatusFailed
-		log.Printf("=== plugin %s installation failed ===", change.Tool.Name)
+		log.Printf("=== plugin %s process failed ===", change.Tool.Name)
 	} else {
-		log.Printf("=== plugin %s installation done ===", change.Tool.Name)
+		log.Printf("=== plugin %s process done ===", change.Tool.Name)
 	}
 
 	p.smgr.AddState(state)

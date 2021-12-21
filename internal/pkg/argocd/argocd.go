@@ -51,7 +51,7 @@ func (a *ArgoCD) addHelmRepo() error {
 	return nil
 }
 
-func (a *ArgoCD) installOrUpgradeChart() error {
+func (a *ArgoCD) installOrUpgradeHelmChart() error {
 	log.Println("adding and updating argocd helm chart repo")
 	if err := a.addHelmRepo(); err != nil {
 		return err
@@ -61,7 +61,7 @@ func (a *ArgoCD) installOrUpgradeChart() error {
 		ReleaseName:     a.param.Chart.ReleaseName,
 		ChartName:       a.param.Chart.Name,
 		Namespace:       a.param.Chart.Namespace,
-    CreateNamespace: a.param.Chart.CreateNamespace,
+		CreateNamespace: a.param.Chart.CreateNamespace,
 		UpgradeCRDs:     true,
 		Wait:            true,
 		Timeout:         3 * time.Minute,
