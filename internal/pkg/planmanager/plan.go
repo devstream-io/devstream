@@ -51,9 +51,11 @@ func NewPlan(smgr statemanager.Manager, cfg *configloader.Config) *Plan {
 			return &Plan{Changes: make([]*Change, 0)}
 		}
 		smgr.SetStates(states)
+		log.Println("succeeded to initialize States")
+	} else {
+		log.Printf("failed to initialize States. %s", err)
+		log.Println("try to initialize the States.")
 	}
-	log.Printf("failed to initialize States. %s", err)
-	log.Println("try to initialize the States.")
 
 	plan := &Plan{
 		Changes: make([]*Change, 0),
@@ -78,9 +80,12 @@ func (p *Plan) Execute() []error {
 		if err != nil {
 			errors = append(errors, err)
 		}
-		c.Result.Succeeded = succeeded
-		c.Result.Error = err
-		c.Result.Time = time.Now().Format(time.RFC3339)
+
+		c.Result = &ChangeResult{
+			Succeeded: succeeded,
+			Error:     err,
+			Time:      time.Now().Format(time.RFC3339),
+		}
 
 		err = p.handleResult(c)
 		if err != nil {
