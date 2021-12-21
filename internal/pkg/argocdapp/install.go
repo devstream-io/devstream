@@ -16,7 +16,10 @@ func Install(options *map[string]interface{}) (bool, error) {
 
 	file := "./app.yaml"
 	writeContentToTmpFile(file, appTemplate, &param)
-	kubectlApply(file)
+	_, errApply := kubectlApply(file)
+	if errApply != nil {
+		return false, errApply
+	}
 
 	return true, nil
 }
