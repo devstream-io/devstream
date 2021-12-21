@@ -6,13 +6,13 @@ require (
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/google/go-github/v40 v40.0.0
 	github.com/mitchellh/mapstructure v1.4.1
-	github.com/mittwald/go-helm-client v0.8.2
+	github.com/mittwald/go-helm-client v0.8.4
 	github.com/spf13/cobra v1.2.1
 	github.com/spf13/viper v1.8.1
 	github.com/stretchr/testify v1.7.0
 	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
-	helm.sh/helm/v3 v3.7.1
+	helm.sh/helm/v3 v3.7.2
 )
 
 require (
@@ -22,7 +22,7 @@ require (
 	github.com/Masterminds/goutils v1.1.1 // indirect
 	github.com/Masterminds/semver/v3 v3.1.1 // indirect
 	github.com/Masterminds/sprig/v3 v3.2.2 // indirect
-	github.com/Masterminds/squirrel v1.5.0 // indirect
+	github.com/Masterminds/squirrel v1.5.2 // indirect
 	github.com/Microsoft/go-winio v0.4.17 // indirect
 	github.com/Microsoft/hcsshim v0.8.21 // indirect
 	github.com/PuerkitoBio/purell v1.1.1 // indirect
@@ -131,20 +131,20 @@ require (
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/ini.v1 v1.62.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	k8s.io/api v0.22.1 // indirect
-	k8s.io/apiextensions-apiserver v0.22.1 // indirect
-	k8s.io/apimachinery v0.22.1 // indirect
-	k8s.io/apiserver v0.22.1 // indirect
-	k8s.io/cli-runtime v0.22.1 // indirect
-	k8s.io/client-go v0.22.1 // indirect
-	k8s.io/component-base v0.22.1 // indirect
+	k8s.io/api v0.22.4 // indirect
+	k8s.io/apiextensions-apiserver v0.22.4 // indirect
+	k8s.io/apimachinery v0.22.4 // indirect
+	k8s.io/apiserver v0.22.4 // indirect
+	k8s.io/cli-runtime v0.22.4 // indirect
+	k8s.io/client-go v0.22.4 // indirect
+	k8s.io/component-base v0.22.4 // indirect
 	k8s.io/klog/v2 v2.9.0 // indirect
-	k8s.io/kube-openapi v0.0.0-20210421082810-95288971da7e // indirect
-	k8s.io/kubectl v0.22.1 // indirect
-	k8s.io/utils v0.0.0-20210707171843-4b05e18ac7d9 // indirect
+	k8s.io/kube-openapi v0.0.0-20211109043538-20434351676c // indirect
+	k8s.io/kubectl v0.22.4 // indirect
+	k8s.io/utils v0.0.0-20210819203725-bdf08cb9a70a // indirect
 	oras.land/oras-go v0.4.0 // indirect
 	sigs.k8s.io/kustomize/api v0.8.11 // indirect
 	sigs.k8s.io/kustomize/kyaml v0.11.0 // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.1.2 // indirect
-	sigs.k8s.io/yaml v1.2.0 // indirect
+	sigs.k8s.io/yaml v1.3.0 // indirect
 )

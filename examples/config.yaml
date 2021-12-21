@@ -19,7 +19,7 @@ tools:
       name: argo/argo-cd
       release_name: argocd
       namespace: argocd
-      create_namespace: False
+      create_namespace: True
 - name: argocdapp
   version: 0.0.1
   options:
