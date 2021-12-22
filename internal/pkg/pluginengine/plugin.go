@@ -2,7 +2,6 @@ package pluginengine
 
 import (
 	"fmt"
-	"os"
 	"plugin"
 
 	"github.com/merico-dev/stream/internal/pkg/configloader"
@@ -18,42 +17,51 @@ type DevStreamPlugin interface {
 
 // Install loads the plugin and calls the Install method of that plugin.
 func Install(tool *configloader.Tool) (bool, error) {
-	p := loadPlugin(tool)
+	p, err := loadPlugin(tool)
+	if err != nil {
+		return false, err
+	}
 	return p.Install(&tool.Options)
 }
 
 // Reinstall loads the plugin and calls the Reinstall method of that plugin.
 func Reinstall(tool *configloader.Tool) (bool, error) {
-	p := loadPlugin(tool)
+	p, err := loadPlugin(tool)
+	if err != nil {
+		return false, err
+	}
 	return p.Reinstall(&tool.Options)
 }
 
 // Uninstall loads the plugin and calls the Uninstall method of that plugin.
 func Uninstall(tool *configloader.Tool) (bool, error) {
-	p := loadPlugin(tool)
+	p, err := loadPlugin(tool)
+	if err != nil {
+		return false, err
+	}
 	return p.Uninstall(&tool.Options)
 }
 
-func loadPlugin(tool *configloader.Tool) DevStreamPlugin {
+func loadPlugin(tool *configloader.Tool) (DevStreamPlugin, error) {
 	mod := fmt.Sprintf("plugins/%s_%s.so", tool.Name, tool.Version)
 	plug, err := plugin.Open(mod)
 	if err != nil {
 		fmt.Println(err)
-		os.Exit(1)
+		return nil, err
 	}
 
 	var devStreamPlugin DevStreamPlugin
 	symDevStreamPlugin, err := plug.Lookup("DevStreamPlugin")
 	if err != nil {
 		fmt.Println(err)
-		os.Exit(1)
+		return nil, err
 	}
 
 	devStreamPlugin, ok := symDevStreamPlugin.(DevStreamPlugin)
 	if !ok {
 		fmt.Println(err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return devStreamPlugin
+	return devStreamPlugin, nil
 }
