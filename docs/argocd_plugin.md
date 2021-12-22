@@ -11,7 +11,7 @@ tools:
   # version of the plugin
   version: 0.0.1
   # options for the plugin
-  # Checkout the version from the GitHub releases.
+  # checkout the version from the GitHub releases
   options:
     # Helm repo information
     repo:
@@ -25,7 +25,7 @@ tools:
       name: argo/argo-cd
       # release name of the chart
       release_name: argocd
-      # K8s namespace where argocd will be installed
+      # k8s namespace where argocd will be installed
       namespace: argocd
       # need to create the namespace or not
       create_namespace: False

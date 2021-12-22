@@ -27,7 +27,7 @@ tools:
   # version of the plugin
   version: 0.0.1
   # options for the plugin
-  # Checkout the version from the GitHub releases.
+  # checkout the version from the GitHub releases
   options:
     # information on the ArgoCD application
     app:
