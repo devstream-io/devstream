@@ -25,3 +25,6 @@
 
 # IDE
 .idea
+
+# state file
+*.state

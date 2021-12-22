@@ -19,12 +19,12 @@ func (p Plugin) Install(options *map[string]interface{}) (bool, error) {
 
 // Reinstall implements the reinstallation of ArgoCD.
 func (p Plugin) Reinstall(options *map[string]interface{}) (bool, error) {
-	return false, fmt.Errorf("mock: %s reinstall finished", NAME)
+	return argocd.Reinstall(options)
 }
 
 // Uninstall implements the uninstallation of ArgoCD.
 func (p Plugin) Uninstall(options *map[string]interface{}) (bool, error) {
-	return false, fmt.Errorf("mock: %s uninstall finished", NAME)
+	return argocd.Uninstall(options)
 }
 
 // DevStreamPlugin is the exported variable used by the DevStream core.
