@@ -54,7 +54,7 @@ func (p *Plan) Execute() []error {
 	errors := make([]error, 0)
 	log.Printf("changes count: %d", len(p.Changes))
 	for i, c := range p.Changes {
-		log.Printf("procprocessing progress: %d/%d", i+1, len(p.Changes))
+		log.Printf("processing progress: %d/%d", i+1, len(p.Changes))
 		log.Printf("processing: %s -> %s", c.Tool.Name, c.ActionName)
 		// We will consider how to execute Action concurrently later.
 		// It involves dependency management.
