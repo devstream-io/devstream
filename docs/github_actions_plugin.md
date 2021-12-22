@@ -15,7 +15,7 @@ tools:
   # version of the plugin
   version: 0.0.1
   # options for the plugin
-  # Checkout the version from the GitHub releases.
+  # checkout the version from the GitHub releases
   options:
     # the repo's owner
     owner: ironcore864
