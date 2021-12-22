@@ -70,6 +70,9 @@ func (p *Plan) generatePlanAccordingToConfig(states statemanager.States, cfg *co
 		}
 		delete(states, tool.Name)
 	}
+	for _, c := range p.Changes{
+		log.Printf("=== %s -> %s ===", c.Tool.Name, c.ActionName)
+	}
 }
 
 // Some tools have already been installed, but they are no longer needed, so they need to be uninstalled
