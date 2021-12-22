@@ -44,7 +44,7 @@ func (p *Plan) generatePlanAccordingToConfig(states statemanager.States, cfg *co
 		state := p.smgr.GetState(tool.Name)
 		if state == nil {
 			p.Changes = append(p.Changes, &Change{
-				Tool:       &tool,
+				Tool:       tool.DeepCopy(),
 				ActionName: statemanager.ActionInstall,
 				Action:     pluginengine.Install,
 			})
