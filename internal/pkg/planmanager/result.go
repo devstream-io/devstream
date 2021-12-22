@@ -55,23 +55,20 @@ func (p *Plan) generatePlanAccordingToConfig(states statemanager.States, cfg *co
 		switch state.Status {
 		case statemanager.StatusUninstalled:
 			p.Changes = append(p.Changes, &Change{
-				Tool:       &tool,
+				Tool:       tool.DeepCopy(),
 				ActionName: statemanager.ActionInstall,
 				Action:     pluginengine.Install,
 			})
 			log.Printf("added a change: %s -> %s", tool.Name, statemanager.ActionInstall)
 		case statemanager.StatusFailed:
 			p.Changes = append(p.Changes, &Change{
-				Tool:       &tool,
+				Tool:       tool.DeepCopy(),
 				ActionName: statemanager.ActionReinstall,
 				Action:     pluginengine.Reinstall,
 			})
 			log.Printf("added a change: %s -> %s", tool.Name, statemanager.ActionReinstall)
 		}
 		delete(states, tool.Name)
-	}
-	for _, c := range p.Changes{
-		log.Printf("=== %s -> %s ===", c.Tool.Name, c.ActionName)
 	}
 }
 
