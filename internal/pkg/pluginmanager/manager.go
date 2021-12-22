@@ -13,13 +13,13 @@ func DownloadPlugins(conf *configloader.Config) error {
 	pluginsDir := filepath.Join(".", "plugins")
 
 	// download all plugins that don't exist locally
-	client := NewDownloadClient()
+	dc := NewDownloadClient()
 
 	for _, tool := range conf.Tools {
 		pluginFileName := configloader.GetPluginFileName(&tool)
 		if _, err := os.Stat(filepath.Join(pluginsDir, pluginFileName)); errors.Is(err, os.ErrNotExist) {
 			// plugin does not exist
-			err := client.download(pluginsDir, pluginFileName, tool.Version)
+			err := dc.download(pluginsDir, pluginFileName, tool.Version)
 			if err != nil {
 				return err
 			}

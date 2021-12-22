@@ -4,7 +4,6 @@
 package pluginmanager
 
 import (
-	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -15,42 +14,40 @@ import (
 )
 
 const (
+	defaultRetryCount = 3
 	defaultReleaseUrl = "https://github.com/merico-dev/stream/releases/download"
 )
 
 type DownloadClient struct {
-	Filepath   string
-	AssetName  string
-	Version    string
-	ReleaseUrl string
-	client     *resty.Client
-	RetryCount int
+	*resty.Client
 }
 
 func NewDownloadClient() *DownloadClient {
-	return &DownloadClient{
-		ReleaseUrl: defaultReleaseUrl,
-		client:     resty.New(),
-		RetryCount: 3,
-	}
+	dClient := DownloadClient{}
+	dClient.Client = resty.New()
+	dClient.SetRetryCount(defaultRetryCount)
+	return &dClient
 }
 
 func (dc *DownloadClient) download(pluginsDir, pluginFilename, version string) error {
-	dc.client.SetOutputDirectory(pluginsDir)
+	dc.SetOutputDirectory(pluginsDir)
 
 	downloadURL := fmt.Sprintf("%s/v%s/%s", defaultReleaseUrl, version, pluginFilename)
 	tmpName := pluginFilename + ".tmp"
 
-	response, err := dc.client.R().SetOutput(tmpName).
+	response, err := dc.R().
+		SetOutput(tmpName).
 		SetHeader("Accept", "application/octet-stream").
 		Get(downloadURL)
-	if response.StatusCode() != http.StatusOK {
-		os.Remove(filepath.Join(pluginsDir, tmpName))
-		errMsg := fmt.Sprintf("Downloading plugin %s from %s status code %d", pluginFilename, downloadURL, response.StatusCode())
-		log.Print(errMsg)
-		return errors.New(errMsg)
-	}
 	if err != nil {
+		log.Print(err)
+		return err
+	}
+	if response.StatusCode() != http.StatusOK {
+		if err = os.Remove(filepath.Join(pluginsDir, tmpName)); err != nil {
+			return err
+		}
+		err = fmt.Errorf("downloading plugin %s from %s status code %d", pluginFilename, downloadURL, response.StatusCode())
 		log.Print(err)
 		return err
 	}
