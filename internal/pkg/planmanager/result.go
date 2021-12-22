@@ -44,10 +44,11 @@ func (p *Plan) generatePlanAccordingToConfig(states statemanager.States, cfg *co
 		state := p.smgr.GetState(tool.Name)
 		if state == nil {
 			p.Changes = append(p.Changes, &Change{
-				Tool:       &tool,
+				Tool:       tool.DeepCopy(),
 				ActionName: statemanager.ActionInstall,
 				Action:     pluginengine.Install,
 			})
+			log.Printf("added a change: %s -> %s", tool.Name, statemanager.ActionInstall)
 			continue
 		}
 
@@ -58,14 +59,19 @@ func (p *Plan) generatePlanAccordingToConfig(states statemanager.States, cfg *co
 				ActionName: statemanager.ActionInstall,
 				Action:     pluginengine.Install,
 			})
+			log.Printf("added a change: %s -> %s", tool.Name, statemanager.ActionInstall)
 		case statemanager.StatusFailed:
 			p.Changes = append(p.Changes, &Change{
 				Tool:       &tool,
 				ActionName: statemanager.ActionReinstall,
 				Action:     pluginengine.Reinstall,
 			})
+			log.Printf("added a change: %s -> %s", tool.Name, statemanager.ActionReinstall)
 		}
 		delete(states, tool.Name)
+	}
+	for _, c := range p.Changes{
+		log.Printf("=== %s -> %s ===", c.Tool.Name, c.ActionName)
 	}
 }
 
@@ -81,5 +87,6 @@ func (p *Plan) removeNoLongerNeededToolsFromPlan(states statemanager.States) {
 			ActionName: statemanager.ActionUninstall,
 			Action:     pluginengine.Uninstall,
 		})
+		log.Printf("added a change: %s -> %s", state.Name, statemanager.ActionUninstall)
 	}
 }

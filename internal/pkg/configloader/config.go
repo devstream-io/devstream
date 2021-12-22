@@ -20,6 +20,18 @@ type Tool struct {
 	Options map[string]interface{} `yaml:"options"`
 }
 
+func (t *Tool) DeepCopy() *Tool {
+	var retTool = Tool{
+		Name:    t.Name,
+		Version: t.Version,
+		Options: map[string]interface{}{},
+	}
+	for k, v := range t.Options {
+		retTool.Options[k] = v
+	}
+	return &retTool
+}
+
 // LoadConf reads an input file as a Config struct.
 func LoadConf(fname string) *Config {
 	f, err := ioutil.ReadFile(fname)
