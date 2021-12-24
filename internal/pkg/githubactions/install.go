@@ -1,12 +1,5 @@
 package githubactions
 
-import (
-	"context"
-	"log"
-
-	"github.com/mitchellh/mapstructure"
-)
-
 var workflows = []Workflow{
 	{"pr builder by DevStream", "pr-builder.yml", prBuilder},
 	{"master builder by DevStream", "master-builder.yml", masterBuilder},
@@ -14,24 +7,17 @@ var workflows = []Workflow{
 
 // Install sets up GitHub Actions workflows.
 func Install(options *map[string]interface{}) (bool, error) {
-	ctx := context.Background()
-
-	var opt Options
-	err := mapstructure.Decode(*options, &opt)
+	githubActions, err := NewGithubActions(options)
 	if err != nil {
-		log.Fatalln(err)
+		return false, err
 	}
 
 	for _, pipeline := range workflows {
-		_, errCreate := createFile(&Param{
-			&ctx,
-			getGitHubClient(&ctx),
-			&opt,
-			&pipeline,
-		})
-		if errCreate != nil {
-			return false, errCreate
+		err := githubActions.AddWorkflow(pipeline)
+		if err != nil {
+			return false, err
 		}
 	}
+
 	return true, nil
 }
