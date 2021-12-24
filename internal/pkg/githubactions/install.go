@@ -1,10 +1,5 @@
 package githubactions
 
-var workflows = []Workflow{
-	{"pr builder by DevStream", "pr-builder.yml", prBuilder},
-	{"master builder by DevStream", "master-builder.yml", masterBuilder},
-}
-
 // Install sets up GitHub Actions workflows.
 func Install(options *map[string]interface{}) (bool, error) {
 	githubActions, err := NewGithubActions(options)
@@ -12,7 +7,10 @@ func Install(options *map[string]interface{}) (bool, error) {
 		return false, err
 	}
 
-	for _, pipeline := range workflows {
+	language := githubActions.GetLanguage()
+	ws := defaultWorkflows.GetWorkflowByNameVersionTypeString(language.String())
+
+	for _, pipeline := range ws {
 		err := githubActions.AddWorkflow(pipeline)
 		if err != nil {
 			return false, err
