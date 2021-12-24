@@ -12,20 +12,6 @@ import (
 	"golang.org/x/oauth2"
 )
 
-// Options is the struct for configurations of the githubactions plugin.
-type Options struct {
-	Owner    string
-	Repo     string
-	Language *Language
-	Branch   string
-}
-
-// Language is the struct containing details of a programming language specified in the GitHub Actions workflow.
-type Language struct {
-	Name    string
-	Version string
-}
-
 type GithubActions struct {
 	ctx     context.Context
 	client  *github.Client
@@ -53,13 +39,17 @@ func NewGithubActions(options *map[string]interface{}) (*GithubActions, error) {
 	}, nil
 }
 
-func (ga *GithubActions) AddWorkflow(workflow Workflow) error {
+func (ga *GithubActions) GetLanguage() *Language {
+	return ga.options.Language
+}
+
+func (ga *GithubActions) AddWorkflow(workflow *Workflow) error {
 	exists, err := ga.fileExists(workflow.workflowFileName)
 	if err != nil {
 		return err
 	}
 	if exists {
-		log.Printf("github actions workflow %s already exists\n", workflow.workflowFileName)
+		log.Printf("github actions Workflow %s already exists\n", workflow.workflowFileName)
 		return nil
 	}
 
@@ -71,7 +61,7 @@ func (ga *GithubActions) AddWorkflow(workflow Workflow) error {
 		Branch:  github.String("master"),
 	}
 
-	log.Printf("creating github actions workflow %s...\n", workflow.workflowFileName)
+	log.Printf("creating github actions Workflow %s...\n", workflow.workflowFileName)
 	_, _, err = ga.client.Repositories.CreateFile(
 		ga.ctx,
 		ga.options.Owner,
@@ -83,17 +73,17 @@ func (ga *GithubActions) AddWorkflow(workflow Workflow) error {
 		log.Println(err)
 		return err
 	}
-	log.Printf("github actions workflow %s created\n", workflow.workflowFileName)
+	log.Printf("github actions Workflow %s created\n", workflow.workflowFileName)
 	return nil
 }
 
-func (ga *GithubActions) DeleteWorkflow(workflow Workflow) error {
+func (ga *GithubActions) DeleteWorkflow(workflow *Workflow) error {
 	exists, err := ga.fileExists(workflow.workflowFileName)
 	if err != nil {
 		return err
 	}
 	if !exists {
-		log.Printf("github actions workflow %s already removed\n", workflow.workflowFileName)
+		log.Printf("github actions Workflow %s already removed\n", workflow.workflowFileName)
 		return nil
 	}
 
@@ -105,7 +95,7 @@ func (ga *GithubActions) DeleteWorkflow(workflow Workflow) error {
 		Branch:  github.String("master"),
 	}
 
-	log.Printf("deleting github actions workflow %s...\n", workflow.workflowFileName)
+	log.Printf("deleting github actions Workflow %s...\n", workflow.workflowFileName)
 	_, _, err = ga.client.Repositories.DeleteFile(
 		ga.ctx,
 		ga.options.Owner,
@@ -117,12 +107,8 @@ func (ga *GithubActions) DeleteWorkflow(workflow Workflow) error {
 		log.Println(err)
 		return err
 	}
-	log.Printf("github actions workflow %s removed\n", workflow.workflowFileName)
+	log.Printf("github actions Workflow %s removed\n", workflow.workflowFileName)
 	return nil
-}
-
-func generateGitHubWorkflowFileByName(f string) string {
-	return fmt.Sprintf(".github/workflows/%s", f)
 }
 
 func (ga *GithubActions) fileExists(filename string) (bool, error) {
@@ -146,6 +132,10 @@ func (ga *GithubActions) fileExists(filename string) (bool, error) {
 		return true, nil
 	}
 	return false, fmt.Errorf("got some error is not expected")
+}
+
+func generateGitHubWorkflowFileByName(f string) string {
+	return fmt.Sprintf(".github/workflows/%s", f)
 }
 
 func getGitHubToken() string {

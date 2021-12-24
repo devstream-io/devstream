@@ -7,7 +7,10 @@ func Reinstall(options *map[string]interface{}) (bool, error) {
 		return false, err
 	}
 
-	for _, pipeline := range workflows {
+	language := githubActions.GetLanguage()
+	ws := defaultWorkflows.GetWorkflowByNameVersionTypeString(language.String())
+
+	for _, pipeline := range ws {
 		err := githubActions.DeleteWorkflow(pipeline)
 		if err != nil {
 			return false, err
