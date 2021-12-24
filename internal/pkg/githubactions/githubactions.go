@@ -58,7 +58,7 @@ func (ga *GithubActions) AddWorkflow(workflow *Workflow) error {
 	opts := &github.RepositoryContentFileOptions{
 		Message: github.String(workflow.commitMessage),
 		Content: []byte(workflow.workflowContent),
-		Branch:  github.String("master"),
+		Branch:  github.String(ga.options.Branch),
 	}
 
 	log.Printf("creating github actions Workflow %s...\n", workflow.workflowFileName)
@@ -92,7 +92,7 @@ func (ga *GithubActions) DeleteWorkflow(workflow *Workflow) error {
 	opts := &github.RepositoryContentFileOptions{
 		Message: github.String(workflow.commitMessage),
 		Content: []byte(workflow.workflowContent),
-		Branch:  github.String("master"),
+		Branch:  github.String(ga.options.Branch),
 	}
 
 	log.Printf("deleting github actions Workflow %s...\n", workflow.workflowFileName)
