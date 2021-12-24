@@ -33,12 +33,24 @@ func writeContentToTmpFile(file string, content string, param *Param) {
 	}
 }
 
-func kubectlApply(file string) {
+func kubectlApply(file string) (bool, error) {
 	cmd := exec.Command("kubectl", "apply", "-f", file)
 	stdout, err := cmd.Output()
 	if err != nil {
 		fmt.Println(err.Error())
-		return
+		return false, err
 	}
-	log.Println(string(strings.TrimSuffix(string(stdout), "\n")))
+	log.Println(strings.TrimSuffix(string(stdout), "\n"))
+	return true, nil
+}
+
+func kubectlDelete(file string) (bool, error) {
+	cmd := exec.Command("kubectl", "delete", "-f", file)
+	stdout, err := cmd.Output()
+	if err != nil {
+		fmt.Println(err.Error())
+		return false, err
+	}
+	log.Println(strings.TrimSuffix(string(stdout), "\n"))
+	return true, nil
 }

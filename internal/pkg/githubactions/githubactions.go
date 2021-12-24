@@ -60,10 +60,10 @@ func fileExists(params *Param) bool {
 
 }
 
-func createFile(params *Param) {
+func createFile(params *Param) (bool, error) {
 	if fileExists(params) {
 		log.Printf("github actions workflow %s already exists\n", params.workflow.workflowFileName)
-		return
+		return true, nil
 	}
 
 	// Note: the file needs to be absent from the repository as you are not
@@ -83,8 +83,39 @@ func createFile(params *Param) {
 		opts)
 
 	if err != nil {
-		fmt.Println(err.Error())
-		return
+		log.Println(err.Error())
+		return false, err
 	}
 	log.Printf("github actions workflow %s created\n", params.workflow.workflowFileName)
+	return true, nil
+}
+
+func removeFile(params *Param) (bool, error) {
+	if !fileExists(params) {
+		log.Printf("github actions workflow %s already removed\n", params.workflow.workflowFileName)
+		return true, nil
+	}
+
+	// Note: the file needs to be absent from the repository as you are not
+	// specifying a SHA reference here.
+	opts := &github.RepositoryContentFileOptions{
+		Message: github.String(params.workflow.commitMessage),
+		Content: []byte(params.workflow.workflowContent),
+		Branch:  github.String("master"),
+	}
+
+	log.Printf("deleting github actions workflow %s...\n", params.workflow.workflowFileName)
+	_, _, err := params.client.Repositories.DeleteFile(
+		*params.ctx,
+		params.options.Owner,
+		params.options.Repo,
+		generateGitHubWorkflowFileByName(params.workflow.workflowFileName),
+		opts)
+
+	if err != nil {
+		log.Println(err.Error())
+		return false, err
+	}
+	log.Printf("github actions workflow %s removed\n", params.workflow.workflowFileName)
+	return true, nil
 }
