@@ -27,7 +27,7 @@ func setup(t *testing.T) {
 func newState() *State {
 	lastOperation := &Operation{
 		Action: ActionInstall,
-		Time:   time.Now().Format("2006-01-02_15:04:05"),
+		Time:   time.Now().Format(time.RFC3339),
 		Metadata: map[string]interface{}{
 			"key": "value",
 		},
@@ -56,8 +56,8 @@ func TestManager_Write(t *testing.T) {
 	setup(t)
 	stateA := newState()
 	smgr.AddState(stateA)
-	if err := smgr.Write(smgr.GetStates().Format()); err != nil {
-		t.Error("Failed to Write States to disk")
+	if err := smgr.Write(smgr.GetStatesMap().Format()); err != nil {
+		t.Error("Failed to Write StatesMap to disk")
 	}
 }
 
@@ -68,15 +68,15 @@ func TestManager_Read(t *testing.T) {
 		t.Error(err)
 	}
 
-	var oldSs = make(States)
+	var oldSs = NewStatesMap()
 	if err := yaml.Unmarshal(data, oldSs); err != nil {
 		t.Error(err)
 	}
 
-	smgr.SetStates(oldSs)
-	newSs := smgr.GetStates()
-	if !reflect.DeepEqual(smgr.GetStates(), oldSs) {
-		t.Errorf("expect old States == new States, but got oldSs: %v and newSs: %v", oldSs, newSs)
+	smgr.SetStatesMap(oldSs)
+	newSs := smgr.GetStatesMap()
+	if !reflect.DeepEqual(smgr.GetStatesMap(), oldSs) {
+		t.Errorf("expect old StatesMap == new StatesMap, but got oldSs: %v and newSs: %v", oldSs, newSs)
 	}
 
 	teardown()

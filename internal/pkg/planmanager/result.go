@@ -8,11 +8,11 @@ import (
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
 )
 
-// handleResult is used to Write the latest States to Backend.
+// handleResult is used to Write the latest StatesMap to Backend.
 func (p *Plan) handleResult(change *Change) error {
 	if change.ActionName == statemanager.ActionUninstall {
 		p.smgr.DeleteState(change.Tool.Name)
-		return p.smgr.Write(p.smgr.GetStates().Format())
+		return p.smgr.Write(p.smgr.GetStatesMap().Format())
 	}
 
 	var state = statemanager.NewState(
@@ -35,11 +35,11 @@ func (p *Plan) handleResult(change *Change) error {
 	}
 
 	p.smgr.AddState(state)
-	return p.smgr.Write(p.smgr.GetStates().Format())
+	return p.smgr.Write(p.smgr.GetStatesMap().Format())
 }
 
 // generatePlanAccordingToConfig is to filter all the Tools in cfg that need some actions
-func (p *Plan) generatePlanAccordingToConfig(states statemanager.States, cfg *configloader.Config) {
+func (p *Plan) generatePlanAccordingToConfig(statesMap *statemanager.StatesMap, cfg *configloader.Config) {
 	for _, tool := range cfg.Tools {
 		state := p.smgr.GetState(tool.Name)
 		if state == nil {
@@ -68,22 +68,23 @@ func (p *Plan) generatePlanAccordingToConfig(states statemanager.States, cfg *co
 			})
 			log.Printf("added a change: %s -> %s", tool.Name, statemanager.ActionReinstall)
 		}
-		delete(states, tool.Name)
+		statesMap.Delete(tool.Name)
 	}
 }
 
 // Some tools have already been installed, but they are no longer needed, so they need to be uninstalled
-func (p *Plan) removeNoLongerNeededToolsFromPlan(states statemanager.States) {
-	for _, state := range states {
+func (p *Plan) removeNoLongerNeededToolsFromPlan(statesMap *statemanager.StatesMap) {
+	statesMap.Range(func(key, value interface{}) bool {
 		p.Changes = append(p.Changes, &Change{
 			Tool: &configloader.Tool{
-				Name:    state.Name,
-				Version: state.Version,
-				Options: state.LastOperation.Metadata,
+				Name:    key.(string),
+				Version: value.(*statemanager.State).Version,
+				Options: value.(*statemanager.State).LastOperation.Metadata,
 			},
 			ActionName: statemanager.ActionUninstall,
 			Action:     pluginengine.Uninstall,
 		})
-		log.Printf("added a change: %s -> %s", state.Name, statemanager.ActionUninstall)
-	}
+		log.Printf("added a change: %s -> %s", key.(string), statemanager.ActionUninstall)
+		return true
+	})
 }

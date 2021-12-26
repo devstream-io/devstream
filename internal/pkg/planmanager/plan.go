@@ -25,22 +25,26 @@ func NewPlan(smgr statemanager.Manager, cfg *configloader.Config) *Plan {
 
 	data, err := smgr.Read()
 	if err == nil {
-		states := make(statemanager.States)
-		if err := yaml.Unmarshal(data, states); err != nil {
-			log.Printf("devstream.states format error")
+		statesMap := statemanager.NewStatesMap()
+		tmpMap := make(map[string]*statemanager.State)
+		if err := yaml.Unmarshal(data, tmpMap); err != nil {
+			log.Printf("devstream.statesMap format error")
 			return &Plan{Changes: make([]*Change, 0)}
 		}
-		smgr.SetStates(states)
-		log.Println("succeeded to initialize States")
+		for k, v := range tmpMap {
+			statesMap.Store(k, v)
+		}
+		smgr.SetStatesMap(statesMap)
+		log.Println("succeeded to initialize StatesMap")
 	} else {
-		log.Printf("failed to initialize States. Error: (%s). try to initialize the States", err)
+		log.Printf("failed to initialize StatesMap. Error: (%s). try to initialize the StatesMap", err)
 	}
 
 	plan := &Plan{
 		Changes: make([]*Change, 0),
 		smgr:    smgr,
 	}
-	tmpStates := smgr.GetStates().DeepCopy()
+	tmpStates := smgr.GetStatesMap().DeepCopy()
 
 	plan.generatePlanAccordingToConfig(tmpStates, cfg)
 	plan.removeNoLongerNeededToolsFromPlan(tmpStates)
