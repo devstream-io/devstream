@@ -14,14 +14,15 @@ func Uninstall(options *map[string]interface{}) (bool, error) {
 		return false, err
 	}
 
-	file := "./app.yaml"
-	_, errDel := kubectlDelete(file)
-	if errDel != nil {
-		return false, errDel
+	file := defaultYamlPath
+	err = kubectlAction(ActionDelete, file)
+	if err != nil {
+		return false, err
 	}
-	errRemove := os.Remove(file)
-	if errRemove != nil {
-		return false, errRemove
+
+	if err = os.Remove(file); err != nil {
+		return false, err
 	}
+
 	return true, nil
 }
