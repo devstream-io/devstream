@@ -1,41 +1,65 @@
-# DevStream Architecture Summary
+# DevStream Architecture Overview
 
-This document summarizes the main components of DevStream and how data and requests flow between these components.
+This document summarizes the main components of DevStream and how data flows between these components.
 
-## DevStream Request Flow
+## 0. Data Flow
 
 The following diagram shows an approximation of how DevStream executes a user command:
 
 ![DevStream Architecture Diagram](./images/architecture-overview.png)
 
-## CLI (The `devstream` Package)
+There are three major parts:
 
-For simplicity, the CLI is named `dtm` instead of the full name DevStream.
+- CLI: handles user input, commands and parameters
+- plugin engine: achieves the core functionalities by calling other modules (config loader, plugins manager, etc.)
+- plugins: implements the actual install/uninstall for a certain DevOps tool
 
-Every time a user runs the `dtm` program, the execution transfers immediately into one of the "command" implementations in the [`devstream`](https://github.com/merico-dev/stream/tree/main/cmd/devstream) package, in which folder all commands' definitions reside. Then, each command calls the corresponding package under [`internal/pkg`](https://github.com/merico-dev/stream/tree/main/internal/pkg).
+## 1. CLI (The `devstream` Package)
 
-The flow illustrated above applies to the main DevStream commands like `dtm install`, `dtm uninstall` (_TODO_), and `dtm reinstall` (_TODO_). For these commands, the role of the command is to parse all the config, load each plugin, and call the [predefined interface](https://github.com/merico-dev/stream/blob/main/internal/pkg/plugin/plugin.go#L12).
+Note: for simplicity, the CLI is named `dtm`(DevOps Tool Manager) instead of the full name DevStream.
 
-## Configuration Loader
+Every time a user runs the `dtm` program, the execution transfers immediately into one of the "command" implementations in the [`devstream`](https://github.com/merico-dev/stream/tree/main/cmd/devstream) package, in which folder all commands' definitions reside.
 
-Model types in package [`config`](https://github.com/merico-dev/stream/blob/main/internal/pkg/config/config.go) represent the top-level configuration structure.
+Then, each command calls the plugin engine package under [`internal/pkg`](https://github.com/merico-dev/stream/tree/main/internal/pkg/pluginengine).
 
-## State Manager
+The plugin engine calls the config loader first to read the local YAML config file into a struct.
 
-_TODO_
+Then it calls the plugin manager to download the required plugins.
 
-## Plugin Engine
+After that, the plugin engine calls the state manager and plan manager to create a plan. At last, the plugin engine asks the plan manager to execute the plan and the state manager to update the state. During the execution of the plan, the plugin engine loads each plugin (*.so file) and calls the predefined interface.
+
+## 2. Plugin Engine
 
 The plugin engine has various responsibilities:
 
-- making sure the required plugins (according to the config) are present (_TODO_)
-- generate a plan according to the state (_TODO_)
+- making sure the required plugins (according to the config) are present 
+- generate a plan according to the state
 - execute the plan by loading each plugin and running the desired operation
 
-_Note: there will be a rework of the engine to generate and execute a plan according to the state manager, which hasn't been implemented yet._
+It achieves the goal by calling the following modules:
 
-## Plugins
+### 2.1 Configuration Loader
+
+Model types in package [`config`](https://github.com/merico-dev/stream/blob/main/internal/pkg/configloader/config.go#L12) represent the top-level configuration structure.
+
+### 2.2 Plugin Manager
+
+The [plugin manager](https://github.com/merico-dev/stream/blob/main/internal/pkg/pluginmanager/manager.go) is in charge of downloading necessary plugins according to the configuration.
+
+If a plugin with the desired version already exists locally, it will not download it again.
+
+### 2.3 State Manager
+
+The [state manager](https://github.com/merico-dev/stream/blob/main/internal/pkg/statemanager/manager.go) manages the "state", i.e., what has been done successfully and what not.
+
+### 2.4 Plan Manager
+
+The [plan manager](https://github.com/merico-dev/stream/blob/main/internal/pkg/planmanager/plan.go) creates a plan according to the state and the config and executes the plan.
+
+## 3. Plugins
 
 A _plugin_ implements the aforementioned predefined interfaces.
 
-It executes operations like install, reinstall (_TODO_), uninstall (_TODO_), and stores state (_TODO_).
+It executes operations like install, uninstall, and stores state.
+
+To develop a new plugin, see [creating_a_plugin.md](https://github.com/merico-dev/stream/blob/main/docs/creating_a_plugin.md).
