@@ -1,6 +1,6 @@
-package githubactions
+package golang
 
-var prBuilder = `
+var PrBuilder = `
 name: PR Builder
 on:
   pull_request:
@@ -20,7 +20,7 @@ jobs:
       run: go build -v ./...
 `
 
-var masterBuilder = `
+var MasterBuilder = `
 name: Master Builder
 on:
   push:

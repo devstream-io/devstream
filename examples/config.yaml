@@ -9,6 +9,26 @@ tools:
       name: go
       version: "1.17"
     branch: master
+##for python config
+#- name: githubactions
+#  version: 0.0.1
+#  options:
+#    owner: lfbdev
+#    repo: spotipy
+#    language:
+#      name: python
+#      version: "3"
+#    branch: master
+##for nodejs config
+#- name: githubactions
+#  version: 0.0.1
+#  options:
+#    owner: lfbdev
+#    repo: lowdb
+#    language:
+#      name: nodejs
+#      version: "9"
+#    branch: main
 - name: argocd
   version: 0.0.1
   options:
