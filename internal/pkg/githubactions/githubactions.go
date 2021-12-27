@@ -44,11 +44,11 @@ func (ga *GithubActions) GetLanguage() *Language {
 }
 
 func (ga *GithubActions) AddWorkflow(workflow *Workflow) error {
-	exists, err := ga.fileExists(workflow.workflowFileName)
+	sha, err := ga.getFileSHA(workflow.workflowFileName)
 	if err != nil {
 		return err
 	}
-	if exists {
+	if sha != "" {
 		log.Printf("github actions Workflow %s already exists\n", workflow.workflowFileName)
 		return nil
 	}
@@ -70,7 +70,6 @@ func (ga *GithubActions) AddWorkflow(workflow *Workflow) error {
 		opts)
 
 	if err != nil {
-		log.Println(err)
 		return err
 	}
 	log.Printf("github actions Workflow %s created\n", workflow.workflowFileName)
@@ -78,11 +77,11 @@ func (ga *GithubActions) AddWorkflow(workflow *Workflow) error {
 }
 
 func (ga *GithubActions) DeleteWorkflow(workflow *Workflow) error {
-	exists, err := ga.fileExists(workflow.workflowFileName)
+	sha, err := ga.getFileSHA(workflow.workflowFileName)
 	if err != nil {
 		return err
 	}
-	if !exists {
+	if sha == "" {
 		log.Printf("github actions Workflow %s already removed\n", workflow.workflowFileName)
 		return nil
 	}
@@ -104,34 +103,33 @@ func (ga *GithubActions) DeleteWorkflow(workflow *Workflow) error {
 		opts)
 
 	if err != nil {
-		log.Println(err)
 		return err
 	}
 	log.Printf("github actions Workflow %s removed\n", workflow.workflowFileName)
 	return nil
 }
 
-func (ga *GithubActions) fileExists(filename string) (bool, error) {
-	_, _, resp, err := ga.client.Repositories.GetContents(
+func (ga *GithubActions) getFileSHA(filename string) (string, error) {
+	content, _, resp, err := ga.client.Repositories.GetContents(
 		ga.ctx,
 		ga.options.Owner,
 		ga.options.Repo,
 		generateGitHubWorkflowFileByName(filename),
 		&github.RepositoryContentGetOptions{},
 	)
-
+	
 	if resp.StatusCode == http.StatusNotFound {
-		return false, nil
+		return "", nil
 	}
 
 	if err != nil {
-		return false, err
+		return "", err
 	}
 
 	if resp.StatusCode == http.StatusOK {
-		return true, nil
+		return *content.SHA, nil
 	}
-	return false, fmt.Errorf("got some error is not expected")
+	return "", fmt.Errorf("got some error is not expected")
 }
 
 func generateGitHubWorkflowFileByName(f string) string {
@@ -141,7 +139,7 @@ func generateGitHubWorkflowFileByName(f string) string {
 func getGitHubToken() string {
 	err := viper.BindEnv("github_token")
 	if err != nil {
-		log.Println("ENV var GITHUB_TOKEN is needed")
+		log.Printf("bind ENV var GITHUB_TOKEN failed: %s", err)
 		return ""
 	}
 
@@ -151,7 +149,7 @@ func getGitHubToken() string {
 func getGitHubClient(ctx context.Context) (*github.Client, error) {
 	token := getGitHubToken()
 	if token == "" {
-		return nil, fmt.Errorf("failed to initialize GitHub token")
+		return nil, fmt.Errorf("failed to initialize GitHub token. More info - https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token")
 	}
 	ts := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: token},
