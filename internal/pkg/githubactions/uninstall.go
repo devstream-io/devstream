@@ -1,5 +1,7 @@
 package githubactions
 
+import "log"
+
 // Uninstall remove GitHub Actions workflows.
 func Uninstall(options *map[string]interface{}) (bool, error) {
 	githubActions, err := NewGithubActions(options)
@@ -8,6 +10,7 @@ func Uninstall(options *map[string]interface{}) (bool, error) {
 	}
 
 	language := githubActions.GetLanguage()
+	log.Printf("language is %s", language.String())
 	ws := defaultWorkflows.GetWorkflowByNameVersionTypeString(language.String())
 
 	for _, pipeline := range ws {

@@ -1,5 +1,9 @@
 package githubactions
 
+import (
+	"log"
+)
+
 // Reinstall remove and set up GitHub Actions workflows.
 func Reinstall(options *map[string]interface{}) (bool, error) {
 	githubActions, err := NewGithubActions(options)
@@ -8,6 +12,7 @@ func Reinstall(options *map[string]interface{}) (bool, error) {
 	}
 
 	language := githubActions.GetLanguage()
+	log.Printf("language is %s", language.String())
 	ws := defaultWorkflows.GetWorkflowByNameVersionTypeString(language.String())
 
 	for _, pipeline := range ws {

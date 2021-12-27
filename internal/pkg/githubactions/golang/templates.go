@@ -4,7 +4,7 @@ var PrBuilder = `
 name: PR Builder
 on:
   pull_request:
-    branches: [ master ]
+    branches: [ master, main ]
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -14,17 +14,17 @@ jobs:
       uses: actions/setup-go@v2
       with:
         go-version: 1.17
-    - name: Test
-      run: go test -v ./...
     - name: Build
       run: go build -v ./...
+    - name: Test
+      run: go test -v ./...
 `
 
 var MasterBuilder = `
 name: Master Builder
 on:
   push:
-    branches: [ master ]
+    branches: [ master, main ]
 jobs:
   test:
     name: Test
