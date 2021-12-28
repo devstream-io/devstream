@@ -117,7 +117,7 @@ func (ga *GithubActions) getFileSHA(filename string) (string, error) {
 		generateGitHubWorkflowFileByName(filename),
 		&github.RepositoryContentGetOptions{},
 	)
-	
+
 	if resp.StatusCode == http.StatusNotFound {
 		return "", nil
 	}

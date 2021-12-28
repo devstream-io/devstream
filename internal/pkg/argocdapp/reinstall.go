@@ -6,7 +6,7 @@ import (
 	"github.com/mitchellh/mapstructure"
 )
 
-// Reinstall an ArgoCD app .
+// Reinstall an ArgoCD app
 func Reinstall(options *map[string]interface{}) (bool, error) {
 	var param Param
 	err := mapstructure.Decode(*options, &param)
@@ -14,25 +14,28 @@ func Reinstall(options *map[string]interface{}) (bool, error) {
 		return false, err
 	}
 
-	file := "./app.yaml"
+	file := defaultYamlPath
 
 	//delete resource
-	_, errDel := kubectlDelete(file)
-	if errDel != nil {
-		return false, errDel
+	err = kubectlAction(ActionDelete, file)
+	if err != nil {
+		return false, err
 	}
 
 	//remove app.yaml file
-	errRemove := os.Remove(file)
-	if errRemove != nil {
+	if err = os.Remove(file); err != nil {
 		return false, err
 	}
 
 	//recreate  app.yaml file
-	writeContentToTmpFile(file, appTemplate, &param)
-	_, errApply := kubectlApply(file)
-	if errApply != nil {
-		return false, errApply
+	err = writeContentToTmpFile(file, appTemplate, &param)
+	if err != nil {
+		return false, err
+	}
+
+	err = kubectlAction(ActionApply, file)
+	if err != nil {
+		return false, err
 	}
 
 	return true, nil

@@ -1,6 +1,6 @@
 package githubactions
 
-import "fmt"
+import "log"
 
 // Install sets up GitHub Actions workflows.
 func Install(options *map[string]interface{}) (bool, error) {
@@ -10,10 +10,8 @@ func Install(options *map[string]interface{}) (bool, error) {
 	}
 
 	language := githubActions.GetLanguage()
+	log.Printf("language is %s", language.String())
 	ws := defaultWorkflows.GetWorkflowByNameVersionTypeString(language.String())
-
-	fmt.Println("lang is ", language.Name, language.Version, language.String())
-	fmt.Println("ws is ", ws)
 
 	for _, pipeline := range ws {
 		err := githubActions.AddWorkflow(pipeline)
