@@ -70,7 +70,6 @@ func (ga *GithubActions) AddWorkflow(workflow *Workflow) error {
 		opts)
 
 	if err != nil {
-		log.Println(err)
 		return err
 	}
 	log.Printf("github actions Workflow %s created\n", workflow.workflowFileName)
@@ -104,7 +103,6 @@ func (ga *GithubActions) DeleteWorkflow(workflow *Workflow) error {
 		opts)
 
 	if err != nil {
-		log.Println(err)
 		return err
 	}
 	log.Printf("github actions Workflow %s removed\n", workflow.workflowFileName)
@@ -120,12 +118,12 @@ func (ga *GithubActions) fileExists(filename string) (bool, error) {
 		&github.RepositoryContentGetOptions{},
 	)
 
-	if resp.StatusCode == http.StatusNotFound {
-		return false, nil
-	}
-
 	if err != nil {
 		return false, err
+	}
+
+	if resp.StatusCode == http.StatusNotFound {
+		return false, nil
 	}
 
 	if resp.StatusCode == http.StatusOK {
@@ -141,7 +139,7 @@ func generateGitHubWorkflowFileByName(f string) string {
 func getGitHubToken() string {
 	err := viper.BindEnv("github_token")
 	if err != nil {
-		log.Println("ENV var GITHUB_TOKEN is needed")
+		log.Printf("bind ENV var GITHUB_TOKEN failed: %s", err)
 		return ""
 	}
 
@@ -151,7 +149,7 @@ func getGitHubToken() string {
 func getGitHubClient(ctx context.Context) (*github.Client, error) {
 	token := getGitHubToken()
 	if token == "" {
-		return nil, fmt.Errorf("failed to initialize GitHub token")
+		return nil, fmt.Errorf("failed to initialize GitHub token. More info - https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token")
 	}
 	ts := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: token},
