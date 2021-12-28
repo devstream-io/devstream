@@ -109,6 +109,7 @@ func (ga *GithubActions) DeleteWorkflow(workflow *Workflow) error {
 	return nil
 }
 
+// getFileSHA: if file exists, return SHA, or return "", for file check and file delete
 func (ga *GithubActions) getFileSHA(filename string) (string, error) {
 	content, _, resp, err := ga.client.Repositories.GetContents(
 		ga.ctx,
