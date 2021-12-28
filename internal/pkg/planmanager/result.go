@@ -10,7 +10,8 @@ import (
 
 // handleResult is used to Write the latest States to Backend.
 func (p *Plan) handleResult(change *Change) error {
-	if change.ActionName == statemanager.ActionUninstall {
+	// uninstall succeeded
+	if change.ActionName == statemanager.ActionUninstall && change.Result.Succeeded {
 		p.smgr.DeleteState(change.Tool.Name)
 		return p.smgr.Write(p.smgr.GetStates().Format())
 	}
@@ -27,9 +28,15 @@ func (p *Plan) handleResult(change *Change) error {
 		},
 	)
 
-	if change.Result.Error != nil {
+	// uninstall failed
+	if change.ActionName == statemanager.ActionUninstall && !change.Result.Succeeded {
+		state.Status = statemanager.StatusInstalled
+		log.Printf("=== plugin %s process failed ===", change.Tool.Name)
+		// install or reinstall failed
+	} else if !change.Result.Succeeded {
 		state.Status = statemanager.StatusFailed
 		log.Printf("=== plugin %s process failed ===", change.Tool.Name)
+		// install or reinstall succeeded
 	} else {
 		log.Printf("=== plugin %s process done ===", change.Tool.Name)
 	}

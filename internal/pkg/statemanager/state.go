@@ -13,9 +13,11 @@ type ComponentAction string
 const (
 	// We should delete the state of the "uninstalled" tool at States.
 	StatusUninstalled ComponentStatus = "uninstalled"
+	// We use StatusInstalled when a plugin is installed but we don't know its status is "running" or "failed".
+	// For example: We try to uninstall a plugin but failed for some reason.
 	StatusInstalled   ComponentStatus = "installed"
 	StatusRunning     ComponentStatus = "running"
-	StatusFailed      ComponentStatus = "Failed"
+	StatusFailed      ComponentStatus = "failed"
 )
 
 const (
