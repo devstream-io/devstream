@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/google/go-github/v40/github"
 	"github.com/mitchellh/mapstructure"
@@ -109,10 +110,10 @@ func (ga *GithubActions) DeleteWorkflow(workflow *Workflow) error {
 	return nil
 }
 
-// getFileSHA: 
-// 1. if file exists without error: return (string(SHA), nil)
-// 2. if some errors occurred: return ("", err)
-// 3. if file not found without error: return ("", nil)
+// getFileSHA will try to collect the SHA hash value of the file, then return it. the return values will be:
+// 1. If file exists without error -> string(SHA), nil
+// 2. If some errors occurred -> return "", err
+// 3. If file not found without error -> return "", nil
 func (ga *GithubActions) getFileSHA(filename string) (string, error) {
 	content, _, resp, err := ga.client.Repositories.GetContents(
 		ga.ctx,
@@ -122,14 +123,17 @@ func (ga *GithubActions) getFileSHA(filename string) (string, error) {
 		&github.RepositoryContentGetOptions{},
 	)
 
+	// error reason is not 404
+	if err != nil && !strings.Contains(err.Error(), "404") {
+		return "", err
+	}
+
+	// error reason is 404
 	if resp.StatusCode == http.StatusNotFound {
 		return "", nil
 	}
 
-	if err != nil {
-		return "", err
-	}
-
+	// no error occurred
 	if resp.StatusCode == http.StatusOK {
 		return *content.SHA, nil
 	}
