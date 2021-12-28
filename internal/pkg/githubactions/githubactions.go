@@ -44,11 +44,11 @@ func (ga *GithubActions) GetLanguage() *Language {
 }
 
 func (ga *GithubActions) AddWorkflow(workflow *Workflow) error {
-	exists, err := ga.fileExists(workflow.workflowFileName)
+	sha, err := ga.getFileSHA(workflow.workflowFileName)
 	if err != nil {
 		return err
 	}
-	if exists {
+	if sha != "" {
 		log.Printf("github actions Workflow %s already exists\n", workflow.workflowFileName)
 		return nil
 	}
@@ -77,11 +77,11 @@ func (ga *GithubActions) AddWorkflow(workflow *Workflow) error {
 }
 
 func (ga *GithubActions) DeleteWorkflow(workflow *Workflow) error {
-	exists, err := ga.fileExists(workflow.workflowFileName)
+	sha, err := ga.getFileSHA(workflow.workflowFileName)
 	if err != nil {
 		return err
 	}
-	if !exists {
+	if sha == "" {
 		log.Printf("github actions Workflow %s already removed\n", workflow.workflowFileName)
 		return nil
 	}
@@ -109,8 +109,12 @@ func (ga *GithubActions) DeleteWorkflow(workflow *Workflow) error {
 	return nil
 }
 
-func (ga *GithubActions) fileExists(filename string) (bool, error) {
-	_, _, resp, err := ga.client.Repositories.GetContents(
+// getFileSHA: 
+// 1. if file exists without error: return (string(SHA), nil)
+// 2. if some errors occurred: return ("", err)
+// 3. if file not found without error: return ("", nil)
+func (ga *GithubActions) getFileSHA(filename string) (string, error) {
+	content, _, resp, err := ga.client.Repositories.GetContents(
 		ga.ctx,
 		ga.options.Owner,
 		ga.options.Repo,
@@ -118,18 +122,18 @@ func (ga *GithubActions) fileExists(filename string) (bool, error) {
 		&github.RepositoryContentGetOptions{},
 	)
 
-	if err != nil {
-		return false, err
+	if resp.StatusCode == http.StatusNotFound {
+		return "", nil
 	}
 
-	if resp.StatusCode == http.StatusNotFound {
-		return false, nil
+	if err != nil {
+		return "", err
 	}
 
 	if resp.StatusCode == http.StatusOK {
-		return true, nil
+		return *content.SHA, nil
 	}
-	return false, fmt.Errorf("got some error is not expected")
+	return "", fmt.Errorf("got some error is not expected")
 }
 
 func generateGitHubWorkflowFileByName(f string) string {
