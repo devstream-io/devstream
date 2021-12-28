@@ -9,15 +9,34 @@ import (
 	"text/template"
 )
 
-func writeContentToTmpFile(file string, content string, param *Param) {
+const defaultYamlPath = "./app.yaml"
+
+const (
+	ActionApply  Action = "apply"
+	ActionDelete Action = "delete"
+)
+
+type Action string
+
+func kubectlAction(action Action, filename string) error {
+	cmd := exec.Command("kubectl", string(action), "-f", filename)
+	stdout, err := cmd.Output()
+	if err != nil {
+		return err
+	}
+	log.Println(strings.TrimSuffix(string(stdout), "\n"))
+	return nil
+}
+
+func writeContentToTmpFile(file string, content string, param *Param) error {
 	t, err := template.New("app").Option("missingkey=error").Parse(content)
 	if err != nil {
-		log.Fatalf("Parse template: %s", err.Error())
+		return err
 	}
 
 	output, err := os.Create(file)
 	if err != nil {
-		log.Fatalf("Create outputFile: %s", err)
+		return err
 	}
 
 	err = t.Execute(output, param)
@@ -26,31 +45,10 @@ func writeContentToTmpFile(file string, content string, param *Param) {
 			msg := err.Error()
 			start := strings.Index(msg, "<")
 			end := strings.Index(msg, ">")
-			log.Fatalf("plugin argocdapp needs options%s but it's missing from the config file", msg[start+1:end])
+			return fmt.Errorf("plugin argocdapp needs options%s but it's missing from the config file", msg[start+1:end])
 		} else {
-			log.Fatalf("Executing tpl: %s", err)
+			return fmt.Errorf("executing tpl: %s", err)
 		}
 	}
-}
-
-func kubectlApply(file string) (bool, error) {
-	cmd := exec.Command("kubectl", "apply", "-f", file)
-	stdout, err := cmd.Output()
-	if err != nil {
-		fmt.Println(err.Error())
-		return false, err
-	}
-	log.Println(strings.TrimSuffix(string(stdout), "\n"))
-	return true, nil
-}
-
-func kubectlDelete(file string) (bool, error) {
-	cmd := exec.Command("kubectl", "delete", "-f", file)
-	stdout, err := cmd.Output()
-	if err != nil {
-		fmt.Println(err.Error())
-		return false, err
-	}
-	log.Println(strings.TrimSuffix(string(stdout), "\n"))
-	return true, nil
+	return nil
 }
