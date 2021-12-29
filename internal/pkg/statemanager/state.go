@@ -15,9 +15,9 @@ const (
 	StatusUninstalled ComponentStatus = "uninstalled"
 	// We use StatusInstalled when a plugin is installed but we don't know its status is "running" or "failed".
 	// For example: We try to uninstall a plugin but failed for some reason.
-	StatusInstalled   ComponentStatus = "installed"
-	StatusRunning     ComponentStatus = "running"
-	StatusFailed      ComponentStatus = "failed"
+	StatusInstalled ComponentStatus = "installed"
+	StatusRunning   ComponentStatus = "running"
+	StatusFailed    ComponentStatus = "failed"
 )
 
 const (

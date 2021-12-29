@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 
 	"github.com/merico-dev/stream/internal/pkg/githubactions"
 )
@@ -31,5 +31,5 @@ func (p Plugin) Uninstall(options *map[string]interface{}) (bool, error) {
 var DevStreamPlugin Plugin
 
 func main() {
-	fmt.Printf("%T: %s is a plugin for DevStream. Use it with DevStream.\n", NAME, DevStreamPlugin)
+	log.Printf("%T: %s is a plugin for DevStream. Use it with DevStream.\n", NAME, DevStreamPlugin)
 }

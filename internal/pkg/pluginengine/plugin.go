@@ -46,20 +46,17 @@ func loadPlugin(tool *configloader.Tool) (DevStreamPlugin, error) {
 	mod := fmt.Sprintf("plugins/%s_%s.so", tool.Name, tool.Version)
 	plug, err := plugin.Open(mod)
 	if err != nil {
-		fmt.Println(err)
 		return nil, err
 	}
 
 	var devStreamPlugin DevStreamPlugin
 	symDevStreamPlugin, err := plug.Lookup("DevStreamPlugin")
 	if err != nil {
-		fmt.Println(err)
 		return nil, err
 	}
 
 	devStreamPlugin, ok := symDevStreamPlugin.(DevStreamPlugin)
 	if !ok {
-		fmt.Println(err)
 		return nil, err
 	}
 
