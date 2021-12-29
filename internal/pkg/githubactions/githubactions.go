@@ -91,7 +91,7 @@ func (ga *GithubActions) DeleteWorkflow(workflow *Workflow) error {
 	// specifying a SHA reference here.
 	opts := &github.RepositoryContentFileOptions{
 		Message: github.String(workflow.commitMessage),
-		Content: []byte(workflow.workflowContent),
+		SHA:     github.String(sha),
 		Branch:  github.String(ga.options.Branch),
 	}
 
