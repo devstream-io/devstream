@@ -23,4 +23,5 @@ func initCMDFunc(cmd *cobra.Command, args []string) {
 		log.Printf("Error: %s", err)
 		return
 	}
+	log.Println("=== initialize finished ===")
 }
