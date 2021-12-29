@@ -12,7 +12,7 @@ build-core: fmt vet ## Build dtm core only, locally.
 	go mod tidy
 	go build -trimpath -gcflags="all=-N -l" -o dtm ./cmd/devstream/
 
-fmt: ## Run go fmt against code.
+fmt: ## Run 'go fmt' & goimports against code.
 	go get golang.org/x/tools/cmd/goimports
 	goimports -local="github.com/merico-dev/stream" -d -w cmd
 	goimports -local="github.com/merico-dev/stream" -d -w internal
