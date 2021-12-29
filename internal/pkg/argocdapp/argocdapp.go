@@ -20,11 +20,15 @@ type Action string
 
 func kubectlAction(action Action, filename string) error {
 	cmd := exec.Command("kubectl", string(action), "-f", filename)
-	stdout, err := cmd.Output()
+	cOut, err := cmd.CombinedOutput()
 	if err != nil {
+		// TODO(Daniel Hu): Handle the Error below:
+		// Error from server (NotFound): error when deleting "./app.yaml": applications.argoproj.io "hello" not found
+		log.Printf("failed to exec: < %s >", cmd.String())
+		log.Printf("exec logs: < %s >. got error: %s", string(cOut), err)
 		return err
 	}
-	log.Println(strings.TrimSuffix(string(stdout), "\n"))
+	log.Println(strings.TrimSuffix(string(cOut), "\n"))
 	return nil
 }
 

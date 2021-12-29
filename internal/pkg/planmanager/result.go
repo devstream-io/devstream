@@ -31,11 +31,11 @@ func (p *Plan) handleResult(change *Change) error {
 	// uninstall failed
 	if change.ActionName == statemanager.ActionUninstall && !change.Result.Succeeded {
 		state.Status = statemanager.StatusInstalled
-		log.Printf("=== plugin %s process failed ===", change.Tool.Name)
+		log.Printf("=== plugin %s uninstall failed ===", change.Tool.Name)
 		// install or reinstall failed
 	} else if !change.Result.Succeeded {
 		state.Status = statemanager.StatusFailed
-		log.Printf("=== plugin %s process failed ===", change.Tool.Name)
+		log.Printf("=== plugin %s (re)install failed ===", change.Tool.Name)
 		// install or reinstall succeeded
 	} else {
 		log.Printf("=== plugin %s process done ===", change.Tool.Name)

@@ -42,16 +42,16 @@ func installCMDFunc(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	errs := p.Execute()
-	if len(errs) == 0 {
+	errsMap := p.Execute()
+	if len(errsMap) == 0 {
 		log.Println("=== all plugins' Install/Uninstall/Reinstall process are succeeded ===")
 		log.Println("=== END ===")
 		return
 	}
 
 	log.Println("=== some errors occurred during plugins Install/Uninstall/Reinstall process ===")
-	for _, err := range errs {
-		log.Println(err)
+	for k, err := range errsMap {
+		log.Printf("%s -> %s", k, err)
 	}
 	log.Println("=== END ===")
 }
