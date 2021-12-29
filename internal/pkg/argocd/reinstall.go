@@ -11,7 +11,7 @@ func Reinstall(options *map[string]interface{}) (bool, error) {
 	}
 
 	log.Println("uninstalling argocd helm chart")
-	if err := acd.uninstallHelmChart(); err != nil {
+	if err := acd.uninstallHelmChartIgnoreReleaseNotFound(); err != nil {
 		return false, err
 	}
 

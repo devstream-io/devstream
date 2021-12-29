@@ -3,6 +3,7 @@ package argocd
 import (
 	"context"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/mitchellh/mapstructure"
@@ -73,6 +74,22 @@ func (a *ArgoCD) installOrUpgradeHelmChart() error {
 	}
 
 	return nil
+}
+
+// uninstallHelmChartIgnoreReleaseNotFound will return nil when:
+// 1. The argocd helm chart release uninstall successful
+// 2. The argocd helm chart release not found
+func (a *ArgoCD) uninstallHelmChartIgnoreReleaseNotFound() error {
+	err := a.uninstallHelmChart()
+	// Log: < Release not loaded: argocd: release: not found >
+	if err == nil {
+		return nil
+	}
+	if strings.Contains(err.Error(), "not found") {
+		log.Println("argocd release is not found, maybe it has been deleted")
+		return nil
+	}
+	return err
 }
 
 func (a *ArgoCD) uninstallHelmChart() error {
