@@ -1,6 +1,7 @@
 package planmanager
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -50,8 +51,8 @@ func NewPlan(smgr statemanager.Manager, cfg *configloader.Config) *Plan {
 
 // Execute will execute all changes included in the Plan and record results.
 // All errors will be return.
-func (p *Plan) Execute() []error {
-	errors := make([]error, 0)
+func (p *Plan) Execute() map[string]error {
+	errorsMap := make(map[string]error)
 	log.Printf("changes count: %d", len(p.Changes))
 	for i, c := range p.Changes {
 		log.Printf("processing progress: %d/%d", i+1, len(p.Changes))
@@ -60,7 +61,8 @@ func (p *Plan) Execute() []error {
 		// It involves dependency management.
 		succeeded, err := c.Action(c.Tool)
 		if err != nil {
-			errors = append(errors, err)
+			key := fmt.Sprintf("%s-%s", c.Tool.Name, c.ActionName)
+			errorsMap[key] = err
 		}
 
 		c.Result = &ChangeResult{
@@ -71,8 +73,8 @@ func (p *Plan) Execute() []error {
 
 		err = p.handleResult(c)
 		if err != nil {
-			errors = append(errors, err)
+			errorsMap["handle-result"] = err
 		}
 	}
-	return errors
+	return errorsMap
 }

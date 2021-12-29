@@ -18,7 +18,7 @@ func Install(options *map[string]interface{}) (bool, error) {
 		return false, err
 	}
 
-	err = kubectlAction(ActionDelete, file)
+	err = kubectlAction(ActionApply, file)
 	if err != nil {
 		return false, err
 	}
