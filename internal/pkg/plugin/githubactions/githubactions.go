@@ -144,18 +144,8 @@ func generateGitHubWorkflowFileByName(f string) string {
 	return fmt.Sprintf(".github/workflows/%s", f)
 }
 
-func getGitHubToken() string {
-	err := viper.BindEnv("github_token")
-	if err != nil {
-		log.Printf("bind ENV var GITHUB_TOKEN failed: %s", err)
-		return ""
-	}
-
-	return viper.GetString("github_token")
-}
-
 func getGitHubClient(ctx context.Context) (*github.Client, error) {
-	token := getGitHubToken()
+	token := viper.GetString("github_token")
 	if token == "" {
 		return nil, fmt.Errorf("failed to initialize GitHub token. More info - https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token")
 	}

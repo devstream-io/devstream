@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"plugin"
 
+	"github.com/spf13/viper"
+
 	"github.com/merico-dev/stream/internal/pkg/configloader"
 )
 
@@ -43,7 +45,12 @@ func Uninstall(tool *configloader.Tool) (bool, error) {
 }
 
 func loadPlugin(tool *configloader.Tool) (DevStreamPlugin, error) {
-	mod := fmt.Sprintf("plugins/%s_%s.so", tool.Name, tool.Version)
+	pluginDir := viper.GetString("plugin-dir")
+	if pluginDir == "" {
+		return nil, fmt.Errorf("plugin-dir is \"\"")
+	}
+
+	mod := fmt.Sprintf("%s/%s_%s.so", pluginDir, tool.Name, tool.Version)
 	plug, err := plugin.Open(mod)
 	if err != nil {
 		return nil, err

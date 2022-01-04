@@ -2,10 +2,12 @@ package local
 
 import (
 	"io/ioutil"
+	"os"
+	"path/filepath"
 	"sync"
 )
 
-const DefaultStateFile = "devstream.state"
+const DefaultStateFile = ".devstream/devstream.state"
 
 // Local is a default implement for backend.Backend
 type Local struct {
@@ -41,6 +43,10 @@ func (l *Local) Read() ([]byte, error) {
 func (l *Local) Write(data []byte) error {
 	l.mu.Lock()
 	defer l.mu.Unlock()
+
+	if err := os.MkdirAll(filepath.Dir(l.filename), 0755); err != nil {
+		return err
+	}
 
 	if err := ioutil.WriteFile(l.filename, data, 0644); err != nil {
 		return err

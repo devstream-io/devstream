@@ -4,10 +4,12 @@ import (
 	"log"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var (
 	configFile string
+	pluginDir  string
 
 	rootCMD = &cobra.Command{
 		Use:   "dtm",
@@ -17,11 +19,24 @@ var (
 )
 
 func init() {
+	cobra.OnInitialize(initConfig)
+
 	rootCMD.PersistentFlags().StringVarP(&configFile, "config-file", "f", "config.yaml", "config file")
+	rootCMD.PersistentFlags().StringVarP(&pluginDir, "plugin-dir", "p", ".devstream/plugins", "plugins directory")
 
 	rootCMD.AddCommand(versionCMD)
 	rootCMD.AddCommand(initCMD)
 	rootCMD.AddCommand(installCMD)
+}
+
+func initConfig() {
+	viper.AutomaticEnv()
+	if err := viper.BindEnv("github_token"); err != nil {
+		log.Fatal(err)
+	}
+	if err := viper.BindPFlags(rootCMD.Flags()); err != nil {
+		log.Fatal(err)
+	}
 }
 
 func main() {
