@@ -21,7 +21,7 @@ func init() {
 
 	rootCMD.AddCommand(versionCMD)
 	rootCMD.AddCommand(initCMD)
-	rootCMD.AddCommand(installCMD)
+	rootCMD.AddCommand(applyCMD)
 }
 
 func main() {
