@@ -1,18 +1,16 @@
 package statemanager
 
 import (
-	"sync"
-
 	"github.com/merico-dev/stream/internal/pkg/backend"
 )
 
-// Manager knows how to manage the States.
+// Manager knows how to manage the StatesMap.
 type Manager interface {
 	backend.Backend
-	// GetStates is used for generate data to Write to the backend.
-	GetStates() States
-	// SetStates is used for initialize States by the data Read from the backend.
-	SetStates(states States)
+	// GetStatesMap is used for generate data to Write to the backend.
+	GetStatesMap() *StatesMap
+	// SetStatesMap is used for initialize StatesMap by the data Read from the backend.
+	SetStatesMap(states *StatesMap)
 
 	GetState(name string) *State
 	AddState(state *State)
@@ -22,55 +20,41 @@ type Manager interface {
 
 // manager is the default implement with Manager
 type manager struct {
-	mu sync.Mutex
 	backend.Backend
-	states States
+	statesMap *StatesMap
 }
 
 func NewManager(backend backend.Backend) Manager {
 	return &manager{
-		Backend: backend,
-		states:  make(States),
+		Backend:   backend,
+		statesMap: NewStatesMap(),
 	}
 }
 
-func (m *manager) GetStates() States {
-	return m.states
+func (m *manager) GetStatesMap() *StatesMap {
+	return m.statesMap
 }
 
-func (m *manager) SetStates(states States) {
-	m.states = states
+func (m *manager) SetStatesMap(statesMap *StatesMap) {
+	m.statesMap = statesMap
 }
 
 func (m *manager) GetState(name string) *State {
-	m.mu.Lock()
-	defer m.mu.Unlock()
-
-	if s, exist := m.states[name]; exist {
-		return s
+	m.statesMap.Load(name)
+	if s, exist := m.statesMap.Load(name); exist {
+		return s.(*State)
 	}
 	return nil
 }
 
 func (m *manager) AddState(state *State) {
-	m.mu.Lock()
-	defer m.mu.Unlock()
-
-	//if _, exist := m.states[state.Name]; exist {
-	//	return fmt.Errorf("statemanager already exists")
-	//}
-	m.states[state.Name] = state
-	//return nil
+	m.statesMap.Store(state.Name, state)
 }
 
 func (m *manager) UpdateState(state *State) {
-	m.mu.Lock()
-	m.states[state.Name] = state
-	m.mu.Unlock()
+	m.statesMap.Store(state.Name, state)
 }
 
 func (m *manager) DeleteState(name string) {
-	m.mu.Lock()
-	delete(m.states, name)
-	m.mu.Unlock()
+	m.statesMap.Delete(name)
 }

@@ -1,17 +1,10 @@
 package statemanager
 
-import (
-	"bytes"
-	"log"
-
-	"gopkg.in/yaml.v3"
-)
-
 type ComponentStatus string
 type ComponentAction string
 
 const (
-	// We should delete the state of the "uninstalled" tool at States.
+	// We should delete the state of the "uninstalled" tool at StatesMap.
 	StatusUninstalled ComponentStatus = "uninstalled"
 	// We use StatusInstalled when a plugin is installed but we don't know its status is "running" or "failed".
 	// For example: We try to uninstall a plugin but failed for some reason.
@@ -25,8 +18,6 @@ const (
 	ActionReinstall ComponentAction = "reinstall"
 	ActionUninstall ComponentAction = "uninstall"
 )
-
-type States map[string]*State
 
 // State is the single component's state.
 type State struct {
@@ -51,30 +42,4 @@ func NewState(name, version string, deps []string, status ComponentStatus, lastO
 		Status:        status,
 		LastOperation: lastOpr,
 	}
-}
-
-func (s States) DeepCopy() States {
-	if s == nil {
-		return nil
-	}
-	newStates := make(States)
-	for k, v := range s {
-		newStates[k] = v
-	}
-	return newStates
-}
-
-func (s States) Format() []byte {
-	if len(s) == 0 {
-		return []byte{}
-	}
-	var buf bytes.Buffer
-	encoder := yaml.NewEncoder(&buf)
-	encoder.SetIndent(2)
-	err := encoder.Encode(&s)
-	if err != nil {
-		log.Println(err)
-		return nil
-	}
-	return buf.Bytes()
 }
