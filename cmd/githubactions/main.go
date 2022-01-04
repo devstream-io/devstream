@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/merico-dev/stream/internal/pkg/githubactions"
+	"github.com/merico-dev/stream/internal/pkg/plugin/githubactions"
 )
 
 // NAME is the name of this DevStream plugin.
