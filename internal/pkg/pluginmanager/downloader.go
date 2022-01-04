@@ -29,8 +29,8 @@ func NewDownloadClient() *DownloadClient {
 	return &dClient
 }
 
-func (dc *DownloadClient) download(pluginsDir, pluginFilename, version string) error {
-	dc.SetOutputDirectory(pluginsDir)
+func (dc *DownloadClient) download(pluginDir, pluginFilename, version string) error {
+	dc.SetOutputDirectory(pluginDir)
 
 	downloadURL := fmt.Sprintf("%s/v%s/%s", defaultReleaseUrl, version, pluginFilename)
 	tmpName := pluginFilename + ".tmp"
@@ -40,11 +40,10 @@ func (dc *DownloadClient) download(pluginsDir, pluginFilename, version string) e
 		SetHeader("Accept", "application/octet-stream").
 		Get(downloadURL)
 	if err != nil {
-		log.Print(err)
 		return err
 	}
 	if response.StatusCode() != http.StatusOK {
-		if err = os.Remove(filepath.Join(pluginsDir, tmpName)); err != nil {
+		if err = os.Remove(filepath.Join(pluginDir, tmpName)); err != nil {
 			return err
 		}
 		err = fmt.Errorf("downloading plugin %s from %s status code %d", pluginFilename, downloadURL, response.StatusCode())
@@ -54,8 +53,8 @@ func (dc *DownloadClient) download(pluginsDir, pluginFilename, version string) e
 
 	// rename, tmp file to real file
 	err = os.Rename(
-		filepath.Join(pluginsDir, tmpName),
-		filepath.Join(pluginsDir, pluginFilename))
+		filepath.Join(pluginDir, tmpName),
+		filepath.Join(pluginDir, pluginFilename))
 	if err != nil {
 		log.Print(err)
 		return err
