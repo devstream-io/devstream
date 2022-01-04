@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/merico-dev/stream/internal/pkg/argocdapp"
+	"github.com/merico-dev/stream/internal/pkg/plugin/argocdapp"
 )
 
 // NAME is the name of this DevStream plugin.

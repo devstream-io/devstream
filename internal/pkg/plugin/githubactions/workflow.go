@@ -3,9 +3,9 @@ package githubactions
 import (
 	"fmt"
 
-	"github.com/merico-dev/stream/internal/pkg/githubactions/golang"
-	"github.com/merico-dev/stream/internal/pkg/githubactions/nodejs"
-	"github.com/merico-dev/stream/internal/pkg/githubactions/python"
+	"github.com/merico-dev/stream/internal/pkg/plugin/githubactions/golang"
+	"github.com/merico-dev/stream/internal/pkg/plugin/githubactions/nodejs"
+	"github.com/merico-dev/stream/internal/pkg/plugin/githubactions/python"
 )
 
 const (
