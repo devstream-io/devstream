@@ -12,14 +12,15 @@ import (
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
 )
 
-var installCMD = &cobra.Command{
-	Use:   "install",
-	Short: "Install tools defined in config file",
-	Long:  `Install tools defined in config file`,
-	Run:   installCMDFunc,
+var applyCMD = &cobra.Command{
+	Use:   "apply",
+	Short: "Create or update DevOps tools according to DevStream configuration file",
+	Long: `Create or update DevOps tools according to DevStream configuration file. 
+DevStream will generate and execute a new plan based on the config file and the state file by default.`,
+	Run: applyCMDFunc,
 }
 
-func installCMDFunc(cmd *cobra.Command, args []string) {
+func applyCMDFunc(cmd *cobra.Command, args []string) {
 	conf := configloader.LoadConf(configFile)
 
 	// init before installation
