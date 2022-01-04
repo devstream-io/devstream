@@ -13,9 +13,9 @@ import (
 )
 
 var installCMD = &cobra.Command{
-	Use:   "install",
-	Short: "Install tools defined in config file",
-	Long:  `Install tools defined in config file`,
+	Use:   "apply",
+	Short: "Creates or updates DevOps tools according to DevStream configuration file.",
+	Long:  `Creates or updates DevOps tools according to DevStream configuration file. DevStream will generate and execute a new plan based on the config file and the state file by default.`,
 	Run:   installCMDFunc,
 }
 
