@@ -14,7 +14,7 @@ func DownloadPlugins(conf *configloader.Config) error {
 	pluginsDir := filepath.Join(".", "plugins")
 
 	// download all plugins that don't exist locally
-	dc := NewDownloadClient()
+	dc := NewPbDownloadClient()
 
 	for _, tool := range conf.Tools {
 		pluginFileName := configloader.GetPluginFileName(&tool)
