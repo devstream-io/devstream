@@ -26,8 +26,9 @@ func DownloadPlugins(conf *configloader.Config) error {
 				return err
 			}
 			log.Printf("=== plugin: %s, version: %s downloaded ===", pluginFileName, tool.Version)
+			continue
 		}
-		log.Printf("=== plugin: %s, version: %s is exists ===", pluginFileName, tool.Version)
+		log.Printf("=== plugin: %s, version: %s exists ===", pluginFileName, tool.Version)
 	}
 
 	return nil
