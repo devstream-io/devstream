@@ -2,10 +2,6 @@ package configloader
 
 import (
 	"fmt"
-	"io/ioutil"
-	"log"
-
-	"gopkg.in/yaml.v3"
 )
 
 // Config is the struct for loading DevStream configuration YAML files.
@@ -30,23 +26,6 @@ func (t *Tool) DeepCopy() *Tool {
 		retTool.Options[k] = v
 	}
 	return &retTool
-}
-
-// LoadConf reads an input file as a Config struct.
-func LoadConf(fname string) *Config {
-	f, err := ioutil.ReadFile(fname)
-	if err != nil {
-		log.Print("It seems you don't have a config file. Maybe you have it in another directory and forgot to use the -f option? See dtm -h for more help.")
-		log.Fatal(err)
-	}
-
-	conf := Config{}
-	err = yaml.Unmarshal(f, &conf)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return &conf
 }
 
 // GetPluginFileName creates the file name based on the tool's name and version

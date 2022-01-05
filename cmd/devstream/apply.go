@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 
 	"github.com/merico-dev/stream/internal/pkg/backend"
 	"github.com/merico-dev/stream/internal/pkg/configloader"
@@ -21,10 +22,16 @@ DevStream will generate and execute a new plan based on the config file and the 
 }
 
 func applyCMDFunc(cmd *cobra.Command, args []string) {
-	conf := configloader.LoadConf(configFile)
+	var tools = make([]configloader.Tool, 0)
+	if err := viper.UnmarshalKey("tools", &tools); err != nil {
+		log.Fatal(err)
+	}
+	var cfg = &configloader.Config{
+		Tools: tools,
+	}
 
 	// init before installation
-	err := pluginmanager.DownloadPlugins(conf)
+	err := pluginmanager.DownloadPlugins(cfg)
 	if err != nil {
 		log.Printf("Error: %s", err)
 		return
@@ -37,7 +44,7 @@ func applyCMDFunc(cmd *cobra.Command, args []string) {
 	}
 	smgr := statemanager.NewManager(b)
 
-	p := planmanager.NewPlan(smgr, conf)
+	p := planmanager.NewPlan(smgr, cfg)
 	if len(p.Changes) == 0 {
 		log.Println("it is nothing to do here")
 		return
