@@ -4,13 +4,8 @@ import (
 	"log"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 
-	"github.com/merico-dev/stream/internal/pkg/backend"
-	"github.com/merico-dev/stream/internal/pkg/configloader"
-	"github.com/merico-dev/stream/internal/pkg/planmanager"
-	"github.com/merico-dev/stream/internal/pkg/pluginmanager"
-	"github.com/merico-dev/stream/internal/pkg/statemanager"
+	"github.com/merico-dev/stream/internal/pkg/pluginengine"
 )
 
 var applyCMD = &cobra.Command{
@@ -22,44 +17,7 @@ DevStream will generate and execute a new plan based on the config file and the 
 }
 
 func applyCMDFunc(cmd *cobra.Command, args []string) {
-	var tools = make([]configloader.Tool, 0)
-	if err := viper.UnmarshalKey("tools", &tools); err != nil {
+	if err := pluginengine.Do(pluginengine.Apply); err != nil {
 		log.Fatal(err)
 	}
-	var cfg = &configloader.Config{
-		Tools: tools,
-	}
-
-	// init before installation
-	err := pluginmanager.DownloadPlugins(cfg)
-	if err != nil {
-		log.Printf("Error: %s", err)
-		return
-	}
-
-	// use default local backend for now.
-	b, err := backend.GetBackend("local")
-	if err != nil {
-		log.Fatal(err)
-	}
-	smgr := statemanager.NewManager(b)
-
-	p := planmanager.NewPlan(smgr, cfg)
-	if len(p.Changes) == 0 {
-		log.Println("it is nothing to do here")
-		return
-	}
-
-	errsMap := p.Execute()
-	if len(errsMap) == 0 {
-		log.Println("=== all plugins Install/Uninstall/Reinstall process succeeded ===")
-		log.Println("=== END ===")
-		return
-	}
-
-	log.Println("=== some errors occurred during plugins Install/Uninstall/Reinstall process ===")
-	for k, err := range errsMap {
-		log.Printf("%s -> %s", k, err)
-	}
-	log.Println("=== END ===")
 }

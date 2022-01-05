@@ -1,4 +1,4 @@
-package pluginengine
+package engine
 
 import (
 	"fmt"

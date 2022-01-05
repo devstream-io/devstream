@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/merico-dev/stream/internal/pkg/configloader"
-	"github.com/merico-dev/stream/internal/pkg/pluginengine"
+	"github.com/merico-dev/stream/internal/pkg/pluginengine/engine"
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
 )
 
@@ -53,7 +53,7 @@ func (p *Plan) generatePlanAccordingToConfig(statesMap *statemanager.StatesMap, 
 			p.Changes = append(p.Changes, &Change{
 				Tool:       tool.DeepCopy(),
 				ActionName: statemanager.ActionInstall,
-				Action:     pluginengine.Install,
+				Action:     engine.Install,
 			})
 			log.Printf("added a change: %s -> %s", tool.Name, statemanager.ActionInstall)
 			continue
@@ -64,14 +64,14 @@ func (p *Plan) generatePlanAccordingToConfig(statesMap *statemanager.StatesMap, 
 			p.Changes = append(p.Changes, &Change{
 				Tool:       tool.DeepCopy(),
 				ActionName: statemanager.ActionInstall,
-				Action:     pluginengine.Install,
+				Action:     engine.Install,
 			})
 			log.Printf("added a change: %s -> %s", tool.Name, statemanager.ActionInstall)
 		case statemanager.StatusFailed:
 			p.Changes = append(p.Changes, &Change{
 				Tool:       tool.DeepCopy(),
 				ActionName: statemanager.ActionReinstall,
-				Action:     pluginengine.Reinstall,
+				Action:     engine.Reinstall,
 			})
 			log.Printf("added a change: %s -> %s", tool.Name, statemanager.ActionReinstall)
 		}
@@ -89,7 +89,7 @@ func (p *Plan) removeNoLongerNeededToolsFromPlan(statesMap *statemanager.StatesM
 				Options: value.(*statemanager.State).LastOperation.Metadata,
 			},
 			ActionName: statemanager.ActionUninstall,
-			Action:     pluginengine.Uninstall,
+			Action:     engine.Uninstall,
 		})
 		log.Printf("added a change: %s -> %s", key.(string), statemanager.ActionUninstall)
 		return true

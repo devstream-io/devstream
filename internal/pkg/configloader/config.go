@@ -2,6 +2,8 @@ package configloader
 
 import (
 	"fmt"
+
+	"github.com/spf13/viper"
 )
 
 // Config is the struct for loading DevStream configuration YAML files.
@@ -32,4 +34,15 @@ func (t *Tool) DeepCopy() *Tool {
 // If tool is {githubactions 0.0.1}, the generated name will be "githubactions_0.0.1.so"
 func GetPluginFileName(t *Tool) string {
 	return fmt.Sprintf("%s_%s.so", t.Name, t.Version)
+}
+
+func LoadConfig() (*Config, error) {
+	var tools = make([]Tool, 0)
+	if err := viper.UnmarshalKey("tools", &tools); err != nil {
+		return nil, err
+	}
+
+	return &Config{
+		Tools: tools,
+	}, nil
 }

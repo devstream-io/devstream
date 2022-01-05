@@ -6,7 +6,7 @@ import (
 )
 
 // ActionFunc is a function that Do Action with a plugin. like:
-// plugin.Install() / plugin.Reinstall() / plugin.Uninstall()
+// engine.Install() / engine.Reinstall() / engine.Uninstall()
 type ActionFunc func(tool *configloader.Tool) (bool, error)
 
 // Change is a wrapper with a single Tool and its Action should be execute.

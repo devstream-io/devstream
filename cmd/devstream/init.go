@@ -3,12 +3,9 @@ package main
 import (
 	"log"
 
-	"github.com/spf13/viper"
-
 	"github.com/spf13/cobra"
 
-	"github.com/merico-dev/stream/internal/pkg/configloader"
-	"github.com/merico-dev/stream/internal/pkg/pluginmanager"
+	"github.com/merico-dev/stream/internal/pkg/pluginengine"
 )
 
 var initCMD = &cobra.Command{
@@ -19,18 +16,7 @@ var initCMD = &cobra.Command{
 }
 
 func initCMDFunc(cmd *cobra.Command, args []string) {
-	var tools = make([]configloader.Tool, 0)
-	if err := viper.UnmarshalKey("tools", &tools); err != nil {
+	if err := pluginengine.Do(pluginengine.Init); err != nil {
 		log.Fatal(err)
 	}
-	var cfg = &configloader.Config{
-		Tools: tools,
-	}
-
-	err := pluginmanager.DownloadPlugins(cfg)
-	if err != nil {
-		log.Printf("Error: %s", err)
-		return
-	}
-	log.Println("=== initialize finished ===")
 }
