@@ -109,7 +109,7 @@ func createPathIfNotExists(path string) error {
 	if !os.IsNotExist(err) {
 		return err
 	}
-	if err := os.Mkdir(path, os.ModePerm); err != nil {
+	if err := os.MkdirAll(path, os.ModePerm); err != nil {
 		return err
 	}
 	return nil
