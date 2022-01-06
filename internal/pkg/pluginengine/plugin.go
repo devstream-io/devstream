@@ -1,11 +1,6 @@
 package pluginengine
 
 import (
-	"fmt"
-	"plugin"
-
-	"github.com/spf13/viper"
-
 	"github.com/merico-dev/stream/internal/pkg/configloader"
 )
 
@@ -42,30 +37,4 @@ func Uninstall(tool *configloader.Tool) (bool, error) {
 		return false, err
 	}
 	return p.Uninstall(&tool.Options)
-}
-
-func loadPlugin(tool *configloader.Tool) (DevStreamPlugin, error) {
-	pluginDir := viper.GetString("plugin-dir")
-	if pluginDir == "" {
-		return nil, fmt.Errorf("plugin-dir is \"\"")
-	}
-
-	mod := fmt.Sprintf("%s/%s_%s.so", pluginDir, tool.Name, tool.Version)
-	plug, err := plugin.Open(mod)
-	if err != nil {
-		return nil, err
-	}
-
-	var devStreamPlugin DevStreamPlugin
-	symDevStreamPlugin, err := plug.Lookup("DevStreamPlugin")
-	if err != nil {
-		return nil, err
-	}
-
-	devStreamPlugin, ok := symDevStreamPlugin.(DevStreamPlugin)
-	if !ok {
-		return nil, err
-	}
-
-	return devStreamPlugin, nil
 }

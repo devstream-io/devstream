@@ -44,7 +44,7 @@ func (pd *PbDownloadClient) download(pluginsDir, pluginFilename, version string)
 	}
 
 	if resp.StatusCode == http.StatusOK {
-		log.Printf("[INFO] downloading: [%s]**\n**", pluginFilename)
+		log.Printf("Downloading: [%s] ...", pluginFilename)
 
 		downFile, err := os.Create(filepath.Join(pluginsDir, tmpName))
 		if err != nil {
@@ -58,9 +58,9 @@ func (pd *PbDownloadClient) download(pluginsDir, pluginFilename, version string)
 			log.Print(errSetup)
 			return errSetup
 		}
-		log.Printf("[INFO] [%s] download success.", pluginFilename)
+		log.Printf("[%s] download succeeded.", pluginFilename)
 	} else {
-		log.Printf("[ERROR] [%s] download fail,%s.", pluginFilename, resp.Status)
+		log.Printf("[%s] download failed, %s.", pluginFilename, resp.Status)
 		if err = os.Remove(filepath.Join(pluginsDir, tmpName)); err != nil {
 			return err
 		}

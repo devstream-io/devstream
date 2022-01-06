@@ -6,6 +6,8 @@ kind: Application
 metadata:
   name: {{.App.Name}}
   namespace: {{.App.Namespace}}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
     namespace: {{.Destination.Namespace}}

@@ -1,13 +1,15 @@
 package local
 
 import (
+	"errors"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 	"sync"
 )
 
-const DefaultStateFile = ".devstream/devstream.state"
+const DefaultStateFile = "devstream.state"
 
 // Local is a default implement for backend.Backend
 type Local struct {
@@ -21,6 +23,15 @@ func NewLocal(filename string) *Local {
 	if filename == "" {
 		lFile = DefaultStateFile
 	}
+
+	if _, err := os.Stat(lFile); errors.Is(err, os.ErrNotExist) {
+		file, err := os.Create(lFile)
+		if err != nil {
+			log.Fatalf("Creating state file %s failed.", lFile)
+		}
+		defer file.Close()
+	}
+
 	return &Local{
 		filename: lFile,
 	}
