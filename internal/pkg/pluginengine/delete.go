@@ -10,7 +10,7 @@ import (
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
 )
 
-func Run(fname string) {
+func Delete(fname string) {
 	cfg := configloader.LoadConf(fname)
 
 	// init before installation
@@ -27,19 +27,19 @@ func Run(fname string) {
 	}
 	smgr := statemanager.NewManager(b)
 
-	p := planmanager.NewPlan(smgr, cfg)
+	p := planmanager.NewDeletePlan(smgr, cfg)
 	if len(p.Changes) == 0 {
-		log.Println("No changes done since last apply. There is nothing to do.")
+		log.Println("Nothing needs to be deleted. There is nothing to do.")
 		return
 	}
 
 	errsMap := execute(p)
 	if len(errsMap) == 0 {
-		log.Println("All plugins applied successfully.")
+		log.Println("All plugins deleted successfully.")
 		return
 	}
 
-	log.Println("Some errors occurred during plugins apply process.")
+	log.Println("Some errors occurred during plugins delete process.")
 	for k, err := range errsMap {
 		log.Printf("%s -> %s", k, err)
 	}

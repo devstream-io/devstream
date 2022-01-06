@@ -27,6 +27,7 @@ func init() {
 	rootCMD.AddCommand(versionCMD)
 	rootCMD.AddCommand(initCMD)
 	rootCMD.AddCommand(applyCMD)
+	rootCMD.AddCommand(deleteCMD)
 }
 
 func initConfig() {

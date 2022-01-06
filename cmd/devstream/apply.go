@@ -18,6 +18,6 @@ DevStream will generate and execute a new plan based on the config file and the 
 
 func applyCMDFunc(cmd *cobra.Command, args []string) {
 	log.Println("Apply started.")
-	pluginengine.Run(configFile)
+	pluginengine.Apply(configFile)
 	log.Println("Apply finished.")
 }

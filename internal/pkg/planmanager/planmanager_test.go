@@ -1,7 +1,9 @@
 package planmanager_test
 
 import (
-	. "github.com/onsi/ginkgo"
+	"os"
+
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
 	"github.com/merico-dev/stream/internal/pkg/backend"
@@ -21,6 +23,9 @@ var _ = Describe("Planmanager", func() {
 		Ω(err).ShouldNot(HaveOccurred())
 		smgr = statemanager.NewManager(b)
 		_, _ = GinkgoWriter.Write([]byte("new a statemanager"))
+		DeferCleanup(func() {
+			os.Remove("devstream.state")
+		})
 	})
 
 	Describe("Generating plans", func() {
