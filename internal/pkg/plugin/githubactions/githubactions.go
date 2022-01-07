@@ -50,7 +50,7 @@ func (ga *GithubActions) AddWorkflow(workflow *Workflow) error {
 		return err
 	}
 	if sha != "" {
-		log.Printf("github actions Workflow %s already exists\n", workflow.workflowFileName)
+		log.Printf("GitHub Actions workflow %s already exists.", workflow.workflowFileName)
 		return nil
 	}
 
@@ -62,7 +62,7 @@ func (ga *GithubActions) AddWorkflow(workflow *Workflow) error {
 		Branch:  github.String(ga.options.Branch),
 	}
 
-	log.Printf("creating github actions Workflow %s...\n", workflow.workflowFileName)
+	log.Printf("Creating GitHub Actions workflow %s ...", workflow.workflowFileName)
 	_, _, err = ga.client.Repositories.CreateFile(
 		ga.ctx,
 		ga.options.Owner,
@@ -73,7 +73,7 @@ func (ga *GithubActions) AddWorkflow(workflow *Workflow) error {
 	if err != nil {
 		return err
 	}
-	log.Printf("github actions Workflow %s created\n", workflow.workflowFileName)
+	log.Printf("Github Actions workflow %s created.", workflow.workflowFileName)
 	return nil
 }
 
@@ -83,7 +83,7 @@ func (ga *GithubActions) DeleteWorkflow(workflow *Workflow) error {
 		return err
 	}
 	if sha == "" {
-		log.Printf("github actions Workflow %s already removed\n", workflow.workflowFileName)
+		log.Printf("Github Actions workflow %s already removed.", workflow.workflowFileName)
 		return nil
 	}
 
@@ -95,7 +95,7 @@ func (ga *GithubActions) DeleteWorkflow(workflow *Workflow) error {
 		Branch:  github.String(ga.options.Branch),
 	}
 
-	log.Printf("deleting github actions Workflow %s...\n", workflow.workflowFileName)
+	log.Printf("Deleting GitHub Actions workflow %s ...", workflow.workflowFileName)
 	_, _, err = ga.client.Repositories.DeleteFile(
 		ga.ctx,
 		ga.options.Owner,
@@ -106,7 +106,7 @@ func (ga *GithubActions) DeleteWorkflow(workflow *Workflow) error {
 	if err != nil {
 		return err
 	}
-	log.Printf("github actions Workflow %s removed\n", workflow.workflowFileName)
+	log.Printf("GitHub Actions workflow %s removed.", workflow.workflowFileName)
 	return nil
 }
 

@@ -9,8 +9,8 @@ tools:
       name: go
       version: "1.17"
     branch: master
-##for python config
-#- name: githubactions
+# # for python config
+# - name: githubactions
 #  version: 0.0.1
 #  options:
 #    owner: lfbdev
@@ -19,8 +19,8 @@ tools:
 #      name: python
 #      version: "3"
 #    branch: master
-##for nodejs config
-#- name: githubactions
+# # for nodejs config
+# - name: githubactions
 #  version: 0.0.1
 #  options:
 #    owner: lfbdev

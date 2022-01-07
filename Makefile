@@ -3,9 +3,10 @@ help: ## Display this help.
 
 build: fmt vet ## Build dtm & plugins locally.
 	go mod tidy
-	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o plugins/githubactions_0.0.1.so ./cmd/githubactions/
-	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o plugins/argocd_0.0.1.so ./cmd/argocd/
-	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o plugins/argocdapp_0.0.1.so ./cmd/argocdapp/
+	mkdir -p .devstream
+	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/githubactions_0.0.1.so ./cmd/githubactions/
+	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/argocd_0.0.1.so ./cmd/argocd/
+	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/argocdapp_0.0.1.so ./cmd/argocdapp/
 	go build -trimpath -gcflags="all=-N -l" -o dtm ./cmd/devstream/
 
 build-core: fmt vet ## Build dtm core only, locally.
@@ -13,7 +14,7 @@ build-core: fmt vet ## Build dtm core only, locally.
 	go build -trimpath -gcflags="all=-N -l" -o dtm ./cmd/devstream/
 
 fmt: ## Run 'go fmt' & goimports against code.
-	go get golang.org/x/tools/cmd/goimports
+	go install golang.org/x/tools/cmd/goimports@latest
 	goimports -local="github.com/merico-dev/stream" -d -w cmd
 	goimports -local="github.com/merico-dev/stream" -d -w internal
 	go fmt ./...
