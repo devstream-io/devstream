@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/spf13/viper"
 
@@ -33,8 +34,33 @@ func DownloadPlugins(conf *configloader.Config) error {
 			}
 			continue
 		}
+		// check md5
+		if dup, _ := checkFileMD5(filepath.Join(pluginDir, pluginFileName), dc, pluginFileName, tool.Version); dup {
+			err := dc.download(pluginDir, pluginFileName, tool.Version)
+			if err != nil {
+				return err
+			}
+			continue
+		}
 		log.Printf("Plugin: %s already exists, no need to download.", pluginFileName)
+
 	}
 
 	return nil
+}
+
+func checkFileMD5(file string, dc *PbDownloadClient, pluginFileName string, version string) (bool, error) {
+	localmd5, err := LocalContentMD5(file)
+	if err != nil {
+		return false, err
+	}
+	remotemd5, err := dc.fetchContentMD5(pluginFileName, version)
+	if err != nil {
+		return false, err
+	}
+
+	if strings.Compare(localmd5, remotemd5) == 0 {
+		return true, nil
+	}
+	return false, nil
 }
