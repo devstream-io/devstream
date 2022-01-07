@@ -17,7 +17,7 @@ func NewDeletePlan(smgr statemanager.Manager, cfg *configloader.Config) *Plan {
 	}
 
 	data, err := smgr.Read()
-	// TODO: duplicated code; needs to be refactored.
+	// TODO(ironcore864): duplicated code; needs to be refactored.
 	if err == nil {
 		statesMap := statemanager.NewStatesMap()
 		tmpMap := make(map[string]*statemanager.State)
