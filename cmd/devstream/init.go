@@ -22,7 +22,7 @@ func initCMDFunc(cmd *cobra.Command, args []string) {
 	log.Println("Initialize started.")
 	err := pluginmanager.DownloadPlugins(cfg)
 	if err != nil {
-		log.Printf("Error: %s", err)
+		log.Printf("Error: %s.", err)
 		return
 	}
 
