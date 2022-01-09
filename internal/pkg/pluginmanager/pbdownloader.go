@@ -119,15 +119,17 @@ func createPathIfNotExists(path string) error {
 func (pd *PbDownloadClient) fetchContentMD5(pluginFilename, version string) (string, error) {
 	downloadURL := fmt.Sprintf("%s/v%s/%s", defaultReleaseUrl, version, pluginFilename)
 	pd.Timeout = time.Second * 60 * 60
+
 	resp, err := pd.Get(downloadURL)
 	if err != nil {
 		return "", err
 	}
-
+	if resp != nil {
+		defer resp.Body.Close()
+	}
 	if resp.StatusCode == http.StatusOK {
-		log.Printf("Downloading: [%s] ...", pluginFilename)
-		return resp.Header.Get("Content-MD5"), nil
 		log.Printf("[%s] check succeeded.", pluginFilename)
+		return resp.Header.Get("Content-MD5"), nil
 	} else {
 		log.Printf("[%s] check failed, %s.", pluginFilename, resp.Status)
 		return "", err

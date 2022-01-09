@@ -35,7 +35,14 @@ func DownloadPlugins(conf *configloader.Config) error {
 			continue
 		}
 		// check md5
-		if dup, _ := checkFileMD5(filepath.Join(pluginDir, pluginFileName), dc, pluginFileName, tool.Version); dup {
+		dup, err := checkFileMD5(filepath.Join(pluginDir, pluginFileName), dc, pluginFileName, tool.Version)
+		if err != nil {
+			return err
+		}
+
+		if !dup {
+			log.Printf("Plugin: %s changed and will be overrided.", pluginFileName)
+			os.Remove(filepath.Join(pluginDir, pluginFileName))
 			err := dc.download(pluginDir, pluginFileName, tool.Version)
 			if err != nil {
 				return err
