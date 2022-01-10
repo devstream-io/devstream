@@ -20,7 +20,8 @@ dtm
 .glide/
 
 # YAML for testings
-*.yaml
+config*.yaml
+app*.yaml
 
 # IDE
 .idea/
@@ -28,3 +29,6 @@ dtm
 # .devstream
 .devstream/
 devstream.state
+
+# e2e
+testbin/
