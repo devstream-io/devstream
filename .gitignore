@@ -28,6 +28,7 @@ app*.yaml
 
 # .devstream
 .devstream/
+devstream.state
 
 # e2e
 testbin/
