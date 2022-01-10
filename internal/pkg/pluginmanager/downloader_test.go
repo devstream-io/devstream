@@ -9,16 +9,15 @@ import (
 )
 
 func TestDownload(t *testing.T) {
+	os.Remove(filepath.Join(".", "argocdapp_0.0.1-rc1.so"))
 
-	os.Remove(filepath.Join(".", "argocdapp"))
+	c := NewDownloadClient()
+	err := c.download(".", "argocdapp_0.0.1-rc1.so", "0.0.1-rc1")
+	if err != nil {
+		t.Fatal("downloaded error")
+	}
 
-	//c := NewDownloadClient()
-	//err := c.download(".", "argocdapp_0.0.1-rc1.so", "0.0.1-rc1")
-	//if err != nil {
-	//	t.Fatal("downloaded error")
-	//}
-
-	os.Remove(filepath.Join(".", "argocdapp"))
+	os.Remove(filepath.Join(".", "argocdapp_0.0.1-rc1.so"))
 }
 
 func TestDownloadNotFound(t *testing.T) {

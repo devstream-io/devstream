@@ -53,7 +53,7 @@ func (a *ArgoCD) addHelmRepo() error {
 }
 
 func (a *ArgoCD) installOrUpgradeHelmChart() error {
-	log.Println("adding and updating argocd helm chart repo")
+	log.Println("Adding and updating argocd helm chart repo ...")
 	if err := a.addHelmRepo(); err != nil {
 		return err
 	}

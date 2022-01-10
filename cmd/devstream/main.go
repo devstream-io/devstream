@@ -21,26 +21,16 @@ var (
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	rootCMD.PersistentFlags().StringVarP(&configFile, "config-file", "f", "", "config file")
-	rootCMD.PersistentFlags().StringVarP(&pluginDir, "plugin-dir", "p", ".devstream/plugins", "plugins directory")
+	rootCMD.PersistentFlags().StringVarP(&configFile, "config-file", "f", "config.yaml", "config file")
+	rootCMD.PersistentFlags().StringVarP(&pluginDir, "plugin-dir", "p", ".devstream/", "plugins directory")
 
 	rootCMD.AddCommand(versionCMD)
 	rootCMD.AddCommand(initCMD)
 	rootCMD.AddCommand(applyCMD)
+	rootCMD.AddCommand(deleteCMD)
 }
 
 func initConfig() {
-	if configFile != "" {
-		viper.SetConfigFile(configFile)
-	} else {
-		viper.AddConfigPath(".")
-		viper.SetConfigType("yaml")
-		viper.SetConfigName("config")
-	}
-	if err := viper.ReadInConfig(); err != nil {
-		log.Fatal(err)
-	}
-
 	viper.AutomaticEnv()
 	if err := viper.BindEnv("github_token"); err != nil {
 		log.Fatal(err)

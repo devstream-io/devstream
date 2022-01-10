@@ -14,9 +14,9 @@ const (
 )
 
 const (
-	ActionInstall   ComponentAction = "install"
-	ActionReinstall ComponentAction = "reinstall"
-	ActionUninstall ComponentAction = "uninstall"
+	ActionInstall   ComponentAction = "Install"
+	ActionReinstall ComponentAction = "Reinstall"
+	ActionUninstall ComponentAction = "Uninstall"
 )
 
 // State is the single component's state.

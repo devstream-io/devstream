@@ -16,18 +16,18 @@ func Reinstall(options *map[string]interface{}) (bool, error) {
 
 	file := defaultYamlPath
 
-	//delete resource
+	// delete resource
 	err = kubectlAction(ActionDelete, file)
 	if err != nil {
 		return false, err
 	}
 
-	//remove app.yaml file
+	// remove app.yaml file
 	if err = os.Remove(file); err != nil {
 		return false, err
 	}
 
-	//recreate  app.yaml file
+	// recreate app.yaml file
 	err = writeContentToTmpFile(file, appTemplate, &param)
 	if err != nil {
 		return false, err

@@ -3,13 +3,11 @@ package planmanager
 import (
 	"log"
 
-	"github.com/merico-dev/stream/internal/pkg/configloader"
-	"github.com/merico-dev/stream/internal/pkg/pluginengine"
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
 )
 
-// handleResult is used to Write the latest StatesMap to Backend.
-func (p *Plan) handleResult(change *Change) error {
+// HandleResult is used to Write the latest StatesMap to the Backend.
+func (p *Plan) HandleResult(change *Change) error {
 	// uninstall succeeded
 	if change.ActionName == statemanager.ActionUninstall && change.Result.Succeeded {
 		p.smgr.DeleteState(change.Tool.Name)
@@ -31,67 +29,17 @@ func (p *Plan) handleResult(change *Change) error {
 	// uninstall failed
 	if change.ActionName == statemanager.ActionUninstall && !change.Result.Succeeded {
 		state.Status = statemanager.StatusInstalled
-		log.Printf("=== plugin %s uninstall failed ===", change.Tool.Name)
-		// install or reinstall failed
+		log.Printf("Plugin %s uninstall failed.", change.Tool.Name)
 	} else if !change.Result.Succeeded {
+		// install or reinstall failed
 		state.Status = statemanager.StatusFailed
-		log.Printf("=== plugin %s (re)install failed ===", change.Tool.Name)
-		// install or reinstall succeeded
+		log.Printf("Plugin %s (re)install failed.", change.Tool.Name)
 	} else {
-		log.Printf("=== plugin %s process done ===", change.Tool.Name)
+		// install or reinstall succeeded
+		state.Status = statemanager.StatusInstalled
+		log.Printf("Plugin %s process done.", change.Tool.Name)
 	}
 
 	p.smgr.AddState(state)
 	return p.smgr.Write(p.smgr.GetStatesMap().Format())
-}
-
-// generatePlanAccordingToConfig is to filter all the Tools in cfg that need some actions
-func (p *Plan) generatePlanAccordingToConfig(statesMap *statemanager.StatesMap, cfg *configloader.Config) {
-	for _, tool := range cfg.Tools {
-		state := p.smgr.GetState(tool.Name)
-		if state == nil {
-			p.Changes = append(p.Changes, &Change{
-				Tool:       tool.DeepCopy(),
-				ActionName: statemanager.ActionInstall,
-				Action:     pluginengine.Install,
-			})
-			log.Printf("added a change: %s -> %s", tool.Name, statemanager.ActionInstall)
-			continue
-		}
-
-		switch state.Status {
-		case statemanager.StatusUninstalled:
-			p.Changes = append(p.Changes, &Change{
-				Tool:       tool.DeepCopy(),
-				ActionName: statemanager.ActionInstall,
-				Action:     pluginengine.Install,
-			})
-			log.Printf("added a change: %s -> %s", tool.Name, statemanager.ActionInstall)
-		case statemanager.StatusFailed:
-			p.Changes = append(p.Changes, &Change{
-				Tool:       tool.DeepCopy(),
-				ActionName: statemanager.ActionReinstall,
-				Action:     pluginengine.Reinstall,
-			})
-			log.Printf("added a change: %s -> %s", tool.Name, statemanager.ActionReinstall)
-		}
-		statesMap.Delete(tool.Name)
-	}
-}
-
-// Some tools have already been installed, but they are no longer needed, so they need to be uninstalled
-func (p *Plan) removeNoLongerNeededToolsFromPlan(statesMap *statemanager.StatesMap) {
-	statesMap.Range(func(key, value interface{}) bool {
-		p.Changes = append(p.Changes, &Change{
-			Tool: &configloader.Tool{
-				Name:    key.(string),
-				Version: value.(*statemanager.State).Version,
-				Options: value.(*statemanager.State).LastOperation.Metadata,
-			},
-			ActionName: statemanager.ActionUninstall,
-			Action:     pluginengine.Uninstall,
-		})
-		log.Printf("added a change: %s -> %s", key.(string), statemanager.ActionUninstall)
-		return true
-	})
 }
