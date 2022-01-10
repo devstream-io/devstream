@@ -58,7 +58,7 @@ function fetch_tools() {
   cd ${WORK_DIR}
 
   if [ ! -f kind ]; then
-    echo "kind doesn't exists, download it now"
+    echo "kind doesn't exist, download it now"
     kind_uri="https://kind.sigs.k8s.io/dl/v${KIND_VERSION}/kind-${HOST_OS}-${HOST_ARCH}"
     echo "kind uri: ${kind_uri}"
     curl -Lo ./kind "${kind_uri}"
@@ -67,7 +67,7 @@ function fetch_tools() {
   chmod +x ./kind
 
   if [ ! -f kubectl ]; then
-    echo "kubectl doesn't exists, download it now"
+    echo "kubectl doesn't exist, download it now"
     kubectl_uri="https://dl.k8s.io/release/v${K8S_VERSION}/bin/${HOST_OS}/${HOST_ARCH}/kubectl"
     echo "kubectl uri: ${kubectl_uri}"
     curl -Lo ./kubectl "${kubectl_uri}"
