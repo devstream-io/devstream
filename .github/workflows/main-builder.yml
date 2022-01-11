@@ -20,9 +20,7 @@ jobs:
         - name: Test
           run: go test -v ./...
         - name: Run coverage
-          if: 'false'
-          run: go test ./... -race -coverprofile=coverage.out -covermode=atomic
-        - name: Upload coverage to Codecov
-          if: ${{ success() }}
-          run: bash <(curl -s https://codecov.io/bash)
+          run: |
+            go test ./... -race -coverprofile=coverage.out -covermode=atomic
+            bash <(curl -s https://codecov.io/bash)
 
