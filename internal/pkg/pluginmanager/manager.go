@@ -64,8 +64,6 @@ func CheckLocalPlugins(conf *configloader.Config) error {
 
 	log.Printf("Using dir <%s> to store plugins.", pluginDir)
 
-	// download all plugins that don't exist locally
-
 	for _, tool := range conf.Tools {
 		pluginFileName := configloader.GetPluginFileName(&tool)
 		if _, err := os.Stat(filepath.Join(pluginDir, pluginFileName)); errors.Is(err, os.ErrNotExist) {
