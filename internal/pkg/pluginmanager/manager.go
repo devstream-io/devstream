@@ -3,10 +3,11 @@ package pluginmanager
 import (
 	"errors"
 	"fmt"
-	"github.com/spf13/viper"
 	"log"
 	"os"
 	"path/filepath"
+
+	"github.com/spf13/viper"
 
 	"github.com/merico-dev/stream/internal/pkg/configloader"
 )
@@ -49,6 +50,29 @@ func DownloadPlugins(conf *configloader.Config) error {
 		}
 		if err = dc.download(pluginDir, pluginFileName, tool.Version); err != nil {
 			return err
+		}
+	}
+
+	return nil
+}
+
+func CheckLocalPlugins(conf *configloader.Config) error {
+	pluginDir := viper.GetString("plugin-dir")
+	if pluginDir == "" {
+		return fmt.Errorf("plugins directory doesn't exist")
+	}
+
+	log.Printf("Using dir <%s> to store plugins.", pluginDir)
+
+	// download all plugins that don't exist locally
+
+	for _, tool := range conf.Tools {
+		pluginFileName := configloader.GetPluginFileName(&tool)
+		if _, err := os.Stat(filepath.Join(pluginDir, pluginFileName)); errors.Is(err, os.ErrNotExist) {
+			if err != nil {
+				return err
+			}
+			return fmt.Errorf("plugin %s directory doesn't exist", tool.Name)
 		}
 	}
 
