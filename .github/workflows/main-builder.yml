@@ -20,15 +20,9 @@ jobs:
         - name: Test
           run: go test -v ./...
         - name: Run coverage
+          if: 'false'
           run: go test ./... -race -coverprofile=coverage.out -covermode=atomic
         - name: Upload coverage to Codecov
+          if: ${{  Run coverage }}
           run: bash <(curl -s https://codecov.io/bash)
-        - name: Staticcheck
-          if: 'false'
-          run: |
-            # add executables installed with go get to PATH
-            # TODO: this will hopefully be fixed by
-            # https://github.com/actions/setup-go/issues/14
-            export PATH=${PATH}:`go env GOPATH`/bin
-            go get -u honnef.co/go/tools/cmd/staticcheck
-            staticcheck ./... 
+
