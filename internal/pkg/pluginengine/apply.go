@@ -7,18 +7,18 @@ import (
 	"github.com/merico-dev/stream/internal/pkg/backend"
 	"github.com/merico-dev/stream/internal/pkg/configloader"
 	"github.com/merico-dev/stream/internal/pkg/planmanager"
-	"github.com/merico-dev/stream/internal/pkg/pluginmanager"
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
 )
 
 func Apply(fname string) error {
 	cfg := configloader.LoadConf(fname)
 
+	// TODO(ironcore864): hot fix, so that local test will work. Will fix the logic later.
 	// init before installation
-	err := pluginmanager.DownloadPlugins(cfg)
-	if err != nil {
-		return err
-	}
+	// err := pluginmanager.DownloadPlugins(cfg)
+	// if err != nil {
+	// 	return err
+	// }
 
 	// use default local backend for now.
 	b, err := backend.GetBackend("local")
