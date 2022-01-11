@@ -3,10 +3,11 @@ package pluginmanager
 import (
 	"errors"
 	"fmt"
-	"github.com/spf13/viper"
 	"log"
 	"os"
 	"path/filepath"
+
+	"github.com/spf13/viper"
 
 	"github.com/merico-dev/stream/internal/pkg/configloader"
 )
