@@ -19,7 +19,7 @@ func loadPlugin(tool *configloader.Tool) (DevStreamPlugin, error) {
 		return nil, fmt.Errorf("plugin-dir is \"\"")
 	}
 
-	mod := fmt.Sprintf("%s/%s_%s.so", pluginDir, tool.Name, tool.Version)
+	mod := fmt.Sprintf("%s%s_%s.so", pluginDir, tool.Name, tool.Version)
 	plug, err := plugin.Open(mod)
 	if err != nil {
 		return nil, err

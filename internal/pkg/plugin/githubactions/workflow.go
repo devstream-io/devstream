@@ -2,7 +2,6 @@ package githubactions
 
 import (
 	"fmt"
-
 	"github.com/merico-dev/stream/internal/pkg/plugin/githubactions/golang"
 	"github.com/merico-dev/stream/internal/pkg/plugin/githubactions/nodejs"
 	"github.com/merico-dev/stream/internal/pkg/plugin/githubactions/python"
@@ -12,6 +11,7 @@ const (
 	defaultCommitMessage = "builder by DevStream"
 	BuilderYmlPr         = "pr-builder.yml"
 	BuilderYmlMaster     = "master-builder.yml"
+	BuilderYmlPipeline   = "pipeline.yml"
 )
 
 var go117 = &Language{
@@ -31,8 +31,7 @@ var nodejs9 = &Language{
 
 var defaultWorkflows = workflows{
 	go117.String(): {
-		{defaultCommitMessage, BuilderYmlPr, golang.PrBuilder},
-		{defaultCommitMessage, BuilderYmlMaster, golang.MasterBuilder},
+		{defaultCommitMessage, BuilderYmlPipeline, golang.PipelineBuilder},
 	},
 	python3.String(): {
 		{defaultCommitMessage, BuilderYmlPr, python.PrBuilder},
@@ -50,6 +49,7 @@ type Options struct {
 	Repo     string
 	Branch   string
 	Language *Language
+	Jobs     *Jobs
 }
 
 // Language is the struct containing details of a programming language specified in the GitHub Actions Workflow.
