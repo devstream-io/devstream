@@ -2,7 +2,7 @@ MKFILE_PATH=$(abspath $(lastword $(MAKEFILE_LIST)))
 BUILD_PATH=$(patsubst %/,%,$(dir $(MKFILE_PATH)))/build/working_dir
 
 help: ## Display this help.
-	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
+	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
 build: fmt vet ## Build dtm & plugins locally.
 	go mod tidy
@@ -12,7 +12,7 @@ build: fmt vet ## Build dtm & plugins locally.
 	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/argocdapp_0.0.1.so ./cmd/argocdapp/
 	go build -trimpath -gcflags="all=-N -l" -o dtm ./cmd/devstream/
 
-build-core-only: fmt vet ## Build dtm core only, locally; for faster local testing without rebuilding all plugins.
+build-core-only: fmt vet ## Build dtm core only, without plugins, locally.
 	go mod tidy
 	go build -trimpath -gcflags="all=-N -l" -o dtm ./cmd/devstream/
 
