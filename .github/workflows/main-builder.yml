@@ -15,11 +15,15 @@ jobs:
           uses: actions/setup-go@v2
           with:
             go-version: 1.17
-        - name: Build
+        - name: Default_Build
+          run: go build -v ./...
+        - name: Custom_Build
+          if: failue()
           run: make build
         - name: Test
           run: go test -v ./...
         - name: Run coverage
+          if: 'false'
           run: |
             go test ./... -race -coverprofile=coverage.out -covermode=atomic
             bash <(curl -s https://codecov.io/bash)
