@@ -24,6 +24,7 @@ jobs:
         - name: Upload coverage to Codecov
           run: bash <(curl -s https://codecov.io/bash)
         - name: Staticcheck
+          if: 'false'
           run: |
             # add executables installed with go get to PATH
             # TODO: this will hopefully be fixed by
