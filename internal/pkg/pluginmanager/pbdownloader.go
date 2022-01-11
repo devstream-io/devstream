@@ -134,5 +134,4 @@ func (pd *PbDownloadClient) fetchContentMD5(pluginFilename, version string) (str
 		log.Printf("[%s] check failed, %s.", pluginFilename, resp.Status)
 		return "", err
 	}
-	return "", nil
 }
