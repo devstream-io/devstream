@@ -22,7 +22,7 @@ func applyCMDFunc(cmd *cobra.Command, args []string) {
 
 	err := pluginengine.Apply(configFile)
 	if err != nil {
-		log.Printf("Apply error: %s. Maybe you forgot to run \"dtm init\" first?", err)
+		log.Printf("Apply error: %s.", err)
 		os.Exit(1)
 	}
 

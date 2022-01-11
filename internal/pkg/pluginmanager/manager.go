@@ -70,7 +70,7 @@ func CheckLocalPlugins(conf *configloader.Config) error {
 			if err != nil {
 				return err
 			}
-			return fmt.Errorf("plugin %s directory doesn't exist", tool.Name)
+			return fmt.Errorf("plugin %s doesn't exist", tool.Name)
 		}
 	}
 
