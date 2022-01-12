@@ -14,9 +14,9 @@ import (
 func Apply(fname string) error {
 	cfg := configloader.LoadConf(fname)
 
-	// init before installation
-	err := pluginmanager.DownloadPlugins(cfg)
+	err := pluginmanager.CheckLocalPlugins(cfg)
 	if err != nil {
+		log.Printf("Error checking required plugins. Maybe you forgot to run \"dtm init\" first?")
 		return err
 	}
 
