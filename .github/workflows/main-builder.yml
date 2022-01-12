@@ -10,10 +10,10 @@ jobs:
 
   test:
       name: Test
-      if: ${{ github.event.action == 'pull_request' }}
+      if: github.event.action == 'push'
       runs-on: ubuntu-latest
       env:
-       DEFAULT_BUILD: 'off'
+       DEFAULT_BUILD: 'on'
        CODE_COVERAGE: 'on'
       steps:
         - uses: actions/checkout@v2
@@ -22,7 +22,7 @@ jobs:
           with:
             go-version: 1.17
         - name: Default_Build
-          if: ${{ env.DEFAULT_BUILD == 'on' }}
+          if: env.DEFAULT_BUILD == 'on'
           run: go build -v ./...
         - name: Custom_Build
           if: ${{ env.DEFAULT_BUILD == 'off' }}
