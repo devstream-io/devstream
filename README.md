@@ -57,11 +57,28 @@ See [docs/architecture.md](./docs/architecture.md).
 
 ## Build
 
+```makefile
+$ make help
+
+Usage:
+  make <target>
+  help                Display this help.
+  build               Build dtm & plugins locally.
+  build-core-only     Build dtm core only, without plugins, locally.
+  build-release       Build for all platforms for release.
+  build-darwin-arm64  Build for darwin/arm64 for release.
+  build-darwin-amd64  Cross-platform build for darwin/amd64.
+  build-linux-amd64   Cross-platform build for linux/amd64
+  fmt                 Run 'go fmt' & goimports against code.
+  vet                 Run go vet against code.
+```
+
+## Test
+
+Unit/functional test:
+
 ```bash
-# build dtm & plugins
-make build
-# build dtm only
-make build-core
+go test ./...
 ```
 
 ## Configuration
@@ -70,15 +87,23 @@ See [examples/config.yaml](./examples/config.yaml).
 
 ## Run
 
-The CLI tool is named `dtm`, which is an acronym of **d**evs**t**rea**m** or *devops toolchain manager*:
+To install/reinstall/update, run:
 
 ```bash
-./dtm install -f examples/config.yaml
+./dtm apply -f examples/config.yaml
+```
+
+To delete, run:
+
+```bash
+./dtm delete -f examples/config.yaml
 ```
 
 ## Why `dtm`?
 
-Inspired by [`git`](https://github.com/git/git#readme), the name is (depending on your mood):
+Q: The CLI tool is named `dtm`, while the tool itself is called DevStream. What the heck?! Where is the consistency?
+
+A: Inspired by [`git`](https://github.com/git/git#readme), the name is (depending on your mood):
 
 - a symmetric, scientific acronym of **d**evs**t**rea**m**.
 - "devops toolchain manager": you're in a good mood, and it actually works for you.
