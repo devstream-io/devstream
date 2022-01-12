@@ -10,7 +10,6 @@ jobs:
 
   test:
       name: Test
-      if: github.event.action == 'push'
       runs-on: ubuntu-latest
       env:
        DEFAULT_BUILD: 'on'
