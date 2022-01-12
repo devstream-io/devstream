@@ -55,7 +55,12 @@ fmt: ## Run 'go fmt' & goimports against code.
 	go install golang.org/x/tools/cmd/goimports@latest
 	goimports -local="github.com/merico-dev/stream" -d -w cmd
 	goimports -local="github.com/merico-dev/stream" -d -w internal
+	goimports -local="github.com/merico-dev/stream" -d -w test
 	go fmt ./...
 
 vet: ## Run go vet against code.
 	go vet ./...
+
+test-cmd: build ## Run e2e tests against the cmd.
+	go build -trimpath -gcflags="all=-N -l" -o smoke ./test/smoke/
+	./smoke

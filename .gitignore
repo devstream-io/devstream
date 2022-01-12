@@ -9,6 +9,7 @@
 
 # build
 dtm*
+smoke
 build/output
 build/working_dir
 

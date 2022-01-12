@@ -10,6 +10,7 @@ type DevStreamPlugin interface {
 	Install(*map[string]interface{}) (bool, error)
 	Reinstall(*map[string]interface{}) (bool, error)
 	Uninstall(*map[string]interface{}) (bool, error)
+	IsHealthy(*map[string]interface{}) (bool, error)
 }
 
 // Install loads the plugin and calls the Install method of that plugin.
@@ -37,4 +38,12 @@ func Uninstall(tool *configloader.Tool) (bool, error) {
 		return false, err
 	}
 	return p.Uninstall(&tool.Options)
+}
+
+func IsHealthy(tool *configloader.Tool) (bool, error) {
+	p, err := loadPlugin(tool)
+	if err != nil {
+		return false, err
+	}
+	return p.IsHealthy(&tool.Options)
 }
