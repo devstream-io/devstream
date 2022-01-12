@@ -3,11 +3,14 @@ name: main Builder
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
 
   test:
       name: Test
+      if: ${{ github.event.action == 'pull_request' }}
       runs-on: ubuntu-latest
       env:
        DEFAULT_BUILD: 'off'
