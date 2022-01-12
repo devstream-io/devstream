@@ -6,7 +6,7 @@ import (
 	"github.com/merico-dev/stream/internal/pkg/configloader"
 )
 
-// CheckHealthy return true while all tools are healthy
+// CheckHealthy returns true while all tools are healthy
 func CheckHealthy(fname string) bool {
 	cfg := configloader.LoadConf(fname)
 	allHealthy := true
@@ -15,7 +15,7 @@ func CheckHealthy(fname string) bool {
 		healthy, err := IsHealthy(&tool)
 		if err != nil {
 			allHealthy = false
-			log.Printf("failed to check healthy for the tool: %s", tool.Name)
+			log.Printf("failed to check healthy for the tool: %s, got error: %s", tool.Name, err)
 			continue
 		}
 		if healthy {

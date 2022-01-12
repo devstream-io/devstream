@@ -25,6 +25,7 @@ func main() {
 
 	if healthy {
 		log.Println("all tools are healthy")
+		return
 	}
 
 	log.Fatalf("some tools are not healthy")
