@@ -8,7 +8,9 @@
 *.dylib
 
 # build
-dtm
+dtm*
+build/output
+build/working_dir
 
 # Test binary, build with `go test -c`
 *.test
