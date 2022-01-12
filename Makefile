@@ -18,7 +18,7 @@ build-core-only: fmt vet ## Build dtm core only, without plugins, locally.
 
 clean:
 	rm -rf .devstream
-	rm dtm*
+	rm -f dtm*
 	rm -rf build/working_dir
 
 build-release: build-darwin-arm64 build-darwin-amd64 build-linux-amd64 ## Build for all platforms for release.
@@ -41,11 +41,12 @@ build-darwin-amd64: ## Cross-platform build for darwin/amd64.
 
 build-linux-amd64: ## Cross-platform build for linux/amd64
 	echo "Building in ${BUILD_PATH}"
+	mkdir -p .devstream
 	rm -rf ${BUILD_PATH} && mkdir ${BUILD_PATH}
-	# docker buildx build --platform linux/amd64,linux/arm64 --push -t ironcore864/dtm-builder:v0.0.1 -f build/package/Dockerfile .
+	docker buildx build --platform linux/amd64 --load -t mericodev/stream-builder:v0.0.1 -f build/package/Dockerfile .
 	cp -r go.mod go.sum cmd internal build/package/build_linux_amd64.sh ${BUILD_PATH}/
 	chmod +x ${BUILD_PATH}/build_linux_amd64.sh
-	docker run --rm --platform linux/amd64 -v ${BUILD_PATH}:/devstream ironcore864/dtm-builder:v0.0.1
+	docker run --rm --platform linux/amd64 -v ${BUILD_PATH}:/devstream mericodev/stream-builder:v0.0.1
 	mv ${BUILD_PATH}/output/*.so .devstream/
 	mv ${BUILD_PATH}/output/dtm* .
 	rm -rf ${BUILD_PATH}
