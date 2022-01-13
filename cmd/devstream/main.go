@@ -5,6 +5,8 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	"github.com/merico-dev/stream/internal/pkg/pluginengine"
 )
 
 var (
@@ -22,11 +24,12 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	rootCMD.PersistentFlags().StringVarP(&configFile, "config-file", "f", "config.yaml", "config file")
-	rootCMD.PersistentFlags().StringVarP(&pluginDir, "plugin-dir", "p", ".devstream/", "plugins directory")
+	rootCMD.PersistentFlags().StringVarP(&pluginDir, "plugin-dir", "p", pluginengine.DefaultPluginDir, "plugins directory")
 
 	rootCMD.AddCommand(versionCMD)
 	rootCMD.AddCommand(initCMD)
 	rootCMD.AddCommand(applyCMD)
+	rootCMD.AddCommand(deleteCMD)
 }
 
 func initConfig() {

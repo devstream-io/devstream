@@ -8,7 +8,10 @@
 *.dylib
 
 # build
-dtm
+dtm*
+smoke
+build/output
+build/working_dir
 
 # Test binary, build with `go test -c`
 *.test
@@ -20,7 +23,8 @@ dtm
 .glide/
 
 # YAML for testings
-*.yaml
+config*.yaml
+app*.yaml
 
 # IDE
 .idea/
@@ -28,3 +32,6 @@ dtm
 # .devstream
 .devstream/
 devstream.state
+
+# e2e
+testbin/

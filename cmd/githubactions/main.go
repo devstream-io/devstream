@@ -27,6 +27,11 @@ func (p Plugin) Uninstall(options *map[string]interface{}) (bool, error) {
 	return githubactions.Uninstall(options)
 }
 
+// IsHealthy implements the healthy check of GitHub Actions workflows.
+func (p Plugin) IsHealthy(options *map[string]interface{}) (bool, error) {
+	return githubactions.IsHealthy(options)
+}
+
 // DevStreamPlugin is the exported variable used by the DevStream core.
 var DevStreamPlugin Plugin
 
