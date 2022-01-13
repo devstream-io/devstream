@@ -27,6 +27,11 @@ func (p Plugin) Uninstall(options *map[string]interface{}) (bool, error) {
 	return argocdapp.Uninstall(options)
 }
 
+// IsHealthy implements the healthy check of ArgoCD app.
+func (p Plugin) IsHealthy(options *map[string]interface{}) (bool, error) {
+	return argocdapp.IsHealthy(options)
+}
+
 // DevStreamPlugin is the exported variable used by the DevStream core.
 var DevStreamPlugin Plugin
 

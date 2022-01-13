@@ -8,7 +8,10 @@
 *.dylib
 
 # build
-dtm
+dtm*
+smoke
+build/output
+build/working_dir
 
 # Test binary, build with `go test -c`
 *.test
