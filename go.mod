@@ -4,6 +4,7 @@ go 1.17
 
 require (
 	github.com/argoproj/argo-cd/v2 v2.2.2
+	github.com/argoproj/gitops-engine v0.5.2
 	github.com/cheggaaa/pb v1.0.29
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/google/go-github/v40 v40.0.0
@@ -33,7 +34,6 @@ require (
 	github.com/Masterminds/squirrel v1.5.2 // indirect
 	github.com/PuerkitoBio/purell v1.1.1 // indirect
 	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
-	github.com/argoproj/gitops-engine v0.5.2 // indirect
 	github.com/argoproj/pkg v0.11.1-0.20211203175135-36c59d8fafe0 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20200428143746-21a406dcc535 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
