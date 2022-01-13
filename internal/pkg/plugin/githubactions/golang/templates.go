@@ -1,11 +1,21 @@
 package golang
 
-var PrBuilder = `
-name: PR Builder
+var PipelineBuilder = `
+name: Pipeline Builder
 on:
+  push:
+    branches: [ master, main ]
   pull_request:
     branches: [ master, main ]
 jobs:
+  [[- if .Build.Enable]]
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Build
+      run: [[.Build.Command]]
+  [[- end]]
+  [[- if .Test.Enable]]
   test:
     runs-on: ubuntu-latest
     steps:
@@ -14,34 +24,15 @@ jobs:
       uses: actions/setup-go@v2
       with:
         go-version: 1.17
-    - name: Build
-      run: go build -v ./...
     - name: Test
-      run: go test -v ./...
-`
+      run: [[.Test.Command]] [[- if .Test.Coverage.Enable]] -race -coverprofile=coverage.out -covermode=atomic [[- end]]
+      
 
-var MasterBuilder = `
-name: Master Builder
-on:
-  push:
-    branches: [ master, main ]
-jobs:
-  test:
-    name: Test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Go
-        uses: actions/setup-go@v2
-        with:
-          go-version: 1.17
-      - name: Test
-        run: go test -v ./...
-      - name: Build
-        run: go build -v ./...
+  [[- end]]
   tag:
     name: Tag
     needs: [test]
+    if: ${{ github.event_name == 'push' }}
     runs-on: ubuntu-latest
     outputs:
       new_tag: ${{ steps.tag_version.outputs.new_tag }}
@@ -53,9 +44,10 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           tag_prefix: ""
-  build:
+  image:
     name: Build Docker Image
     needs: [tag]
+    if: ${{ github.event_name == 'push' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
