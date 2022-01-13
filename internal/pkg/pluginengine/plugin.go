@@ -1,8 +1,12 @@
 package pluginengine
 
 import (
+	"github.com/spf13/viper"
+
 	"github.com/merico-dev/stream/internal/pkg/configloader"
 )
+
+const DefaultPluginDir = ".devstream"
 
 // DevStreamPlugin is a struct, on which install/reinstall/uninstall interfaces are defined.
 type DevStreamPlugin interface {
@@ -15,7 +19,8 @@ type DevStreamPlugin interface {
 
 // Install loads the plugin and calls the Install method of that plugin.
 func Install(tool *configloader.Tool) (bool, error) {
-	p, err := loadPlugin(tool)
+	pluginDir := getPluginDir()
+	p, err := loadPlugin(pluginDir, tool)
 	if err != nil {
 		return false, err
 	}
@@ -24,7 +29,8 @@ func Install(tool *configloader.Tool) (bool, error) {
 
 // Reinstall loads the plugin and calls the Reinstall method of that plugin.
 func Reinstall(tool *configloader.Tool) (bool, error) {
-	p, err := loadPlugin(tool)
+	pluginDir := getPluginDir()
+	p, err := loadPlugin(pluginDir, tool)
 	if err != nil {
 		return false, err
 	}
@@ -33,7 +39,8 @@ func Reinstall(tool *configloader.Tool) (bool, error) {
 
 // Uninstall loads the plugin and calls the Uninstall method of that plugin.
 func Uninstall(tool *configloader.Tool) (bool, error) {
-	p, err := loadPlugin(tool)
+	pluginDir := getPluginDir()
+	p, err := loadPlugin(pluginDir, tool)
 	if err != nil {
 		return false, err
 	}
@@ -41,9 +48,18 @@ func Uninstall(tool *configloader.Tool) (bool, error) {
 }
 
 func IsHealthy(tool *configloader.Tool) (bool, error) {
-	p, err := loadPlugin(tool)
+	pluginDir := getPluginDir()
+	p, err := loadPlugin(pluginDir, tool)
 	if err != nil {
 		return false, err
 	}
 	return p.IsHealthy(&tool.Options)
+}
+
+func getPluginDir() string {
+	var pluginDir string
+	if pluginDir = viper.GetString("plugin-dir"); pluginDir == "" {
+		pluginDir = DefaultPluginDir
+	}
+	return pluginDir
 }

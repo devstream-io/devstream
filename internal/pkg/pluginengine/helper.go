@@ -6,19 +6,12 @@ import (
 	"plugin"
 	"time"
 
-	"github.com/spf13/viper"
-
 	"github.com/merico-dev/stream/internal/pkg/configloader"
 	"github.com/merico-dev/stream/internal/pkg/planmanager"
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
 )
 
-func loadPlugin(tool *configloader.Tool) (DevStreamPlugin, error) {
-	pluginDir := viper.GetString("plugin-dir")
-	if pluginDir == "" {
-		return nil, fmt.Errorf("plugin-dir is \"\"")
-	}
-
+func loadPlugin(pluginDir string, tool *configloader.Tool) (DevStreamPlugin, error) {
 	mod := fmt.Sprintf("%s/%s_%s.so", pluginDir, tool.Name, tool.Version)
 	plug, err := plugin.Open(mod)
 	if err != nil {
