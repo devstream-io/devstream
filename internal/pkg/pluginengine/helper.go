@@ -11,7 +11,6 @@ import (
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
 )
 
-
 func loadPlugin(pluginDir string, tool *configloader.Tool) (DevStreamPlugin, error) {
 	mod := fmt.Sprintf("%s/%s_%s.so", pluginDir, tool.Name, tool.Version)
 	plug, err := plugin.Open(mod)
