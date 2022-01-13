@@ -32,5 +32,5 @@ jobs:
           if: ${{ env.CODE_COVERAGE == 'on' }}
           run: |
             go test ./... -race -coverprofile=coverage.out -covermode=atomic
-            bash <(curl -s https://codecov.io/bash)
+            go tool cover -html=coverprofile.cov
 
