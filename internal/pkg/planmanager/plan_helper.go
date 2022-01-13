@@ -59,3 +59,22 @@ func (p *Plan) removeNoLongerNeededToolsFromPlan(statesMap *statemanager.StatesM
 		return true
 	})
 }
+
+// generatePlanForDelete is to create a plan that deletes all the Tools in cfg
+func (p *Plan) generatePlanForDelete(statesMap *statemanager.StatesMap, cfg *configloader.Config) {
+	// reverse loop, a hack to solve dependency issues when uninstalling
+	for i := len(cfg.Tools) - 1; i >= 0; i-- {
+		tool := cfg.Tools[i]
+		state := p.smgr.GetState(tool.Name)
+		if state == nil || state.Status != statemanager.StatusInstalled {
+			continue
+		}
+
+		p.Changes = append(p.Changes, &Change{
+			Tool:       tool.DeepCopy(),
+			ActionName: statemanager.ActionUninstall,
+		})
+		log.Printf("Change added: %s -> %s", tool.Name, statemanager.ActionUninstall)
+		statesMap.Delete(tool.Name)
+	}
+}

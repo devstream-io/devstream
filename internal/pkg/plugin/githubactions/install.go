@@ -14,8 +14,10 @@ func Install(options *map[string]interface{}) (bool, error) {
 	ws := defaultWorkflows.GetWorkflowByNameVersionTypeString(language.String())
 
 	for _, pipeline := range ws {
-		err := githubActions.AddWorkflow(pipeline)
-		if err != nil {
+		if err := githubActions.renderTemplate(pipeline); err != nil {
+			return false, err
+		}
+		if err := githubActions.AddWorkflow(pipeline); err != nil {
 			return false, err
 		}
 	}

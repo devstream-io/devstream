@@ -9,8 +9,19 @@ tools:
       name: go
       version: "1.17"
     branch: master
+    jobs:
+      build:
+        enable: True
+        command: "go build ./..."
+      test:
+        enable: True
+        command: "go test ./..."
+        coverage:
+          enable: False
+          profile: "-race -coverprofile=coverage.out -covermode=atomic"
+
 # # for python config
-# - name: githubactions
+#- name: githubactions
 #  version: 0.0.1
 #  options:
 #    owner: lfbdev

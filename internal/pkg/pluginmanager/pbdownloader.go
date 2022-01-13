@@ -124,15 +124,14 @@ func (pd *PbDownloadClient) fetchContentMD5(pluginFilename, version string) (str
 	if err != nil {
 		return "", err
 	}
-	if resp != nil {
-		defer resp.Body.Close()
-	}
+
+	defer resp.Body.Close()
+
 	if resp.StatusCode == http.StatusOK {
-		log.Printf("[%s] check succeeded.", pluginFilename)
+		log.Printf("[%s] check success.", pluginFilename)
 		return resp.Header.Get("Content-MD5"), nil
 	} else {
 		log.Printf("[%s] check failed, %s.", pluginFilename, resp.Status)
 		return "", err
 	}
-	return "", nil
 }

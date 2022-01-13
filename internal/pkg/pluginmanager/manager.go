@@ -3,12 +3,10 @@ package pluginmanager
 import (
 	"errors"
 	"fmt"
+	"github.com/spf13/viper"
 	"log"
 	"os"
 	"path/filepath"
-	"strings"
-
-	"github.com/spf13/viper"
 
 	"github.com/merico-dev/stream/internal/pkg/configloader"
 )
@@ -40,17 +38,39 @@ func DownloadPlugins(conf *configloader.Config) error {
 			return err
 		}
 
-		if !dup {
-			log.Printf("Plugin: %s changed and will be overrided.", pluginFileName)
-			os.Remove(filepath.Join(pluginDir, pluginFileName))
-			err := dc.download(pluginDir, pluginFileName, tool.Version)
+		if dup {
+			log.Printf("Plugin: %s already exists, no need to download.", pluginFileName)
+			continue
+		}
+
+		log.Printf("Plugin: %s changed and will be overrided.", pluginFileName)
+		if err = os.Remove(filepath.Join(pluginDir, pluginFileName)); err != nil {
+			return err
+		}
+		if err = dc.download(pluginDir, pluginFileName, tool.Version); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func CheckLocalPlugins(conf *configloader.Config) error {
+	pluginDir := viper.GetString("plugin-dir")
+	if pluginDir == "" {
+		return fmt.Errorf("plugins directory doesn't exist")
+	}
+
+	log.Printf("Using dir <%s> to store plugins.", pluginDir)
+
+	for _, tool := range conf.Tools {
+		pluginFileName := configloader.GetPluginFileName(&tool)
+		if _, err := os.Stat(filepath.Join(pluginDir, pluginFileName)); errors.Is(err, os.ErrNotExist) {
 			if err != nil {
 				return err
 			}
-			continue
+			return fmt.Errorf("plugin %s doesn't exist", tool.Name)
 		}
-		log.Printf("Plugin: %s already exists, no need to download.", pluginFileName)
-
 	}
 
 	return nil
@@ -66,7 +86,7 @@ func checkFileMD5(file string, dc *PbDownloadClient, pluginFileName string, vers
 		return false, err
 	}
 
-	if strings.Compare(localmd5, remotemd5) == 0 {
+	if localmd5 == remotemd5 {
 		return true, nil
 	}
 	return false, nil

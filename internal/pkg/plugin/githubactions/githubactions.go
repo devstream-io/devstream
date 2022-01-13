@@ -1,11 +1,13 @@
 package githubactions
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"log"
 	"net/http"
 	"strings"
+	"text/template"
 
 	"github.com/google/go-github/v40/github"
 	"github.com/mitchellh/mapstructure"
@@ -154,4 +156,26 @@ func getGitHubClient(ctx context.Context) (*github.Client, error) {
 	)
 	tc := oauth2.NewClient(ctx, ts)
 	return github.NewClient(tc), nil
+}
+
+// renderTemplate render the github actions template with config.yaml
+func (ga *GithubActions) renderTemplate(workflow *Workflow) error {
+	var jobs Jobs
+	err := mapstructure.Decode(ga.options.Jobs, &jobs)
+	if err != nil {
+		return err
+	}
+	//if use default {{.}}, it will confict (github actions vars also use them)
+	t, err := template.New("githubactions").Delims("[[", "]]").Parse(workflow.workflowContent)
+	if err != nil {
+		return err
+	}
+
+	var buff bytes.Buffer
+	err = t.Execute(&buff, jobs)
+	if err != nil {
+		return err
+	}
+	workflow.workflowContent = buff.String()
+	return nil
 }

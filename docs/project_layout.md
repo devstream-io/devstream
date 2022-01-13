@@ -67,6 +67,10 @@ Web application specific components: static web assets, server side templates an
 
 ## Common Application Directories
 
+### `/hack`
+
+The [`/hack`](hack/README.md) directory contains many scripts that ensure continuous development of DevStream.
+
 ### `/configs`
 
 Configuration file templates or default configs.
