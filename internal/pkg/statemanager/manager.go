@@ -1,21 +1,23 @@
 package statemanager
 
 import (
+	"fmt"
+
 	"github.com/merico-dev/stream/internal/pkg/backend"
 )
 
 // Manager knows how to manage the StatesMap.
 type Manager interface {
 	backend.Backend
-	// GetStatesMap is used for generate data to Write to the backend.
+	// GetStatesMap returns the state manager's map of states, used to generate data to Write to the backend.
 	GetStatesMap() *StatesMap
-	// SetStatesMap is used for initialize StatesMap by the data Read from the backend.
+	// SetStatesMap sets the state manager's map of states, used to initialize the StatesMap by the data Read from the backend.
 	SetStatesMap(states *StatesMap)
 
-	GetState(name string) *State
+	GetState(key string) *State
 	AddState(state *State)
 	UpdateState(state *State)
-	DeleteState(name string)
+	DeleteState(key string)
 }
 
 // manager is the default implement with Manager
@@ -39,22 +41,28 @@ func (m *manager) SetStatesMap(statesMap *StatesMap) {
 	m.statesMap = statesMap
 }
 
-func (m *manager) GetState(name string) *State {
-	m.statesMap.Load(name)
-	if s, exist := m.statesMap.Load(name); exist {
+func (m *manager) GetState(key string) *State {
+	m.statesMap.Load(key)
+	if s, exist := m.statesMap.Load(key); exist {
 		return s.(*State)
 	}
 	return nil
 }
 
 func (m *manager) AddState(state *State) {
-	m.statesMap.Store(state.Name, state)
+	state_key := getStateKeyFromState(state)
+	m.statesMap.Store(state_key, state)
 }
 
 func (m *manager) UpdateState(state *State) {
-	m.statesMap.Store(state.Name, state)
+	state_key := getStateKeyFromState(state)
+	m.statesMap.Store(state_key, state)
 }
 
-func (m *manager) DeleteState(name string) {
-	m.statesMap.Delete(name)
+func (m *manager) DeleteState(key string) {
+	m.statesMap.Delete(key)
+}
+
+func getStateKeyFromState(s *State) string {
+	return fmt.Sprintf("%s_%s", s.Name, s.Plugin.Kind)
 }

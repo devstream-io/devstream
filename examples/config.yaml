@@ -1,7 +1,9 @@
 ---
 tools:
-- name: githubactions
-  version: 0.0.1
+- name: go-hello-http-ci
+  plugin:
+    kind: githubactions
+    version: 0.0.1
   options:
     owner: ironcore864
     repo: go-hello-http
@@ -19,29 +21,10 @@ tools:
         coverage:
           enable: False
           profile: "-race -coverprofile=coverage.out -covermode=atomic"
-
-# # for python config
-#- name: githubactions
-#  version: 0.0.1
-#  options:
-#    owner: lfbdev
-#    repo: spotipy
-#    language:
-#      name: python
-#      version: "3"
-#    branch: master
-# # for nodejs config
-# - name: githubactions
-#  version: 0.0.1
-#  options:
-#    owner: lfbdev
-#    repo: lowdb
-#    language:
-#      name: nodejs
-#      version: "9"
-#    branch: main
-- name: argocd
-  version: 0.0.1
+- name: argocd-dev
+  plugin:
+    kind: argocd
+    version: 0.0.1
   options:
     repo:
       name: argo
@@ -51,8 +34,10 @@ tools:
       release_name: argocd
       namespace: argocd
       create_namespace: True
-- name: argocdapp
-  version: 0.0.1
+- name: argocdapp-hello
+  plugin:
+    kind: argocdapp
+    version: 0.0.1
   options:
     app:
       name: hello

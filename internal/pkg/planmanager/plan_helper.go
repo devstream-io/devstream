@@ -2,15 +2,20 @@ package planmanager
 
 import (
 	"log"
+	"reflect"
 
 	"github.com/merico-dev/stream/internal/pkg/configloader"
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
 )
 
+func drifted(t *configloader.Tool, s *statemanager.State) bool {
+	return !reflect.DeepEqual(t.Options, s.Metadata) || !reflect.DeepEqual(t.Plugin, s.Plugin)
+}
+
 // generatePlanAccordingToConfig is to filter all the Tools in cfg that need some actions
 func (p *Plan) generatePlanAccordingToConfig(statesMap *statemanager.StatesMap, cfg *configloader.Config) {
 	for _, tool := range cfg.Tools {
-		state := p.smgr.GetState(tool.Name)
+		state := p.smgr.GetState(getStateKeyFromTool(&tool))
 		if state == nil {
 			p.Changes = append(p.Changes, &Change{
 				Tool:       tool.DeepCopy(),
@@ -20,26 +25,14 @@ func (p *Plan) generatePlanAccordingToConfig(statesMap *statemanager.StatesMap, 
 			continue
 		}
 
-		switch state.Status {
-		case statemanager.StatusUninstalled:
-			p.Changes = append(p.Changes, &Change{
-				Tool:       tool.DeepCopy(),
-				ActionName: statemanager.ActionInstall,
-			})
-			log.Printf("Change added: %s -> %s", tool.Name, statemanager.ActionInstall)
-		case statemanager.StatusFailed:
+		if drifted(&tool, state) {
 			p.Changes = append(p.Changes, &Change{
 				Tool:       tool.DeepCopy(),
 				ActionName: statemanager.ActionReinstall,
 			})
 			log.Printf("Change added: %s -> %s", tool.Name, statemanager.ActionReinstall)
-		case statemanager.StatusRunning:
-			p.Changes = append(p.Changes, &Change{
-				Tool:       tool.DeepCopy(),
-				ActionName: statemanager.ActionInstall,
-			})
-			log.Printf("Change added: %s -> %s", tool.Name, statemanager.ActionInstall)
 		}
+
 		statesMap.Delete(tool.Name)
 	}
 }
@@ -50,8 +43,8 @@ func (p *Plan) removeNoLongerNeededToolsFromPlan(statesMap *statemanager.StatesM
 		p.Changes = append(p.Changes, &Change{
 			Tool: &configloader.Tool{
 				Name:    key.(string),
-				Version: value.(*statemanager.State).Version,
-				Options: value.(*statemanager.State).LastOperation.Metadata,
+				Plugin:  value.(*statemanager.State).Plugin,
+				Options: value.(*statemanager.State).Metadata,
 			},
 			ActionName: statemanager.ActionUninstall,
 		})
@@ -65,8 +58,8 @@ func (p *Plan) generatePlanForDelete(statesMap *statemanager.StatesMap, cfg *con
 	// reverse loop, a hack to solve dependency issues when uninstalling
 	for i := len(cfg.Tools) - 1; i >= 0; i-- {
 		tool := cfg.Tools[i]
-		state := p.smgr.GetState(tool.Name)
-		if state == nil || state.Status != statemanager.StatusInstalled {
+		state := p.smgr.GetState(getStateKeyFromTool(&tool))
+		if state == nil {
 			continue
 		}
 
