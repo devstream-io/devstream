@@ -26,7 +26,7 @@ func loadPlugin(pluginDir string, tool *configloader.Tool) (DevStreamPlugin, err
 
 	devStreamPlugin, ok := symDevStreamPlugin.(DevStreamPlugin)
 	if !ok {
-		return nil, err
+		return nil, fmt.Errorf("DevStreamPlugin type error")
 	}
 
 	return devStreamPlugin, nil

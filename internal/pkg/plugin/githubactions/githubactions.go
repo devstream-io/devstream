@@ -33,6 +33,10 @@ func NewGithubActions(options *map[string]interface{}) (*GithubActions, error) {
 		return nil, err
 	}
 
+	if !verifyOptions(&opt) {
+		return nil, fmt.Errorf("options is illegal")
+	}
+
 	client, err := getGitHubClient(ctx)
 	if err != nil {
 		return nil, err
@@ -124,8 +128,8 @@ func (ga *GithubActions) VerifyWorkflows(workflows []*Workflow) (map[string]erro
 	for _, w := range workflows {
 		wsFiles = append(wsFiles, w.workflowFileName)
 	}
+	fmt.Printf("Workflow files: %v", wsFiles)
 
-	log.Printf("========")
 	_, dirContent, resp, err := ga.client.Repositories.GetContents(
 		ga.ctx,
 		ga.options.Owner,
@@ -133,16 +137,15 @@ func (ga *GithubActions) VerifyWorkflows(workflows []*Workflow) (map[string]erro
 		".github/workflows",
 		&github.RepositoryContentGetOptions{},
 	)
-	log.Printf("%v", dirContent)
-	log.Printf("========")
-	return nil, fmt.Errorf("test")
 
 	// error reason is not 404
 	if err != nil && !strings.Contains(err.Error(), "404") {
+		log.Printf("GetContents failed with error: %s", err)
 		return nil, err
 	}
 	// StatusCode == 404
 	if resp.StatusCode == http.StatusNotFound {
+		log.Printf("GetContents return with status code 404")
 		retMap := mapz.FillMapWithStrAndError(wsFiles, fmt.Errorf("not found"))
 		return retMap, nil
 	}
@@ -151,20 +154,25 @@ func (ga *GithubActions) VerifyWorkflows(workflows []*Workflow) (map[string]erro
 		return nil, fmt.Errorf("got some error is not expected: %s", resp.Status)
 	}
 	// StatusCode == 200
+	log.Printf("GetContents return with status code 200")
 	var filesInRemoteDir = make([]string, 0)
 	for _, f := range dirContent {
+		log.Printf("Found remote file: %s", f.GetName())
 		filesInRemoteDir = append(filesInRemoteDir, f.GetName())
 	}
 
-	lostFiles := slicez.SliceInSlice(wsFiles, filesInRemoteDir).([]string)
+	lostFiles := slicez.SliceInSliceStr(wsFiles, filesInRemoteDir)
 	// all files exist
 	if len(lostFiles) == 0 {
+		log.Println("All files exist")
 		retMap := mapz.FillMapWithStrAndError(wsFiles, nil)
 		return retMap, nil
 	}
 	// some files lost
+	log.Println("Some files lost")
 	retMap := mapz.FillMapWithStrAndError(wsFiles, nil)
 	for _, f := range lostFiles {
+		log.Printf("Lost file: %s", f)
 		retMap[f] = fmt.Errorf("not found")
 	}
 	return retMap, nil
@@ -236,4 +244,12 @@ func getGitHubClient(ctx context.Context) (*github.Client, error) {
 	)
 	tc := oauth2.NewClient(ctx, ts)
 	return github.NewClient(tc), nil
+}
+
+func verifyOptions(opt *Options) bool {
+	return opt.Owner != "" &&
+		opt.Repo != "" &&
+		opt.Branch != "" &&
+		opt.Language != nil &&
+		opt.Jobs != nil
 }

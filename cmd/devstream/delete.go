@@ -18,6 +18,8 @@ DevStream will delete everything defined in the config file, regardless of the s
 
 func deleteCMDFunc(cmd *cobra.Command, args []string) {
 	log.Println("Delete started.")
-	pluginengine.Delete(configFile)
+	if err := pluginengine.Delete(configFile); err != nil {
+		log.Fatal("Delete failed.")
+	}
 	log.Println("Delete finished.")
 }
