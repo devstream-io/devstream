@@ -39,4 +39,4 @@ jobs:
           env:
             GITHUB_TOKEN: ${{ secrets.TOKEN }}
           with:
-            path: results/results.txt
+            path: coverage.out
