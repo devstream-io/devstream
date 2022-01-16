@@ -34,13 +34,9 @@ jobs:
           run: |
             go test ./... -race -coverprofile=coverage.out -covermode=atomic
             go tool cover -html=coverage.out
-
         - name: comment PR
-          uses: unsplash/comment-on-pr@v1.3.0
+          uses: machine-learning-apps/pr-comment@master
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
-            msg: cat -b coverage.out
-            check_for_duplicate_msg: false  # OPTIONAL
-            delete_prev_regex_msg: "[0-9]"  # OPTIONAL
-            duplicate_msg_pattern: "[A-Z]"  # OPTIONAL
+            path: results/results.txt
