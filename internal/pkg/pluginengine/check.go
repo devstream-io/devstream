@@ -3,11 +3,18 @@ package pluginengine
 import (
 	"log"
 
+	"github.com/spf13/viper"
+
 	"github.com/merico-dev/stream/internal/pkg/configloader"
 )
 
 // CheckHealthy returns true while all tools are healthy
 func CheckHealthy(fname string) bool {
+	viper.AutomaticEnv()
+	if err := viper.BindEnv("github_token"); err != nil {
+		log.Fatal(err)
+	}
+
 	cfg := configloader.LoadConf(fname)
 	allHealthy := true
 

@@ -34,6 +34,7 @@ func NewPlan(smgr statemanager.Manager, cfg *configloader.Config) *Plan {
 			statesMap.Store(k, v)
 		}
 		smgr.SetStatesMap(statesMap)
+
 		log.Printf("Succeeded initializing StatesMap.")
 	} else {
 		log.Printf("Failed to initialize StatesMap. Error: (%s). Try to initialize the StatesMap.", err)
@@ -46,6 +47,5 @@ func NewPlan(smgr statemanager.Manager, cfg *configloader.Config) *Plan {
 	tmpStates := smgr.GetStatesMap().DeepCopy()
 	plan.generatePlanAccordingToConfig(tmpStates, cfg)
 	plan.removeNoLongerNeededToolsFromPlan(tmpStates)
-
 	return plan
 }

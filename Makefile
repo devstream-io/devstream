@@ -12,7 +12,7 @@ build: fmt vet ## Build dtm & plugins locally.
 	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/argocdapp_0.0.1.so ./cmd/argocdapp/
 	go build -trimpath -gcflags="all=-N -l" -o dtm ./cmd/devstream/
 
-build-core-only: fmt vet ## Build dtm core only, without plugins, locally.
+build-core: fmt vet ## Build dtm core only, without plugins, locally.
 	go mod tidy
 	go build -trimpath -gcflags="all=-N -l" -o dtm ./cmd/devstream/
 
@@ -61,6 +61,7 @@ fmt: ## Run 'go fmt' & goimports against code.
 vet: ## Run go vet against code.
 	go vet ./...
 
-test-cmd: build ## Run e2e tests against the cmd.
-	go build -trimpath -gcflags="all=-N -l" -o smoke ./test/smoke/
-	./smoke
+e2e: build ## Run e2e tests.
+	./dtm apply -f config.yaml
+	./dtm verify -f config.yaml
+	./dtm delete -f config.yaml

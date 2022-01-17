@@ -4,12 +4,12 @@ import (
 	"os"
 	"reflect"
 	"testing"
-	"time"
 
 	"gopkg.in/yaml.v3"
 
 	"github.com/merico-dev/stream/internal/pkg/backend"
 	"github.com/merico-dev/stream/internal/pkg/backend/local"
+	"github.com/merico-dev/stream/internal/pkg/configloader"
 )
 
 var smgr Manager
@@ -25,14 +25,7 @@ func setup(t *testing.T) {
 }
 
 func newState() *State {
-	lastOperation := &Operation{
-		Action: ActionInstall,
-		Time:   time.Now().Format(time.RFC3339),
-		Metadata: map[string]interface{}{
-			"key": "value",
-		},
-	}
-	return NewState("argocd", "v0.0.1", nil, StatusRunning, lastOperation)
+	return NewState("argocd-prod", configloader.Plugin{Kind: "argocd", Version: "v0.0.1"}, nil, nil)
 }
 
 func TestManager_State(t *testing.T) {
@@ -40,7 +33,7 @@ func TestManager_State(t *testing.T) {
 	stateA := newState()
 	smgr.AddState(stateA)
 
-	stateB := smgr.GetState("argocd")
+	stateB := smgr.GetState("argocd-prod_argocd")
 
 	if !reflect.DeepEqual(stateA, stateB) {
 		t.Errorf("expect stateB == stateA, but got stateA: %v and stateB: %v", stateA, stateB)

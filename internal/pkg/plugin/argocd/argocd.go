@@ -65,7 +65,8 @@ func (a *ArgoCD) installOrUpgradeHelmChart() error {
 		CreateNamespace: a.param.Chart.CreateNamespace,
 		UpgradeCRDs:     true,
 		Wait:            true,
-		Timeout:         3 * time.Minute,
+		// increasing the timeout because it seems this function can't do a "helm upgrade --install"
+		Timeout: 5 * time.Minute,
 	}
 
 	_, err := (*a.client).InstallOrUpgradeChart(context.Background(), &chartSpec)

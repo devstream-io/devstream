@@ -15,8 +15,11 @@ func Uninstall(options *map[string]interface{}) (bool, error) {
 	}
 
 	file := defaultYamlPath
-	err = kubectlAction(ActionDelete, file)
-	if err != nil {
+	if err = writeContentToTmpFile(file, appTemplate, &param); err != nil {
+		return false, err
+	}
+
+	if err = kubectlAction(ActionDelete, file); err != nil {
 		return false, err
 	}
 

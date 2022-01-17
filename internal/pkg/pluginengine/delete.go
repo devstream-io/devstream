@@ -1,6 +1,7 @@
 package pluginengine
 
 import (
+	"errors"
 	"log"
 
 	"github.com/merico-dev/stream/internal/pkg/backend"
@@ -10,37 +11,37 @@ import (
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
 )
 
-func Delete(fname string) {
+func Delete(fname string) error {
 	cfg := configloader.LoadConf(fname)
 
-	// init before installation
-	err := pluginmanager.DownloadPlugins(cfg)
+	err := pluginmanager.CheckLocalPlugins(cfg)
 	if err != nil {
-		log.Printf("Error: %s", err)
-		return
+		log.Printf("Error checking required plugins. Maybe you forgot to run \"dtm init\" first?")
+		return err
 	}
 
 	// use default local backend for now.
 	b, err := backend.GetBackend("local")
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	smgr := statemanager.NewManager(b)
 
 	p := planmanager.NewDeletePlan(smgr, cfg)
 	if len(p.Changes) == 0 {
 		log.Println("Nothing needs to be deleted. There is nothing to do.")
-		return
+		return nil
 	}
 
 	errsMap := execute(p)
-	if len(errsMap) == 0 {
-		log.Println("All plugins deleted successfully.")
-		return
+	if len(errsMap) != 0 {
+		err := errors.New("some error(s) occurred during plugins delete process")
+		for k, e := range errsMap {
+			log.Printf("%s -> %s", k, e)
+		}
+		return err
 	}
 
-	log.Println("Some errors occurred during plugins delete process.")
-	for k, err := range errsMap {
-		log.Printf("%s -> %s", k, err)
-	}
+	log.Println("All plugins deleted successfully.")
+	return nil
 }

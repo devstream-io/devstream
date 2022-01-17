@@ -57,18 +57,19 @@ See [docs/architecture.md](./docs/architecture.md).
 
 ## Build
 
-```makefile
+```shell
 $ make help
 
 Usage:
   make <target>
   help                Display this help.
   build               Build dtm & plugins locally.
-  build-core-only     Build dtm core only, without plugins, locally.
+  build-core          Build dtm core only, without plugins, locally.
   build-release       Build for all platforms for release.
   build-darwin-arm64  Build for darwin/arm64 for release.
   build-darwin-amd64  Cross-platform build for darwin/amd64.
   build-linux-amd64   Cross-platform build for linux/amd64
+  e2e                 Run e2e tests.
   fmt                 Run 'go fmt' & goimports against code.
   vet                 Run go vet against code.
 ```
@@ -97,6 +98,12 @@ To delete, run:
 
 ```bash
 ./dtm delete -f examples/config.yaml
+```
+
+To verify, run:
+
+```bash
+./dtm verify -f examples/config.yaml
 ```
 
 ## Why `dtm`?

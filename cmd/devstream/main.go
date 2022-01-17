@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -30,6 +31,7 @@ func init() {
 	rootCMD.AddCommand(initCMD)
 	rootCMD.AddCommand(applyCMD)
 	rootCMD.AddCommand(deleteCMD)
+	rootCMD.AddCommand(verifyCMD)
 }
 
 func initConfig() {
@@ -45,6 +47,10 @@ func initConfig() {
 func main() {
 	err := rootCMD.Execute()
 	if err != nil {
-		log.Fatal(err)
+		if strings.Contains(err.Error(), "unknown command \"install\"") {
+			log.Fatalf("Did you mean \"dtm apply\" instead?")
+		} else {
+			log.Fatal(err)
+		}
 	}
 }
