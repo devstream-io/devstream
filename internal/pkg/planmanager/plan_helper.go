@@ -2,14 +2,15 @@ package planmanager
 
 import (
 	"log"
-	"reflect"
+
+	"github.com/google/go-cmp/cmp"
 
 	"github.com/merico-dev/stream/internal/pkg/configloader"
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
 )
 
 func drifted(t *configloader.Tool, s *statemanager.State) bool {
-	return !reflect.DeepEqual(t.Options, s.Metadata) || !reflect.DeepEqual(t.Plugin, s.Plugin)
+	return !cmp.Equal(t.Options, s.Metadata) || !cmp.Equal(t.Plugin, s.Plugin)
 }
 
 // generatePlanAccordingToConfig is to filter all the Tools in cfg that need some actions
@@ -33,7 +34,7 @@ func (p *Plan) generatePlanAccordingToConfig(statesMap *statemanager.StatesMap, 
 			log.Printf("Change added: %s -> %s", tool.Name, statemanager.ActionReinstall)
 		}
 
-		statesMap.Delete(tool.Name)
+		statesMap.Delete(getStateKeyFromTool(&tool))
 	}
 }
 
