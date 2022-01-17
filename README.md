@@ -57,7 +57,7 @@ See [docs/architecture.md](./docs/architecture.md).
 
 ## Build
 
-```makefile
+```shell
 $ make help
 
 Usage:
@@ -69,6 +69,7 @@ Usage:
   build-darwin-arm64  Build for darwin/arm64 for release.
   build-darwin-amd64  Cross-platform build for darwin/amd64.
   build-linux-amd64   Cross-platform build for linux/amd64
+  e2e                 Run e2e tests.
   fmt                 Run 'go fmt' & goimports against code.
   vet                 Run go vet against code.
 ```
@@ -97,6 +98,12 @@ To delete, run:
 
 ```bash
 ./dtm delete -f examples/config.yaml
+```
+
+To verify, run:
+
+```bash
+./dtm verify -f examples/config.yaml
 ```
 
 ## Why `dtm`?
