@@ -2,9 +2,10 @@ package configloader
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 
-	"github.com/spf13/viper"
+	"gopkg.in/yaml.v3"
 )
 
 // Config is the struct for loading DevStream configuration YAML files.
@@ -39,27 +40,21 @@ func (t *Tool) DeepCopy() *Tool {
 
 // LoadConf reads an input file as a Config struct.
 func LoadConf(fname string) *Config {
-	if fname != "" {
-		viper.SetConfigFile(fname)
-	} else {
-		viper.AddConfigPath(".")
-		viper.SetConfigType("yaml")
-		viper.SetConfigName("config")
-	}
-
-	if err := viper.ReadInConfig(); err != nil {
+	fileBytes, err := ioutil.ReadFile(fname)
+	if err != nil {
 		log.Print(err)
 		log.Print("Perhaps you forgot to specify the path of the config file by using the \"-f\" parameter?")
 		log.Fatal("See more help by running \"dtm help\"")
 	}
 
-	var tools = make([]Tool, 0)
+	config := Config{}
 
-	if err := viper.UnmarshalKey("tools", &tools); err != nil {
+	err = yaml.Unmarshal(fileBytes, &config)
+	if err != nil {
 		log.Fatal(err)
 	}
 
-	return &Config{Tools: tools}
+	return &config
 }
 
 // GetPluginFileName creates the file name based on the tool's name and version

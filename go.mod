@@ -7,6 +7,7 @@ require (
 	github.com/argoproj/gitops-engine v0.5.2
 	github.com/cheggaaa/pb v1.0.29
 	github.com/go-resty/resty/v2 v2.7.0
+	github.com/google/go-cmp v0.5.6
 	github.com/google/go-github/v40 v40.0.0
 	github.com/mitchellh/mapstructure v1.4.1
 	github.com/mittwald/go-helm-client v0.8.4
@@ -76,7 +77,6 @@ require (
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/btree v1.0.1 // indirect
-	github.com/google/go-cmp v0.5.6 // indirect
 	github.com/google/go-github/v38 v38.0.0 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/google/gofuzz v1.1.0 // indirect
