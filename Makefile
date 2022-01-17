@@ -12,7 +12,7 @@ build: fmt vet ## Build dtm & plugins locally.
 	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/argocdapp_0.0.1.so ./cmd/argocdapp/
 	go build -trimpath -gcflags="all=-N -l" -o dtm ./cmd/devstream/
 
-build-core-only: fmt vet ## Build dtm core only, without plugins, locally.
+build-core: fmt vet ## Build dtm core only, without plugins, locally.
 	go mod tidy
 	go build -trimpath -gcflags="all=-N -l" -o dtm ./cmd/devstream/
 

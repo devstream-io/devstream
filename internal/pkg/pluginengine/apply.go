@@ -36,11 +36,10 @@ func Apply(fname string) error {
 
 	errsMap := execute(p)
 	if len(errsMap) != 0 {
-		err := errors.New("some error(s) occurred during plugins apply process")
 		for k, e := range errsMap {
 			log.Printf("%s -> %s", k, e)
 		}
-		return err
+		return errors.New("some error(s) occurred during plugins delete process")
 	}
 
 	log.Println("All plugins applied successfully.")

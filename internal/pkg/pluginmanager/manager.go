@@ -27,14 +27,14 @@ func DownloadPlugins(conf *configloader.Config) error {
 		pluginFileName := configloader.GetPluginFileName(&tool)
 		if _, err := os.Stat(filepath.Join(pluginDir, pluginFileName)); errors.Is(err, os.ErrNotExist) {
 			// plugin does not exist
-			err := dc.download(pluginDir, pluginFileName, tool.Version)
+			err := dc.download(pluginDir, pluginFileName, tool.Plugin.Version)
 			if err != nil {
 				return err
 			}
 			continue
 		}
 		// check md5
-		dup, err := checkFileMD5(filepath.Join(pluginDir, pluginFileName), dc, pluginFileName, tool.Version)
+		dup, err := checkFileMD5(filepath.Join(pluginDir, pluginFileName), dc, pluginFileName, tool.Plugin.Version)
 		if err != nil {
 			return err
 		}
@@ -48,7 +48,7 @@ func DownloadPlugins(conf *configloader.Config) error {
 		if err = os.Remove(filepath.Join(pluginDir, pluginFileName)); err != nil {
 			return err
 		}
-		if err = dc.download(pluginDir, pluginFileName, tool.Version); err != nil {
+		if err = dc.download(pluginDir, pluginFileName, tool.Plugin.Version); err != nil {
 			return err
 		}
 	}

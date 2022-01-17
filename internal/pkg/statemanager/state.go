@@ -1,17 +1,8 @@
 package statemanager
 
-type ComponentStatus string
-type ComponentAction string
+import "github.com/merico-dev/stream/internal/pkg/configloader"
 
-const (
-	// We should delete the state of the "uninstalled" tool at StatesMap.
-	StatusUninstalled ComponentStatus = "uninstalled"
-	// We use StatusInstalled when a plugin is installed but we don't know its status is "running" or "failed".
-	// For example: We try to uninstall a plugin but failed for some reason.
-	StatusInstalled ComponentStatus = "installed"
-	StatusRunning   ComponentStatus = "running"
-	StatusFailed    ComponentStatus = "failed"
-)
+type ComponentAction string
 
 const (
 	ActionInstall   ComponentAction = "Install"
@@ -21,25 +12,17 @@ const (
 
 // State is the single component's state.
 type State struct {
-	Name          string          `yaml:"name"`
-	Version       string          `yaml:"version"`
-	Dependencies  []string        `yaml:"dependencies"`
-	Status        ComponentStatus `yaml:"status"`
-	LastOperation *Operation      `yaml:"lastOperation"`
+	Name         string                 `yaml:"name"`
+	Plugin       configloader.Plugin    `yaml:"plugin"`
+	Dependencies []string               `yaml:"dependencies"`
+	Metadata     map[string]interface{} `yaml:"metadata"`
 }
 
-type Operation struct {
-	Action   ComponentAction        `yaml:"action"`
-	Time     string                 `yaml:"time"`
-	Metadata map[string]interface{} `yaml:"metadata"`
-}
-
-func NewState(name, version string, deps []string, status ComponentStatus, lastOpr *Operation) *State {
+func NewState(name string, plugin configloader.Plugin, deps []string, metadata map[string]interface{}) *State {
 	return &State{
-		Name:          name,
-		Version:       version,
-		Dependencies:  deps,
-		Status:        status,
-		LastOperation: lastOpr,
+		Name:         name,
+		Plugin:       plugin,
+		Dependencies: deps,
+		Metadata:     metadata,
 	}
 }
