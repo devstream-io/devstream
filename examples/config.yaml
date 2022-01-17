@@ -49,3 +49,16 @@ tools:
       valuefile: values.yaml
       path: charts/go-hello-http
       repoURL: https://github.com/ironcore864/openstream-gitops-test.git
+- name: kube-prometheus-dev
+  plugin:
+    kind: kube-prometheus
+    version: 0.0.1
+  options:
+    repo:
+      name: prometheus-community
+      url: https://prometheus-community.github.io/helm-charts
+    chart:
+      name: prometheus-community/kube-prometheus-stack
+      release_name: dev
+      namespace: monitoring
+      create_namespace: True
