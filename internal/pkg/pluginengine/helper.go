@@ -12,7 +12,7 @@ import (
 )
 
 func loadPlugin(pluginDir string, tool *configloader.Tool) (DevStreamPlugin, error) {
-	mod := fmt.Sprintf("%s/%s_%s.so", pluginDir, tool.Name, tool.Version)
+	mod := fmt.Sprintf("%s/%s", pluginDir, configloader.GetPluginFileName(tool))
 	plug, err := plugin.Open(mod)
 	if err != nil {
 		return nil, err

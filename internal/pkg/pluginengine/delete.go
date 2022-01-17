@@ -1,7 +1,7 @@
 package pluginengine
 
 import (
-	"fmt"
+	"errors"
 	"log"
 
 	"github.com/merico-dev/stream/internal/pkg/backend"
@@ -34,13 +34,14 @@ func Delete(fname string) error {
 	}
 
 	errsMap := execute(p)
-	if len(errsMap) == 0 {
-		log.Println("All plugins deleted successfully.")
-		return nil
+	if len(errsMap) != 0 {
+		err := errors.New("some error(s) occurred during plugins delete process")
+		for k, e := range errsMap {
+			log.Printf("%s -> %s", k, e)
+		}
+		return err
 	}
 
-	for k, err := range errsMap {
-		log.Printf("%s -> %s", k, err)
-	}
-	return fmt.Errorf("some errors occurred during plugins delete process")
+	log.Println("All plugins deleted successfully.")
+	return nil
 }

@@ -1,6 +1,7 @@
 package planmanager
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
@@ -8,38 +9,25 @@ import (
 
 // HandleResult is used to Write the latest StatesMap to the Backend.
 func (p *Plan) HandleResult(change *Change) error {
-	// uninstall succeeded
-	if change.ActionName == statemanager.ActionUninstall && change.Result.Succeeded {
-		p.smgr.DeleteState(change.Tool.Name)
+	if !change.Result.Succeeded {
+		log.Printf("Plugin %s %s failed.", change.Tool.Name, change.ActionName)
+		return fmt.Errorf("plugin %s %s failed", change.Tool.Name, change.ActionName)
+	}
+
+	if change.ActionName == statemanager.ActionUninstall {
+		p.smgr.DeleteState(getStateKeyFromTool(change.Tool))
+		log.Printf("Plugin %s uninstall done.", change.Tool.Name)
 		return p.smgr.Write(p.smgr.GetStatesMap().Format())
 	}
 
+	// install, reinstall
 	var state = statemanager.NewState(
 		change.Tool.Name,
-		change.Tool.Version,
+		change.Tool.Plugin,
 		[]string{},
-		statemanager.StatusRunning,
-		&statemanager.Operation{
-			Action:   change.ActionName,
-			Time:     change.Result.Time,
-			Metadata: change.Tool.Options,
-		},
+		change.Tool.Options,
 	)
-
-	// uninstall failed
-	if change.ActionName == statemanager.ActionUninstall && !change.Result.Succeeded {
-		state.Status = statemanager.StatusInstalled
-		log.Printf("Plugin %s uninstall failed.", change.Tool.Name)
-	} else if !change.Result.Succeeded {
-		// install or reinstall failed
-		state.Status = statemanager.StatusFailed
-		log.Printf("Plugin %s (re)install failed.", change.Tool.Name)
-	} else {
-		// install or reinstall succeeded
-		state.Status = statemanager.StatusInstalled
-		log.Printf("Plugin %s process done.", change.Tool.Name)
-	}
-
 	p.smgr.AddState(state)
+	log.Printf("Plugin %s %s done.", change.Tool.Name, change.ActionName)
 	return p.smgr.Write(p.smgr.GetStatesMap().Format())
 }

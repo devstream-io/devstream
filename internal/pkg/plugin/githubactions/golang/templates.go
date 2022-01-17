@@ -25,9 +25,15 @@ jobs:
       with:
         go-version: 1.17
     - name: Test
-      run: [[.Test.Command]] [[- if .Test.Coverage.Enable]] -race -coverprofile=coverage.out -covermode=atomic [[- end]]
-      
-
+      run: [[.Test.Command]] [[- if .Test.Coverage.Enable]] -race -covermode=atomic -coverprofile=[[.Test.Coverage.Output]] [[- end]]
+    [[- if .Test.Coverage.Enable]]
+    - name: comment PR
+      uses: machine-learning-apps/pr-comment@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
+      with:
+        path: [[.Test.Coverage.Output]]
+    [[- end]]
   [[- end]]
   tag:
     name: Tag

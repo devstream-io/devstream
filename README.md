@@ -64,7 +64,7 @@ Usage:
   make <target>
   help                Display this help.
   build               Build dtm & plugins locally.
-  build-core-only     Build dtm core only, without plugins, locally.
+  build-core          Build dtm core only, without plugins, locally.
   build-release       Build for all platforms for release.
   build-darwin-arm64  Build for darwin/arm64 for release.
   build-darwin-amd64  Cross-platform build for darwin/amd64.
