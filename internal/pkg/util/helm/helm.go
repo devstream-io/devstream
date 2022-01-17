@@ -2,11 +2,12 @@ package helm
 
 import (
 	"context"
-	helmclient "github.com/mittwald/go-helm-client"
-	"helm.sh/helm/v3/pkg/repo"
 	"log"
 	"strings"
 	"time"
+
+	helmclient "github.com/mittwald/go-helm-client"
+	"helm.sh/helm/v3/pkg/repo"
 )
 
 type Helm struct {
@@ -89,7 +90,7 @@ func (h *Helm) InstallOrUpgradeChart() error {
 	return err
 }
 
-func (h *Helm) UninstallHelmChart() error {
+func (h *Helm) UninstallHelmChartRelease() error {
 	var err error
 	if err = h.UninstallReleaseByName(h.ChartSpec.ReleaseName); err != nil {
 		if strings.Contains(err.Error(), "not found") {

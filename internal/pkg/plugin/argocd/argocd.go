@@ -11,6 +11,7 @@ import (
 	"helm.sh/helm/v3/pkg/repo"
 )
 
+// TODO(daniel-hutao): refactor this package to implement with util/helm. After plugin kube-prometheus is merged.
 type ArgoCD struct {
 	client *helmClient.Client
 	param  *Param

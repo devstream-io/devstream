@@ -6,7 +6,6 @@ type HelmParam struct {
 	Chart Chart
 }
 
-
 // Repo is the struct containing details of a git repository.
 // TODO(daniel-hutao): make the Repo equals to repo.Entry
 type Repo struct {
