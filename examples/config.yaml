@@ -17,8 +17,9 @@ tools:
         enable: True
         command: "go test ./..."
         coverage:
-          enable: False
-          profile: "-race -coverprofile=coverage.out -covermode=atomic"
+          enable: True
+          profile: "-race -covermode=atomic"
+          output: "coverage.out"
 
 # # for python config
 #- name: githubactions
