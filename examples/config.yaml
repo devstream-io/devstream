@@ -32,6 +32,16 @@ tools:
       name: go
       version: "1.17"
     branch: main
+- name: trello-integration
+  plugin:
+    kind: githubintegrations
+    version: 0.0.1
+  options:
+    owner: ironcore864
+    repo: go-hello-http
+    api:
+      name: trello
+    branch: master
 - name: argocd-dev
   plugin:
     kind: argocd
