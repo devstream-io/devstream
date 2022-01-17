@@ -17,7 +17,7 @@ tools:
         enable: True
         command: "go test ./..."
         coverage:
-          enable: True
+          enable: False
           profile: "-race -covermode=atomic"
           output: "coverage.out"
 
