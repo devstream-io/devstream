@@ -1,5 +1,7 @@
 package slicez
 
+// TODO(daniel-hutao): use set to improve the implementation
+
 // SliceInSliceInterface is used to filter the items in s1 but not in s2
 // Please use the SliceInSliceStr() or SliceInSliceInt() instead, they are more clear and easy to use.
 func SliceInSliceInterface(s1, s2 interface{}) interface{} {
