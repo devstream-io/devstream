@@ -13,11 +13,11 @@ func Install(options *map[string]interface{}) (bool, error) {
 	log.Printf("Language is: %s.", language.String())
 	ws := defaultWorkflows.GetWorkflowByNameVersionTypeString(language.String())
 
-	for _, pipeline := range ws {
-		if err := githubActions.renderTemplate(pipeline); err != nil {
+	for _, w := range ws {
+		if err := githubActions.renderTemplate(w); err != nil {
 			return false, err
 		}
-		if err := githubActions.AddWorkflow(pipeline); err != nil {
+		if err := githubActions.AddWorkflow(w); err != nil {
 			return false, err
 		}
 	}

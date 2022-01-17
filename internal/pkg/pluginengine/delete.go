@@ -23,7 +23,7 @@ func Delete(fname string) error {
 	// use default local backend for now.
 	b, err := backend.GetBackend("local")
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	smgr := statemanager.NewManager(b)
 
