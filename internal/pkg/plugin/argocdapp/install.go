@@ -1,6 +1,8 @@
 package argocdapp
 
 import (
+	"os"
+
 	"github.com/mitchellh/mapstructure"
 )
 
@@ -13,13 +15,15 @@ func Install(options *map[string]interface{}) (bool, error) {
 	}
 
 	file := defaultYamlPath
-	err = writeContentToTmpFile(file, appTemplate, &param)
-	if err != nil {
+	if err = writeContentToTmpFile(file, appTemplate, &param); err != nil {
 		return false, err
 	}
 
-	err = kubectlAction(ActionApply, file)
-	if err != nil {
+	if err = kubectlAction(ActionApply, file); err != nil {
+		return false, err
+	}
+
+	if err = os.Remove(file); err != nil {
 		return false, err
 	}
 
