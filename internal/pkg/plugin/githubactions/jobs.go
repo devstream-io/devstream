@@ -23,6 +23,7 @@ type Test struct {
 type Coverage struct {
 	Enable  bool
 	Profile string
+	Output  string
 }
 
 // Tag is the struct for githubacions job.
