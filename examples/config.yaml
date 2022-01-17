@@ -1,77 +1,87 @@
 ---
 tools:
-- name: go-hello-http-ci
-  plugin:
-    kind: githubactions
-    version: 0.0.1
-  options:
-    owner: ironcore864
-    repo: go-hello-http
-    language:
-      name: go
-      version: "1.17"
-    branch: master
-    jobs:
-      build:
-        enable: True
-        command: "go build ./..."
-      test:
-        enable: True
-        command: "go test ./..."
-        coverage:
-          enable: False
-          profile: "-race -coverprofile=coverage.out -covermode=atomic"
-- name: dtm-test1-ci
-  plugin:
-    kind: githubactions
-    version: 0.0.1
-  options:
-    owner: ironcore864
-    repo: dtm-test1
-    language:
-      name: go
-      version: "1.17"
-    branch: main
-- name: argocd-dev
-  plugin:
-    kind: argocd
-    version: 0.0.1
-  options:
-    repo:
-      name: argo
-      url: https://argoproj.github.io/argo-helm
-    chart:
-      name: argo/argo-cd
-      release_name: argocd
-      namespace: argocd
-      create_namespace: True
-- name: argocdapp-hello
-  plugin:
-    kind: argocdapp
-    version: 0.0.1
-  options:
-    app:
-      name: hello
-      namespace: argocd
-    destination:
-      server: https://kubernetes.default.svc
-      namespace: default
-    source:
-      valuefile: values.yaml
-      path: charts/go-hello-http
-      repoURL: https://github.com/ironcore864/openstream-gitops-test.git
-- name: argocdapp-demo-app
-  plugin:
-    kind: argocdapp
-    version: 0.0.1
-  options:
-    app:
-      name: demo-app
-      namespace: argocd
-    destination:
-      server: https://kubernetes.default.svc
-      namespace: default
-    source:
-      valuefile: values.yaml
-      path: charts/demo-app
-      repoURL: https://github.com/ironcore864/openstream-gitops-test.git
+  - name: go-hello-http-ci
+    plugin:
+      kind: githubactions
+      version: 0.0.1
+    options:
+      owner: ironcore864
+      repo: go-hello-http
+      language:
+        name: go
+        version: "1.17"
+      branch: master
+      jobs:
+        build:
+          enable: True
+          command: "go build ./..."
+        test:
+          enable: True
+          command: "go test ./..."
+          coverage:
+            enable: False
+            profile: "-race -coverprofile=coverage.out -covermode=atomic"
+  - name: dtm-test1-ci
+    plugin:
+      kind: githubactions
+      version: 0.0.1
+    options:
+      owner: ironcore864
+      repo: dtm-test1
+      language:
+        name: go
+        version: "1.17"
+      branch: main
+  - name: trello-integration
+    plugin:
+      kind: githubintegrations
+      version: 0.0.1
+    options:
+      owner: ironcore864
+      repo: go-hello-http
+      api:
+        name: trello
+      branch: master
+  - name: argocd-dev
+    plugin:
+      kind: argocd
+      version: 0.0.1
+    options:
+      repo:
+        name: argo
+        url: https://argoproj.github.io/argo-helm
+      chart:
+        name: argo/argo-cd
+        release_name: argocd
+        namespace: argocd
+        create_namespace: True
+  - name: argocdapp-hello
+    plugin:
+      kind: argocdapp
+      version: 0.0.1
+    options:
+      app:
+        name: hello
+        namespace: argocd
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: default
+      source:
+        valuefile: values.yaml
+        path: charts/go-hello-http
+        repoURL: https://github.com/ironcore864/openstream-gitops-test.git
+  - name: argocdapp-demo-app
+    plugin:
+      kind: argocdapp
+      version: 0.0.1
+    options:
+      app:
+        name: demo-app
+        namespace: argocd
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: default
+      source:
+        valuefile: values.yaml
+        path: charts/demo-app
+        repoURL: https://github.com/ironcore864/openstream-gitops-test.git
