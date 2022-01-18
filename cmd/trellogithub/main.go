@@ -12,22 +12,22 @@ const NAME = "trellogithub"
 // Plugin is the type used by DevStream core. It's a string.
 type Plugin string
 
-// Install implements the installation of some GitHub Actions workflows.
+// Install implements the installation of some trello-github-integ workflows.
 func (p Plugin) Install(options *map[string]interface{}) (bool, error) {
 	return trellogithub.Install(options)
 }
 
-// Reinstall implements the installation of some GitHub Actions workflows.
+// Reinstall implements the installation of some trello-github-integ workflows.
 func (p Plugin) Reinstall(options *map[string]interface{}) (bool, error) {
 	return trellogithub.Reinstall(options)
 }
 
-// Uninstall implements the installation of some GitHub Actions workflows.
+// Uninstall implements the installation of some trello-github-integ workflows.
 func (p Plugin) Uninstall(options *map[string]interface{}) (bool, error) {
 	return trellogithub.Uninstall(options)
 }
 
-// IsHealthy implements the healthy check of GitHub Actions workflows.
+// IsHealthy implements the healthy check of trello-github-integ workflows.
 func (p Plugin) IsHealthy(options *map[string]interface{}) (bool, error) {
 	return trellogithub.IsHealthy(options)
 }

@@ -1,6 +1,6 @@
 ## 1 Trello-Github Integration Plugin
 
-This plugin creates some GitHub Actions workflows.
+This plugin creates some trello-github-integ workflows.
 
 Currently, only Golang is supported.
 

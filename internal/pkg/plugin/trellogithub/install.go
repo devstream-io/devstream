@@ -4,7 +4,7 @@ import (
 	"log"
 )
 
-// Install sets up GitHub Actions workflows.
+// Install sets up trello-github-integ workflows.
 func Install(options *map[string]interface{}) (bool, error) {
 	gis, err := NewTrelloGithub(options)
 	if err != nil {

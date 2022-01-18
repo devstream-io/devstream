@@ -4,7 +4,7 @@ import (
 	"log"
 )
 
-// Reinstall remove and set up GitHub Actions workflows.
+// Reinstall remove and set up trello-github-integ workflows.
 func Reinstall(options *map[string]interface{}) (bool, error) {
 	gis, err := NewTrelloGithub(options)
 	if err != nil {
