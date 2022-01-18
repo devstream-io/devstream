@@ -9,10 +9,9 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/spf13/viper"
-
 	"github.com/google/go-github/v40/github"
 	"github.com/mitchellh/mapstructure"
+	"github.com/spf13/viper"
 	"golang.org/x/oauth2"
 
 	"github.com/merico-dev/stream/internal/pkg/util/mapz"
