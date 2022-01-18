@@ -17,12 +17,12 @@ func (p Plugin) Install(options *map[string]interface{}) (bool, error) {
 	return kubeprometheus.Install(options)
 }
 
-// Reinstall implements the installation of some GitHub Actions workflows.
+// Reinstall implements the reinstallation of some GitHub Actions workflows.
 func (p Plugin) Reinstall(options *map[string]interface{}) (bool, error) {
 	return kubeprometheus.Reinstall(options)
 }
 
-// Uninstall implements the installation of some GitHub Actions workflows.
+// Uninstall implements the uninstallation of some GitHub Actions workflows.
 func (p Plugin) Uninstall(options *map[string]interface{}) (bool, error) {
 	return kubeprometheus.Uninstall(options)
 }
