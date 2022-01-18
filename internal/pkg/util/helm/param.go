@@ -16,8 +16,12 @@ type Repo struct {
 // Chart is the struct containing details of a helm chart.
 // TODO(daniel-hutao): make the Chart equals to helmclient.ChartSpec
 type Chart struct {
-	Name            string
+	ChartName       string `mapstructure:"chart_name"`
+	Version         string
 	ReleaseName     string `mapstructure:"release_name"`
 	Namespace       string
 	CreateNamespace bool `mapstructure:"create_namespace"`
+	Wait            bool
+	Timeout         string // such as "1.5h" or "2h45m", valid time units are "s", "m", "h"
+	UpgradeCRDs     bool   `mapstructure:"upgradeCRDs"`
 }

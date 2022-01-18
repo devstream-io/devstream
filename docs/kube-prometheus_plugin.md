@@ -24,13 +24,19 @@ tools:
     # Helm chart information
     chart:
       # name of the chart
-      name: prometheus-community/kube-prometheus-stack
+      chart_name: prometheus-community/kube-prometheus-stack
       # release name of the chart
       release_name: dev
       # k8s namespace where kube-prometheus will be installed
       namespace: monitoring
       # need to create the namespace or not
       create_namespace: True
+      # whether to wait for the release to be deployed or not
+      wait: true
+      # the time to wait for any individual Kubernetes operation (like Jobs for hooks)
+      timeout: 5m
+      # whether to perform a CRD upgrade during installation
+      upgradeCRDs: true
 ```
 
 Currently, all the parameters in the example above are mandatory.
