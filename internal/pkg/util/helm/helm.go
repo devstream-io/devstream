@@ -55,7 +55,7 @@ func NewHelm(param *HelmParam) (*Helm, error) {
 		Version:          param.Chart.Version,
 		CreateNamespace:  param.Chart.CreateNamespace,
 		DisableHooks:     false,
-		Replace:          false,
+		Replace:          true,
 		Wait:             param.Chart.Wait,
 		DependencyUpdate: false,
 		Timeout:          tmout,
