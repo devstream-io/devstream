@@ -6,7 +6,7 @@ import (
 
 const (
 	defaultCommitMessage = "builder by DevStream"
-	BuilderYmlTrello     = "trello-integration.yml"
+	BuilderYmlTrello     = "trello-github-integ.yml"
 )
 
 var extTrello = &Api{

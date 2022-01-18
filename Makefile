@@ -8,7 +8,7 @@ build: fmt vet ## Build dtm & plugins locally.
 	go mod tidy
 	mkdir -p .devstream
 	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/githubactions_0.0.1.so ./cmd/githubactions/
-	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/trellogithub.0.1.so ./cmd/trellogithub/
+	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/trello-github-integ_0.0.1.so ./cmd/trellogithub/
 	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/argocd_0.0.1.so ./cmd/argocd/
 	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/argocdapp_0.0.1.so ./cmd/argocdapp/
 	go build -trimpath -gcflags="all=-N -l" -o dtm ./cmd/devstream/
@@ -28,7 +28,7 @@ build-darwin-arm64: ## Build for darwin/arm64 for release.
 	go mod tidy
 	mkdir -p .devstream
 	CGO_ENABLED=1 GOOS=darwin GOARCH=arm64 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/githubactions-darwin-arm64_0.0.1.so ./cmd/githubactions/
-	CGO_ENABLED=1 GOOS=darwin GOARCH=arm64 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/trellogithub-darwin-arm64_0.0.1.so ./cmd/trellogithub/
+	CGO_ENABLED=1 GOOS=darwin GOARCH=arm64 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/trello-github-integ-darwin-arm64_0.0.1.so ./cmd/trellogithub/
     CGO_ENABLED=1 GOOS=darwin GOARCH=arm64 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/argocd-darwin-arm64_0.0.1.so ./cmd/argocd/
 	CGO_ENABLED=1 GOOS=darwin GOARCH=arm64 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/argocdapp-darwin-arm64_0.0.1.so ./cmd/argocdapp/
 	CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -trimpath -gcflags="all=-N -l" -o dtm-darwin-arm64 ./cmd/devstream/
@@ -37,7 +37,7 @@ build-darwin-amd64: ## Cross-platform build for darwin/amd64.
 	go mod tidy
 	mkdir -p .devstream
 	CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/githubactions-darwin-amd64_0.0.1.so ./cmd/githubactions/
-	CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/trellogithub-darwin-amd64_0.0.1.so ./cmd/trellogithub/
+	CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/trello-github-integ-darwin-amd64_0.0.1.so ./cmd/trellogithub/
     CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/argocd-darwin-amd64_0.0.1.so ./cmd/argocd/
 	CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/argocdapp-darwin-amd64_0.0.1.so ./cmd/argocdapp/
 	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -trimpath -gcflags="all=-N -l" -o dtm-darwin-amd64 ./cmd/devstream/
