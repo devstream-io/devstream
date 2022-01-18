@@ -30,6 +30,11 @@ func NewHelm(param *HelmParam) (*Helm, error) {
 		return nil, err
 	}
 
+	tmout, err := time.ParseDuration(param.Chart.Timeout)
+	if err != nil {
+		return nil, err
+	}
+
 	entry := &repo.Entry{
 		Name:                  param.Repo.Name,
 		URL:                   param.Repo.URL,
@@ -43,33 +48,30 @@ func NewHelm(param *HelmParam) (*Helm, error) {
 	}
 
 	chartSpec := &helmclient.ChartSpec{
-		ReleaseName:     param.Chart.ReleaseName,
-		ChartName:       param.Chart.Name,
-		Namespace:       param.Chart.Namespace,
-		ValuesYaml:      "",
-		Version:         "",
-		CreateNamespace: param.Chart.CreateNamespace,
-		DisableHooks:    false,
-		Replace:         false,
-		// TODO(daniel-hutao): default to true now, maybe exposed at config.yaml later
-		Wait:             true,
+		ReleaseName:      param.Chart.ReleaseName,
+		ChartName:        param.Chart.ChartName,
+		Namespace:        param.Chart.Namespace,
+		ValuesYaml:       "",
+		Version:          param.Chart.Version,
+		CreateNamespace:  param.Chart.CreateNamespace,
+		DisableHooks:     false,
+		Replace:          true,
+		Wait:             param.Chart.Wait,
 		DependencyUpdate: false,
-		// TODO(daniel-hutao): default to 5min now, maybe exposed at config.yaml later
-		Timeout:      5 * time.Minute,
-		GenerateName: false,
-		NameTemplate: "",
-		Atomic:       false,
-		SkipCRDs:     false,
-		// TODO(daniel-hutao): default to true now, maybe exposed at config.yaml later
-		UpgradeCRDs:   true,
-		SubNotes:      false,
-		Force:         false,
-		ResetValues:   false,
-		ReuseValues:   false,
-		Recreate:      false,
-		MaxHistory:    0,
-		CleanupOnFail: false,
-		DryRun:        false,
+		Timeout:          tmout,
+		GenerateName:     false,
+		NameTemplate:     "",
+		Atomic:           false,
+		SkipCRDs:         false,
+		UpgradeCRDs:      param.Chart.UpgradeCRDs,
+		SubNotes:         false,
+		Force:            false,
+		ResetValues:      false,
+		ReuseValues:      false,
+		Recreate:         false,
+		MaxHistory:       0,
+		CleanupOnFail:    false,
+		DryRun:           false,
 	}
 
 	helm := &Helm{

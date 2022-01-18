@@ -41,10 +41,13 @@ tools:
       name: argo
       url: https://argoproj.github.io/argo-helm
     chart:
-      name: argo/argo-cd
+      chart_name: argo/argo-cd
       release_name: argocd
       namespace: argocd
       create_namespace: True
+      wait: true
+      timeout: 5m
+      upgradeCRDs: true
 - name: argocdapp-hello
   plugin:
     kind: argocdapp
@@ -84,7 +87,10 @@ tools:
       name: prometheus-community
       url: https://prometheus-community.github.io/helm-charts
     chart:
-      name: prometheus-community/kube-prometheus-stack
+      chart_name: prometheus-community/kube-prometheus-stack
       release_name: dev
       namespace: monitoring
       create_namespace: True
+      wait: true
+      timeout: 5m
+      upgradeCRDs: true

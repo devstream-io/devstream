@@ -22,13 +22,19 @@ tools:
     # Helm chart information
     chart:
       # name of the chart
-      name: argo/argo-cd
+      chart_name: argo/argo-cd
       # release name of the chart
       release_name: argocd
       # k8s namespace where argocd will be installed
       namespace: argocd
       # need to create the namespace or not
       create_namespace: False
+      # whether to wait for the release to be deployed or not
+      wait: true
+      # the time to wait for any individual Kubernetes operation (like Jobs for hooks)
+      timeout: 5m
+      # whether to perform a CRD upgrade during installation
+      upgradeCRDs: true
 ```
 
 Currently, all the parameters in the example above are mandatory.
