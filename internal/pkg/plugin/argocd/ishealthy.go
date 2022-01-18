@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/mitchellh/mapstructure"
+
+	"github.com/merico-dev/stream/internal/pkg/util/helm"
 	"github.com/merico-dev/stream/internal/pkg/util/k8s"
 )
 
@@ -14,23 +17,34 @@ import (
 // 4. argocd-repo-server
 // 5. argocd-server
 const (
-	DefaultDeploymentCount = 5
-	ArgoCDNamespace        = "argocd"
+	ArgocdDefaultDeploymentCount = 5
+	ArgocdDefaultNamespace       = "argocd"
 )
 
 func IsHealthy(options *map[string]interface{}) (bool, error) {
+	var param helm.HelmParam
+	if err := mapstructure.Decode(*options, &param); err != nil {
+		return false, err
+	}
+
+	namespace := param.Chart.Namespace
+	if namespace == "" {
+		namespace = ArgocdDefaultNamespace
+	}
+
 	kubeClient, err := k8s.NewClient()
 	if err != nil {
 		return false, err
 	}
 
-	dps, err := kubeClient.ListDeployments(ArgoCDNamespace)
+	dps, err := kubeClient.ListDeployments(namespace)
 	if err != nil {
 		return false, err
 	}
 
-	if len(dps) != DefaultDeploymentCount {
-		return false, fmt.Errorf("expect deployments count %d, but got count %d now", DefaultDeploymentCount, len(dps))
+	if len(dps) != ArgocdDefaultDeploymentCount {
+		return false, fmt.Errorf("expect deployments count %d, but got count %d now",
+			ArgocdDefaultDeploymentCount, len(dps))
 	}
 
 	hasNotReadyDeployment := false
@@ -44,7 +58,7 @@ func IsHealthy(options *map[string]interface{}) (bool, error) {
 	}
 
 	if hasNotReadyDeployment {
-		return false, fmt.Errorf("some deployment are not ready")
+		return false, fmt.Errorf("some deployments are not ready")
 	}
 	return true, nil
 }
