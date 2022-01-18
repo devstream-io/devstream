@@ -9,5 +9,5 @@ import (
 
 func TestPlanmanager(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Util Githubactions Suite")
+	RunSpecs(t, "Util Trellogithub Suite")
 }

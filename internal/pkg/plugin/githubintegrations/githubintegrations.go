@@ -10,12 +10,9 @@ import (
 	"text/template"
 
 	"github.com/google/go-github/v40/github"
-	"github.com/mitchellh/mapstructure"
-	"github.com/spf13/viper"
-	"golang.org/x/oauth2"
-
 	"github.com/merico-dev/stream/internal/pkg/util/mapz"
 	"github.com/merico-dev/stream/internal/pkg/util/slicez"
+	"github.com/mitchellh/mapstructure"
 )
 
 type GithubIntegrations struct {
@@ -128,8 +125,21 @@ func (gi *GithubIntegrations) VerifyWorkflows(workflows []*Workflow) (map[string
 	for _, w := range workflows {
 		wsFiles = append(wsFiles, w.workflowFileName)
 	}
-	fmt.Printf("Workflow files: %v", wsFiles)
 
+	fmt.Printf("Workflow files: %v", wsFiles)
+	filesInRemoteDir, rMap, err := gi.FetchRemoteContent(wsFiles)
+	if err != nil {
+		return nil, err
+	}
+	if rMap != nil {
+		return rMap, nil
+	}
+
+	return gi.CompareFiles(wsFiles, filesInRemoteDir), nil
+}
+
+func (gi *GithubIntegrations) FetchRemoteContent(wsFiles []string) ([]string, map[string]error, error) {
+	var filesInRemoteDir = make([]string, 0)
 	_, dirContent, resp, err := gi.client.Repositories.GetContents(
 		gi.ctx,
 		gi.options.Owner,
@@ -141,41 +151,43 @@ func (gi *GithubIntegrations) VerifyWorkflows(workflows []*Workflow) (map[string
 	// error reason is not 404
 	if err != nil && !strings.Contains(err.Error(), "404") {
 		log.Printf("GetContents failed with error: %s", err)
-		return nil, err
+		return nil, nil, err
 	}
 	// StatusCode == 404
 	if resp.StatusCode == http.StatusNotFound {
-		log.Printf("GetContents return with status code 404")
+		log.Printf("GetContents returned with status code 404")
 		retMap := mapz.FillMapWithStrAndError(wsFiles, fmt.Errorf("not found"))
-		return retMap, nil
+		return nil, retMap, nil
 	}
 	// StatusCode != 200
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("got some error is not expected: %s", resp.Status)
+		return nil, nil, fmt.Errorf("got some error: %s", resp.Status)
 	}
 	// StatusCode == 200
 	log.Printf("GetContents return with status code 200")
-	var filesInRemoteDir = make([]string, 0)
 	for _, f := range dirContent {
 		log.Printf("Found remote file: %s", f.GetName())
 		filesInRemoteDir = append(filesInRemoteDir, f.GetName())
 	}
+	return filesInRemoteDir, nil, nil
+}
 
+// CompareFiles compare files between local and remote
+func (gi *GithubIntegrations) CompareFiles(wsFiles, filesInRemoteDir []string) map[string]error {
 	lostFiles := slicez.SliceInSliceStr(wsFiles, filesInRemoteDir)
 	// all files exist
 	if len(lostFiles) == 0 {
-		log.Println("All files exist")
+		log.Println("All workflows exist.")
 		retMap := mapz.FillMapWithStrAndError(wsFiles, nil)
-		return retMap, nil
+		return retMap
 	}
 	// some files lost
-	log.Println("Some files lost")
 	retMap := mapz.FillMapWithStrAndError(wsFiles, nil)
 	for _, f := range lostFiles {
 		log.Printf("Lost file: %s", f)
 		retMap[f] = fmt.Errorf("not found")
 	}
-	return retMap, nil
+	return retMap
 }
 
 // getFileSHA will try to collect the SHA hash value of the file, then return it. the return values will be:
@@ -205,7 +217,7 @@ func (gi *GithubIntegrations) getFileSHA(filename string) (string, error) {
 	if resp.StatusCode == http.StatusOK {
 		return *content.SHA, nil
 	}
-	return "", fmt.Errorf("got some error is not expected")
+	return "", fmt.Errorf("got some error")
 }
 
 // renderTemplate render the github actions template with config.yaml
@@ -216,7 +228,7 @@ func (gi *GithubIntegrations) renderTemplate(workflow *Workflow) error {
 		return err
 	}
 	//if use default {{.}}, it will confict (github actions vars also use them)
-	t, err := template.New("githubactions").Delims("[[", "]]").Parse(workflow.workflowContent)
+	t, err := template.New("trellogithub").Delims("[[", "]]").Parse(workflow.workflowContent)
 	if err != nil {
 		return err
 	}
@@ -228,27 +240,4 @@ func (gi *GithubIntegrations) renderTemplate(workflow *Workflow) error {
 	}
 	workflow.workflowContent = buff.String()
 	return nil
-}
-
-func generateGitHubWorkflowFileByName(f string) string {
-	return fmt.Sprintf(".github/workflows/%s", f)
-}
-
-func getGitHubClient(ctx context.Context) (*github.Client, error) {
-	token := viper.GetString("github_token")
-	if token == "" {
-		return nil, fmt.Errorf("failed to initialize GitHub token. More info - https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token")
-	}
-	ts := oauth2.StaticTokenSource(
-		&oauth2.Token{AccessToken: token},
-	)
-	tc := oauth2.NewClient(ctx, ts)
-	return github.NewClient(tc), nil
-}
-
-func verifyOptions(opt *Options) bool {
-	return opt.Owner != "" &&
-		opt.Repo != "" &&
-		opt.Branch != "" &&
-		opt.Api != nil
 }

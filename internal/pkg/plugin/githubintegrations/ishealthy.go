@@ -21,7 +21,7 @@ func IsHealthy(options *map[string]interface{}) (bool, error) {
 	for name, err := range retMap {
 		if err != nil {
 			errFlag = true
-			log.Printf("The workflow/file %s is not ok: %s", name, err)
+			log.Printf("The workflow/file %s got some error: %s", name, err)
 		}
 		log.Printf("The workflow/file %s is ok", name)
 	}

@@ -4,6 +4,6 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 )
 
-var _ = Describe("Githubactions", func() {
+var _ = Describe("Trellogithub", func() {
 	// TODO(daniel-hutao): implement the unit tests
 })

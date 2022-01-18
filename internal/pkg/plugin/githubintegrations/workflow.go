@@ -19,7 +19,7 @@ var defaultWorkflows = workflows{
 	},
 }
 
-// Options is the struct for configurations of the githubactions plugin.
+// Options is the struct for configurations of the trellogithub plugin.
 type Options struct {
 	Owner  string
 	Repo   string
