@@ -20,7 +20,8 @@ tools:
         command: "go test ./..."
         coverage:
           enable: False
-          profile: "-race -coverprofile=coverage.out -covermode=atomic"
+          profile: "-race -covermode=atomic"
+          output: "coverage.out"
 - name: dtm-test1-ci
   plugin:
     kind: githubactions
@@ -32,6 +33,16 @@ tools:
       name: go
       version: "1.17"
     branch: main
+- name: trello-github-integ-default
+  plugin:
+    kind: trello-github-integ
+    version: 0.0.1
+  options:
+    owner: ironcore864
+    repo: go-hello-http
+    api:
+      name: trello
+    branch: master
 - name: argocd-dev
   plugin:
     kind: argocd
