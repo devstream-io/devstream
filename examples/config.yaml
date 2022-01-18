@@ -33,7 +33,7 @@ tools:
       name: go
       version: "1.17"
     branch: main
-- name: trellogithub-trello
+- name: github-trello
   plugin:
     kind: trellogithub
     version: 0.0.1
