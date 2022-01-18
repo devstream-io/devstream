@@ -2,6 +2,7 @@ package pluginengine
 
 import (
 	"errors"
+	"fmt"
 	"log"
 
 	"github.com/merico-dev/stream/internal/pkg/backend"
@@ -13,6 +14,9 @@ import (
 
 func Delete(fname string) error {
 	cfg := configloader.LoadConf(fname)
+	if cfg == nil {
+		return fmt.Errorf("failed to load the config file")
+	}
 
 	err := pluginmanager.CheckLocalPlugins(cfg)
 	if err != nil {

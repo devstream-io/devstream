@@ -18,6 +18,9 @@ var initCMD = &cobra.Command{
 
 func initCMDFunc(cmd *cobra.Command, args []string) {
 	cfg := configloader.LoadConf(configFile)
+	if cfg == nil {
+		log.Fatal("Failed to load the config file.")
+	}
 
 	log.Println("Initialize started.")
 	err := pluginmanager.DownloadPlugins(cfg)

@@ -15,6 +15,11 @@ type Config struct {
 
 // Tool is the struct for one section of the DevStream configuration file.
 type Tool struct {
+	// RFC 1123 - DNS Subdomain Names style
+	// contain no more than 253 characters
+	// contain only lowercase alphanumeric characters, '-' or '.'
+	// start with an alphanumeric character
+	// end with an alphanumeric character
 	Name    string                 `yaml:"name"`
 	Plugin  Plugin                 `yaml:"plugin"`
 	Options map[string]interface{} `yaml:"options"`
@@ -47,11 +52,20 @@ func LoadConf(fname string) *Config {
 		log.Fatal("See more help by running \"dtm help\"")
 	}
 
-	config := Config{}
-
+	var config Config
 	err = yaml.Unmarshal(fileBytes, &config)
 	if err != nil {
-		log.Fatal(err)
+		log.Printf("unmarshal config failed: %s", err)
+		return nil
+	}
+
+	errs := config.Validate()
+
+	if len(errs) != 0 {
+		for _, e := range errs {
+			fmt.Printf("Config validation failed: %s", e)
+		}
+		return nil
 	}
 
 	return &config
