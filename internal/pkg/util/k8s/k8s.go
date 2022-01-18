@@ -64,6 +64,38 @@ func (c *Client) IsDeploymentReady(deployment *appsv1.Deployment) bool {
 	return deployment.Status.ReadyReplicas == *deployment.Spec.Replicas
 }
 
+func (c *Client) ListDaemonsets(namespace string) ([]appsv1.DaemonSet, error) {
+	dsList, err := c.AppsV1().DaemonSets(namespace).List(context.TODO(), metav1.ListOptions{})
+	if err != nil {
+		return nil, err
+	}
+	return dsList.Items, nil
+}
+
+func (c *Client) GetDaemonset(namespace, name string) (*appsv1.DaemonSet, error) {
+	return c.AppsV1().DaemonSets(namespace).Get(context.TODO(), name, metav1.GetOptions{})
+}
+
+func (c *Client) IsDaemonsetReady(daemonset *appsv1.DaemonSet) bool {
+	return daemonset.Status.NumberReady == daemonset.Status.DesiredNumberScheduled
+}
+
+func (c *Client) ListStatefulsets(namespace string) ([]appsv1.StatefulSet, error) {
+	ssList, err := c.AppsV1().StatefulSets(namespace).List(context.TODO(), metav1.ListOptions{})
+	if err != nil {
+		return nil, err
+	}
+	return ssList.Items, nil
+}
+
+func (c *Client) GetStatefulset(namespace, name string) (*appsv1.StatefulSet, error) {
+	return c.AppsV1().StatefulSets(namespace).Get(context.TODO(), name, metav1.GetOptions{})
+}
+
+func (c *Client) IsStatefulsetReady(statefulset *appsv1.StatefulSet) bool {
+	return statefulset.Status.ReadyReplicas == *statefulset.Spec.Replicas
+}
+
 func (c *Client) ListServices(namespace string) ([]corev1.Service, error) {
 	services, err := c.CoreV1().Services(namespace).List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
