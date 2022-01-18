@@ -1,4 +1,4 @@
-package githubintegrations
+package trellogithub
 
 import (
 	"testing"

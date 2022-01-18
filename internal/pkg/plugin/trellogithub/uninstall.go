@@ -1,4 +1,4 @@
-package githubintegrations
+package trellogithub
 
 import (
 	"log"
@@ -6,7 +6,7 @@ import (
 
 // Uninstall remove GitHub Actions workflows.
 func Uninstall(options *map[string]interface{}) (bool, error) {
-	gis, err := NewGithubIntegrations(options)
+	gis, err := NewTrelloGithub(options)
 	if err != nil {
 		return false, err
 	}

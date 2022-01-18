@@ -33,9 +33,9 @@ tools:
       name: go
       version: "1.17"
     branch: main
-- name: githubintegrations-trello
+- name: trellogithub-trello
   plugin:
-    kind: githubintegrations
+    kind: trellogithub
     version: 0.0.1
   options:
     owner: ironcore864

@@ -1,8 +1,9 @@
-package githubintegrations
+package trellogithub
 
 import (
 	"context"
 	"fmt"
+
 	"github.com/google/go-github/v40/github"
 	"github.com/spf13/viper"
 	"golang.org/x/oauth2"

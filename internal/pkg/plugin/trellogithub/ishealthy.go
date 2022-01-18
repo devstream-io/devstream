@@ -1,9 +1,9 @@
-package githubintegrations
+package trellogithub
 
 import "log"
 
 func IsHealthy(options *map[string]interface{}) (bool, error) {
-	gis, err := NewGithubIntegrations(options)
+	gis, err := NewTrelloGithub(options)
 	if err != nil {
 		return false, err
 	}

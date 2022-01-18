@@ -1,4 +1,4 @@
-package githubintegrations
+package trellogithub
 
 import (
 	"bytes"
@@ -10,18 +10,19 @@ import (
 	"text/template"
 
 	"github.com/google/go-github/v40/github"
+	"github.com/mitchellh/mapstructure"
+
 	"github.com/merico-dev/stream/internal/pkg/util/mapz"
 	"github.com/merico-dev/stream/internal/pkg/util/slicez"
-	"github.com/mitchellh/mapstructure"
 )
 
-type GithubIntegrations struct {
+type TrelloGithub struct {
 	ctx     context.Context
 	client  *github.Client
 	options *Options
 }
 
-func NewGithubIntegrations(options *map[string]interface{}) (*GithubIntegrations, error) {
+func NewTrelloGithub(options *map[string]interface{}) (*TrelloGithub, error) {
 	ctx := context.Background()
 
 	var opt Options
@@ -39,18 +40,18 @@ func NewGithubIntegrations(options *map[string]interface{}) (*GithubIntegrations
 		return nil, err
 	}
 
-	return &GithubIntegrations{
+	return &TrelloGithub{
 		ctx:     ctx,
 		client:  client,
 		options: &opt,
 	}, nil
 }
 
-func (gi *GithubIntegrations) GetApi() *Api {
+func (gi *TrelloGithub) GetApi() *Api {
 	return gi.options.Api
 }
 
-func (gi *GithubIntegrations) AddWorkflow(workflow *Workflow) error {
+func (gi *TrelloGithub) AddWorkflow(workflow *Workflow) error {
 	sha, err := gi.getFileSHA(workflow.workflowFileName)
 	if err != nil {
 		return err
@@ -83,7 +84,7 @@ func (gi *GithubIntegrations) AddWorkflow(workflow *Workflow) error {
 	return nil
 }
 
-func (gi *GithubIntegrations) DeleteWorkflow(workflow *Workflow) error {
+func (gi *TrelloGithub) DeleteWorkflow(workflow *Workflow) error {
 	sha, err := gi.getFileSHA(workflow.workflowFileName)
 	if err != nil {
 		return err
@@ -120,7 +121,7 @@ func (gi *GithubIntegrations) DeleteWorkflow(workflow *Workflow) error {
 // If all workflows is ok => return ({"wf1.yml":nil, "wf2.yml:nil}, nil)
 // If some error occurred => return (nil, error)
 // If wf1.yml is not found => return ({"wf1.yml":error("not found"), "wf2.yml:nil},nil)
-func (gi *GithubIntegrations) VerifyWorkflows(workflows []*Workflow) (map[string]error, error) {
+func (gi *TrelloGithub) VerifyWorkflows(workflows []*Workflow) (map[string]error, error) {
 	wsFiles := make([]string, 0)
 	for _, w := range workflows {
 		wsFiles = append(wsFiles, w.workflowFileName)
@@ -138,7 +139,7 @@ func (gi *GithubIntegrations) VerifyWorkflows(workflows []*Workflow) (map[string
 	return gi.CompareFiles(wsFiles, filesInRemoteDir), nil
 }
 
-func (gi *GithubIntegrations) FetchRemoteContent(wsFiles []string) ([]string, map[string]error, error) {
+func (gi *TrelloGithub) FetchRemoteContent(wsFiles []string) ([]string, map[string]error, error) {
 	var filesInRemoteDir = make([]string, 0)
 	_, dirContent, resp, err := gi.client.Repositories.GetContents(
 		gi.ctx,
@@ -173,7 +174,7 @@ func (gi *GithubIntegrations) FetchRemoteContent(wsFiles []string) ([]string, ma
 }
 
 // CompareFiles compare files between local and remote
-func (gi *GithubIntegrations) CompareFiles(wsFiles, filesInRemoteDir []string) map[string]error {
+func (gi *TrelloGithub) CompareFiles(wsFiles, filesInRemoteDir []string) map[string]error {
 	lostFiles := slicez.SliceInSliceStr(wsFiles, filesInRemoteDir)
 	// all files exist
 	if len(lostFiles) == 0 {
@@ -194,7 +195,7 @@ func (gi *GithubIntegrations) CompareFiles(wsFiles, filesInRemoteDir []string) m
 // 1. If file exists without error -> string(SHA), nil
 // 2. If some errors occurred -> return "", err
 // 3. If file not found without error -> return "", nil
-func (gi *GithubIntegrations) getFileSHA(filename string) (string, error) {
+func (gi *TrelloGithub) getFileSHA(filename string) (string, error) {
 	content, _, resp, err := gi.client.Repositories.GetContents(
 		gi.ctx,
 		gi.options.Owner,
@@ -221,7 +222,7 @@ func (gi *GithubIntegrations) getFileSHA(filename string) (string, error) {
 }
 
 // renderTemplate render the github actions template with config.yaml
-func (gi *GithubIntegrations) renderTemplate(workflow *Workflow) error {
+func (gi *TrelloGithub) renderTemplate(workflow *Workflow) error {
 	var jobs Jobs
 	err := mapstructure.Decode(gi.options.Jobs, &jobs)
 	if err != nil {

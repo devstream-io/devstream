@@ -1,7 +1,7 @@
-package githubintegrations
+package trellogithub
 
 import (
-	"github.com/merico-dev/stream/internal/pkg/plugin/githubintegrations/trello"
+	"github.com/merico-dev/stream/internal/pkg/plugin/trellogithub/trello"
 )
 
 const (
