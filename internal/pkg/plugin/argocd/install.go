@@ -2,17 +2,26 @@ package argocd
 
 import (
 	"log"
+
+	"github.com/mitchellh/mapstructure"
+
+	"github.com/merico-dev/stream/internal/pkg/util/helm"
 )
 
 // Install installs ArgoCD with provided options.
 func Install(options *map[string]interface{}) (bool, error) {
-	acd, err := NewArgoCD(options)
+	var param helm.HelmParam
+	if err := mapstructure.Decode(*options, &param); err != nil {
+		return false, err
+	}
+
+	h, err := helm.NewHelm(&param)
 	if err != nil {
 		return false, err
 	}
 
 	log.Println("Installing or updating argocd helm chart ...")
-	if err := acd.installOrUpgradeHelmChart(); err != nil {
+	if err = h.InstallOrUpgradeChart(); err != nil {
 		return false, err
 	}
 
