@@ -3,9 +3,10 @@ package configloader
 import (
 	"fmt"
 	"io/ioutil"
-	"log"
 
 	"gopkg.in/yaml.v3"
+
+	"github.com/merico-dev/stream/internal/pkg/util/log"
 )
 
 // Config is the struct for loading DevStream configuration YAML files.
@@ -47,15 +48,15 @@ func (t *Tool) DeepCopy() *Tool {
 func LoadConf(fname string) *Config {
 	fileBytes, err := ioutil.ReadFile(fname)
 	if err != nil {
-		log.Print(err)
-		log.Print("Perhaps you forgot to specify the path of the config file by using the \"-f\" parameter?")
+		log.Error(err)
+		log.Info("Perhaps you forgot to specify the path of the config file by using the \"-f\" parameter?")
 		log.Fatal("See more help by running \"dtm help\"")
 	}
 
 	var config Config
 	err = yaml.Unmarshal(fileBytes, &config)
 	if err != nil {
-		log.Printf("unmarshal config failed: %s", err)
+		log.Errorf("unmarshal config failed: %s", err)
 		return nil
 	}
 

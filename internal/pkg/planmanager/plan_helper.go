@@ -1,12 +1,11 @@
 package planmanager
 
 import (
-	"log"
-
 	"github.com/google/go-cmp/cmp"
 
 	"github.com/merico-dev/stream/internal/pkg/configloader"
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
+	"github.com/merico-dev/stream/internal/pkg/util/log"
 )
 
 func drifted(t *configloader.Tool, s *statemanager.State) bool {
@@ -22,7 +21,7 @@ func (p *Plan) generatePlanAccordingToConfig(statesMap *statemanager.StatesMap, 
 				Tool:       tool.DeepCopy(),
 				ActionName: statemanager.ActionInstall,
 			})
-			log.Printf("Change added: %s -> %s", tool.Name, statemanager.ActionInstall)
+			log.Info("Change added: %s -> %s", tool.Name, statemanager.ActionInstall)
 			continue
 		}
 
@@ -31,7 +30,7 @@ func (p *Plan) generatePlanAccordingToConfig(statesMap *statemanager.StatesMap, 
 				Tool:       tool.DeepCopy(),
 				ActionName: statemanager.ActionReinstall,
 			})
-			log.Printf("Change added: %s -> %s", tool.Name, statemanager.ActionReinstall)
+			log.Info("Change added: %s -> %s", tool.Name, statemanager.ActionReinstall)
 		}
 
 		statesMap.Delete(getStateKeyFromTool(&tool))
@@ -49,7 +48,7 @@ func (p *Plan) removeNoLongerNeededToolsFromPlan(statesMap *statemanager.StatesM
 			},
 			ActionName: statemanager.ActionUninstall,
 		})
-		log.Printf("Change added: %s -> %s", key.(string), statemanager.ActionUninstall)
+		log.Info("Change added: %s -> %s", key.(string), statemanager.ActionUninstall)
 		return true
 	})
 }
@@ -68,7 +67,7 @@ func (p *Plan) generatePlanForDelete(statesMap *statemanager.StatesMap, cfg *con
 			Tool:       tool.DeepCopy(),
 			ActionName: statemanager.ActionUninstall,
 		})
-		log.Printf("Change added: %s -> %s", tool.Name, statemanager.ActionUninstall)
+		log.Info("Change added: %s -> %s", tool.Name, statemanager.ActionUninstall)
 		statesMap.Delete(tool.Name)
 	}
 }
