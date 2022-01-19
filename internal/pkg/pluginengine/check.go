@@ -1,23 +1,20 @@
 package pluginengine
 
 import (
+	"fmt"
 	"log"
-
-	"github.com/spf13/viper"
 
 	"github.com/merico-dev/stream/internal/pkg/configloader"
 )
 
 // CheckHealthy returns true while all tools are healthy
-func CheckHealthy(fname string) bool {
-	viper.AutomaticEnv()
-	if err := viper.BindEnv("github_token"); err != nil {
-		log.Fatal(err)
+func CheckHealthy(fname string) (bool, error) {
+	cfg := configloader.LoadConf(fname)
+	if cfg == nil {
+		return false, fmt.Errorf("failed to load the config file")
 	}
 
-	cfg := configloader.LoadConf(fname)
 	allHealthy := true
-
 	for _, tool := range cfg.Tools {
 		healthy, err := IsHealthy(&tool)
 		if err != nil {
@@ -33,5 +30,5 @@ func CheckHealthy(fname string) bool {
 		log.Printf("the tool %s is not healthy", tool.Name)
 	}
 
-	return allHealthy
+	return allHealthy, nil
 }
