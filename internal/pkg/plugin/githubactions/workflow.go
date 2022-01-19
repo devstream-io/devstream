@@ -44,6 +44,7 @@ var defaultWorkflows = workflows{
 	},
 }
 
+// TODO(daniel-hutao): Options should keep as same as other plugins named Param
 // Options is the struct for configurations of the githubactions plugin.
 type Options struct {
 	Owner    string
@@ -69,6 +70,16 @@ type Workflow struct {
 type LanguageString string
 
 type workflows map[LanguageString][]*Workflow
+
+func (l *Language) Validate() []error {
+	retErrors := make([]error, 0)
+
+	if l.Name == "" {
+		retErrors = append(retErrors, fmt.Errorf("name is empty"))
+	}
+
+	return retErrors
+}
 
 func (l *Language) String() LanguageString {
 	return LanguageString(fmt.Sprintf("%s-%s", l.Name, l.Version))

@@ -1,6 +1,8 @@
 package argocdapp
 
 import (
+	"fmt"
+	"log"
 	"os"
 
 	"github.com/mitchellh/mapstructure"
@@ -12,6 +14,13 @@ func Install(options *map[string]interface{}) (bool, error) {
 	err := mapstructure.Decode(*options, &param)
 	if err != nil {
 		return false, err
+	}
+
+	if errs := validate(&param); len(errs) != 0 {
+		for _, e := range errs {
+			log.Printf("Param error: %s", e)
+		}
+		return false, fmt.Errorf("params are illegal")
 	}
 
 	file := defaultYamlPath

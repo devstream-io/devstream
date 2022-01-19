@@ -1,6 +1,7 @@
 package kubeprometheus
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/mitchellh/mapstructure"
@@ -13,6 +14,13 @@ func Uninstall(options *map[string]interface{}) (bool, error) {
 	var param helm.HelmParam
 	if err := mapstructure.Decode(*options, &param); err != nil {
 		return false, err
+	}
+
+	if errs := validate(&param); len(errs) != 0 {
+		for _, e := range errs {
+			log.Printf("Param error: %s", e)
+		}
+		return false, fmt.Errorf("params are illegal")
 	}
 
 	h, err := helm.NewHelm(&param)

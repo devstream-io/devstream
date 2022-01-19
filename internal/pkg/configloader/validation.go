@@ -29,7 +29,7 @@ func (t *Tool) validate() []error {
 
 	errs := validation.IsDNS1123Subdomain(t.Name)
 	for _, e := range errs {
-		retErrors = append(retErrors, fmt.Errorf("name %s invalid: %s", t.Name, e))
+		retErrors = append(retErrors, fmt.Errorf("name %s is invalid: %s", t.Name, e))
 	}
 
 	// Plugin

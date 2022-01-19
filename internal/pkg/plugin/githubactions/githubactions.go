@@ -33,8 +33,11 @@ func NewGithubActions(options *map[string]interface{}) (*GithubActions, error) {
 		return nil, err
 	}
 
-	if !verifyOptions(&opt) {
-		return nil, fmt.Errorf("options is illegal")
+	if errs := validate(&opt); len(errs) != 0 {
+		for _, e := range errs {
+			log.Printf("Param error: %s", e)
+		}
+		return nil, fmt.Errorf("params are illegal")
 	}
 
 	client, err := getGitHubClient(ctx)
@@ -244,12 +247,4 @@ func getGitHubClient(ctx context.Context) (*github.Client, error) {
 	)
 	tc := oauth2.NewClient(ctx, ts)
 	return github.NewClient(tc), nil
-}
-
-func verifyOptions(opt *Options) bool {
-	return opt.Owner != "" &&
-		opt.Repo != "" &&
-		opt.Branch != "" &&
-		opt.Language != nil &&
-		opt.Jobs != nil
 }

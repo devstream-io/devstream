@@ -24,10 +24,3 @@ func getGitHubClient(ctx context.Context) (*github.Client, error) {
 	tc := oauth2.NewClient(ctx, ts)
 	return github.NewClient(tc), nil
 }
-
-func verifyOptions(opt *Options) bool {
-	return opt.Owner != "" &&
-		opt.Repo != "" &&
-		opt.Branch != "" &&
-		opt.Api != nil
-}
