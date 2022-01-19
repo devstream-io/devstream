@@ -11,8 +11,9 @@ import (
 )
 
 var (
-	configFile string
-	pluginDir  string
+	configFile       string
+	pluginDir        string
+	continueDirectly bool
 
 	rootCMD = &cobra.Command{
 		Use:   "dtm",
@@ -26,6 +27,7 @@ func init() {
 
 	rootCMD.PersistentFlags().StringVarP(&configFile, "config-file", "f", "config.yaml", "config file")
 	rootCMD.PersistentFlags().StringVarP(&pluginDir, "plugin-dir", "p", pluginengine.DefaultPluginDir, "plugins directory")
+	rootCMD.PersistentFlags().BoolVarP(&continueDirectly, "yes", "y", false, "apply/delete directly without confirmation")
 
 	rootCMD.AddCommand(versionCMD)
 	rootCMD.AddCommand(initCMD)
