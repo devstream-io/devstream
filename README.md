@@ -94,10 +94,22 @@ To install/reinstall/update, run:
 ./dtm apply -f examples/config.yaml
 ```
 
+The command above will ask you for confirmation before actually executing the changes. To apply without confirmation (like `apt-get -y update`), run:
+
+```bash
+./dtm -y apply -f examples/config.yaml
+```
+
 To delete, run:
 
 ```bash
 ./dtm delete -f examples/config.yaml
+```
+
+Similarly, to delete without confirmation:
+
+```bash
+./dtm -y delete -f examples/config.yaml
 ```
 
 To verify, run:

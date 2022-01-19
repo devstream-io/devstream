@@ -3,8 +3,11 @@ package pluginengine
 import (
 	"fmt"
 	"log"
+	"os"
 	"plugin"
 	"time"
+
+	"github.com/tcnksm/go-input"
 
 	"github.com/merico-dev/stream/internal/pkg/configloader"
 	"github.com/merico-dev/stream/internal/pkg/planmanager"
@@ -71,4 +74,28 @@ func execute(p *planmanager.Plan) map[string]error {
 	}
 
 	return errorsMap
+}
+
+func readUserInput() string {
+	ui := &input.UI{
+		Writer: os.Stdout,
+		Reader: os.Stdin,
+	}
+
+	query := "Continue? [y/n]"
+	userInput, err := ui.Ask(query, &input.Options{
+		Required: true,
+		Default:  "n",
+		Loop:     true,
+		ValidateFunc: func(s string) error {
+			if s != "y" && s != "n" {
+				return fmt.Errorf("input must be y or n")
+			}
+			return nil
+		},
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	return userInput
 }

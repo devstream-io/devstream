@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/merico-dev/stream/internal/pkg/backend"
 	"github.com/merico-dev/stream/internal/pkg/configloader"
@@ -12,7 +13,7 @@ import (
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
 )
 
-func Apply(fname string) error {
+func Apply(fname string, continueDirectly bool) error {
 	cfg := configloader.LoadConf(fname)
 	if cfg == nil {
 		return fmt.Errorf("failed to load the config file")
@@ -36,6 +37,13 @@ func Apply(fname string) error {
 	if len(p.Changes) == 0 {
 		log.Println("No changes done since last apply. There is nothing to do.")
 		return nil
+	}
+
+	if !continueDirectly {
+		userInput := readUserInput()
+		if userInput == "n" {
+			os.Exit(0)
+		}
 	}
 
 	errsMap := execute(p)

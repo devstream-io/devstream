@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/merico-dev/stream/internal/pkg/backend"
 	"github.com/merico-dev/stream/internal/pkg/configloader"
@@ -12,7 +13,7 @@ import (
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
 )
 
-func Delete(fname string) error {
+func Delete(fname string, continueDirectly bool) error {
 	cfg := configloader.LoadConf(fname)
 	if cfg == nil {
 		return fmt.Errorf("failed to load the config file")
@@ -35,6 +36,13 @@ func Delete(fname string) error {
 	if len(p.Changes) == 0 {
 		log.Println("Nothing needs to be deleted. There is nothing to do.")
 		return nil
+	}
+
+	if !continueDirectly {
+		userInput := readUserInput()
+		if userInput == "n" {
+			os.Exit(0)
+		}
 	}
 
 	errsMap := execute(p)

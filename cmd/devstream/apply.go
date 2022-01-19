@@ -20,7 +20,7 @@ DevStream will generate and execute a new plan based on the config file and the 
 func applyCMDFunc(cmd *cobra.Command, args []string) {
 	log.Println("Apply started.")
 
-	if err := pluginengine.Apply(configFile); err != nil {
+	if err := pluginengine.Apply(configFile, continueDirectly); err != nil {
 		log.Printf("Apply error: %s.", err)
 		os.Exit(1)
 	}
