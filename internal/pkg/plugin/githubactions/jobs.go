@@ -6,6 +6,14 @@ type Jobs struct {
 	Test  Test
 }
 
+func (j *Jobs) Validate() []error {
+	retErrors := make([]error, 0)
+
+	// TODO(daniel-hutao): what should we validate here?
+
+	return retErrors
+}
+
 // Build is the struct for githubacions job.
 type Build struct {
 	Enable  bool

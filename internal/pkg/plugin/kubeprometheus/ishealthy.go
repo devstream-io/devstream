@@ -36,6 +36,13 @@ func IsHealthy(options *map[string]interface{}) (bool, error) {
 		return false, err
 	}
 
+	if errs := validate(&param); len(errs) != 0 {
+		for _, e := range errs {
+			log.Printf("Param error: %s", e)
+		}
+		return false, fmt.Errorf("params are illegal")
+	}
+
 	namespace := param.Chart.Namespace
 	if namespace == "" {
 		namespace = KubePrometheusDefaultNamespace
