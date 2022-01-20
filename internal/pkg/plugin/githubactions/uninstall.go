@@ -1,6 +1,6 @@
 package githubactions
 
-import "log"
+import "github.com/merico-dev/stream/internal/pkg/util/log"
 
 // Uninstall remove GitHub Actions workflows.
 func Uninstall(options *map[string]interface{}) (bool, error) {
@@ -10,7 +10,7 @@ func Uninstall(options *map[string]interface{}) (bool, error) {
 	}
 
 	language := githubActions.GetLanguage()
-	log.Printf("language is %s", language.String())
+	log.Infof("language is %s", language.String())
 	ws := defaultWorkflows.GetWorkflowByNameVersionTypeString(language.String())
 
 	for _, pipeline := range ws {

@@ -2,11 +2,11 @@ package statemanager
 
 import (
 	"bytes"
-	"log"
 
 	"gopkg.in/yaml.v3"
 
 	"github.com/merico-dev/stream/internal/pkg/container/concurrentmap"
+	"github.com/merico-dev/stream/internal/pkg/util/log"
 )
 
 type StatesMap concurrentmap.ConcurrentMap
@@ -40,7 +40,7 @@ func (s StatesMap) Format() []byte {
 	encoder.SetIndent(2)
 	err := encoder.Encode(&tmpMap)
 	if err != nil {
-		log.Println(err)
+		log.Error(err)
 		return nil
 	}
 

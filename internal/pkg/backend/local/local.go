@@ -3,10 +3,11 @@ package local
 import (
 	"errors"
 	"io/ioutil"
-	"log"
 	"os"
 	"path/filepath"
 	"sync"
+
+	"github.com/merico-dev/stream/internal/pkg/util/log"
 )
 
 const DefaultStateFile = "devstream.state"

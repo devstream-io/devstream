@@ -1,9 +1,8 @@
 package main
 
 import (
-	"log"
-
 	"github.com/merico-dev/stream/internal/pkg/plugin/trellogithub"
+	"github.com/merico-dev/stream/internal/pkg/util/log"
 )
 
 // NAME is the name of this DevStream plugin.
@@ -36,5 +35,5 @@ func (p Plugin) IsHealthy(options *map[string]interface{}) (bool, error) {
 var DevStreamPlugin Plugin
 
 func main() {
-	log.Printf("%T: %s is a plugin for DevStream. Use it with DevStream.\n", NAME, DevStreamPlugin)
+	log.Infof("%T: %s is a plugin for DevStream. Use it with DevStream.\n", NAME, DevStreamPlugin)
 }

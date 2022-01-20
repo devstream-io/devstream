@@ -1,12 +1,12 @@
 package main
 
 import (
-	"log"
 	"os"
 
 	"github.com/spf13/cobra"
 
 	"github.com/merico-dev/stream/internal/pkg/pluginengine"
+	"github.com/merico-dev/stream/internal/pkg/util/log"
 )
 
 var applyCMD = &cobra.Command{
@@ -18,12 +18,11 @@ DevStream will generate and execute a new plan based on the config file and the 
 }
 
 func applyCMDFunc(cmd *cobra.Command, args []string) {
-	log.Println("Apply started.")
+	log.Info("Apply started.")
 
 	if err := pluginengine.Apply(configFile, continueDirectly); err != nil {
-		log.Printf("Apply error: %s.", err)
+		log.Errorf("Apply error: %s.", err)
 		os.Exit(1)
 	}
-
-	log.Println("Apply finished.")
+	log.Success("Apply finished.")
 }

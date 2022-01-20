@@ -3,13 +3,13 @@ package pluginmanager
 import (
 	"errors"
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 
 	"github.com/spf13/viper"
 
 	"github.com/merico-dev/stream/internal/pkg/configloader"
+	"github.com/merico-dev/stream/internal/pkg/util/log"
 )
 
 func DownloadPlugins(conf *configloader.Config) error {
@@ -18,7 +18,7 @@ func DownloadPlugins(conf *configloader.Config) error {
 	if pluginDir == "" {
 		return fmt.Errorf("plugins directory should not be \"\"")
 	}
-	log.Printf("Using dir <%s> to store plugins.", pluginDir)
+	log.Infof("Using dir <%s> to store plugins.", pluginDir)
 
 	// download all plugins that don't exist locally
 	dc := NewPbDownloadClient()
@@ -40,11 +40,11 @@ func DownloadPlugins(conf *configloader.Config) error {
 		}
 
 		if dup {
-			log.Printf("Plugin: %s already exists, no need to download.", pluginFileName)
+			log.Infof("Plugin: %s already exists, no need to download.", pluginFileName)
 			continue
 		}
 
-		log.Printf("Plugin: %s changed and will be overrided.", pluginFileName)
+		log.Infof("Plugin: %s changed and will be overrided.", pluginFileName)
 		if err = os.Remove(filepath.Join(pluginDir, pluginFileName)); err != nil {
 			return err
 		}
@@ -62,7 +62,7 @@ func CheckLocalPlugins(conf *configloader.Config) error {
 		return fmt.Errorf("plugins directory doesn't exist")
 	}
 
-	log.Printf("Using dir <%s> to store plugins.", pluginDir)
+	log.Infof("Using dir <%s> to store plugins.", pluginDir)
 
 	for _, tool := range conf.Tools {
 		pluginFileName := configloader.GetPluginFileName(&tool)

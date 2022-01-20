@@ -15,18 +15,33 @@ const (
 	FATAL   = "[FATAL] "
 )
 
+// Successf log success with color,symbol and format for a success operation
+func Successf(format string, args ...interface{}) {
+	cligger.Success(color.Success.Render(SUCCESS)+format, args...)
+}
+
 // Success log success with color and symbol, for a success operation
-func Success(format string, args ...interface{}) {
+func Success(args ...interface{}) {
 	cligger.Success(color.Success.Render(SUCCESS)+"%s", fmt.Sprint(args...))
 }
 
+// Infof log info with color,symbol and format for a notice
+func Infof(format string, args ...interface{}) {
+	cligger.Info(color.Blue.Render(INFO)+format, args...)
+}
+
 // Info log info with color and symbol, for a notice
-func Info(format string, args ...interface{}) {
+func Info(args ...interface{}) {
 	cligger.Info(color.Blue.Render(INFO)+"%s", fmt.Sprint(args...))
 }
 
+// Warnf log warn with color,symbol and format for a warning event
+func Warnf(format string, args ...interface{}) {
+	cligger.Warning(color.Warn.Render(WARN)+format, args...)
+}
+
 // Warn log warn with color and symbol, for a warning event
-func Warn(format string, args ...interface{}) {
+func Warn(args ...interface{}) {
 	cligger.Warning(color.Warn.Render(WARN)+"%s", fmt.Sprint(args...))
 }
 
@@ -53,7 +68,7 @@ func Fatal(args ...interface{}) {
 //func main() {
 //	Info("test %s", "haha")
 //	Warn("test %s", "haha")
-//	Success("test %s", "haha")
+//	Success("hahfsfsa")
 //	Error("test %s", "haha")
 //	Fatalf("test %s", "haha")
 //}

@@ -5,12 +5,13 @@ package pluginmanager
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 	"path/filepath"
 
 	"github.com/go-resty/resty/v2"
+
+	"github.com/merico-dev/stream/internal/pkg/util/log"
 )
 
 const (
@@ -47,7 +48,7 @@ func (dc *DownloadClient) download(pluginDir, pluginFilename, version string) er
 			return err
 		}
 		err = fmt.Errorf("downloading plugin %s from %s status code %d", pluginFilename, downloadURL, response.StatusCode())
-		log.Print(err)
+		log.Error(err)
 		return err
 	}
 
@@ -56,7 +57,7 @@ func (dc *DownloadClient) download(pluginDir, pluginFilename, version string) er
 		filepath.Join(pluginDir, tmpName),
 		filepath.Join(pluginDir, pluginFilename))
 	if err != nil {
-		log.Print(err)
+		log.Error(err)
 		return err
 	}
 

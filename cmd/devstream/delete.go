@@ -1,12 +1,12 @@
 package main
 
 import (
-	"log"
 	"os"
 
 	"github.com/spf13/cobra"
 
 	"github.com/merico-dev/stream/internal/pkg/pluginengine"
+	"github.com/merico-dev/stream/internal/pkg/util/log"
 )
 
 var deleteCMD = &cobra.Command{
@@ -18,12 +18,12 @@ DevStream will delete everything defined in the config file, regardless of the s
 }
 
 func deleteCMDFunc(cmd *cobra.Command, args []string) {
-	log.Println("Delete started.")
+	log.Info("Delete started.")
 
 	if err := pluginengine.Delete(configFile, continueDirectly); err != nil {
-		log.Printf("Delete error: %s.", err)
+		log.Errorf("Delete error: %s.", err)
 		os.Exit(1)
 	}
 
-	log.Println("Delete finished.")
+	log.Success("Delete finished.")
 }

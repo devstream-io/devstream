@@ -6,7 +6,6 @@ package pluginmanager
 import (
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -14,6 +13,8 @@ import (
 	"time"
 
 	"github.com/cheggaaa/pb"
+
+	"github.com/merico-dev/stream/internal/pkg/util/log"
 )
 
 type PbDownloadClient struct {
@@ -44,7 +45,7 @@ func (pd *PbDownloadClient) download(pluginsDir, pluginFilename, version string)
 	}
 
 	if resp.StatusCode == http.StatusOK {
-		log.Printf("Downloading: [%s] ...", pluginFilename)
+		log.Infof("Downloading: [%s] ...", pluginFilename)
 
 		downFile, err := os.Create(filepath.Join(pluginsDir, tmpName))
 		if err != nil {
@@ -55,17 +56,17 @@ func (pd *PbDownloadClient) download(pluginsDir, pluginFilename, version string)
 		// create progress bar when reading response body
 		errSetup := setUpProgressBar(resp, downFile)
 		if errSetup != nil {
-			log.Print(errSetup)
+			log.Error(errSetup)
 			return errSetup
 		}
-		log.Printf("[%s] download succeeded.", pluginFilename)
+		log.Successf("[%s] download succeeded.", pluginFilename)
 	} else {
-		log.Printf("[%s] download failed, %s.", pluginFilename, resp.Status)
+		log.Errorf("[%s] download failed, %s.", pluginFilename, resp.Status)
 		if err = os.Remove(filepath.Join(pluginsDir, tmpName)); err != nil {
 			return err
 		}
 		err = fmt.Errorf("downloading plugin %s from %s status code %d", pluginFilename, downloadURL, resp.StatusCode)
-		log.Print(err)
+		log.Error(err)
 		return err
 	}
 
@@ -73,7 +74,7 @@ func (pd *PbDownloadClient) download(pluginsDir, pluginFilename, version string)
 	if err = os.Rename(
 		filepath.Join(pluginsDir, tmpName),
 		filepath.Join(pluginsDir, pluginFilename)); err != nil {
-		log.Print(err)
+		log.Error(err)
 		return err
 	}
 	return nil
@@ -97,7 +98,7 @@ func setUpProgressBar(resp *http.Response, downFile *os.File) error {
 	writer := io.MultiWriter(downFile, bar)
 	_, err := io.Copy(writer, source)
 	if err != nil {
-		log.Print(err)
+		log.Error(err)
 		return err
 	}
 	bar.Finish()
@@ -127,10 +128,10 @@ func (pd *PbDownloadClient) fetchContentMD5(pluginFilename, version string) (str
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusOK {
-		log.Printf("[%s] check success.", pluginFilename)
+		log.Successf("[%s] check success.", pluginFilename)
 		return resp.Header.Get("Content-MD5"), nil
 	} else {
-		log.Printf("[%s] check failed, %s.", pluginFilename, resp.Status)
+		log.Errorf("[%s] check failed, %s.", pluginFilename, resp.Status)
 		return "", err
 	}
 }

@@ -21,7 +21,7 @@ func (p *Plan) generatePlanAccordingToConfig(statesMap *statemanager.StatesMap, 
 				Tool:       tool.DeepCopy(),
 				ActionName: statemanager.ActionInstall,
 			})
-			log.Info("Change added: %s -> %s", tool.Name, statemanager.ActionInstall)
+			log.Infof("Change added: %s -> %s", tool.Name, statemanager.ActionInstall)
 			continue
 		}
 
@@ -30,7 +30,7 @@ func (p *Plan) generatePlanAccordingToConfig(statesMap *statemanager.StatesMap, 
 				Tool:       tool.DeepCopy(),
 				ActionName: statemanager.ActionReinstall,
 			})
-			log.Info("Change added: %s -> %s", tool.Name, statemanager.ActionReinstall)
+			log.Infof("Change added: %s -> %s", tool.Name, statemanager.ActionReinstall)
 		}
 
 		statesMap.Delete(getStateKeyFromTool(&tool))
@@ -48,7 +48,7 @@ func (p *Plan) removeNoLongerNeededToolsFromPlan(statesMap *statemanager.StatesM
 			},
 			ActionName: statemanager.ActionUninstall,
 		})
-		log.Info("Change added: %s -> %s", key.(string), statemanager.ActionUninstall)
+		log.Infof("Change added: %s -> %s", key.(string), statemanager.ActionUninstall)
 		return true
 	})
 }
@@ -67,7 +67,7 @@ func (p *Plan) generatePlanForDelete(statesMap *statemanager.StatesMap, cfg *con
 			Tool:       tool.DeepCopy(),
 			ActionName: statemanager.ActionUninstall,
 		})
-		log.Info("Change added: %s -> %s", tool.Name, statemanager.ActionUninstall)
+		log.Infof("Change added: %s -> %s", tool.Name, statemanager.ActionUninstall)
 		statesMap.Delete(tool.Name)
 	}
 }

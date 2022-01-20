@@ -2,10 +2,11 @@ package argocdapp
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/mitchellh/mapstructure"
+
+	"github.com/merico-dev/stream/internal/pkg/util/log"
 )
 
 // Install creates an ArgoCD app yaml and apply it.
@@ -18,7 +19,7 @@ func Install(options *map[string]interface{}) (bool, error) {
 
 	if errs := validate(&param); len(errs) != 0 {
 		for _, e := range errs {
-			log.Printf("Param error: %s", e)
+			log.Errorf("Param error: %s", e)
 		}
 		return false, fmt.Errorf("params are illegal")
 	}

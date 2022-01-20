@@ -2,7 +2,6 @@ package pluginengine
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"plugin"
 	"time"
@@ -12,6 +11,7 @@ import (
 	"github.com/merico-dev/stream/internal/pkg/configloader"
 	"github.com/merico-dev/stream/internal/pkg/planmanager"
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
+	"github.com/merico-dev/stream/internal/pkg/util/log"
 )
 
 func loadPlugin(pluginDir string, tool *configloader.Tool) (DevStreamPlugin, error) {
@@ -38,11 +38,11 @@ func loadPlugin(pluginDir string, tool *configloader.Tool) (DevStreamPlugin, err
 func execute(p *planmanager.Plan) map[string]error {
 	errorsMap := make(map[string]error)
 
-	log.Printf("Changes count: %d.", len(p.Changes))
+	log.Infof("Changes count: %d.", len(p.Changes))
 
 	for i, c := range p.Changes {
-		log.Printf("Processing progress: %d/%d.", i+1, len(p.Changes))
-		log.Printf("Processing: %s -> %s ...", c.Tool.Name, c.ActionName)
+		log.Infof("Processing progress: %d/%d.", i+1, len(p.Changes))
+		log.Infof("Processing: %s -> %s ...", c.Tool.Name, c.ActionName)
 
 		var succeeded bool
 		var err error

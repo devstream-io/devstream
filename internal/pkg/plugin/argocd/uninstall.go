@@ -2,11 +2,11 @@ package argocd
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/mitchellh/mapstructure"
 
 	"github.com/merico-dev/stream/internal/pkg/util/helm"
+	"github.com/merico-dev/stream/internal/pkg/util/log"
 )
 
 func Uninstall(options *map[string]interface{}) (bool, error) {
@@ -17,7 +17,7 @@ func Uninstall(options *map[string]interface{}) (bool, error) {
 
 	if errs := validate(&param); len(errs) != 0 {
 		for _, e := range errs {
-			log.Printf("Param error: %s", e)
+			log.Errorf("Param error: %s", e)
 		}
 		return false, fmt.Errorf("params are illegal")
 	}
@@ -27,7 +27,7 @@ func Uninstall(options *map[string]interface{}) (bool, error) {
 		return false, err
 	}
 
-	log.Println("uninstalling argocd helm chart")
+	log.Info("uninstalling argocd helm chart")
 	if err = h.UninstallHelmChartRelease(); err != nil {
 		return false, err
 	}

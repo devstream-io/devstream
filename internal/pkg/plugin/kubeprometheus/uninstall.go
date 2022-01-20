@@ -2,11 +2,11 @@ package kubeprometheus
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/mitchellh/mapstructure"
 
 	"github.com/merico-dev/stream/internal/pkg/util/helm"
+	"github.com/merico-dev/stream/internal/pkg/util/log"
 )
 
 // Uninstall uninstalls kube-prometheus with provided options.
@@ -18,7 +18,7 @@ func Uninstall(options *map[string]interface{}) (bool, error) {
 
 	if errs := validate(&param); len(errs) != 0 {
 		for _, e := range errs {
-			log.Printf("Param error: %s", e)
+			log.Errorf("Param error: %s", e)
 		}
 		return false, fmt.Errorf("params are illegal")
 	}
@@ -28,7 +28,7 @@ func Uninstall(options *map[string]interface{}) (bool, error) {
 		return false, err
 	}
 
-	log.Println("Uninstalling kube-prometheus-stack helm chart ...")
+	log.Info("Uninstalling kube-prometheus-stack helm chart ...")
 	if err = h.UninstallHelmChartRelease(); err != nil {
 		return false, err
 	}
