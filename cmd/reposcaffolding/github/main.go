@@ -7,27 +7,27 @@ import (
 )
 
 // NAME is the name of this DevStream plugin.
-const NAME = "repo-scaffolding-github"
+const NAME = "github-repo-scaffolding"
 
 // Plugin is the type used by DevStream core. It's a string.
 type Plugin string
 
-// Install implements the installation of the repo-scaffolding-github.
+// Install implements the installation of the github-repo-scaffolding.
 func (p Plugin) Install(options *map[string]interface{}) (bool, error) {
 	return github.Install(options)
 }
 
-// Reinstall implements the reinstallation of the repo-scaffolding-github.
+// Reinstall implements the reinstallation of the github-repo-scaffolding.
 func (p Plugin) Reinstall(options *map[string]interface{}) (bool, error) {
 	return github.Reinstall(options)
 }
 
-// Uninstall implements the uninstallation of the repo-scaffolding-github.
+// Uninstall implements the uninstallation of the github-repo-scaffolding.
 func (p Plugin) Uninstall(options *map[string]interface{}) (bool, error) {
 	return github.Uninstall(options)
 }
 
-// IsHealthy implements the healthy check of the repo-scaffolding-github.
+// IsHealthy implements the healthy check of the github-repo-scaffolding.
 func (p Plugin) IsHealthy(options *map[string]interface{}) (bool, error) {
 	return github.IsHealthy(options)
 }

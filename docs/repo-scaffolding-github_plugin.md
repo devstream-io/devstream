@@ -1,16 +1,16 @@
-## 1 kube-prometheus Plugin
+## 1 github-repo-scaffolding Plugin
 
-This plugin installs repo-scaffolding-github.
+This plugin installs github-repo-scaffolding.
 
 ## 2 Usage:
 
 ```yaml
 tools:
-# name of the instance with repo-scaffolding-github
-- name: repo-scaffolding-github-go
+# name of the instance with github-repo-scaffolding
+- name: github-repo-scaffolding-go
   plugin:
     # kind of the plugin
-    kind: repo-scaffolding-github
+    kind: github-repo-scaffolding
     # version of the plugin
     version: 0.0.1
   # options for the plugin

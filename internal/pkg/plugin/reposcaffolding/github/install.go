@@ -1,8 +1,12 @@
 package github
 
-// Install installs repo-scaffolding-github with provided options.
+import "github.com/merico-dev/stream/internal/pkg/util/github"
+
+// Install installs github-repo-scaffolding with provided options.
 func Install(options *map[string]interface{}) (bool, error) {
 	// TODO(daniel-hutao): implement it
-	validate()
+	_, _ = github.NewGithubClient()
+	_ = validate()
+
 	return true, nil
 }
