@@ -105,9 +105,9 @@ tools:
       wait: true
       timeout: 5m
       upgradeCRDs: true
-- name: github-repo-scaffolding-go
+- name: github-repo-scaffolding-golang-demo
   plugin:
-    kind: github-repo-scaffolding
+    kind: github-repo-scaffolding-golang
     version: 0.0.1
   options: null
     # TODO(daniel-hutao): complete it

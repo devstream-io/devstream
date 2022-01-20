@@ -1,4 +1,4 @@
-package github
+package golang
 
 // validate validates the options provided by the core.
 func validate() []error {
