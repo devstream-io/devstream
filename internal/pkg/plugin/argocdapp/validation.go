@@ -6,6 +6,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/validation"
 )
 
+// validate validates the options provided by the core.
 func validate(param *Param) []error {
 	retErrors := make([]error, 0)
 

@@ -2,6 +2,7 @@ package githubactions
 
 import "fmt"
 
+// validate validates the options provided by the core.
 func validate(param *Options) []error {
 	retErrors := make([]error, 0)
 

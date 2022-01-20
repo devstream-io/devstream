@@ -105,3 +105,9 @@ tools:
       wait: true
       timeout: 5m
       upgradeCRDs: true
+- name: repo-scaffolding-github-go
+  plugin:
+    kind: repo-scaffolding-github
+    version: 0.0.1
+  options: null
+    # TODO(daniel-hutao): complete it
