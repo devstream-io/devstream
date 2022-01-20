@@ -64,11 +64,3 @@ func Fatalf(format string, args ...interface{}) {
 func Fatal(args ...interface{}) {
 	cligger.Fatal(color.BgRed.Render(FATAL)+"%s", fmt.Sprint(args...))
 }
-
-//func main() {
-//	Info("test %s", "haha")
-//	Warn("test %s", "haha")
-//	Success("hahfsfsa")
-//	Error("test %s", "haha")
-//	Fatalf("test %s", "haha")
-//}
