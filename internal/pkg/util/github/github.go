@@ -1,4 +1,4 @@
-package trellogithub
+package github
 
 import (
 	"context"
@@ -9,18 +9,28 @@ import (
 	"golang.org/x/oauth2"
 )
 
-func generateGitHubWorkflowFileByName(f string) string {
-	return fmt.Sprintf(".github/workflows/%s", f)
-}
+var client *github.Client
 
-func getGitHubClient(ctx context.Context) (*github.Client, error) {
+func NewGithubClient() (*github.Client, error) {
+	if client != nil {
+		return client, nil
+	}
+
 	token := viper.GetString("github_token")
 	if token == "" {
 		return nil, fmt.Errorf("failed to initialize GitHub token. More info - https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token")
 	}
-	ts := oauth2.StaticTokenSource(
-		&oauth2.Token{AccessToken: token},
+
+	tc := oauth2.NewClient(
+		context.TODO(),
+		oauth2.StaticTokenSource(
+			&oauth2.Token{
+				AccessToken: token,
+			},
+		),
 	)
-	tc := oauth2.NewClient(ctx, ts)
-	return github.NewClient(tc), nil
+
+	client = github.NewClient(tc)
+
+	return client, nil
 }
