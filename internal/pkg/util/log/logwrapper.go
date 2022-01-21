@@ -33,10 +33,10 @@ func (m *CliLoggerFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 		b = &bytes.Buffer{}
 	}
 
-	timestamp := entry.Time.Format("2006-01-02 15:04:05")
 	m.levelPrintRender()
-	var newLog string
-	newLog = fmt.Sprintf("%s %s %s %s\n", timestamp, m.prefix, m.formatLevelName, entry.Message)
+
+	timestamp := entry.Time.Format("2006-01-02 15:04:05")
+	newLog := fmt.Sprintf("%s %s %s %s\n", timestamp, m.prefix, m.formatLevelName, entry.Message)
 
 	b.WriteString(newLog)
 	return b.Bytes(), nil
