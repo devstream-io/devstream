@@ -11,22 +11,22 @@ const NAME = "kube-prometheus"
 // Plugin is the type used by DevStream core. It's a string.
 type Plugin string
 
-// Install implements the installation of some GitHub Actions workflows.
+// Install implements the installation of the kube-prometheus.
 func (p Plugin) Install(options *map[string]interface{}) (bool, error) {
 	return kubeprometheus.Install(options)
 }
 
-// Reinstall implements the reinstallation of some GitHub Actions workflows.
+// Reinstall implements the reinstallation of the kube-prometheus.
 func (p Plugin) Reinstall(options *map[string]interface{}) (bool, error) {
 	return kubeprometheus.Reinstall(options)
 }
 
-// Uninstall implements the uninstallation of some GitHub Actions workflows.
+// Uninstall implements the uninstallation of the kube-prometheus.
 func (p Plugin) Uninstall(options *map[string]interface{}) (bool, error) {
 	return kubeprometheus.Uninstall(options)
 }
 
-// IsHealthy implements the healthy check of GitHub Actions workflows.
+// IsHealthy implements the healthy check of the kube-prometheus.
 func (p Plugin) IsHealthy(options *map[string]interface{}) (bool, error) {
 	return kubeprometheus.IsHealthy(options)
 }
