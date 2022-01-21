@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"log"
 	"net/http"
 	"strings"
 	"text/template"
@@ -12,6 +11,7 @@ import (
 	"github.com/google/go-github/v42/github"
 	"github.com/mitchellh/mapstructure"
 
+	"github.com/merico-dev/stream/internal/pkg/log"
 	"github.com/merico-dev/stream/internal/pkg/util/mapz"
 	"github.com/merico-dev/stream/internal/pkg/util/slicez"
 )
@@ -33,7 +33,7 @@ func NewTrelloGithub(options *map[string]interface{}) (*TrelloGithub, error) {
 
 	if errs := validate(&opt); len(errs) != 0 {
 		for _, e := range errs {
-			log.Printf("Param error: %s", e)
+			log.Errorf("Param error: %s", e)
 		}
 		return nil, fmt.Errorf("params are illegal")
 	}
@@ -60,7 +60,7 @@ func (gi *TrelloGithub) AddWorkflow(workflow *Workflow) error {
 		return err
 	}
 	if sha != "" {
-		log.Printf("GitHub Actions workflow %s already exists.", workflow.workflowFileName)
+		log.Infof("GitHub Actions workflow %s already exists.", workflow.workflowFileName)
 		return nil
 	}
 
@@ -72,7 +72,7 @@ func (gi *TrelloGithub) AddWorkflow(workflow *Workflow) error {
 		Branch:  github.String(gi.options.Branch),
 	}
 
-	log.Printf("Creating GitHub Actions workflow %s ...", workflow.workflowFileName)
+	log.Infof("Creating GitHub Actions workflow %s ...", workflow.workflowFileName)
 	_, _, err = gi.client.Repositories.CreateFile(
 		gi.ctx,
 		gi.options.Owner,
@@ -83,7 +83,7 @@ func (gi *TrelloGithub) AddWorkflow(workflow *Workflow) error {
 	if err != nil {
 		return err
 	}
-	log.Printf("Github Actions workflow %s created.", workflow.workflowFileName)
+	log.Infof("Github Actions workflow %s created.", workflow.workflowFileName)
 	return nil
 }
 
@@ -93,7 +93,7 @@ func (gi *TrelloGithub) DeleteWorkflow(workflow *Workflow) error {
 		return err
 	}
 	if sha == "" {
-		log.Printf("Github Actions workflow %s already removed.", workflow.workflowFileName)
+		log.Successf("Github Actions workflow %s already removed.", workflow.workflowFileName)
 		return nil
 	}
 
@@ -105,7 +105,7 @@ func (gi *TrelloGithub) DeleteWorkflow(workflow *Workflow) error {
 		Branch:  github.String(gi.options.Branch),
 	}
 
-	log.Printf("Deleting GitHub Actions workflow %s ...", workflow.workflowFileName)
+	log.Infof("Deleting GitHub Actions workflow %s ...", workflow.workflowFileName)
 	_, _, err = gi.client.Repositories.DeleteFile(
 		gi.ctx,
 		gi.options.Owner,
@@ -116,7 +116,7 @@ func (gi *TrelloGithub) DeleteWorkflow(workflow *Workflow) error {
 	if err != nil {
 		return err
 	}
-	log.Printf("GitHub Actions workflow %s removed.", workflow.workflowFileName)
+	log.Successf("GitHub Actions workflow %s removed.", workflow.workflowFileName)
 	return nil
 }
 
@@ -154,12 +154,12 @@ func (gi *TrelloGithub) FetchRemoteContent(wsFiles []string) ([]string, map[stri
 
 	// error reason is not 404
 	if err != nil && !strings.Contains(err.Error(), "404") {
-		log.Printf("GetContents failed with error: %s", err)
+		log.Errorf("GetContents failed with error: %s", err)
 		return nil, nil, err
 	}
 	// StatusCode == 404
 	if resp.StatusCode == http.StatusNotFound {
-		log.Printf("GetContents returned with status code 404")
+		log.Error("GetContents returned with status code 404")
 		retMap := mapz.FillMapWithStrAndError(wsFiles, fmt.Errorf("not found"))
 		return nil, retMap, nil
 	}
@@ -168,9 +168,9 @@ func (gi *TrelloGithub) FetchRemoteContent(wsFiles []string) ([]string, map[stri
 		return nil, nil, fmt.Errorf("got some error: %s", resp.Status)
 	}
 	// StatusCode == 200
-	log.Printf("GetContents return with status code 200")
+	log.Info("GetContents return with status code 200")
 	for _, f := range dirContent {
-		log.Printf("Found remote file: %s", f.GetName())
+		log.Infof("Found remote file: %s", f.GetName())
 		filesInRemoteDir = append(filesInRemoteDir, f.GetName())
 	}
 	return filesInRemoteDir, nil, nil
@@ -181,14 +181,14 @@ func (gi *TrelloGithub) CompareFiles(wsFiles, filesInRemoteDir []string) map[str
 	lostFiles := slicez.SliceInSliceStr(wsFiles, filesInRemoteDir)
 	// all files exist
 	if len(lostFiles) == 0 {
-		log.Println("All workflows exist.")
+		log.Info("All workflows exist.")
 		retMap := mapz.FillMapWithStrAndError(wsFiles, nil)
 		return retMap
 	}
 	// some files lost
 	retMap := mapz.FillMapWithStrAndError(wsFiles, nil)
 	for _, f := range lostFiles {
-		log.Printf("Lost file: %s", f)
+		log.Warnf("Lost file: %s", f)
 		retMap[f] = fmt.Errorf("not found")
 	}
 	return retMap

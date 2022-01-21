@@ -2,7 +2,8 @@ package argocd
 
 import (
 	"fmt"
-	"log"
+
+	"github.com/merico-dev/stream/internal/pkg/log"
 
 	"github.com/mitchellh/mapstructure"
 
@@ -18,7 +19,7 @@ func Install(options *map[string]interface{}) (bool, error) {
 
 	if errs := validate(&param); len(errs) != 0 {
 		for _, e := range errs {
-			log.Printf("Param error: %s", e)
+			log.Errorf("Param error: %s", e)
 		}
 		return false, fmt.Errorf("params are illegal")
 	}
@@ -28,7 +29,7 @@ func Install(options *map[string]interface{}) (bool, error) {
 		return false, err
 	}
 
-	log.Println("Installing or updating argocd helm chart ...")
+	log.Info("Installing or updating argocd helm chart ...")
 	if err = h.InstallOrUpgradeChart(); err != nil {
 		return false, err
 	}

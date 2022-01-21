@@ -1,7 +1,7 @@
 package trellogithub
 
 import (
-	"log"
+	"github.com/merico-dev/stream/internal/pkg/log"
 )
 
 // Install sets up trello-github-integ workflows.
@@ -12,7 +12,7 @@ func Install(options *map[string]interface{}) (bool, error) {
 	}
 
 	api := gis.GetApi()
-	log.Printf("api is: %s.", api.Name)
+	log.Infof("api is: %s.", api.Name)
 	ws := defaultWorkflows.GetWorkflowByNameVersionTypeString(api.Name)
 
 	for _, w := range ws {

@@ -2,7 +2,8 @@ package statemanager
 
 import (
 	"bytes"
-	"log"
+
+	"github.com/merico-dev/stream/internal/pkg/log"
 
 	"gopkg.in/yaml.v3"
 
@@ -40,7 +41,7 @@ func (s StatesMap) Format() []byte {
 	encoder.SetIndent(2)
 	err := encoder.Encode(&tmpMap)
 	if err != nil {
-		log.Println(err)
+		log.Error(err)
 		return nil
 	}
 

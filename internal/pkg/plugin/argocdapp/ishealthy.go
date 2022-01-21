@@ -2,7 +2,8 @@ package argocdapp
 
 import (
 	"fmt"
-	"log"
+
+	"github.com/merico-dev/stream/internal/pkg/log"
 
 	"github.com/mitchellh/mapstructure"
 
@@ -18,7 +19,7 @@ func IsHealthy(options *map[string]interface{}) (bool, error) {
 
 	if errs := validate(&param); len(errs) != 0 {
 		for _, e := range errs {
-			log.Printf("Param error: %s", e)
+			log.Errorf("Param error: %s", e)
 		}
 		return false, fmt.Errorf("params are illegal")
 	}
@@ -36,7 +37,7 @@ func IsHealthy(options *map[string]interface{}) (bool, error) {
 	}
 
 	if kubeClient.IsArgocdApplicationReady(app) {
-		log.Printf("%s/%s is ready", namespace, name)
+		log.Infof("%s/%s is ready", namespace, name)
 		return true, nil
 	}
 	return false, fmt.Errorf("the Argocd Application %s/%s is not ready", namespace, name)

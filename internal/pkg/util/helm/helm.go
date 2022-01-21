@@ -2,9 +2,10 @@ package helm
 
 import (
 	"context"
-	"log"
 	"strings"
 	"time"
+
+	"github.com/merico-dev/stream/internal/pkg/log"
 
 	helmclient "github.com/mittwald/go-helm-client"
 	"helm.sh/helm/v3/pkg/repo"
@@ -96,7 +97,7 @@ func (h *Helm) UninstallHelmChartRelease() error {
 	var err error
 	if err = h.UninstallReleaseByName(h.ChartSpec.ReleaseName); err != nil {
 		if strings.Contains(err.Error(), "not found") {
-			log.Println("release is not found, maybe it has been deleted")
+			log.Warn("release is not found, maybe it has been deleted")
 			return nil
 		}
 		return err

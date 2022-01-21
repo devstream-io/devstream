@@ -1,9 +1,9 @@
 package main
 
 import (
-	"log"
-
 	"github.com/spf13/cobra"
+
+	"github.com/merico-dev/stream/internal/pkg/log"
 
 	"github.com/merico-dev/stream/internal/pkg/pluginengine"
 )
@@ -16,15 +16,15 @@ var verifyCMD = &cobra.Command{
 }
 
 func verifyCMDFunc(cmd *cobra.Command, args []string) {
-	log.Println("Verify started.")
+	log.Info("Verify started.")
 	healthy, err := pluginengine.CheckHealthy(configFile)
 	if err != nil {
 		log.Fatalf("Verify error: %s.", err)
 	}
 
 	if healthy {
-		log.Println("all tools are healthy")
+		log.Success("all tools are healthy")
 	} else {
-		log.Println("some tools are NOT healthy!!!")
+		log.Error("some tools are NOT healthy!!!")
 	}
 }

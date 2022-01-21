@@ -1,6 +1,8 @@
 package githubactions
 
-import "log"
+import (
+	"github.com/merico-dev/stream/internal/pkg/log"
+)
 
 // Install sets up GitHub Actions workflows.
 func Install(options *map[string]interface{}) (bool, error) {
@@ -10,7 +12,7 @@ func Install(options *map[string]interface{}) (bool, error) {
 	}
 
 	language := githubActions.GetLanguage()
-	log.Printf("Language is: %s.", language.String())
+	log.Infof("Language is: %s.", language.String())
 	ws := defaultWorkflows.GetWorkflowByNameVersionTypeString(language.String())
 
 	for _, w := range ws {

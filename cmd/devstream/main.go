@@ -1,8 +1,9 @@
 package main
 
 import (
-	"log"
 	"strings"
+
+	"github.com/merico-dev/stream/internal/pkg/log"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -52,7 +53,7 @@ func main() {
 		if strings.Contains(err.Error(), "unknown command \"install\"") {
 			log.Fatalf("Did you mean \"dtm apply\" instead?")
 		} else {
-			log.Fatal(err)
+			log.Fatal(err.Error())
 		}
 	}
 }

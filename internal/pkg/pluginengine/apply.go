@@ -3,8 +3,9 @@ package pluginengine
 import (
 	"errors"
 	"fmt"
-	"log"
 	"os"
+
+	"github.com/merico-dev/stream/internal/pkg/log"
 
 	"github.com/merico-dev/stream/internal/pkg/backend"
 	"github.com/merico-dev/stream/internal/pkg/configloader"
@@ -21,7 +22,7 @@ func Apply(fname string, continueDirectly bool) error {
 
 	err := pluginmanager.CheckLocalPlugins(cfg)
 	if err != nil {
-		log.Printf("Error checking required plugins. Maybe you forgot to run \"dtm init\" first?")
+		log.Errorf("Error checking required plugins. Maybe you forgot to run \"dtm init\" first?")
 		return err
 	}
 
@@ -35,7 +36,7 @@ func Apply(fname string, continueDirectly bool) error {
 
 	p := planmanager.NewPlan(smgr, cfg)
 	if len(p.Changes) == 0 {
-		log.Println("No changes done since last apply. There is nothing to do.")
+		log.Info("No changes done since last apply. There is nothing to do.")
 		return nil
 	}
 
@@ -49,11 +50,11 @@ func Apply(fname string, continueDirectly bool) error {
 	errsMap := execute(p)
 	if len(errsMap) != 0 {
 		for k, e := range errsMap {
-			log.Printf("%s -> %s", k, e)
+			log.Infof("%s -> %s", k, e)
 		}
 		return errors.New("some error(s) occurred during plugins delete process")
 	}
 
-	log.Println("All plugins applied successfully.")
+	log.Success("All plugins applied successfully.")
 	return nil
 }

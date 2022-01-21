@@ -2,7 +2,8 @@ package kubeprometheus
 
 import (
 	"fmt"
-	"log"
+
+	"github.com/merico-dev/stream/internal/pkg/log"
 
 	"github.com/mitchellh/mapstructure"
 
@@ -38,7 +39,7 @@ func IsHealthy(options *map[string]interface{}) (bool, error) {
 
 	if errs := validate(&param); len(errs) != 0 {
 		for _, e := range errs {
-			log.Printf("Param error: %s", e)
+			log.Errorf("Param error: %s", e)
 		}
 		return false, fmt.Errorf("params are illegal")
 	}
@@ -61,7 +62,7 @@ func IsHealthy(options *map[string]interface{}) (bool, error) {
 	}
 	if !dpReady {
 		hasSomeResorucesNotReady = true
-		log.Printf("Some deployments are not ready.")
+		log.Warn("Some deployments are not ready.")
 	}
 
 	dsReady, err := isDaemonsetsReady(kubeClient, namespace)
@@ -70,7 +71,7 @@ func IsHealthy(options *map[string]interface{}) (bool, error) {
 	}
 	if !dsReady {
 		hasSomeResorucesNotReady = true
-		log.Printf("Some daemonsets are not ready.")
+		log.Warn("Some daemonsets are not ready.")
 	}
 
 	ssReady, err := isStatefulsetsReady(kubeClient, namespace)
@@ -79,7 +80,7 @@ func IsHealthy(options *map[string]interface{}) (bool, error) {
 	}
 	if !ssReady {
 		hasSomeResorucesNotReady = true
-		log.Printf("Some statefulsets are not ready.")
+		log.Warn("Some statefulsets are not ready.")
 	}
 
 	if hasSomeResorucesNotReady {
@@ -103,10 +104,10 @@ func isDeploymentsReady(kubeClient *k8s.Client, namespace string) (bool, error) 
 	hasNotReadyDeployment := false
 	for _, dp := range dps {
 		if kubeClient.IsDeploymentReady(&dp) {
-			log.Printf("the deployment %s is ready", dp.Name)
+			log.Infof("the deployment %s is ready", dp.Name)
 			continue
 		}
-		log.Printf("the deployment %s is not ready", dp.Name)
+		log.Warnf("the deployment %s is not ready", dp.Name)
 		hasNotReadyDeployment = true
 	}
 
@@ -130,10 +131,10 @@ func isDaemonsetsReady(kubeClient *k8s.Client, namespace string) (bool, error) {
 	hasNotReadyDaemonset := false
 	for _, ds := range dss {
 		if kubeClient.IsDaemonsetReady(&ds) {
-			log.Printf("the daemonset %s is ready", ds.Name)
+			log.Infof("the daemonset %s is ready", ds.Name)
 			continue
 		}
-		log.Printf("the daemonset %s is not ready", ds.Name)
+		log.Warnf("the daemonset %s is not ready", ds.Name)
 		hasNotReadyDaemonset = true
 	}
 
@@ -157,10 +158,10 @@ func isStatefulsetsReady(kubeClient *k8s.Client, namespace string) (bool, error)
 	hasNotReadyStatefulset := false
 	for _, ss := range sss {
 		if kubeClient.IsStatefulsetReady(&ss) {
-			log.Printf("the statefulset %s is ready", ss.Name)
+			log.Infof("the statefulset %s is ready", ss.Name)
 			continue
 		}
-		log.Printf("the statefulset %s is not ready", ss.Name)
+		log.Infof("the statefulset %s is not ready", ss.Name)
 		hasNotReadyStatefulset = true
 	}
 

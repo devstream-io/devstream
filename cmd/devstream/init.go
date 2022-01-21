@@ -1,9 +1,9 @@
 package main
 
 import (
-	"log"
-
 	"github.com/spf13/cobra"
+
+	"github.com/merico-dev/stream/internal/pkg/log"
 
 	"github.com/merico-dev/stream/internal/pkg/configloader"
 	"github.com/merico-dev/stream/internal/pkg/pluginmanager"
@@ -22,12 +22,12 @@ func initCMDFunc(cmd *cobra.Command, args []string) {
 		log.Fatal("Failed to load the config file.")
 	}
 
-	log.Println("Initialize started.")
+	log.Info("Initialize started.")
 	err := pluginmanager.DownloadPlugins(cfg)
 	if err != nil {
-		log.Printf("Error: %s.", err)
+		log.Errorf("Error: %s.", err)
 		return
 	}
 
-	log.Println("Initialize finished.")
+	log.Success("Initialize finished.")
 }

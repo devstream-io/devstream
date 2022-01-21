@@ -2,7 +2,8 @@ package kubeprometheus
 
 import (
 	"fmt"
-	"log"
+
+	"github.com/merico-dev/stream/internal/pkg/log"
 
 	"github.com/mitchellh/mapstructure"
 
@@ -18,7 +19,7 @@ func Reinstall(options *map[string]interface{}) (bool, error) {
 
 	if errs := validate(&param); len(errs) != 0 {
 		for _, e := range errs {
-			log.Printf("Param error: %s", e)
+			log.Errorf("Param error: %s", e)
 		}
 		return false, fmt.Errorf("params are illegal")
 	}
@@ -28,12 +29,12 @@ func Reinstall(options *map[string]interface{}) (bool, error) {
 		return false, err
 	}
 
-	log.Println("Uninstalling kube-prometheus-stack helm chart ...")
+	log.Info("Uninstalling kube-prometheus-stack helm chart ...")
 	if err = h.UninstallHelmChartRelease(); err != nil {
 		return false, err
 	}
 
-	log.Println("Installing or updating kube-prometheus-stack helm chart ...")
+	log.Info("Installing or updating kube-prometheus-stack helm chart ...")
 	if err = h.InstallOrUpgradeChart(); err != nil {
 		return false, err
 	}

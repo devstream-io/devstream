@@ -13,11 +13,13 @@ require (
 	github.com/mittwald/go-helm-client v0.8.4
 	github.com/onsi/ginkgo/v2 v2.0.0
 	github.com/onsi/gomega v1.17.0
+	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/cobra v1.2.1
 	github.com/spf13/viper v1.8.1
 	github.com/stretchr/testify v1.7.0
 	github.com/tcnksm/go-input v0.0.0-20180404061846-548a7d7a8ee8
 	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8
+	gopkg.in/gookit/color.v1 v1.1.6
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 	helm.sh/helm/v3 v3.7.2
 	k8s.io/api v0.22.4
@@ -137,7 +139,6 @@ require (
 	github.com/russross/blackfriday v1.5.2 // indirect
 	github.com/sergi/go-diff v1.1.0 // indirect
 	github.com/shopspring/decimal v1.2.0 // indirect
-	github.com/sirupsen/logrus v1.8.1 // indirect
 	github.com/spf13/afero v1.6.0 // indirect
 	github.com/spf13/cast v1.4.1 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect

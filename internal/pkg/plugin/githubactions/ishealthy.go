@@ -1,6 +1,8 @@
 package githubactions
 
-import "log"
+import (
+	"github.com/merico-dev/stream/internal/pkg/log"
+)
 
 func IsHealthy(options *map[string]interface{}) (bool, error) {
 	ghActions, err := NewGithubActions(options)
@@ -9,7 +11,7 @@ func IsHealthy(options *map[string]interface{}) (bool, error) {
 	}
 
 	language := ghActions.GetLanguage()
-	log.Printf("Language is: %s.", language.String())
+	log.Infof("Language is: %s.", language.String())
 
 	ws := defaultWorkflows.GetWorkflowByNameVersionTypeString(language.String())
 	retMap, err := ghActions.VerifyWorkflows(ws)
@@ -21,9 +23,9 @@ func IsHealthy(options *map[string]interface{}) (bool, error) {
 	for name, err := range retMap {
 		if err != nil {
 			errFlag = true
-			log.Printf("The workflow/file %s is not ok: %s", name, err)
+			log.Errorf("The workflow/file %s is not ok: %s", name, err)
 		}
-		log.Printf("The workflow/file %s is ok", name)
+		log.Successf("The workflow/file %s is ok", name)
 	}
 	if errFlag {
 		return false, nil

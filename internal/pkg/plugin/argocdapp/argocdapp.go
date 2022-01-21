@@ -2,11 +2,12 @@ package argocdapp
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 	"strings"
 	"text/template"
+
+	"github.com/merico-dev/stream/internal/pkg/log"
 )
 
 const defaultYamlPath = "./app.yaml"
@@ -24,11 +25,11 @@ func kubectlAction(action Action, filename string) error {
 	if err != nil {
 		// TODO(Daniel Hu): Handle the Error below:
 		// Error from server (NotFound): error when deleting "./app.yaml": applications.argoproj.io "hello" not found
-		log.Printf("failed to exec: < %s >", cmd.String())
-		log.Printf("exec logs: < %s >. got error: %s", string(cOut), err)
+		log.Errorf("failed to exec: < %s >", cmd.String())
+		log.Errorf("exec logs: < %s >. got error: %s", string(cOut), err)
 		return err
 	}
-	log.Println(strings.TrimSuffix(string(cOut), "\n"))
+	log.Info(strings.TrimSuffix(string(cOut), "\n"))
 	return nil
 }
 

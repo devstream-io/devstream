@@ -1,9 +1,9 @@
 package planmanager
 
 import (
-	"log"
-
 	"gopkg.in/yaml.v3"
+
+	"github.com/merico-dev/stream/internal/pkg/log"
 
 	"github.com/merico-dev/stream/internal/pkg/configloader"
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
@@ -35,9 +35,9 @@ func NewPlan(smgr statemanager.Manager, cfg *configloader.Config) *Plan {
 		}
 		smgr.SetStatesMap(statesMap)
 
-		log.Printf("Succeeded initializing StatesMap.")
+		log.Success("Succeeded initializing StatesMap.")
 	} else {
-		log.Printf("Failed to initialize StatesMap. Error: (%s). Try to initialize the StatesMap.", err)
+		log.Errorf("Failed to initialize StatesMap. Error: (%s). Try to initialize the StatesMap.", err)
 	}
 
 	plan := &Plan{
