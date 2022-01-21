@@ -2,6 +2,7 @@ package kubeprometheus
 
 import (
 	"fmt"
+
 	"github.com/merico-dev/stream/internal/pkg/log"
 
 	"github.com/mitchellh/mapstructure"

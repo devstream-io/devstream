@@ -2,6 +2,7 @@ package planmanager
 
 import (
 	"github.com/google/go-cmp/cmp"
+
 	"github.com/merico-dev/stream/internal/pkg/log"
 
 	"github.com/merico-dev/stream/internal/pkg/configloader"

@@ -4,10 +4,11 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/merico-dev/stream/internal/pkg/log"
 	"net/http"
 	"strings"
 	"text/template"
+
+	"github.com/merico-dev/stream/internal/pkg/log"
 
 	"github.com/google/go-github/v40/github"
 	"github.com/mitchellh/mapstructure"

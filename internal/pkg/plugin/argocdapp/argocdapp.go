@@ -2,11 +2,12 @@ package argocdapp
 
 import (
 	"fmt"
-	"github.com/merico-dev/stream/internal/pkg/log"
 	"os"
 	"os/exec"
 	"strings"
 	"text/template"
+
+	"github.com/merico-dev/stream/internal/pkg/log"
 )
 
 const defaultYamlPath = "./app.yaml"

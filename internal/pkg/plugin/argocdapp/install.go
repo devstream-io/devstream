@@ -2,8 +2,9 @@ package argocdapp
 
 import (
 	"fmt"
-	"github.com/merico-dev/stream/internal/pkg/log"
 	"os"
+
+	"github.com/merico-dev/stream/internal/pkg/log"
 
 	"github.com/mitchellh/mapstructure"
 )

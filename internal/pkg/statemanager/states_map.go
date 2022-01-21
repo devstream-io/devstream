@@ -2,6 +2,7 @@ package statemanager
 
 import (
 	"bytes"
+
 	"github.com/merico-dev/stream/internal/pkg/log"
 
 	"gopkg.in/yaml.v3"

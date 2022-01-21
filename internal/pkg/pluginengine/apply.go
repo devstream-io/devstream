@@ -3,8 +3,9 @@ package pluginengine
 import (
 	"errors"
 	"fmt"
-	"github.com/merico-dev/stream/internal/pkg/log"
 	"os"
+
+	"github.com/merico-dev/stream/internal/pkg/log"
 
 	"github.com/merico-dev/stream/internal/pkg/backend"
 	"github.com/merico-dev/stream/internal/pkg/configloader"

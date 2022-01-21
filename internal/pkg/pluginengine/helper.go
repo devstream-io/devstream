@@ -2,10 +2,11 @@ package pluginengine
 
 import (
 	"fmt"
-	"github.com/merico-dev/stream/internal/pkg/log"
 	"os"
 	"plugin"
 	"time"
+
+	"github.com/merico-dev/stream/internal/pkg/log"
 
 	"github.com/tcnksm/go-input"
 

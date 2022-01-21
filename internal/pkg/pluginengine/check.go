@@ -2,6 +2,7 @@ package pluginengine
 
 import (
 	"fmt"
+
 	"github.com/merico-dev/stream/internal/pkg/log"
 
 	"github.com/merico-dev/stream/internal/pkg/configloader"

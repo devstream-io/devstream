@@ -2,9 +2,10 @@ package helm
 
 import (
 	"context"
-	"github.com/merico-dev/stream/internal/pkg/log"
 	"strings"
 	"time"
+
+	"github.com/merico-dev/stream/internal/pkg/log"
 
 	helmclient "github.com/mittwald/go-helm-client"
 	"helm.sh/helm/v3/pkg/repo"

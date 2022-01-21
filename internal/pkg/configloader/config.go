@@ -2,8 +2,9 @@ package configloader
 
 import (
 	"fmt"
-	"github.com/merico-dev/stream/internal/pkg/log"
 	"io/ioutil"
+
+	"github.com/merico-dev/stream/internal/pkg/log"
 
 	"gopkg.in/yaml.v3"
 )

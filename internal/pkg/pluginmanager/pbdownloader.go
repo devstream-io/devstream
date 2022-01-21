@@ -5,13 +5,14 @@ package pluginmanager
 
 import (
 	"fmt"
-	"github.com/merico-dev/stream/internal/pkg/log"
 	"io"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strconv"
 	"time"
+
+	"github.com/merico-dev/stream/internal/pkg/log"
 
 	"github.com/cheggaaa/pb"
 )
