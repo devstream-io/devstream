@@ -8,6 +8,7 @@
 [![Discord](https://img.shields.io/discord/844603288082186240.svg?style=flat?label=&logo=discord&logoColor=ffffff&color=747df7&labelColor=454545)](https://discord.gg/83rDG6ydVZ)
 ![Test](https://github.com/merico-dev/stream/actions/workflows/main-builder.yml/badge.svg)
 [![Go Report Card](https://goreportcard.com/badge/github.com/merico-dev/stream)](https://goreportcard.com/report/github.com/merico-dev/stream)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fmerico-dev%2Fstream.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fmerico-dev%2Fstream?ref=badge_shield)
 
 # DevStream
 </div>
@@ -135,3 +136,7 @@ A: Inspired by [`git`](https://github.com/git/git#readme), the name is (dependin
 ## Contribute
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md).
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fmerico-dev%2Fstream.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fmerico-dev%2Fstream?ref=badge_large)
