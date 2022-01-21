@@ -4,8 +4,6 @@ import (
 	"fmt"
 )
 
-var colorOn bool
-
 type Symbol string
 
 // Symbols struct contains all symbols
@@ -19,8 +17,6 @@ type Symbols struct {
 	Success Symbol
 }
 
-var osBaseSymbols Symbols
-
 var normal = Symbols{
 	Debug:   Symbol("ℹ"),
 	Info:    Symbol("ℹ"),
@@ -29,15 +25,6 @@ var normal = Symbols{
 	Warn:    Symbol("⚠"),
 	Error:   Symbol("✖"),
 	Fatal:   Symbol("✖"),
-}
-
-var fallback = Symbols{
-	Debug:   Symbol("i"),
-	Info:    Symbol("i"),
-	Success: Symbol("√"),
-	Warning: Symbol("‼"),
-	Warn:    Symbol("‼"),
-	Error:   Symbol("×"),
 }
 
 // String returns a printable representation of Symbols struct
