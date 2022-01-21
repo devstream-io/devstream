@@ -1,6 +1,8 @@
 package githubactions
 
-import "github.com/merico-dev/stream/internal/pkg/util/log"
+import (
+	"github.com/merico-dev/stream/internal/pkg/log"
+)
 
 func IsHealthy(options *map[string]interface{}) (bool, error) {
 	ghActions, err := NewGithubActions(options)

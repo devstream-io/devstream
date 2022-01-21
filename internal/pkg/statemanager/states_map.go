@@ -2,11 +2,11 @@ package statemanager
 
 import (
 	"bytes"
+	"github.com/merico-dev/stream/internal/pkg/log"
 
 	"gopkg.in/yaml.v3"
 
 	"github.com/merico-dev/stream/internal/pkg/container/concurrentmap"
-	"github.com/merico-dev/stream/internal/pkg/util/log"
 )
 
 type StatesMap concurrentmap.ConcurrentMap

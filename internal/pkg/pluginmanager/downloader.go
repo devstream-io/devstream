@@ -5,13 +5,12 @@ package pluginmanager
 
 import (
 	"fmt"
+	"github.com/merico-dev/stream/internal/pkg/log"
 	"net/http"
 	"os"
 	"path/filepath"
 
 	"github.com/go-resty/resty/v2"
-
-	"github.com/merico-dev/stream/internal/pkg/util/log"
 )
 
 const (

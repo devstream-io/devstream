@@ -5,6 +5,7 @@ package pluginmanager
 
 import (
 	"fmt"
+	"github.com/merico-dev/stream/internal/pkg/log"
 	"io"
 	"net/http"
 	"os"
@@ -13,8 +14,6 @@ import (
 	"time"
 
 	"github.com/cheggaaa/pb"
-
-	"github.com/merico-dev/stream/internal/pkg/util/log"
 )
 
 type PbDownloadClient struct {

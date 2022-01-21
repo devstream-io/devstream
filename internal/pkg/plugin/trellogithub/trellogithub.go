@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"github.com/merico-dev/stream/internal/pkg/log"
 	"net/http"
 	"strings"
 	"text/template"
@@ -11,7 +12,6 @@ import (
 	"github.com/google/go-github/v40/github"
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/merico-dev/stream/internal/pkg/util/log"
 	"github.com/merico-dev/stream/internal/pkg/util/mapz"
 	"github.com/merico-dev/stream/internal/pkg/util/slicez"
 )

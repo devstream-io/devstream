@@ -1,11 +1,11 @@
 package main
 
 import (
+	"github.com/merico-dev/stream/internal/pkg/log"
 	"github.com/spf13/cobra"
 
 	"github.com/merico-dev/stream/internal/pkg/configloader"
 	"github.com/merico-dev/stream/internal/pkg/pluginmanager"
-	"github.com/merico-dev/stream/internal/pkg/util/log"
 )
 
 var initCMD = &cobra.Command{

@@ -1,11 +1,11 @@
 package planmanager
 
 import (
+	"github.com/merico-dev/stream/internal/pkg/log"
 	"gopkg.in/yaml.v3"
 
 	"github.com/merico-dev/stream/internal/pkg/configloader"
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
-	"github.com/merico-dev/stream/internal/pkg/util/log"
 )
 
 // Plan is an "Actions" plan, it includes all changes should be take with plugins.

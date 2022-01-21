@@ -1,13 +1,13 @@
 package main
 
 import (
+	"github.com/merico-dev/stream/internal/pkg/log"
 	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
 	"github.com/merico-dev/stream/internal/pkg/pluginengine"
-	"github.com/merico-dev/stream/internal/pkg/util/log"
 )
 
 var (

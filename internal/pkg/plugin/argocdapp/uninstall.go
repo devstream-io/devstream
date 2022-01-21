@@ -2,11 +2,10 @@ package argocdapp
 
 import (
 	"fmt"
+	"github.com/merico-dev/stream/internal/pkg/log"
 	"os"
 
 	"github.com/mitchellh/mapstructure"
-
-	"github.com/merico-dev/stream/internal/pkg/util/log"
 )
 
 // Uninstall uninstall an ArgoCD app by yaml.

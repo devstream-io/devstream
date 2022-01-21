@@ -2,6 +2,7 @@ package pluginengine
 
 import (
 	"fmt"
+	"github.com/merico-dev/stream/internal/pkg/log"
 	"os"
 	"plugin"
 	"time"
@@ -11,7 +12,6 @@ import (
 	"github.com/merico-dev/stream/internal/pkg/configloader"
 	"github.com/merico-dev/stream/internal/pkg/planmanager"
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
-	"github.com/merico-dev/stream/internal/pkg/util/log"
 )
 
 func loadPlugin(pluginDir string, tool *configloader.Tool) (DevStreamPlugin, error) {

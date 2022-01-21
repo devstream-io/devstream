@@ -2,11 +2,10 @@ package configloader
 
 import (
 	"fmt"
+	"github.com/merico-dev/stream/internal/pkg/log"
 	"io/ioutil"
 
 	"gopkg.in/yaml.v3"
-
-	"github.com/merico-dev/stream/internal/pkg/util/log"
 )
 
 // Config is the struct for loading DevStream configuration YAML files.

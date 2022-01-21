@@ -1,6 +1,8 @@
 package githubactions
 
-import "github.com/merico-dev/stream/internal/pkg/util/log"
+import (
+	"github.com/merico-dev/stream/internal/pkg/log"
+)
 
 // Uninstall remove GitHub Actions workflows.
 func Uninstall(options *map[string]interface{}) (bool, error) {

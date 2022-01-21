@@ -1,11 +1,11 @@
 package planmanager
 
 import (
+	"github.com/merico-dev/stream/internal/pkg/log"
 	"gopkg.in/yaml.v3"
 
 	"github.com/merico-dev/stream/internal/pkg/configloader"
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
-	"github.com/merico-dev/stream/internal/pkg/util/log"
 )
 
 // NewDeletePlan takes "State Manager" & "Config" then do some calculation and return a Plan to delete all plugins in the Config.

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"github.com/merico-dev/stream/internal/pkg/log"
 	"net/http"
 	"strings"
 	"text/template"
@@ -13,7 +14,6 @@ import (
 	"github.com/spf13/viper"
 	"golang.org/x/oauth2"
 
-	"github.com/merico-dev/stream/internal/pkg/util/log"
 	"github.com/merico-dev/stream/internal/pkg/util/mapz"
 	"github.com/merico-dev/stream/internal/pkg/util/slicez"
 )

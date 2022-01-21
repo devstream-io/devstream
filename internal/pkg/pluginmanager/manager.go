@@ -3,13 +3,13 @@ package pluginmanager
 import (
 	"errors"
 	"fmt"
+	"github.com/merico-dev/stream/internal/pkg/log"
 	"os"
 	"path/filepath"
 
 	"github.com/spf13/viper"
 
 	"github.com/merico-dev/stream/internal/pkg/configloader"
-	"github.com/merico-dev/stream/internal/pkg/util/log"
 )
 
 func DownloadPlugins(conf *configloader.Config) error {

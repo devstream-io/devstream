@@ -2,10 +2,10 @@ package planmanager
 
 import (
 	"github.com/google/go-cmp/cmp"
+	"github.com/merico-dev/stream/internal/pkg/log"
 
 	"github.com/merico-dev/stream/internal/pkg/configloader"
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
-	"github.com/merico-dev/stream/internal/pkg/util/log"
 )
 
 func drifted(t *configloader.Tool, s *statemanager.State) bool {

@@ -1,6 +1,8 @@
 package trellogithub
 
-import "github.com/merico-dev/stream/internal/pkg/util/log"
+import (
+	"github.com/merico-dev/stream/internal/pkg/log"
+)
 
 func IsHealthy(options *map[string]interface{}) (bool, error) {
 	gis, err := NewTrelloGithub(options)

@@ -1,7 +1,7 @@
 package githubactions
 
 import (
-	"github.com/merico-dev/stream/internal/pkg/util/log"
+	"github.com/merico-dev/stream/internal/pkg/log"
 )
 
 // Reinstall remove and set up GitHub Actions workflows.

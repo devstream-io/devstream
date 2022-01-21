@@ -1,6 +1,8 @@
 package githubactions
 
-import "github.com/merico-dev/stream/internal/pkg/util/log"
+import (
+	"github.com/merico-dev/stream/internal/pkg/log"
+)
 
 // Install sets up GitHub Actions workflows.
 func Install(options *map[string]interface{}) (bool, error) {

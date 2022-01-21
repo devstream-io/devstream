@@ -3,6 +3,7 @@ package pluginengine
 import (
 	"errors"
 	"fmt"
+	"github.com/merico-dev/stream/internal/pkg/log"
 	"os"
 
 	"github.com/merico-dev/stream/internal/pkg/backend"
@@ -10,7 +11,6 @@ import (
 	"github.com/merico-dev/stream/internal/pkg/planmanager"
 	"github.com/merico-dev/stream/internal/pkg/pluginmanager"
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
-	"github.com/merico-dev/stream/internal/pkg/util/log"
 )
 
 func Delete(fname string, continueDirectly bool) error {
