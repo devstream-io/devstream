@@ -8,8 +8,6 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/merico-dev/stream/internal/pkg/log"
-
 	"github.com/google/go-github/v42/github"
 	"github.com/mitchellh/mapstructure"
 
