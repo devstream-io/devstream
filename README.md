@@ -14,7 +14,7 @@
 
 ## DevStream, What Is It Anyway?
 
-DevStream is an open-source DevOps toolchain manager.
+TL;DR: DevStream (CLI tool named `dtm`) is an open-source DevOps toolchain manager.
 
 Imagine you are in a new project. Before writing the first line of code, you would have to figure out the tools needed in the whole Software Development Life Cycle (SDLC). You would probably need the following pieces:
 
@@ -51,37 +51,6 @@ Define your wanted DevOps tools in a single human-readable YAML config file, and
 
 Want to install another different tool for a try? No problem. Want to remove or reinstall a specific piece in the whole workflow? Got your back.
 
-## Architecture
-
-See [docs/architecture.md](./docs/architecture.md).
-
-## Build
-
-```shell
-$ make help
-
-Usage:
-  make <target>
-  help                Display this help.
-  build               Build dtm & plugins locally.
-  build-core          Build dtm core only, without plugins, locally.
-  build-release       Build for all platforms for release.
-  build-darwin-arm64  Build for darwin/arm64 for release.
-  build-darwin-amd64  Cross-platform build for darwin/amd64.
-  build-linux-amd64   Cross-platform build for linux/amd64
-  e2e                 Run e2e tests.
-  fmt                 Run 'go fmt' & goimports against code.
-  vet                 Run go vet against code.
-```
-
-## Test
-
-Unit/functional test:
-
-```bash
-go test ./...
-```
-
 ## Configuration
 
 See [examples/config.yaml](./examples/config.yaml).
@@ -116,6 +85,41 @@ To verify, run:
 
 ```bash
 ./dtm verify -f examples/config.yaml
+```
+
+## Architecture
+
+See [docs/architecture.md](./docs/architecture.md).
+
+## Build
+
+Dependencies:
+- go 1.17
+- the `$GOPATH/bin` directory should be in your `PATH` environment variable (we use `goimports` to update import lines)
+
+```makefile
+$ make help
+
+Usage:
+  make <target>
+  help                Display this help.
+  build               Build dtm & plugins locally.
+  build-core          Build dtm core only, without plugins, locally.
+  build-release       Build for all platforms for release.
+  build-darwin-arm64  Build for darwin/arm64 for release.
+  build-darwin-amd64  Cross-platform build for darwin/amd64.
+  build-linux-amd64   Cross-platform build for linux/amd64
+  e2e                 Run e2e tests.
+  fmt                 Run 'go fmt' & goimports against code.
+  vet                 Run go vet against code.
+```
+
+## Test
+
+Unit/functional test:
+
+```bash
+go test ./...
 ```
 
 ## Why `dtm`?
