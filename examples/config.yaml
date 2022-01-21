@@ -33,6 +33,17 @@ tools:
       name: go
       version: "1.17"
     branch: main
+    jobs:
+      build:
+        enable: True
+        command: "go build ./..."
+      test:
+        enable: True
+        command: "go test ./..."
+        coverage:
+          enable: False
+          profile: "-race -covermode=atomic"
+          output: "coverage.out"
 - name: trello-github-integ-default
   plugin:
     kind: trello-github-integ
