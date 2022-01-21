@@ -8,23 +8,6 @@ var colorOn bool
 
 type Symbol string
 
-//var (
-//	// Debug represents the debug symbol
-//	debug Symbol
-//	// Info represents the information symbol
-//	info Symbol
-//	// Warning represents the warning symbol
-//	warning Symbol
-//	// Warn alias of Warning
-//	warn Symbol
-//	// Error represents the error symbol
-//	error Symbol
-//	// Fatal represents the fatal symbol
-//	fatal Symbol
-//	// Success represents the success symbol
-//	success Symbol
-//)
-
 // Symbols struct contains all symbols
 type Symbols struct {
 	Debug   Symbol
