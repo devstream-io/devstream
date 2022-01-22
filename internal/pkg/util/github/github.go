@@ -3,7 +3,9 @@ package github
 import (
 	"context"
 	"fmt"
+	"io/fs"
 	"net/http"
+	"path/filepath"
 
 	"github.com/google/go-github/v42/github"
 	"github.com/spf13/viper"
@@ -142,4 +144,26 @@ func (c *Client) DownloadAsset(tagName, assetName string) error {
 	log.Debugf("Downloaded <%d> bytes", n)
 
 	return nil
+}
+
+func (c *Client) InitRepoLocalAndPushToRemote(repoPath string) error {
+	err := filepath.Walk(repoPath, func(path string, info fs.FileInfo, err error) error {
+		if info.IsDir() {
+			log.Debugf("Found dir: %s", path)
+			return nil
+		}
+
+		log.Debugf("Found file: %s", path)
+		return c.CreateFile(path)
+	})
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *Client) CreateFile(filePath string) error {
+	_, _, err := c.Repositories.CreateFile(context.TODO(), c.Owner, c.Repo, filePath, &github.RepositoryContentFileOptions{})
+	return err
 }
