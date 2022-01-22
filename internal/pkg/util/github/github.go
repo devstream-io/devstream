@@ -3,11 +3,7 @@ package github
 import (
 	"context"
 	"fmt"
-	"io/fs"
-	"io/ioutil"
 	"net/http"
-	"path/filepath"
-	"strings"
 
 	"github.com/google/go-github/v42/github"
 	"github.com/spf13/viper"
@@ -148,43 +144,7 @@ func (c *Client) DownloadAsset(tagName, assetName string) error {
 	return nil
 }
 
-func (c *Client) InitRepoLocalAndPushToRemote(repoPath string) error {
-	if err := c.CreateRepo(); err != nil {
-		log.Errorf("Failed to create repo: %s", err)
-		return err
-	}
-
-	err := filepath.Walk(repoPath, func(path string, info fs.FileInfo, err error) error {
-		if err != nil {
-			log.Debugf("Walk error: %s", err)
-			return err
-		}
-
-		if info.IsDir() {
-			log.Debugf("Found dir: %s", path)
-			return nil
-		}
-
-		if strings.Contains(path, ".git") {
-			return nil
-		}
-
-		log.Debugf("Found file: %s", path)
-		return c.CreateFile(path)
-	})
-
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (c *Client) CreateFile(filePath string) error {
-	content, err := ioutil.ReadFile(filePath)
-	if err != nil {
-		return err
-	}
-
+func (c *Client) CreateFile(content []byte, filePath string) error {
 	defaultMsg := "initialize"
 	defaultBranch := "main"
 
@@ -194,13 +154,7 @@ func (c *Client) CreateFile(filePath string) error {
 		Branch:  &defaultBranch,
 	}
 
-	splitStrs := strings.SplitN(filePath, "/", 2)
-	if len(splitStrs) != 2 {
-		log.Errorf("Unknown format: %s", filePath)
-	}
-	realPath := splitStrs[1]
-
-	_, _, err = c.Repositories.CreateFile(context.TODO(), c.Owner, c.Repo, realPath, opt)
+	_, _, err := c.Repositories.CreateFile(context.TODO(), c.Owner, c.Repo, filePath, opt)
 	return err
 }
 

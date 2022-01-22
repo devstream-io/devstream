@@ -74,7 +74,7 @@ func push(param *Param) error {
 		return err
 	}
 
-	err = ghClient.InitRepoLocalAndPushToRemote(DefaultTemplateRepo)
+	err = InitRepoLocalAndPushToRemote(DefaultTemplateRepo, param, ghClient)
 	if err != nil {
 		return err
 	}
