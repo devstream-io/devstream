@@ -44,7 +44,7 @@ func UnTargz(filePath string) error {
 func handleHeader(header *tar.Header, reader *tar.Reader) error {
 	switch header.Typeflag {
 	case tar.TypeDir:
-		if err := os.Mkdir(header.Name, 0755); err != nil {
+		if err := os.MkdirAll(header.Name, 0755); err != nil {
 			return err
 		}
 	case tar.TypeReg:

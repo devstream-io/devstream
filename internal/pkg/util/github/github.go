@@ -4,8 +4,10 @@ import (
 	"context"
 	"fmt"
 	"io/fs"
+	"io/ioutil"
 	"net/http"
 	"path/filepath"
+	"time"
 
 	"github.com/google/go-github/v42/github"
 	"github.com/spf13/viper"
@@ -147,7 +149,14 @@ func (c *Client) DownloadAsset(tagName, assetName string) error {
 }
 
 func (c *Client) InitRepoLocalAndPushToRemote(repoPath string) error {
+	// TODO(daniel-hutao): create repo here
+
 	err := filepath.Walk(repoPath, func(path string, info fs.FileInfo, err error) error {
+		if err != nil {
+			log.Debugf("Walk error: %s", err)
+			return err
+		}
+
 		if info.IsDir() {
 			log.Debugf("Found dir: %s", path)
 			return nil
@@ -164,6 +173,54 @@ func (c *Client) InitRepoLocalAndPushToRemote(repoPath string) error {
 }
 
 func (c *Client) CreateFile(filePath string) error {
-	_, _, err := c.Repositories.CreateFile(context.TODO(), c.Owner, c.Repo, filePath, &github.RepositoryContentFileOptions{})
+	content, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		return err
+	}
+
+	// TODO(daniel-hutao): generage the sha
+	sha := ""
+	defaultMsg := "todo"
+	defaultBranch := "main"
+
+	t := time.Now()
+	// TODO(daniel-hutao): need a official name here
+	n := "devstream-bot"
+	e := "devstream-bot@merico.dev"
+	l := ""
+	commitAuthor := github.CommitAuthor{
+		Date:  &t,
+		Name:  &n,
+		Email: &e,
+		Login: &l,
+	}
+
+	opt := &github.RepositoryContentFileOptions{
+		Message:   &defaultMsg,
+		Content:   content,
+		SHA:       &sha,
+		Branch:    &defaultBranch,
+		Author:    &commitAuthor,
+		Committer: &commitAuthor,
+	}
+
+	_, _, err = c.Repositories.CreateFile(context.TODO(), c.Owner, c.Repo, filePath, opt)
 	return err
+}
+
+// TODO(daniel-hutao) implement CreateRepo*() functions below
+func (c *Client) CreateRepoInOrgIfNotExist() error {
+	return nil
+}
+
+func (c *Client) CreateRepoInOrg() error {
+	return nil
+}
+
+func (c *Client) CreateRepoIfNotExist() error {
+	return nil
+}
+
+func (c *Client) CreateRepo() error {
+	return nil
 }
