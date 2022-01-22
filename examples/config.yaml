@@ -109,5 +109,7 @@ tools:
   plugin:
     kind: github-repo-scaffolding-golang
     version: 0.0.1
-  options: null
-    # TODO(daniel-hutao): complete it
+  options:
+    owner: daniel-hutao
+    repo: golang-demo
+    branch: main

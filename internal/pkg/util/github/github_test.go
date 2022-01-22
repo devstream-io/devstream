@@ -38,4 +38,8 @@ var _ = Describe("GitHub", func() {
 			Expect(err).NotTo(HaveOccurred())
 		})
 	})
+
+	Context("Client with auth enabled", func() {
+
+	})
 })
