@@ -15,7 +15,12 @@ tools:
     version: 0.0.1
   # options for the plugin
   options:
-    # TODO(daniel-hutao): complete it
+    # the repo's owner
+    owner: daniel-hutao
+    # the repo which you'd like to create
+    repo: golang-demo
+    # the branch of the repo you'd like to hold the code
+    branch: main
 ```
 
 Currently, all the parameters in the example above are mandatory.
