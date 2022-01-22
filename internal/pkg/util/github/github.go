@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"path/filepath"
-	"time"
+	"strings"
 
 	"github.com/google/go-github/v42/github"
 	"github.com/spf13/viper"
@@ -149,7 +149,10 @@ func (c *Client) DownloadAsset(tagName, assetName string) error {
 }
 
 func (c *Client) InitRepoLocalAndPushToRemote(repoPath string) error {
-	// TODO(daniel-hutao): create repo here
+	if err := c.CreateRepo(); err != nil {
+		log.Errorf("Failed to create repo: %s", err)
+		return err
+	}
 
 	err := filepath.Walk(repoPath, func(path string, info fs.FileInfo, err error) error {
 		if err != nil {
@@ -159,6 +162,10 @@ func (c *Client) InitRepoLocalAndPushToRemote(repoPath string) error {
 
 		if info.IsDir() {
 			log.Debugf("Found dir: %s", path)
+			return nil
+		}
+
+		if strings.Contains(path, ".git") {
 			return nil
 		}
 
@@ -178,49 +185,33 @@ func (c *Client) CreateFile(filePath string) error {
 		return err
 	}
 
-	// TODO(daniel-hutao): generage the sha
-	sha := ""
-	defaultMsg := "todo"
+	defaultMsg := "initialize"
 	defaultBranch := "main"
 
-	t := time.Now()
-	// TODO(daniel-hutao): need a official name here
-	n := "devstream-bot"
-	e := "devstream-bot@merico.dev"
-	l := ""
-	commitAuthor := github.CommitAuthor{
-		Date:  &t,
-		Name:  &n,
-		Email: &e,
-		Login: &l,
-	}
-
 	opt := &github.RepositoryContentFileOptions{
-		Message:   &defaultMsg,
-		Content:   content,
-		SHA:       &sha,
-		Branch:    &defaultBranch,
-		Author:    &commitAuthor,
-		Committer: &commitAuthor,
+		Message: &defaultMsg,
+		Content: content,
+		Branch:  &defaultBranch,
 	}
 
-	_, _, err = c.Repositories.CreateFile(context.TODO(), c.Owner, c.Repo, filePath, opt)
+	splitStrs := strings.SplitN(filePath, "/", 2)
+	if len(splitStrs) != 2 {
+		log.Errorf("Unknown format: %s", filePath)
+	}
+	realPath := splitStrs[1]
+
+	_, _, err = c.Repositories.CreateFile(context.TODO(), c.Owner, c.Repo, realPath, opt)
 	return err
 }
 
-// TODO(daniel-hutao) implement CreateRepo*() functions below
-func (c *Client) CreateRepoInOrgIfNotExist() error {
-	return nil
-}
-
-func (c *Client) CreateRepoInOrg() error {
-	return nil
-}
-
-func (c *Client) CreateRepoIfNotExist() error {
-	return nil
-}
-
 func (c *Client) CreateRepo() error {
+	repo := &github.Repository{
+		Name: &c.Repo,
+	}
+
+	_, _, err := c.Repositories.Create(context.TODO(), "", repo)
+	if err != nil {
+		return err
+	}
 	return nil
 }
