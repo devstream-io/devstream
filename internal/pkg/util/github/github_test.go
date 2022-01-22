@@ -2,7 +2,6 @@ package github_test
 
 import (
 	"os"
-	"path/filepath"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -11,16 +10,17 @@ import (
 )
 
 var _ = Describe("GitHub", func() {
-	var testRelease = "v0.0.1"
-	var testAsset = "argocdapp_0.0.1.so"
+	var testTag = "v0.0.1"
+	var testAsset = "dtm-scaffolding-golang-v0.0.1.tar.gz"
 	var workPath = ".github-repo-scaffolding-golang"
 	Context("Client without auth enabled", func() {
 		var ghClient *github.Client
 		var err error
 		BeforeEach(func() {
 			ghClient, err = github.NewClient(&github.Option{
-				Owner:    "merico-dev",
-				Repo:     "stream",
+				// TODO(daniel-hutao): update it to merico-dev after merico-dev/dtm-scaffolding-golang has a stable asset
+				Owner:    "daniel-hutao",
+				Repo:     "dtm-scaffolding-golang",
 				NeedAuth: false,
 				WorkPath: workPath,
 			})
@@ -29,12 +29,12 @@ var _ = Describe("GitHub", func() {
 		})
 
 		It("Should get assets", func() {
-			err := ghClient.DownloadAsset(testRelease, testAsset)
+			err := ghClient.DownloadAsset(testTag, testAsset)
 			Expect(err).NotTo(HaveOccurred())
 		})
 
 		AfterEach(func() {
-			err = os.RemoveAll(filepath.Join(workPath, testAsset))
+			err = os.RemoveAll(workPath)
 			Expect(err).NotTo(HaveOccurred())
 		})
 	})
