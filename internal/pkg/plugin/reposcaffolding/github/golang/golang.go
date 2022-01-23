@@ -6,6 +6,7 @@ import (
 	"io/fs"
 	"io/ioutil"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"text/template"
 
@@ -39,7 +40,15 @@ func InitRepoLocalAndPushToRemote(repoPath string, param *Param, ghClient *githu
 		return err
 	}
 
-	err := filepath.Walk(repoPath, func(path string, info fs.FileInfo, err error) error {
+	if err := WalkLocalRepoPath(repoPath, param, ghClient); err != nil {
+		return err
+	}
+	return nil
+}
+
+func WalkLocalRepoPath(repoPath string, param *Param, ghClient *github.Client) error {
+	appName := param.Repo
+	if err := filepath.Walk(repoPath, func(path string, info fs.FileInfo, err error) error {
 		if err != nil {
 			log.Debugf("Walk error: %s", err)
 			return err
@@ -60,7 +69,7 @@ func InitRepoLocalAndPushToRemote(repoPath string, param *Param, ghClient *githu
 
 		log.Debugf("Found file: %s", path)
 
-		newPath, err := genPathForGithub(path)
+		pathForGithub, err := genPathForGithub(path)
 		if err != nil {
 			return err
 		}
@@ -78,12 +87,15 @@ func InitRepoLocalAndPushToRemote(repoPath string, param *Param, ghClient *githu
 			}
 		}
 
-		return ghClient.CreateFile(content, strings.TrimSuffix(newPath, ".tpl"))
-	})
-
-	if err != nil {
+		if newPathForGithub, err := replaceAppNameInPathStr(pathForGithub, appName); err != nil {
+			return err
+		} else {
+			return ghClient.CreateFile(content, strings.TrimSuffix(newPathForGithub, ".tpl"))
+		}
+	}); err != nil {
 		return err
 	}
+
 	return nil
 }
 
@@ -127,4 +139,19 @@ func genPathForGithub(filePath string) (string, error) {
 		return "", fmt.Errorf("unknown format: %s", filePath)
 	}
 	return splitStrs[1], nil
+}
+
+func replaceAppNameInPathStr(filePath, appName string) (string, error) {
+	log.Debugf("Got filePath %s", filePath)
+
+	pet := "_app_name_"
+	reg, err := regexp.Compile(pet)
+	if err != nil {
+		return "", err
+	}
+	newFilePath := reg.ReplaceAllString(filePath, appName)
+
+	log.Debugf("New filePath: %s", newFilePath)
+
+	return newFilePath, nil
 }

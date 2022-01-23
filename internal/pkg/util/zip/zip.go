@@ -6,11 +6,10 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 
 	"github.com/merico-dev/stream/internal/pkg/log"
 )
-
-// TODO(daniel-hutao): Implement Targz()/Zip()/Unzip() here
 
 func UnTargz(filePath string) error {
 	f, err := os.Open(filePath)
@@ -33,7 +32,9 @@ func UnTargz(filePath string) error {
 		if err != nil {
 			return err
 		}
-
+		if strings.Contains(header.Name, "._") {
+			continue
+		}
 		if err := handleHeader(header, tarReader); err != nil {
 			return err
 		}
