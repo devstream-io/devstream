@@ -14,7 +14,7 @@ var _ = Describe("Downloader", func() {
 		var url = "https://github.com/merico-dev/stream/releases/download/v0.0.1/argocdapp_0.0.1.so"
 		var targetDir = "tmp"
 		It("Should get the file", func() {
-			size, err := downloader.Download(url, targetDir)
+			size, err := downloader.Download(url, "", targetDir)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(size).NotTo(Equal(int64(0)))
 		})
