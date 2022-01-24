@@ -116,9 +116,14 @@ tools:
       wait: true
       timeout: 5m
       upgradeCRDs: true
-- name: github-repo-scaffolding-golang-demo
+- name: golang-demo
   plugin:
     kind: github-repo-scaffolding-golang
     version: 0.0.1
-  options: null
-    # TODO(daniel-hutao): complete it
+  options:
+    owner: daniel-hutao
+    # same as application's name
+    repo: golang-demo
+    branch: main
+    image_repo: daniel-hutao/golang-demo
+

@@ -35,3 +35,6 @@ devstream.state
 
 # e2e
 testbin/
+
+# plugins
+.github*
