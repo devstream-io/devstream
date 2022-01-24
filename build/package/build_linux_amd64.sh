@@ -4,7 +4,7 @@ set -e
 
 export GOOS=linux
 export GOARCH=amd64
-VERSION
+export VERSION
 go build -trimpath -gcflags="all=-N -l" -o output/dtm-${GOOS}-${GOARCH} ./cmd/devstream/
 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o output/githubactions-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/githubactions/
 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o output/trello-github-integ-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/trellogithub/
