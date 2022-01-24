@@ -75,3 +75,9 @@ e2e: build ## Run e2e tests.
 	./dtm apply -f config.yaml
 	./dtm verify -f config.yaml
 	./dtm delete -f config.yaml
+
+e2e-up: ## Start kind cluster for e2e tests
+	sh hack/e2e/e2e-up.sh
+
+e2e-down: ## Stop kind cluster for e2e tests
+	sh hack/e2e/e2e-down.sh
