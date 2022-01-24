@@ -9,4 +9,4 @@ ARG VERSION
 ENV VERSION=${VERSION}
 RUN echo "CURRENT VERSION:${VERSION}"
 # the script will be copied to a mounted volume before docker run
-CMD ["./build_linux_amd64.sh","${VERSION}"]
+CMD ["./build_linux_amd64.sh", "${VERSION}"]
