@@ -71,3 +71,25 @@ func (m *CliLoggerFormatter) levelPrintRender() {
 		m.prefix = color.Green.Render(normal.Success)
 	}
 }
+
+type SeparatorFormatter struct{}
+
+// Format implement Format interface to output custom log
+func (s *SeparatorFormatter) Format(entry *logrus.Entry) ([]byte, error) {
+	var b *bytes.Buffer
+	if entry.Buffer != nil {
+		b = entry.Buffer
+	} else {
+		b = &bytes.Buffer{}
+	}
+
+	timestamp := entry.Time.Format("2006-01-02 15:04:05")
+	newLog := fmt.Sprintf("%s %s %s %s\n",
+		timestamp,
+		color.Blue.Render(normal.Info),
+		color.Blue.Render(INFO),
+		color.Blue.Render(fmt.Sprintf("%s %s %s", "-------------------- [ ", entry.Message, " ] --------------------")))
+
+	b.WriteString(newLog)
+	return b.Bytes(), nil
+}

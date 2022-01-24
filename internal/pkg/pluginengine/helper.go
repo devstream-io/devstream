@@ -39,10 +39,11 @@ func loadPlugin(pluginDir string, tool *configloader.Tool) (DevStreamPlugin, err
 func execute(p *planmanager.Plan) map[string]error {
 	errorsMap := make(map[string]error)
 
+	log.Info("Start executing the plan.")
 	log.Infof("Changes count: %d.", len(p.Changes))
 
 	for i, c := range p.Changes {
-		log.Infof("Processing progress: %d/%d.", i+1, len(p.Changes))
+		log.Separatorf("Processing progress: %d/%d.", i+1, len(p.Changes))
 		log.Infof("Processing: %s -> %s ...", c.Tool.Name, c.ActionName)
 
 		var succeeded bool
