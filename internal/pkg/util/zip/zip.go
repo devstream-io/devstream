@@ -29,14 +29,14 @@ func UnZip(filePath, targetPath string) error {
 func handleArchiveFiles(targetPath string, files []*zip.File) error {
 	for _, f := range files {
 		filePath := filepath.Join(targetPath, f.Name)
-		log.Infof("unzipping file -> %s", filePath)
+		log.Debugf("unzipping file -> %s", filePath)
 
 		if !strings.HasPrefix(filePath, filepath.Clean(targetPath)+string(os.PathSeparator)) {
 			return fmt.Errorf("invalid file path")
 		}
 
 		if f.FileInfo().IsDir() {
-			log.Infof("creating directory -> %s", f.FileInfo().Name())
+			log.Debugf("creating directory -> %s", f.FileInfo().Name())
 			if err := os.MkdirAll(filePath, os.ModePerm); err != nil {
 				return err
 			}
