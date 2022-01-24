@@ -33,7 +33,7 @@ func install(param *Param) (bool, error) {
 		return false, err
 	}
 
-	if err := zip.UnTargz(filepath.Join(DefaultWorkPath, DefaultAssetName)); err != nil {
+	if err := zip.UnZip(filepath.Join(DefaultWorkPath, github.DefaultLatestCodeZipfileName), DefaultWorkPath); err != nil {
 		return false, err
 	}
 
@@ -56,9 +56,10 @@ func download() error {
 		return err
 	}
 
-	if err = ghClient.DownloadAsset(DefaultTemplateTag, DefaultAssetName); err != nil {
+	if err = ghClient.DownloadLatestCodeAsZipFile(); err != nil {
 		return err
 	}
+
 	return nil
 }
 
@@ -74,7 +75,7 @@ func push(param *Param) error {
 		return err
 	}
 
-	err = InitRepoLocalAndPushToRemote(DefaultTemplateRepo, param, ghClient)
+	err = InitRepoLocalAndPushToRemote(filepath.Join(ghClient.WorkPath, DefaultTemplateRepo+"-main"), param, ghClient)
 	if err != nil {
 		return err
 	}

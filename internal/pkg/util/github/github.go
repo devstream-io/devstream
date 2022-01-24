@@ -13,7 +13,13 @@ import (
 	"github.com/merico-dev/stream/internal/pkg/util/downloader"
 )
 
-const DefaultWorkPath = ".github"
+const (
+	DefaultWorkPath = ".github"
+	// https://github.com/merico-dev/dtm-scaffolding-golang/archive/refs/heads/main.zip -> 302 ->
+	// https://codeload.github.com/merico-dev/dtm-scaffolding-golang/zip/refs/heads/main
+	DefaultLatestCodeZipfileDownloadUrlFormat = "https://codeload.github.com/%s/%s/zip/refs/heads/main"
+	DefaultLatestCodeZipfileName              = "main-latest.zip"
+)
 
 var client *Client
 
@@ -134,13 +140,27 @@ func (c *Client) DownloadAsset(tagName, assetName string) error {
 	}
 
 	// 4. download
-	n, err := downloader.Download(downloadUrl, c.WorkPath)
+	n, err := downloader.Download(downloadUrl, "", c.WorkPath)
 	if err != nil {
 		log.Debugf("Failed to download asset from %s", downloadUrl)
 		return err
 	}
 	log.Debugf("Downloaded <%d> bytes", n)
 
+	return nil
+}
+
+func (c *Client) DownloadLatestCodeAsZipFile() error {
+	latestCodeZipfileDownloadUrl := fmt.Sprintf(DefaultLatestCodeZipfileDownloadUrlFormat, c.Owner, c.Repo)
+	log.Debugf("latestCodeZipfileDownloadUrl: %s", latestCodeZipfileDownloadUrl)
+
+	n, err := downloader.Download(latestCodeZipfileDownloadUrl, DefaultLatestCodeZipfileName, c.WorkPath)
+	if err != nil {
+		log.Debugf("Failed to download zip file from %s", latestCodeZipfileDownloadUrl)
+		return err
+	}
+
+	log.Debugf("Downloaded <%d> bytes", n)
 	return nil
 }
 

@@ -2,14 +2,75 @@ package zip
 
 import (
 	"archive/tar"
+	"archive/zip"
 	"compress/gzip"
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/merico-dev/stream/internal/pkg/log"
 )
+
+func UnZip(filePath, targetPath string) error {
+	archive, err := zip.OpenReader(filePath)
+	if err != nil {
+		return err
+	}
+
+	if err = handleArchiveFiles(targetPath, archive.File); err != nil {
+		return err
+	}
+
+	return archive.Close()
+}
+
+func handleArchiveFiles(targetPath string, files []*zip.File) error {
+	for _, f := range files {
+		filePath := filepath.Join(targetPath, f.Name)
+		log.Infof("unzipping file -> %s", filePath)
+
+		if !strings.HasPrefix(filePath, filepath.Clean(targetPath)+string(os.PathSeparator)) {
+			return fmt.Errorf("invalid file path")
+		}
+
+		if f.FileInfo().IsDir() {
+			log.Infof("creating directory -> %s", f.FileInfo().Name())
+			if err := os.MkdirAll(filePath, os.ModePerm); err != nil {
+				return err
+			}
+			continue
+		}
+
+		if err := os.MkdirAll(filepath.Dir(filePath), os.ModePerm); err != nil {
+			return err
+		}
+
+		dstFile, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
+		if err != nil {
+			return err
+		}
+
+		fileInArchive, err := f.Open()
+		if err != nil {
+			return err
+		}
+
+		if _, err = io.Copy(dstFile, fileInArchive); err != nil {
+			return err
+		}
+
+		if err = dstFile.Close(); err != nil {
+			return err
+		}
+
+		if err = fileInArchive.Close(); err != nil {
+			return err
+		}
+	}
+	return nil
+}
 
 func UnTargz(filePath string) error {
 	f, err := os.Open(filePath)

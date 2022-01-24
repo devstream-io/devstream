@@ -15,10 +15,7 @@ import (
 )
 
 const (
-	DefaultWorkPath = ".github-repo-scaffolding-golang"
-	// TODO(daniel-hutao): Make it configurable
-	DefaultTemplateTag   = "v0.0.1"
-	DefaultAssetName     = "dtm-scaffolding-golang-v0.0.1.tar.gz"
+	DefaultWorkPath      = ".github-repo-scaffolding-golang"
 	DefaultTemplateRepo  = "dtm-scaffolding-golang"
 	DefaultTemplateOwner = "merico-dev"
 )
@@ -36,9 +33,10 @@ type Repo struct {
 
 func InitRepoLocalAndPushToRemote(repoPath string, param *Param, ghClient *github.Client) error {
 	if err := ghClient.CreateRepo(); err != nil {
-		log.Errorf("Failed to create repo: %s", err)
+		log.Infof("Failed to create repo: %s", err)
 		return err
 	}
+	log.Info("Repo created.")
 
 	if err := WalkLocalRepoPath(repoPath, param, ghClient); err != nil {
 		return err
@@ -58,16 +56,17 @@ func WalkLocalRepoPath(repoPath string, param *Param, ghClient *github.Client) e
 			log.Debugf("Found dir: %s", path)
 			return nil
 		}
+		log.Debugf("Found file: %s", path)
 
-		if strings.Contains(path, ".git") {
+		if strings.Contains(path, ".git/") {
+			log.Debugf("Ignore this file -> %s", "./git/xxx")
 			return nil
 		}
 
 		if strings.HasSuffix(path, "README.md") {
+			log.Debugf("Ignore this file -> %s", "README.md")
 			return nil
 		}
-
-		log.Debugf("Found file: %s", path)
 
 		pathForGithub, err := genPathForGithub(path)
 		if err != nil {
@@ -86,6 +85,7 @@ func WalkLocalRepoPath(repoPath string, param *Param, ghClient *github.Client) e
 				return err
 			}
 		}
+		log.Debugf("Content size: %d", len(content))
 
 		if newPathForGithub, err := replaceAppNameInPathStr(pathForGithub, appName); err != nil {
 			return err
@@ -134,11 +134,13 @@ func Render(filePath string, param *Param) ([]byte, error) {
 }
 
 func genPathForGithub(filePath string) (string, error) {
-	splitStrs := strings.SplitN(filePath, "/", 2)
-	if len(splitStrs) != 2 {
+	splitStrs := strings.SplitN(filePath, "/", 3)
+	if len(splitStrs) != 3 {
 		return "", fmt.Errorf("unknown format: %s", filePath)
 	}
-	return splitStrs[1], nil
+	retStr := splitStrs[2]
+	log.Debugf("Path for github: %s", retStr)
+	return retStr, nil
 }
 
 func replaceAppNameInPathStr(filePath, appName string) (string, error) {
