@@ -18,8 +18,17 @@ var (
 
 	rootCMD = &cobra.Command{
 		Use:   "dtm",
-		Short: "DevStream is an open-source DevOps toolchain manager",
-		Long:  `DevStream is an open-source DevOps toolchain manager`,
+		Short: `DevStream is an open-source DevOps toolchain manager`,
+		Long: `DevStream is an open-source DevOps toolchain manager
+
+######                 #####                                    
+#     # ###### #    # #     # ##### #####  ######   ##   #    # 
+#     # #      #    # #         #   #    # #       #  #  ##  ## 
+#     # #####  #    #  #####    #   #    # #####  #    # # ## # 
+#     # #      #    #       #   #   #####  #      ###### #    # 
+#     # #       #  #  #     #   #   #   #  #      #    # #    # 
+######  ######   ##    #####    #   #    # ###### #    # #    # 
+`,
 	}
 )
 
