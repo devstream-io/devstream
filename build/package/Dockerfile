@@ -1,7 +1,7 @@
 FROM golang:1.17 as builder
 
 WORKDIR /devstream
-
+ENV VERSION 0.0.1
 # cache deps before building so that source changes don't invalidate our downloaded layer
 COPY go.mod go.sum /devstream/
 
