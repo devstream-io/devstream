@@ -52,7 +52,7 @@ func Apply(fname string, continueDirectly bool) error {
 		for k, e := range errsMap {
 			log.Infof("%s -> %s", k, e)
 		}
-		return errors.New("some error(s) occurred during plugins delete process")
+		return errors.New("some error(s) occurred during plugins apply process")
 	}
 
 	log.Success("All plugins applied successfully.")

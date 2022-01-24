@@ -9,12 +9,13 @@ func init() {
 }
 
 var (
-	debugLog   = &CliLoggerFormatter{showType: "debug"}
-	infoLog    = &CliLoggerFormatter{showType: "info"}
-	warnLog    = &CliLoggerFormatter{showType: "warn"}
-	errorLog   = &CliLoggerFormatter{showType: "error"}
-	fatalLog   = &CliLoggerFormatter{showType: "fatal"}
-	successLog = &CliLoggerFormatter{showType: "success"}
+	debugLog     = &CliLoggerFormatter{showType: "debug"}
+	infoLog      = &CliLoggerFormatter{showType: "info"}
+	warnLog      = &CliLoggerFormatter{showType: "warn"}
+	errorLog     = &CliLoggerFormatter{showType: "error"}
+	fatalLog     = &CliLoggerFormatter{showType: "fatal"}
+	successLog   = &CliLoggerFormatter{showType: "success"}
+	separatorLog = &SeparatorFormatter{}
 )
 
 // Debugf log info with color,symbol and format for a notice
@@ -87,4 +88,10 @@ func Successf(format string, args ...interface{}) {
 func Success(args ...interface{}) {
 	logrus.SetFormatter(successLog)
 	logrus.Info(args...)
+}
+
+// Separator prints a line for separating as green color
+func Separatorf(format string, args ...interface{}) {
+	logrus.SetFormatter(separatorLog)
+	logrus.Infof(format, args...)
 }

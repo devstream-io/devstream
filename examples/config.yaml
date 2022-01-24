@@ -1,34 +1,22 @@
 ---
 tools:
-- name: go-hello-http-ci
+- name: golang-demo-repo
   plugin:
-    kind: githubactions
-    version: 0.0.1
+    kind: github-repo-scaffolding-golang
+    version: 0.0.2
   options:
     owner: ironcore864
-    repo: go-hello-http
-    language:
-      name: go
-      version: "1.17"
-    branch: master
-    jobs:
-      build:
-        enable: True
-        command: "go build ./..."
-      test:
-        enable: True
-        command: "go test ./..."
-        coverage:
-          enable: False
-          profile: "-race -covermode=atomic"
-          output: "coverage.out"
-- name: dtm-test1-ci
+    # will also be used as application name
+    repo: golang-demo
+    branch: main
+    image_repo: ironcore864/golang-demo
+- name: golang-demo-app
   plugin:
     kind: githubactions
-    version: 0.0.1
+    version: 0.0.2
   options:
     owner: ironcore864
-    repo: dtm-test1
+    repo: golang-demo
     language:
       name: go
       version: "1.17"
@@ -44,20 +32,20 @@ tools:
           enable: False
           profile: "-race -covermode=atomic"
           output: "coverage.out"
-- name: trello-github-integ-default
-  plugin:
-    kind: trello-github-integ
-    version: 0.0.1
-  options:
-    owner: ironcore864
-    repo: go-hello-http
-    api:
-      name: trello
-    branch: master
+# - name: trello-github-integ-golang-demo
+#   plugin:
+#     kind: trello-github-integ
+#     version: 0.0.2
+#   options:
+#     owner: ironcore864
+#     repo: golang-demo
+#     api:
+#       name: trello
+#     branch: main
 - name: argocd-dev
   plugin:
     kind: argocd
-    version: 0.0.1
+    version: 0.0.2
   options:
     repo:
       name: argo
@@ -70,40 +58,25 @@ tools:
       wait: true
       timeout: 5m
       upgradeCRDs: true
-- name: argocdapp-hello
+- name: argocdapp-golang-demo
   plugin:
     kind: argocdapp
-    version: 0.0.1
+    version: 0.0.2
   options:
     app:
-      name: hello
+      name: golang-demo
       namespace: argocd
     destination:
       server: https://kubernetes.default.svc
       namespace: default
     source:
       valuefile: values.yaml
-      path: charts/go-hello-http
-      repoURL: https://github.com/ironcore864/openstream-gitops-test.git
-- name: argocdapp-demo-app
-  plugin:
-    kind: argocdapp
-    version: 0.0.1
-  options:
-    app:
-      name: demo-app
-      namespace: argocd
-    destination:
-      server: https://kubernetes.default.svc
-      namespace: default
-    source:
-      valuefile: values.yaml
-      path: charts/demo-app
-      repoURL: https://github.com/ironcore864/openstream-gitops-test.git
+      path: helm/golang-demo
+      repoURL: https://github.com/ironcore864/golang-demo.git
 - name: kube-prometheus-dev
   plugin:
     kind: kube-prometheus
-    version: 0.0.1
+    version: 0.0.2
   options:
     repo:
       name: prometheus-community
@@ -116,14 +89,3 @@ tools:
       wait: true
       timeout: 5m
       upgradeCRDs: true
-- name: golang-demo
-  plugin:
-    kind: github-repo-scaffolding-golang
-    version: 0.0.1
-  options:
-    owner: daniel-hutao
-    # same as application's name
-    repo: golang-demo
-    branch: main
-    image_repo: daniel-hutao/golang-demo
-
