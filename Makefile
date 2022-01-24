@@ -53,7 +53,7 @@ build-linux-amd64: ## Cross-platform build for linux/amd64
 	echo "Building in ${BUILD_PATH}"
 	mkdir -p .devstream
 	rm -rf ${BUILD_PATH} && mkdir ${BUILD_PATH}
-	docker buildx build --platform linux/amd64 --load -t mericodev/stream-builder:v${VERSION} --build-arg http_proxy=${VERSION} -f build/package/Dockerfile .
+	docker buildx build --platform linux/amd64 --load -t mericodev/stream-builder:v${VERSION} --build-arg VERSION=${VERSION} -f build/package/Dockerfile .
 	cp -r go.mod go.sum cmd internal build/package/build_linux_amd64.sh ${BUILD_PATH}/
 	chmod +x ${BUILD_PATH}/build_linux_amd64.sh
 	docker run --rm --platform linux/amd64 -v ${BUILD_PATH}:/devstream mericodev/stream-builder:v${VERSION}
