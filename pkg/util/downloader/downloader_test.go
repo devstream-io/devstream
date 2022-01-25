@@ -6,7 +6,7 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/merico-dev/stream/internal/pkg/util/downloader"
+	"github.com/merico-dev/stream/pkg/util/downloader"
 )
 
 var _ = Describe("Downloader", func() {

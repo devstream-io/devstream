@@ -8,7 +8,7 @@ import (
 	"github.com/google/go-github/v42/github"
 
 	"github.com/merico-dev/stream/internal/pkg/log"
-	"github.com/merico-dev/stream/internal/pkg/util/downloader"
+	"github.com/merico-dev/stream/pkg/util/downloader"
 )
 
 func (c *Client) DownloadAsset(tagName, assetName string) error {

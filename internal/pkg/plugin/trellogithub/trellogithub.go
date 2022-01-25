@@ -13,10 +13,10 @@ import (
 	"github.com/spf13/viper"
 
 	"github.com/merico-dev/stream/internal/pkg/log"
-	gh "github.com/merico-dev/stream/internal/pkg/util/github"
-	"github.com/merico-dev/stream/internal/pkg/util/mapz"
-	"github.com/merico-dev/stream/internal/pkg/util/slicez"
-	"github.com/merico-dev/stream/internal/pkg/util/trello"
+	gh "github.com/merico-dev/stream/pkg/util/github"
+	"github.com/merico-dev/stream/pkg/util/mapz"
+	"github.com/merico-dev/stream/pkg/util/slicez"
+	"github.com/merico-dev/stream/pkg/util/trello"
 )
 
 type TrelloGithub struct {

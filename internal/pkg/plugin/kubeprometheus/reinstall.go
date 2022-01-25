@@ -3,11 +3,10 @@ package kubeprometheus
 import (
 	"fmt"
 
-	"github.com/merico-dev/stream/internal/pkg/log"
-
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/merico-dev/stream/internal/pkg/util/helm"
+	"github.com/merico-dev/stream/internal/pkg/log"
+	"github.com/merico-dev/stream/pkg/util/helm"
 )
 
 // Reinstall re-installs kube-prometheus with provided options.

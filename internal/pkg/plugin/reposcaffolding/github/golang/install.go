@@ -7,8 +7,8 @@ import (
 	"github.com/mitchellh/mapstructure"
 
 	"github.com/merico-dev/stream/internal/pkg/log"
-	"github.com/merico-dev/stream/internal/pkg/util/github"
-	"github.com/merico-dev/stream/internal/pkg/util/zip"
+	"github.com/merico-dev/stream/pkg/util/github"
+	"github.com/merico-dev/stream/pkg/util/zip"
 )
 
 // Install installs github-repo-scaffolding-golang with provided options.

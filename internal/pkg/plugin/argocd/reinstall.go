@@ -3,11 +3,10 @@ package argocd
 import (
 	"fmt"
 
-	"github.com/merico-dev/stream/internal/pkg/log"
-
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/merico-dev/stream/internal/pkg/util/helm"
+	"github.com/merico-dev/stream/internal/pkg/log"
+	"github.com/merico-dev/stream/pkg/util/helm"
 )
 
 func Reinstall(options *map[string]interface{}) (bool, error) {
