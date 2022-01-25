@@ -3,6 +3,7 @@ module github.com/merico-dev/stream
 go 1.17
 
 require (
+	github.com/adlio/trello v1.9.0
 	github.com/argoproj/argo-cd/v2 v2.2.2
 	github.com/argoproj/gitops-engine v0.5.2
 	github.com/cheggaaa/pb v1.0.29
