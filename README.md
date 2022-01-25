@@ -52,6 +52,19 @@ Define your wanted DevOps tools in a single human-readable YAML config file, and
 
 Want to install another different tool for a try? No problem. Want to remove or reinstall a specific piece in the whole workflow? Got your back.
 
+## Supported DevOps Tools
+
+| Type                   | Plugin                                             | Note                        |
+|------------------------|----------------------------------------------------|-----------------------------|
+| Issue Tracking         | Trello - GitHub                                    | Trello/GitHub Integratoin   |
+| Source Code Management | GitHub Repository Bootstrapping - Golang           |                             |
+| CI                     | GitHub Actions - Golang                            |                             |
+| CI                     | GitHub Actions - Python                            |                             |
+| CI                     | GitHub Actions - Node.js                           |                             |
+| CD/GitOps              | ArgoCD                                             | ArgoCD Installation         |
+| CD/GitOps              | ArgoCD App (manages the Application CRD of ArgoCD) | ArgoCD Application Creation |
+| Monitoring             | Prometheus/Grafana                                 |                             |
+
 ## Configuration
 
 See [examples/config.yaml](./examples/config.yaml).
