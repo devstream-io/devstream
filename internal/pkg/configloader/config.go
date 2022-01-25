@@ -3,10 +3,16 @@ package configloader
 import (
 	"fmt"
 	"io/ioutil"
+	"runtime"
 
 	"github.com/merico-dev/stream/internal/pkg/log"
 
 	"gopkg.in/yaml.v3"
+)
+
+var (
+	GOOS   string = runtime.GOOS
+	GOARCH string = runtime.GOARCH
 )
 
 // Config is the struct for loading DevStream configuration YAML files.
@@ -75,5 +81,5 @@ func LoadConf(fname string) *Config {
 // GetPluginFileName creates the file name based on the tool's name and version
 // If the plugin {githubactions 0.0.1}, the generated name will be "githubactions_0.0.1.so"
 func GetPluginFileName(t *Tool) string {
-	return fmt.Sprintf("%s_%s.so", t.Plugin.Kind, t.Plugin.Version)
+	return fmt.Sprintf("%s-%s-%s_%s.so", t.Plugin.Kind, GOOS, GOARCH, t.Plugin.Version)
 }
