@@ -24,5 +24,13 @@ func Install(options *map[string]interface{}) (bool, error) {
 		}
 	}
 
+	trelloIds, err := gis.CreateTrelloItems()
+	if err != nil {
+		return false, err
+	}
+	if err := gis.AddTrelloIdSecret(trelloIds); err != nil {
+		return false, err
+	}
+
 	return true, nil
 }
