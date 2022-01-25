@@ -29,6 +29,25 @@ tools:
       version: "1.17"
     # main branch of the repo (to which branch the plugin will submit the workflows)
     branch: master
+    # configurations for the pipeline in GitHub Actions
+    jobs:
+      build:
+        enable: True
+        # build command, default to "go build ./..."
+        command: "go build ./..."
+      test:
+        enable: True
+        # test command, default to "go test ./..."
+        command: "go test ./..."
+        coverage:
+          enable: True
+          profile: "-race -covermode=atomic"
+          output: "coverage.out"
+      # docker build/push related
+      docker:
+        enable: True
+        # dockerhub image repo
+        repo: golang-demo
 ```
 
 Currently, all the parameters in the example above are mandatory.
