@@ -2,8 +2,9 @@ package githubactions
 
 // Jobs is the struct for github actions custom config.
 type Jobs struct {
-	Build Build
-	Test  Test
+	Build  Build
+	Test   Test
+	Docker Docker
 }
 
 func (j *Jobs) Validate() []error {
@@ -25,6 +26,12 @@ type Test struct {
 	Enable   bool
 	Command  string
 	Coverage Coverage
+}
+
+// Docker is the struct for githubacions job.
+type Docker struct {
+	Enable bool
+	Repo   string
 }
 
 // Coverage is the struct for githubacions job.
