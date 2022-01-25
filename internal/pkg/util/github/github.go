@@ -31,6 +31,10 @@ type Option struct {
 	Repo     string
 	NeedAuth bool
 	// default -> ".github"
+
+	// TODO(ironcore864): WorkPath should not belong to "Option",
+	// because WorkPath is only used when calling the download function,
+	// and it's not a property of the github client.
 	WorkPath string
 }
 
@@ -42,9 +46,9 @@ func NewClient(option *Option) (*Client, error) {
 	}
 
 	defer func() {
-		if client.WorkPath == "" {
+		if client.Option.WorkPath == "" {
 			log.Debugf("Used the default workpath: %s", DefaultWorkPath)
-			client.WorkPath = DefaultWorkPath
+			client.Option.WorkPath = DefaultWorkPath
 		}
 	}()
 
@@ -61,6 +65,18 @@ func NewClient(option *Option) (*Client, error) {
 	log.Debug("Auth is enabled")
 
 	// client with auth enabled
+
+	// TODO(ironcore864): The github package should not depend on dtm.
+	// GitHub util should be a public util, instead of internal.
+	// So, it should be placed under /pkg/ instead of /internal/pkg/
+	// And, since this is a "util" package, it should be able to be used directly without using DTM.
+	// At the moment, viper.GetString() depends on viper.BindEnv() which is triggered in the dtm main file,
+	// which means, if somebody uses this package in his own package, internal or external,
+	// it will fail without calling the following code first:
+	//
+	// if err := viper.BindEnv("github_token"); err != nil {
+	// 	log.Fatal(err)
+	// }
 	token := viper.GetString("github_token")
 	if token == "" {
 		return nil, fmt.Errorf("failed to initialize GitHub token. More info - https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token")
