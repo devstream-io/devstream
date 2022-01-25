@@ -32,7 +32,7 @@ build-darwin-arm64: ## Build for darwin/arm64 for release.
 	mkdir -p .devstream
 	CGO_ENABLED=1 GOOS=darwin GOARCH=arm64 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/githubactions-darwin-arm64_${VERSION}.so ./cmd/githubactions/
 	CGO_ENABLED=1 GOOS=darwin GOARCH=arm64 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/trello-github-integ-darwin-arm64_${VERSION}.so ./cmd/trellogithub/
-    CGO_ENABLED=1 GOOS=darwin GOARCH=arm64 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/argocd-darwin-arm64_${VERSION}.so ./cmd/argocd/
+	CGO_ENABLED=1 GOOS=darwin GOARCH=arm64 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/argocd-darwin-arm64_${VERSION}.so ./cmd/argocd/
 	CGO_ENABLED=1 GOOS=darwin GOARCH=arm64 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/argocdapp-darwin-arm64_${VERSION}.so ./cmd/argocdapp/
 	CGO_ENABLED=1 GOOS=darwin GOARCH=arm64 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/kube-prometheus-darwin-arm64_${VERSION}.so ./cmd/kubeprometheus/
 	CGO_ENABLED=1 GOOS=darwin GOARCH=arm64 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/github-repo-scaffolding-golang-darwin-arm64_${VERSION}.so ./cmd/reposcaffolding/github/golang/
@@ -43,7 +43,7 @@ build-darwin-amd64: ## Cross-platform build for darwin/amd64.
 	mkdir -p .devstream
 	CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/githubactions-darwin-amd64_${VERSION}.so ./cmd/githubactions/
 	CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/trello-github-integ-darwin-amd64_${VERSION}.so ./cmd/trellogithub/
-    CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/argocd-darwin-amd64_${VERSION}.so ./cmd/argocd/
+	CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/argocd-darwin-amd64_${VERSION}.so ./cmd/argocd/
 	CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/argocdapp-darwin-amd64_${VERSION}.so ./cmd/argocdapp/
 	CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/kube-prometheus-darwin-amd64_${VERSION}.so ./cmd/kubeprometheus/
 	CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/github-repo-scaffolding-golang-darwin-amd64_${VERSION}.so ./cmd/reposcaffolding/github/golang/
