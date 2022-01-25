@@ -51,6 +51,12 @@ func initConfig() {
 	if err := viper.BindEnv("github_token"); err != nil {
 		log.Fatal(err)
 	}
+	if err := viper.BindEnv("trello_api_key"); err != nil {
+		log.Fatal(err)
+	}
+	if err := viper.BindEnv("trello_token"); err != nil {
+		log.Fatal(err)
+	}
 	if err := viper.BindPFlags(rootCMD.Flags()); err != nil {
 		log.Fatal(err)
 	}
