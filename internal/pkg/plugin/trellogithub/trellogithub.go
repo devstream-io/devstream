@@ -4,19 +4,19 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/merico-dev/stream/internal/pkg/util/trello"
-	"github.com/spf13/viper"
 	"net/http"
 	"strings"
 	"text/template"
 
 	"github.com/google/go-github/v42/github"
 	"github.com/mitchellh/mapstructure"
+	"github.com/spf13/viper"
 
 	"github.com/merico-dev/stream/internal/pkg/log"
 	gh "github.com/merico-dev/stream/internal/pkg/util/github"
 	"github.com/merico-dev/stream/internal/pkg/util/mapz"
 	"github.com/merico-dev/stream/internal/pkg/util/slicez"
+	"github.com/merico-dev/stream/internal/pkg/util/trello"
 )
 
 type TrelloGithub struct {
