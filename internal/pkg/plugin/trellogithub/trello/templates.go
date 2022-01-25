@@ -15,7 +15,7 @@ jobs:
     env:
       ACTION_VERSION: CyanRYi/trello-github-integration@v3.0.0
       TRELLO_API_KEY: ${{ secrets.TRELLO_API_KEY }}
-      TRELLO_API_TOKEN: ${{ secrets.TRELLO_API_TOKEN }}
+      TRELLO_API_TOKEN: ${{ secrets.TRELLO_TOKEN }}
       TRELLO_BOARD_ID: ${{ secrets.TRELLO_BOARD_ID }}
       TRELLO_TODO_LIST_ID: ${{ secrets.TRELLO_TODO_LIST_ID }}
       TRELLO_DONE_LIST_ID: ${{ secrets.TRELLO_DONE_LIST_ID }}
@@ -45,7 +45,7 @@ jobs:
     name: Integrate Issue
     env:
       TRELLO_API_KEY: ${{ secrets.TRELLO_API_KEY }}
-      TRELLO_API_TOKEN: ${{ secrets.TRELLO_API_TOKEN }}
+      TRELLO_API_TOKEN: ${{ secrets.TRELLO_TOKEN }}
       TRELLO_BOARD_ID: ${{ secrets.TRELLO_BOARD_ID }}
       TRELLO_TODO_LIST_ID: ${{ secrets.TRELLO_TODO_LIST_ID }}
       TRELLO_DONE_LIST_ID: ${{ secrets.TRELLO_DONE_LIST_ID }}
