@@ -3,9 +3,9 @@ package github
 import (
 	"context"
 	"fmt"
+	"os"
 
 	"github.com/google/go-github/v42/github"
-	"github.com/spf13/viper"
 	"golang.org/x/oauth2"
 
 	"github.com/merico-dev/stream/internal/pkg/log"
@@ -39,7 +39,7 @@ func NewClient(option *Option) (*Client, error) {
 		return client, nil
 	}
 
-	// client without auth enabled
+	// a. client without auth enabled
 	if !option.NeedAuth {
 		log.Debug("Auth is not enabled")
 		client = &Client{
@@ -51,22 +51,19 @@ func NewClient(option *Option) (*Client, error) {
 	}
 	log.Debug("Auth is enabled")
 
-	// client with auth enabled
+	// b. client with auth enabled
 
-	// TODO(ironcore864): The github package should not depend on dtm.
-	// GitHub util should be a public util, instead of internal.
-	// So, it should be placed under /pkg/ instead of /internal/pkg/
-	// And, since this is a "util" package, it should be able to be used directly without using DTM.
-	// At the moment, viper.GetString() depends on viper.BindEnv() which is triggered in the dtm main file,
-	// which means, if somebody uses this package in his own package, internal or external,
-	// it will fail without calling the following code first:
-	//
-	// if err := viper.BindEnv("github_token"); err != nil {
-	// 	log.Fatal(err)
-	// }
-	token := viper.GetString("github_token")
+	// Don't use `token := viper.GetString("github_token")` here,
+	// it will fail without calling `viper.BindEnv("github_token")` first.
+	// os.Getenv() function is more clear and reasonable here.
+	token := os.Getenv("GITHUB_TOKEN")
 	if token == "" {
-		return nil, fmt.Errorf("failed to initialize GitHub token. More info - https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token")
+		// github_token works well as GITHUB_TOKEN.
+		token = os.Getenv("github_token")
+	}
+	if token == "" {
+		return nil, fmt.Errorf("failed to initialize GitHub token. More info - " +
+			"https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token")
 	}
 	log.Debugf("Token: %s", token)
 
