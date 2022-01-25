@@ -10,10 +10,13 @@ import (
 
 	"github.com/google/go-github/v42/github"
 	"github.com/mitchellh/mapstructure"
+	"github.com/spf13/viper"
 
 	"github.com/merico-dev/stream/internal/pkg/log"
+	gh "github.com/merico-dev/stream/internal/pkg/util/github"
 	"github.com/merico-dev/stream/internal/pkg/util/mapz"
 	"github.com/merico-dev/stream/internal/pkg/util/slicez"
+	"github.com/merico-dev/stream/internal/pkg/util/trello"
 )
 
 type TrelloGithub struct {
@@ -243,5 +246,93 @@ func (gi *TrelloGithub) renderTemplate(workflow *Workflow) error {
 		return err
 	}
 	workflow.workflowContent = buff.String()
+	return nil
+}
+
+type TrelloItemId struct {
+	boardId     string
+	todoListId  string
+	doingListId string
+	doneListId  string
+}
+
+// CreateTrelloItems create board/lists, and set secret by ids
+func (gi *TrelloGithub) CreateTrelloItems() (*TrelloItemId, error) {
+	c, _ := trello.NewClient()
+	board, err := c.CreateBoard("DevStream_Trello_Board")
+	if err != nil {
+		return nil, err
+	}
+
+	todo, err := c.CreateList(board, "TODO")
+	if err != nil {
+		return nil, err
+	}
+
+	doing, err := c.CreateList(board, "DOING")
+	if err != nil {
+		return nil, err
+	}
+
+	done, err := c.CreateList(board, "DONE")
+	if err != nil {
+		return nil, err
+	}
+
+	return &TrelloItemId{
+		boardId:     board.ID,
+		todoListId:  todo.ID,
+		doingListId: doing.ID,
+		doneListId:  done.ID,
+	}, nil
+}
+
+// AddTrelloIdSecret add trello ids to secret
+func (gi *TrelloGithub) AddTrelloIdSecret(trelloId *TrelloItemId) error {
+	ghOptions := &gh.Option{
+		Owner:    gi.options.Owner,
+		Repo:     gi.options.Repo,
+		NeedAuth: true,
+		WorkPath: gh.DefaultWorkPath,
+	}
+	c, err := gh.NewClient(ghOptions)
+	if err != nil {
+		return err
+	}
+	// add key
+	if err := c.AddRepoSecret("TRELLO_API_KEY", viper.GetString("trello_api_key")); err != nil {
+		return err
+	}
+
+	// add token
+	if err := c.AddRepoSecret("TRELLO_TOKEN", viper.GetString("trello_token")); err != nil {
+		return err
+	}
+
+	// add board id
+	if err := c.AddRepoSecret("TRELLO_BOARD_ID", trelloId.boardId); err != nil {
+		return err
+	}
+
+	// add todolist id
+	if err := c.AddRepoSecret("TRELLO_TODO_LIST_ID", trelloId.todoListId); err != nil {
+		return err
+	}
+
+	// add doinglist id
+	if err := c.AddRepoSecret("TRELLO_DOING_LIST_ID", trelloId.doingListId); err != nil {
+		return err
+	}
+
+	// add donelist id
+	if err := c.AddRepoSecret("TRELLO_DONE_LIST_ID", trelloId.doneListId); err != nil {
+		return err
+	}
+
+	// add member map
+	if err := c.AddRepoSecret("TRELLO_MEMBER_MAP", "[]"); err != nil {
+		return err
+	}
+
 	return nil
 }

@@ -29,9 +29,12 @@ tools:
         enable: True
         command: "go test ./..."
         coverage:
-          enable: False
+          enable: True
           profile: "-race -covermode=atomic"
           output: "coverage.out"
+      docker:
+        enable: True
+        repo: golang-demo
 # - name: trello-github-integ-golang-demo
 #   plugin:
 #     kind: trello-github-integ

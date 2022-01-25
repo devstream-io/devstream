@@ -4,11 +4,12 @@
 
 Each plugin needs to satisfy all the interfaces defined in the [plugin engine](https://github.com/merico-dev/stream/blob/main/internal/pkg/pluginengine/plugin.go#L12).
 
-At the moment, there are only three interfaces, which might be subject to change. Currently, the three interfaces are:
+At the moment, there are 4 interfaces, which might be subject to change. Currently, the three interfaces are:
 
 - `Install`
 - `Reinstall`
 - `Uninstall`
+- `IsHealthy`
 
 ### 1.2 Return Value
 
@@ -18,8 +19,7 @@ If no error occurred, the return value would be `(true, nil)`. Otherwise, the re
 
 ## 2 Package
 
-TL;DR:
-Each plugin should have a separate folder under the `cmd/` directory. Refer to [this example](https://github.com/merico-dev/stream/blob/main/cmd/githubactions/main.go).
+TL;DR: each plugin should have a separate folder under the `cmd/` directory. Refer to [this example](https://github.com/merico-dev/stream/blob/main/cmd/githubactions/main.go).
 Put most of a plugin's code under the `internal/pkg/` directory and only use `cmd/` as the main entrance to the plugin code.
 
 Check out our [Standard Go Project Layout](https://github.com/merico-dev/stream/blob/main/docs/project_layout.md) document for detailed instruction on the project layout.

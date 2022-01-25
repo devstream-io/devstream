@@ -24,10 +24,21 @@ func NewClient() (*Client, error) {
 	}, nil
 }
 
-func (c *Client) CreateBoard(boardName string) error {
+func (c *Client) CreateBoard(boardName string) (*trello.Board, error) {
 	if boardName == "" {
-		return fmt.Errorf("board name can't be empty")
+		return nil, fmt.Errorf("board name can't be empty")
 	}
 	board := trello.NewBoard(boardName)
-	return c.Client.CreateBoard(&board, trello.Defaults())
+	err := c.Client.CreateBoard(&board, trello.Defaults())
+	if err != nil {
+		return nil, err
+	}
+	return &board, nil
+}
+
+func (c *Client) CreateList(board *trello.Board, listName string) (*trello.List, error) {
+	if listName == "" {
+		return nil, fmt.Errorf("listName name can't be empty")
+	}
+	return c.Client.CreateList(board, listName, trello.Defaults())
 }
