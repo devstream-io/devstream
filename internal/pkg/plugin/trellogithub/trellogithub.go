@@ -293,7 +293,6 @@ func (gi *TrelloGithub) AddTrelloIdSecret(trelloId *TrelloItemId) error {
 		Owner:    gi.options.Owner,
 		Repo:     gi.options.Repo,
 		NeedAuth: true,
-		WorkPath: gh.DefaultWorkPath,
 	}
 	c, err := gh.NewClient(ghOptions)
 	if err != nil {

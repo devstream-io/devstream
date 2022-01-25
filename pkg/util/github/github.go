@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	DefaultWorkPath = ".github"
+	DefaultWorkPath = ".github-workpath"
 	// https://github.com/merico-dev/dtm-scaffolding-golang/archive/refs/heads/main.zip -> 302 ->
 	// https://codeload.github.com/merico-dev/dtm-scaffolding-golang/zip/refs/heads/main
 	DefaultLatestCodeZipfileDownloadUrlFormat = "https://codeload.github.com/%s/%s/zip/refs/heads/main"
@@ -30,12 +30,6 @@ type Option struct {
 	Owner    string
 	Repo     string
 	NeedAuth bool
-	// default -> ".github"
-
-	// TODO(ironcore864): WorkPath should not belong to "Option",
-	// because WorkPath is only used when calling the download function,
-	// and it's not a property of the github client.
-	WorkPath string
 }
 
 func NewClient(option *Option) (*Client, error) {
@@ -44,13 +38,6 @@ func NewClient(option *Option) (*Client, error) {
 		log.Debug("Used a cached client")
 		return client, nil
 	}
-
-	defer func() {
-		if client.Option.WorkPath == "" {
-			log.Debugf("Used the default workpath: %s", DefaultWorkPath)
-			client.Option.WorkPath = DefaultWorkPath
-		}
-	}()
 
 	// client without auth enabled
 	if !option.NeedAuth {

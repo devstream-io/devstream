@@ -49,7 +49,6 @@ func download() error {
 		Owner:    DefaultTemplateOwner,
 		Repo:     DefaultTemplateRepo,
 		NeedAuth: false,
-		WorkPath: DefaultWorkPath,
 	}
 	ghClient, err := github.NewClient(ghOption)
 	if err != nil {
@@ -68,14 +67,13 @@ func push(param *Param) error {
 		Owner:    param.Owner,
 		Repo:     param.Repo,
 		NeedAuth: true,
-		WorkPath: DefaultWorkPath,
 	}
 	ghClient, err := github.NewClient(ghOption)
 	if err != nil {
 		return err
 	}
 
-	err = InitRepoLocalAndPushToRemote(filepath.Join(ghClient.WorkPath, DefaultTemplateRepo+"-main"), param, ghClient)
+	err = InitRepoLocalAndPushToRemote(filepath.Join(DefaultWorkPath, DefaultTemplateRepo+"-main"), param, ghClient)
 	if err != nil {
 		return err
 	}

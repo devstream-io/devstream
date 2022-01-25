@@ -22,7 +22,6 @@ var _ = Describe("GitHub", func() {
 				Owner:    "daniel-hutao",
 				Repo:     "dtm-scaffolding-golang",
 				NeedAuth: false,
-				WorkPath: workPath,
 			})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(ghClient).NotTo(Equal(nil))

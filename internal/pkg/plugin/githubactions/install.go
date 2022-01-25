@@ -23,7 +23,6 @@ func Install(options *map[string]interface{}) (bool, error) {
 			Owner:    githubActions.options.Owner,
 			Repo:     githubActions.options.Repo,
 			NeedAuth: true,
-			WorkPath: github.DefaultWorkPath,
 		}
 		c, err := github.NewClient(ghOptions)
 		if err != nil {
