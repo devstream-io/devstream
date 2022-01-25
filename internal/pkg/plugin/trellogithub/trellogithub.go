@@ -329,5 +329,10 @@ func (gi *TrelloGithub) AddTrelloIdSecret(trelloId *TrelloItemId) error {
 		return err
 	}
 
+	// add member map
+	if err := c.AddRepoSecret("TRELLO_MEMBER_MAP", "[]"); err != nil {
+		return err
+	}
+
 	return nil
 }
