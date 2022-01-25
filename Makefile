@@ -8,12 +8,12 @@ help: ## Display this help.
 build: fmt vet ## Build dtm & plugins locally.
 	go mod tidy
 	mkdir -p .devstream
-	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/githubactions_${VERSION}.so ./cmd/githubactions/
-	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/trello-github-integ_${VERSION}.so ./cmd/trellogithub/
-	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/argocd_${VERSION}.so ./cmd/argocd/
-	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/argocdapp_${VERSION}.so ./cmd/argocdapp/
-	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/kube-prometheus_${VERSION}.so ./cmd/kubeprometheus/
-	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/github-repo-scaffolding-golang_${VERSION}.so ./cmd/reposcaffolding/github/golang/
+	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/githubactions-darwin-arm64_${VERSION}.so ./cmd/githubactions/
+	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/trello-github-integ-darwin-arm64_${VERSION}.so ./cmd/trellogithub/
+	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/argocd-darwin-arm64_${VERSION}.so ./cmd/argocd/
+	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/argocdapp-darwin-arm64_${VERSION}.so ./cmd/argocdapp/
+	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/kube-prometheus-darwin-arm64_${VERSION}.so ./cmd/kubeprometheus/
+	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/github-repo-scaffolding-golang-darwin-arm64_${VERSION}.so ./cmd/reposcaffolding/github/golang/
 	go build -trimpath -gcflags="all=-N -l" -ldflags "-X github.com/merico-dev/stream/internal/pkg/version.VERSION=${VERSION}" -o dtm ./cmd/devstream/
 
 build-core: fmt vet ## Build dtm core only, without plugins, locally.
