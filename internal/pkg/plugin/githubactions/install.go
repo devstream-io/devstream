@@ -29,8 +29,12 @@ func Install(options *map[string]interface{}) (bool, error) {
 		if err != nil {
 			return false, err
 		}
-		c.AddRepoSecret("DOCKERHUB_USERNAME", viper.GetString("dockerhub_username"))
-		c.AddRepoSecret("DOCKERHUB_TOKEN", viper.GetString("dockerhub_token"))
+		if err := c.AddRepoSecret("DOCKERHUB_USERNAME", viper.GetString("dockerhub_username")); err != nil {
+			return false, err
+		}
+		if err := c.AddRepoSecret("DOCKERHUB_TOKEN", viper.GetString("dockerhub_token")); err != nil {
+			return false, err
+		}
 	}
 
 	ws := defaultWorkflows.GetWorkflowByNameVersionTypeString(language.String())
