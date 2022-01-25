@@ -29,15 +29,15 @@ func Reinstall(options *map[string]interface{}) (bool, error) {
 			return false, err
 		}
 	}
-	log.Success("Succeeded in adding workflow file success.")
+	log.Success("Adding workflow file succeeded.")
 	trelloIds, err := gis.CreateTrelloItems()
 	if err != nil {
 		return false, err
 	}
-	log.Success("Succeeded in creating trello board.")
+	log.Success("Creating trello board succeeded.")
 	if err := gis.AddTrelloIdSecret(trelloIds); err != nil {
 		return false, err
 	}
-	log.Success("Succeeded in adding secret keys for trello.")
+	log.Success("Adding secret keys for trello succeeded.")
 	return true, nil
 }
