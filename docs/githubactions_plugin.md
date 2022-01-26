@@ -2,11 +2,11 @@
 
 This plugin creates some GitHub Actions workflows.
 
-Currently, only Golang is supported.
-
-We will support Python/Node.js soon, according to our roadmap.
+Currently, Golang, Python, and Node.js are supported.
 
 ## 2 Usage:
+
+_This plugin depends on an environment variable "GITHUB_TOKEN". Set it before using this plugin._
 
 ```yaml
 tools:
