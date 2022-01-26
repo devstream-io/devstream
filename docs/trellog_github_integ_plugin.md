@@ -1,12 +1,17 @@
 ## 1 Trello-Github Integration Plugin
 
-This plugin creates some trello-github-integ workflows.
-
-Currently, only Golang is supported.
-
-We now support trello, according to our roadmap.
+This plugin creates a new Trello board and integrate it with your GitHub repo.
 
 ## 2 Usage:
+
+_This plugin depends on the following two environment variables:_
+
+- TRELLO_API_KEY
+- TRELLO_TOKEN
+
+Set the values accordingly before using this plugin.
+
+To create a Trello API key and token, see [here](https://docs.servicenow.com/bundle/quebec-it-asset-management/page/product/software-asset-management2/task/generate-trello-apikey-token.html).
 
 ```yaml
 tools:
