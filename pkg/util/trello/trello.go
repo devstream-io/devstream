@@ -41,5 +41,4 @@ func (c *Client) CreateList(board *trello.Board, listName string) (*trello.List,
 		return nil, fmt.Errorf("listName name can't be empty")
 	}
 	return c.Client.CreateList(board, listName, trello.Defaults())
-
 }
