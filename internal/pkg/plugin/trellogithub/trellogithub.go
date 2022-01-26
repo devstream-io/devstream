@@ -257,6 +257,7 @@ type TrelloItemId struct {
 }
 
 // CreateTrelloItems create board/lists, and set secret by ids
+// TODO(daniel-hutao): rename the function name
 func (gi *TrelloGithub) CreateTrelloItems() (*TrelloItemId, error) {
 	c, _ := trello.NewClient()
 	board, err := c.CreateBoard("DevStream_Trello_Board")
@@ -264,26 +265,38 @@ func (gi *TrelloGithub) CreateTrelloItems() (*TrelloItemId, error) {
 		return nil, err
 	}
 
-	todo, err := c.CreateList(board, "TODO")
+	lists, err := board.GetLists()
 	if err != nil {
 		return nil, err
 	}
 
-	doing, err := c.CreateList(board, "DOING")
-	if err != nil {
-		return nil, err
-	}
+	var todo string
+	var doing string
+	var done string
 
-	done, err := c.CreateList(board, "DONE")
-	if err != nil {
-		return nil, err
+	for _, l := range lists {
+		log.Debugf("List name: %s", l.Name)
+		if l.Name == "To Do" || l.Name == "待办" {
+			todo = l.ID
+			continue
+		}
+		if l.Name == "Doing" || l.Name == "进行中" {
+			doing = l.ID
+			continue
+		}
+		if l.Name == "Done" || l.Name == "完成" {
+			done = l.ID
+			continue
+		}
+		log.Errorf("Unknow name: %s", l.Name)
+		return nil, fmt.Errorf("unknow name: %s", l.Name)
 	}
 
 	return &TrelloItemId{
 		boardId:     board.ID,
-		todoListId:  todo.ID,
-		doingListId: doing.ID,
-		doneListId:  done.ID,
+		todoListId:  todo,
+		doingListId: doing,
+		doneListId:  done,
 	}, nil
 }
 
