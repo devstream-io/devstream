@@ -2,6 +2,7 @@ package golang
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 
 	"github.com/mitchellh/mapstructure"
@@ -29,6 +30,13 @@ func Install(options *map[string]interface{}) (bool, error) {
 }
 
 func install(param *Param) (bool, error) {
+	// Clear workpath before return
+	defer func() {
+		if err := os.RemoveAll(DefaultWorkPath); err != nil {
+			log.Errorf("Failed to clear workpath: %s", err)
+		}
+	}()
+
 	if err := download(); err != nil {
 		return false, err
 	}
@@ -49,6 +57,7 @@ func download() error {
 		Owner:    DefaultTemplateOwner,
 		Repo:     DefaultTemplateRepo,
 		NeedAuth: false,
+		WorkPath: DefaultWorkPath,
 	}
 	ghClient, err := github.NewClient(ghOption)
 	if err != nil {

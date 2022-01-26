@@ -30,6 +30,7 @@ type Option struct {
 	Owner    string
 	Repo     string
 	NeedAuth bool
+	WorkPath string
 }
 
 func NewClient(option *Option) (*Client, error) {
@@ -38,6 +39,12 @@ func NewClient(option *Option) (*Client, error) {
 		log.Debug("Used a cached client")
 		return client, nil
 	}
+
+	defer func() {
+		if client.Option.WorkPath == "" {
+			client.Option.WorkPath = DefaultWorkPath
+		}
+	}()
 
 	// a. client without auth enabled
 	if !option.NeedAuth {
