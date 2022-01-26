@@ -8,15 +8,14 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/merico-dev/stream/internal/pkg/log"
-
 	"github.com/google/go-github/v42/github"
 	"github.com/mitchellh/mapstructure"
 	"github.com/spf13/viper"
 	"golang.org/x/oauth2"
 
-	"github.com/merico-dev/stream/internal/pkg/util/mapz"
-	"github.com/merico-dev/stream/internal/pkg/util/slicez"
+	"github.com/merico-dev/stream/internal/pkg/log"
+	"github.com/merico-dev/stream/pkg/util/mapz"
+	"github.com/merico-dev/stream/pkg/util/slicez"
 )
 
 type GithubActions struct {

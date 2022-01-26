@@ -3,11 +3,10 @@ package argocdapp
 import (
 	"fmt"
 
-	"github.com/merico-dev/stream/internal/pkg/log"
-
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/merico-dev/stream/internal/pkg/util/k8s"
+	"github.com/merico-dev/stream/internal/pkg/log"
+	"github.com/merico-dev/stream/pkg/util/k8s"
 )
 
 func IsHealthy(options *map[string]interface{}) (bool, error) {

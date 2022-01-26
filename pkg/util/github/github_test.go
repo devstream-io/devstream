@@ -6,7 +6,7 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/merico-dev/stream/internal/pkg/util/github"
+	"github.com/merico-dev/stream/pkg/util/github"
 )
 
 var _ = Describe("GitHub", func() {
@@ -22,7 +22,6 @@ var _ = Describe("GitHub", func() {
 				Owner:    "daniel-hutao",
 				Repo:     "dtm-scaffolding-golang",
 				NeedAuth: false,
-				WorkPath: workPath,
 			})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(ghClient).NotTo(Equal(nil))

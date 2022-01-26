@@ -8,7 +8,7 @@ import (
 	"github.com/google/go-github/v42/github"
 
 	"github.com/merico-dev/stream/internal/pkg/log"
-	"github.com/merico-dev/stream/internal/pkg/util/downloader"
+	"github.com/merico-dev/stream/pkg/util/downloader"
 )
 
 func (c *Client) DownloadAsset(tagName, assetName string) error {
@@ -65,7 +65,7 @@ func (c *Client) DownloadAsset(tagName, assetName string) error {
 	}
 
 	// 4. download
-	n, err := downloader.Download(downloadUrl, "", c.WorkPath)
+	n, err := downloader.Download(downloadUrl, "", DefaultWorkPath)
 	if err != nil {
 		log.Debugf("Failed to download asset from %s", downloadUrl)
 		return err
@@ -79,7 +79,7 @@ func (c *Client) DownloadLatestCodeAsZipFile() error {
 	latestCodeZipfileDownloadUrl := fmt.Sprintf(DefaultLatestCodeZipfileDownloadUrlFormat, c.Owner, c.Repo)
 	log.Debugf("latestCodeZipfileDownloadUrl: %s", latestCodeZipfileDownloadUrl)
 
-	n, err := downloader.Download(latestCodeZipfileDownloadUrl, DefaultLatestCodeZipfileName, c.WorkPath)
+	n, err := downloader.Download(latestCodeZipfileDownloadUrl, DefaultLatestCodeZipfileName, DefaultWorkPath)
 	if err != nil {
 		log.Debugf("Failed to download zip file from %s", latestCodeZipfileDownloadUrl)
 		return err

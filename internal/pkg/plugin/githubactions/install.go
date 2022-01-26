@@ -4,7 +4,7 @@ import (
 	"github.com/spf13/viper"
 
 	"github.com/merico-dev/stream/internal/pkg/log"
-	"github.com/merico-dev/stream/internal/pkg/util/github"
+	"github.com/merico-dev/stream/pkg/util/github"
 )
 
 // Install sets up GitHub Actions workflows.
@@ -23,7 +23,6 @@ func Install(options *map[string]interface{}) (bool, error) {
 			Owner:    githubActions.options.Owner,
 			Repo:     githubActions.options.Repo,
 			NeedAuth: true,
-			WorkPath: github.DefaultWorkPath,
 		}
 		c, err := github.NewClient(ghOptions)
 		if err != nil {
