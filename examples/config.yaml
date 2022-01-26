@@ -35,16 +35,16 @@ tools:
       docker:
         enable: True
         repo: golang-demo
-# - name: trello-github-integ-golang-demo
-#   plugin:
-#     kind: trello-github-integ
-#     version: 0.0.2
-#   options:
-#     owner: ironcore864
-#     repo: golang-demo
-#     api:
-#       name: trello
-#     branch: main
+- name: trello-github-integ-golang-demo
+  plugin:
+    kind: trello-github-integ
+    version: 0.0.2
+  options:
+    owner: ironcore864
+    repo: golang-demo
+    api:
+      name: trello
+    branch: main
 - name: argocd-dev
   plugin:
     kind: argocd
