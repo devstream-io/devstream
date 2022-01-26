@@ -7,6 +7,7 @@ import (
 
 	"github.com/merico-dev/stream/internal/pkg/log"
 	"github.com/merico-dev/stream/pkg/util/helm"
+	"github.com/merico-dev/stream/pkg/util/k8s"
 )
 
 // Uninstall uninstalls kube-prometheus with provided options.
@@ -30,6 +31,16 @@ func Uninstall(options *map[string]interface{}) (bool, error) {
 
 	log.Info("Uninstalling kube-prometheus-stack helm chart ...")
 	if err = h.UninstallHelmChartRelease(); err != nil {
+		return false, err
+	}
+
+	// delete the namespace
+	kubeClient, err := k8s.NewClient()
+	if err != nil {
+		return false, err
+	}
+	if err = kubeClient.DeleteNamespace(param.Chart.Namespace); err != nil {
+		log.Errorf("Failed to delete the %s namespace: %s", param.Chart.Namespace, err)
 		return false, err
 	}
 
