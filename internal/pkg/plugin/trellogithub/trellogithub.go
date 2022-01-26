@@ -269,28 +269,16 @@ func (gi *TrelloGithub) CreateTrelloItems() (*TrelloItemId, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	var todo string
-	var doing string
-	var done string
-
-	for _, l := range lists {
-		log.Debugf("List name: %s", l.Name)
-		if l.Name == "To Do" || l.Name == "待办" {
-			todo = l.ID
-			continue
-		}
-		if l.Name == "Doing" || l.Name == "进行中" {
-			doing = l.ID
-			continue
-		}
-		if l.Name == "Done" || l.Name == "完成" {
-			done = l.ID
-			continue
-		}
-		log.Errorf("Unknow name: %s", l.Name)
-		return nil, fmt.Errorf("unknow name: %s", l.Name)
+	if len(lists) != 3 {
+		log.Errorf("Unknown lists format: len==%d", len(lists))
+		return nil, fmt.Errorf("unknown lists format: len==%d", len(lists))
 	}
+
+	todo := lists[0].ID
+	doing := lists[1].ID
+	done := lists[2].ID
+
+	log.Debugf("Lists: To Do(%s), Doing(%s), Done(%s)", todo, doing, done)
 
 	return &TrelloItemId{
 		boardId:     board.ID,
