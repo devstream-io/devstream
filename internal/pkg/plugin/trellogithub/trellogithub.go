@@ -79,8 +79,13 @@ func (gi *TrelloGithub) CompareFiles(wsFiles, filesInRemoteDir []string) map[str
 // CreateTrelloItems create board/lists, and set secret by ids
 // TODO(daniel-hutao): rename the function name
 func (gi *TrelloGithub) CreateTrelloItems() (*TrelloItemId, error) {
-	c, _ := trello.NewClient()
-	board, err := c.CreateBoard("DevStream_Trello_Board")
+	c, err := trello.NewClient()
+	if err != nil {
+		return nil, err
+	}
+
+	boardName := gi.options.Repo
+	board, err := c.CreateBoard(boardName)
 	if err != nil {
 		return nil, err
 	}
