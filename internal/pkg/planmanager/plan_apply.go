@@ -3,9 +3,8 @@ package planmanager
 import (
 	"gopkg.in/yaml.v3"
 
-	"github.com/merico-dev/stream/internal/pkg/log"
-
 	"github.com/merico-dev/stream/internal/pkg/configloader"
+	"github.com/merico-dev/stream/internal/pkg/log"
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
 )
 
@@ -47,5 +46,11 @@ func NewPlan(smgr statemanager.Manager, cfg *configloader.Config) *Plan {
 	tmpStates := smgr.GetStatesMap().DeepCopy()
 	plan.generatePlanAccordingToConfig(tmpStates, cfg)
 	plan.removeNoLongerNeededToolsFromPlan(tmpStates)
+
+	log.Debugf("Changes for the plan:")
+	for _, c := range plan.Changes {
+		log.Debugf(c.String())
+	}
+
 	return plan
 }

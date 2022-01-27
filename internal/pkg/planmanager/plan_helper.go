@@ -43,7 +43,7 @@ func (p *Plan) removeNoLongerNeededToolsFromPlan(statesMap *statemanager.StatesM
 	statesMap.Range(func(key, value interface{}) bool {
 		p.Changes = append(p.Changes, &Change{
 			Tool: &configloader.Tool{
-				Name:    key.(string),
+				Name:    value.(*statemanager.State).Name,
 				Plugin:  value.(*statemanager.State).Plugin,
 				Options: value.(*statemanager.State).Metadata,
 			},

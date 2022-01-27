@@ -9,10 +9,14 @@ import (
 	"github.com/merico-dev/stream/pkg/util/mapz/concurrentmap"
 )
 
-type StatesMap concurrentmap.ConcurrentMap
+type StatesMap struct {
+	*concurrentmap.ConcurrentMap
+}
 
 func NewStatesMap() *StatesMap {
-	return (*StatesMap)(concurrentmap.NewConcurrentMap("", new(State)))
+	return &StatesMap{
+		ConcurrentMap: concurrentmap.NewConcurrentMap("", new(State)),
+	}
 }
 
 func (s StatesMap) DeepCopy() *StatesMap {

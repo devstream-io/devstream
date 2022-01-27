@@ -50,13 +50,13 @@ func (m *manager) GetState(key string) *State {
 }
 
 func (m *manager) AddState(state *State) {
-	state_key := getStateKeyFromState(state)
-	m.statesMap.Store(state_key, state)
+	stateKey := getStateKeyFromState(state)
+	m.statesMap.Store(stateKey, state)
 }
 
 func (m *manager) UpdateState(state *State) {
-	state_key := getStateKeyFromState(state)
-	m.statesMap.Store(state_key, state)
+	stateKey := getStateKeyFromState(state)
+	m.statesMap.Store(stateKey, state)
 }
 
 func (m *manager) DeleteState(key string) {

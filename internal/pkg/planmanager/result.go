@@ -10,13 +10,20 @@ import (
 
 // HandleResult is used to Write the latest StatesMap to the Backend.
 func (p *Plan) HandleResult(change *Change) error {
+	log.Debugf("Start: \n%s", string(p.smgr.GetStatesMap().Format()))
+	defer func() {
+		log.Debugf("End:\n%s", string(p.smgr.GetStatesMap().Format()))
+	}()
+
 	if !change.Result.Succeeded {
 		log.Errorf("Plugin %s %s failed.", change.Tool.Name, change.ActionName)
 		return fmt.Errorf("plugin %s %s failed", change.Tool.Name, change.ActionName)
 	}
 
 	if change.ActionName == statemanager.ActionUninstall {
-		p.smgr.DeleteState(getStateKeyFromTool(change.Tool))
+		key := getStateKeyFromTool(change.Tool)
+		log.Infof("Prepare to delete '%s' from States", key)
+		p.smgr.DeleteState(key)
 		log.Successf("Plugin %s uninstall done.", change.Tool.Name)
 		return p.smgr.Write(p.smgr.GetStatesMap().Format())
 	}
