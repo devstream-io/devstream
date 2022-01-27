@@ -49,12 +49,13 @@ func NewHelm(param *HelmParam) (*Helm, error) {
 	}
 
 	chartSpec := &helmclient.ChartSpec{
-		ReleaseName:      param.Chart.ReleaseName,
-		ChartName:        param.Chart.ChartName,
-		Namespace:        param.Chart.Namespace,
-		ValuesYaml:       "",
-		Version:          param.Chart.Version,
-		CreateNamespace:  param.Chart.CreateNamespace,
+		ReleaseName: param.Chart.ReleaseName,
+		ChartName:   param.Chart.ChartName,
+		Namespace:   param.Chart.Namespace,
+		ValuesYaml:  "",
+		Version:     param.Chart.Version,
+		// we need to create the namespace if it does not exist
+		CreateNamespace:  true,
 		DisableHooks:     false,
 		Replace:          true,
 		Wait:             param.Chart.Wait,

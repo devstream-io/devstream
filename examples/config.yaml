@@ -57,7 +57,6 @@ tools:
       chart_name: argo/argo-cd
       release_name: argocd
       namespace: argocd
-      create_namespace: True
       wait: true
       timeout: 5m
       upgradeCRDs: true
@@ -88,7 +87,6 @@ tools:
       chart_name: prometheus-community/kube-prometheus-stack
       release_name: dev
       namespace: monitoring
-      create_namespace: True
       wait: true
       timeout: 5m
       upgradeCRDs: true
