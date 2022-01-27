@@ -6,7 +6,6 @@ import (
 	"github.com/mitchellh/mapstructure"
 
 	"github.com/merico-dev/stream/internal/pkg/log"
-	"github.com/merico-dev/stream/pkg/util/helm"
 	"github.com/merico-dev/stream/pkg/util/k8s"
 )
 
@@ -31,7 +30,7 @@ const (
 
 // IsHealthy check the health for kube-prometheus with provided options.
 func IsHealthy(options *map[string]interface{}) (bool, error) {
-	var param helm.HelmParam
+	var param Param
 	if err := mapstructure.Decode(*options, &param); err != nil {
 		return false, err
 	}

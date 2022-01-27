@@ -7,11 +7,10 @@ import (
 
 	"github.com/merico-dev/stream/internal/pkg/log"
 	"github.com/merico-dev/stream/pkg/util/helm"
-	"github.com/merico-dev/stream/pkg/util/k8s"
 )
 
 func Reinstall(options *map[string]interface{}) (bool, error) {
-	var param helm.HelmParam
+	var param Param
 	if err := mapstructure.Decode(*options, &param); err != nil {
 		return false, err
 	}
@@ -23,7 +22,7 @@ func Reinstall(options *map[string]interface{}) (bool, error) {
 		return false, fmt.Errorf("params are illegal")
 	}
 
-	h, err := helm.NewHelm(&param)
+	h, err := helm.NewHelm(param.GetHelmParam())
 	if err != nil {
 		return false, err
 	}
@@ -33,17 +32,15 @@ func Reinstall(options *map[string]interface{}) (bool, error) {
 		return false, err
 	}
 
-	// delete the namespace
-	kubeClient, err := k8s.NewClient()
-	if err != nil {
-		return false, err
-	}
-	if err = kubeClient.DeleteNamespace(param.Chart.Namespace); err != nil {
-		log.Errorf("Failed to delete the %s namespace: %s", param.Chart.Namespace, err)
+	if err := dealWithNsWhenUninstall(&param); err != nil {
 		return false, err
 	}
 
 	// install
+	if err := dealWithNsWhenInstall(&param); err != nil {
+		return false, err
+	}
+
 	log.Info("Installing or updating argocd helm chart ...")
 	if err = h.InstallOrUpgradeChart(); err != nil {
 		return false, err

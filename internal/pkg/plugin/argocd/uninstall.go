@@ -11,7 +11,7 @@ import (
 )
 
 func Uninstall(options *map[string]interface{}) (bool, error) {
-	var param helm.HelmParam
+	var param Param
 	if err := mapstructure.Decode(*options, &param); err != nil {
 		return false, err
 	}
@@ -23,7 +23,7 @@ func Uninstall(options *map[string]interface{}) (bool, error) {
 		return false, fmt.Errorf("params are illegal")
 	}
 
-	h, err := helm.NewHelm(&param)
+	h, err := helm.NewHelm(param.GetHelmParam())
 	if err != nil {
 		return false, err
 	}
@@ -33,15 +33,22 @@ func Uninstall(options *map[string]interface{}) (bool, error) {
 		return false, err
 	}
 
-	// delete the namespace
-	kubeClient, err := k8s.NewClient()
-	if err != nil {
-		return false, err
-	}
-	if err = kubeClient.DeleteNamespace(param.Chart.Namespace); err != nil {
-		log.Errorf("Failed to delete the %s namespace: %s", param.Chart.Namespace, err)
+	if err := dealWithNsWhenUninstall(&param); err != nil {
 		return false, err
 	}
 
 	return true, nil
+}
+
+func dealWithNsWhenUninstall(param *Param) error {
+	if !param.CreateNamespace {
+		return nil
+	}
+
+	kubeClient, err := k8s.NewClient()
+	if err != nil {
+		return err
+	}
+
+	return kubeClient.DeleteNamespace(param.Chart.Namespace)
 }
