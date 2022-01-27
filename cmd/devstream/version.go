@@ -16,5 +16,6 @@ var versionCMD = &cobra.Command{
 }
 
 func versionCMDFunc(cmd *cobra.Command, args []string) {
+	initLogConf()
 	fmt.Println(version.VERSION)
 }
