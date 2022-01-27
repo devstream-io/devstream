@@ -24,7 +24,7 @@ func Uninstall(options *map[string]interface{}) (bool, error) {
 		return false, fmt.Errorf("params are illegal")
 	}
 
-	h, err := helm.NewHelm(&param.HelmParam)
+	h, err := helm.NewHelm(param.GetHelmParam())
 	if err != nil {
 		return false, err
 	}
