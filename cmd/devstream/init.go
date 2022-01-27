@@ -17,7 +17,6 @@ var initCMD = &cobra.Command{
 }
 
 func initCMDFunc(cmd *cobra.Command, args []string) {
-	initLogConf()
 	cfg := configloader.LoadConf(configFile)
 	if cfg == nil {
 		log.Fatal("Failed to load the config file.")

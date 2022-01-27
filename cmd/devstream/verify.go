@@ -16,7 +16,6 @@ var verifyCMD = &cobra.Command{
 }
 
 func verifyCMDFunc(cmd *cobra.Command, args []string) {
-	initLogConf()
 	log.Info("Verify started.")
 	healthy, err := pluginengine.CheckHealthy(configFile)
 	if err != nil {

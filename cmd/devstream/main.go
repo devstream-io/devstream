@@ -30,6 +30,9 @@ var (
 #     # #       #  #  #     #   #   #   #  #      #    # #    # 
 ######  ######   ##    #####    #   #    # ###### #    # #    # 
 `,
+		PersistentPreRun: func(cmd *cobra.Command, args []string) {
+			initLog()
+		},
 	}
 )
 
@@ -40,7 +43,6 @@ func init() {
 	rootCMD.PersistentFlags().StringVarP(&pluginDir, "plugin-dir", "p", pluginengine.DefaultPluginDir, "plugins directory")
 	rootCMD.PersistentFlags().BoolVarP(&continueDirectly, "yes", "y", false, "apply/delete directly without confirmation")
 	rootCMD.PersistentFlags().BoolVarP(&isDebug, "debug", "d", false, "debug level log")
-
 	rootCMD.AddCommand(versionCMD)
 	rootCMD.AddCommand(initCMD)
 	rootCMD.AddCommand(applyCMD)
@@ -70,12 +72,13 @@ func initConfig() {
 	}
 }
 
-func initLogConf() {
+func initLog() {
 	if isDebug {
 		logrus.SetLevel(logrus.DebugLevel)
 	} else {
 		logrus.SetLevel(logrus.InfoLevel)
 	}
+	log.Info("Log level is: ", logrus.GetLevel())
 }
 
 func main() {
