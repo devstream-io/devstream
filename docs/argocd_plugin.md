@@ -13,6 +13,8 @@ tools:
   # options for the plugin
   # checkout the version from the GitHub releases
   options:
+    # need to create the namespace or not, default: false
+    create_namespace: false
     # Helm repo information
     repo:
       # name of the Helm repo
@@ -27,8 +29,6 @@ tools:
       release_name: argocd
       # k8s namespace where argocd will be installed
       namespace: argocd
-      # need to create the namespace or not
-      create_namespace: False
       # whether to wait for the release to be deployed or not
       wait: true
       # the time to wait for any individual Kubernetes operation (like Jobs for hooks)

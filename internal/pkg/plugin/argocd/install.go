@@ -7,11 +7,12 @@ import (
 
 	"github.com/merico-dev/stream/internal/pkg/log"
 	"github.com/merico-dev/stream/pkg/util/helm"
+	"github.com/merico-dev/stream/pkg/util/k8s"
 )
 
 // Install installs ArgoCD with provided options.
 func Install(options *map[string]interface{}) (bool, error) {
-	var param helm.HelmParam
+	var param Param
 	if err := mapstructure.Decode(*options, &param); err != nil {
 		return false, err
 	}
@@ -23,7 +24,11 @@ func Install(options *map[string]interface{}) (bool, error) {
 		return false, fmt.Errorf("params are illegal")
 	}
 
-	h, err := helm.NewHelm(&param)
+	if err := dealWithNsWhenInstall(&param); err != nil {
+		return false, err
+	}
+
+	h, err := helm.NewHelm(&param.HelmParam)
 	if err != nil {
 		return false, err
 	}
@@ -34,4 +39,17 @@ func Install(options *map[string]interface{}) (bool, error) {
 	}
 
 	return true, nil
+}
+
+func dealWithNsWhenInstall(param *Param) error {
+	if !param.CreateNamespace {
+		return nil
+	}
+
+	kubeClient, err := k8s.NewClient()
+	if err != nil {
+		return err
+	}
+
+	return kubeClient.CreateNamespace(param.Chart.Namespace)
 }
