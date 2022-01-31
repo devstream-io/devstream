@@ -31,7 +31,7 @@ tools:
       namespace: argocd
       # whether to wait for the release to be deployed or not
       wait: true
-      # the time to wait for any individual Kubernetes operation (like Jobs for hooks)
+      # the time to wait for any individual Kubernetes operation (like Jobs for hooks). This defaults to 5m0s
       timeout: 5m
       # whether to perform a CRD upgrade during installation
       upgradeCRDs: true
