@@ -3,11 +3,11 @@ package main
 import (
 	"strings"
 
-	"github.com/merico-dev/stream/internal/pkg/log"
-
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
+	"github.com/merico-dev/stream/internal/pkg/log"
 	"github.com/merico-dev/stream/internal/pkg/pluginengine"
 )
 
@@ -15,6 +15,7 @@ var (
 	configFile       string
 	pluginDir        string
 	continueDirectly bool
+	isDebug          bool
 
 	rootCMD = &cobra.Command{
 		Use:   "dtm",
@@ -29,6 +30,9 @@ var (
 #     # #       #  #  #     #   #   #   #  #      #    # #    # 
 ######  ######   ##    #####    #   #    # ###### #    # #    # 
 `,
+		PersistentPreRun: func(cmd *cobra.Command, args []string) {
+			initLog()
+		},
 	}
 )
 
@@ -38,7 +42,7 @@ func init() {
 	rootCMD.PersistentFlags().StringVarP(&configFile, "config-file", "f", "config.yaml", "config file")
 	rootCMD.PersistentFlags().StringVarP(&pluginDir, "plugin-dir", "p", pluginengine.DefaultPluginDir, "plugins directory")
 	rootCMD.PersistentFlags().BoolVarP(&continueDirectly, "yes", "y", false, "apply/delete directly without confirmation")
-
+	rootCMD.PersistentFlags().BoolVarP(&isDebug, "debug", "d", false, "debug level log")
 	rootCMD.AddCommand(versionCMD)
 	rootCMD.AddCommand(initCMD)
 	rootCMD.AddCommand(applyCMD)
@@ -66,6 +70,15 @@ func initConfig() {
 	if err := viper.BindPFlags(rootCMD.Flags()); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func initLog() {
+	if isDebug {
+		logrus.SetLevel(logrus.DebugLevel)
+	} else {
+		logrus.SetLevel(logrus.InfoLevel)
+	}
+	log.Info("Log level is: ", logrus.GetLevel())
 }
 
 func main() {
