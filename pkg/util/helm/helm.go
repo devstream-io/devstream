@@ -62,7 +62,7 @@ func NewHelm(param *HelmParam) (*Helm, error) {
 		Timeout:          tmout,
 		GenerateName:     false,
 		NameTemplate:     "",
-		Atomic:           false,
+		Atomic:           true,
 		SkipCRDs:         false,
 		UpgradeCRDs:      param.Chart.UpgradeCRDs,
 		SubNotes:         false,
