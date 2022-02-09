@@ -29,17 +29,15 @@ func IsHealthy(options *map[string]interface{}) (bool, error) {
 		return false, err
 	}
 
-	errFlag := false
+	healthy := true
 	for name, err := range retMap {
 		if err != nil {
-			errFlag = true
+			healthy = false
 			log.Errorf("The workflow/file %s is not ok: %s", name, err)
+		} else {
+			log.Successf("The workflow/file %s is ok", name)
 		}
-		log.Successf("The workflow/file %s is ok", name)
-	}
-	if errFlag {
-		return false, nil
 	}
 
-	return true, nil
+	return healthy, nil
 }
