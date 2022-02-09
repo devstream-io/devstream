@@ -24,6 +24,7 @@ var client *Client
 type Client struct {
 	*Option
 	*github.Client
+	context.Context
 }
 
 type Option struct {
@@ -50,8 +51,9 @@ func NewClient(option *Option) (*Client, error) {
 	if !option.NeedAuth {
 		log.Debug("Auth is not enabled")
 		client = &Client{
-			Option: option,
-			Client: github.NewClient(nil),
+			Option:  option,
+			Client:  github.NewClient(nil),
+			Context: context.Background(),
 		}
 
 		return client, nil
@@ -74,6 +76,7 @@ func NewClient(option *Option) (*Client, error) {
 	}
 	log.Debugf("Token: %s", token)
 
+	ctx := context.Background()
 	tc := oauth2.NewClient(
 		context.TODO(),
 		oauth2.StaticTokenSource(
@@ -84,8 +87,9 @@ func NewClient(option *Option) (*Client, error) {
 	)
 
 	client = &Client{
-		Option: option,
-		Client: github.NewClient(tc),
+		Option:  option,
+		Client:  github.NewClient(tc),
+		Context: ctx,
 	}
 
 	return client, nil

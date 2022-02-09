@@ -12,7 +12,7 @@ tools:
     image_repo: ironcore864/golang-demo
 - name: golang-demo-app
   plugin:
-    kind: githubactions
+    kind: githubactions-golang
     version: 0.0.2
   options:
     owner: ironcore864
