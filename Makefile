@@ -10,7 +10,9 @@ help: ## Display this help.
 build: fmt vet ## Build dtm & plugins locally.
 	go mod tidy
 	mkdir -p .devstream
-	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/githubactions-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/githubactions/
+	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/githubactions-golang-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/githubactions/golang
+	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/githubactions-python-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/githubactions/python
+	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/githubactions-nodejs-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/githubactions/nodejs
 	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/trello-github-integ-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/trellogithub/
 	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/argocd-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/argocd/
 	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/argocdapp-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/argocdapp/

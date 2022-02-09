@@ -1,25 +1,6 @@
 package python
 
-var PrBuilder = `
-name: "Pull Request Workflow"
-on:
-  pull_request:
-    types: [ready_for_review]
-
-jobs:
-  # Enforces the update of a changelog file on every pull request
-  changelog:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      - uses: dangoslen/changelog-enforcer@v1.1.1
-        with:
-          changeLogPath: 'CHANGELOG.md'
-          skipLabel: 'skip-changelog'
-`
-
-var MasterBuilder = `
-name: Tests
+var mainPipeline = `name: Tests
 
 on: [push, pull_request]
 

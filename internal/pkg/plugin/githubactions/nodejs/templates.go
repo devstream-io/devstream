@@ -1,13 +1,12 @@
 package nodejs
 
-var PrBuilder = `
-name: Node.js CI
+var mainPipeline = `name: Node.js CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, master ]
 
 jobs:
   build:
@@ -29,5 +28,3 @@ jobs:
     - run: npm run build --if-present
     - run: npm test
 `
-
-var MasterBuilder = ``

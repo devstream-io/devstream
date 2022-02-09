@@ -66,3 +66,30 @@ func encryptSecretWithPublicKey(publicKey *github.PublicKey, secretName string, 
 	}
 	return encryptedSecret, nil
 }
+
+// DeleteRepoSecret deletes a secret in a GitHub repo.
+func (c *Client) DeleteRepoSecret(secretKey string) error {
+	ctx := context.Background()
+	response, err := client.Actions.DeleteRepoSecret(ctx, c.Owner, c.Repo, secretKey)
+	if err != nil {
+		if response.StatusCode == 404 {
+			return nil
+		}
+		return fmt.Errorf("github Actions.DeleteRepoSecret returned error: %v", err)
+	}
+
+	return nil
+}
+
+// RepoSecretExists detects if a secret exists in a GitHub repo.
+func (c *Client) RepoSecretExists(secretKey string) (bool, error) {
+	ctx := context.Background()
+	_, response, err := client.Actions.GetRepoSecret(ctx, c.Owner, c.Repo, secretKey)
+	if err != nil {
+		if response.StatusCode == 404 {
+			return false, nil
+		}
+		return false, fmt.Errorf("github Actions.GetRepoSecret returned error: %v", err)
+	}
+	return true, nil
+}
