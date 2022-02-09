@@ -30,6 +30,7 @@ func (cm *ConcurrentMap) Load(key interface{}) (value interface{}, ok bool) {
 func (cm *ConcurrentMap) Store(key, value interface{}) {
 	if reflect.TypeOf(key) == cm.KeyType && reflect.TypeOf(value) == cm.ValueType {
 		cm.Map.Store(key, value)
+		return
 	}
 	panic(fmt.Errorf("wrong key or value type: %v, %v", reflect.TypeOf(key), reflect.TypeOf(value)))
 }
@@ -37,6 +38,7 @@ func (cm *ConcurrentMap) Store(key, value interface{}) {
 func (cm *ConcurrentMap) Delete(key interface{}) {
 	if reflect.TypeOf(key) == cm.KeyType {
 		cm.Map.Delete(key)
+		return
 	}
 	panic(fmt.Errorf("wrong key type: %v", reflect.TypeOf(key)))
 }

@@ -31,6 +31,7 @@ func Delete(fname string, continueDirectly bool) error {
 	if err != nil {
 		return err
 	}
+
 	smgr := statemanager.NewManager(b)
 
 	p := planmanager.NewDeletePlan(smgr, cfg)

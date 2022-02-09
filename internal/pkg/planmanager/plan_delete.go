@@ -40,5 +40,11 @@ func NewDeletePlan(smgr statemanager.Manager, cfg *configloader.Config) *Plan {
 	}
 	tmpStates := smgr.GetStatesMap().DeepCopy()
 	plan.generatePlanForDelete(tmpStates, cfg)
+
+	log.Debugf("Changes for the plan:")
+	for _, c := range plan.Changes {
+		log.Debugf(c.String())
+	}
+
 	return plan
 }

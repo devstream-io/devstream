@@ -1,80 +1,74 @@
-package statemanager
+package statemanager_test
 
 import (
 	"os"
-	"reflect"
-	"testing"
 
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 	"gopkg.in/yaml.v3"
 
 	"github.com/merico-dev/stream/internal/pkg/backend"
 	"github.com/merico-dev/stream/internal/pkg/backend/local"
 	"github.com/merico-dev/stream/internal/pkg/configloader"
+	"github.com/merico-dev/stream/internal/pkg/statemanager"
 )
 
-var smgr Manager
+var _ = Describe("Statemanager", func() {
+	var smgr statemanager.Manager
 
-// setup is used to initialize smgr.
-func setup(t *testing.T) {
-	b, err := backend.GetBackend("local")
-	if err != nil {
-		t.Fatal("failed to get backend.")
-	}
+	Context("States", func() {
+		BeforeEach(func() {
+			b, err := backend.GetBackend("local")
+			Expect(err).NotTo(HaveOccurred())
+			Expect(b).NotTo(BeNil())
 
-	smgr = NewManager(b)
-}
+			smgr = statemanager.NewManager(b)
+			Expect(smgr).NotTo(BeNil())
+		})
 
-func newState() *State {
-	return NewState("argocd-prod", configloader.Plugin{Kind: "argocd", Version: "v0.0.1"}, nil, nil)
-}
+		It("Should get the state right", func() {
+			stateA := statemanager.NewState("prod", configloader.Plugin{Kind: "argocd", Version: "v0.0.1"}, nil, nil)
+			Expect(stateA).NotTo(BeNil())
 
-func TestManager_State(t *testing.T) {
-	setup(t)
-	stateA := newState()
-	smgr.AddState(stateA)
+			smgr.AddState(stateA)
 
-	stateB := smgr.GetState("argocd-prod_argocd")
+			stateB := smgr.GetState("prod_argocd")
+			Expect(stateA).To(Equal(stateB))
 
-	if !reflect.DeepEqual(stateA, stateB) {
-		t.Errorf("expect stateB == stateA, but got stateA: %v and stateB: %v", stateA, stateB)
-	}
+			smgr.DeleteState("prod_argocd")
+			stateC := smgr.GetState("prod_argocd")
+			Expect(stateC).To(BeNil())
+		})
 
-	smgr.DeleteState("argocd")
-	if smgr.GetState("argocd") != nil {
-		t.Error("DeleteState failed")
-	}
-}
+		It("Should Read/Write well", func() {
+			// write
+			stateA := statemanager.NewState("prod", configloader.Plugin{Kind: "argocd", Version: "v0.0.1"}, []string{}, map[string]interface{}{})
+			smgr.AddState(stateA)
+			err := smgr.Write(smgr.GetStatesMap().Format())
+			Expect(err).NotTo(HaveOccurred())
 
-func TestManager_Write(t *testing.T) {
-	setup(t)
-	stateA := newState()
-	smgr.AddState(stateA)
-	if err := smgr.Write(smgr.GetStatesMap().Format()); err != nil {
-		t.Error("Failed to Write StatesMap to disk")
-	}
-}
+			// read
+			data, err := smgr.Read()
+			Expect(err).NotTo(HaveOccurred())
+			Expect(len(data)).NotTo(BeZero())
 
-func TestManager_Read(t *testing.T) {
-	TestManager_Write(t)
-	data, err := smgr.Read()
-	if err != nil {
-		t.Error(err)
-	}
+			tmpMap := make(map[string]*statemanager.State)
+			err = yaml.Unmarshal(data, tmpMap)
+			Expect(err).NotTo(HaveOccurred())
 
-	var oldSs = NewStatesMap()
-	if err := yaml.Unmarshal(data, oldSs); err != nil {
-		t.Error(err)
-	}
+			statesMap := statemanager.NewStatesMap()
+			for k, v := range tmpMap {
+				statesMap.Store(k, v)
+			}
 
-	smgr.SetStatesMap(oldSs)
-	newSs := smgr.GetStatesMap()
-	if !reflect.DeepEqual(smgr.GetStatesMap(), oldSs) {
-		t.Errorf("expect old StatesMap == new StatesMap, but got oldSs: %v and newSs: %v", oldSs, newSs)
-	}
+			stateB, ok := statesMap.Load("prod_argocd")
+			Expect(ok).To(BeTrue())
+			Expect(*stateB.(*statemanager.State)).To(Equal(*stateA))
+		})
 
-	teardown()
-}
-
-func teardown() {
-	_ = os.Remove(local.DefaultStateFile)
-}
+		AfterEach(func() {
+			err := os.RemoveAll(local.DefaultStateFile)
+			Expect(err).NotTo(HaveOccurred())
+		})
+	})
+})

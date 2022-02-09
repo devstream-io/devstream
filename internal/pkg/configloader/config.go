@@ -5,9 +5,9 @@ import (
 	"io/ioutil"
 	"runtime"
 
-	"github.com/merico-dev/stream/internal/pkg/log"
-
 	"gopkg.in/yaml.v3"
+
+	"github.com/merico-dev/stream/internal/pkg/log"
 )
 
 var (
@@ -32,12 +32,6 @@ type Tool struct {
 	Options map[string]interface{} `yaml:"options"`
 }
 
-// Plugin is the struct for the plugin section of each tool of the DevStream configuration file.
-type Plugin struct {
-	Kind    string `mapstructure:"kind"`
-	Version string `mapstructure:"version"`
-}
-
 func (t *Tool) DeepCopy() *Tool {
 	var retTool = Tool{
 		Name:    t.Name,
@@ -50,6 +44,12 @@ func (t *Tool) DeepCopy() *Tool {
 	return &retTool
 }
 
+// Plugin is the struct for the plugin section of each tool of the DevStream configuration file.
+type Plugin struct {
+	Kind    string `mapstructure:"kind"`
+	Version string `mapstructure:"version"`
+}
+
 // LoadConf reads an input file as a Config struct.
 func LoadConf(fname string) *Config {
 	fileBytes, err := ioutil.ReadFile(fname)
@@ -58,6 +58,8 @@ func LoadConf(fname string) *Config {
 		log.Info("Perhaps you forgot to specify the path of the config file by using the \"-f\" parameter?")
 		log.Fatal("See more help by running \"dtm help\"")
 	}
+
+	log.Debugf("Config file: \n%s\n", string(fileBytes))
 
 	var config Config
 	err = yaml.Unmarshal(fileBytes, &config)

@@ -21,6 +21,11 @@ type ChangeResult struct {
 	Time      string
 }
 
+func (c *Change) String() string {
+	return fmt.Sprintf("\n{\n  ActionName: %s,\n  Tool: {Name: %s, Plugin: {Kind: %s, Version: %s}}\n}",
+		c.ActionName, c.Tool.Name, c.Tool.Plugin.Kind, c.Tool.Plugin.Version)
+}
+
 func getStateKeyFromTool(t *configloader.Tool) string {
 	return fmt.Sprintf("%s_%s", t.Name, t.Plugin.Kind)
 }
