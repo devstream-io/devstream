@@ -76,23 +76,15 @@ on:
   push:
     branches: [ master, main ]
 jobs:
-  [[- if not .Build.Enable]]
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Build
-      run: go build ./...
-  [[- else]]
-  [[- if eq .Build.Enable "True"]]
+  [[- if .Build.Enable]]
   build:
     runs-on: ubuntu-latest
     steps:
     - name: Build
       run: [[- if not .Build.Command]] go build ./...[[- else]][[.Build.Command]][[- end]]
-  [[- else if eq .Build.Enable "False"]]
+  [[- else]]
   [[- end]]
-  [[- end]]
-  [[- if not .Test.Enable]]
+  [[- if .Test.Enable]]
   test:
     runs-on: ubuntu-latest
     steps:
@@ -102,8 +94,8 @@ jobs:
       with:
         go-version: 1.17
     - name: Test
-      run: [[- if not .Test.Command]] go test ./...[[- else]][[.Test.Command]][[- end]] [[- if eq .Test.Coverage.Enable "True"]] -race -covermode=atomic -coverprofile=[[- if not .Test.Coverage.Output]]coverage.out[[- else]][[.Test.Coverage.Output]][[- end]] [[- end]]
-    [[- if eq .Test.Coverage.Enable "True"]]
+      run: [[- if not .Test.Command]] go test ./...[[- else]][[.Test.Command]][[- end]] [[- if .Test.Coverage.Enable]] -race -covermode=atomic -coverprofile=[[- if not .Test.Coverage.Output]]coverage.out[[- else]][[.Test.Coverage.Output]][[- end]] [[- end]]
+    [[- if .Test.Coverage.Enable]]
     - name: comment PR
       uses: machine-learning-apps/pr-comment@master
       env:
@@ -112,27 +104,6 @@ jobs:
         path: [[- if not .Test.Coverage.Output]]coverage.out[[- else]][[.Test.Coverage.Output]][[- end]]
     [[- end]]
   [[- else]]
-  [[- if eq .Test.Enable "True"]]
-  test:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Go
-      uses: actions/setup-go@v2
-      with:
-        go-version: 1.17
-    - name: Test
-      run: [[- if not .Test.Command]] go test ./...[[- else]][[.Test.Command]][[- end]] [[- if eq .Test.Coverage.Enable "True"]] -race -covermode=atomic -coverprofile=[[- if not .Test.Coverage.Output]]coverage.out[[- else]][[.Test.Coverage.Output]][[- end]] [[- end]]
-    [[- if eq .Test.Coverage.Enable "True"]]
-    - name: comment PR
-      uses: machine-learning-apps/pr-comment@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        path: [[- if not .Test.Coverage.Output]]coverage.out[[- else]][[.Test.Coverage.Output]][[- end]]
-    [[- end]]
-  [[- else if eq .Test.Enable "False"]]
-  [[- end]]
   [[- end]]
   tag:
     name: Tag
