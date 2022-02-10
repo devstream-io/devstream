@@ -1,10 +1,11 @@
 package golang
 
 import (
+	"github.com/spf13/viper"
+
 	"github.com/merico-dev/stream/internal/pkg/log"
 	ga "github.com/merico-dev/stream/internal/pkg/plugin/githubactions"
 	"github.com/merico-dev/stream/pkg/util/github"
-	"github.com/spf13/viper"
 )
 
 // Install sets up GitHub Actions workflow(s).
