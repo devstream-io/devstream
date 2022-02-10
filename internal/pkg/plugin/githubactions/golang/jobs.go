@@ -33,26 +33,26 @@ func (d *Docker) Validate() []error {
 
 // Build is the struct for githubacions job.
 type Build struct {
-	Enable  string
+	Enable  bool
 	Command string
 }
 
 // Test is the struct for githubacions job.
 type Test struct {
-	Enable   string
+	Enable   bool
 	Command  string
 	Coverage Coverage
 }
 
 // Docker is the struct for githubacions job.
 type Docker struct {
-	Enable string
+	Enable bool
 	Repo   string
 }
 
 // Coverage is the struct for githubacions job.
 type Coverage struct {
-	Enable  string
+	Enable  bool
 	Profile string
 	Output  string
 }

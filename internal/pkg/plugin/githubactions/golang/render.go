@@ -16,7 +16,7 @@ func renderTemplate(workflow *github.Workflow, options *Options) (string, error)
 		return "", err
 	}
 	if opts.Build == nil {
-		opts.Build = &Build{"", ""}
+		opts.Build = &Build{false, ""}
 	}
 
 	//if use default {{.}}, it will confict (github actions vars also use them)
