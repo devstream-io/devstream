@@ -105,14 +105,23 @@ on:
   push:
     branches: [ master, main ]
 jobs:
-  [[- if .Build.Enable]]
+  [[- if not .Build.Enable]]
   build:
     runs-on: ubuntu-latest
     steps:
     - name: Build
-      run: [[.Build.Command]]
+      run: go build ./...
+  [[- else]]
+  [[- if eq .Build.Enable "True"]]
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Build
+      run: [[- if not .Build.Command]] go build ./...[[- else]][[.Build.Command]][[- end]]
+  [[- else if eq .Build.Enable "False"]]
   [[- end]]
-  [[- if .Test.Enable]]
+  [[- end]]
+  [[- if not .Test.Enable]]
   test:
     runs-on: ubuntu-latest
     steps:
@@ -122,7 +131,37 @@ jobs:
       with:
         go-version: 1.17
     - name: Test
-      run: [[.Test.Command]] [[- if .Test.Coverage.Enable]] -race -covermode=atomic -coverprofile=[[.Test.Coverage.Output]] [[- end]]
+      run: [[- if not .Test.Command]] go test ./...[[- else]][[.Test.Command]][[- end]] [[- if eq .Test.Coverage.Enable "True"]] -race -covermode=atomic -coverprofile=[[- if not .Test.Coverage.Output]]coverage.out[[- else]][[.Test.Coverage.Output]][[- end]] [[- end]]
+    [[- if eq .Test.Coverage.Enable "True"]]
+    - name: comment PR
+      uses: machine-learning-apps/pr-comment@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        path: [[- if not .Test.Coverage.Output]]coverage.out[[- else]][[.Test.Coverage.Output]][[- end]]
+    [[- end]]
+  [[- else]]
+  [[- if eq .Test.Enable "True"]]
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.17
+    - name: Test
+      run: [[- if not .Test.Command]] go test ./...[[- else]][[.Test.Command]][[- end]] [[- if eq .Test.Coverage.Enable "True"]] -race -covermode=atomic -coverprofile=[[- if not .Test.Coverage.Output]]coverage.out[[- else]][[.Test.Coverage.Output]][[- end]] [[- end]]
+    [[- if eq .Test.Coverage.Enable "True"]]
+    - name: comment PR
+      uses: machine-learning-apps/pr-comment@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        path: [[- if not .Test.Coverage.Output]]coverage.out[[- else]][[.Test.Coverage.Output]][[- end]]
+    [[- end]]
+  [[- else if eq .Test.Enable "False"]]
+  [[- end]]
   [[- end]]
   tag:
     name: Tag
@@ -157,6 +196,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/[[.Docker.Repo]]:${{needs.tag.outputs.new_tag}}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/[[- if not .Docker.Repo]][[.Repo]][[- else]][[.Docker.Repo]][[- end]]:${{needs.tag.outputs.new_tag}}
   [[- end]]
 `
