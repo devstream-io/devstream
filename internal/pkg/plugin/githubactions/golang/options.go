@@ -13,7 +13,9 @@ type Options struct {
 	Repo     string
 	Branch   string
 	Language *ga.Language
-	Jobs     *Jobs
+	Build    *Build
+	Test     *Test
+	Docker   *Docker
 }
 
 // validate validates the options provided by the core.
@@ -42,12 +44,21 @@ func validate(param *Options) []error {
 	}
 
 	// jobs
-	if param.Jobs == nil {
-		retErrors = append(retErrors, fmt.Errorf("job is empty"))
+	if param.Test == nil {
+		retErrors = append(retErrors, fmt.Errorf("test is empty"))
 	}
-	if errs := param.Jobs.Validate(); len(errs) != 0 {
+	if errs := param.Test.Validate(); len(errs) != 0 {
 		for _, e := range errs {
-			retErrors = append(retErrors, fmt.Errorf("job is invalid: %s", e))
+			retErrors = append(retErrors, fmt.Errorf("test is invalid: %s", e))
+		}
+	}
+
+	if param.Docker == nil {
+		retErrors = append(retErrors, fmt.Errorf("docker is empty"))
+	}
+	if errs := param.Docker.Validate(); len(errs) != 0 {
+		for _, e := range errs {
+			retErrors = append(retErrors, fmt.Errorf("docker is invalid: %s", e))
 		}
 	}
 

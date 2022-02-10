@@ -1,11 +1,10 @@
 package golang
 
 import (
-	"github.com/spf13/viper"
-
 	"github.com/merico-dev/stream/internal/pkg/log"
 	ga "github.com/merico-dev/stream/internal/pkg/plugin/githubactions"
 	"github.com/merico-dev/stream/pkg/util/github"
+	"github.com/spf13/viper"
 )
 
 // Install sets up GitHub Actions workflow(s).
@@ -28,7 +27,7 @@ func Install(options *map[string]interface{}) (bool, error) {
 	log.Infof("Language is: %s.", ga.GetLanguage(opt.Language))
 
 	// if docker is enabled, create repo secrets for DOCKERHUB_USERNAME and DOCKERHUB_TOKEN
-	if opt.Jobs.Docker.Enable {
+	if opt.Docker.Enable == "True" {
 		if err := gitHubClient.AddRepoSecret("DOCKERHUB_USERNAME", viper.GetString("dockerhub_username")); err != nil {
 			return false, err
 		}
