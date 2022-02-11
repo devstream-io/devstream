@@ -1,13 +1,22 @@
 package golang
 
-// Jobs is the struct for github actions custom config.
-type Jobs struct {
-	Build  Build
-	Test   Test
-	Docker Docker
+func (b *Build) Validate() []error {
+	retErrors := make([]error, 0)
+
+	// TODO(daniel-hutao): what should we validate here?
+
+	return retErrors
 }
 
-func (j *Jobs) Validate() []error {
+func (t *Test) Validate() []error {
+	retErrors := make([]error, 0)
+
+	// TODO(daniel-hutao): what should we validate here?
+
+	return retErrors
+}
+
+func (d *Docker) Validate() []error {
 	retErrors := make([]error, 0)
 
 	// TODO(daniel-hutao): what should we validate here?

@@ -21,20 +21,14 @@ tools:
       name: go
       version: "1.17"
     branch: main
-    jobs:
-      build:
+    build:
+      enable: True
+    test:
+      enable: True
+      coverage:
         enable: True
-        command: "go build ./..."
-      test:
-        enable: True
-        command: "go test ./..."
-        coverage:
-          enable: True
-          profile: "-race -covermode=atomic"
-          output: "coverage.out"
-      docker:
-        enable: True
-        repo: golang-demo
+    docker:
+      enable: True
 - name: trello-github-integ-golang-demo
   plugin:
     kind: trello-github-integ

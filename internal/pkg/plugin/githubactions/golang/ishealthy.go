@@ -40,7 +40,7 @@ func IsHealthy(options *map[string]interface{}) (bool, error) {
 	}
 
 	// if docker is enabled, verify if secrets DOCKERHUB_USERNAME and DOCKERHUB_TOKEN are deleted
-	if opt.Jobs.Docker.Enable {
+	if opt.Docker.Enable {
 		for _, secret := range []string{"DOCKERHUB_USERNAME", "DOCKERHUB_TOKEN"} {
 			exists, err := gitHubClient.RepoSecretExists(secret)
 			if err != nil {

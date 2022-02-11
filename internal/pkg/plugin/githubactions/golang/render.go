@@ -10,10 +10,13 @@ import (
 )
 
 func renderTemplate(workflow *github.Workflow, options *Options) (string, error) {
-	var jobs Jobs
-	err := mapstructure.Decode(options.Jobs, &jobs)
+	var opts Options
+	err := mapstructure.Decode(options, &opts)
 	if err != nil {
 		return "", err
+	}
+	if opts.Build == nil {
+		opts.Build = &Build{false, ""}
 	}
 
 	//if use default {{.}}, it will confict (github actions vars also use them)
@@ -23,7 +26,7 @@ func renderTemplate(workflow *github.Workflow, options *Options) (string, error)
 	}
 
 	var buff bytes.Buffer
-	err = t.Execute(&buff, jobs)
+	err = t.Execute(&buff, opts)
 	if err != nil {
 		return "", err
 	}

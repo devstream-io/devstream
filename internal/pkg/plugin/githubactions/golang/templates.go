@@ -10,7 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Build
-      run: [[.Build.Command]]
+      run: [[- if not .Build.Command]] go build ./...[[- else]][[.Build.Command]][[- end]]
+  [[- else]]
   [[- end]]
   [[- if .Test.Enable]]
   test:
@@ -22,15 +23,16 @@ jobs:
       with:
         go-version: 1.17
     - name: Test
-      run: [[.Test.Command]] [[- if .Test.Coverage.Enable]] -race -covermode=atomic -coverprofile=[[.Test.Coverage.Output]] [[- end]]
+      run: [[- if not .Test.Command]] go test ./...[[- else]][[.Test.Command]][[- end]] [[- if .Test.Coverage.Enable]] -race -covermode=atomic -coverprofile=[[- if not .Test.Coverage.Output]]coverage.out[[- else]][[.Test.Coverage.Output]][[- end]] [[- end]]
     [[- if .Test.Coverage.Enable]]
     - name: comment PR
       uses: machine-learning-apps/pr-comment@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        path: [[.Test.Coverage.Output]]
+        path: [[- if not .Test.Coverage.Output]]coverage.out[[- else]][[.Test.Coverage.Output]][[- end]]
     [[- end]]
+  [[- else]]
   [[- end]]
   tag:
     name: Tag
@@ -65,7 +67,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/[[.Docker.Repo]]:${{needs.tag.outputs.new_tag}}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/[[- if not .Docker.Repo]][[.Repo]][[- else]][[.Docker.Repo]][[- end]]:${{needs.tag.outputs.new_tag}}
   [[- end]]
 `
 
@@ -79,7 +81,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Build
-      run: [[.Build.Command]]
+      run: [[- if not .Build.Command]] go build ./...[[- else]][[.Build.Command]][[- end]]
+  [[- else]]
   [[- end]]
   [[- if .Test.Enable]]
   test:
@@ -91,7 +94,16 @@ jobs:
       with:
         go-version: 1.17
     - name: Test
-      run: [[.Test.Command]] [[- if .Test.Coverage.Enable]] -race -covermode=atomic -coverprofile=[[.Test.Coverage.Output]] [[- end]]
+      run: [[- if not .Test.Command]] go test ./...[[- else]][[.Test.Command]][[- end]] [[- if .Test.Coverage.Enable]] -race -covermode=atomic -coverprofile=[[- if not .Test.Coverage.Output]]coverage.out[[- else]][[.Test.Coverage.Output]][[- end]] [[- end]]
+    [[- if .Test.Coverage.Enable]]
+    - name: comment PR
+      uses: machine-learning-apps/pr-comment@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        path: [[- if not .Test.Coverage.Output]]coverage.out[[- else]][[.Test.Coverage.Output]][[- end]]
+    [[- end]]
+  [[- else]]
   [[- end]]
   tag:
     name: Tag
@@ -126,6 +138,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/[[.Docker.Repo]]:${{needs.tag.outputs.new_tag}}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/[[- if not .Docker.Repo]][[.Repo]][[- else]][[.Docker.Repo]][[- end]]:${{needs.tag.outputs.new_tag}}
   [[- end]]
 `

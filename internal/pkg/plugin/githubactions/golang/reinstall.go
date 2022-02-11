@@ -27,7 +27,7 @@ func Reinstall(options *map[string]interface{}) (bool, error) {
 
 	log.Infof("language is %s", ga.GetLanguage(opt.Language))
 
-	if opt.Jobs.Docker.Enable {
+	if opt.Docker.Enable {
 		for _, secret := range []string{"DOCKERHUB_USERNAME", "DOCKERHUB_TOKEN"} {
 			if err := gitHubClient.DeleteRepoSecret(secret); err != nil {
 				return false, err
