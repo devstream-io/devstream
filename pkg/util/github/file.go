@@ -1,21 +1,18 @@
 package github
 
 import (
-	"context"
-
 	"github.com/google/go-github/v42/github"
 )
 
-func (c *Client) CreateFile(content []byte, filePath string) error {
-	defaultMsg := "initialize"
-	defaultBranch := "main"
+func (c *Client) CreateFile(content []byte, filePath, targetBranch string) error {
+	defaultMsg := "Initialize the repository"
 
 	opt := &github.RepositoryContentFileOptions{
 		Message: &defaultMsg,
 		Content: content,
-		Branch:  &defaultBranch,
+		Branch:  &targetBranch,
 	}
 
-	_, _, err := c.Repositories.CreateFile(context.TODO(), c.Owner, c.Repo, filePath, opt)
+	_, _, err := c.Repositories.CreateFile(c.Context, c.Owner, c.Repo, filePath, opt)
 	return err
 }

@@ -18,6 +18,8 @@ const (
 	DefaultWorkPath      = ".github-repo-scaffolding-golang"
 	DefaultTemplateRepo  = "dtm-scaffolding-golang"
 	DefaultTemplateOwner = "merico-dev"
+	TransitBranch        = "init-with-devstream"
+	MainBranch           = "main"
 )
 
 type Config struct {
@@ -41,7 +43,8 @@ func InitRepoLocalAndPushToRemote(repoPath string, param *Param, ghClient *githu
 	if err := WalkLocalRepoPath(repoPath, param, ghClient); err != nil {
 		return err
 	}
-	return nil
+
+	return MergeCommits(ghClient)
 }
 
 func WalkLocalRepoPath(repoPath string, param *Param, ghClient *github.Client) error {
@@ -90,13 +93,32 @@ func WalkLocalRepoPath(repoPath string, param *Param, ghClient *github.Client) e
 		if newPathForGithub, err := replaceAppNameInPathStr(pathForGithub, appName); err != nil {
 			return err
 		} else {
-			return ghClient.CreateFile(content, strings.TrimSuffix(newPathForGithub, ".tpl"))
+			// the main branch needs a initial commit
+			if strings.Contains(newPathForGithub, "gitignore") {
+				err := ghClient.CreateFile(content, strings.TrimSuffix(newPathForGithub, ".tpl"), MainBranch)
+				if err != nil {
+					log.Debugf("Failed to add the .gitignore file.")
+					return err
+				}
+				log.Debugf("Added the .gitignore file.")
+				return ghClient.NewBranch(MainBranch, TransitBranch)
+			}
+			return ghClient.CreateFile(content, strings.TrimSuffix(newPathForGithub, ".tpl"), TransitBranch)
 		}
 	}); err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func MergeCommits(ghClient *github.Client) error {
+	number, err := ghClient.NewPullRequest(TransitBranch, MainBranch)
+	if err != nil {
+		return err
+	}
+
+	return ghClient.MergePullRequest(number, github.MergeMethodSquash)
 }
 
 func Render(filePath string, param *Param) ([]byte, error) {
