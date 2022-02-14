@@ -6,16 +6,15 @@ This plugin installs [ArgoCD](https://argoproj.github.io/cd/) in an existing Kub
 
 ```yaml
 tools:
-# name of the plugin
-- name: argocd
-  # version of the plugin
-  version: 0.0.1
-  # options for the plugin
-  # checkout the version from the GitHub releases
+- name: argocd-dev
+  plugin:
+    # name of the plugin
+    kind: argocd
+    # version of the plugin
+    version: 0.0.2
   options:
     # need to create the namespace or not, default: false
-    create_namespace: false
-    # Helm repo information
+    create_namespace: true
     repo:
       # name of the Helm repo
       name: argo

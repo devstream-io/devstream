@@ -11,23 +11,14 @@ This plugin installs an ArgoCD application.
 
 ```yaml
 tools:
-- name: argocd
-  version: 0.0.1
-  options:
-    repo:
-      name: argo
-      url: https://argoproj.github.io/argo-helm
-    chart:
-      name: argo/argo-cd
-      release_name: argocd
-      namespace: argocd
-      create_namespace: False
-# name of the plugin
 - name: argocdapp
-  # version of the plugin
-  version: 0.0.1
+  plugin:
+    # name of the plugin
+    kind: argocdapp
+    # version of the plugin
+    # checkout the version from the GitHub releases
+    version: 0.0.2
   # options for the plugin
-  # checkout the version from the GitHub releases
   options:
     # information on the ArgoCD application
     app:

@@ -10,44 +10,48 @@ _This plugin depends on an environment variable "GITHUB_TOKEN". Set it before us
 
 ```yaml
 tools:
-# name of the plugin
-- name: githubactions
-  # version of the plugin
-  version: 0.0.1
+- name: golang-demo-app
+  plugin:
+    # name of the plugin
+    kind: githubactions-golang
+    # version of the plugin
+    # checkout the version from the GitHub releases
+    version: 0.0.2
   # options for the plugin
-  # checkout the version from the GitHub releases
   options:
     # the repo's owner
     owner: ironcore864
     # the repo where you'd like to setup GitHub Actions
-    repo: go-hello-http
+    repo: golang-demo
     # programming language specific settings
     language:
-      # currently only go is supported
+      # currently, go, python and nodejs are supported
       name: go
       # version of the language
       version: "1.17"
     # main branch of the repo (to which branch the plugin will submit the workflows)
-    branch: master
-    # configurations for the pipeline in GitHub Actions
-    jobs:
-      build:
+    branch: main
+    build:
+      # default to false
+      enable: True
+      # build command, OPTIONAL, the given value below is default value
+      command: "go build ./..."
+    test:
+      # default to false
+      enable: True
+      # test command, OPTIONAL, the given value below is default value
+      command: "go test ./..."
+      coverage:
+        # default to false
         enable: True
-        # build command, default to "go build ./..."
-        command: "go build ./..."
-      test:
-        enable: True
-        # test command, default to "go test ./..."
-        command: "go test ./..."
-        coverage:
-          enable: True
-          profile: "-race -covermode=atomic"
-          output: "coverage.out"
-      # docker build/push related
-      docker:
-        enable: True
-        # dockerhub image repo
-        repo: golang-demo
+        # go test profile subcommand, OPTIONAL, the given value below is default value
+        profile: "-race -covermode=atomic"
+        output: "coverage.out"
+    docker:
+      # docker build/push related, default to false
+      enable: True
+      # dockerhub image repo
+      repo: golang-demo  
 ```
 
-Currently, all the parameters in the example above are mandatory.
+Some parameters are optional. See the default values and optional parameters in the example above.
