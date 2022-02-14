@@ -39,7 +39,7 @@ func IsHealthy(options *map[string]interface{}) (bool, error) {
 		return false, err
 	}
 
-	// check if the number of deployments are correct
+	// check if the number of deployments is correct
 	if len(dps) != DevLakeTotalK8sDeployments {
 		return false, fmt.Errorf("expect %d deployments, but only got %d",
 			DevLakeTotalK8sDeployments, len(dps))
