@@ -3,11 +3,11 @@ package devlake
 import (
 	"fmt"
 
+	"github.com/mitchellh/mapstructure"
+
 	"github.com/merico-dev/stream/internal/pkg/log"
 	"github.com/merico-dev/stream/pkg/util/downloader"
 	"github.com/merico-dev/stream/pkg/util/kubectl"
-
-	"github.com/mitchellh/mapstructure"
 )
 
 func Reinstall(options *map[string]interface{}) (bool, error) {
