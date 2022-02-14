@@ -37,8 +37,7 @@ func uninstall(param *Param) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	err = gitHubClient.DeleteRepo()
-	if err != nil {
+	if err := gitHubClient.DeleteRepo(); err != nil {
 		return false, err
 	}
 	return true, nil
