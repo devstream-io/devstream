@@ -41,7 +41,6 @@ func (c *Client) CheckRepo() error {
 		c.Option.Owner,
 		c.Option.Repo)
 
-	log.Debugf("repo is %s, response is %s ", rps, rsp)
 	if err != nil {
 		return err
 	}
