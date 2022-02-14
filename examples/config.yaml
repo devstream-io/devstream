@@ -86,3 +86,7 @@ tools:
       wait: true
       timeout: 5m
       upgradeCRDs: true
+- name: devlake
+  plugin:
+    kind: devlake
+    version: 0.0.2

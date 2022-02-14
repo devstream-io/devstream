@@ -14,3 +14,4 @@ go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o output/argocd-${GOO
 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o output/argocdapp-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/argocdapp/
 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o output/kube-prometheus-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/kubeprometheus/
 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o output/github-repo-scaffolding-golang-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/reposcaffolding/github/golang/
+go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o output/devlake-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/devlake/
