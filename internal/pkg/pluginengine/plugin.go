@@ -8,52 +8,51 @@ import (
 
 const DefaultPluginDir = ".devstream"
 
-// DevStreamPlugin is a struct, on which install/reinstall/uninstall interfaces are defined.
+// DevStreamPlugin is a struct, on which Create/Update/Remove/Read interfaces are defined.
 type DevStreamPlugin interface {
-	// Install will return (true, nil) if there is no error occurred. Otherwise (false, error) will be returned.
-	Install(*map[string]interface{}) (bool, error)
-	Reinstall(*map[string]interface{}) (bool, error)
-	Uninstall(*map[string]interface{}) (bool, error)
-	IsHealthy(*map[string]interface{}) (bool, error)
+	Create(*map[string]interface{}) (map[string]interface{}, error)
+	Update(*map[string]interface{}) (map[string]interface{}, error)
+	Read(*map[string]interface{}) (map[string]interface{}, error)
+	Delete(*map[string]interface{}) (bool, error)
 }
 
-// Install loads the plugin and calls the Install method of that plugin.
-func Install(tool *configloader.Tool) (bool, error) {
+// Create loads the plugin and calls the Create method of that plugin.
+func Create(tool *configloader.Tool) (map[string]interface{}, error) {
+	pluginDir := getPluginDir()
+	p, err := loadPlugin(pluginDir, tool)
+	if err != nil {
+		return nil, err
+	}
+	return p.Create(&tool.Options)
+}
+
+// Update loads the plugin and calls the Update method of that plugin.
+func Update(tool *configloader.Tool) (map[string]interface{}, error) {
+	pluginDir := getPluginDir()
+	p, err := loadPlugin(pluginDir, tool)
+	if err != nil {
+		return nil, err
+	}
+	return p.Update(&tool.Options)
+}
+
+func Read(tool *configloader.Tool) (map[string]interface{}, error) {
+	pluginDir := getPluginDir()
+	p, err := loadPlugin(pluginDir, tool)
+	if err != nil {
+		return nil, err
+	}
+	return p.Read(&tool.Options)
+}
+
+// Delete loads the plugin and calls the Delete method of that plugin.
+func Delete(tool *configloader.Tool) (bool, error) {
 	pluginDir := getPluginDir()
 	p, err := loadPlugin(pluginDir, tool)
 	if err != nil {
 		return false, err
 	}
-	return p.Install(&tool.Options)
-}
-
-// Reinstall loads the plugin and calls the Reinstall method of that plugin.
-func Reinstall(tool *configloader.Tool) (bool, error) {
-	pluginDir := getPluginDir()
-	p, err := loadPlugin(pluginDir, tool)
-	if err != nil {
-		return false, err
-	}
-	return p.Reinstall(&tool.Options)
-}
-
-// Uninstall loads the plugin and calls the Uninstall method of that plugin.
-func Uninstall(tool *configloader.Tool) (bool, error) {
-	pluginDir := getPluginDir()
-	p, err := loadPlugin(pluginDir, tool)
-	if err != nil {
-		return false, err
-	}
-	return p.Uninstall(&tool.Options)
-}
-
-func IsHealthy(tool *configloader.Tool) (bool, error) {
-	pluginDir := getPluginDir()
-	p, err := loadPlugin(pluginDir, tool)
-	if err != nil {
-		return false, err
-	}
-	return p.IsHealthy(&tool.Options)
+	return p.Delete(&tool.Options)
 }
 
 func getPluginDir() string {

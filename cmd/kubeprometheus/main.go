@@ -12,23 +12,23 @@ const NAME = "kube-prometheus"
 type Plugin string
 
 // Install implements the installation of the kube-prometheus.
-func (p Plugin) Install(options *map[string]interface{}) (bool, error) {
+func (p Plugin) Create(options *map[string]interface{}) (bool, error) {
 	return kubeprometheus.Install(options)
 }
 
 // Reinstall implements the reinstallation of the kube-prometheus.
-func (p Plugin) Reinstall(options *map[string]interface{}) (bool, error) {
+func (p Plugin) Update(options *map[string]interface{}) (bool, error) {
 	return kubeprometheus.Reinstall(options)
 }
 
-// Uninstall implements the uninstallation of the kube-prometheus.
-func (p Plugin) Uninstall(options *map[string]interface{}) (bool, error) {
-	return kubeprometheus.Uninstall(options)
+// IsHealthy implements the healthy check of the kube-prometheus.
+func (p Plugin) Read(options *map[string]interface{}) (bool, error) {
+	return kubeprometheus.IsHealthy(options)
 }
 
-// IsHealthy implements the healthy check of the kube-prometheus.
-func (p Plugin) IsHealthy(options *map[string]interface{}) (bool, error) {
-	return kubeprometheus.IsHealthy(options)
+// Uninstall implements the uninstallation of the kube-prometheus.
+func (p Plugin) Delete(options *map[string]interface{}) (bool, error) {
+	return kubeprometheus.Uninstall(options)
 }
 
 // DevStreamPlugin is the exported variable used by the DevStream core.

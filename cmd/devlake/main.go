@@ -12,23 +12,23 @@ const NAME = "devlake"
 type Plugin string
 
 // Install implements the installation of DevLake.
-func (p Plugin) Install(options *map[string]interface{}) (bool, error) {
+func (p Plugin) Create(options *map[string]interface{}) (bool, error) {
 	return devlake.Install(options)
 }
 
 // Reinstall implements the installation of DevLake.
-func (p Plugin) Reinstall(options *map[string]interface{}) (bool, error) {
+func (p Plugin) Update(options *map[string]interface{}) (bool, error) {
 	return devlake.Reinstall(options)
 }
 
-// Uninstall Uninstall the installation of DevLake.
-func (p Plugin) Uninstall(options *map[string]interface{}) (bool, error) {
-	return devlake.Uninstall(options)
+// IsHealthy implements the healthy check of DevLake.
+func (p Plugin) Read(options *map[string]interface{}) (bool, error) {
+	return devlake.IsHealthy(options)
 }
 
-// IsHealthy implements the healthy check of DevLake.
-func (p Plugin) IsHealthy(options *map[string]interface{}) (bool, error) {
-	return devlake.IsHealthy(options)
+// Uninstall Uninstall the installation of DevLake.
+func (p Plugin) Delete(options *map[string]interface{}) (bool, error) {
+	return devlake.Uninstall(options)
 }
 
 // DevStreamPlugin is the exported variable used by the DevStream core.

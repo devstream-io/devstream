@@ -10,35 +10,35 @@ import (
 	"github.com/merico-dev/stream/pkg/util/k8s"
 )
 
-// Install installs ArgoCD with provided options.
-func Install(options *map[string]interface{}) (bool, error) {
+// Create creates ArgoCD with provided options.
+func Create(options *map[string]interface{}) (map[string]interface{}, error) {
 	var param Param
 	if err := mapstructure.Decode(*options, &param); err != nil {
-		return false, err
+		return nil, err
 	}
 
 	if errs := validate(&param); len(errs) != 0 {
 		for _, e := range errs {
 			log.Errorf("Param error: %s", e)
 		}
-		return false, fmt.Errorf("params are illegal")
+		return nil, fmt.Errorf("params are illegal")
 	}
 
 	if err := dealWithNsWhenInstall(&param); err != nil {
-		return false, err
+		return nil, err
 	}
 
 	h, err := helm.NewHelm(param.GetHelmParam())
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
-	log.Info("Installing or updating argocd helm chart ...")
+	log.Info("Creating or updating argocd helm chart ...")
 	if err = h.InstallOrUpgradeChart(); err != nil {
-		return false, err
+		return nil, err
 	}
 
-	return true, nil
+	return make(map[string]interface{}), nil
 }
 
 func dealWithNsWhenInstall(param *Param) error {

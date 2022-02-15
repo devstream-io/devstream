@@ -20,17 +20,17 @@ const (
 	ArgocdDefaultNamespace       = "argocd"
 )
 
-func IsHealthy(options *map[string]interface{}) (bool, error) {
+func Read(options *map[string]interface{}) (map[string]interface{}, error) {
 	var param Param
 	if err := mapstructure.Decode(*options, &param); err != nil {
-		return false, err
+		return nil, err
 	}
 
 	if errs := validate(&param); len(errs) != 0 {
 		for _, e := range errs {
 			log.Errorf("Param error: %s", e)
 		}
-		return false, fmt.Errorf("params are illegal")
+		return nil, fmt.Errorf("params are illegal")
 	}
 
 	namespace := param.Chart.Namespace
@@ -40,16 +40,16 @@ func IsHealthy(options *map[string]interface{}) (bool, error) {
 
 	kubeClient, err := k8s.NewClient()
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
 	dps, err := kubeClient.ListDeployments(namespace)
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
 	if len(dps) != ArgocdDefaultDeploymentCount {
-		return false, fmt.Errorf("expect deployments count %d, but got count %d now",
+		return nil, fmt.Errorf("expect deployments count %d, but got count %d now",
 			ArgocdDefaultDeploymentCount, len(dps))
 	}
 
@@ -64,7 +64,7 @@ func IsHealthy(options *map[string]interface{}) (bool, error) {
 	}
 
 	if hasNotReadyDeployment {
-		return false, fmt.Errorf("some deployments are not ready")
+		return nil, fmt.Errorf("some deployments are not ready")
 	}
-	return true, nil
+	return make(map[string]interface{}), nil
 }
