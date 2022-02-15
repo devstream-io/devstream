@@ -51,11 +51,15 @@ func execute(p *planmanager.Plan) map[string]error {
 
 		switch c.ActionName {
 		case statemanager.ActionInstall:
-			succeeded, err = Install(c.Tool)
+			if _, err = Create(c.Tool); err == nil {
+				succeeded = true
+			}
 		case statemanager.ActionReinstall:
-			succeeded, err = Reinstall(c.Tool)
+			if _, err = Update(c.Tool); err == nil {
+				succeeded = true
+			}
 		case statemanager.ActionUninstall:
-			succeeded, err = Uninstall(c.Tool)
+			succeeded, err = Delete(c.Tool)
 		}
 
 		if err != nil {

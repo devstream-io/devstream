@@ -12,23 +12,23 @@ const NAME = "trellogithub"
 type Plugin string
 
 // Install implements the installation of some trello-github-integ workflows.
-func (p Plugin) Install(options *map[string]interface{}) (bool, error) {
+func (p Plugin) Create(options *map[string]interface{}) (bool, error) {
 	return trellogithub.Install(options)
 }
 
 // Reinstall implements the installation of some trello-github-integ workflows.
-func (p Plugin) Reinstall(options *map[string]interface{}) (bool, error) {
+func (p Plugin) Update(options *map[string]interface{}) (bool, error) {
 	return trellogithub.Reinstall(options)
 }
 
-// Uninstall implements the installation of some trello-github-integ workflows.
-func (p Plugin) Uninstall(options *map[string]interface{}) (bool, error) {
-	return trellogithub.Uninstall(options)
+// IsHealthy implements the healthy check of trello-github-integ workflows.
+func (p Plugin) Read(options *map[string]interface{}) (bool, error) {
+	return trellogithub.IsHealthy(options)
 }
 
-// IsHealthy implements the healthy check of trello-github-integ workflows.
-func (p Plugin) IsHealthy(options *map[string]interface{}) (bool, error) {
-	return trellogithub.IsHealthy(options)
+// Uninstall implements the installation of some trello-github-integ workflows.
+func (p Plugin) Delete(options *map[string]interface{}) (bool, error) {
+	return trellogithub.Uninstall(options)
 }
 
 // DevStreamPlugin is the exported variable used by the DevStream core.
