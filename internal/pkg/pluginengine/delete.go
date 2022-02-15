@@ -14,7 +14,7 @@ import (
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
 )
 
-func Delete(fname string, continueDirectly bool) error {
+func Remove(fname string, continueDirectly bool) error {
 	cfg := configloader.LoadConf(fname)
 	if cfg == nil {
 		return fmt.Errorf("failed to load the config file")

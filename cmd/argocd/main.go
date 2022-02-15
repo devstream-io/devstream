@@ -11,24 +11,24 @@ const NAME = "argocd"
 // Plugin is the type used by DevStream core. It's a string.
 type Plugin string
 
-// Install implements the installation of ArgoCD.
-func (p Plugin) Install(options *map[string]interface{}) (bool, error) {
-	return argocd.Install(options)
+// Create implements the create of ArgoCD.
+func (p Plugin) Create(options *map[string]interface{}) (map[string]interface{}, error) {
+	return argocd.Create(options)
 }
 
-// Reinstall implements the reinstallation of ArgoCD.
-func (p Plugin) Reinstall(options *map[string]interface{}) (bool, error) {
-	return argocd.Reinstall(options)
+// Update implements the update of ArgoCD.
+func (p Plugin) Update(options *map[string]interface{}) (map[string]interface{}, error) {
+	return argocd.Update(options)
 }
 
-// Uninstall implements the uninstallation of ArgoCD.
-func (p Plugin) Uninstall(options *map[string]interface{}) (bool, error) {
-	return argocd.Uninstall(options)
+// Delete implements the delete of ArgoCD.
+func (p Plugin) Delete(options *map[string]interface{}) (bool, error) {
+	return argocd.Delete(options)
 }
 
-// IsHealthy implements the healthy check of ArgoCD.
-func (p Plugin) IsHealthy(options *map[string]interface{}) (bool, error) {
-	return argocd.IsHealthy(options)
+// Read implements the read of ArgoCD.
+func (p Plugin) Read(options *map[string]interface{}) (map[string]interface{}, error) {
+	return argocd.Read(options)
 }
 
 // DevStreamPlugin is the exported variable used by the DevStream core.
