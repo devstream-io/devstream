@@ -75,10 +75,10 @@ func initConfig() {
 func initLog() {
 	if isDebug {
 		logrus.SetLevel(logrus.DebugLevel)
+		log.Info("Log level is: ", logrus.GetLevel())
 	} else {
 		logrus.SetLevel(logrus.InfoLevel)
 	}
-	log.Info("Log level is: ", logrus.GetLevel())
 }
 
 func main() {
