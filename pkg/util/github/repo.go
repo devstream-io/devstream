@@ -35,7 +35,7 @@ func (c *Client) DeleteRepo() error {
 	return nil
 }
 
-func (c *Client) CheckRepo() error {
+func (c *Client) IsRepoExists() error {
 	rps, rsp, err := c.Client.Repositories.Get(
 		c.Context,
 		c.Option.Owner,

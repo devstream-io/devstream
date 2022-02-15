@@ -33,11 +33,11 @@ func check(param *Param) (bool, error) {
 		NeedAuth: true,
 	}
 
-	gitHubClient, err := github.NewClient(ghOptions)
+	ghClient, err := github.NewClient(ghOptions)
 	if err != nil {
 		return false, err
 	}
-	if err := gitHubClient.CheckRepo(); err != nil {
+	if err := ghClient.IsRepoExists(); err != nil {
 		return false, err
 	}
 	return true, nil
