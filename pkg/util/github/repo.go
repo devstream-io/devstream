@@ -22,11 +22,11 @@ func (c *Client) CreateRepo() error {
 	return nil
 }
 
-func (c *Client) DeleteRepo() error {
+func (c *Client) Delete() error {
 	_, err := c.Client.Repositories.Delete(
 		c.Context,
-		c.Option.Owner,
-		c.Option.Repo)
+		c.Owner,
+		c.Repo)
 
 	if err != nil {
 		return err
@@ -36,17 +36,17 @@ func (c *Client) DeleteRepo() error {
 }
 
 func (c *Client) IsRepoExists() error {
-	rps, rsp, err := c.Client.Repositories.Get(
+	rps, resp, err := c.Client.Repositories.Get(
 		c.Context,
-		c.Option.Owner,
-		c.Option.Repo)
+		c.Owner,
+		c.Repo)
 
 	if err != nil {
 		return err
 	}
 
-	if rsp.StatusCode != 200 {
-		return errors.New("response status is not 200 OK, but is " + fmt.Sprintf("%d", rsp.StatusCode))
+	if resp.StatusCode != 200 {
+		return errors.New("response status is not 200 OK, but is " + fmt.Sprintf("%d", resp.StatusCode))
 	}
 
 	log.Successf("GitHub repo exists, repo is %s, owner is %s.", *rps.Name, *rps.Owner.Login)
