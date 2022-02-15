@@ -65,6 +65,73 @@ Want to install another different tool for a try? No problem. Want to remove or 
 | CD/GitOps              | ArgoCD App (manages the Application CRD of ArgoCD) | ArgoCD Application Creation |
 | Monitoring             | Prometheus/Grafana                                 |                             |
 
+## Quick Install
+
+### Binary (Cross-platform)
+
+Download the appropriate dtm version for your platform from [DevStream Releases](https://github.com/merico-dev/stream/releases).
+
+Once downloaded, you can run the binary from anywhere. You don’t need to install it into a global location.
+
+Ideally, you should install it somewhere in your PATH(eg: */usr/local/bin*) for easy use.
+
+Remember to rename the binary file to `dtm`(eg: `mv dtm-$(go env GOOS)-$(go env GOARCH) dtm`).
+
+### Source
+
+#### Prerequisite Tools
+
+- Git
+- Go (1.17+)
+
+#### Fetch from GitHub
+
+```bash
+mkdir -p ~/gocode
+cd ~/gocode
+git clone https://github.com/merico-dev/stream.git
+```
+
+#### Build
+
+```bash
+cd ~/gocode/stream
+make build
+mv dtm-$(go env GOOS)-$(go env GOARCH) dtm
+```
+
+See the Makefile for more info.
+
+```makefile
+$ make help
+
+Usage:
+  make <target>
+  help                Display this help.
+  build               Build dtm & plugins locally.
+  build-core          Build dtm core only, without plugins, locally.
+  build-linux-amd64   Cross-platform build for linux/amd64
+  fmt                 Run 'go fmt' & goimports against code.
+  vet                 Run go vet against code.
+  e2e                 Run e2e tests.
+  e2e-up              Start kind cluster for e2e tests
+  e2e-down            Stop kind cluster for e2e tests
+```
+
+## Test
+
+Run unit tests:
+
+```bash
+go test ./...
+```
+
+Run e2e tests:
+
+```bash
+make e2e
+```
+
 ## Configuration
 
 See [examples/config.yaml](./examples/config.yaml).
@@ -104,36 +171,6 @@ To verify, run:
 ## Architecture
 
 See [docs/architecture.md](./docs/architecture.md).
-
-## Build
-
-Dependencies:
-- go 1.17
-- the `$GOPATH/bin` directory should be in your `PATH` environment variable (we use `goimports` to update import lines)
-
-```makefile
-$ make help
-
-Usage:
-  make <target>
-  help                Display this help.
-  build               Build dtm & plugins locally.
-  build-core          Build dtm core only, without plugins, locally.
-  build-linux-amd64   Cross-platform build for linux/amd64
-  fmt                 Run 'go fmt' & goimports against code.
-  vet                 Run go vet against code.
-  e2e                 Run e2e tests.
-  e2e-up              Start kind cluster for e2e tests
-  e2e-down            Stop kind cluster for e2e tests
-```
-
-## Test
-
-Unit/functional test:
-
-```bash
-go test ./...
-```
 
 ## Why `dtm`?
 
