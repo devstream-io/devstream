@@ -28,18 +28,18 @@ const (
 	KubePrometheusDefaultDaemonsetCount = 1
 )
 
-// IsHealthy check the health for kube-prometheus with provided options.
-func IsHealthy(options *map[string]interface{}) (bool, error) {
+// Read reads the state for kube-prometheus with provided options.
+func Read(options *map[string]interface{}) (map[string]interface{}, error) {
 	var param Param
 	if err := mapstructure.Decode(*options, &param); err != nil {
-		return false, err
+		return nil, err
 	}
 
 	if errs := validate(&param); len(errs) != 0 {
 		for _, e := range errs {
 			log.Errorf("Param error: %s", e)
 		}
-		return false, fmt.Errorf("params are illegal")
+		return nil, fmt.Errorf("params are illegal")
 	}
 
 	namespace := param.Chart.Namespace
@@ -49,14 +49,14 @@ func IsHealthy(options *map[string]interface{}) (bool, error) {
 
 	kubeClient, err := k8s.NewClient()
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
 	hasSomeResorucesNotReady := false
 
 	dpReady, err := isDeploymentsReady(kubeClient, namespace)
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 	if !dpReady {
 		hasSomeResorucesNotReady = true
@@ -65,7 +65,7 @@ func IsHealthy(options *map[string]interface{}) (bool, error) {
 
 	dsReady, err := isDaemonsetsReady(kubeClient, namespace)
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 	if !dsReady {
 		hasSomeResorucesNotReady = true
@@ -74,7 +74,7 @@ func IsHealthy(options *map[string]interface{}) (bool, error) {
 
 	ssReady, err := isStatefulsetsReady(kubeClient, namespace)
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 	if !ssReady {
 		hasSomeResorucesNotReady = true
@@ -82,10 +82,10 @@ func IsHealthy(options *map[string]interface{}) (bool, error) {
 	}
 
 	if hasSomeResorucesNotReady {
-		return false, fmt.Errorf("some resources are not ready")
+		return nil, fmt.Errorf("some resources are not ready")
 	}
 
-	return true, nil
+	return make(map[string]interface{}), nil
 }
 
 func isDeploymentsReady(kubeClient *k8s.Client, namespace string) (bool, error) {
