@@ -2,6 +2,10 @@
 
 This plugin installs github-repo-scaffolding-golang.
 
+tips:
+if uninstall, the repo on github will be completely removed
+if reinstall，the repo on github will be completely removed and recreated
+
 ## 2 Usage:
 
 ```yaml
