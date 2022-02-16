@@ -6,7 +6,6 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/merico-dev/stream/internal/pkg/log"
 	"github.com/merico-dev/stream/pkg/util/k8s"
 )
 
@@ -59,27 +58,6 @@ func buildState(p Param) map[string]interface{} {
 	return res
 }
 
-// isArgoCDAppReady returns nil if the app is ready; otherwise it returns an error
-func isArgoCDAppReady(name, namespace string) error {
-	kubeClient, err := k8s.NewClient()
-	if err != nil {
-		return err
-	}
-
-	app, err := kubeClient.GetArgocdApplication(namespace, name)
-	if err != nil {
-		return err
-	}
-
-	if kubeClient.IsArgocdApplicationReady(app) {
-		log.Infof("%s/%s is ready", namespace, name)
-		return nil
-	} else {
-		log.Infof("%s/%s is not ready yet", namespace, name)
-		return fmt.Errorf("%s/%s not ready", namespace, name)
-	}
-}
-
 func getArgoCDAppFromK8sAndSetState(state map[string]interface{}, name, namespace string) error {
 	kubeClient, err := k8s.NewClient()
 	if err != nil {
@@ -91,6 +69,10 @@ func getArgoCDAppFromK8sAndSetState(state map[string]interface{}, name, namespac
 		return err
 	}
 
-	state = kubeClient.DescribeArgocdApp(app)
+	d := kubeClient.DescribeArgocdApp(app)
+	state["app"] = d["app"]
+	state["src"] = d["src"]
+	state["dest"] = d["dest"]
+
 	return nil
 }
