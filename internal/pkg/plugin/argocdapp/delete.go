@@ -1,0 +1,46 @@
+package argocdapp
+
+import (
+	"fmt"
+	"os"
+
+	"github.com/merico-dev/stream/internal/pkg/log"
+	"github.com/merico-dev/stream/pkg/util/kubectl"
+
+	"github.com/mitchellh/mapstructure"
+)
+
+func Delete(options *map[string]interface{}) (bool, error) {
+	var param Param
+
+	// decode input parameters into a struct
+	err := mapstructure.Decode(*options, &param)
+	if err != nil {
+		return false, err
+	}
+
+	// validate parameters
+	if errs := validateParams(&param); len(errs) != 0 {
+		for _, e := range errs {
+			log.Errorf("Param error: %s", e)
+		}
+		return false, fmt.Errorf("params are illegal")
+	}
+
+	// render an ArgoCD App YAML file based on inputs and template
+	if err = writeContentToTmpFile(argoCDAppYAMLFile, argoCDAppTemplate, &param); err != nil {
+		return false, err
+	}
+
+	// kubectl delete -f
+	if err = kubectl.KubeDelete(argoCDAppYAMLFile); err != nil {
+		return false, err
+	}
+
+	// remove temporary YAML file used for kubectl delete
+	if err = os.Remove(argoCDAppYAMLFile); err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
