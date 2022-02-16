@@ -3,35 +3,13 @@ package argocdapp
 import (
 	"fmt"
 	"os"
-	"os/exec"
 	"strings"
 	"text/template"
 
-	"github.com/merico-dev/stream/internal/pkg/log"
+	"github.com/merico-dev/stream/pkg/util/k8s"
 )
 
-const defaultYamlPath = "./app.yaml"
-
-const (
-	ActionApply  Action = "apply"
-	ActionDelete Action = "delete"
-)
-
-type Action string
-
-func kubectlAction(action Action, filename string) error {
-	cmd := exec.Command("kubectl", string(action), "-f", filename)
-	cOut, err := cmd.CombinedOutput()
-	if err != nil {
-		// TODO(Daniel Hu): Handle the Error below:
-		// Error from server (NotFound): error when deleting "./app.yaml": applications.argoproj.io "hello" not found
-		log.Errorf("failed to exec: < %s >", cmd.String())
-		log.Errorf("exec logs: < %s >. got error: %s", string(cOut), err)
-		return err
-	}
-	log.Info(strings.TrimSuffix(string(cOut), "\n"))
-	return nil
-}
+const argoCDAppYAMLFile = "./app.yaml"
 
 func writeContentToTmpFile(file string, content string, param *Param) error {
 	t, err := template.New("app").Option("missingkey=error").Parse(content)
@@ -55,5 +33,46 @@ func writeContentToTmpFile(file string, content string, param *Param) error {
 			return fmt.Errorf("executing tpl: %s", err)
 		}
 	}
+	return nil
+}
+
+func buildState(p Param) map[string]interface{} {
+	res := make(map[string]interface{})
+
+	res["app"] = map[string]interface{}{
+		"name":      p.App.Name,
+		"namespace": p.App.Namespace,
+	}
+
+	res["src"] = map[string]interface{}{
+		"repoURL":   p.Source.RepoURL,
+		"path":      p.Source.Path,
+		"valueFile": p.Source.Valuefile,
+	}
+
+	res["dest"] = map[string]interface{}{
+		"server":    p.Destination.Server,
+		"namespace": p.Destination.Namespace,
+	}
+
+	return res
+}
+
+func getArgoCDAppFromK8sAndSetState(state map[string]interface{}, name, namespace string) error {
+	kubeClient, err := k8s.NewClient()
+	if err != nil {
+		return err
+	}
+
+	app, err := kubeClient.GetArgocdApplication(namespace, name)
+	if err != nil {
+		return err
+	}
+
+	d := kubeClient.DescribeArgocdApp(app)
+	state["app"] = d["app"]
+	state["src"] = d["src"]
+	state["dest"] = d["dest"]
+
 	return nil
 }

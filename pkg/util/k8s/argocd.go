@@ -25,3 +25,25 @@ func (c *Client) GetArgocdApplication(namespace, name string) (*argocdv1alpha1.A
 func (c *Client) IsArgocdApplicationReady(application *argocdv1alpha1.Application) bool {
 	return application.Status.Health.Status == health.HealthStatusHealthy
 }
+
+func (c *Client) DescribeArgocdApp(app *argocdv1alpha1.Application) map[string]interface{} {
+	res := make(map[string]interface{})
+
+	res["app"] = map[string]interface{}{
+		"name":      app.Name,
+		"namespace": app.Namespace,
+	}
+
+	res["src"] = map[string]interface{}{
+		"repoURL":   app.Spec.Source.RepoURL,
+		"path":      app.Spec.Source.Path,
+		"valueFile": app.Spec.Source.Helm.ValueFiles[0],
+	}
+
+	res["dest"] = map[string]interface{}{
+		"server":    app.Spec.Destination.Server,
+		"namespace": app.Spec.Destination.Namespace,
+	}
+
+	return res
+}
