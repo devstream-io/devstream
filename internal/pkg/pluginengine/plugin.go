@@ -10,9 +10,11 @@ const DefaultPluginDir = ".devstream"
 
 // DevStreamPlugin is a struct, on which Create/Read/Update/Delete interfaces are defined.
 type DevStreamPlugin interface {
+	// Create, Read, and Update return two results, the first being the "state"
 	Create(*map[string]interface{}) (map[string]interface{}, error)
 	Read(*map[string]interface{}) (map[string]interface{}, error)
 	Update(*map[string]interface{}) (map[string]interface{}, error)
+	// Delete returns (true, nil) if there is no error; otherwise it returns (false, error)
 	Delete(*map[string]interface{}) (bool, error)
 }
 

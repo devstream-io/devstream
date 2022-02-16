@@ -138,11 +138,13 @@ See [examples/config.yaml](./examples/config.yaml).
 
 ## Run
 
-To install/reinstall/update, run:
+To apply the config, run:
 
 ```bash
 ./dtm apply -f examples/config.yaml
 ```
+
+_`dtm` will compare the config, the state, and the resources to decide whether a "create", "update", or "delete" is needed._
 
 The command above will ask you for confirmation before actually executing the changes. To apply without confirmation (like `apt-get -y update`), run:
 
@@ -150,11 +152,13 @@ The command above will ask you for confirmation before actually executing the ch
 ./dtm -y apply -f examples/config.yaml
 ```
 
-To delete, run:
+To delete everything defined in the config, run:
 
 ```bash
 ./dtm delete -f examples/config.yaml
 ```
+
+_Note that this deletes everything defined in the config. If some config is deleted after apply (state has it but config not), `dtm delete` won't delete it. It differs from `dtm destroy` which will be implemented soon._
 
 Similarly, to delete without confirmation:
 
