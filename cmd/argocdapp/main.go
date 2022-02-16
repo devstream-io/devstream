@@ -11,17 +11,17 @@ const NAME = "argocdapps"
 // Plugin is the type used by DevStream core. It's a string.
 type Plugin string
 
-// Install implements the installation of an ArgoCD app.
+// Create implements the installation of an ArgoCD app.
 func (p Plugin) Create(options *map[string]interface{}) (map[string]interface{}, error) {
 	return argocdapp.Create(options)
 }
 
-// Reinstall implements the installation of an ArgoCD app.
+// Update implements the installation of an ArgoCD app.
 func (p Plugin) Update(options *map[string]interface{}) (map[string]interface{}, error) {
 	return argocdapp.Update(options)
 }
 
-// IsHealthy implements the healthy check of ArgoCD app.
+// Read implements the healthy check of ArgoCD app.
 func (p Plugin) Read(options *map[string]interface{}) (map[string]interface{}, error) {
 	return argocdapp.Read(options)
 }

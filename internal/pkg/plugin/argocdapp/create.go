@@ -40,7 +40,7 @@ func Create(options *map[string]interface{}) (map[string]interface{}, error) {
 
 	// remove temporary YAML file used for kubectl apply
 	if err = os.Remove(argoCDAppYAMLFile); err != nil {
-		return nil, err
+		log.Warnf("Temporary YAML file %s can't be deleted, but the installation is successful.", argoCDAppYAMLFile)
 	}
 
 	// build state & return results
