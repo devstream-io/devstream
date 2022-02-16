@@ -12,23 +12,23 @@ const NAME = "githubactions-python"
 type Plugin string
 
 // Install implements the installation of some GitHub Actions workflows.
-func (p Plugin) Create(options *map[string]interface{}) (bool, error) {
-	return python.Install(options)
+func (p Plugin) Create(options *map[string]interface{}) (map[string]interface{}, error) {
+	return python.Create(options)
 }
 
 // Reinstall implements the installation of some GitHub Actions workflows.
-func (p Plugin) Update(options *map[string]interface{}) (bool, error) {
-	return python.Reinstall(options)
+func (p Plugin) Update(options *map[string]interface{}) (map[string]interface{}, error) {
+	return python.Update(options)
 }
 
 // IsHealthy implements the healthy check of GitHub Actions workflows.
-func (p Plugin) Read(options *map[string]interface{}) (bool, error) {
-	return python.IsHealthy(options)
+func (p Plugin) Read(options *map[string]interface{}) (map[string]interface{}, error) {
+	return python.Read(options)
 }
 
 // Uninstall implements the installation of some GitHub Actions workflows.
 func (p Plugin) Delete(options *map[string]interface{}) (bool, error) {
-	return python.Uninstall(options)
+	return python.Delete(options)
 }
 
 // DevStreamPlugin is the exported variable used by the DevStream core.

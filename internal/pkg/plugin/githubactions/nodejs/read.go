@@ -6,11 +6,10 @@ import (
 	"github.com/merico-dev/stream/pkg/util/github"
 )
 
-// Uninstall remove GitHub Actions workflows.
-func Uninstall(options *map[string]interface{}) (bool, error) {
+func Read(options *map[string]interface{}) (map[string]interface{}, error) {
 	opt, err := parseAndValidateOptions(options)
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
 	ghOptions := &github.Option{
@@ -20,17 +19,10 @@ func Uninstall(options *map[string]interface{}) (bool, error) {
 	}
 	gitHubClient, err := github.NewClient(ghOptions)
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
-	log.Infof("language is %s", ga.GetLanguage(opt.Language))
+	log.Infof("Language is: %s.", ga.GetLanguage(opt.Language))
 
-	for _, pipeline := range workflows {
-		err := gitHubClient.DeleteWorkflow(pipeline, opt.Branch)
-		if err != nil {
-			return false, err
-		}
-	}
-
-	return true, nil
+	return gitHubClient.GetWorkflowState()
 }

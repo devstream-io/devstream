@@ -1,4 +1,4 @@
-package python
+package golang
 
 import (
 	"github.com/merico-dev/stream/internal/pkg/log"
@@ -6,8 +6,8 @@ import (
 	"github.com/merico-dev/stream/pkg/util/github"
 )
 
-// Uninstall remove GitHub Actions workflows.
-func Uninstall(options *map[string]interface{}) (bool, error) {
+// Delete remove GitHub Actions workflows.
+func Delete(options *map[string]interface{}) (bool, error) {
 	opt, err := parseAndValidateOptions(options)
 	if err != nil {
 		return false, err
@@ -24,6 +24,15 @@ func Uninstall(options *map[string]interface{}) (bool, error) {
 	}
 
 	log.Infof("language is %s", ga.GetLanguage(opt.Language))
+
+	// if docker is enabled, delete repo secrets DOCKERHUB_USERNAME and DOCKERHUB_TOKEN
+	if opt.Docker.Enable {
+		for _, secret := range []string{"DOCKERHUB_USERNAME", "DOCKERHUB_TOKEN"} {
+			if err := gitHubClient.DeleteRepoSecret(secret); err != nil {
+				return false, err
+			}
+		}
+	}
 
 	for _, pipeline := range workflows {
 		err := gitHubClient.DeleteWorkflow(pipeline, opt.Branch)

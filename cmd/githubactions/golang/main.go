@@ -12,23 +12,23 @@ const NAME = "githubactions-golang"
 type Plugin string
 
 // Install implements the installation of some GitHub Actions workflows.
-func (p Plugin) Create(options *map[string]interface{}) (bool, error) {
-	return golang.Install(options)
+func (p Plugin) Create(options *map[string]interface{}) (map[string]interface{}, error) {
+	return golang.Create(options)
 }
 
 // Reinstall implements the installation of some GitHub Actions workflows.
-func (p Plugin) Update(options *map[string]interface{}) (bool, error) {
-	return golang.Reinstall(options)
+func (p Plugin) Update(options *map[string]interface{}) (map[string]interface{}, error) {
+	return golang.Update(options)
 }
 
 // IsHealthy implements the healthy check of GitHub Actions workflows.
-func (p Plugin) Read(options *map[string]interface{}) (bool, error) {
-	return golang.IsHealthy(options)
+func (p Plugin) Read(options *map[string]interface{}) (map[string]interface{}, error) {
+	return golang.Read(options)
 }
 
 // Uninstall implements the installation of some GitHub Actions workflows.
 func (p Plugin) Delete(options *map[string]interface{}) (bool, error) {
-	return golang.Uninstall(options)
+	return golang.Delete(options)
 }
 
 // DevStreamPlugin is the exported variable used by the DevStream core.

@@ -12,23 +12,23 @@ const NAME = "githubactions-nodejs"
 type Plugin string
 
 // Install implements the installation of some GitHub Actions workflows.
-func (p Plugin) Create(options *map[string]interface{}) (bool, error) {
-	return nodejs.Install(options)
+func (p Plugin) Create(options *map[string]interface{}) (map[string]interface{}, error) {
+	return nodejs.Create(options)
 }
 
 // Reinstall implements the installation of some GitHub Actions workflows.
-func (p Plugin) Update(options *map[string]interface{}) (bool, error) {
-	return nodejs.Reinstall(options)
+func (p Plugin) Update(options *map[string]interface{}) (map[string]interface{}, error) {
+	return nodejs.Update(options)
 }
 
 // IsHealthy implements the healthy check of GitHub Actions workflows.
-func (p Plugin) Read(options *map[string]interface{}) (bool, error) {
-	return nodejs.IsHealthy(options)
+func (p Plugin) Read(options *map[string]interface{}) (map[string]interface{}, error) {
+	return nodejs.Read(options)
 }
 
 // Uninstall implements the installation of some GitHub Actions workflows.
 func (p Plugin) Delete(options *map[string]interface{}) (bool, error) {
-	return nodejs.Uninstall(options)
+	return nodejs.Delete(options)
 }
 
 // DevStreamPlugin is the exported variable used by the DevStream core.

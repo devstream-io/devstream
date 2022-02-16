@@ -8,11 +8,11 @@ import (
 	"github.com/merico-dev/stream/pkg/util/github"
 )
 
-// Reinstall remove and set up GitHub Actions workflows.
-func Reinstall(options *map[string]interface{}) (bool, error) {
+// Update remove and set up GitHub Actions workflows.
+func Update(options *map[string]interface{}) (map[string]interface{}, error) {
 	opt, err := parseAndValidateOptions(options)
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
 	ghOptions := &github.Option{
@@ -22,7 +22,7 @@ func Reinstall(options *map[string]interface{}) (bool, error) {
 	}
 	gitHubClient, err := github.NewClient(ghOptions)
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
 	log.Infof("language is %s", ga.GetLanguage(opt.Language))
@@ -30,29 +30,29 @@ func Reinstall(options *map[string]interface{}) (bool, error) {
 	if opt.Docker.Enable {
 		for _, secret := range []string{"DOCKERHUB_USERNAME", "DOCKERHUB_TOKEN"} {
 			if err := gitHubClient.DeleteRepoSecret(secret); err != nil {
-				return false, err
+				return nil, err
 			}
 		}
 
 		if err := gitHubClient.AddRepoSecret("DOCKERHUB_USERNAME", viper.GetString("dockerhub_username")); err != nil {
-			return false, err
+			return nil, err
 		}
 		if err := gitHubClient.AddRepoSecret("DOCKERHUB_TOKEN", viper.GetString("dockerhub_token")); err != nil {
-			return false, err
+			return nil, err
 		}
 	}
 
 	for _, pipeline := range workflows {
 		err := gitHubClient.DeleteWorkflow(pipeline, opt.Branch)
 		if err != nil {
-			return false, err
+			return nil, err
 		}
 
 		err = gitHubClient.AddWorkflow(pipeline, opt.Branch)
 		if err != nil {
-			return false, err
+			return nil, err
 		}
 	}
 
-	return true, nil
+	return ga.BuildState(opt.Owner, opt.Repo), nil
 }
