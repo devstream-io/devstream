@@ -1,7 +1,6 @@
 package devlake
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/mitchellh/mapstructure"
@@ -11,32 +10,31 @@ import (
 	"github.com/merico-dev/stream/pkg/util/kubectl"
 )
 
-func Install(options *map[string]interface{}) (bool, error) {
+func Delete(options *map[string]interface{}) (bool, error) {
 	var param Param
+
+	// decode input parameters into a struct
 	err := mapstructure.Decode(*options, &param)
 	if err != nil {
 		return false, err
 	}
 
-	if errs := validateParams(&param); len(errs) != 0 {
-		for _, e := range errs {
-			log.Errorf("Param error: %s", e)
-		}
-		return false, fmt.Errorf("params are illegal")
-	}
-
+	// download DevLake installation YAML file
 	_, err = downloader.Download(devLakeInstallYAMLDownloadURL, devLakeInstallYAMLFileName, ".")
 	if err != nil {
 		log.Debugf("Failed to download DevLake K8s deploy YAML file from %s", devLakeInstallYAMLDownloadURL)
 		return false, err
 	}
 
-	if err = kubectl.KubeApply(devLakeInstallYAMLDownloadURL); err != nil {
+	// kubectl delete -f
+	err = kubectl.KubeDelete(devLakeInstallYAMLFileName)
+	if err != nil {
 		return false, err
 	}
 
+	// remove temporary YAML file used for kubectl apply
 	if err = os.Remove(devLakeInstallYAMLFileName); err != nil {
-		return false, err
+		log.Warnf("Temporary YAML file %s can't be deleted, but the installation is successful.", devLakeInstallYAMLFileName)
 	}
 
 	return true, nil

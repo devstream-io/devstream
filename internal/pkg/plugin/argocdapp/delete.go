@@ -37,9 +37,9 @@ func Delete(options *map[string]interface{}) (bool, error) {
 		return false, err
 	}
 
-	// remove temporary YAML file used for kubectl delete
+	// remove temporary YAML file used for kubectl apply
 	if err = os.Remove(argoCDAppYAMLFile); err != nil {
-		return false, err
+		log.Warnf("Temporary YAML file %s can't be deleted, but the installation is successful.", argoCDAppYAMLFile)
 	}
 
 	return true, nil
