@@ -6,14 +6,16 @@ Each plugin needs to satisfy all the interfaces defined in the [plugin engine](h
 
 At the moment, there are 4 interfaces, which might be subject to change. Currently, the three interfaces are:
 
-- `Install`
-- `Reinstall`
-- `Uninstall`
-- `IsHealthy`
+- `Create`
+- `Read`
+- `Update`
+- `Delete`
 
 ### 1.2 Return Value
 
-Each interface returns two values `(bool, error)`.
+`Create`, `Read`, and `Update` interfaces return two values `(map[string]interface{}, error)`; the first being the "state".
+
+`Delete` interface returns two values `(bool, error)`. It returns `(true, nil)` if there is no error; otherwise `(false, error)` will be returned.
 
 If no error occurred, the return value would be `(true, nil)`. Otherwise, the result would be `(false, error)`.
 
