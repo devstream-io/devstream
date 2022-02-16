@@ -12,23 +12,23 @@ const NAME = "argocdapps"
 type Plugin string
 
 // Install implements the installation of an ArgoCD app.
-func (p Plugin) Create(options *map[string]interface{}) (bool, error) {
-	return argocdapp.Install(options)
+func (p Plugin) Create(options *map[string]interface{}) (map[string]interface{}, error) {
+	return argocdapp.Create(options)
 }
 
 // Reinstall implements the installation of an ArgoCD app.
-func (p Plugin) Update(options *map[string]interface{}) (bool, error) {
-	return argocdapp.Reinstall(options)
+func (p Plugin) Update(options *map[string]interface{}) (map[string]interface{}, error) {
+	return argocdapp.Update(options)
 }
 
 // IsHealthy implements the healthy check of ArgoCD app.
-func (p Plugin) Read(options *map[string]interface{}) (bool, error) {
-	return argocdapp.IsHealthy(options)
+func (p Plugin) Read(options *map[string]interface{}) (map[string]interface{}, error) {
+	return argocdapp.Read(options)
 }
 
 // Delete Deletes the installation of an ArgoCD app.
 func (p Plugin) Delete(options *map[string]interface{}) (bool, error) {
-	return argocdapp.Uninstall(options)
+	return argocdapp.Delete(options)
 }
 
 // DevStreamPlugin is the exported variable used by the DevStream core.

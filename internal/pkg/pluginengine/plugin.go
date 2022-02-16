@@ -8,11 +8,11 @@ import (
 
 const DefaultPluginDir = ".devstream"
 
-// DevStreamPlugin is a struct, on which Create/Update/Remove/Read interfaces are defined.
+// DevStreamPlugin is a struct, on which Create/Read/Update/Delete interfaces are defined.
 type DevStreamPlugin interface {
 	Create(*map[string]interface{}) (map[string]interface{}, error)
-	Update(*map[string]interface{}) (map[string]interface{}, error)
 	Read(*map[string]interface{}) (map[string]interface{}, error)
+	Update(*map[string]interface{}) (map[string]interface{}, error)
 	Delete(*map[string]interface{}) (bool, error)
 }
 
