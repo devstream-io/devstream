@@ -62,3 +62,13 @@ func (gi *TrelloGithub) renderTemplate(workflow *Workflow) error {
 	workflow.workflowContent = buff.String()
 	return nil
 }
+
+func buildState(tg *TrelloGithub, ti *TrelloItemId) map[string]interface{} {
+	res := make(map[string]interface{})
+	res["workflowDir"] = fmt.Sprintf("repos/%s/%s/contents/.github/workflows", tg.options.Owner, tg.options.Repo)
+	res["boardId"] = ti.boardId
+	res["todoListId"] = ti.todoListId
+	res["doingListId"] = ti.doingListId
+	res["doneListId"] = ti.doneListId
+	return res
+}

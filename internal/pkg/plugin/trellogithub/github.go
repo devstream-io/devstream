@@ -183,3 +183,28 @@ func (gi *TrelloGithub) AddTrelloIdSecret(trelloId *TrelloItemId) error {
 
 	return nil
 }
+
+func (gi *TrelloGithub) GetWorkflowState() (map[string]interface{}, error) {
+	_, _, resp, err := gi.client.Repositories.GetContents(
+		gi.ctx,
+		gi.options.Owner,
+		gi.options.Repo,
+		".github/workflows",
+		&github.RepositoryContentGetOptions{},
+	)
+
+	// error reason is not 404
+	if err != nil && !strings.Contains(err.Error(), "404") {
+		return nil, err
+	}
+
+	// error reason is 404
+	if resp.StatusCode == http.StatusNotFound {
+		return nil, err
+	}
+
+	res := make(map[string]interface{})
+	res["workflowDir"] = resp.Request.URL.Path
+
+	return res, nil
+}

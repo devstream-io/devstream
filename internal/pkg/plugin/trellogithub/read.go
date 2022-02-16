@@ -2,12 +2,13 @@ package trellogithub
 
 import (
 	"github.com/merico-dev/stream/internal/pkg/log"
+	"github.com/merico-dev/stream/pkg/util/trello"
 )
 
-func IsHealthy(options *map[string]interface{}) (bool, error) {
+func Read(options *map[string]interface{}) (map[string]interface{}, error) {
 	gis, err := NewTrelloGithub(options)
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
 	api := gis.GetApi()
@@ -16,7 +17,7 @@ func IsHealthy(options *map[string]interface{}) (bool, error) {
 	ws := defaultWorkflows.GetWorkflowByNameVersionTypeString(api.Name)
 	retMap, err := gis.VerifyWorkflows(ws)
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
 	errFlag := false
@@ -28,8 +29,13 @@ func IsHealthy(options *map[string]interface{}) (bool, error) {
 		log.Infof("The workflow/file %s is ok", name)
 	}
 	if errFlag {
-		return false, nil
+		return nil, nil
 	}
 
-	return true, nil
+	c, err := trello.NewClient()
+	if err != nil {
+		return nil, err
+	}
+
+	return c.GetBoard()
 }
