@@ -46,5 +46,8 @@ func Update(options *map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	return make(map[string]interface{}), nil
+	retMap := GetStaticState().ToStringInterfaceMap()
+	log.Debugf("Return map: %v", retMap)
+
+	return retMap, nil
 }

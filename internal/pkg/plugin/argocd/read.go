@@ -4,20 +4,15 @@ import (
 	"fmt"
 
 	"github.com/mitchellh/mapstructure"
+	"k8s.io/utils/strings/slices"
 
 	"github.com/merico-dev/stream/internal/pkg/log"
+	"github.com/merico-dev/stream/pkg/util/helm"
 	"github.com/merico-dev/stream/pkg/util/k8s"
 )
 
-// The deployments should exist:
-// 1. argocd-application-controller
-// 2. argocd-dex-server
-// 3. argocd-redis
-// 4. argocd-repo-server
-// 5. argocd-server
 const (
-	ArgocdDefaultDeploymentCount = 5
-	ArgocdDefaultNamespace       = "argocd"
+	ArgocdDefaultNamespace = "argocd"
 )
 
 func Read(options *map[string]interface{}) (map[string]interface{}, error) {
@@ -48,23 +43,20 @@ func Read(options *map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	if len(dps) != ArgocdDefaultDeploymentCount {
-		return nil, fmt.Errorf("expect deployments count %d, but got count %d now",
-			ArgocdDefaultDeploymentCount, len(dps))
-	}
-
-	hasNotReadyDeployment := false
+	retState := &helm.InstanceState{}
 	for _, dp := range dps {
-		if kubeClient.IsDeploymentReady(&dp) {
-			log.Infof("the deployment %s is ready", dp.Name)
-			continue
+		dpName := dp.GetName()
+		if !slices.Contains(DefaultDeploymentList, dpName) {
+			log.Infof("Found unknown deployment: %s", dpName)
 		}
-		log.Infof("the deployment %s is not ready", dp.Name)
-		hasNotReadyDeployment = true
+
+		ready := kubeClient.IsDeploymentReady(&dp)
+		retState.Workflows.AddDeployment(dpName, ready)
+		log.Debugf("The deployment %s is %t", dp.GetName(), ready)
 	}
 
-	if hasNotReadyDeployment {
-		return nil, fmt.Errorf("some deployments are not ready")
-	}
-	return make(map[string]interface{}), nil
+	retMap := retState.ToStringInterfaceMap()
+	log.Debugf("Return map: %v", retMap)
+
+	return retMap, nil
 }
