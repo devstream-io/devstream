@@ -179,3 +179,10 @@ func replaceAppNameInPathStr(filePath, appName string) (string, error) {
 
 	return newFilePath, nil
 }
+
+func buildState(param *Param) map[string]interface{} {
+	res := make(map[string]interface{})
+	res["owner"] = param.Owner
+	res["repoName"] = param.Repo
+	return res
+}

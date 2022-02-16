@@ -35,20 +35,25 @@ func (c *Client) Delete() error {
 	return nil
 }
 
-func (c *Client) IsRepoExists() error {
+func (c *Client) GetRepoInfo() (map[string]interface{}, error) {
 	rps, resp, err := c.Client.Repositories.Get(
 		c.Context,
 		c.Owner,
 		c.Repo)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if resp.StatusCode != 200 {
-		return errors.New("response status is not 200 OK, but is " + fmt.Sprintf("%d", resp.StatusCode))
+		return nil, errors.New("response status is not 200 OK, but is " + fmt.Sprintf("%d", resp.StatusCode))
 	}
 
 	log.Successf("GitHub repo exists, repo is %s, owner is %s.", *rps.Name, *rps.Owner.Login)
-	return nil
+
+	res := make(map[string]interface{})
+	res["owner"] = *rps.Owner.Login
+	res["repoName"] = *rps.Name
+
+	return res, nil
 }

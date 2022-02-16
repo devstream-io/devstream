@@ -12,24 +12,24 @@ import (
 	"github.com/merico-dev/stream/pkg/util/zip"
 )
 
-// Install installs github-repo-scaffolding-golang with provided options.
-func Install(options *map[string]interface{}) (bool, error) {
+// Create installs github-repo-scaffolding-golang with provided options.
+func Create(options *map[string]interface{}) (map[string]interface{}, error) {
 	var param Param
 	if err := mapstructure.Decode(*options, &param); err != nil {
-		return false, err
+		return nil, err
 	}
 
 	if errs := validate(&param); len(errs) != 0 {
 		for _, e := range errs {
 			log.Errorf("Param error: %s", e)
 		}
-		return false, fmt.Errorf("params are illegal")
+		return nil, fmt.Errorf("params are illegal")
 	}
 
 	return install(&param)
 }
 
-func install(param *Param) (bool, error) {
+func install(param *Param) (map[string]interface{}, error) {
 	// Clear workpath before return
 	defer func() {
 		if err := os.RemoveAll(DefaultWorkPath); err != nil {
@@ -38,18 +38,18 @@ func install(param *Param) (bool, error) {
 	}()
 
 	if err := download(); err != nil {
-		return false, err
+		return nil, err
 	}
 
 	if err := zip.UnZip(filepath.Join(DefaultWorkPath, github.DefaultLatestCodeZipfileName), DefaultWorkPath); err != nil {
-		return false, err
+		return nil, err
 	}
 
 	if err := push(param); err != nil {
-		return false, err
+		return nil, err
 	}
 
-	return true, nil
+	return buildState(param), nil
 }
 
 func download() error {
