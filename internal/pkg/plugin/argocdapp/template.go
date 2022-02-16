@@ -1,6 +1,6 @@
 package argocdapp
 
-var appTemplate = `---
+var argoCDAppTemplate = `---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:

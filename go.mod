@@ -6,6 +6,7 @@ require (
 	github.com/adlio/trello v1.9.0
 	github.com/argoproj/argo-cd/v2 v2.2.2
 	github.com/argoproj/gitops-engine v0.5.2
+	github.com/cenkalti/backoff/v4 v4.1.2
 	github.com/cheggaaa/pb v1.0.29
 	github.com/go-errors/errors v1.0.1
 	github.com/go-resty/resty/v2 v2.7.0
