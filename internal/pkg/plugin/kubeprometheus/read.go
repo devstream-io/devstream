@@ -4,28 +4,15 @@ import (
 	"fmt"
 
 	"github.com/mitchellh/mapstructure"
+	"k8s.io/utils/strings/slices"
 
 	"github.com/merico-dev/stream/internal/pkg/log"
+	"github.com/merico-dev/stream/pkg/util/helm"
 	"github.com/merico-dev/stream/pkg/util/k8s"
 )
 
 const (
 	KubePrometheusDefaultNamespace = "monitoring"
-
-	// The deployments should exist:
-	// 1. ${release-name}-grafana
-	// 2. ${release-name}-kube-prometheus-stack-operator
-	// 3. ${release-name}-kube-state-metrics
-	KubePrometheusDefaultDeploymentCount = 3
-
-	// // The statefulsets should exist:
-	// 1. alertmanager-${release-name}-kube-prometheus-stack-alertmanager
-	// 2. prometheus-${release-name}-kube-prometheus-stack-prometheus
-	KubePrometheusDefaultStatefulsetCount = 2
-
-	// // The daemonsets should exist:
-	// 1. ${release-name}-prometheus-node-exporter
-	KubePrometheusDefaultDaemonsetCount = 1
 )
 
 // Read reads the state for kube-prometheus with provided options.
@@ -52,119 +39,109 @@ func Read(options *map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	hasSomeResorucesNotReady := false
+	retState := &helm.InstanceState{}
+	releaseName := param.Chart.ReleaseName
 
-	dpReady, err := isDeploymentsReady(kubeClient, namespace)
+	err = readDeployments(kubeClient, namespace, releaseName, retState)
 	if err != nil {
+		log.Debugf("Failed to read deployments: %s", err)
 		return nil, err
 	}
-	if !dpReady {
-		hasSomeResorucesNotReady = true
-		log.Warn("Some deployments are not ready.")
-	}
-
-	dsReady, err := isDaemonsetsReady(kubeClient, namespace)
+	err = readDaemonsets(kubeClient, namespace, releaseName, retState)
 	if err != nil {
+		log.Debugf("Failed to read daemonsets: %s", err)
 		return nil, err
 	}
-	if !dsReady {
-		hasSomeResorucesNotReady = true
-		log.Warn("Some daemonsets are not ready.")
-	}
-
-	ssReady, err := isStatefulsetsReady(kubeClient, namespace)
+	err = readStatefulsets(kubeClient, namespace, releaseName, retState)
 	if err != nil {
+		log.Debugf("Failed to read statefulsets: %s", err)
 		return nil, err
 	}
-	if !ssReady {
-		hasSomeResorucesNotReady = true
-		log.Warn("Some statefulsets are not ready.")
-	}
 
-	if hasSomeResorucesNotReady {
-		return nil, fmt.Errorf("some resources are not ready")
-	}
-
-	return make(map[string]interface{}), nil
+	log.Debugf("All resources read ready.")
+	return retState.ToStringInterfaceMap(), nil
 }
 
-func isDeploymentsReady(kubeClient *k8s.Client, namespace string) (bool, error) {
+func readDeployments(kubeClient *k8s.Client, namespace, releaseName string, state *helm.InstanceState) error {
 	dps, err := kubeClient.ListDeployments(namespace)
 	if err != nil {
-		return false, err
+		log.Debugf("Failed to list deployments: %s", err)
+		return err
 	}
 
-	if len(dps) != KubePrometheusDefaultDeploymentCount {
-		return false, fmt.Errorf("expect deployments count %d, but got count %d now",
-			KubePrometheusDefaultDeploymentCount, len(dps))
-	}
-
-	hasNotReadyDeployment := false
 	for _, dp := range dps {
 		if kubeClient.IsDeploymentReady(&dp) {
-			log.Infof("the deployment %s is ready", dp.Name)
+			log.Infof("The deployment %s is ready", dp.Name)
 			continue
 		}
-		log.Warnf("the deployment %s is not ready", dp.Name)
-		hasNotReadyDeployment = true
+		log.Warnf("The deployment %s is not ready", dp.Name)
+
+		DefaultDeploymentList := GetDefaultDeploymentList(releaseName)
+		dpName := dp.GetName()
+		if !slices.Contains(DefaultDeploymentList, dpName) {
+			log.Infof("Found unknown deployment: %s", dpName)
+		}
+
+		ready := kubeClient.IsDeploymentReady(&dp)
+		state.Workflows.AddDeployment(dpName, ready)
+		log.Debugf("The deployment %s is %t", dp.GetName(), ready)
 	}
 
-	if hasNotReadyDeployment {
-		return false, fmt.Errorf("some deployments are not ready")
-	}
-	return true, nil
+	return nil
 }
 
-func isDaemonsetsReady(kubeClient *k8s.Client, namespace string) (bool, error) {
+func readDaemonsets(kubeClient *k8s.Client, namespace, releaseName string, state *helm.InstanceState) error {
 	dss, err := kubeClient.ListDaemonsets(namespace)
 	if err != nil {
-		return false, err
+		log.Debugf("Failed to list daemonsets: %s", err)
+		return err
 	}
 
-	if len(dss) != KubePrometheusDefaultDaemonsetCount {
-		return false, fmt.Errorf("expect daemonsets count %d, but got count %d now",
-			KubePrometheusDefaultDaemonsetCount, len(dss))
-	}
-
-	hasNotReadyDaemonset := false
 	for _, ds := range dss {
 		if kubeClient.IsDaemonsetReady(&ds) {
-			log.Infof("the daemonset %s is ready", ds.Name)
+			log.Infof("The daemonset %s is ready", ds.Name)
 			continue
 		}
-		log.Warnf("the daemonset %s is not ready", ds.Name)
-		hasNotReadyDaemonset = true
+		log.Warnf("The daemonset %s is not ready", ds.Name)
+
+		DefaultDaemonsetList := GetDefaultDaemonsetList(releaseName)
+		dsName := ds.GetName()
+		if !slices.Contains(DefaultDaemonsetList, dsName) {
+			log.Infof("Found unknown daemonset: %s", dsName)
+		}
+
+		ready := kubeClient.IsDaemonsetReady(&ds)
+		state.Workflows.AddDaemonset(dsName, ready)
+		log.Debugf("The daemonset %s is %t", ds.GetName(), ready)
 	}
 
-	if hasNotReadyDaemonset {
-		return false, fmt.Errorf("some daemonsets are not ready")
-	}
-	return true, nil
+	return nil
 }
 
-func isStatefulsetsReady(kubeClient *k8s.Client, namespace string) (bool, error) {
+func readStatefulsets(kubeClient *k8s.Client, namespace, releaseName string, state *helm.InstanceState) error {
 	sss, err := kubeClient.ListStatefulsets(namespace)
 	if err != nil {
-		return false, err
+		log.Debugf("Failed to list statefulsets: %s", err)
+		return err
 	}
 
-	if len(sss) != KubePrometheusDefaultStatefulsetCount {
-		return false, fmt.Errorf("expect statefulsets count %d, but got count %d now",
-			KubePrometheusDefaultStatefulsetCount, len(sss))
-	}
-
-	hasNotReadyStatefulset := false
 	for _, ss := range sss {
 		if kubeClient.IsStatefulsetReady(&ss) {
-			log.Infof("the statefulset %s is ready", ss.Name)
+			log.Infof("The statefulset %s is ready", ss.Name)
 			continue
 		}
-		log.Infof("the statefulset %s is not ready", ss.Name)
-		hasNotReadyStatefulset = true
+		log.Warnf("The statefulset %s is not ready", ss.Name)
+
+		DefaultStatefulsetList := GetDefaultStatefulsetList(releaseName)
+		ssName := ss.GetName()
+		if !slices.Contains(DefaultStatefulsetList, ssName) {
+			log.Infof("Found unknown statefulset: %s", ssName)
+		}
+
+		ready := kubeClient.IsStatefulsetReady(&ss)
+		state.Workflows.AddStatefulset(ssName, ready)
+		log.Debugf("The statefulset %s is %t", ss.GetName(), ready)
 	}
 
-	if hasNotReadyStatefulset {
-		return false, fmt.Errorf("some statefulsets are not ready")
-	}
-	return true, nil
+	return nil
 }

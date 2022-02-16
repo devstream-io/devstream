@@ -7,6 +7,7 @@ import (
 	"k8s.io/utils/strings/slices"
 
 	"github.com/merico-dev/stream/internal/pkg/log"
+	"github.com/merico-dev/stream/pkg/util/helm"
 	"github.com/merico-dev/stream/pkg/util/k8s"
 )
 
@@ -42,7 +43,7 @@ func Read(options *map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	retState := &InstanceState{}
+	retState := &helm.InstanceState{}
 	for _, dp := range dps {
 		dpName := dp.GetName()
 		if !slices.Contains(DefaultDeploymentList, dpName) {
