@@ -3,9 +3,8 @@ package argocd
 import (
 	"fmt"
 
-	"k8s.io/utils/strings/slices"
-
 	"github.com/mitchellh/mapstructure"
+	"k8s.io/utils/strings/slices"
 
 	"github.com/merico-dev/stream/internal/pkg/log"
 	"github.com/merico-dev/stream/pkg/util/k8s"
