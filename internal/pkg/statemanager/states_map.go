@@ -9,17 +9,20 @@ import (
 	"github.com/merico-dev/stream/pkg/util/mapz/concurrentmap"
 )
 
+// State is the single component's state.
+type State map[string]interface{}
+
 type StatesMap struct {
 	*concurrentmap.ConcurrentMap
 }
 
-func NewStatesMap() *StatesMap {
-	return &StatesMap{
-		ConcurrentMap: concurrentmap.NewConcurrentMap("", new(State)),
+func NewStatesMap() StatesMap {
+	return StatesMap{
+		ConcurrentMap: concurrentmap.NewConcurrentMap("", State{}),
 	}
 }
 
-func (s StatesMap) DeepCopy() *StatesMap {
+func (s StatesMap) DeepCopy() StatesMap {
 	newStatesMap := NewStatesMap()
 	s.Range(func(key, value interface{}) bool {
 		newStatesMap.Store(key, value)
@@ -29,9 +32,9 @@ func (s StatesMap) DeepCopy() *StatesMap {
 }
 
 func (s StatesMap) Format() []byte {
-	tmpMap := make(map[string]*State)
+	tmpMap := make(map[string]State)
 	s.Range(func(key, value interface{}) bool {
-		tmpMap[key.(string)] = value.(*State)
+		tmpMap[key.(string)] = value.(State)
 		return true
 	})
 

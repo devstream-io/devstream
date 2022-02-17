@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/merico-dev/stream/internal/pkg/log"
-
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
 )
 
@@ -28,14 +27,17 @@ func (p *Plan) HandleResult(change *Change) error {
 		return p.smgr.Write(p.smgr.GetStatesMap().Format())
 	}
 
+	// TODO(daniel-hutao) wait for refactor
 	// install, reinstall
-	var state = statemanager.NewState(
-		change.Tool.Name,
-		change.Tool.Plugin,
-		[]string{},
-		change.Tool.Options,
-	)
-	p.smgr.AddState(state)
+	//var state = statemanager.NewState(
+	//	change.Tool.Name,
+	//	change.Tool.Plugin,
+	//	[]string{},
+	//	change.Tool.Options,
+	//)
+	state := statemanager.State{}
+	p.smgr.AddState("todo", state)
+
 	log.Successf("Plugin %s %s done.", change.Tool.Name, change.ActionName)
 	return p.smgr.Write(p.smgr.GetStatesMap().Format())
 }
