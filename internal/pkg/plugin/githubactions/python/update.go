@@ -1,4 +1,4 @@
-package golang
+package python
 
 import (
 	"github.com/merico-dev/stream/internal/pkg/log"
@@ -6,11 +6,11 @@ import (
 	"github.com/merico-dev/stream/pkg/util/github"
 )
 
-// Uninstall remove GitHub Actions workflows.
-func Uninstall(options *map[string]interface{}) (bool, error) {
+// Update remove and set up GitHub Actions workflows.
+func Update(options *map[string]interface{}) (map[string]interface{}, error) {
 	opt, err := parseAndValidateOptions(options)
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
 	ghOptions := &github.Option{
@@ -20,26 +20,22 @@ func Uninstall(options *map[string]interface{}) (bool, error) {
 	}
 	gitHubClient, err := github.NewClient(ghOptions)
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
 	log.Infof("language is %s", ga.GetLanguage(opt.Language))
 
-	// if docker is enabled, delete repo secrets DOCKERHUB_USERNAME and DOCKERHUB_TOKEN
-	if opt.Docker.Enable {
-		for _, secret := range []string{"DOCKERHUB_USERNAME", "DOCKERHUB_TOKEN"} {
-			if err := gitHubClient.DeleteRepoSecret(secret); err != nil {
-				return false, err
-			}
-		}
-	}
-
 	for _, pipeline := range workflows {
 		err := gitHubClient.DeleteWorkflow(pipeline, opt.Branch)
 		if err != nil {
-			return false, err
+			return nil, err
+		}
+
+		err = gitHubClient.AddWorkflow(pipeline, opt.Branch)
+		if err != nil {
+			return nil, err
 		}
 	}
 
-	return true, nil
+	return ga.BuildState(opt.Owner, opt.Repo), nil
 }

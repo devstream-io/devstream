@@ -1,4 +1,4 @@
-package python
+package nodejs
 
 import (
 	"github.com/merico-dev/stream/internal/pkg/log"
@@ -6,11 +6,11 @@ import (
 	"github.com/merico-dev/stream/pkg/util/github"
 )
 
-// Reinstall remove and set up GitHub Actions workflows.
-func Reinstall(options *map[string]interface{}) (bool, error) {
+// Update remove and set up GitHub Actions workflows.
+func Update(options *map[string]interface{}) (map[string]interface{}, error) {
 	opt, err := parseAndValidateOptions(options)
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
 	ghOptions := &github.Option{
@@ -20,7 +20,7 @@ func Reinstall(options *map[string]interface{}) (bool, error) {
 	}
 	gitHubClient, err := github.NewClient(ghOptions)
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
 	log.Infof("language is %s", ga.GetLanguage(opt.Language))
@@ -28,14 +28,14 @@ func Reinstall(options *map[string]interface{}) (bool, error) {
 	for _, pipeline := range workflows {
 		err := gitHubClient.DeleteWorkflow(pipeline, opt.Branch)
 		if err != nil {
-			return false, err
+			return nil, err
 		}
 
 		err = gitHubClient.AddWorkflow(pipeline, opt.Branch)
 		if err != nil {
-			return false, err
+			return nil, err
 		}
 	}
 
-	return true, nil
+	return ga.BuildState(opt.Owner, opt.Repo), nil
 }

@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/adlio/trello"
+	"github.com/merico-dev/stream/internal/pkg/log"
 )
 
 type Client struct {
@@ -41,4 +42,29 @@ func (c *Client) CreateList(board *trello.Board, listName string) (*trello.List,
 		return nil, fmt.Errorf("listName name can't be empty")
 	}
 	return c.Client.CreateList(board, listName, trello.Defaults())
+}
+
+func (c *Client) GetBoardIdAndListId() (map[string]interface{}, error) {
+	res := make(map[string]interface{})
+
+	bs, err := c.Client.GetMyBoards()
+	if err != nil {
+		return nil, err
+	}
+
+	for _, b := range bs {
+		lists, err := b.GetLists()
+		if err != nil {
+			return nil, err
+		}
+		if len(lists) != 3 {
+			log.Errorf("Unknown lists format: len==%d", len(lists))
+			return nil, fmt.Errorf("unknown lists format: len==%d", len(lists))
+		}
+		res["boardId"] = b.ID
+		res["todoListId"] = lists[0].ID
+		res["doingListId"] = lists[1].ID
+		res["doneListId"] = lists[2].ID
+	}
+	return res, nil
 }

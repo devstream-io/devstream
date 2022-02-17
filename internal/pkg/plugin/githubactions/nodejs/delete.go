@@ -1,4 +1,4 @@
-package python
+package nodejs
 
 import (
 	"github.com/merico-dev/stream/internal/pkg/log"
@@ -6,7 +6,8 @@ import (
 	"github.com/merico-dev/stream/pkg/util/github"
 )
 
-func IsHealthy(options *map[string]interface{}) (bool, error) {
+// Delete remove GitHub Actions workflows.
+func Delete(options *map[string]interface{}) (bool, error) {
 	opt, err := parseAndValidateOptions(options)
 	if err != nil {
 		return false, err
@@ -22,22 +23,14 @@ func IsHealthy(options *map[string]interface{}) (bool, error) {
 		return false, err
 	}
 
-	log.Infof("Language is: %s.", ga.GetLanguage(opt.Language))
+	log.Infof("language is %s", ga.GetLanguage(opt.Language))
 
-	retMap, err := gitHubClient.VerifyWorkflows(workflows)
-	if err != nil {
-		return false, err
-	}
-
-	healthy := true
-	for name, err := range retMap {
+	for _, pipeline := range workflows {
+		err := gitHubClient.DeleteWorkflow(pipeline, opt.Branch)
 		if err != nil {
-			healthy = false
-			log.Errorf("The workflow/file %s is not ok: %s", name, err)
-		} else {
-			log.Successf("The workflow/file %s is ok", name)
+			return false, err
 		}
 	}
 
-	return healthy, nil
+	return true, nil
 }

@@ -8,11 +8,11 @@ import (
 	"github.com/merico-dev/stream/pkg/util/github"
 )
 
-// Install sets up GitHub Actions workflow(s).
-func Install(options *map[string]interface{}) (bool, error) {
+// Create sets up GitHub Actions workflow(s).
+func Create(options *map[string]interface{}) (map[string]interface{}, error) {
 	opt, err := parseAndValidateOptions(options)
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
 	ghOptions := &github.Option{
@@ -22,7 +22,7 @@ func Install(options *map[string]interface{}) (bool, error) {
 	}
 	gitHubClient, err := github.NewClient(ghOptions)
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
 	log.Infof("Language is: %s.", ga.GetLanguage(opt.Language))
@@ -30,23 +30,23 @@ func Install(options *map[string]interface{}) (bool, error) {
 	// if docker is enabled, create repo secrets for DOCKERHUB_USERNAME and DOCKERHUB_TOKEN
 	if opt.Docker.Enable {
 		if err := gitHubClient.AddRepoSecret("DOCKERHUB_USERNAME", viper.GetString("dockerhub_username")); err != nil {
-			return false, err
+			return nil, err
 		}
 		if err := gitHubClient.AddRepoSecret("DOCKERHUB_TOKEN", viper.GetString("dockerhub_token")); err != nil {
-			return false, err
+			return nil, err
 		}
 	}
 
 	for _, w := range workflows {
 		content, err := renderTemplate(w, opt)
 		if err != nil {
-			return false, err
+			return nil, err
 		}
 		w.WorkflowContent = content
 		if err := gitHubClient.AddWorkflow(w, opt.Branch); err != nil {
-			return false, err
+			return nil, err
 		}
 	}
 
-	return true, nil
+	return ga.BuildState(opt.Owner, opt.Repo), nil
 }

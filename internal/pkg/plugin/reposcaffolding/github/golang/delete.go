@@ -9,8 +9,8 @@ import (
 	"github.com/merico-dev/stream/pkg/util/github"
 )
 
-// IsHealthy check the health for github-repo-scaffolding-golang with provided options.
-func IsHealthy(options *map[string]interface{}) (bool, error) {
+// Delete uninstalls github-repo-scaffolding-golang with provided options.
+func Delete(options *map[string]interface{}) (bool, error) {
 	var param Param
 	if err := mapstructure.Decode(*options, &param); err != nil {
 		return false, err
@@ -23,21 +23,21 @@ func IsHealthy(options *map[string]interface{}) (bool, error) {
 		return false, fmt.Errorf("params are illegal")
 	}
 
-	return check(&param)
+	return uninstall(&param)
 }
 
-func check(param *Param) (bool, error) {
+func uninstall(param *Param) (bool, error) {
 	ghOptions := &github.Option{
 		Owner:    param.Owner,
 		Repo:     param.Repo,
 		NeedAuth: true,
 	}
 
-	ghClient, err := github.NewClient(ghOptions)
+	gitHubClient, err := github.NewClient(ghOptions)
 	if err != nil {
 		return false, err
 	}
-	if err := ghClient.IsRepoExists(); err != nil {
+	if err := gitHubClient.Delete(); err != nil {
 		return false, err
 	}
 	return true, nil
