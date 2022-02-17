@@ -90,3 +90,19 @@ tools:
   plugin:
     kind: devlake
     version: 0.0.2
+- name: jenkins-dev
+  plugin:
+    kind: jenkins
+    version: 0.0.2
+  options:
+    create_namespace: true
+    repo:
+      name: jenkins
+      url: https://charts.jenkins.io
+    chart:
+      chart_name: jenkins/jenkins
+      release_name: dev
+      namespace: jenkins
+      wait: true
+      timeout: 5m
+      upgradeCRDs: true
