@@ -44,7 +44,7 @@ func (c *Client) CreateList(board *trello.Board, listName string) (*trello.List,
 	return c.Client.CreateList(board, listName, trello.Defaults())
 }
 
-func (c *Client) GetBoard() (map[string]interface{}, error) {
+func (c *Client) GetBoardIdAndListId() (map[string]interface{}, error) {
 	res := make(map[string]interface{})
 
 	bs, err := c.Client.GetMyBoards()

@@ -22,7 +22,12 @@ func Read(options *map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
+	path, err := gitHubClient.GetWorkflowPath()
+	if err != nil {
+		return nil, err
+	}
+
 	log.Infof("Language is: %s.", ga.GetLanguage(opt.Language))
 
-	return gitHubClient.GetWorkflowState()
+	return ga.BuildReadState(path), nil
 }

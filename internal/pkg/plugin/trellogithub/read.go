@@ -2,7 +2,6 @@ package trellogithub
 
 import (
 	"github.com/merico-dev/stream/internal/pkg/log"
-	"github.com/merico-dev/stream/pkg/util/trello"
 )
 
 func Read(options *map[string]interface{}) (map[string]interface{}, error) {
@@ -32,10 +31,5 @@ func Read(options *map[string]interface{}) (map[string]interface{}, error) {
 		return nil, nil
 	}
 
-	c, err := trello.NewClient()
-	if err != nil {
-		return nil, err
-	}
-
-	return c.GetBoard()
+	return gis.buildReadState()
 }

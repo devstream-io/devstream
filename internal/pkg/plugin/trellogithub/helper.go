@@ -9,6 +9,8 @@ import (
 
 	"github.com/google/go-github/v42/github"
 	"github.com/mitchellh/mapstructure"
+
+	"github.com/merico-dev/stream/pkg/util/trello"
 )
 
 // getFileSHA will try to collect the SHA hash value of the file, then return it. the return values will be:
@@ -71,4 +73,22 @@ func buildState(tg *TrelloGithub, ti *TrelloItemId) map[string]interface{} {
 	res["doingListId"] = ti.doingListId
 	res["doneListId"] = ti.doneListId
 	return res
+}
+
+func (gi *TrelloGithub) buildReadState() (map[string]interface{}, error) {
+	c, err := trello.NewClient()
+	if err != nil {
+		return nil, err
+	}
+	listIds, err := c.GetBoardIdAndListId()
+	if err != nil {
+		return nil, err
+	}
+
+	path, err := gi.GetWorkflowPath()
+	if err != nil {
+		return nil, err
+	}
+	listIds["workflowDir"] = path
+	return listIds, nil
 }

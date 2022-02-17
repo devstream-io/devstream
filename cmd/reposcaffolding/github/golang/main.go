@@ -12,22 +12,22 @@ const NAME = "github-repo-scaffolding-golang"
 // Plugin is the type used by DevStream core. It's a string.
 type Plugin string
 
-// Install implements the installation of the github-repo-scaffolding-golang.
+// Create implements the installation of the github-repo-scaffolding-golang.
 func (p Plugin) Create(options *map[string]interface{}) (map[string]interface{}, error) {
 	return golang.Create(options)
 }
 
-// Reinstall implements the reinstallation of the github-repo-scaffolding-golang.
+// Update implements the reinstallation of the github-repo-scaffolding-golang.
 func (p Plugin) Update(options *map[string]interface{}) (map[string]interface{}, error) {
 	return golang.Update(options)
 }
 
-// IsHealthy implements the healthy check of the github-repo-scaffolding-golang.
+// Read implements the healthy check of the github-repo-scaffolding-golang.
 func (p Plugin) Read(options *map[string]interface{}) (map[string]interface{}, error) {
 	return golang.Read(options)
 }
 
-// Uninstall implements the uninstallation of the github-repo-scaffolding-golang.
+// Delete implements the uninstallation of the github-repo-scaffolding-golang.
 func (p Plugin) Delete(options *map[string]interface{}) (bool, error) {
 	return golang.Delete(options)
 }

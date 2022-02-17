@@ -142,7 +142,7 @@ func (c *Client) VerifyWorkflows(workflows []*Workflow) (map[string]error, error
 	return retMap, nil
 }
 
-func (c *Client) GetWorkflowState() (map[string]interface{}, error) {
+func (c *Client) GetWorkflowPath() (string, error) {
 	_, _, resp, err := c.Client.Repositories.GetContents(
 		c.Context,
 		c.Owner,
@@ -153,16 +153,13 @@ func (c *Client) GetWorkflowState() (map[string]interface{}, error) {
 
 	// error reason is not 404
 	if err != nil && !strings.Contains(err.Error(), "404") {
-		return nil, err
+		return "", err
 	}
 
 	// error reason is 404
 	if resp.StatusCode == http.StatusNotFound {
-		return nil, err
+		return "", err
 	}
 
-	res := make(map[string]interface{})
-	res["workflowDir"] = resp.Request.URL.Path
-
-	return res, nil
+	return resp.Request.URL.Path, nil
 }

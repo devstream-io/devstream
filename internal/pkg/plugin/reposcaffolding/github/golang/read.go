@@ -23,10 +23,10 @@ func Read(options *map[string]interface{}) (map[string]interface{}, error) {
 		return nil, fmt.Errorf("params are illegal")
 	}
 
-	return check(&param)
+	return buildReadState(&param)
 }
 
-func check(param *Param) (map[string]interface{}, error) {
+func buildReadState(param *Param) (map[string]interface{}, error) {
 	ghOptions := &github.Option{
 		Owner:    param.Owner,
 		Repo:     param.Repo,
@@ -38,5 +38,14 @@ func check(param *Param) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	return ghClient.GetRepoInfo()
+	repo, err := ghClient.GetRepoDescription()
+	if err != nil {
+		return nil, err
+	}
+
+	res := make(map[string]interface{})
+	res["owner"] = repo.Owner.Login
+	res["repoName"] = repo.Name
+
+	return res, nil
 }

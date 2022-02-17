@@ -11,22 +11,22 @@ const NAME = "githubactions-golang"
 // Plugin is the type used by DevStream core. It's a string.
 type Plugin string
 
-// Install implements the installation of some GitHub Actions workflows.
+// Create implements the installation of some GitHub Actions workflows.
 func (p Plugin) Create(options *map[string]interface{}) (map[string]interface{}, error) {
 	return golang.Create(options)
 }
 
-// Reinstall implements the installation of some GitHub Actions workflows.
+// Update implements the installation of some GitHub Actions workflows.
 func (p Plugin) Update(options *map[string]interface{}) (map[string]interface{}, error) {
 	return golang.Update(options)
 }
 
-// IsHealthy implements the healthy check of GitHub Actions workflows.
+// Read implements the healthy check of GitHub Actions workflows.
 func (p Plugin) Read(options *map[string]interface{}) (map[string]interface{}, error) {
 	return golang.Read(options)
 }
 
-// Uninstall implements the installation of some GitHub Actions workflows.
+// Delete implements the installation of some GitHub Actions workflows.
 func (p Plugin) Delete(options *map[string]interface{}) (bool, error) {
 	return golang.Delete(options)
 }

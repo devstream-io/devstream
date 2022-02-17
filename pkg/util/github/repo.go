@@ -35,7 +35,7 @@ func (c *Client) Delete() error {
 	return nil
 }
 
-func (c *Client) GetRepoInfo() (map[string]interface{}, error) {
+func (c *Client) GetRepoDescription() (*github.Repository, error) {
 	rps, resp, err := c.Client.Repositories.Get(
 		c.Context,
 		c.Owner,
@@ -51,9 +51,5 @@ func (c *Client) GetRepoInfo() (map[string]interface{}, error) {
 
 	log.Successf("GitHub repo exists, repo is %s, owner is %s.", *rps.Name, *rps.Owner.Login)
 
-	res := make(map[string]interface{})
-	res["owner"] = *rps.Owner.Login
-	res["repoName"] = *rps.Name
-
-	return res, nil
+	return rps, nil
 }
