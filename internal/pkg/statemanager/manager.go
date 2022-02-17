@@ -1,8 +1,6 @@
 package statemanager
 
 import (
-	"fmt"
-
 	"github.com/merico-dev/stream/internal/pkg/backend"
 )
 
@@ -10,20 +8,20 @@ import (
 type Manager interface {
 	backend.Backend
 	// GetStatesMap returns the state manager's map of states, used to generate data to Write to the backend.
-	GetStatesMap() *StatesMap
+	GetStatesMap() StatesMap
 	// SetStatesMap sets the state manager's map of states, used to initialize the StatesMap by the data Read from the backend.
-	SetStatesMap(states *StatesMap)
+	SetStatesMap(states StatesMap)
 
-	GetState(key string) *State
-	AddState(state *State)
-	UpdateState(state *State)
+	GetState(key string) State
+	AddState(key string, state State)
+	UpdateState(key string, state State)
 	DeleteState(key string)
 }
 
 // manager is the default implement with Manager
 type manager struct {
 	backend.Backend
-	statesMap *StatesMap
+	statesMap StatesMap
 }
 
 func NewManager(backend backend.Backend) Manager {
@@ -33,36 +31,30 @@ func NewManager(backend backend.Backend) Manager {
 	}
 }
 
-func (m *manager) GetStatesMap() *StatesMap {
+func (m *manager) GetStatesMap() StatesMap {
 	return m.statesMap
 }
 
-func (m *manager) SetStatesMap(statesMap *StatesMap) {
+func (m *manager) SetStatesMap(statesMap StatesMap) {
 	m.statesMap = statesMap
 }
 
-func (m *manager) GetState(key string) *State {
+func (m *manager) GetState(key string) State {
 	m.statesMap.Load(key)
 	if s, exist := m.statesMap.Load(key); exist {
-		return s.(*State)
+		return s.(State)
 	}
 	return nil
 }
 
-func (m *manager) AddState(state *State) {
-	stateKey := getStateKeyFromState(state)
-	m.statesMap.Store(stateKey, state)
+func (m *manager) AddState(key string, state State) {
+	m.statesMap.Store(key, state)
 }
 
-func (m *manager) UpdateState(state *State) {
-	stateKey := getStateKeyFromState(state)
-	m.statesMap.Store(stateKey, state)
+func (m *manager) UpdateState(key string, state State) {
+	m.statesMap.Store(key, state)
 }
 
 func (m *manager) DeleteState(key string) {
 	m.statesMap.Delete(key)
-}
-
-func getStateKeyFromState(s *State) string {
-	return fmt.Sprintf("%s_%s", s.Name, s.Plugin.Kind)
 }
