@@ -4,34 +4,42 @@ import (
 	"github.com/merico-dev/stream/internal/pkg/log"
 )
 
-// Install sets up trello-github-integ workflows.
-func Install(options *map[string]interface{}) (bool, error) {
+// Update remove and set up trello-github-integ workflows.
+func Update(options *map[string]interface{}) (map[string]interface{}, error) {
 	gis, err := NewTrelloGithub(options)
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
 	api := gis.GetApi()
-	log.Infof("api is: %s.", api.Name)
+	log.Infof("api is %s", api.Name)
 	ws := defaultWorkflows.GetWorkflowByNameVersionTypeString(api.Name)
 
 	for _, w := range ws {
-		if err := gis.renderTemplate(w); err != nil {
-			return false, err
+		err := gis.DeleteWorkflow(w)
+		if err != nil {
+			return nil, err
 		}
-		if err := gis.AddWorkflow(w); err != nil {
-			return false, err
+
+		if err := gis.renderTemplate(w); err != nil {
+			return nil, err
+		}
+		err = gis.AddWorkflow(w)
+		if err != nil {
+			return nil, err
 		}
 	}
 	log.Success("Adding workflow file succeeded.")
 	trelloIds, err := gis.CreateTrelloItems()
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 	log.Success("Creating trello board succeeded.")
 	if err := gis.AddTrelloIdSecret(trelloIds); err != nil {
-		return false, err
+		return nil, err
 	}
+
 	log.Success("Adding secret keys for trello succeeded.")
-	return true, nil
+
+	return buildState(gis, trelloIds), nil
 }
