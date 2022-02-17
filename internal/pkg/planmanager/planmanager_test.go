@@ -82,7 +82,8 @@ var _ = Describe("Planmanager", func() {
 		cfg := &configloader.Config{
 			Tools: []configloader.Tool{*getTool(name, kind, version)},
 		}
-		smgr.AddState(createState(name, kind, version))
+		// TODO(daniel-hutao) wait for refactor
+		smgr.AddState("todo", statemanager.State{})
 		plan := planmanager.NewDeletePlan(smgr, cfg)
 
 		Expect(len(plan.Changes)).To(Equal(1))
@@ -103,9 +104,11 @@ func getTool(name, kind, version string) *configloader.Tool {
 }
 
 func createState(name, kind, version string) *statemanager.State {
-	return &statemanager.State{
-		Name:         name,
-		Plugin:       configloader.Plugin{Kind: kind, Version: version},
-		Dependencies: make([]string, 0),
-		Metadata:     make(map[string]interface{})}
+	//return &statemanager.State{
+	//	Name:         name,
+	//	Plugin:       configloader.Plugin{Kind: kind, Version: version},
+	//	Dependencies: make([]string, 0),
+	//	Metadata:     make(map[string]interface{})}
+	// TODO(daniel-hutao) wait for refactor
+	return nil
 }
