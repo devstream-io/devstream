@@ -24,4 +24,7 @@ type Chart struct {
 	Wait            bool
 	Timeout         string // such as "1.5h" or "2h45m", valid time units are "s", "m", "h"
 	UpgradeCRDs     bool   `mapstructure:"upgradeCRDs"`
+	// ValuesYaml is the values.yaml content.
+	// use string instead of map[string]interface{}
+	ValuesYaml string
 }

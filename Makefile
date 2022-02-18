@@ -16,6 +16,7 @@ build: fmt vet ## Build dtm & plugins locally.
 	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/trello-github-integ-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/trellogithub/
 	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/argocd-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/argocd/
 	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/argocdapp-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/argocdapp/
+	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/jenkins-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/jenkins/
 	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/kube-prometheus-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/kubeprometheus/
 	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/github-repo-scaffolding-golang-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/reposcaffolding/github/golang/
 	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/devlake-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/devlake/
