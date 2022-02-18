@@ -63,6 +63,7 @@ Want to install another different tool for a try? No problem. Want to remove or 
 | CI                     | GitHub Actions - Node.js                           |                             |
 | CD/GitOps              | ArgoCD                                             | ArgoCD Installation         |
 | CD/GitOps              | ArgoCD App (manages the Application CRD of ArgoCD) | ArgoCD Application Creation |
+| CD                     | Jenkins                                            | Jenkins Installation        |
 | Monitoring             | Prometheus/Grafana                                 |                             |
 
 ## Quick Install
