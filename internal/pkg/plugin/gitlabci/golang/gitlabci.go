@@ -8,8 +8,10 @@ import (
 	"github.com/merico-dev/stream/internal/pkg/log"
 )
 
-const ciFileName string = ".gitlab-ci.yml"
-const commitMessage string = "managed by DevStream"
+const (
+	ciFileName    string = ".gitlab-ci.yml"
+	commitMessage string = "managed by DevStream"
+)
 
 type Options struct {
 	PathWithNamespace string
