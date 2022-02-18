@@ -29,6 +29,13 @@ tools:
         enable: True
     docker:
       enable: True
+- name: go-hello-world-gitlab-ci
+  plugin:
+    kind: gitlabci-golang
+    version: 0.0.2
+  options:
+    pathWithNamespace: ironcore864/golang-demo
+    branch: main
 - name: trello-github-integ-golang-demo
   plugin:
     kind: trello-github-integ
