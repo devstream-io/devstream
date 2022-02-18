@@ -37,7 +37,7 @@ type Option struct {
 func NewClient(option *Option) (*Client, error) {
 	// same option will get same client
 	if client != nil && *client.Option == *option {
-		log.Debug("Used a cached client")
+		log.Debug("Use a cached client")
 		return client, nil
 	}
 

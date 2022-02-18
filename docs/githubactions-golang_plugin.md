@@ -1,8 +1,6 @@
-## 1 GitHub Actions Plugin
+## 1 GitHub Actions Golang Plugin
 
-This plugin creates some GitHub Actions workflows.
-
-Currently, Golang, Python, and Node.js are supported.
+This plugin creates some Golang GitHub Actions workflows.
 
 ## 2 Usage:
 
@@ -25,7 +23,6 @@ tools:
     repo: golang-demo
     # programming language specific settings
     language:
-      # currently, go, python and nodejs are supported
       name: go
       # version of the language
       version: "1.17"

@@ -61,10 +61,12 @@ Want to install another different tool for a try? No problem. Want to remove or 
 | CI                     | GitHub Actions - Golang                            |                             |
 | CI                     | GitHub Actions - Python                            |                             |
 | CI                     | GitHub Actions - Node.js                           |                             |
+| CI                     | GitLab CI - Golang                                 |                             |
 | CD/GitOps              | ArgoCD                                             | ArgoCD Installation         |
 | CD/GitOps              | ArgoCD App (manages the Application CRD of ArgoCD) | ArgoCD Application Creation |
 | CD                     | Jenkins                                            | Jenkins Installation        |
 | Monitoring             | Prometheus/Grafana                                 |                             |
+| DevLake                | DevLake                                            |                             |
 
 ## Quick Install
 

@@ -19,6 +19,7 @@ build: fmt vet ## Build dtm & plugins locally.
 	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/kube-prometheus-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/kubeprometheus/
 	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/github-repo-scaffolding-golang-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/reposcaffolding/github/golang/
 	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/devlake-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/devlake/
+	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/gitlabci-golang-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/gitlabci/golang
 	go build -trimpath -gcflags="all=-N -l" -ldflags "-X github.com/merico-dev/stream/internal/pkg/version.VERSION=${VERSION}" -o dtm-${GOOS}-${GOARCH} ./cmd/devstream/
 
 build-core: fmt vet ## Build dtm core only, without plugins, locally.
