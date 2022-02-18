@@ -52,7 +52,7 @@ func NewHelm(param *HelmParam) (*Helm, error) {
 		ReleaseName:      param.Chart.ReleaseName,
 		ChartName:        param.Chart.ChartName,
 		Namespace:        param.Chart.Namespace,
-		ValuesYaml:       "",
+		ValuesYaml:       param.Chart.ValuesYaml,
 		Version:          param.Chart.Version,
 		CreateNamespace:  false,
 		DisableHooks:     false,

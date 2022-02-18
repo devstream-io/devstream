@@ -15,3 +15,12 @@ func (p *Param) GetHelmParam() *helm.HelmParam {
 		Chart: p.Chart,
 	}
 }
+
+func (p *Param) renderValuesYamlForJenkins() {
+	p.Chart.ValuesYaml = `persistence:
+  storageClass: jenkins-pv
+serviceAccount:
+  create: false
+  name: jenkins
+`
+}
