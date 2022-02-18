@@ -102,13 +102,3 @@ func getTool(name, kind, version string) *configloader.Tool {
 		Options: map[string]interface{}{"key": "value"},
 	}
 }
-
-func createState(name, kind, version string) *statemanager.State {
-	//return &statemanager.State{
-	//	Name:         name,
-	//	Plugin:       configloader.Plugin{Kind: kind, Version: version},
-	//	Dependencies: make([]string, 0),
-	//	Metadata:     make(map[string]interface{})}
-	// TODO(daniel-hutao) wait for refactor
-	return nil
-}
