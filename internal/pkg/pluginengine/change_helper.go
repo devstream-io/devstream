@@ -59,7 +59,7 @@ func changesForApply(smgr statemanager.Manager, statesMap statemanager.StatesMap
 			log.Infof("Change added: %s -> %s", tool.Name, statemanager.ActionCreate)
 		} else if drifted(resource, state) {
 			// resource drifted from state, need to update
-			changes = append(changes, generateCreateAction(&tool))
+			changes = append(changes, generateUpdateAction(&tool))
 			log.Infof("Change added: %s -> %s", tool.Name, statemanager.ActionUpdate)
 		} else {
 			// resource is the same as the state, do nothing
@@ -83,12 +83,9 @@ func changesForDelete(smgr statemanager.Manager, statesMap statemanager.StatesMa
 		if state == nil {
 			continue
 		}
-		action := statemanager.ActionDelete
-		changes = append(changes, &Change{
-			Tool:       tool.DeepCopy(),
-			ActionName: action,
-		})
-		log.Infof("Change added: %s -> %s", tool.Name, action)
+
+		changes = append(changes, generateDeleteAction(&tool))
+		log.Infof("Change added: %s -> %s", tool.Name, statemanager.ActionDelete)
 		statesMap.Delete(tool.Name)
 	}
 
