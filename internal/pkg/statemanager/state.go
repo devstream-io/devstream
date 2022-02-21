@@ -3,7 +3,7 @@ package statemanager
 type ComponentAction string
 
 const (
-	ActionInstall   ComponentAction = "Install"
-	ActionReinstall ComponentAction = "Reinstall"
-	ActionUninstall ComponentAction = "Uninstall"
+	ActionCreate ComponentAction = "Create"
+	ActionUpdate ComponentAction = "Update"
+	ActionDelete ComponentAction = "Delete"
 )

@@ -6,8 +6,8 @@ import (
 	"github.com/merico-dev/stream/internal/pkg/configloader"
 )
 
-// CheckHealthy returns true while all tools are healthy
-func CheckHealthy(fname string) (bool, error) {
+// Verify returns true while all tools are healthy
+func Verify(fname string) (bool, error) {
 	cfg := configloader.LoadConf(fname)
 	if cfg == nil {
 		return false, fmt.Errorf("failed to load the config file")
