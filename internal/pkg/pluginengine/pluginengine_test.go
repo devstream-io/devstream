@@ -22,7 +22,7 @@ var _ = Describe("Pluginengine", func() {
 	BeforeEach(func() {
 		defer GinkgoRecover()
 
-		b, err := backend.GetBackend("local")
+		b, err := backend.GetBackend(backend.BackendLocal)
 		Expect(err).NotTo(HaveOccurred())
 
 		smgr = statemanager.NewManager(b)

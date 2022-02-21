@@ -64,7 +64,7 @@ func LoadConf(fname string) *Config {
 	var config Config
 	err = yaml.Unmarshal(fileBytes, &config)
 	if err != nil {
-		log.Errorf("unmarshal config failed: %s", err)
+		log.Errorf("Unmarshal the config failed: %s", err)
 		return nil
 	}
 
@@ -72,7 +72,7 @@ func LoadConf(fname string) *Config {
 
 	if len(errs) != 0 {
 		for _, e := range errs {
-			fmt.Printf("Config validation failed: %s", e)
+			log.Errorf("Config validation failed: %s", e)
 		}
 		return nil
 	}
