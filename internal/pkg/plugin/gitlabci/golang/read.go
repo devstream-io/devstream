@@ -13,8 +13,13 @@ func Read(options *map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	if err = client.FileExists(opt.PathWithNamespace, opt.Branch, ciFileName); err != nil {
+	exists, err := client.FileExists(opt.PathWithNamespace, opt.Branch, ciFileName)
+	if err != nil {
 		return nil, err
+	}
+
+	if !exists {
+		return nil, nil
 	}
 
 	return buildState(opt), nil

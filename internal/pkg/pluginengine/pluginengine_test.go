@@ -1,6 +1,7 @@
-package planmanager_test
+package pluginengine_test
 
 import (
+	"fmt"
 	"os"
 
 	. "github.com/onsi/ginkgo/v2"
@@ -9,11 +10,11 @@ import (
 	"github.com/merico-dev/stream/internal/pkg/backend"
 	"github.com/merico-dev/stream/internal/pkg/backend/local"
 	"github.com/merico-dev/stream/internal/pkg/configloader"
-	"github.com/merico-dev/stream/internal/pkg/planmanager"
+	"github.com/merico-dev/stream/internal/pkg/pluginengine"
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
 )
 
-var _ = Describe("Planmanager", func() {
+var _ = Describe("Pluginengine", func() {
 	var (
 		smgr statemanager.Manager
 	)
@@ -40,13 +41,13 @@ var _ = Describe("Planmanager", func() {
 		cfg := &configloader.Config{
 			Tools: []configloader.Tool{*getTool(name, kind, version)},
 		}
-		plan := planmanager.NewPlan(smgr, cfg)
+		changes, _ := pluginengine.GetChangesForApply(smgr, cfg)
 
-		Expect(len(plan.Changes)).To(Equal(1))
-		c := plan.Changes[0]
+		Expect(len(changes)).To(Equal(1))
+		c := changes[0]
 		Expect(c.Tool.Name).To(Equal(name))
 		Expect(c.Tool.Plugin.Version).To(Equal(version))
-		Expect(c.ActionName).To(Equal(statemanager.ActionInstall))
+		Expect(c.ActionName).To(Equal(statemanager.ActionCreate))
 	})
 
 	It("should be 'two install'", func() {
@@ -57,21 +58,20 @@ var _ = Describe("Planmanager", func() {
 		cfg := &configloader.Config{
 			Tools: []configloader.Tool{*getTool(name1, kind1, version1), *getTool(name2, kind2, version2)},
 		}
-		plan := planmanager.NewPlan(smgr, cfg)
+		changes, _ := pluginengine.GetChangesForApply(smgr, cfg)
 
-		Expect(len(plan.Changes)).To(Equal(2))
-
-		c1 := plan.Changes[0]
+		Expect(len(changes)).To(Equal(2))
+		c1 := changes[0]
 		Expect(c1.Tool.Name).To(Equal(name1))
 		Expect(c1.Tool.Plugin.Kind).To(Equal(kind1))
 		Expect(c1.Tool.Plugin.Version).To(Equal(version1))
-		Expect(c1.ActionName).To(Equal(statemanager.ActionInstall))
+		Expect(c1.ActionName).To(Equal(statemanager.ActionCreate))
 
-		c2 := plan.Changes[1]
+		c2 := changes[1]
 		Expect(c2.Tool.Name).To(Equal(name2))
 		Expect(c2.Tool.Plugin.Kind).To(Equal(kind2))
 		Expect(c2.Tool.Plugin.Version).To(Equal(version2))
-		Expect(c2.ActionName).To(Equal(statemanager.ActionInstall))
+		Expect(c2.ActionName).To(Equal(statemanager.ActionCreate))
 	})
 
 	It("should be 1 uninstall when `dtm delete` is triggered against a config with 1 tool and a successful state", func() {
@@ -83,15 +83,15 @@ var _ = Describe("Planmanager", func() {
 			Tools: []configloader.Tool{*getTool(name, kind, version)},
 		}
 		// TODO(daniel-hutao) wait for refactor
-		smgr.AddState("todo", statemanager.State{})
-		plan := planmanager.NewDeletePlan(smgr, cfg)
+		smgr.AddState(fmt.Sprintf("%s_%s", name, kind), statemanager.State{})
+		changes, _ := pluginengine.GetChangesForDelete(smgr, cfg)
 
-		Expect(len(plan.Changes)).To(Equal(1))
-		c := plan.Changes[0]
+		Expect(len(changes)).To(Equal(1))
+		c := changes[0]
 		Expect(c.Tool.Name).To(Equal(name))
 		Expect(c.Tool.Plugin.Kind).To(Equal(kind))
 		Expect(c.Tool.Plugin.Version).To(Equal(version))
-		Expect(c.ActionName).To(Equal(statemanager.ActionUninstall))
+		Expect(c.ActionName).To(Equal(statemanager.ActionDelete))
 	})
 })
 

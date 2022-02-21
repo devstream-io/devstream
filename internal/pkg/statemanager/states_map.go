@@ -5,12 +5,17 @@ import (
 
 	"gopkg.in/yaml.v3"
 
+	"github.com/merico-dev/stream/internal/pkg/configloader"
 	"github.com/merico-dev/stream/internal/pkg/log"
 	"github.com/merico-dev/stream/pkg/util/mapz/concurrentmap"
 )
 
 // State is the single component's state.
-type State map[string]interface{}
+type State struct {
+	Name     string
+	Plugin   configloader.Plugin
+	Resource map[string]interface{}
+}
 
 type StatesMap struct {
 	*concurrentmap.ConcurrentMap

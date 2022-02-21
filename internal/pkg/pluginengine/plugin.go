@@ -1,8 +1,6 @@
 package pluginengine
 
 import (
-	"github.com/spf13/viper"
-
 	"github.com/merico-dev/stream/internal/pkg/configloader"
 )
 
@@ -55,12 +53,4 @@ func Delete(tool *configloader.Tool) (bool, error) {
 		return false, err
 	}
 	return p.Delete(&tool.Options)
-}
-
-func getPluginDir() string {
-	var pluginDir string
-	if pluginDir = viper.GetString("plugin-dir"); pluginDir == "" {
-		pluginDir = DefaultPluginDir
-	}
-	return pluginDir
 }
