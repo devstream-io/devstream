@@ -9,7 +9,6 @@ import (
 
 	"github.com/merico-dev/stream/internal/pkg/backend"
 	"github.com/merico-dev/stream/internal/pkg/configloader"
-	"github.com/merico-dev/stream/internal/pkg/planmanager"
 	"github.com/merico-dev/stream/internal/pkg/pluginmanager"
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
 )
@@ -34,8 +33,11 @@ func Apply(fname string, continueDirectly bool) error {
 
 	smgr := statemanager.NewManager(b)
 
-	p := planmanager.NewPlan(smgr, cfg)
-	if len(p.Changes) == 0 {
+	changes, err := GetChangesForApply(smgr, cfg)
+	if err != nil {
+		return err
+	}
+	if len(changes) == 0 {
 		log.Info("No changes done since last apply. There is nothing to do.")
 		return nil
 	}
@@ -47,7 +49,7 @@ func Apply(fname string, continueDirectly bool) error {
 		}
 	}
 
-	errsMap := execute(p)
+	errsMap := execute(smgr, changes)
 	if len(errsMap) != 0 {
 		for k, e := range errsMap {
 			log.Infof("%s -> %s", k, e)

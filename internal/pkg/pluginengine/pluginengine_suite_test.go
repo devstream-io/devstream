@@ -1,4 +1,4 @@
-package planmanager_test
+package pluginengine_test
 
 import (
 	"testing"
@@ -7,7 +7,7 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-func TestPlanmanager(t *testing.T) {
+func TestPluginengine(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Planmanager Suite")
+	RunSpecs(t, "Pluginengine Suite")
 }

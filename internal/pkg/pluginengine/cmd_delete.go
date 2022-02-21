@@ -9,7 +9,6 @@ import (
 
 	"github.com/merico-dev/stream/internal/pkg/backend"
 	"github.com/merico-dev/stream/internal/pkg/configloader"
-	"github.com/merico-dev/stream/internal/pkg/planmanager"
 	"github.com/merico-dev/stream/internal/pkg/pluginmanager"
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
 )
@@ -34,8 +33,11 @@ func Remove(fname string, continueDirectly bool) error {
 
 	smgr := statemanager.NewManager(b)
 
-	p := planmanager.NewDeletePlan(smgr, cfg)
-	if len(p.Changes) == 0 {
+	changes, err := GetChangesForDelete(smgr, cfg)
+	if err != nil {
+		return err
+	}
+	if len(changes) == 0 {
 		log.Info("Nothing needs to be deleted. There is nothing to do.")
 		return nil
 	}
@@ -47,7 +49,7 @@ func Remove(fname string, continueDirectly bool) error {
 		}
 	}
 
-	errsMap := execute(p)
+	errsMap := execute(smgr, changes)
 	if len(errsMap) != 0 {
 		err := errors.New("some error(s) occurred during plugins delete process")
 		for k, e := range errsMap {

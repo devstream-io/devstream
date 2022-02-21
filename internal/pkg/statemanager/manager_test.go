@@ -9,6 +9,7 @@ import (
 
 	"github.com/merico-dev/stream/internal/pkg/backend"
 	"github.com/merico-dev/stream/internal/pkg/backend/local"
+	"github.com/merico-dev/stream/internal/pkg/configloader"
 	"github.com/merico-dev/stream/internal/pkg/log"
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
 )
@@ -27,26 +28,30 @@ var _ = Describe("Statemanager", func() {
 		})
 
 		It("Should get the state right", func() {
-			key := "state-a"
+			key := "name_githubactions"
 			stateA := statemanager.State{
-				"key": "value",
+				Name:     "name",
+				Plugin:   configloader.Plugin{Kind: "githubactions", Version: "0.0.2"},
+				Resource: map[string]interface{}{"a": "value"},
 			}
 
 			smgr.AddState(key, stateA)
 
 			stateB := smgr.GetState(key)
-			Expect(stateA).To(Equal(stateB))
+			Expect(&stateA).To(Equal(stateB))
 
 			smgr.DeleteState(key)
 			stateC := smgr.GetState(key)
-			Expect(stateC).To(BeNil())
+			Expect(stateC).To(BeZero())
 		})
 
 		It("Should Read/Write well", func() {
 			// write
 			key := "state-a"
 			stateA := statemanager.State{
-				"key": "value",
+				Name:     "name",
+				Plugin:   configloader.Plugin{Kind: "githubactions", Version: "0.0.2"},
+				Resource: map[string]interface{}{"a": "value"},
 			}
 			smgr.AddState(key, stateA)
 			err := smgr.Write(smgr.GetStatesMap().Format())

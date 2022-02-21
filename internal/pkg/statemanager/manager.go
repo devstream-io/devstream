@@ -12,7 +12,7 @@ type Manager interface {
 	// SetStatesMap sets the state manager's map of states, used to initialize the StatesMap by the data Read from the backend.
 	SetStatesMap(states StatesMap)
 
-	GetState(key string) State
+	GetState(key string) *State
 	AddState(key string, state State)
 	UpdateState(key string, state State)
 	DeleteState(key string)
@@ -39,10 +39,11 @@ func (m *manager) SetStatesMap(statesMap StatesMap) {
 	m.statesMap = statesMap
 }
 
-func (m *manager) GetState(key string) State {
+func (m *manager) GetState(key string) *State {
 	m.statesMap.Load(key)
 	if s, exist := m.statesMap.Load(key); exist {
-		return s.(State)
+		state, _ := s.(State)
+		return &state
 	}
 	return nil
 }
