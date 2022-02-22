@@ -97,7 +97,7 @@ tools:
   plugin:
     kind: devlake
     version: 0.0.2
-- name: jenkins-dev
+- name: jenkins-dev # "you need to create the ~/data/jenkins-volumes/ directory first and chown this directory to 1000:1000"
   plugin:
     kind: jenkins
     version: 0.0.2

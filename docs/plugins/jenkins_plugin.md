@@ -4,6 +4,15 @@ This plugin installs [jenkins](https://jenkins.io) in an existing Kubernetes clu
 
 ## 2 Usage:
 
+NOTICE:
+
+Create the data directory manually:
+
+```bash
+mkdir -p ~/data/jenkins-volumes/
+chown -R 1000:1000 ~/data/jenkins-volumes/
+```
+
 ```yaml
 tools:
 # name of the instance with jenkins
