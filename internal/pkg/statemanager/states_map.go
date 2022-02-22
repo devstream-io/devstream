@@ -14,6 +14,7 @@ import (
 type State struct {
 	Name     string
 	Plugin   configloader.Plugin
+	Options  map[string]interface{}
 	Resource map[string]interface{}
 }
 
