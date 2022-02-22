@@ -6,12 +6,16 @@ import (
 	"github.com/merico-dev/stream/internal/pkg/backend/local"
 )
 
-var backends map[string]Backend
+type BackendType string
+
+const BackendLocal BackendType = "local"
+
+var backends map[BackendType]Backend
 
 func init() {
 	if backends == nil {
-		backends = map[string]Backend{
-			"local": local.NewLocal(""),
+		backends = map[BackendType]Backend{
+			BackendLocal: local.NewLocal(local.DefaultStateFile),
 		}
 	}
 }
@@ -25,9 +29,9 @@ type Backend interface {
 }
 
 // GetBackend will return a Backend by the given name.
-func GetBackend(name string) (Backend, error) {
+func GetBackend(name BackendType) (Backend, error) {
 	if b, ok := backends[name]; ok {
 		return b, nil
 	}
-	return nil, fmt.Errorf("backend %s is illegal", name)
+	return nil, fmt.Errorf("the backend < %s > is illegal", name)
 }

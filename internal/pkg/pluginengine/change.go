@@ -43,7 +43,7 @@ func GetChangesForApply(smgr statemanager.Manager, cfg *configloader.Config) ([]
 		statesMap := statemanager.NewStatesMap()
 		tmpMap := make(map[string]statemanager.State)
 		if err := yaml.Unmarshal(data, tmpMap); err != nil {
-			log.Fatalf("Devstream.statesMap format error.")
+			log.Errorf("Devstream.statesMap format error.")
 			return make([]*Change, 0), err
 		}
 		for k, v := range tmpMap {
