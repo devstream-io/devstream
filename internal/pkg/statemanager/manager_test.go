@@ -19,7 +19,7 @@ var _ = Describe("Statemanager", func() {
 
 	Context("States", func() {
 		BeforeEach(func() {
-			b, err := backend.GetBackend("local")
+			b, err := backend.GetBackend(backend.BackendLocal)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(b).NotTo(BeNil())
 

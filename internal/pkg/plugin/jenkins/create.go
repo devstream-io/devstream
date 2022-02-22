@@ -24,12 +24,20 @@ func Create(options *map[string]interface{}) (map[string]interface{}, error) {
 		return nil, fmt.Errorf("params are illegal")
 	}
 
+	param.renderValuesYamlForJenkins()
+
 	if err := dealWithNsWhenInstall(&param); err != nil {
 		return nil, err
 	}
 
 	h, err := helm.NewHelm(param.GetHelmParam())
 	if err != nil {
+		return nil, err
+	}
+
+	// pre-create
+	if err = preCreate(); err != nil {
+		log.Errorf("The pre-create logic failed: %s", err)
 		return nil, err
 	}
 
