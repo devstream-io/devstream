@@ -9,23 +9,21 @@ import (
 )
 
 func generateCreateAction(tool *configloader.Tool) *Change {
-	return &Change{
-		Tool:       tool.DeepCopy(),
-		ActionName: statemanager.ActionCreate,
-	}
+	return generateAction(tool, statemanager.ActionCreate)
 }
 
 func generateUpdateAction(tool *configloader.Tool) *Change {
-	return &Change{
-		Tool:       tool.DeepCopy(),
-		ActionName: statemanager.ActionUpdate,
-	}
+	return generateAction(tool, statemanager.ActionUpdate)
 }
 
 func generateDeleteAction(tool *configloader.Tool) *Change {
+	return generateAction(tool, statemanager.ActionDelete)
+}
+
+func generateAction(tool *configloader.Tool, action statemanager.ComponentAction) *Change {
 	return &Change{
 		Tool:       tool.DeepCopy(),
-		ActionName: statemanager.ActionDelete,
+		ActionName: action,
 	}
 }
 
@@ -63,7 +61,7 @@ func changesForApply(smgr statemanager.Manager, statesMap statemanager.StatesMap
 			log.Infof("Change added: %s -> %s", tool.Name, statemanager.ActionUpdate)
 		} else {
 			// resource is the same as the state, do nothing
-			log.Debugf("Tool %s state and resource are the same, not drifted, do nothing.", tool.Name)
+			log.Debugf("Tool < %s > -> state == resource, not drifted, do nothing.", tool.Name)
 		}
 
 		statesMap.Delete(getStateKeyFromTool(&tool))

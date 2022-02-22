@@ -13,8 +13,8 @@ import (
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
 )
 
-func Remove(fname string, continueDirectly bool) error {
-	cfg := configloader.LoadConf(fname)
+func Remove(configFile string, continueDirectly bool) error {
+	cfg := configloader.LoadConf(configFile)
 	if cfg == nil {
 		return fmt.Errorf("failed to load the config file")
 	}
@@ -26,7 +26,7 @@ func Remove(fname string, continueDirectly bool) error {
 	}
 
 	// use default local backend for now.
-	b, err := backend.GetBackend("local")
+	b, err := backend.GetBackend(backend.BackendLocal)
 	if err != nil {
 		return err
 	}
