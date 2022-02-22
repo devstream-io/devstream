@@ -1,8 +1,12 @@
 package jenkins
 
 import (
+	"fmt"
 	"os"
+	"path/filepath"
+	"syscall"
 
+	"k8s.io/client-go/util/homedir"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
 
@@ -52,6 +56,11 @@ func preCreate() error {
 }
 
 func createPersistentVolume(kubeClient *k8s.Client) error {
+	dataDir := getRealJenkinsDataDirectory()
+	if dataDir == "" {
+		return fmt.Errorf("failed to get the real Jenkins data directory")
+	}
+
 	pvOption := &k8s.PVOption{
 		Name:             "jenkins-pv",
 		StorageClassName: "jenkins-pv",
@@ -60,7 +69,7 @@ func createPersistentVolume(kubeClient *k8s.Client) error {
 		},
 		Capacity:                      "10Gi",
 		PersistentVolumeReclaimPolicy: corev1.PersistentVolumeReclaimRetain,
-		HostPath:                      "/data/jenkins-volume/",
+		HostPath:                      dataDir,
 	}
 
 	if err := kubeClient.CreatePersistentVolume(pvOption); err != nil {
@@ -156,17 +165,40 @@ func createClusterRoleBinding(kubeClient *k8s.Client) error {
 }
 
 func initDataDirectory() error {
-	if err := os.MkdirAll(JenkinsDataDirectory, 0755); err != nil {
-		log.Errorf("Faield to create data directory: %s", err)
-		return err
-	}
-	log.Debugf("The data directory is created: %s", JenkinsDataDirectory)
-
-	if err := os.Chown(JenkinsDataDirectory, JenkinsUid, JenkinsGid); err != nil {
-		log.Errorf("Failed to change the permissions with %s to allow the jenkins account to write its data. %s",
-			JenkinsDataDirectory, err)
-		return err
+	dataDir := getRealJenkinsDataDirectory()
+	if dataDir == "" {
+		return fmt.Errorf("failed to get the real Jenkins data directory")
 	}
 
+	f, err := os.Stat(dataDir)
+	if err != nil && os.IsNotExist(err) {
+		return fmt.Errorf("you should create the data directory \"%s\" manually", dataDir)
+	}
+
+	if err != nil {
+		return fmt.Errorf("failed to stat the data directory \"%s\": %s", dataDir, err)
+	}
+
+	uid := int(f.Sys().(*syscall.Stat_t).Uid)
+	gid := int(f.Sys().(*syscall.Stat_t).Gid)
+
+	if uid != JenkinsUid || gid != JenkinsGid {
+		return fmt.Errorf("you should chown the data directory to 1000:1000. Expected the %s with uid=%d gid=%d, but got the uid=%d gid=%d", dataDir, JenkinsUid, JenkinsGid, uid, gid)
+	}
+
+	log.Debugf("The data directory %s is ready.", dataDir)
 	return nil
+}
+
+func getRealJenkinsDataDirectory() string {
+	home := homedir.HomeDir()
+	if home == "" {
+		log.Errorf("Failed to get the homedir.")
+		return ""
+	}
+
+	log.Debugf("Got the homedir: %s", home)
+	realPath := filepath.Join(home, JenkinsDataDirectory)
+	log.Debugf("The real Jenkins data directory is: %s", realPath)
+	return realPath
 }

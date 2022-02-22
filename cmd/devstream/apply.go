@@ -3,10 +3,9 @@ package main
 import (
 	"os"
 
-	"github.com/merico-dev/stream/internal/pkg/log"
-
 	"github.com/spf13/cobra"
 
+	"github.com/merico-dev/stream/internal/pkg/log"
 	"github.com/merico-dev/stream/internal/pkg/pluginengine"
 )
 
@@ -21,7 +20,7 @@ DevStream will generate and execute a new plan based on the config file and the 
 func applyCMDFunc(cmd *cobra.Command, args []string) {
 	log.Info("Apply started.")
 	if err := pluginengine.Apply(configFile, continueDirectly); err != nil {
-		log.Errorf("Apply error: %s.", err)
+		log.Errorf("Apply failed => %s.", err)
 		os.Exit(1)
 	}
 	log.Success("Apply finished.")
