@@ -180,6 +180,7 @@ func handleResult(smgr statemanager.Manager, change *Change) error {
 	state := statemanager.State{
 		Name:     change.Tool.Name,
 		Plugin:   change.Tool.Plugin,
+		Options:  change.Tool.Options,
 		Resource: change.Result.ReturnValue,
 	}
 	smgr.AddState(key, state)

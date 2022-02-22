@@ -32,6 +32,7 @@ var _ = Describe("Statemanager", func() {
 			stateA := statemanager.State{
 				Name:     "name",
 				Plugin:   configloader.Plugin{Kind: "githubactions", Version: "0.0.2"},
+				Options:  map[string]interface{}{"a": "value"},
 				Resource: map[string]interface{}{"a": "value"},
 			}
 
@@ -51,6 +52,7 @@ var _ = Describe("Statemanager", func() {
 			stateA := statemanager.State{
 				Name:     "name",
 				Plugin:   configloader.Plugin{Kind: "githubactions", Version: "0.0.2"},
+				Options:  map[string]interface{}{"a": "value"},
 				Resource: map[string]interface{}{"a": "value"},
 			}
 			smgr.AddState(key, stateA)
