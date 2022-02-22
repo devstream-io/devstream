@@ -9,23 +9,21 @@ import (
 )
 
 func generateCreateAction(tool *configloader.Tool) *Change {
-	return &Change{
-		Tool:       tool.DeepCopy(),
-		ActionName: statemanager.ActionCreate,
-	}
+	return generateAction(tool, statemanager.ActionCreate)
 }
 
 func generateUpdateAction(tool *configloader.Tool) *Change {
-	return &Change{
-		Tool:       tool.DeepCopy(),
-		ActionName: statemanager.ActionUpdate,
-	}
+	return generateAction(tool, statemanager.ActionUpdate)
 }
 
 func generateDeleteAction(tool *configloader.Tool) *Change {
+	return generateAction(tool, statemanager.ActionDelete)
+}
+
+func generateAction(tool *configloader.Tool, action statemanager.ComponentAction) *Change {
 	return &Change{
 		Tool:       tool.DeepCopy(),
-		ActionName: statemanager.ActionDelete,
+		ActionName: action,
 	}
 }
 
