@@ -4,9 +4,6 @@ import (
 	"fmt"
 	"time"
 
-	"gopkg.in/yaml.v3"
-
-	"github.com/merico-dev/stream/internal/pkg/backend/local"
 	"github.com/merico-dev/stream/internal/pkg/configloader"
 	"github.com/merico-dev/stream/internal/pkg/log"
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
@@ -32,75 +29,44 @@ func (c *Change) String() string {
 		c.ActionName, c.Tool.Name, c.Tool.Plugin.Kind, c.Tool.Plugin.Version)
 }
 
+type CommandType string
+
+const (
+	CommandApply  CommandType = "apply"
+	CommandDelete CommandType = "delete"
+)
+
 // GetChangesForApply takes "State Manager" & "Config" then do some calculate and return a Plan.
 // All actions should be execute is included in this Plan.changes.
 func GetChangesForApply(smgr statemanager.Manager, cfg *configloader.Config) ([]*Change, error) {
-	if cfg == nil {
-		return make([]*Change, 0), nil
-	}
-
-	data, err := smgr.Read()
-	if err == nil {
-		statesMap := statemanager.NewStatesMap()
-		tmpMap := make(map[string]statemanager.State)
-		if err := yaml.Unmarshal(data, tmpMap); err != nil {
-			log.Errorf("Failed to unmarshal the state file < %s >. error: %s", local.DefaultStateFile, err)
-			log.Errorf("Reading the state file failed, it might have been compromised/modified by someone other than DTM.")
-			log.Errorf("The state file is managed by DTM automatically. Please do not modify it yourself.")
-			return make([]*Change, 0), err
-		}
-		for k, v := range tmpMap {
-			statesMap.Store(k, v)
-		}
-		smgr.SetStatesMap(statesMap)
-
-		log.Success("Succeeded initializing StatesMap.")
-	} else {
-		log.Errorf("Failed to initialize StatesMap. Error: (%s). Try to initialize the StatesMap.", err)
-	}
-
-	// calculate changes from config and state
-	tmpStates := smgr.GetStatesMap().DeepCopy()
-	changes, err := changesForApply(smgr, tmpStates, cfg)
-	if err != nil {
-		return nil, err
-	}
-
-	log.Debugf("Changes for the plan:")
-	for _, c := range changes {
-		log.Debugf(c.String())
-	}
-
-	return changes, nil
+	return getChanges(smgr, cfg, CommandApply)
 }
 
 // GetChangesForDelete takes "State Manager" & "Config" then do some calculation and return a Plan to delete all plugins in the Config.
 // All actions should be execute is included in this Plan.changes.
 func GetChangesForDelete(smgr statemanager.Manager, cfg *configloader.Config) ([]*Change, error) {
+	return getChanges(smgr, cfg, CommandDelete)
+}
+
+func getChanges(smgr statemanager.Manager, cfg *configloader.Config, commandType CommandType) ([]*Change, error) {
 	if cfg == nil {
 		return make([]*Change, 0), nil
 	}
 
-	data, err := smgr.Read()
-	// TODO(ironcore864): duplicated code; needs to be refactored.
-	if err == nil {
-		statesMap := statemanager.NewStatesMap()
-		tmpMap := make(map[string]statemanager.State)
-		if err := yaml.Unmarshal(data, tmpMap); err != nil {
-			log.Fatalf("Devstream.statesMap format error.")
-			return make([]*Change, 0), err
-		}
-		for k, v := range tmpMap {
-			statesMap.Store(k, v)
-		}
-		smgr.SetStatesMap(statesMap)
-		log.Success("Succeeded initializing StatesMap.")
+	// calculate changes from config and state
+	var changes []*Change
+	var err error
+	if commandType == CommandApply {
+		changes, err = changesForApply(smgr, cfg)
+	} else if commandType == CommandDelete {
+		changes = changesForDelete(smgr, cfg)
 	} else {
-		log.Errorf("Failed to initialize StatesMap. Error: (%s). Try to initialize the StatesMap.", err)
+		log.Fatalf("That's not impossible!")
 	}
 
-	tmpStates := smgr.GetStatesMap().DeepCopy()
-	changes := changesForDelete(smgr, tmpStates, cfg)
+	if err != nil {
+		return nil, err
+	}
 
 	log.Debugf("Changes for the plan:")
 	for _, c := range changes {
@@ -174,9 +140,13 @@ func handleResult(smgr statemanager.Manager, change *Change) error {
 	if change.ActionName == statemanager.ActionDelete {
 		key := getStateKeyFromTool(change.Tool)
 		log.Infof("Prepare to delete '%s' from States", key)
-		smgr.DeleteState(key)
+		err := smgr.DeleteState(key)
+		if err != nil {
+			log.Debugf("Failed to delete state %s: %s", key, err)
+			return err
+		}
 		log.Successf("Plugin %s delete done.", change.Tool.Name)
-		return smgr.Write(smgr.GetStatesMap().Format())
+		return nil
 	}
 
 	key := getStateKeyFromTool(change.Tool)
@@ -186,8 +156,11 @@ func handleResult(smgr statemanager.Manager, change *Change) error {
 		Options:  change.Tool.Options,
 		Resource: change.Result.ReturnValue,
 	}
-	smgr.AddState(key, state)
-
+	err := smgr.AddState(key, state)
+	if err != nil {
+		log.Debugf("Failed to add state %s: %s", key, err)
+		return err
+	}
 	log.Successf("Plugin %s %s done.", change.Tool.Name, change.ActionName)
-	return smgr.Write(smgr.GetStatesMap().Format())
+	return nil
 }

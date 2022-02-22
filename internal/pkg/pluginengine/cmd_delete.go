@@ -31,7 +31,11 @@ func Remove(configFile string, continueDirectly bool) error {
 		return err
 	}
 	// create a state manager using the default local backend
-	smgr := statemanager.NewManager(b)
+	smgr, err := statemanager.NewManager(b)
+	if err != nil {
+		log.Debugf("Failed to get the manager. %s", err)
+		return err
+	}
 
 	changes, err := GetChangesForDelete(smgr, cfg)
 	if err != nil {

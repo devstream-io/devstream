@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"syscall"
 
-	"k8s.io/client-go/util/homedir"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
+	"k8s.io/client-go/util/homedir"
 
 	"github.com/merico-dev/stream/internal/pkg/log"
 	"github.com/merico-dev/stream/pkg/util/k8s"

@@ -25,7 +25,9 @@ var _ = Describe("Pluginengine", func() {
 		b, err := backend.GetBackend(backend.BackendLocal)
 		Expect(err).NotTo(HaveOccurred())
 
-		smgr = statemanager.NewManager(b)
+		smgr, err = statemanager.NewManager(b)
+		Expect(err).ToNot(HaveOccurred())
+		Expect(smgr).NotTo(BeNil())
 		_, _ = GinkgoWriter.Write([]byte("new a statemanager"))
 
 		DeferCleanup(func() {
@@ -82,8 +84,9 @@ var _ = Describe("Pluginengine", func() {
 		cfg := &configloader.Config{
 			Tools: []configloader.Tool{*getTool(name, kind, version)},
 		}
-		// TODO(daniel-hutao) wait for refactor
-		smgr.AddState(fmt.Sprintf("%s_%s", name, kind), statemanager.State{})
+
+		err := smgr.AddState(fmt.Sprintf("%s_%s", name, kind), statemanager.State{})
+		Expect(err).NotTo(HaveOccurred())
 		changes, _ := pluginengine.GetChangesForDelete(smgr, cfg)
 
 		Expect(len(changes)).To(Equal(1))
