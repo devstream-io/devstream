@@ -6,6 +6,7 @@ import (
 
 	"gopkg.in/yaml.v3"
 
+	"github.com/merico-dev/stream/internal/pkg/backend/local"
 	"github.com/merico-dev/stream/internal/pkg/configloader"
 	"github.com/merico-dev/stream/internal/pkg/log"
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
@@ -43,7 +44,9 @@ func GetChangesForApply(smgr statemanager.Manager, cfg *configloader.Config) ([]
 		statesMap := statemanager.NewStatesMap()
 		tmpMap := make(map[string]statemanager.State)
 		if err := yaml.Unmarshal(data, tmpMap); err != nil {
-			log.Errorf("Devstream.statesMap format error.")
+			log.Errorf("Failed to unmarshal the state file < %s >. error: %s", local.DefaultStateFile, err)
+			log.Errorf("Reading the state file failed, it might have been compromised/modified by someone other than DTM.")
+			log.Errorf("The state file is managed by DTM automatically. Please do not modify it yourself.")
 			return make([]*Change, 0), err
 		}
 		for k, v := range tmpMap {

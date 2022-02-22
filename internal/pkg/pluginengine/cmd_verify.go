@@ -33,6 +33,7 @@ func Verify(configFile string) (bool, error) {
 
 	changes, err := GetChangesForApply(smgr, cfg)
 	if err != nil {
+		log.Debugf("Get changes for apply failed: %s", err)
 		return false, err
 	}
 	if len(changes) == 0 {

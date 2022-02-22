@@ -35,6 +35,7 @@ func Apply(configFile string, continueDirectly bool) error {
 
 	changes, err := GetChangesForApply(smgr, cfg)
 	if err != nil {
+		log.Debugf("Get changes for apply failed: %s", err)
 		return err
 	}
 	if len(changes) == 0 {
