@@ -67,7 +67,7 @@ func (gi *TrelloGithub) renderTemplate(workflow *Workflow) error {
 
 func buildState(tg *TrelloGithub, ti *TrelloItemId) map[string]interface{} {
 	res := make(map[string]interface{})
-	res["workflowDir"] = fmt.Sprintf("repos/%s/%s/contents/.github/workflows", tg.options.Owner, tg.options.Repo)
+	res["workflowDir"] = fmt.Sprintf("/repos/%s/%s/contents/.github/workflows", tg.options.Owner, tg.options.Repo)
 	res["boardId"] = ti.boardId
 	res["todoListId"] = ti.todoListId
 	res["doingListId"] = ti.doingListId
@@ -75,12 +75,12 @@ func buildState(tg *TrelloGithub, ti *TrelloItemId) map[string]interface{} {
 	return res
 }
 
-func (gi *TrelloGithub) buildReadState() (map[string]interface{}, error) {
+func (gi *TrelloGithub) buildReadState(api *Api) (map[string]interface{}, error) {
 	c, err := trello.NewClient()
 	if err != nil {
 		return nil, err
 	}
-	listIds, err := c.GetBoardIdAndListId()
+	listIds, err := c.GetBoardIdAndListId(gi.options.Owner, gi.options.Repo, api.Kanban)
 	if err != nil {
 		return nil, err
 	}

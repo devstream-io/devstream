@@ -84,8 +84,7 @@ func (gi *TrelloGithub) CreateTrelloItems() (*TrelloItemId, error) {
 		return nil, err
 	}
 
-	boardName := gi.options.Repo
-	board, err := c.CreateBoard(boardName)
+	board, err := c.CreateBoard(gi.options.Api.Kanban, gi.options.Owner, gi.options.Repo)
 	if err != nil {
 		return nil, err
 	}

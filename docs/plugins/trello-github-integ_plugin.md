@@ -11,6 +11,9 @@ _This plugin depends on the following two environment variables:_
 
 Set the values accordingly before using this plugin.
 
+## 3 Tips:
+_Trello board description managed by DevStream, don't modify it_
+
 To create a Trello API key and token, see [here](https://docs.servicenow.com/bundle/quebec-it-asset-management/page/product/software-asset-management2/task/generate-trello-apikey-token.html).
 
 ```yaml
@@ -32,6 +35,7 @@ tools:
     # integration tool name
     api:
       name: trello
+      kanban: kanban-name
     # main branch of the repo (to which branch the plugin will submit the workflows)
     branch: master
 ```

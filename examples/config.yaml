@@ -45,6 +45,7 @@ tools:
     repo: golang-demo
     api:
       name: trello
+      kanban: kanban-golang-demo
     branch: main
 - name: argocd-dev
   plugin:
