@@ -32,8 +32,10 @@ func drifted(a, b map[string]interface{}) bool {
 }
 
 // changesForApply is to filter all the Tools in cfg that need some actions
-func changesForApply(smgr statemanager.Manager, statesMap statemanager.StatesMap, cfg *configloader.Config) ([]*Change, error) {
+func changesForApply(smgr statemanager.Manager, cfg *configloader.Config) ([]*Change, error) {
 	changes := make([]*Change, 0)
+	tmpStates := smgr.GetStatesMap().DeepCopy()
+
 	for _, tool := range cfg.Tools {
 		state := smgr.GetState(getStateKeyFromTool(&tool))
 
@@ -71,15 +73,16 @@ func changesForApply(smgr statemanager.Manager, statesMap statemanager.StatesMap
 			}
 		}
 
-		statesMap.Delete(getStateKeyFromTool(&tool))
+		tmpStates.Delete(getStateKeyFromTool(&tool))
 	}
 
 	return changes, nil
 }
 
 // changesForDelete is to create a plan that deletes all the Tools in cfg
-func changesForDelete(smgr statemanager.Manager, statesMap statemanager.StatesMap, cfg *configloader.Config) []*Change {
+func changesForDelete(smgr statemanager.Manager, cfg *configloader.Config) []*Change {
 	changes := make([]*Change, 0)
+	tmpStates := smgr.GetStatesMap().DeepCopy()
 
 	// reverse loop, a hack to solve dependency issues when deleting
 	for i := len(cfg.Tools) - 1; i >= 0; i-- {
@@ -91,7 +94,7 @@ func changesForDelete(smgr statemanager.Manager, statesMap statemanager.StatesMa
 
 		changes = append(changes, generateDeleteAction(&tool))
 		log.Infof("Change added: %s -> %s", tool.Name, statemanager.ActionDelete)
-		statesMap.Delete(tool.Name)
+		tmpStates.Delete(tool.Name)
 	}
 
 	return changes

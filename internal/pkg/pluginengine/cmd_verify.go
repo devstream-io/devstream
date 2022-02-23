@@ -29,7 +29,11 @@ func Verify(configFile string) (bool, error) {
 		return false, err
 	}
 
-	smgr := statemanager.NewManager(b)
+	smgr, err := statemanager.NewManager(b)
+	if err != nil {
+		log.Debugf("Failed to get the manager. %s", err)
+		return false, err
+	}
 
 	changes, err := GetChangesForApply(smgr, cfg)
 	if err != nil {

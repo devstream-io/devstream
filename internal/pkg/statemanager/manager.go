@@ -1,21 +1,33 @@
 package statemanager
 
 import (
+	"fmt"
+
+	"gopkg.in/yaml.v3"
+
 	"github.com/merico-dev/stream/internal/pkg/backend"
+	"github.com/merico-dev/stream/internal/pkg/backend/local"
+	"github.com/merico-dev/stream/internal/pkg/log"
+)
+
+type ComponentAction string
+
+const (
+	ActionCreate ComponentAction = "Create"
+	ActionUpdate ComponentAction = "Update"
+	ActionDelete ComponentAction = "Delete"
 )
 
 // Manager knows how to manage the StatesMap.
 type Manager interface {
 	backend.Backend
-	// GetStatesMap returns the state manager's map of states, used to generate data to Write to the backend.
+
 	GetStatesMap() StatesMap
-	// SetStatesMap sets the state manager's map of states, used to initialize the StatesMap by the data Read from the backend.
-	SetStatesMap(states StatesMap)
 
 	GetState(key string) *State
-	AddState(key string, state State)
-	UpdateState(key string, state State)
-	DeleteState(key string)
+	AddState(key string, state State) error
+	UpdateState(key string, state State) error
+	DeleteState(key string) error
 }
 
 // manager is the default implement with Manager
@@ -24,19 +36,44 @@ type manager struct {
 	statesMap StatesMap
 }
 
-func NewManager(backend backend.Backend) Manager {
-	return &manager{
+var m *manager
+
+func NewManager(backend backend.Backend) (Manager, error) {
+	if m != nil {
+		return m, nil
+	}
+
+	log.Debugf("The global manager m is not initialized.")
+
+	m = &manager{
 		Backend:   backend,
 		statesMap: NewStatesMap(),
 	}
+
+	// Read the initial states data
+	data, err := backend.Read()
+	if err != nil {
+		log.Debugf("Failed to read data from backend: %s", err)
+		return nil, err
+	}
+
+	tmpMap := make(map[string]State)
+	if err = yaml.Unmarshal(data, tmpMap); err != nil {
+		log.Errorf("Failed to unmarshal the state file < %s >. error: %s", local.DefaultStateFile, err)
+		log.Errorf("Reading the state file failed, it might have been compromised/modified by someone other than DTM.")
+		log.Errorf("The state file is managed by DTM automatically. Please do not modify it yourself.")
+		return nil, fmt.Errorf("state format error")
+	}
+	for k, v := range tmpMap {
+		log.Debugf("Got a state from the backend: %s -> %v", k, v)
+		m.statesMap.Store(k, v)
+	}
+
+	return m, nil
 }
 
 func (m *manager) GetStatesMap() StatesMap {
 	return m.statesMap
-}
-
-func (m *manager) SetStatesMap(statesMap StatesMap) {
-	m.statesMap = statesMap
 }
 
 func (m *manager) GetState(key string) *State {
@@ -48,14 +85,17 @@ func (m *manager) GetState(key string) *State {
 	return nil
 }
 
-func (m *manager) AddState(key string, state State) {
+func (m *manager) AddState(key string, state State) error {
 	m.statesMap.Store(key, state)
+	return m.Write(m.GetStatesMap().Format())
 }
 
-func (m *manager) UpdateState(key string, state State) {
+func (m *manager) UpdateState(key string, state State) error {
 	m.statesMap.Store(key, state)
+	return m.Write(m.GetStatesMap().Format())
 }
 
-func (m *manager) DeleteState(key string) {
+func (m *manager) DeleteState(key string) error {
 	m.statesMap.Delete(key)
+	return m.Write(m.GetStatesMap().Format())
 }
