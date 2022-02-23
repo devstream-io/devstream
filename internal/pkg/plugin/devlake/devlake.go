@@ -23,11 +23,11 @@ var devLakeDeployments = [4]string{
 func buildState(p Param) map[string]interface{} {
 	res := make(map[string]interface{})
 
-	res["deployments"] = make(map[string]bool)
-	res["services"] = make(map[string]bool)
+	res["deployments"] = make(map[string]interface{})
+	res["services"] = make(map[string]interface{})
 	for _, d := range devLakeDeployments {
-		res["deployments"].(map[string]bool)[d] = true
-		res["services"].(map[string]bool)[d] = true
+		res["deployments"].(map[string]interface{})[d] = true
+		res["services"].(map[string]interface{})[d] = true
 	}
 
 	return res
