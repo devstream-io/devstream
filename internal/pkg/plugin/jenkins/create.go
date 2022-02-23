@@ -43,6 +43,12 @@ func Create(options *map[string]interface{}) (map[string]interface{}, error) {
 
 	log.Info("Installing or updating jenkins helm chart ...")
 	if err = h.InstallOrUpgradeChart(); err != nil {
+		log.Debugf("Failed to install or upgrade the Chart: %s", err)
+		if err = dealWithNsWhenInterruption(&param); err != nil {
+			log.Debugf("Failed to deal with namespace: %s", err)
+			// don't need to return this err here, just print it.
+			// The err return by InstallOrUpgradeChart() is more useful for the caller.
+		}
 		return nil, err
 	}
 
@@ -53,15 +59,48 @@ func Create(options *map[string]interface{}) (map[string]interface{}, error) {
 	return retMap, nil
 }
 
+// TODO(daniel-hutao): All helm-style plugins has this code logic, maybe it's better to move it to a common package.
 func dealWithNsWhenInstall(param *Param) error {
 	if !param.CreateNamespace {
 		return nil
 	}
+
+	log.Debugf("Prepare to create the namespace: %s", param.Chart.Namespace)
 
 	kubeClient, err := k8s.NewClient()
 	if err != nil {
 		return err
 	}
 
-	return kubeClient.CreateNamespace(param.Chart.Namespace)
+	err = kubeClient.CreateNamespace(param.Chart.Namespace)
+	if err != nil {
+		log.Debugf("Failed to create the namespace: %s", param.Chart.Namespace)
+		return err
+	}
+
+	log.Debugf("The namespace %s has been created.", param.Chart.Namespace)
+	return nil
+}
+
+// TODO(daniel-hutao): All helm-style plugins has this code logic, maybe it's better to move it to a common package.
+func dealWithNsWhenInterruption(param *Param) error {
+	if !param.CreateNamespace {
+		return nil
+	}
+
+	log.Debugf("Prepare to delete the namespace: %s", param.Chart.Namespace)
+
+	kubeClient, err := k8s.NewClient()
+	if err != nil {
+		return err
+	}
+
+	err = kubeClient.DeleteNamespace(param.Chart.Namespace)
+	if err != nil {
+		log.Debugf("Failed to delete the namespace: %s", param.Chart.Namespace)
+		return err
+	}
+
+	log.Debugf("The namespace %s has been deleted.", param.Chart.Namespace)
+	return nil
 }
