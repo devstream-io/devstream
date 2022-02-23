@@ -80,27 +80,28 @@ func readDeploymentsAndServicesAndBuildState() (map[string]interface{}, error) {
 
 	res := make(map[string]interface{})
 
-	res["deployments"] = make(map[string]bool)
-	res["services"] = make(map[string]bool)
+	res["deployments"] = make(map[string]interface{})
+	res["services"] = make(map[string]interface{})
 
 	// check if all deployments are ready
 	for _, d := range devLakeDeployments {
 		// deployment
 		dp, err := kubeClient.GetDeployment(namespace, d)
 		if err == nil && kubeClient.IsDeploymentReady(dp) {
-			res["deployments"].(map[string]bool)[d] = true
+			res["deployments"].(map[string]interface{})[d] = true
 		} else {
-			res["deployments"].(map[string]bool)[d] = true
+			res["deployments"].(map[string]interface{})[d] = true
 		}
 
 		// services
 		_, err = kubeClient.GetService(namespace, d)
 		if err == nil {
-			res["services"].(map[string]bool)[d] = true
+			res["services"].(map[string]interface{})[d] = true
 		} else {
-			res["services"].(map[string]bool)[d] = false
+			res["services"].(map[string]interface{})[d] = false
 		}
 	}
 
+	log.Debugf("Resource read returns: %v.", res)
 	return res, nil
 }
