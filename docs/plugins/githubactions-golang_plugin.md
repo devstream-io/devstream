@@ -1,4 +1,4 @@
-## 1 GitHub Actions Golang Plugin
+## 1 `githubactions-golang` Plugin
 
 This plugin creates some Golang GitHub Actions workflows.
 

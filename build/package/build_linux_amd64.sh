@@ -5,7 +5,7 @@ set -e
 export GOOS=linux
 export GOARCH=amd64
 export VERSION
-go build -trimpath -gcflags="all=-N -l" -o output/dtm-${GOOS}-${GOARCH} ./cmd/devstream/
+go build -trimpath -gcflags="all=-N -l" -ldflags "-X github.com/merico-dev/stream/internal/pkg/version.VERSION=${VERSION}" -o output/dtm-${GOOS}-${GOARCH} ./cmd/devstream/
 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o output/githubactions-golang-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/githubactions/golang
 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o output/githubactions-python-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/githubactions/python
 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o output/githubactions-nodejs-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/githubactions/nodejs

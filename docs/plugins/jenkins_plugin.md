@@ -1,4 +1,4 @@
-## 1 jenkins Plugin
+## 1 `jenkins` Plugin
 
 This plugin installs [jenkins](https://jenkins.io) in an existing Kubernetes cluster using the Helm chart.
 

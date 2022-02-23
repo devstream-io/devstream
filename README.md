@@ -54,19 +54,19 @@ Want to install another different tool for a try? No problem. Want to remove or 
 
 ## Supported DevOps Tools
 
-| Type                   | Plugin                                             | Note                        |
-|------------------------|----------------------------------------------------|-----------------------------|
-| Issue Tracking         | Trello - GitHub                                    | Trello/GitHub Integratoin   |
-| Source Code Management | GitHub Repository Bootstrapping - Golang           |                             |
-| CI                     | Jenkins                                            | Jenkins Installation        |
-| CI                     | GitHub Actions - Golang                            |                             |
-| CI                     | GitHub Actions - Python                            |                             |
-| CI                     | GitHub Actions - Node.js                           |                             |
-| CI                     | GitLab CI - Golang                                 |                             |
-| CD/GitOps              | ArgoCD                                             | ArgoCD Installation         |
-| CD/GitOps              | ArgoCD App (manages the Application CRD of ArgoCD) | ArgoCD Application Creation |
-| Monitoring             | Prometheus/Grafana                                 |                             |
-| DevLake                | DevLake                                            |                             |
+| Type                   | Plugin                         | Note                           |
+|------------------------|--------------------------------|--------------------------------|
+| Issue Tracking         | trello-github-integ            | Trello/GitHub integratoin      |
+| Source Code Management | github-repo-scaffolding-golang | Go WebApp scaffolding          |
+| CI                     | jenkins                        | Jenkins installation           |
+| CI                     | githubactions-golang           | GitHub Actions CI for Golang   |
+| CI                     | githubactions-python           | GitHub Actions CI for Python   |
+| CI                     | githubactions-nodejs           | GitHub Actions CI for Nodejs   |
+| CI                     | gitlabci-golang                | GitLab CI for Golang           |
+| CD/GitOps              | argocd                         | ArgoCD installation            |
+| CD/GitOps              | argocdapp                      | ArgoCD Application creation    |
+| Monitoring             | kube-prometheus                | Prometheus/Grafana K8s install |
+| DevLake                | devlake                        | DevLake installation           |
 
 ## Quick Install
 

@@ -60,3 +60,7 @@ Both "body" and "footer" are optional; BREAKING CHANGE can be addressed both in 
   A detailed description in the body.
   BREAKING CHANGE: readdressing the breaking change in the footer.
   ```
+
+### Creating a New Plugin
+
+See [creating_a_plugin.md](./docs/creating_a_plugin.md).

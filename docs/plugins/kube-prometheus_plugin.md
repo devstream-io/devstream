@@ -1,4 +1,4 @@
-## 1 kube-prometheus Plugin
+## 1 `kube-prometheus` Plugin
 
 This plugin installs [kube-prometheus](https://github.com/prometheus-operator/kube-prometheus) in an existing Kubernetes cluster using the Helm chart.
 

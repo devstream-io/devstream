@@ -3,7 +3,7 @@ tools:
 - name: golang-demo-repo
   plugin:
     kind: github-repo-scaffolding-golang
-    version: 0.0.2
+    version: 0.2.0
   options:
     owner: ironcore864
     # will also be used as application name
@@ -13,7 +13,7 @@ tools:
 - name: golang-demo-app
   plugin:
     kind: githubactions-golang
-    version: 0.0.2
+    version: 0.2.0
   options:
     owner: ironcore864
     repo: golang-demo
@@ -32,14 +32,14 @@ tools:
 - name: go-hello-world-gitlab-ci
   plugin:
     kind: gitlabci-golang
-    version: 0.0.2
+    version: 0.2.0
   options:
     pathWithNamespace: ironcore864/golang-demo
     branch: main
 - name: trello-github-integ-golang-demo
   plugin:
     kind: trello-github-integ
-    version: 0.0.2
+    version: 0.2.0
   options:
     owner: ironcore864
     repo: golang-demo
@@ -49,7 +49,7 @@ tools:
 - name: argocd-dev
   plugin:
     kind: argocd
-    version: 0.0.2
+    version: 0.2.0
   options:
     create_namespace: true
     repo:
@@ -65,7 +65,7 @@ tools:
 - name: argocdapp-golang-demo
   plugin:
     kind: argocdapp
-    version: 0.0.2
+    version: 0.2.0
   options:
     app:
       name: golang-demo
@@ -80,7 +80,7 @@ tools:
 - name: kube-prometheus-dev
   plugin:
     kind: kube-prometheus
-    version: 0.0.2
+    version: 0.2.0
   options:
     create_namespace: true
     repo:
@@ -96,11 +96,11 @@ tools:
 - name: devlake
   plugin:
     kind: devlake
-    version: 0.0.2
+    version: 0.2.0
 - name: jenkins-dev # "you need to create the ~/data/jenkins-volumes/ directory first and chown this directory to 1000:1000"
   plugin:
     kind: jenkins
-    version: 0.0.2
+    version: 0.2.0
   options:
     create_namespace: true
     repo:

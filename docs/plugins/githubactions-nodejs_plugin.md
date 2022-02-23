@@ -1,4 +1,4 @@
-## 1 GitHub Actions Nodejs Plugin
+## 1 `githubactions-nodejs` Plugin
 
 This plugin creates Nodejs GitHub Actions workflows.
 

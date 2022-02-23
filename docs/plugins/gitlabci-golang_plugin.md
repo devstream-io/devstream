@@ -1,4 +1,4 @@
-## 1 GitLab CI Golang Plugin
+## 1 `gitlabci-golang` Plugin
 
 This plugin creates Golang GitLab CI workflow.
 

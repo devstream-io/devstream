@@ -1,4 +1,4 @@
-## 1 DevLake Plugin
+## 1 `devlake` Plugin
 
 This plugin installs [DevLake](https://github.com/merico-dev/lake) in an existing K8s cluster.
 

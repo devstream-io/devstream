@@ -1,4 +1,4 @@
-## 1 GitHub Actions Python Plugin
+## 1 `githubactions-python` Plugin
 
 This plugin creates Python GitHub Actions workflows.
 

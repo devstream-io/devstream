@@ -1,4 +1,4 @@
-## 1 github-repo-scaffolding-golang Plugin
+## 1 `github-repo-scaffolding-golang` Plugin
 
 This plugin installs github-repo-scaffolding-golang.
 
