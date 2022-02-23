@@ -1,19 +1,36 @@
 package helm
 
+import (
+	"bytes"
+	"gopkg.in/yaml.v3"
+
+	"github.com/merico-dev/stream/internal/pkg/log"
+)
+
 type InstanceState struct {
 	Workflows Workflows
 }
 
 func (is *InstanceState) ToStringInterfaceMap() map[string]interface{} {
+	var buf bytes.Buffer
+	encoder := yaml.NewEncoder(&buf)
+	encoder.SetIndent(2)
+	err := encoder.Encode(&is.Workflows)
+	if err != nil {
+		log.Errorf("Failed to marshal the workflows. %s", err)
+		return make(map[string]interface{})
+	}
+	wfs := buf.String()
+
 	return map[string]interface{}{
-		"workflows": is.Workflows,
+		"workflows": wfs,
 	}
 }
 
 type Workflows struct {
-	Deployments  []Deployment
-	Daemonsets   []Daemonset
-	Statefulsets []Statefulset
+	Deployments  []Deployment  `yaml:"deployments,omitempty"`
+	Daemonsets   []Daemonset   `yaml:"daemonsets,omitempty"`
+	Statefulsets []Statefulset `yaml:"statefulsets,omitempty"`
 }
 
 func (w *Workflows) AddDeployment(name string, ready bool) {
@@ -47,16 +64,16 @@ func (w *Workflows) AddStatefulset(name string, ready bool) {
 }
 
 type Deployment struct {
-	Name  string
-	Ready bool
+	Name  string `yaml:"name"`
+	Ready bool   `yaml:"ready"`
 }
 
 type Daemonset struct {
-	Name  string
-	Ready bool
+	Name  string `yaml:"name"`
+	Ready bool   `yaml:"ready"`
 }
 
 type Statefulset struct {
-	Name  string
-	Ready bool
+	Name  string `yaml:"name"`
+	Ready bool   `yaml:"ready"`
 }
