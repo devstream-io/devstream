@@ -53,19 +53,19 @@ func NewManager(backend backend.Backend) (Manager, error) {
 	// Read the initial states data
 	data, err := backend.Read()
 	if err != nil {
-		log.Debugf("Failed to read data from backend: %s", err)
+		log.Debugf("Failed to read data from backend: %s.", err)
 		return nil, err
 	}
 
 	tmpMap := make(map[string]State)
 	if err = yaml.Unmarshal(data, tmpMap); err != nil {
-		log.Errorf("Failed to unmarshal the state file < %s >. error: %s", local.DefaultStateFile, err)
+		log.Errorf("Failed to unmarshal the state file < %s >. error: %s.", local.DefaultStateFile, err)
 		log.Errorf("Reading the state file failed, it might have been compromised/modified by someone other than DTM.")
 		log.Errorf("The state file is managed by DTM automatically. Please do not modify it yourself.")
 		return nil, fmt.Errorf("state format error")
 	}
 	for k, v := range tmpMap {
-		log.Debugf("Got a state from the backend: %s -> %v", k, v)
+		log.Debugf("Got a state from the backend: %s -> %v.", k, v)
 		m.statesMap.Store(k, v)
 	}
 

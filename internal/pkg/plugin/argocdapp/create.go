@@ -23,7 +23,7 @@ func Create(options *map[string]interface{}) (map[string]interface{}, error) {
 	// validate parameters
 	if errs := validateParams(&param); len(errs) != 0 {
 		for _, e := range errs {
-			log.Errorf("Param error: %s", e)
+			log.Errorf("Param error: %s.", e)
 		}
 		return nil, fmt.Errorf("params are illegal")
 	}

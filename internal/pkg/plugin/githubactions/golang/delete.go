@@ -23,7 +23,7 @@ func Delete(options *map[string]interface{}) (bool, error) {
 		return false, err
 	}
 
-	log.Infof("language is %s", ga.GetLanguage(opt.Language))
+	log.Infof("language is %s.", ga.GetLanguage(opt.Language))
 
 	// if docker is enabled, delete repo secrets DOCKERHUB_USERNAME and DOCKERHUB_TOKEN
 	if opt.Docker.Enable {

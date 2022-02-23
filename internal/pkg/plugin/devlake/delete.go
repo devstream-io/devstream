@@ -22,7 +22,7 @@ func Delete(options *map[string]interface{}) (bool, error) {
 	// download DevLake installation YAML file
 	_, err = downloader.Download(devLakeInstallYAMLDownloadURL, devLakeInstallYAMLFileName, ".")
 	if err != nil {
-		log.Debugf("Failed to download DevLake K8s deploy YAML file from %s", devLakeInstallYAMLDownloadURL)
+		log.Debugf("Failed to download DevLake K8s deploy YAML file from %s.", devLakeInstallYAMLDownloadURL)
 		return false, err
 	}
 

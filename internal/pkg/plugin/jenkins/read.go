@@ -24,7 +24,7 @@ func Read(options *map[string]interface{}) (map[string]interface{}, error) {
 
 	if errs := validate(&param); len(errs) != 0 {
 		for _, e := range errs {
-			log.Errorf("Param error: %s", e)
+			log.Errorf("Param error: %s.", e)
 		}
 		return nil, fmt.Errorf("params are illegal")
 	}
@@ -44,7 +44,7 @@ func Read(options *map[string]interface{}) (map[string]interface{}, error) {
 
 	err = readStatefulsets(kubeClient, namespace, releaseName, retState)
 	if err != nil {
-		log.Debugf("Failed to read statefulsets: %s", err)
+		log.Debugf("Failed to read statefulsets: %s.", err)
 		return nil, err
 	}
 
@@ -55,26 +55,26 @@ func Read(options *map[string]interface{}) (map[string]interface{}, error) {
 func readStatefulsets(kubeClient *k8s.Client, namespace, releaseName string, state *helm.InstanceState) error {
 	sss, err := kubeClient.ListStatefulsets(namespace)
 	if err != nil {
-		log.Debugf("Failed to list statefulsets: %s", err)
+		log.Debugf("Failed to list statefulsets: %s.", err)
 		return err
 	}
 
 	for _, ss := range sss {
 		if kubeClient.IsStatefulsetReady(&ss) {
-			log.Infof("The statefulset %s is ready", ss.Name)
+			log.Infof("The statefulset %s is ready.", ss.Name)
 			continue
 		}
-		log.Warnf("The statefulset %s is not ready", ss.Name)
+		log.Warnf("The statefulset %s is not ready.", ss.Name)
 
 		DefaultStatefulsetList := GetDefaultStatefulsetList(releaseName)
 		ssName := ss.GetName()
 		if !slices.Contains(DefaultStatefulsetList, ssName) {
-			log.Infof("Found unknown statefulset: %s", ssName)
+			log.Infof("Found unknown statefulset: %s.", ssName)
 		}
 
 		ready := kubeClient.IsStatefulsetReady(&ss)
 		state.Workflows.AddStatefulset(ssName, ready)
-		log.Debugf("The statefulset %s is %t", ss.GetName(), ready)
+		log.Debugf("The statefulset %s is %t.", ss.GetName(), ready)
 	}
 
 	return nil

@@ -139,10 +139,10 @@ func handleResult(smgr statemanager.Manager, change *Change) error {
 
 	if change.ActionName == statemanager.ActionDelete {
 		key := getStateKeyFromTool(change.Tool)
-		log.Infof("Prepare to delete '%s' from States", key)
+		log.Infof("Prepare to delete '%s' from States.", key)
 		err := smgr.DeleteState(key)
 		if err != nil {
-			log.Debugf("Failed to delete state %s: %s", key, err)
+			log.Debugf("Failed to delete state %s: %s.", key, err)
 			return err
 		}
 		log.Successf("Plugin %s delete done.", change.Tool.Name)
@@ -158,7 +158,7 @@ func handleResult(smgr statemanager.Manager, change *Change) error {
 	}
 	err := smgr.AddState(key, state)
 	if err != nil {
-		log.Debugf("Failed to add state %s: %s", key, err)
+		log.Debugf("Failed to add state %s: %s.", key, err)
 		return err
 	}
 	log.Successf("Plugin %s %s done.", change.Tool.Name, change.ActionName)

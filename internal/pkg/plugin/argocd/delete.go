@@ -18,7 +18,7 @@ func Delete(options *map[string]interface{}) (bool, error) {
 
 	if errs := validate(&param); len(errs) != 0 {
 		for _, e := range errs {
-			log.Errorf("Param error: %s", e)
+			log.Errorf("Param error: %s.", e)
 		}
 		return false, fmt.Errorf("params are illegal")
 	}
@@ -28,7 +28,7 @@ func Delete(options *map[string]interface{}) (bool, error) {
 		return false, err
 	}
 
-	log.Info("uninstalling argocd helm chart")
+	log.Info("Uninstalling argocd helm chart.")
 	if err = h.UninstallHelmChartRelease(); err != nil {
 		return false, err
 	}

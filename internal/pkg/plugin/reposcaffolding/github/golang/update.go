@@ -17,7 +17,7 @@ func Update(options *map[string]interface{}) (map[string]interface{}, error) {
 
 	if errs := validate(&param); len(errs) != 0 {
 		for _, e := range errs {
-			log.Errorf("Param error: %s", e)
+			log.Errorf("Param error: %s.", e)
 		}
 		return nil, fmt.Errorf("params are illegal")
 	}

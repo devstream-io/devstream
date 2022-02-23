@@ -103,7 +103,7 @@ func (h *Helm) UninstallHelmChartRelease() error {
 	var err error
 	if err = h.UninstallReleaseByName(h.ChartSpec.ReleaseName); err != nil {
 		if strings.Contains(err.Error(), "not found") {
-			log.Warn("release is not found, maybe it has been deleted")
+			log.Warn("Release is not found, maybe it has been deleted.")
 			return nil
 		}
 		return err

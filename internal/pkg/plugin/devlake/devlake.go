@@ -50,10 +50,10 @@ func allDeploymentsAndServicesReady() error {
 		}
 
 		if kubeClient.IsDeploymentReady(dp) {
-			log.Infof("the deployment %s is ready", dp.Name)
+			log.Infof("The deployment %s is ready.", dp.Name)
 			continue
 		} else {
-			log.Infof("the deployment %s is not ready yet", dp.Name)
+			log.Infof("The deployment %s is not ready yet.", dp.Name)
 			return fmt.Errorf("deployment %s not ready", dp.Name)
 		}
 	}

@@ -56,7 +56,7 @@ func LoadConf(fname string) *Config {
 	if err != nil {
 		log.Error(err)
 		log.Info("Perhaps you forgot to specify the path of the config file by using the \"-f\" parameter?")
-		log.Fatal("See more help by running \"dtm help\"")
+		log.Fatal("See more help by running \"dtm help\".")
 	}
 
 	log.Debugf("Config file: \n%s\n", string(fileBytes))
@@ -64,7 +64,7 @@ func LoadConf(fname string) *Config {
 	var config Config
 	err = yaml.Unmarshal(fileBytes, &config)
 	if err != nil {
-		log.Errorf("Unmarshal the config failed: %s", err)
+		log.Errorf("Unmarshal the config failed: %s.", err)
 		return nil
 	}
 
@@ -72,7 +72,7 @@ func LoadConf(fname string) *Config {
 
 	if len(errs) != 0 {
 		for _, e := range errs {
-			log.Errorf("Config validation failed: %s", e)
+			log.Errorf("Config validation failed: %s.", e)
 		}
 		return nil
 	}

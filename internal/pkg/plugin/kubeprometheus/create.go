@@ -19,7 +19,7 @@ func Create(options *map[string]interface{}) (map[string]interface{}, error) {
 
 	if errs := validate(&param); len(errs) != 0 {
 		for _, e := range errs {
-			log.Errorf("Param error: %s", e)
+			log.Errorf("Param error: %s.", e)
 		}
 		return nil, fmt.Errorf("params are illegal")
 	}
@@ -35,9 +35,9 @@ func Create(options *map[string]interface{}) (map[string]interface{}, error) {
 
 	log.Info("Installing or updating kube-prometheus-stack helm chart ...")
 	if err = h.InstallOrUpgradeChart(); err != nil {
-		log.Debugf("Failed to install or upgrade the Chart: %s", err)
+		log.Debugf("Failed to install or upgrade the Chart: %s.", err)
 		if err = dealWithNsWhenInterruption(&param); err != nil {
-			log.Debugf("Failed to deal with namespace: %s", err)
+			log.Debugf("Failed to deal with namespace: %s.", err)
 			// don't need to return this err here, just print it.
 			// The err return by InstallOrUpgradeChart() is more useful for the caller.
 		}
@@ -57,7 +57,7 @@ func dealWithNsWhenInstall(param *Param) error {
 		return nil
 	}
 
-	log.Debugf("Prepare to create the namespace: %s", param.Chart.Namespace)
+	log.Debugf("Prepare to create the namespace: %s.", param.Chart.Namespace)
 
 	kubeClient, err := k8s.NewClient()
 	if err != nil {
@@ -66,7 +66,7 @@ func dealWithNsWhenInstall(param *Param) error {
 
 	err = kubeClient.CreateNamespace(param.Chart.Namespace)
 	if err != nil {
-		log.Debugf("Failed to create the namespace: %s", param.Chart.Namespace)
+		log.Debugf("Failed to create the namespace: %s.", param.Chart.Namespace)
 		return err
 	}
 
@@ -80,7 +80,7 @@ func dealWithNsWhenInterruption(param *Param) error {
 		return nil
 	}
 
-	log.Debugf("Prepare to delete the namespace: %s", param.Chart.Namespace)
+	log.Debugf("Prepare to delete the namespace: %s.", param.Chart.Namespace)
 
 	kubeClient, err := k8s.NewClient()
 	if err != nil {
@@ -89,7 +89,7 @@ func dealWithNsWhenInterruption(param *Param) error {
 
 	err = kubeClient.DeleteNamespace(param.Chart.Namespace)
 	if err != nil {
-		log.Debugf("Failed to delete the namespace: %s", param.Chart.Namespace)
+		log.Debugf("Failed to delete the namespace: %s.", param.Chart.Namespace)
 		return err
 	}
 

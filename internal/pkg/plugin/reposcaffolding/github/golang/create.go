@@ -21,7 +21,7 @@ func Create(options *map[string]interface{}) (map[string]interface{}, error) {
 
 	if errs := validate(&param); len(errs) != 0 {
 		for _, e := range errs {
-			log.Errorf("Param error: %s", e)
+			log.Errorf("Param error: %s.", e)
 		}
 		return nil, fmt.Errorf("params are illegal")
 	}
@@ -33,7 +33,7 @@ func install(param *Param) (map[string]interface{}, error) {
 	// Clear workpath before return
 	defer func() {
 		if err := os.RemoveAll(DefaultWorkPath); err != nil {
-			log.Errorf("Failed to clear workpath: %s", err)
+			log.Errorf("Failed to clear workpath: %s.", err)
 		}
 	}()
 

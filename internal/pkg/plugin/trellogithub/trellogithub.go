@@ -37,7 +37,7 @@ func NewTrelloGithub(options *map[string]interface{}) (*TrelloGithub, error) {
 
 	if errs := validate(&opt); len(errs) != 0 {
 		for _, e := range errs {
-			log.Errorf("Param error: %s", e)
+			log.Errorf("Param error: %s.", e)
 		}
 		return nil, fmt.Errorf("params are illegal")
 	}
@@ -70,7 +70,7 @@ func (gi *TrelloGithub) CompareFiles(wsFiles, filesInRemoteDir []string) map[str
 	// some files lost
 	retMap := mapz.FillMapWithStrAndError(wsFiles, nil)
 	for _, f := range lostFiles {
-		log.Warnf("Lost file: %s", f)
+		log.Warnf("Lost file: %s.", f)
 		retMap[f] = fmt.Errorf("not found")
 	}
 	return retMap
@@ -95,7 +95,7 @@ func (gi *TrelloGithub) CreateTrelloItems() (*TrelloItemId, error) {
 		return nil, err
 	}
 	if len(lists) != 3 {
-		log.Errorf("Unknown lists format: len==%d", len(lists))
+		log.Errorf("Unknown lists format: len==%d.", len(lists))
 		return nil, fmt.Errorf("unknown lists format: len==%d", len(lists))
 	}
 
@@ -108,7 +108,7 @@ func (gi *TrelloGithub) CreateTrelloItems() (*TrelloItemId, error) {
 	doing := lists[1].ID
 	done := lists[2].ID
 
-	log.Debugf("Lists: To Do(%s), Doing(%s), Done(%s)", todo, doing, done)
+	log.Debugf("Lists: To Do(%s), Doing(%s), Done(%s).", todo, doing, done)
 
 	return &TrelloItemId{
 		boardId:     board.ID,

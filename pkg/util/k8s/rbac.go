@@ -21,7 +21,7 @@ func (c *Client) CreateServiceAccount(name, namespace string) error {
 
 	_, err := c.CoreV1().ServiceAccounts(namespace).Create(context.TODO(), sa, metav1.CreateOptions{})
 	if err != nil {
-		log.Errorf("Failed to create ServiceAccount < %s >: %s", sa.Name, err)
+		log.Errorf("Failed to create ServiceAccount < %s >: %s.", sa.Name, err)
 		return err
 	}
 
@@ -44,7 +44,7 @@ func (c *Client) CreateClusterRole(option *CROption) error {
 
 	_, err := c.RbacV1().ClusterRoles().Create(context.TODO(), cr, metav1.CreateOptions{})
 	if err != nil {
-		log.Errorf("Failed to create ClusterRole < %s >: %s", cr.Name, err)
+		log.Errorf("Failed to create ClusterRole < %s >: %s.", cr.Name, err)
 		return err
 	}
 
@@ -82,7 +82,7 @@ func (c *Client) CreateClusterRoleBinding(option *CRBOption) error {
 
 	_, err := c.RbacV1().ClusterRoleBindings().Create(context.TODO(), crb, metav1.CreateOptions{})
 	if err != nil {
-		log.Errorf("Failed to create ClusterRoleBinding < %s >: %s", crb.Name, err)
+		log.Errorf("Failed to create ClusterRoleBinding < %s >: %s.", crb.Name, err)
 		return err
 	}
 

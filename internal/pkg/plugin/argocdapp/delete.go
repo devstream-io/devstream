@@ -22,7 +22,7 @@ func Delete(options *map[string]interface{}) (bool, error) {
 	// validate parameters
 	if errs := validateParams(&param); len(errs) != 0 {
 		for _, e := range errs {
-			log.Errorf("Param error: %s", e)
+			log.Errorf("Param error: %s.", e)
 		}
 		return false, fmt.Errorf("params are illegal")
 	}

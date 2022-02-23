@@ -37,7 +37,7 @@ type PVOption struct {
 func (c *Client) CreatePersistentVolume(option *PVOption) error {
 	quantity, err := resource.ParseQuantity(option.Capacity)
 	if err != nil {
-		log.Errorf("Failed to parse the Capacity string: %s", err)
+		log.Errorf("Failed to parse the Capacity string: %s.", err)
 		return err
 	}
 
@@ -62,7 +62,7 @@ func (c *Client) CreatePersistentVolume(option *PVOption) error {
 
 	_, err = c.CoreV1().PersistentVolumes().Create(context.TODO(), pv, metav1.CreateOptions{})
 	if err != nil {
-		log.Errorf("Failed to create PersistentVolume < %s >: %s", pv.Name, err)
+		log.Errorf("Failed to create PersistentVolume < %s >: %s.", pv.Name, err)
 		return err
 	}
 

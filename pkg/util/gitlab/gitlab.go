@@ -16,7 +16,7 @@ type Client struct {
 
 func NewClient() (*Client, error) {
 	if client != nil {
-		log.Debug("Use a cached client")
+		log.Debug("Use a cached client.")
 		return client, nil
 	}
 
@@ -26,7 +26,7 @@ func NewClient() (*Client, error) {
 	}
 	client, err := gitlab.NewClient(token)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	return &Client{Client: client}, nil

@@ -58,7 +58,7 @@ func (c *Client) GetBoardIdAndListId() (map[string]interface{}, error) {
 			return nil, err
 		}
 		if len(lists) != 3 {
-			log.Errorf("Unknown lists format: len==%d", len(lists))
+			log.Errorf("Unknown lists format: len==%d.", len(lists))
 			return nil, fmt.Errorf("unknown lists format: len==%d", len(lists))
 		}
 		res["boardId"] = b.ID

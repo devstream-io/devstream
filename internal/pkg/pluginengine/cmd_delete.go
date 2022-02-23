@@ -33,7 +33,7 @@ func Remove(configFile string, continueDirectly bool) error {
 	// create a state manager using the default local backend
 	smgr, err := statemanager.NewManager(b)
 	if err != nil {
-		log.Debugf("Failed to get the manager. %s", err)
+		log.Debugf("Failed to get the manager: %s.", err)
 		return err
 	}
 
@@ -57,7 +57,7 @@ func Remove(configFile string, continueDirectly bool) error {
 	if len(errsMap) != 0 {
 		err := errors.New("some error(s) occurred during plugins delete process")
 		for k, e := range errsMap {
-			log.Infof("%s -> %s", k, e)
+			log.Infof("%s -> %s.", k, e)
 		}
 		return err
 	}
