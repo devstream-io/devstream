@@ -36,6 +36,7 @@ func Create(options *map[string]interface{}) (map[string]interface{}, error) {
 		if err = dealWithNsWhenInterruption(&param); err != nil {
 			log.Errorf("Failed to deal with namespace: %s.", err)
 		}
+		log.Debugf("Deal with namespace when interruption succeeded.")
 	}()
 
 	var h *helm.Helm

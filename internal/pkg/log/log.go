@@ -4,10 +4,6 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func init() {
-	logrus.SetLevel(logrus.InfoLevel)
-}
-
 var (
 	debugLog     = &CliLoggerFormatter{showType: "debug"}
 	infoLog      = &CliLoggerFormatter{showType: "info"}

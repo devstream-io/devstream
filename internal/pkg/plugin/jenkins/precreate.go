@@ -8,6 +8,7 @@ import (
 
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
+	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/client-go/util/homedir"
 
 	"github.com/merico-dev/stream/internal/pkg/log"
@@ -73,7 +74,10 @@ func createPersistentVolume(kubeClient *k8s.Client) error {
 	}
 
 	if err := kubeClient.CreatePersistentVolume(pvOption); err != nil {
-		return err
+		if !errors.IsAlreadyExists(err) {
+			return err
+		}
+		log.Infof("The resource %s is already exists.", "PersistentVolume")
 	}
 
 	return nil
@@ -81,7 +85,10 @@ func createPersistentVolume(kubeClient *k8s.Client) error {
 
 func createServiceAccount(kubeClient *k8s.Client) error {
 	if err := kubeClient.CreateServiceAccount(JenkinsName, JenkinsNamespace); err != nil {
-		return err
+		if !errors.IsAlreadyExists(err) {
+			return err
+		}
+		log.Infof("The resource %s is already exists.", "ServiceAccount")
 	}
 
 	return nil
@@ -144,7 +151,10 @@ func createClusterRole(kubeClient *k8s.Client) error {
 	}
 
 	if err := kubeClient.CreateClusterRole(crOption); err != nil {
-		return err
+		if !errors.IsAlreadyExists(err) {
+			return err
+		}
+		log.Infof("The resource %s is already exists.", "ClusterRole")
 	}
 
 	return nil
@@ -158,7 +168,10 @@ func createClusterRoleBinding(kubeClient *k8s.Client) error {
 	}
 
 	if err := kubeClient.CreateClusterRoleBinding(crbOption); err != nil {
-		return err
+		if !errors.IsAlreadyExists(err) {
+			return err
+		}
+		log.Infof("The resource %s is already exists.", "ClusterRoleBinding")
 	}
 
 	return nil
