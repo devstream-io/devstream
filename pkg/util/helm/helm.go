@@ -48,6 +48,12 @@ func NewHelm(param *HelmParam) (*Helm, error) {
 		PassCredentialsAll:    false,
 	}
 
+	// 'Wait' will automatically be set to true when using Atomic.
+	atomic := true
+	if !param.Chart.Wait {
+		atomic = false
+	}
+
 	chartSpec := &helmclient.ChartSpec{
 		ReleaseName:      param.Chart.ReleaseName,
 		ChartName:        param.Chart.ChartName,
@@ -62,7 +68,7 @@ func NewHelm(param *HelmParam) (*Helm, error) {
 		Timeout:          tmout,
 		GenerateName:     false,
 		NameTemplate:     "",
-		Atomic:           true,
+		Atomic:           atomic,
 		SkipCRDs:         false,
 		UpgradeCRDs:      param.Chart.UpgradeCRDs,
 		SubNotes:         false,
