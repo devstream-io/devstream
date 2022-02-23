@@ -24,8 +24,8 @@ func kubectlAction(action string, filename string) error {
 	cmd := exec.Command("kubectl", action, "-f", filename)
 	cOut, err := cmd.CombinedOutput()
 	if err != nil {
-		log.Errorf("failed to exec: < %s >", cmd.String())
-		log.Errorf("exec logs: < %s >. got error: %s", string(cOut), err)
+		log.Errorf("Failed to exec: < %s >.", cmd.String())
+		log.Errorf("Exec logs: < %s >. Got error: %s.", string(cOut), err)
 		return err
 	}
 	log.Info(strings.TrimSuffix(string(cOut), "\n"))

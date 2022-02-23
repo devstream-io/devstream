@@ -37,7 +37,7 @@ type Option struct {
 func NewClient(option *Option) (*Client, error) {
 	// same option will get same client
 	if client != nil && *client.Option == *option {
-		log.Debug("Use a cached client")
+		log.Debug("Use a cached client.")
 		return client, nil
 	}
 
@@ -49,7 +49,7 @@ func NewClient(option *Option) (*Client, error) {
 
 	// a. client without auth enabled
 	if !option.NeedAuth {
-		log.Debug("Auth is not enabled")
+		log.Debug("Auth is not enabled.")
 		client = &Client{
 			Option:  option,
 			Client:  github.NewClient(nil),
@@ -58,7 +58,7 @@ func NewClient(option *Option) (*Client, error) {
 
 		return client, nil
 	}
-	log.Debug("Auth is enabled")
+	log.Debug("Auth is enabled.")
 
 	// b. client with auth enabled
 
@@ -74,7 +74,7 @@ func NewClient(option *Option) (*Client, error) {
 		return nil, fmt.Errorf("failed to initialize GitHub token. More info - " +
 			"https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token")
 	}
-	log.Debugf("Token: %s", token)
+	log.Debugf("Token: %s.", token)
 
 	ctx := context.Background()
 	tc := oauth2.NewClient(

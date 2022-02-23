@@ -11,7 +11,7 @@ func Read(options *map[string]interface{}) (map[string]interface{}, error) {
 	}
 
 	api := gis.GetApi()
-	log.Infof("api is: %s.", api.Name)
+	log.Infof("API is: %s.", api.Name)
 
 	ws := defaultWorkflows.GetWorkflowByNameVersionTypeString(api.Name)
 	retMap, err := gis.VerifyWorkflows(ws)
@@ -23,9 +23,9 @@ func Read(options *map[string]interface{}) (map[string]interface{}, error) {
 	for name, err := range retMap {
 		if err != nil {
 			errFlag = true
-			log.Errorf("The workflow/file %s got some error: %s", name, err)
+			log.Errorf("The workflow/file %s got some error: %s.", name, err)
 		}
-		log.Infof("The workflow/file %s is ok", name)
+		log.Infof("The workflow/file %s is ok.", name)
 	}
 	if errFlag {
 		return nil, nil

@@ -17,7 +17,7 @@ func parseAndValidateOptions(options *map[string]interface{}) (*Options, error) 
 
 	if errs := validate(&opt); len(errs) != 0 {
 		for _, e := range errs {
-			log.Errorf("Param error: %s", e)
+			log.Errorf("Param error: %s.", e)
 		}
 		return nil, fmt.Errorf("incorrect params")
 	}

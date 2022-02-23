@@ -19,10 +19,10 @@ func (c *Client) DownloadAsset(tagName, assetName string) error {
 	}
 	log.Debug("Got releases successful.")
 	for i, r := range releases {
-		log.Debugf("Release(%d): %s", i+1, r.GetName())
+		log.Debugf("Release(%d): %s.", i+1, r.GetName())
 	}
 
-	log.Debugf("Response status: %s", resp.Status)
+	log.Debugf("Response status: %s.", resp.Status)
 	if resp.StatusCode != http.StatusOK {
 		return fmt.Errorf("got response status not expected: %s", resp.Status)
 	}
@@ -33,19 +33,19 @@ func (c *Client) DownloadAsset(tagName, assetName string) error {
 		if *r.TagName != tagName {
 			continue
 		}
-		log.Debugf("Got a matched tag %s with release <%s>", *r.TagName, *r.Name)
+		log.Debugf("Got a matched tag %s with release <%s>.", *r.TagName, *r.Name)
 
 		if len(r.Assets) == 0 {
-			log.Debug("Assets is empty")
+			log.Debug("Assets is empty.")
 			return fmt.Errorf("assets is empty")
 		}
-		log.Debugf("%d Assets was found", len(r.Assets))
+		log.Debugf("%d Assets was found.", len(r.Assets))
 
 		assets = r.Assets
 		break
 	}
 	if len(assets) == 0 {
-		log.Debugf("Release with tag <%s> was not found", tagName)
+		log.Debugf("Release with tag <%s> was not found.", tagName)
 		return fmt.Errorf("release with tag <%s> was not found", tagName)
 	}
 
@@ -55,36 +55,36 @@ func (c *Client) DownloadAsset(tagName, assetName string) error {
 	for _, a := range assets {
 		if a.GetName() == assetName {
 			downloadUrl = a.GetBrowserDownloadURL()
-			log.Debugf("Download url: %s", downloadUrl)
+			log.Debugf("Download url: %s.", downloadUrl)
 			break
 		}
 	}
 	if downloadUrl == "" {
-		log.Debugf("Failed to got the download url for %s, maybe it not exists", assetName)
+		log.Debugf("Failed to got the download url for %s, maybe it not exists.", assetName)
 		return fmt.Errorf("failed to got the download url for %s, maybe it not exists", assetName)
 	}
 
 	// 4. download
 	n, err := downloader.Download(downloadUrl, "", c.WorkPath)
 	if err != nil {
-		log.Debugf("Failed to download asset from %s", downloadUrl)
+		log.Debugf("Failed to download asset from %s.", downloadUrl)
 		return err
 	}
-	log.Debugf("Downloaded <%d> bytes", n)
+	log.Debugf("Downloaded <%d> bytes.", n)
 
 	return nil
 }
 
 func (c *Client) DownloadLatestCodeAsZipFile() error {
 	latestCodeZipfileDownloadUrl := fmt.Sprintf(DefaultLatestCodeZipfileDownloadUrlFormat, c.Owner, c.Repo)
-	log.Debugf("latestCodeZipfileDownloadUrl: %s", latestCodeZipfileDownloadUrl)
+	log.Debugf("LatestCodeZipfileDownloadUrl: %s.", latestCodeZipfileDownloadUrl)
 
 	n, err := downloader.Download(latestCodeZipfileDownloadUrl, DefaultLatestCodeZipfileName, c.WorkPath)
 	if err != nil {
-		log.Debugf("Failed to download zip file from %s", latestCodeZipfileDownloadUrl)
+		log.Debugf("Failed to download zip file from %s.", latestCodeZipfileDownloadUrl)
 		return err
 	}
 
-	log.Debugf("Downloaded <%d> bytes", n)
+	log.Debugf("Downloaded <%d> bytes.", n)
 	return nil
 }

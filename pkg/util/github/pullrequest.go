@@ -34,10 +34,10 @@ func (c *Client) NewPullRequest(fromBranch, toBranch string) (int, error) {
 		Draft:               &draft,
 	})
 	if err != nil {
-		log.Debugf("Failed to create the pr: %s", err)
+		log.Debugf("Failed to create the pr: %s.", err)
 		return 0, err
 	}
-	log.Debugf("The pr has created: #%d", pr.GetNumber())
+	log.Debugf("The pr has created: #%d.", pr.GetNumber())
 
 	return pr.GetNumber(), nil
 }
@@ -52,7 +52,7 @@ func (c *Client) MergePullRequest(number int, mergeMethod MergeMethod) error {
 		DontDefaultIfBlank: false,
 	})
 	if err != nil {
-		log.Debugf("Got an error when merge the pr: %s", err)
+		log.Debugf("Got an error when merge the pr: %s.", err)
 		return err
 	}
 

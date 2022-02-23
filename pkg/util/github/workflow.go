@@ -104,12 +104,12 @@ func (c *Client) VerifyWorkflows(workflows []*Workflow) (map[string]error, error
 
 	// error reason is not 404
 	if err != nil && !strings.Contains(err.Error(), "404") {
-		log.Errorf("GetContents failed with error: %s", err)
+		log.Errorf("GetContents failed with error: %s.", err)
 		return nil, err
 	}
 	// StatusCode == 404
 	if resp.StatusCode == http.StatusNotFound {
-		log.Errorf("GetContents return with status code 404")
+		log.Errorf("GetContents return with status code 404.")
 		retMap := mapz.FillMapWithStrAndError(wsFiles, fmt.Errorf("not found"))
 		return retMap, nil
 	}
@@ -118,25 +118,25 @@ func (c *Client) VerifyWorkflows(workflows []*Workflow) (map[string]error, error
 		return nil, fmt.Errorf("got some error is not expected: %s", resp.Status)
 	}
 	// StatusCode == 200
-	log.Success("GetContents return with status code 200")
+	log.Success("GetContents return with status code 200.")
 	var filesInRemoteDir = make([]string, 0)
 	for _, f := range dirContent {
-		log.Infof("Found remote file: %s", f.GetName())
+		log.Infof("Found remote file: %s.", f.GetName())
 		filesInRemoteDir = append(filesInRemoteDir, f.GetName())
 	}
 
 	lostFiles := slicez.SliceInSliceStr(wsFiles, filesInRemoteDir)
 	// all files exist
 	if len(lostFiles) == 0 {
-		log.Info("All files exist")
+		log.Info("All files exist.")
 		retMap := mapz.FillMapWithStrAndError(wsFiles, nil)
 		return retMap, nil
 	}
 	// some files lost
-	log.Warn("Some files lost")
+	log.Warn("Some files lost.")
 	retMap := mapz.FillMapWithStrAndError(wsFiles, nil)
 	for _, f := range lostFiles {
-		log.Infof("Lost file: %s", f)
+		log.Infof("Lost file: %s.", f)
 		retMap[f] = fmt.Errorf("not found")
 	}
 	return retMap, nil

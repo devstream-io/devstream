@@ -24,7 +24,7 @@ func Create(options *map[string]interface{}) (map[string]interface{}, error) {
 	// download DevLake installation YAML file
 	_, err = downloader.Download(devLakeInstallYAMLDownloadURL, devLakeInstallYAMLFileName, ".")
 	if err != nil {
-		log.Debugf("Failed to download DevLake K8s deploy YAML file from %s", devLakeInstallYAMLDownloadURL)
+		log.Debugf("Failed to download DevLake K8s deploy YAML file from %s.", devLakeInstallYAMLDownloadURL)
 		return nil, err
 	}
 

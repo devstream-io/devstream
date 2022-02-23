@@ -12,8 +12,8 @@ import (
 
 // if filename is "", use the remote filename at local.
 func Download(url, filename, targetDir string) (int64, error) {
-	log.Debugf("Target dir: %s", targetDir)
-	log.Debugf("URL: %s", url)
+	log.Debugf("Target dir: %s.", targetDir)
+	log.Debugf("URL: %s.", url)
 	resp, err := http.Get(url)
 	if err != nil {
 		return 0, err
@@ -23,7 +23,7 @@ func Download(url, filename, targetDir string) (int64, error) {
 	if fileName == "" {
 		fileName = filepath.Base(url)
 	}
-	log.Debugf("Filename: %s", fileName)
+	log.Debugf("Filename: %s.", fileName)
 	if fileName == "." {
 		return 0, fmt.Errorf("failed to get the filename from url: %s", url)
 	}

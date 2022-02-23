@@ -23,7 +23,7 @@ func Read(options *map[string]interface{}) (map[string]interface{}, error) {
 
 	if errs := validate(&param); len(errs) != 0 {
 		for _, e := range errs {
-			log.Errorf("Param error: %s", e)
+			log.Errorf("Param error: %s.", e)
 		}
 		return nil, fmt.Errorf("params are illegal")
 	}
@@ -47,16 +47,16 @@ func Read(options *map[string]interface{}) (map[string]interface{}, error) {
 	for _, dp := range dps {
 		dpName := dp.GetName()
 		if !slices.Contains(DefaultDeploymentList, dpName) {
-			log.Infof("Found unknown deployment: %s", dpName)
+			log.Infof("Found unknown deployment: %s.", dpName)
 		}
 
 		ready := kubeClient.IsDeploymentReady(&dp)
 		retState.Workflows.AddDeployment(dpName, ready)
-		log.Debugf("The deployment %s is %t", dp.GetName(), ready)
+		log.Debugf("The deployment %s is %t.", dp.GetName(), ready)
 	}
 
 	retMap := retState.ToStringInterfaceMap()
-	log.Debugf("Return map: %v", retMap)
+	log.Debugf("Return map: %v.", retMap)
 
 	return retMap, nil
 }

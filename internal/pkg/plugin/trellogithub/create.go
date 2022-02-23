@@ -12,7 +12,7 @@ func Create(options *map[string]interface{}) (map[string]interface{}, error) {
 	}
 
 	api := gis.GetApi()
-	log.Infof("api is: %s.", api.Name)
+	log.Infof("API is: %s.", api.Name)
 	ws := defaultWorkflows.GetWorkflowByNameVersionTypeString(api.Name)
 
 	for _, w := range ws {

@@ -23,8 +23,8 @@ func verifyCMDFunc(cmd *cobra.Command, args []string) {
 	}
 
 	if healthy {
-		log.Success("all tools are healthy")
+		log.Success("All tools are healthy.")
 	} else {
-		log.Error("some tools are NOT healthy!!!")
+		log.Error("Some tools are NOT healthy!!!")
 	}
 }

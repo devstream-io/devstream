@@ -113,12 +113,12 @@ func (gi *TrelloGithub) FetchRemoteContent(wsFiles []string) ([]string, map[stri
 
 	// error reason is not 404
 	if err != nil && !strings.Contains(err.Error(), "404") {
-		log.Errorf("GetContents failed with error: %s", err)
+		log.Errorf("GetContents failed with error: %s.", err)
 		return nil, nil, err
 	}
 	// StatusCode == 404
 	if resp.StatusCode == http.StatusNotFound {
-		log.Error("GetContents returned with status code 404")
+		log.Error("GetContents returned with status code 404.")
 		retMap := mapz.FillMapWithStrAndError(wsFiles, fmt.Errorf("not found"))
 		return nil, retMap, nil
 	}
@@ -127,9 +127,9 @@ func (gi *TrelloGithub) FetchRemoteContent(wsFiles []string) ([]string, map[stri
 		return nil, nil, fmt.Errorf("got some error: %s", resp.Status)
 	}
 	// StatusCode == 200
-	log.Info("GetContents return with status code 200")
+	log.Info("GetContents return with status code 200.")
 	for _, f := range dirContent {
-		log.Infof("Found remote file: %s", f.GetName())
+		log.Infof("Found remote file: %s.", f.GetName())
 		filesInRemoteDir = append(filesInRemoteDir, f.GetName())
 	}
 	return filesInRemoteDir, nil, nil

@@ -31,13 +31,13 @@ func Verify(configFile string) (bool, error) {
 
 	smgr, err := statemanager.NewManager(b)
 	if err != nil {
-		log.Debugf("Failed to get the manager. %s", err)
+		log.Debugf("Failed to get the manager: %s.", err)
 		return false, err
 	}
 
 	changes, err := GetChangesForApply(smgr, cfg)
 	if err != nil {
-		log.Debugf("Get changes for apply failed: %s", err)
+		log.Debugf("Get changes for apply failed: %s.", err)
 		return false, err
 	}
 	if len(changes) == 0 {
@@ -46,7 +46,7 @@ func Verify(configFile string) (bool, error) {
 	}
 
 	for _, c := range changes {
-		log.Infof("The plugin < %s > has been changed, need to %s", c.Tool.Name, c.ActionName)
+		log.Infof("The plugin < %s > has been changed, need to %s.", c.Tool.Name, c.ActionName)
 	}
 	return false, nil
 }

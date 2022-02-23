@@ -24,7 +24,7 @@ func Read(options *map[string]interface{}) (map[string]interface{}, error) {
 
 	if errs := validate(&param); len(errs) != 0 {
 		for _, e := range errs {
-			log.Errorf("Param error: %s", e)
+			log.Errorf("Param error: %s.", e)
 		}
 		return nil, fmt.Errorf("params are illegal")
 	}
@@ -44,17 +44,17 @@ func Read(options *map[string]interface{}) (map[string]interface{}, error) {
 
 	err = readDeployments(kubeClient, namespace, releaseName, retState)
 	if err != nil {
-		log.Debugf("Failed to read deployments: %s", err)
+		log.Debugf("Failed to read deployments: %s.", err)
 		return nil, err
 	}
 	err = readDaemonsets(kubeClient, namespace, releaseName, retState)
 	if err != nil {
-		log.Debugf("Failed to read daemonsets: %s", err)
+		log.Debugf("Failed to read daemonsets: %s.", err)
 		return nil, err
 	}
 	err = readStatefulsets(kubeClient, namespace, releaseName, retState)
 	if err != nil {
-		log.Debugf("Failed to read statefulsets: %s", err)
+		log.Debugf("Failed to read statefulsets: %s.", err)
 		return nil, err
 	}
 
@@ -65,26 +65,26 @@ func Read(options *map[string]interface{}) (map[string]interface{}, error) {
 func readDeployments(kubeClient *k8s.Client, namespace, releaseName string, state *helm.InstanceState) error {
 	dps, err := kubeClient.ListDeployments(namespace)
 	if err != nil {
-		log.Debugf("Failed to list deployments: %s", err)
+		log.Debugf("Failed to list deployments: %s.", err)
 		return err
 	}
 
 	for _, dp := range dps {
 		if kubeClient.IsDeploymentReady(&dp) {
-			log.Infof("The deployment %s is ready", dp.Name)
+			log.Infof("The deployment %s is ready.", dp.Name)
 			continue
 		}
-		log.Warnf("The deployment %s is not ready", dp.Name)
+		log.Warnf("The deployment %s is not ready.", dp.Name)
 
 		DefaultDeploymentList := GetDefaultDeploymentList(releaseName)
 		dpName := dp.GetName()
 		if !slices.Contains(DefaultDeploymentList, dpName) {
-			log.Infof("Found unknown deployment: %s", dpName)
+			log.Infof("Found unknown deployment: %s.", dpName)
 		}
 
 		ready := kubeClient.IsDeploymentReady(&dp)
 		state.Workflows.AddDeployment(dpName, ready)
-		log.Debugf("The deployment %s is %t", dp.GetName(), ready)
+		log.Debugf("The deployment %s is %t.", dp.GetName(), ready)
 	}
 
 	return nil
@@ -93,26 +93,26 @@ func readDeployments(kubeClient *k8s.Client, namespace, releaseName string, stat
 func readDaemonsets(kubeClient *k8s.Client, namespace, releaseName string, state *helm.InstanceState) error {
 	dss, err := kubeClient.ListDaemonsets(namespace)
 	if err != nil {
-		log.Debugf("Failed to list daemonsets: %s", err)
+		log.Debugf("Failed to list daemonsets: %s.", err)
 		return err
 	}
 
 	for _, ds := range dss {
 		if kubeClient.IsDaemonsetReady(&ds) {
-			log.Infof("The daemonset %s is ready", ds.Name)
+			log.Infof("The daemonset %s is ready.", ds.Name)
 			continue
 		}
-		log.Warnf("The daemonset %s is not ready", ds.Name)
+		log.Warnf("The daemonset %s is not ready.", ds.Name)
 
 		DefaultDaemonsetList := GetDefaultDaemonsetList(releaseName)
 		dsName := ds.GetName()
 		if !slices.Contains(DefaultDaemonsetList, dsName) {
-			log.Infof("Found unknown daemonset: %s", dsName)
+			log.Infof("Found unknown daemonset: %s.", dsName)
 		}
 
 		ready := kubeClient.IsDaemonsetReady(&ds)
 		state.Workflows.AddDaemonset(dsName, ready)
-		log.Debugf("The daemonset %s is %t", ds.GetName(), ready)
+		log.Debugf("The daemonset %s is %t.", ds.GetName(), ready)
 	}
 
 	return nil
@@ -121,26 +121,26 @@ func readDaemonsets(kubeClient *k8s.Client, namespace, releaseName string, state
 func readStatefulsets(kubeClient *k8s.Client, namespace, releaseName string, state *helm.InstanceState) error {
 	sss, err := kubeClient.ListStatefulsets(namespace)
 	if err != nil {
-		log.Debugf("Failed to list statefulsets: %s", err)
+		log.Debugf("Failed to list statefulsets: %s.", err)
 		return err
 	}
 
 	for _, ss := range sss {
 		if kubeClient.IsStatefulsetReady(&ss) {
-			log.Infof("The statefulset %s is ready", ss.Name)
+			log.Infof("The statefulset %s is ready.", ss.Name)
 			continue
 		}
-		log.Warnf("The statefulset %s is not ready", ss.Name)
+		log.Warnf("The statefulset %s is not ready.", ss.Name)
 
 		DefaultStatefulsetList := GetDefaultStatefulsetList(releaseName)
 		ssName := ss.GetName()
 		if !slices.Contains(DefaultStatefulsetList, ssName) {
-			log.Infof("Found unknown statefulset: %s", ssName)
+			log.Infof("Found unknown statefulset: %s.", ssName)
 		}
 
 		ready := kubeClient.IsStatefulsetReady(&ss)
 		state.Workflows.AddStatefulset(ssName, ready)
-		log.Debugf("The statefulset %s is %t", ss.GetName(), ready)
+		log.Debugf("The statefulset %s is %t.", ss.GetName(), ready)
 	}
 
 	return nil

@@ -19,7 +19,7 @@ func Create(options *map[string]interface{}) (map[string]interface{}, error) {
 
 	if errs := validate(&param); len(errs) != 0 {
 		for _, e := range errs {
-			log.Errorf("Param error: %s", e)
+			log.Errorf("Param error: %s.", e)
 		}
 		return nil, fmt.Errorf("params are illegal")
 	}
@@ -30,38 +30,83 @@ func Create(options *map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	h, err := helm.NewHelm(param.GetHelmParam())
+	var err error
+	defer func() {
+		if err == nil {
+			return
+		}
+		if err = dealWithNsWhenInterruption(&param); err != nil {
+			log.Errorf("Failed to deal with namespace: %s.", err)
+		}
+	}()
+
+	var h *helm.Helm
+	h, err = helm.NewHelm(param.GetHelmParam())
 	if err != nil {
 		return nil, err
 	}
 
 	// pre-create
 	if err = preCreate(); err != nil {
-		log.Errorf("The pre-create logic failed: %s", err)
+		log.Errorf("The pre-create logic failed: %s.", err)
 		return nil, err
 	}
 
 	log.Info("Installing or updating jenkins helm chart ...")
 	if err = h.InstallOrUpgradeChart(); err != nil {
+		log.Debugf("Failed to install or upgrade the Chart: %s.", err)
 		return nil, err
 	}
 
 	releaseName := param.Chart.ReleaseName
 	retMap := GetStaticState(releaseName).ToStringInterfaceMap()
-	log.Debugf("Return map: %v", retMap)
+	log.Debugf("Return map: %v.", retMap)
 
 	return retMap, nil
 }
 
+// TODO(daniel-hutao): All helm-style plugins has this code logic, maybe it's better to move it to a common package.
 func dealWithNsWhenInstall(param *Param) error {
 	if !param.CreateNamespace {
 		return nil
 	}
+
+	log.Debugf("Prepare to create the namespace: %s.", param.Chart.Namespace)
 
 	kubeClient, err := k8s.NewClient()
 	if err != nil {
 		return err
 	}
 
-	return kubeClient.CreateNamespace(param.Chart.Namespace)
+	err = kubeClient.CreateNamespace(param.Chart.Namespace)
+	if err != nil {
+		log.Debugf("Failed to create the namespace: %s.", param.Chart.Namespace)
+		return err
+	}
+
+	log.Debugf("The namespace %s has been created.", param.Chart.Namespace)
+	return nil
+}
+
+// TODO(daniel-hutao): All helm-style plugins has this code logic, maybe it's better to move it to a common package.
+func dealWithNsWhenInterruption(param *Param) error {
+	if !param.CreateNamespace {
+		return nil
+	}
+
+	log.Debugf("Prepare to delete the namespace: %s.", param.Chart.Namespace)
+
+	kubeClient, err := k8s.NewClient()
+	if err != nil {
+		return err
+	}
+
+	err = kubeClient.DeleteNamespace(param.Chart.Namespace)
+	if err != nil {
+		log.Debugf("Failed to delete the namespace: %s.", param.Chart.Namespace)
+		return err
+	}
+
+	log.Debugf("The namespace %s has been deleted.", param.Chart.Namespace)
+	return nil
 }

@@ -35,7 +35,7 @@ type Repo struct {
 
 func InitRepoLocalAndPushToRemote(repoPath string, param *Param, ghClient *github.Client) error {
 	if err := ghClient.CreateRepo(); err != nil {
-		log.Infof("Failed to create repo: %s", err)
+		log.Infof("Failed to create repo: %s.", err)
 		return err
 	}
 	log.Info("Repo created.")
@@ -51,23 +51,23 @@ func WalkLocalRepoPath(repoPath string, param *Param, ghClient *github.Client) e
 	appName := param.Repo
 	if err := filepath.Walk(repoPath, func(path string, info fs.FileInfo, err error) error {
 		if err != nil {
-			log.Debugf("Walk error: %s", err)
+			log.Debugf("Walk error: %s.", err)
 			return err
 		}
 
 		if info.IsDir() {
-			log.Debugf("Found dir: %s", path)
+			log.Debugf("Found dir: %s.", path)
 			return nil
 		}
-		log.Debugf("Found file: %s", path)
+		log.Debugf("Found file: %s.", path)
 
 		if strings.Contains(path, ".git/") {
-			log.Debugf("Ignore this file -> %s", "./git/xxx")
+			log.Debugf("Ignore this file -> %s.", "./git/xxx")
 			return nil
 		}
 
 		if strings.HasSuffix(path, "README.md") {
-			log.Debugf("Ignore this file -> %s", "README.md")
+			log.Debugf("Ignore this file -> %s.", "README.md")
 			return nil
 		}
 
@@ -130,7 +130,7 @@ func Render(filePath string, param *Param) ([]byte, error) {
 			Owner: param.Owner,
 		},
 	}
-	log.Debugf("filePath: %s", filePath)
+	log.Debugf("FilePath: %s.", filePath)
 	log.Debugf("Config %v", config)
 
 	textBytes, err := ioutil.ReadFile(filePath)
@@ -142,13 +142,13 @@ func Render(filePath string, param *Param) ([]byte, error) {
 	tpl := template.New("github-repo-scaffolding-golang").Delims("[[", "]]")
 	parsed, err := tpl.Parse(textStr)
 	if err != nil {
-		log.Debugf("template parse file failed: %s", err)
+		log.Debugf("Template parse file failed: %s.", err)
 		return nil, err
 	}
 
 	var buf bytes.Buffer
 	if err = parsed.Execute(&buf, config); err != nil {
-		log.Debugf("template execute failed: %s", err)
+		log.Debugf("Template execute failed: %s.", err)
 		return nil, err
 	}
 
@@ -161,12 +161,12 @@ func genPathForGithub(filePath string) (string, error) {
 		return "", fmt.Errorf("unknown format: %s", filePath)
 	}
 	retStr := splitStrs[2]
-	log.Debugf("Path for github: %s", retStr)
+	log.Debugf("Path for github: %s.", retStr)
 	return retStr, nil
 }
 
 func replaceAppNameInPathStr(filePath, appName string) (string, error) {
-	log.Debugf("Got filePath %s", filePath)
+	log.Debugf("Got filePath %s.", filePath)
 
 	pet := "_app_name_"
 	reg, err := regexp.Compile(pet)
@@ -175,7 +175,7 @@ func replaceAppNameInPathStr(filePath, appName string) (string, error) {
 	}
 	newFilePath := reg.ReplaceAllString(filePath, appName)
 
-	log.Debugf("New filePath: %s", newFilePath)
+	log.Debugf("New filePath: %s.", newFilePath)
 
 	return newFilePath, nil
 }

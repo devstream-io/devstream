@@ -11,7 +11,7 @@ import (
 func (c *Client) GetLastCommit() (*github.RepositoryCommit, error) {
 	commits, _, err := c.Client.Repositories.ListCommits(c.Context, c.Owner, c.Repo, &github.CommitsListOptions{})
 	if err != nil {
-		log.Debugf("failed to get RepositoryCommits: %s", err)
+		log.Debugf("Failed to get RepositoryCommits: %s.", err)
 		return nil, err
 	}
 
