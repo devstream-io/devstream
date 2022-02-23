@@ -2,6 +2,7 @@ package pluginengine
 
 import (
 	"github.com/google/go-cmp/cmp"
+	"github.com/google/go-cmp/cmp/cmpopts"
 
 	"github.com/merico-dev/stream/internal/pkg/configloader"
 	"github.com/merico-dev/stream/internal/pkg/log"
@@ -28,6 +29,15 @@ func generateAction(tool *configloader.Tool, action statemanager.ComponentAction
 }
 
 func drifted(a, b map[string]interface{}) bool {
+	log.Debugf("a: %v.", a)
+	log.Debugf("b: %v.", b)
+
+	// nil vs empty map
+	if cmp.Equal(a, b, cmpopts.EquateEmpty()) {
+		return false
+	}
+
+	log.Debug(cmp.Diff(a, b))
 	return !cmp.Equal(a, b)
 }
 
