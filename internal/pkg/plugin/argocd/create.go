@@ -28,7 +28,18 @@ func Create(options *map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	h, err := helm.NewHelm(param.GetHelmParam())
+	var err error
+	defer func() {
+		if err == nil {
+			return
+		}
+		if err = dealWithNsWhenInterruption(&param); err != nil {
+			log.Errorf("Failed to deal with namespace: %s.", err)
+		}
+	}()
+
+	var h *helm.Helm
+	h, err = helm.NewHelm(param.GetHelmParam())
 	if err != nil {
 		return nil, err
 	}
@@ -36,11 +47,6 @@ func Create(options *map[string]interface{}) (map[string]interface{}, error) {
 	log.Info("Creating or updating argocd helm chart ...")
 	if err = h.InstallOrUpgradeChart(); err != nil {
 		log.Debugf("Failed to install or upgrade the Chart: %s.", err)
-		if err = dealWithNsWhenInterruption(&param); err != nil {
-			log.Debugf("Failed to deal with namespace: %s.", err)
-			// don't need to return this err here, just print it.
-			// The err return by InstallOrUpgradeChart() is more useful for the caller.
-		}
 		return nil, err
 	}
 
