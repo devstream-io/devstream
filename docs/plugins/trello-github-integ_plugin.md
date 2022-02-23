@@ -1,4 +1,4 @@
-## 1 Trello-Github Integration Plugin
+## 1 `trello-github-integ` Plugin
 
 This plugin creates a new Trello board and integrate it with your GitHub repo.
 

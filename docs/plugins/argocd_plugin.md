@@ -1,4 +1,4 @@
-## 1 ArgoCD Plugin
+## 1 `argocd` Plugin
 
 This plugin installs [ArgoCD](https://argoproj.github.io/cd/) in an existing Kubernetes cluster using the Helm chart.
 

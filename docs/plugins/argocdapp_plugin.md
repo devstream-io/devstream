@@ -1,6 +1,6 @@
-## 1 ArgoCD Application Plugin
+## 1 `argocdapp` Plugin
 
-This plugin installs an ArgoCD application.
+This plugin creates an ArgoCD Application.
 
 **Notes:**
 - ArgoCD itself must have been already installed before the usage of this plugin. To install ArgoCD, use [this plugin](https://github.com/merico-dev/stream/blob/main/docs/argocd_plugin.md).
