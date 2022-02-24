@@ -2,6 +2,7 @@ package golang
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/mitchellh/mapstructure"
 
@@ -44,7 +45,7 @@ func buildReadState(param *Param) (map[string]interface{}, error) {
 	}
 
 	res := make(map[string]interface{})
-	res["owner"] = *repo.Owner.Login
+	res["owner"] = strings.ToLower(*repo.Owner.Login)
 	res["repoName"] = *repo.Name
 
 	return res, nil
