@@ -23,13 +23,13 @@ func Read(options *map[string]interface{}) (map[string]interface{}, error) {
 	for name, err := range retMap {
 		if err != nil {
 			errFlag = true
-			log.Errorf("The workflow/file %s got some error: %s.", name, err)
+			log.Errorf("The workflow/file %s got some error: %s", name, err)
 		}
-		log.Infof("The workflow/file %s is ok.", name)
+		log.Infof("The workflow/file %s is ok", name)
 	}
 	if errFlag {
 		return nil, nil
 	}
 
-	return gis.buildReadState()
+	return gis.buildReadState(api)
 }

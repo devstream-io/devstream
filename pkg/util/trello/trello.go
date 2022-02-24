@@ -5,12 +5,15 @@ import (
 	"os"
 
 	"github.com/adlio/trello"
+
 	"github.com/merico-dev/stream/internal/pkg/log"
 )
 
 type Client struct {
 	*trello.Client
 }
+
+const DefaultListsNumber = 3
 
 func NewClient() (*Client, error) {
 	helpUrl := "https://docs.servicenow.com/bundle/quebec-it-asset-management/page/product/software-asset-management2/task/generate-trello-apikey-token.html"
@@ -25,11 +28,14 @@ func NewClient() (*Client, error) {
 	}, nil
 }
 
-func (c *Client) CreateBoard(boardName string) (*trello.Board, error) {
-	if boardName == "" {
-		return nil, fmt.Errorf("board name can't be empty")
+func (c *Client) CreateBoard(kanbanBoardName, owner, repo string) (*trello.Board, error) {
+	if kanbanBoardName == "" {
+		kanbanBoardName = fmt.Sprintf("%s/%s", owner, repo)
 	}
-	board := trello.NewBoard(boardName)
+
+	board := trello.NewBoard(kanbanBoardName)
+	board.Desc = boardDesc(owner, repo)
+
 	err := c.Client.CreateBoard(&board, trello.Defaults())
 	if err != nil {
 		return nil, err
@@ -44,27 +50,41 @@ func (c *Client) CreateList(board *trello.Board, listName string) (*trello.List,
 	return c.Client.CreateList(board, listName, trello.Defaults())
 }
 
-func (c *Client) GetBoardIdAndListId() (map[string]interface{}, error) {
-	res := make(map[string]interface{})
+// GetBoardIdAndListId get the board, which board name == kanbanBoardName, and board desc == owner/repo
+func (c *Client) GetBoardIdAndListId(owner, repo, kanbanBoardName string) (map[string]interface{}, error) {
 
+	res := make(map[string]interface{})
 	bs, err := c.Client.GetMyBoards()
 	if err != nil {
 		return nil, err
 	}
 
 	for _, b := range bs {
-		lists, err := b.GetLists()
-		if err != nil {
-			return nil, err
+		if checkTargetBoard(owner, repo, kanbanBoardName, b) {
+			lists, err := b.GetLists()
+			if err != nil {
+				return nil, err
+			}
+			if len(lists) != DefaultListsNumber {
+				log.Errorf("Unknown lists format: len==%d.", len(lists))
+				return nil, fmt.Errorf("unknown lists format: len==%d", len(lists))
+			}
+			res["boardId"] = b.ID
+			res["todoListId"] = lists[0].ID
+			res["doingListId"] = lists[1].ID
+			res["doneListId"] = lists[2].ID
 		}
-		if len(lists) != 3 {
-			log.Errorf("Unknown lists format: len==%d.", len(lists))
-			return nil, fmt.Errorf("unknown lists format: len==%d", len(lists))
-		}
-		res["boardId"] = b.ID
-		res["todoListId"] = lists[0].ID
-		res["doingListId"] = lists[1].ID
-		res["doneListId"] = lists[2].ID
 	}
 	return res, nil
+}
+
+func checkTargetBoard(owner, repo, kanbanBoardName string, b *trello.Board) bool {
+	if b.Name == kanbanBoardName && b.Desc == boardDesc(owner, repo) {
+		return true
+	}
+	return false
+}
+
+func boardDesc(owner, repo string) string {
+	return fmt.Sprintf("Description is managed by DevStream, please don't modify. %s/%s", owner, repo)
 }
