@@ -21,7 +21,7 @@ tools:
     version: 0.0.1
   # options for the plugin
   options:
-    # the repo's owner
+    # the repo's owner. please use lowercase
     owner: daniel-hutao
     # the repo which you'd like to create
     repo: golang-demo
