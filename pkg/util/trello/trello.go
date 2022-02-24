@@ -28,12 +28,12 @@ func NewClient() (*Client, error) {
 	}, nil
 }
 
-func (c *Client) CreateBoard(kanban, owner, repo string) (*trello.Board, error) {
-	if kanban == "" {
-		kanban = fmt.Sprintf("%s/%s", owner, repo)
+func (c *Client) CreateBoard(kanbanBoardName, owner, repo string) (*trello.Board, error) {
+	if kanbanBoardName == "" {
+		kanbanBoardName = fmt.Sprintf("%s/%s", owner, repo)
 	}
 
-	board := trello.NewBoard(kanban)
+	board := trello.NewBoard(kanbanBoardName)
 	board.Desc = boardDesc(owner, repo)
 
 	err := c.Client.CreateBoard(&board, trello.Defaults())
@@ -50,8 +50,8 @@ func (c *Client) CreateList(board *trello.Board, listName string) (*trello.List,
 	return c.Client.CreateList(board, listName, trello.Defaults())
 }
 
-// GetBoardIdAndListId get the board, which board name == kanban, and board desc == owner/repo
-func (c *Client) GetBoardIdAndListId(owner, repo, kanban string) (map[string]interface{}, error) {
+// GetBoardIdAndListId get the board, which board name == kanbanBoardName, and board desc == owner/repo
+func (c *Client) GetBoardIdAndListId(owner, repo, kanbanBoardName string) (map[string]interface{}, error) {
 
 	res := make(map[string]interface{})
 	bs, err := c.Client.GetMyBoards()
@@ -60,13 +60,13 @@ func (c *Client) GetBoardIdAndListId(owner, repo, kanban string) (map[string]int
 	}
 
 	for _, b := range bs {
-		if checkTargetBoard(owner, repo, kanban, b) {
+		if checkTargetBoard(owner, repo, kanbanBoardName, b) {
 			lists, err := b.GetLists()
 			if err != nil {
 				return nil, err
 			}
 			if len(lists) != DefaultListsNumber {
-				log.Errorf("Unknown lists format: len==%d", len(lists))
+				log.Errorf("Unknown lists format: len==%d.", len(lists))
 				return nil, fmt.Errorf("unknown lists format: len==%d", len(lists))
 			}
 			res["boardId"] = b.ID
@@ -78,13 +78,13 @@ func (c *Client) GetBoardIdAndListId(owner, repo, kanban string) (map[string]int
 	return res, nil
 }
 
-func checkTargetBoard(owner, repo, kanban string, b *trello.Board) bool {
-	if b.Name == kanban && b.Desc == boardDesc(owner, repo) {
+func checkTargetBoard(owner, repo, kanbanBoardName string, b *trello.Board) bool {
+	if b.Name == kanbanBoardName && b.Desc == boardDesc(owner, repo) {
 		return true
 	}
 	return false
 }
 
 func boardDesc(owner, repo string) string {
-	return fmt.Sprintf("Description managed by DevStream,don't change.%s/%s", owner, repo)
+	return fmt.Sprintf("Description is managed by DevStream, please don't modify. %s/%s", owner, repo)
 }

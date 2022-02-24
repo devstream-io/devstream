@@ -80,7 +80,7 @@ func (gi *TrelloGithub) buildReadState(api *Api) (map[string]interface{}, error)
 	if err != nil {
 		return nil, err
 	}
-	listIds, err := c.GetBoardIdAndListId(gi.options.Owner, gi.options.Repo, api.Kanban)
+	listIds, err := c.GetBoardIdAndListId(gi.options.Owner, gi.options.Repo, api.KanbanBoardName)
 	if err != nil {
 		return nil, err
 	}

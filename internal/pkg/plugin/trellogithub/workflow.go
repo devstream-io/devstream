@@ -29,8 +29,8 @@ type Options struct {
 }
 
 type Api struct {
-	Name   string
-	Kanban string
+	Name            string
+	KanbanBoardName string
 }
 
 // Workflow is the struct for a GitHub Actions Workflow.
