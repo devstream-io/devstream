@@ -28,27 +28,27 @@ func Create(options *map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	var err error
+	var retErr error
 	defer func() {
-		if err == nil {
+		if retErr == nil {
 			return
 		}
-		if err = dealWithNsWhenInterruption(&param); err != nil {
+		if err := dealWithNsWhenInterruption(&param); err != nil {
 			log.Errorf("Failed to deal with namespace: %s.", err)
 		}
 		log.Debugf("Deal with namespace when interruption succeeded.")
 	}()
 
 	var h *helm.Helm
-	h, err = helm.NewHelm(param.GetHelmParam())
-	if err != nil {
-		return nil, err
+	h, retErr = helm.NewHelm(param.GetHelmParam())
+	if retErr != nil {
+		return nil, retErr
 	}
 
 	log.Info("Creating or updating argocd helm chart ...")
-	if err = h.InstallOrUpgradeChart(); err != nil {
-		log.Debugf("Failed to install or upgrade the Chart: %s.", err)
-		return nil, err
+	if retErr = h.InstallOrUpgradeChart(); retErr != nil {
+		log.Debugf("Failed to install or upgrade the Chart: %s.", retErr)
+		return nil, retErr
 	}
 
 	retMap := GetStaticState().ToStringInterfaceMap()
@@ -60,6 +60,7 @@ func Create(options *map[string]interface{}) (map[string]interface{}, error) {
 // TODO(daniel-hutao): All helm-style plugins has this code logic, maybe it's better to move it to a common package.
 func dealWithNsWhenInstall(param *Param) error {
 	if !param.CreateNamespace {
+		log.Debugf("There's no need to delete the namespace for the create_namespace == false in the config file.")
 		return nil
 	}
 
