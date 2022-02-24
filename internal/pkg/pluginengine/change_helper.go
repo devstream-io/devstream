@@ -29,9 +29,6 @@ func generateAction(tool *configloader.Tool, action statemanager.ComponentAction
 }
 
 func drifted(a, b map[string]interface{}) bool {
-	log.Debugf("a: %v.", a)
-	log.Debugf("b: %v.", b)
-
 	// nil vs empty map
 	if cmp.Equal(a, b, cmpopts.EquateEmpty()) {
 		return false
@@ -56,6 +53,7 @@ func changesForApply(smgr statemanager.Manager, cfg *configloader.Config) ([]*Ch
 		} else {
 			// tool found in state
 			if drifted(tool.Options, state.Options) {
+				log.Debugf("Tool %s %s config options drifted from state.", tool.Name, tool.Plugin.Kind)
 				// tool's config differs from State's, Update
 				changes = append(changes, generateUpdateAction(&tool))
 				log.Infof("Change added: %s -> %s", tool.Name, statemanager.ActionUpdate)
@@ -73,6 +71,7 @@ func changesForApply(smgr statemanager.Manager, cfg *configloader.Config) ([]*Ch
 					changes = append(changes, generateCreateAction(&tool))
 					log.Infof("Change added: %s -> %s", tool.Name, statemanager.ActionCreate)
 				} else if drifted(resource, state.Resource) {
+					log.Debugf("Tool %s %s resource drifted from state.", tool.Name, tool.Plugin.Kind)
 					// resource drifted from state, Update
 					changes = append(changes, generateUpdateAction(&tool))
 					log.Infof("Change added: %s -> %s", tool.Name, statemanager.ActionUpdate)
