@@ -39,6 +39,11 @@ func Create(options *map[string]interface{}) (map[string]interface{}, error) {
 			log.Errorf("Failed to deal with namespace: %s.", err)
 		}
 		log.Debugf("Deal with namespace when interruption succeeded.")
+
+		// Clear all the resources have been created if the creation process interruption.
+		if err = postDelete(); err != nil {
+			log.Errorf("Failed to clear the resources have been created: %s.", err)
+		}
 	}()
 
 	var h *helm.Helm

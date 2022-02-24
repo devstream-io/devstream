@@ -38,6 +38,11 @@ func Delete(options *map[string]interface{}) (bool, error) {
 		return false, err
 	}
 
+	if err = postDelete(); err != nil {
+		log.Errorf("Failed to execute the post-delete logic. Error: %s.", err)
+		return false, err
+	}
+
 	return true, nil
 }
 
