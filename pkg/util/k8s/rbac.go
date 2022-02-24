@@ -21,11 +21,22 @@ func (c *Client) CreateServiceAccount(name, namespace string) error {
 
 	_, err := c.CoreV1().ServiceAccounts(namespace).Create(context.TODO(), sa, metav1.CreateOptions{})
 	if err != nil {
-		log.Errorf("Failed to create ServiceAccount < %s >: %s.", sa.Name, err)
+		log.Errorf("Failed to create the ServiceAccount < %s >: %s.", sa.Name, err)
 		return err
 	}
 
-	log.Debugf("The ServiceAccount < %s > has created.", sa.Name)
+	log.Debugf("The ServiceAccount < %s > has been created.", sa.Name)
+	return nil
+}
+
+func (c *Client) DeleteServiceAccount(name, namespace string) error {
+	err := c.CoreV1().ServiceAccounts(namespace).Delete(context.TODO(), name, metav1.DeleteOptions{})
+	if err != nil {
+		log.Errorf("Failed to delete the ServiceAccount < %s >: %s.", name, err)
+		return err
+	}
+
+	log.Debugf("The ServiceAccount < %s > has been deleted.", name)
 	return nil
 }
 
@@ -44,11 +55,22 @@ func (c *Client) CreateClusterRole(option *CROption) error {
 
 	_, err := c.RbacV1().ClusterRoles().Create(context.TODO(), cr, metav1.CreateOptions{})
 	if err != nil {
-		log.Errorf("Failed to create ClusterRole < %s >: %s.", cr.Name, err)
+		log.Errorf("Failed to create the ClusterRole < %s >: %s.", cr.Name, err)
 		return err
 	}
 
-	log.Debugf("The ClusterRole < %s > has created.", cr.Name)
+	log.Debugf("The ClusterRole < %s > has been created.", cr.Name)
+	return nil
+}
+
+func (c *Client) DeleteClusterRole(name string) error {
+	err := c.RbacV1().ClusterRoles().Delete(context.TODO(), name, metav1.DeleteOptions{})
+	if err != nil {
+		log.Errorf("Failed to delete the ClusterRole < %s >: %s.", name, err)
+		return err
+	}
+
+	log.Debugf("The ClusterRole < %s > has been deleted.", name)
 	return nil
 }
 
@@ -82,10 +104,21 @@ func (c *Client) CreateClusterRoleBinding(option *CRBOption) error {
 
 	_, err := c.RbacV1().ClusterRoleBindings().Create(context.TODO(), crb, metav1.CreateOptions{})
 	if err != nil {
-		log.Errorf("Failed to create ClusterRoleBinding < %s >: %s.", crb.Name, err)
+		log.Errorf("Failed to create the ClusterRoleBinding < %s >: %s.", crb.Name, err)
 		return err
 	}
 
-	log.Debugf("The ClusterRoleBinding < %s > has created.", crb.Name)
+	log.Debugf("The ClusterRoleBinding < %s > has been created.", crb.Name)
+	return nil
+}
+
+func (c *Client) DeleteClusterRoleBinding(name string) error {
+	err := c.RbacV1().ClusterRoleBindings().Delete(context.TODO(), name, metav1.DeleteOptions{})
+	if err != nil {
+		log.Errorf("Failed to delete the ClusterRoleBinding < %s >: %s.", name, err)
+		return err
+	}
+
+	log.Debugf("The ClusterRoleBinding < %s > has been deleted.", name)
 	return nil
 }
