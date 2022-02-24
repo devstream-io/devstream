@@ -3,7 +3,6 @@ package pluginengine
 import (
 	"fmt"
 
-	"github.com/merico-dev/stream/internal/pkg/backend"
 	"github.com/merico-dev/stream/internal/pkg/configloader"
 	"github.com/merico-dev/stream/internal/pkg/log"
 	"github.com/merico-dev/stream/internal/pkg/pluginmanager"
@@ -23,13 +22,7 @@ func Verify(configFile string) (bool, error) {
 		return false, err
 	}
 
-	// use default local backend for now.
-	b, err := backend.GetBackend(backend.BackendLocal)
-	if err != nil {
-		return false, err
-	}
-
-	smgr, err := statemanager.NewManager(b)
+	smgr, err := statemanager.NewManager()
 	if err != nil {
 		log.Debugf("Failed to get the manager: %s.", err)
 		return false, err
