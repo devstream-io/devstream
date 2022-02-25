@@ -8,7 +8,7 @@ import (
 	"github.com/google/go-github/v42/github"
 	"golang.org/x/oauth2"
 
-	"github.com/merico-dev/stream/internal/pkg/log"
+	"github.com/merico-dev/stream/pkg/util/log"
 )
 
 const (

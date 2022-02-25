@@ -9,9 +9,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/merico-dev/stream/internal/pkg/log"
-
 	"github.com/go-resty/resty/v2"
+
+	"github.com/merico-dev/stream/pkg/util/log"
 )
 
 const (

@@ -1,9 +1,9 @@
 package python
 
 import (
-	"github.com/merico-dev/stream/internal/pkg/log"
 	ga "github.com/merico-dev/stream/internal/pkg/plugin/githubactions"
 	"github.com/merico-dev/stream/pkg/util/github"
+	"github.com/merico-dev/stream/pkg/util/log"
 )
 
 // Create sets up GitHub Actions workflow(s).

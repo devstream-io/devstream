@@ -3,9 +3,9 @@ package golang
 import (
 	"github.com/spf13/viper"
 
-	"github.com/merico-dev/stream/internal/pkg/log"
 	ga "github.com/merico-dev/stream/internal/pkg/plugin/githubactions"
 	"github.com/merico-dev/stream/pkg/util/github"
+	"github.com/merico-dev/stream/pkg/util/log"
 )
 
 // Update remove and set up GitHub Actions workflows.

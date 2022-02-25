@@ -7,7 +7,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/merico-dev/stream/internal/pkg/log"
+	"github.com/merico-dev/stream/pkg/util/log"
 )
 
 // if filename is "", use the remote filename at local.

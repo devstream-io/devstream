@@ -7,7 +7,7 @@ import (
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	"github.com/merico-dev/stream/internal/pkg/log"
+	"github.com/merico-dev/stream/pkg/util/log"
 )
 
 type PVOption struct {

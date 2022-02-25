@@ -3,8 +3,8 @@ package jenkins
 import (
 	"fmt"
 
-	"github.com/merico-dev/stream/internal/pkg/log"
 	"github.com/merico-dev/stream/pkg/util/helm"
+	"github.com/merico-dev/stream/pkg/util/log"
 )
 
 var DefaultStatefulsetTplList = []string{

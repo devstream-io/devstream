@@ -47,6 +47,7 @@ build-linux-amd64: ## Cross-platform build for linux/amd64
 fmt: ## Run 'go fmt' & goimports against code.
 	go install golang.org/x/tools/cmd/goimports@latest
 	goimports -local="github.com/merico-dev/stream" -d -w cmd
+	goimports -local="github.com/merico-dev/stream" -d -w pkg
 	goimports -local="github.com/merico-dev/stream" -d -w internal
 	goimports -local="github.com/merico-dev/stream" -d -w test
 	go fmt ./...

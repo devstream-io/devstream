@@ -3,8 +3,8 @@ package devlake
 import (
 	"fmt"
 
-	"github.com/merico-dev/stream/internal/pkg/log"
 	"github.com/merico-dev/stream/pkg/util/k8s"
+	"github.com/merico-dev/stream/pkg/util/log"
 )
 
 const devLakeInstallYAMLDownloadURL = "https://raw.githubusercontent.com/merico-dev/lake/main/k8s-deploy.yaml"

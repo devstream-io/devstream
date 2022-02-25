@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/merico-dev/stream/internal/pkg/log"
 	"github.com/merico-dev/stream/internal/pkg/plugin/gitlabci/golang"
+	"github.com/merico-dev/stream/pkg/util/log"
 )
 
 // NAME is the name of this DevStream plugin.

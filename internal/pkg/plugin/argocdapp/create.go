@@ -6,8 +6,8 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/merico-dev/stream/internal/pkg/log"
 	"github.com/merico-dev/stream/pkg/util/kubectl"
+	"github.com/merico-dev/stream/pkg/util/log"
 )
 
 // Create creates an ArgoCD app YAML and applys it.

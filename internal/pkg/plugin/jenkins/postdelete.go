@@ -1,8 +1,8 @@
 package jenkins
 
 import (
-	"github.com/merico-dev/stream/internal/pkg/log"
 	"github.com/merico-dev/stream/pkg/util/k8s"
+	"github.com/merico-dev/stream/pkg/util/log"
 )
 
 func postDelete() error {

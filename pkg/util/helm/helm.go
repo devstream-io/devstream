@@ -5,10 +5,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/merico-dev/stream/internal/pkg/log"
-
 	helmclient "github.com/mittwald/go-helm-client"
 	"helm.sh/helm/v3/pkg/repo"
+
+	"github.com/merico-dev/stream/pkg/util/log"
 )
 
 type Helm struct {

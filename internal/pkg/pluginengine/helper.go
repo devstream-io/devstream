@@ -7,7 +7,7 @@ import (
 	"github.com/tcnksm/go-input"
 
 	"github.com/merico-dev/stream/internal/pkg/configloader"
-	"github.com/merico-dev/stream/internal/pkg/log"
+	"github.com/merico-dev/stream/pkg/util/log"
 )
 
 func getStateKeyFromTool(t *configloader.Tool) string {
