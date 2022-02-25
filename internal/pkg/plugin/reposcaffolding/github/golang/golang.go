@@ -182,7 +182,7 @@ func replaceAppNameInPathStr(filePath, appName string) (string, error) {
 
 func buildState(param *Param) map[string]interface{} {
 	res := make(map[string]interface{})
-	res["owner"] = strings.ToLower(param.Owner)
+	res["owner"] = param.Owner
 	res["repoName"] = param.Repo
 	return res
 }
