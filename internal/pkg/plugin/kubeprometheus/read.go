@@ -70,12 +70,6 @@ func readDeployments(kubeClient *k8s.Client, namespace, releaseName string, stat
 	}
 
 	for _, dp := range dps {
-		if kubeClient.IsDeploymentReady(&dp) {
-			log.Infof("The deployment %s is ready.", dp.Name)
-			continue
-		}
-		log.Warnf("The deployment %s is not ready.", dp.Name)
-
 		DefaultDeploymentList := GetDefaultDeploymentList(releaseName)
 		dpName := dp.GetName()
 		if !slices.Contains(DefaultDeploymentList, dpName) {
@@ -98,12 +92,6 @@ func readDaemonsets(kubeClient *k8s.Client, namespace, releaseName string, state
 	}
 
 	for _, ds := range dss {
-		if kubeClient.IsDaemonsetReady(&ds) {
-			log.Infof("The daemonset %s is ready.", ds.Name)
-			continue
-		}
-		log.Warnf("The daemonset %s is not ready.", ds.Name)
-
 		DefaultDaemonsetList := GetDefaultDaemonsetList(releaseName)
 		dsName := ds.GetName()
 		if !slices.Contains(DefaultDaemonsetList, dsName) {
@@ -126,12 +114,6 @@ func readStatefulsets(kubeClient *k8s.Client, namespace, releaseName string, sta
 	}
 
 	for _, ss := range sss {
-		if kubeClient.IsStatefulsetReady(&ss) {
-			log.Infof("The statefulset %s is ready.", ss.Name)
-			continue
-		}
-		log.Warnf("The statefulset %s is not ready.", ss.Name)
-
 		DefaultStatefulsetList := GetDefaultStatefulsetList(releaseName)
 		ssName := ss.GetName()
 		if !slices.Contains(DefaultStatefulsetList, ssName) {
