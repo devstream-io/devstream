@@ -38,20 +38,27 @@ type manager struct {
 
 var m *manager
 
-func NewManager(backend backend.Backend) (Manager, error) {
+func NewManager() (Manager, error) {
 	if m != nil {
 		return m, nil
 	}
 
 	log.Debugf("The global manager m is not initialized.")
 
+	// use default local backend for now.
+	b, err := backend.GetBackend(backend.BackendLocal)
+	if err != nil {
+		log.Errorf("Failed to get the Backend: %s.", err)
+		return nil, err
+	}
+
 	m = &manager{
-		Backend:   backend,
+		Backend:   b,
 		statesMap: NewStatesMap(),
 	}
 
 	// Read the initial states data
-	data, err := backend.Read()
+	data, err := b.Read()
 	if err != nil {
 		log.Debugf("Failed to read data from backend: %s.", err)
 		return nil, err

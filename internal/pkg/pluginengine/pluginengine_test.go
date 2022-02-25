@@ -7,7 +7,6 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/merico-dev/stream/internal/pkg/backend"
 	"github.com/merico-dev/stream/internal/pkg/backend/local"
 	"github.com/merico-dev/stream/internal/pkg/configloader"
 	"github.com/merico-dev/stream/internal/pkg/pluginengine"
@@ -17,15 +16,13 @@ import (
 var _ = Describe("Pluginengine", func() {
 	var (
 		smgr statemanager.Manager
+		err  error
 	)
 
 	BeforeEach(func() {
 		defer GinkgoRecover()
 
-		b, err := backend.GetBackend(backend.BackendLocal)
-		Expect(err).NotTo(HaveOccurred())
-
-		smgr, err = statemanager.NewManager(b)
+		smgr, err = statemanager.NewManager()
 		Expect(err).ToNot(HaveOccurred())
 		Expect(smgr).NotTo(BeNil())
 		_, _ = GinkgoWriter.Write([]byte("new a statemanager"))
@@ -85,7 +82,7 @@ var _ = Describe("Pluginengine", func() {
 			Tools: []configloader.Tool{*getTool(name, kind, version)},
 		}
 
-		err := smgr.AddState(fmt.Sprintf("%s_%s", name, kind), statemanager.State{})
+		err = smgr.AddState(fmt.Sprintf("%s_%s", name, kind), statemanager.State{})
 		Expect(err).NotTo(HaveOccurred())
 		changes, _ := pluginengine.GetChangesForDelete(smgr, cfg)
 
