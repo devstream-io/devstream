@@ -1,7 +1,7 @@
 package trellogithub
 
 import (
-	"github.com/merico-dev/stream/internal/pkg/log"
+	"github.com/merico-dev/stream/pkg/util/log"
 )
 
 // Delete remove trello-github-integ workflows.

@@ -3,11 +3,10 @@ package main
 import (
 	"os"
 
-	"github.com/merico-dev/stream/internal/pkg/log"
-
 	"github.com/spf13/cobra"
 
 	"github.com/merico-dev/stream/internal/pkg/pluginengine"
+	"github.com/merico-dev/stream/pkg/util/log"
 )
 
 var deleteCMD = &cobra.Command{

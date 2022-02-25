@@ -6,7 +6,7 @@ import (
 	"gopkg.in/yaml.v3"
 
 	"github.com/merico-dev/stream/internal/pkg/configloader"
-	"github.com/merico-dev/stream/internal/pkg/log"
+	"github.com/merico-dev/stream/pkg/util/log"
 	"github.com/merico-dev/stream/pkg/util/mapz/concurrentmap"
 )
 

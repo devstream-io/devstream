@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/merico-dev/stream/internal/pkg/log"
 	"github.com/xanzy/go-gitlab"
+
+	"github.com/merico-dev/stream/pkg/util/log"
 )
 
 var client *Client

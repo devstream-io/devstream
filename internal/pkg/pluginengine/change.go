@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/merico-dev/stream/internal/pkg/configloader"
-	"github.com/merico-dev/stream/internal/pkg/log"
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
+	"github.com/merico-dev/stream/pkg/util/log"
 )
 
 // Change is a wrapper with a single Tool and its Action should be execute.

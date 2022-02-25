@@ -8,8 +8,8 @@ import (
 	"github.com/google/go-github/v42/github"
 	"github.com/spf13/viper"
 
-	"github.com/merico-dev/stream/internal/pkg/log"
 	gh "github.com/merico-dev/stream/pkg/util/github"
+	"github.com/merico-dev/stream/pkg/util/log"
 	"github.com/merico-dev/stream/pkg/util/mapz"
 )
 

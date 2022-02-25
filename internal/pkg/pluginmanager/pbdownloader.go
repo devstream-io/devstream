@@ -12,9 +12,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/merico-dev/stream/internal/pkg/log"
-
 	"github.com/cheggaaa/pb"
+
+	"github.com/merico-dev/stream/pkg/util/log"
 )
 
 type PbDownloadClient struct {

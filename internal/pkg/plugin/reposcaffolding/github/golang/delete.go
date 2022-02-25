@@ -5,8 +5,8 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/merico-dev/stream/internal/pkg/log"
 	"github.com/merico-dev/stream/pkg/util/github"
+	"github.com/merico-dev/stream/pkg/util/log"
 )
 
 // Delete uninstalls github-repo-scaffolding-golang with provided options.

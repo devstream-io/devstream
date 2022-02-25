@@ -4,12 +4,12 @@ import (
 	"os"
 	"time"
 
-	backoff "github.com/cenkalti/backoff/v4"
+	"github.com/cenkalti/backoff/v4"
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/merico-dev/stream/internal/pkg/log"
 	"github.com/merico-dev/stream/pkg/util/downloader"
 	"github.com/merico-dev/stream/pkg/util/kubectl"
+	"github.com/merico-dev/stream/pkg/util/log"
 )
 
 func Create(options *map[string]interface{}) (map[string]interface{}, error) {

@@ -6,11 +6,10 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/merico-dev/stream/internal/pkg/log"
-
 	"github.com/spf13/viper"
 
 	"github.com/merico-dev/stream/internal/pkg/configloader"
+	"github.com/merico-dev/stream/pkg/util/log"
 )
 
 func DownloadPlugins(conf *configloader.Config) error {

@@ -11,8 +11,8 @@ import (
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/client-go/util/homedir"
 
-	"github.com/merico-dev/stream/internal/pkg/log"
 	"github.com/merico-dev/stream/pkg/util/k8s"
+	"github.com/merico-dev/stream/pkg/util/log"
 )
 
 const (

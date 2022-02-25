@@ -5,7 +5,7 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/merico-dev/stream/internal/pkg/log"
+	"github.com/merico-dev/stream/pkg/util/log"
 )
 
 func parseAndValidateOptions(options *map[string]interface{}) (*Options, error) {

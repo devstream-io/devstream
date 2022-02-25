@@ -5,9 +5,9 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/merico-dev/stream/internal/pkg/log"
 	"github.com/merico-dev/stream/pkg/util/helm"
 	"github.com/merico-dev/stream/pkg/util/k8s"
+	"github.com/merico-dev/stream/pkg/util/log"
 )
 
 // Delete deletes kube-prometheus with provided options.

@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"time"
 
-	backoff "github.com/cenkalti/backoff/v4"
+	"github.com/cenkalti/backoff/v4"
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/merico-dev/stream/internal/pkg/log"
+	"github.com/merico-dev/stream/pkg/util/log"
 )
 
 func Read(options *map[string]interface{}) (map[string]interface{}, error) {

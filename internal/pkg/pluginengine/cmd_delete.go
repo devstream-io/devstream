@@ -6,9 +6,9 @@ import (
 	"os"
 
 	"github.com/merico-dev/stream/internal/pkg/configloader"
-	"github.com/merico-dev/stream/internal/pkg/log"
 	"github.com/merico-dev/stream/internal/pkg/pluginmanager"
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
+	"github.com/merico-dev/stream/pkg/util/log"
 )
 
 func Remove(configFile string, continueDirectly bool) error {

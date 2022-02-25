@@ -5,7 +5,7 @@ import (
 
 	"github.com/google/go-github/v42/github"
 
-	"github.com/merico-dev/stream/internal/pkg/log"
+	"github.com/merico-dev/stream/pkg/util/log"
 )
 
 func (c *Client) GetLastCommit() (*github.RepositoryCommit, error) {

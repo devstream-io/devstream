@@ -5,9 +5,9 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/merico-dev/stream/internal/pkg/log"
 	"github.com/merico-dev/stream/pkg/util/downloader"
 	"github.com/merico-dev/stream/pkg/util/kubectl"
+	"github.com/merico-dev/stream/pkg/util/log"
 )
 
 func Delete(options *map[string]interface{}) (bool, error) {
