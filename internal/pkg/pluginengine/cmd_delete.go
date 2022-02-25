@@ -5,10 +5,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/merico-dev/stream/internal/pkg/log"
-
-	"github.com/merico-dev/stream/internal/pkg/backend"
 	"github.com/merico-dev/stream/internal/pkg/configloader"
+	"github.com/merico-dev/stream/internal/pkg/log"
 	"github.com/merico-dev/stream/internal/pkg/pluginmanager"
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
 )
@@ -25,13 +23,7 @@ func Remove(configFile string, continueDirectly bool) error {
 		return err
 	}
 
-	// use default local backend for now.
-	b, err := backend.GetBackend(backend.BackendLocal)
-	if err != nil {
-		return err
-	}
-	// create a state manager using the default local backend
-	smgr, err := statemanager.NewManager(b)
+	smgr, err := statemanager.NewManager()
 	if err != nil {
 		log.Debugf("Failed to get the manager: %s.", err)
 		return err

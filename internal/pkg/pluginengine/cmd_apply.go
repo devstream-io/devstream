@@ -5,10 +5,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/merico-dev/stream/internal/pkg/log"
-
-	"github.com/merico-dev/stream/internal/pkg/backend"
 	"github.com/merico-dev/stream/internal/pkg/configloader"
+	"github.com/merico-dev/stream/internal/pkg/log"
 	"github.com/merico-dev/stream/internal/pkg/pluginmanager"
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
 )
@@ -25,21 +23,15 @@ func Apply(configFile string, continueDirectly bool) error {
 		return err
 	}
 
-	// use default local backend for now.
-	b, err := backend.GetBackend(backend.BackendLocal)
+	smgr, err := statemanager.NewManager()
 	if err != nil {
-		return err
-	}
-	// create a state manager using the default local backend
-	smgr, err := statemanager.NewManager(b)
-	if err != nil {
-		log.Debugf("Failed to get the manager. %s", err)
+		log.Debugf("Failed to get the manager: %s.", err)
 		return err
 	}
 
 	changes, err := GetChangesForApply(smgr, cfg)
 	if err != nil {
-		log.Debugf("Get changes for apply failed: %s", err)
+		log.Debugf("Get changes for apply failed: %s.", err)
 		return err
 	}
 	if len(changes) == 0 {
