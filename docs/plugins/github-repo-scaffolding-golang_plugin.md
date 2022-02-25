@@ -10,7 +10,7 @@ This plugin installs github-repo-scaffolding-golang.
 
 ## 2 Usage:
 
-Please note that the `owner` parameter is case-sensitive.
+**Please note that the `owner` parameter is case-sensitive.**
 
 ```yaml
 tools:
