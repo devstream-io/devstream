@@ -60,12 +60,6 @@ func readStatefulsets(kubeClient *k8s.Client, namespace, releaseName string, sta
 	}
 
 	for _, ss := range sss {
-		if kubeClient.IsStatefulsetReady(&ss) {
-			log.Infof("The statefulset %s is ready.", ss.Name)
-			continue
-		}
-		log.Warnf("The statefulset %s is not ready.", ss.Name)
-
 		DefaultStatefulsetList := GetDefaultStatefulsetList(releaseName)
 		ssName := ss.GetName()
 		if !slices.Contains(DefaultStatefulsetList, ssName) {
