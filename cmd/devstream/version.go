@@ -5,7 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/merico-dev/stream/internal/pkg/version"
+	"github.com/merico-dev/stream/cmd/devstream/version"
 )
 
 var versionCMD = &cobra.Command{
@@ -16,5 +16,5 @@ var versionCMD = &cobra.Command{
 }
 
 func versionCMDFunc(cmd *cobra.Command, args []string) {
-	fmt.Println(version.VERSION)
+	fmt.Println(version.Version)
 }
