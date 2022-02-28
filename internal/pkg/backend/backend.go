@@ -4,21 +4,12 @@ import (
 	"fmt"
 
 	"github.com/merico-dev/stream/internal/pkg/backend/local"
+	"github.com/merico-dev/stream/pkg/util/log"
 )
 
-type BackendType string
+type Type string
 
-const BackendLocal BackendType = "local"
-
-var backends map[BackendType]Backend
-
-func init() {
-	if backends == nil {
-		backends = map[BackendType]Backend{
-			BackendLocal: local.NewLocal(local.DefaultStateFile),
-		}
-	}
-}
+const Local Type = "local"
 
 // Backend is used to persist data, it can be local file/etcd/s3/...
 type Backend interface {
@@ -29,9 +20,12 @@ type Backend interface {
 }
 
 // GetBackend will return a Backend by the given name.
-func GetBackend(name BackendType) (Backend, error) {
-	if b, ok := backends[name]; ok {
-		return b, nil
+func GetBackend(typeName Type) (Backend, error) {
+	switch typeName {
+	case Local:
+		log.Debugf("Used the Backend: %s.", typeName)
+		return local.NewLocal(local.DefaultStateFile), nil
+	default:
+		return nil, fmt.Errorf("the backend type < %s > is illegal", typeName)
 	}
-	return nil, fmt.Errorf("the backend < %s > is illegal", name)
 }

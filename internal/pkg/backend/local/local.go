@@ -30,6 +30,7 @@ func NewLocal(filename string) *Local {
 		if err != nil {
 			log.Fatalf("Creating state file %s failed.", lFile)
 		}
+		log.Debugf("The state file %s have been created.", lFile)
 		defer file.Close()
 	}
 
