@@ -5,8 +5,8 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
+	. "github.com/merico-dev/stream/internal/pkg/plugin/common/helm"
 	"github.com/merico-dev/stream/pkg/util/helm"
-	"github.com/merico-dev/stream/pkg/util/k8s"
 	"github.com/merico-dev/stream/pkg/util/log"
 )
 
@@ -24,7 +24,7 @@ func Create(options *map[string]interface{}) (map[string]interface{}, error) {
 		return nil, fmt.Errorf("params are illegal")
 	}
 
-	if err := dealWithNsWhenInstall(&param); err != nil {
+	if err := DealWithNsWhenInstall(&param); err != nil {
 		return nil, err
 	}
 
@@ -33,7 +33,7 @@ func Create(options *map[string]interface{}) (map[string]interface{}, error) {
 		if retErr == nil {
 			return
 		}
-		if err := dealWithNsWhenInterruption(&param); err != nil {
+		if err := DealWithNsWhenInterruption(&param); err != nil {
 			log.Errorf("Failed to deal with namespace: %s.", err)
 		}
 		log.Debugf("Deal with namespace when interruption succeeded.")
@@ -56,51 +56,4 @@ func Create(options *map[string]interface{}) (map[string]interface{}, error) {
 	log.Debugf("Return map: %v", retMap)
 
 	return retMap, nil
-}
-
-// TODO(daniel-hutao): All helm-style plugins has this code logic, maybe it's better to move it to a common package.
-func dealWithNsWhenInstall(param *Param) error {
-	if !param.CreateNamespace {
-		log.Debugf("There's no need to delete the namespace for the create_namespace == false in the config file.")
-		return nil
-	}
-
-	log.Debugf("Prepare to create the namespace: %s.", param.Chart.Namespace)
-
-	kubeClient, err := k8s.NewClient()
-	if err != nil {
-		return err
-	}
-
-	err = kubeClient.CreateNamespace(param.Chart.Namespace)
-	if err != nil {
-		log.Debugf("Failed to create the namespace: %s.", param.Chart.Namespace)
-		return err
-	}
-
-	log.Debugf("The namespace %s has been created.", param.Chart.Namespace)
-	return nil
-}
-
-// TODO(daniel-hutao): All helm-style plugins has this code logic, maybe it's better to move it to a common package.
-func dealWithNsWhenInterruption(param *Param) error {
-	if !param.CreateNamespace {
-		return nil
-	}
-
-	log.Debugf("Prepare to delete the namespace: %s.", param.Chart.Namespace)
-
-	kubeClient, err := k8s.NewClient()
-	if err != nil {
-		return err
-	}
-
-	err = kubeClient.DeleteNamespace(param.Chart.Namespace)
-	if err != nil {
-		log.Debugf("Failed to delete the namespace: %s.", param.Chart.Namespace)
-		return err
-	}
-
-	log.Debugf("The namespace %s has been deleted.", param.Chart.Namespace)
-	return nil
 }

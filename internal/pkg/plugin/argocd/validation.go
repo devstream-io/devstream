@@ -1,6 +1,7 @@
 package argocd
 
 import (
+	. "github.com/merico-dev/stream/internal/pkg/plugin/common/helm"
 	"github.com/merico-dev/stream/pkg/util/helm"
 )
 
