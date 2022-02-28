@@ -19,7 +19,7 @@ const (
 	DefaultTemplateRepo  = "dtm-scaffolding-golang"
 	DefaultTemplateOwner = "merico-dev"
 	TransitBranch        = "init-with-devstream"
-	MainBranch           = "main"
+	DefaultMainBranch    = "main"
 )
 
 type Config struct {
@@ -44,11 +44,14 @@ func InitRepoLocalAndPushToRemote(repoPath string, param *Param, ghClient *githu
 		return err
 	}
 
-	return MergeCommits(ghClient)
+	mainBranch := getMainBranchName(param)
+	return MergeCommits(ghClient, mainBranch)
 }
 
 func WalkLocalRepoPath(repoPath string, param *Param, ghClient *github.Client) error {
 	appName := param.Repo
+	mainBranch := getMainBranchName(param)
+
 	if err := filepath.Walk(repoPath, func(path string, info fs.FileInfo, err error) error {
 		if err != nil {
 			log.Debugf("Walk error: %s.", err)
@@ -95,13 +98,13 @@ func WalkLocalRepoPath(repoPath string, param *Param, ghClient *github.Client) e
 		} else {
 			// the main branch needs a initial commit
 			if strings.Contains(newPathForGithub, "gitignore") {
-				err := ghClient.CreateFile(content, strings.TrimSuffix(newPathForGithub, ".tpl"), MainBranch)
+				err := ghClient.CreateFile(content, strings.TrimSuffix(newPathForGithub, ".tpl"), mainBranch)
 				if err != nil {
 					log.Debugf("Failed to add the .gitignore file.")
 					return err
 				}
 				log.Debugf("Added the .gitignore file.")
-				return ghClient.NewBranch(MainBranch, TransitBranch)
+				return ghClient.NewBranch(mainBranch, TransitBranch)
 			}
 			return ghClient.CreateFile(content, strings.TrimSuffix(newPathForGithub, ".tpl"), TransitBranch)
 		}
@@ -112,8 +115,8 @@ func WalkLocalRepoPath(repoPath string, param *Param, ghClient *github.Client) e
 	return nil
 }
 
-func MergeCommits(ghClient *github.Client) error {
-	number, err := ghClient.NewPullRequest(TransitBranch, MainBranch)
+func MergeCommits(ghClient *github.Client, mainBranch string) error {
+	number, err := ghClient.NewPullRequest(TransitBranch, mainBranch)
 	if err != nil {
 		return err
 	}
@@ -185,4 +188,11 @@ func buildState(param *Param) map[string]interface{} {
 	res["owner"] = param.Owner
 	res["repoName"] = param.Repo
 	return res
+}
+
+func getMainBranchName(param *Param) string {
+	if param.Branch == "" {
+		return DefaultMainBranch
+	}
+	return param.Branch
 }

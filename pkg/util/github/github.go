@@ -41,7 +41,11 @@ func NewClient(option *Option) (*Client, error) {
 		return client, nil
 	}
 
+	var retErr error
 	defer func() {
+		if retErr != nil {
+			return
+		}
 		if client.Option.WorkPath == "" {
 			client.Option.WorkPath = DefaultWorkPath
 		}
@@ -71,8 +75,9 @@ func NewClient(option *Option) (*Client, error) {
 		token = os.Getenv("github_token")
 	}
 	if token == "" {
-		return nil, fmt.Errorf("failed to initialize GitHub token. More info - " +
+		retErr = fmt.Errorf("failed to initialize GitHub token. More info - " +
 			"https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token")
+		return nil, retErr
 	}
 	log.Debugf("Token: %s.", token)
 
