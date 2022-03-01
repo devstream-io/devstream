@@ -66,7 +66,7 @@ Want to remove or reinstall a specific piece in the workflow? DevStream has got 
 
 | Type                   | Plugin                         | Note                           |
 |------------------------|--------------------------------|--------------------------------|
-| Issue Tracking         | trello-github-integ            | Trello/GitHub integratoin      |
+| Issue Tracking         | trello-github-integ            | Trello/GitHub integration      |
 | Source Code Management | github-repo-scaffolding-golang | Go WebApp scaffolding          |
 | CI                     | jenkins                        | Jenkins installation           |
 | CI                     | githubactions-golang           | GitHub Actions CI for Golang   |
@@ -198,6 +198,10 @@ A: Inspired by [`git`](https://github.com/git/git#readme), the name is (dependin
 - a symmetric, scientific acronym of **d**evs**t**rea**m**.
 - "devops toolchain manager": you're in a good mood, and it actually works for you.
 - "dead to me": when it breaks.
+
+## Community
+
+- <a href="https://discord.com/invite/83rDG6ydVZ" target="_blank">Discord</a>: Message us on Discord
 
 ## Contribute
 
