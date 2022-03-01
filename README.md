@@ -15,6 +15,8 @@
 
 ## DevStream, What Is It Anyway?
 
+> English | [中文](docs/README_zh.md)
+
 TL;DR: DevStream (CLI tool named `dtm`) is an open-source DevOps toolchain manager.
 
 Imagine you are starting a new project or ramping up a new team. Before writing the first line of code, you have to figure out the tools to run an effective SDLC process and from development to deployment. 
