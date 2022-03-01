@@ -17,40 +17,48 @@
 
 TL;DR: DevStream (CLI tool named `dtm`) is an open-source DevOps toolchain manager.
 
-Imagine you are in a new project. Before writing the first line of code, you would have to figure out the tools needed in the whole Software Development Life Cycle (SDLC). You would probably need the following pieces:
+Imagine you are starting a new project or ramping up a new team. Before writing the first line of code, you have to figure out the tools to run an effective SDLC process and from development to deployment. 
 
-- some kind of project management software or issue tracking tools (e.g., Jira);
-- someplace for source code management (GitHub and alike);
-- some tools for continuous integration (e.g., Jenkins, GitHub Actions, CircleCI, Travis CI);
-- some tools for continuous delivery or continuous deployment (e.g., fluxcd/flux2, ArgoCD, etc.);
-- someplace serving as the single source of truth for secrets and credentials (secrets manager, e.g., Vault by HashiCorp);
-- some tools for centralized logging and monitoring (for example, ELK, Prometheus/Grafana);
+Typically, you'd need the following pieces in place to work effectively:
 
-And maybe more. The list could go on for quite a bit.
+- Project management software or issue tracking tools (JIRA, etc.)
+- Source code management (GitHub, Bitbucket, etc.)
+- Continuous integration tools (Jenkins, CircleCI, Travis CI, etc.)
+- Continuous delivery/deployment tools (fluxcd/flux2, ArgoCD, etc.)
+- A single source of truth for secrets and credentials (secrets manager, e.g., Vault by HashiCorp)
+- Some tools for centralized logging and monitoring (for example, ELK, Prometheus/Grafana);
 
-And, there are multiple challenges in creating YOUR ideal SDLC workflow:
+The list could go on for quite a bit, but you get the idea!
 
-- There are too many choices. Even for a particular field, there are too many. Which is best? There is no "one-size-fits-all" answer because it totally depends.
-- Integration between different pieces.
-- The software world (and the DevOps world) changes and it changes fast. What's best for today might not be the best tomorrow. You want to switch some parts out and get some new state-of-the-art pieces in so that you always keep your efficiency high.
+There are many challenges in creating an effective and personalized workflow:
 
-To be fair, there are a few integrated products out there that may contain everything you might need, but they might not suit your specific requirements perfectly. So, the chance is, you will still want to go out and do your research, find the best pieces for you, and integrate them. And, it would be a lot of operational overhead if all you had to do all day was install and uninstall and integrate things.
+- There are too many choices. Which is best? There is no "one-size-fits-all" answer because it totally depends on your needs and preferences.
+- Integration between different pieces is challenging, creating silos and fragmentation.
+- The software world evolves fast. What's best today might not make sense tomorrow. If you want to switch parts or tools out, it can be challenging and resource intensive to manage.
 
-You probably have already seen where we are going with this, and you are right: DevStream, an open-source DevOps toolchain manager, aims to be the solution here.
+To be fair, there are a few integrated products out there that may contain everything you might need, but they might not suit your specific requirements perfectly. So, the chances are, you will still want to go out and do your research, find the best pieces, and integrate them yourself. That being said, to choose, launch, connect, and manage all these pieces take a lot of time and energy.
+
+You might be seeing where we are going with this...
+
+We wanted to make it easy to set up these personalized and flexible toolchains, so we built DevStream, an open-source DevOps toolchain manager.
 
 Think of the Linux kernel V.S. different distributions. Different distros offer different packages so that you can always choose the best for your need.
 
-Or, Think of `yum`, `apt`, or `apk`. You can easily set it up with your favorite packages for any new environment using these package managers.
+Or, think of `yum`, `apt`, or `apk`. You can easily set it up with your favorite packages for any new environment using these package managers.
 
-DevStream aims to be the package manager for DevOps tools. To be more ambitious, DevStream wants to be the Linux kernel, around which different distros can be created with various components so that you can always have the best components for each part of your SDLC workflow.
+DevStream aims to be the package manager for DevOps tools.
 
-## Why Using DevStream?
+To be more ambitious, DevStream wants to be the Linux kernel, around which different distros can be created with various components so that you can always have the best components for each part of your SDLC workflow.
+
+## Why Use DevStream?
 
 No more manual curl/wget download, apt install, helm install; no more local experiments and playing around just to get a piece of tool installed correctly.
 
-Define your wanted DevOps tools in a single human-readable YAML config file, and at the press of a button (one single command), you will have your whole DevOps toolchain and SDLC workflow set up.
+Define your desired DevOps tools in a single human-readable YAML config file, and at the press of a button (one single command), you will have your whole DevOps toolchain and SDLC workflow set up. Five Minutes. One Command.
 
-Want to install another different tool for a try? No problem. Want to remove or reinstall a specific piece in the whole workflow? Got your back.
+Want to install another different tool for a try? No problem.
+
+Want to remove or reinstall a specific piece in the workflow? DevStream has got your back!
 
 ## Supported DevOps Tools
 
