@@ -7,10 +7,6 @@ import (
 )
 
 func (c *Config) Validate() []error {
-	if len(c.Tools) == 0 {
-		return []error{fmt.Errorf("config has no tools defined")}
-	}
-
 	retErrors := make([]error, 0)
 
 	for _, t := range c.Tools {

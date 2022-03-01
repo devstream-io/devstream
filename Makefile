@@ -27,7 +27,7 @@ build-core: fmt vet ## Build dtm core only, without plugins, locally.
 	go mod tidy
 	go build -trimpath -gcflags="all=-N -l" -ldflags "-X github.com/merico-dev/stream/cmd/devstream/version.Version=${VERSION}" -o dtm-${GOOS}-${GOARCH} ./cmd/devstream/
 
-clean:
+clean: ## Remove local plugins and locally built artifacts.
 	rm -rf .devstream
 	rm -f dtm*
 	rm -rf build/working_dir
