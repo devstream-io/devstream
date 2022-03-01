@@ -171,7 +171,7 @@ To delete everything defined in the config, run:
 ./dtm delete -f examples/config.yaml
 ```
 
-_Note that this deletes everything defined in the config. If some config is deleted after apply (state has it but config not), `dtm delete` won't delete it. It differs from `dtm destroy` which will be implemented soon._
+_Note that this deletes everything defined in the config. If some config is deleted after apply (state has it but config not), `dtm delete` won't delete it. It differs from `dtm destroy`._
 
 Similarly, to delete without confirmation:
 
@@ -184,6 +184,14 @@ To verify, run:
 ```bash
 ./dtm verify -f examples/config.yaml
 ```
+
+To destroy everything, run:
+
+```bash
+./dtm destroy
+```
+
+_`dtm` will read the state, then determine which tools are installed, and then remove those tools. It's same as `dtm apply -f empty.yaml` (empty.yaml is an empty config file)._
 
 ## Architecture
 
