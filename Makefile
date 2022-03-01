@@ -56,9 +56,9 @@ vet: ## Run go vet against code.
 	go vet ./...
 
 e2e: build ## Run e2e tests.
-	./dtm apply -f config.yaml
-	./dtm verify -f config.yaml
-	./dtm delete -f config.yaml
+	./dtm-${GOOS}-${GOARCH} apply -f config.yaml
+	./dtm-${GOOS}-${GOARCH} verify -f config.yaml
+	./dtm-${GOOS}-${GOARCH} delete -f config.yaml
 
 e2e-up: ## Start kind cluster for e2e tests
 	sh hack/e2e/e2e-up.sh
