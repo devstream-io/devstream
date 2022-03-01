@@ -2,7 +2,7 @@ package golang
 
 import "github.com/merico-dev/stream/pkg/util/gitlab"
 
-func Delete(options *map[string]interface{}) (bool, error) {
+func Delete(options map[string]interface{}) (bool, error) {
 	opt, err := parseAndValidateOptions(options)
 	if err != nil {
 		return false, err

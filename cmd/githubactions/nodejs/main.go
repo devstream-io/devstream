@@ -12,22 +12,22 @@ const NAME = "githubactions-nodejs"
 type Plugin string
 
 // Create implements the installation of some GitHub Actions workflows.
-func (p Plugin) Create(options *map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Create(options map[string]interface{}) (map[string]interface{}, error) {
 	return nodejs.Create(options)
 }
 
 // Update implements the installation of some GitHub Actions workflows.
-func (p Plugin) Update(options *map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Update(options map[string]interface{}) (map[string]interface{}, error) {
 	return nodejs.Update(options)
 }
 
 // Read implements the healthy check of GitHub Actions workflows.
-func (p Plugin) Read(options *map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Read(options map[string]interface{}) (map[string]interface{}, error) {
 	return nodejs.Read(options)
 }
 
 // Delete implements the installation of some GitHub Actions workflows.
-func (p Plugin) Delete(options *map[string]interface{}) (bool, error) {
+func (p Plugin) Delete(options map[string]interface{}) (bool, error) {
 	return nodejs.Delete(options)
 }
 

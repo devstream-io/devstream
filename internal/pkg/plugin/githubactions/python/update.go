@@ -7,7 +7,7 @@ import (
 )
 
 // Update remove and set up GitHub Actions workflows.
-func Update(options *map[string]interface{}) (map[string]interface{}, error) {
+func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	opt, err := parseAndValidateOptions(options)
 	if err != nil {
 		return nil, err

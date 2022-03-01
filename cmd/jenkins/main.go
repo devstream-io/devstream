@@ -12,22 +12,22 @@ const NAME = "jenkins"
 type Plugin string
 
 // Create implements the create of the jenkins.
-func (p Plugin) Create(options *map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Create(options map[string]interface{}) (map[string]interface{}, error) {
 	return jenkins.Create(options)
 }
 
 // Update implements the update of the jenkins.
-func (p Plugin) Update(options *map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Update(options map[string]interface{}) (map[string]interface{}, error) {
 	return jenkins.Update(options)
 }
 
 // Read implements read of the jenkins.
-func (p Plugin) Read(options *map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Read(options map[string]interface{}) (map[string]interface{}, error) {
 	return jenkins.Read(options)
 }
 
 // Delete implements the delete of the jenkins.
-func (p Plugin) Delete(options *map[string]interface{}) (bool, error) {
+func (p Plugin) Delete(options map[string]interface{}) (bool, error) {
 	return jenkins.Delete(options)
 }
 

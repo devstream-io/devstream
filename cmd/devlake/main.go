@@ -12,22 +12,22 @@ const NAME = "devlake"
 type Plugin string
 
 // Create implements the installation of DevLake.
-func (p Plugin) Create(options *map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Create(options map[string]interface{}) (map[string]interface{}, error) {
 	return devlake.Create(options)
 }
 
 // Update implements the installation of DevLake.
-func (p Plugin) Update(options *map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Update(options map[string]interface{}) (map[string]interface{}, error) {
 	return devlake.Update(options)
 }
 
 // Read implements the healthy check of DevLake.
-func (p Plugin) Read(options *map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Read(options map[string]interface{}) (map[string]interface{}, error) {
 	return devlake.Read(options)
 }
 
 // Delete Uninstall the installation of DevLake.
-func (p Plugin) Delete(options *map[string]interface{}) (bool, error) {
+func (p Plugin) Delete(options map[string]interface{}) (bool, error) {
 	return devlake.Delete(options)
 }
 

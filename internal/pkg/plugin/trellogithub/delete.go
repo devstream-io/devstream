@@ -5,7 +5,7 @@ import (
 )
 
 // Delete remove trello-github-integ workflows.
-func Delete(options *map[string]interface{}) (bool, error) {
+func Delete(options map[string]interface{}) (bool, error) {
 	gis, err := NewTrelloGithub(options)
 	if err != nil {
 		return false, err

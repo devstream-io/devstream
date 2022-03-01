@@ -7,7 +7,7 @@ import (
 )
 
 // Delete remove GitHub Actions workflows.
-func Delete(options *map[string]interface{}) (bool, error) {
+func Delete(options map[string]interface{}) (bool, error) {
 	opt, err := parseAndValidateOptions(options)
 	if err != nil {
 		return false, err

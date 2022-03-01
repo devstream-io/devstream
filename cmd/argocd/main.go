@@ -12,22 +12,22 @@ const NAME = "argocd"
 type Plugin string
 
 // Create implements the create of ArgoCD.
-func (p Plugin) Create(options *map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Create(options map[string]interface{}) (map[string]interface{}, error) {
 	return argocd.Create(options)
 }
 
 // Update implements the update of ArgoCD.
-func (p Plugin) Update(options *map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Update(options map[string]interface{}) (map[string]interface{}, error) {
 	return argocd.Update(options)
 }
 
 // Delete implements the delete of ArgoCD.
-func (p Plugin) Delete(options *map[string]interface{}) (bool, error) {
+func (p Plugin) Delete(options map[string]interface{}) (bool, error) {
 	return argocd.Delete(options)
 }
 
 // Read implements the read of ArgoCD.
-func (p Plugin) Read(options *map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Read(options map[string]interface{}) (map[string]interface{}, error) {
 	return argocd.Read(options)
 }
 

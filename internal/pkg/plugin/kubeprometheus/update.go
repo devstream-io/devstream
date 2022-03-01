@@ -5,7 +5,7 @@ import (
 )
 
 // Update updates kube-prometheus with provided options.
-func Update(options *map[string]interface{}) (map[string]interface{}, error) {
+func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	_, err := Delete(options)
 	if err != nil {
 		log.Errorf("Failed to delete the kube-prometheus: %s", err)
