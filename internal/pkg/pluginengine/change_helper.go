@@ -21,6 +21,17 @@ func generateDeleteAction(tool *configloader.Tool) *Change {
 	return generateAction(tool, statemanager.ActionDelete)
 }
 
+func generateDeleteActionFromState(state statemanager.State) *Change {
+	return &Change{
+		Tool: &configloader.Tool{
+			Name:    state.Name,
+			Plugin:  state.Plugin,
+			Options: state.Options,
+		},
+		ActionName: statemanager.ActionDelete,
+	}
+}
+
 func generateAction(tool *configloader.Tool, action statemanager.ComponentAction) *Change {
 	return &Change{
 		Tool:       tool.DeepCopy(),
@@ -38,11 +49,17 @@ func drifted(a, b map[string]interface{}) bool {
 	return !cmp.Equal(a, b)
 }
 
-// changesForApply is to filter all the Tools in cfg that need some actions
+// changesForApply generates "changes" according to:
+// - config
+// - state
+// - resource status (by calling the Read() interface of the plugin)
 func changesForApply(smgr statemanager.Manager, cfg *configloader.Config) ([]*Change, error) {
 	changes := make([]*Change, 0)
-	tmpStates := smgr.GetStatesMap().DeepCopy()
 
+	// 1, create a temporary state map used to store unprocessed tools.
+	tmpStatesMap := smgr.GetStatesMap().DeepCopy()
+
+	// 2, for each tool in the config, generate changes.
 	for _, tool := range cfg.Tools {
 		state := smgr.GetState(getStateKeyFromTool(&tool))
 
@@ -82,8 +99,19 @@ func changesForApply(smgr statemanager.Manager, cfg *configloader.Config) ([]*Ch
 			}
 		}
 
-		tmpStates.Delete(getStateKeyFromTool(&tool))
+		// delete the tool from the temporary state map since it's already been processed above
+		tmpStatesMap.Delete(getStateKeyFromTool(&tool))
 	}
+
+	// what's left in the temporary state map "tmpStatesMap" contains tools that:
+	// - have a state (probably created previously)
+	// - don't have a definition in the config (probably deleted by the user)
+	// thus, we need to generate a "delete" change for it.
+	tmpStatesMap.Range(func(key, value interface{}) bool {
+		changes = append(changes, generateDeleteActionFromState(value.(statemanager.State)))
+		log.Infof("Change added: %s -> %s", key.(string), statemanager.ActionDelete)
+		return true
+	})
 
 	return changes, nil
 }
