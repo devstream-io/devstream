@@ -26,11 +26,11 @@ type TrelloItemId struct {
 	doneListId  string
 }
 
-func NewTrelloGithub(options *map[string]interface{}) (*TrelloGithub, error) {
+func NewTrelloGithub(options map[string]interface{}) (*TrelloGithub, error) {
 	ctx := context.Background()
 
 	var opt Options
-	err := mapstructure.Decode(*options, &opt)
+	err := mapstructure.Decode(options, &opt)
 	if err != nil {
 		return nil, err
 	}

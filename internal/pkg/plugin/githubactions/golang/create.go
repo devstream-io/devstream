@@ -9,7 +9,7 @@ import (
 )
 
 // Create sets up GitHub Actions workflow(s).
-func Create(options *map[string]interface{}) (map[string]interface{}, error) {
+func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	opt, err := parseAndValidateOptions(options)
 	if err != nil {
 		return nil, err

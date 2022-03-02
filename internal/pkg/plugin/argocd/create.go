@@ -11,9 +11,9 @@ import (
 )
 
 // Create creates ArgoCD with provided options.
-func Create(options *map[string]interface{}) (map[string]interface{}, error) {
+func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	var param Param
-	if err := mapstructure.Decode(*options, &param); err != nil {
+	if err := mapstructure.Decode(options, &param); err != nil {
 		return nil, err
 	}
 

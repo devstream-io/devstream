@@ -10,9 +10,9 @@ import (
 )
 
 // Read check the health for github-repo-scaffolding-golang with provided options.
-func Read(options *map[string]interface{}) (map[string]interface{}, error) {
+func Read(options map[string]interface{}) (map[string]interface{}, error) {
 	var param Param
-	if err := mapstructure.Decode(*options, &param); err != nil {
+	if err := mapstructure.Decode(options, &param); err != nil {
 		return nil, err
 	}
 

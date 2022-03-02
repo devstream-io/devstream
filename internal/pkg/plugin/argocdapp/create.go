@@ -11,11 +11,11 @@ import (
 )
 
 // Create creates an ArgoCD app YAML and applys it.
-func Create(options *map[string]interface{}) (map[string]interface{}, error) {
+func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	var param Param
 
 	// decode input parameters into a struct
-	err := mapstructure.Decode(*options, &param)
+	err := mapstructure.Decode(options, &param)
 	if err != nil {
 		return nil, err
 	}

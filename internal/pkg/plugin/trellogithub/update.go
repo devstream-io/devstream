@@ -5,7 +5,7 @@ import (
 )
 
 // Update remove and set up trello-github-integ workflows.
-func Update(options *map[string]interface{}) (map[string]interface{}, error) {
+func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	gis, err := NewTrelloGithub(options)
 	if err != nil {
 		return nil, err

@@ -11,9 +11,9 @@ import (
 	"github.com/merico-dev/stream/pkg/util/log"
 )
 
-func Delete(options *map[string]interface{}) (bool, error) {
+func Delete(options map[string]interface{}) (bool, error) {
 	var param Param
-	if err := mapstructure.Decode(*options, &param); err != nil {
+	if err := mapstructure.Decode(options, &param); err != nil {
 		return false, err
 	}
 

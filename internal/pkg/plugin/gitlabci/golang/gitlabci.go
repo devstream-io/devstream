@@ -18,7 +18,7 @@ type Options struct {
 	Branch            string
 }
 
-func parseAndValidateOptions(options *map[string]interface{}) (*Options, error) {
+func parseAndValidateOptions(options map[string]interface{}) (*Options, error) {
 	var opt Options
 	err := mapstructure.Decode(options, &opt)
 	if err != nil {

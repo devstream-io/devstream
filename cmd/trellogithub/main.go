@@ -12,22 +12,22 @@ const NAME = "trellogithub"
 type Plugin string
 
 // Create implements the installation of some trello-github-integ workflows.
-func (p Plugin) Create(options *map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Create(options map[string]interface{}) (map[string]interface{}, error) {
 	return trellogithub.Create(options)
 }
 
 // Update implements the installation of some trello-github-integ workflows.
-func (p Plugin) Update(options *map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Update(options map[string]interface{}) (map[string]interface{}, error) {
 	return trellogithub.Update(options)
 }
 
 // Read implements the healthy check of trello-github-integ workflows.
-func (p Plugin) Read(options *map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Read(options map[string]interface{}) (map[string]interface{}, error) {
 	return trellogithub.Read(options)
 }
 
 // Delete implements the installation of some trello-github-integ workflows.
-func (p Plugin) Delete(options *map[string]interface{}) (bool, error) {
+func (p Plugin) Delete(options map[string]interface{}) (bool, error) {
 	return trellogithub.Delete(options)
 }
 
