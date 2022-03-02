@@ -37,4 +37,4 @@ devstream.state
 testbin/
 
 # plugins
-.github*
+.github-*
