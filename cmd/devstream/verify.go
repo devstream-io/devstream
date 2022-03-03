@@ -9,21 +9,17 @@ import (
 
 var verifyCMD = &cobra.Command{
 	Use:   "verify",
-	Short: "Verify DevOps tools according to DevStream configuration file",
-	Long:  `Verify DevOps tools according to DevStream configuration file.`,
+	Short: "Verify DevOps tools according to DevStream config file and state.",
+	Long:  `Verify DevOps tools according to DevStream config file and state.`,
 	Run:   verifyCMDFunc,
 }
 
 func verifyCMDFunc(cmd *cobra.Command, args []string) {
 	log.Info("Verify started.")
-	healthy, err := pluginengine.Verify(configFile)
-	if err != nil {
-		log.Fatalf("Verify error: %s.", err)
-	}
 
-	if healthy {
-		log.Success("All tools are healthy.")
+	if pluginengine.Verify(configFile) {
+		log.Success("Verify succeeded.")
 	} else {
-		log.Error("Some tools are NOT healthy!!!")
+		log.Info("Verify finished.")
 	}
 }
