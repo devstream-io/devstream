@@ -38,3 +38,7 @@ testbin/
 
 # plugins
 .github-*
+
+# terraform
+.terraform
+
