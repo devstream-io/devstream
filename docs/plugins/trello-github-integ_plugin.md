@@ -37,7 +37,7 @@ tools:
       name: trello
       kanbanBoardName: kanban-name
     # main branch of the repo (to which branch the plugin will submit the workflows)
-    branch: master
+    branch: main
 ```
 
 Currently, all the parameters in the example above are mandatory.
