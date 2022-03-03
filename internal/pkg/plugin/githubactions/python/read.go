@@ -27,7 +27,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	log.Infof("Language is: %s.", ga.GetLanguage(opt.Language))
+	log.Debugf("Language is: %s.", ga.GetLanguage(opt.Language))
 
 	return ga.BuildReadState(path), nil
 }

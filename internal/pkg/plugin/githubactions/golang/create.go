@@ -25,7 +25,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	log.Infof("Language is: %s.", ga.GetLanguage(opt.Language))
+	log.Debugf("Language is: %s.", ga.GetLanguage(opt.Language))
 
 	// if docker is enabled, create repo secrets for DOCKERHUB_USERNAME and DOCKERHUB_TOKEN
 	if opt.Docker.Enable {

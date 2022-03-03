@@ -23,7 +23,7 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	log.Infof("language is %s.", ga.GetLanguage(opt.Language))
+	log.Debugf("language is %s.", ga.GetLanguage(opt.Language))
 
 	for _, pipeline := range workflows {
 		err := gitHubClient.DeleteWorkflow(pipeline, opt.Branch)
