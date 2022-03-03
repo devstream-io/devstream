@@ -55,8 +55,9 @@ func LoadConf(fname string) *Config {
 	fileBytes, err := ioutil.ReadFile(fname)
 	if err != nil {
 		log.Error(err)
-		log.Info("Perhaps you forgot to specify the path of the config file by using the \"-f\" parameter?")
-		log.Fatal("See more help by running \"dtm help\".")
+		log.Info("Maybe the default file doesn't exist or you forgot to pass your config file to the \"-f\" option?")
+		log.Info("See \"dtm help\" for more information.")
+		return nil
 	}
 
 	log.Debugf("Config file: \n%s\n", string(fileBytes))

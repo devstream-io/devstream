@@ -11,9 +11,10 @@ import (
 
 // Change is a wrapper with a single Tool and its Action should be execute.
 type Change struct {
-	Tool       *configloader.Tool
-	ActionName statemanager.ComponentAction
-	Result     *ChangeResult
+	Tool        *configloader.Tool
+	ActionName  statemanager.ComponentAction
+	Result      *ChangeResult
+	Description string
 }
 
 // ChangeResult holds the result with a change action.

@@ -49,7 +49,5 @@ func (c *Client) GetRepoDescription() (*github.Repository, error) {
 		return nil, errors.New("response status is not 200 OK, but is " + fmt.Sprintf("%d", resp.StatusCode))
 	}
 
-	log.Successf("GitHub repo exists, repo is %s, owner is %s.", *rps.Name, *rps.Owner.Login)
-
 	return rps, nil
 }
