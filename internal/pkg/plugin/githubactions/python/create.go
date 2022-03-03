@@ -23,7 +23,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	log.Infof("Language is: %s.", ga.GetLanguage(opt.Language))
+	log.Debugf("Language is: %s.", ga.GetLanguage(opt.Language))
 
 	for _, w := range workflows {
 		if err := gitHubClient.AddWorkflow(w, opt.Branch); err != nil {
