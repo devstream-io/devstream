@@ -1,6 +1,8 @@
 package pluginengine
 
 import (
+	"fmt"
+
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
 
@@ -9,16 +11,16 @@ import (
 	"github.com/merico-dev/stream/pkg/util/log"
 )
 
-func generateCreateAction(tool *configloader.Tool) *Change {
-	return generateAction(tool, statemanager.ActionCreate)
+func generateCreateAction(tool *configloader.Tool, description string) *Change {
+	return generateAction(tool, statemanager.ActionCreate, description)
 }
 
-func generateUpdateAction(tool *configloader.Tool) *Change {
-	return generateAction(tool, statemanager.ActionUpdate)
+func generateUpdateAction(tool *configloader.Tool, description string) *Change {
+	return generateAction(tool, statemanager.ActionUpdate, description)
 }
 
-func generateDeleteAction(tool *configloader.Tool) *Change {
-	return generateAction(tool, statemanager.ActionDelete)
+func generateDeleteAction(tool *configloader.Tool, description string) *Change {
+	return generateAction(tool, statemanager.ActionDelete, description)
 }
 
 func generateDeleteActionFromState(state statemanager.State) *Change {
@@ -32,10 +34,11 @@ func generateDeleteActionFromState(state statemanager.State) *Change {
 	}
 }
 
-func generateAction(tool *configloader.Tool, action statemanager.ComponentAction) *Change {
+func generateAction(tool *configloader.Tool, action statemanager.ComponentAction, description string) *Change {
 	return &Change{
-		Tool:       tool.DeepCopy(),
-		ActionName: action,
+		Tool:        tool.DeepCopy(),
+		ActionName:  action,
+		Description: description,
 	}
 }
 
@@ -64,16 +67,15 @@ func changesForApply(smgr statemanager.Manager, cfg *configloader.Config) ([]*Ch
 		state := smgr.GetState(getStateKeyFromTool(&tool))
 
 		if state == nil {
-			// tool not in state, create, no need to Read resource before Create
-			changes = append(changes, generateCreateAction(&tool))
-			log.Infof("Change added: %s -> %s", tool.Name, statemanager.ActionCreate)
+			// tool not in the state, create, no need to Read resource before Create
+			description := fmt.Sprintf("Tool < %s > found in config but doesn't exist in the state, will be created.", tool.Name)
+			changes = append(changes, generateCreateAction(&tool, description))
 		} else {
-			// tool found in state
+			// tool found in the state
 			if drifted(tool.Options, state.Options) {
-				log.Debugf("Tool %s %s config options drifted from state.", tool.Name, tool.Plugin.Kind)
 				// tool's config differs from State's, Update
-				changes = append(changes, generateUpdateAction(&tool))
-				log.Infof("Change added: %s -> %s", tool.Name, statemanager.ActionUpdate)
+				description := fmt.Sprintf("Tool < %s > config drifted from the state, will be updated.", tool.Name)
+				changes = append(changes, generateUpdateAction(&tool, description))
 			} else {
 				// tool's config is the same as State's
 
@@ -84,17 +86,15 @@ func changesForApply(smgr statemanager.Manager, cfg *configloader.Config) ([]*Ch
 				}
 
 				if resource == nil {
-					// tool exists in state, but resource doesn't exist, Create
-					changes = append(changes, generateCreateAction(&tool))
-					log.Infof("Change added: %s -> %s", tool.Name, statemanager.ActionCreate)
+					// tool exists in the state, but resource doesn't exist, Create
+					description := fmt.Sprintf("Tool < %s > state found but it seems the tool isn't created, will be created.", tool.Name)
+					changes = append(changes, generateCreateAction(&tool, description))
 				} else if drifted(resource, state.Resource) {
-					log.Debugf("Tool %s %s resource drifted from state.", tool.Name, tool.Plugin.Kind)
 					// resource drifted from state, Update
-					changes = append(changes, generateUpdateAction(&tool))
-					log.Infof("Change added: %s -> %s", tool.Name, statemanager.ActionUpdate)
+					description := fmt.Sprintf("Tool < %s > drifted from the state, will be updated.", tool.Name)
+					changes = append(changes, generateUpdateAction(&tool, description))
 				} else {
 					// resource is the same as the state, do nothing
-					log.Debugf("Tool %s state and resource are the same, not drifted, do nothing.", tool.Name)
 				}
 			}
 		}
@@ -128,9 +128,8 @@ func changesForDelete(smgr statemanager.Manager, cfg *configloader.Config) []*Ch
 		if state == nil {
 			continue
 		}
-
-		changes = append(changes, generateDeleteAction(&tool))
-		log.Infof("Change added: %s -> %s", tool.Name, statemanager.ActionDelete)
+		description := fmt.Sprintf("Tool < %s > will be deleted.", tool.Name)
+		changes = append(changes, generateDeleteAction(&tool, description))
 		tmpStates.Delete(tool.Name)
 	}
 

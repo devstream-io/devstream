@@ -37,6 +37,9 @@ func Remove(configFile string, continueDirectly bool) error {
 		log.Info("Nothing needs to be deleted. There is nothing to do.")
 		return nil
 	}
+	for _, change := range changes {
+		log.Info(change.Description)
+	}
 
 	if !continueDirectly {
 		userInput := readUserInput()
