@@ -95,6 +95,7 @@ func changesForApply(smgr statemanager.Manager, cfg *configloader.Config) ([]*Ch
 					changes = append(changes, generateUpdateAction(&tool, description))
 				} else {
 					// resource is the same as the state, do nothing
+					log.Debugf("Tool < %s > is the same as the state, do nothing.", tool.Name)
 				}
 			}
 		}
