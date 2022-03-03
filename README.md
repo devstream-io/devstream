@@ -147,7 +147,11 @@ make e2e
 
 ## Configuration
 
-See [examples/config.yaml](./examples/config.yaml).
+This is an example of DevStream config: [examples/config.yaml](./examples/config.yaml).
+
+Remember to open this configuration file, modify all **DO_CHANGE_ME** in it to your own.
+
+Pay attention to the meaning of each item to ensure that it is what you want.
 
 ## Run
 
