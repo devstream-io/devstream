@@ -152,13 +152,11 @@ func (c *Client) GetWorkflowPath() (string, error) {
 		&github.RepositoryContentGetOptions{},
 	)
 
-	// error reason is not 404
-	if err != nil && !strings.Contains(err.Error(), "404") {
-		return "", err
+	if resp.StatusCode == http.StatusNotFound {
+		return "", nil
 	}
 
-	// error reason is 404
-	if resp.StatusCode == http.StatusNotFound {
+	if resp.StatusCode != http.StatusOK {
 		return "", err
 	}
 

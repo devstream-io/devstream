@@ -8,7 +8,6 @@ require (
 	github.com/argoproj/gitops-engine v0.5.2
 	github.com/cenkalti/backoff/v4 v4.1.2
 	github.com/cheggaaa/pb v1.0.29
-	github.com/go-errors/errors v1.0.1
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/google/go-cmp v0.5.6
 	github.com/google/go-github/v42 v42.0.0
@@ -71,6 +70,7 @@ require (
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/fvbommel/sortorder v1.0.1 // indirect
 	github.com/ghodss/yaml v1.0.0 // indirect
+	github.com/go-errors/errors v1.0.1 // indirect
 	github.com/go-git/gcfg v1.5.0 // indirect
 	github.com/go-git/go-billy/v5 v5.0.0 // indirect
 	github.com/go-git/go-git/v5 v5.2.0 // indirect
