@@ -75,7 +75,7 @@ func NewClient(option *Option) (*Client, error) {
 		token = os.Getenv("github_token")
 	}
 	if token == "" {
-		retErr = fmt.Errorf("failed to initialize GitHub token. More info - " +
+		retErr = fmt.Errorf("environment variable GITHUB_TOKEN is not set. Failed to initialize GitHub token. More info - " +
 			"https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token")
 		return nil, retErr
 	}
