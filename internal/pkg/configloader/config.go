@@ -35,9 +35,10 @@ type Tool struct {
 
 func (t *Tool) DeepCopy() *Tool {
 	var retTool = Tool{
-		Name:    t.Name,
-		Plugin:  t.Plugin,
-		Options: map[string]interface{}{},
+		Name:      t.Name,
+		Plugin:    t.Plugin,
+		DependsOn: t.DependsOn,
+		Options:   map[string]interface{}{},
 	}
 	for k, v := range t.Options {
 		retTool.Options[k] = v
