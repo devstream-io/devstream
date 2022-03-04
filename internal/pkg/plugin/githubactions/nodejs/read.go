@@ -17,12 +17,12 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 		Repo:     opt.Repo,
 		NeedAuth: true,
 	}
-	gitHubClient, err := github.NewClient(ghOptions)
+	ghClient, err := github.NewClient(ghOptions)
 	if err != nil {
 		return nil, err
 	}
 
-	path, err := gitHubClient.GetWorkflowPath()
+	path, err := ghClient.GetWorkflowPath()
 	if err != nil {
 		return nil, err
 	}
