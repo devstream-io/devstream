@@ -26,5 +26,5 @@ type Chart struct {
 	UpgradeCRDs     bool   `mapstructure:"upgradeCRDs"`
 	// ValuesYaml is the values.yaml content.
 	// use string instead of map[string]interface{}
-	ValuesYaml string
+	ValuesYaml string `mapstructure:"values_yaml"`
 }
