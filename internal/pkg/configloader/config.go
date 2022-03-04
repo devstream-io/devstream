@@ -71,7 +71,7 @@ func LoadConf(fname string) *Config {
 		return nil
 	}
 
-	errs := validate(&config)
+	errs := validateConfig(&config)
 
 	if len(errs) != 0 {
 		for _, e := range errs {

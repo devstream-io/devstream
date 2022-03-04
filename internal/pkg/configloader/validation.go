@@ -7,7 +7,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/validation"
 )
 
-func validate(config *Config) []error {
+func validateConfig(config *Config) []error {
 	errors := make([]error, 0)
 
 	for _, t := range config.Tools {
@@ -43,24 +43,30 @@ func validateTool(t *Tool) []error {
 func validateDependency(tools []Tool) []error {
 	errors := make([]error, 0)
 
+	// config "set" (map)
 	toolMap := make(map[string]bool)
-
+	// creating the set
 	for _, tool := range tools {
 		key := fmt.Sprintf("%s.%s", tool.Name, tool.Plugin.Kind)
 		toolMap[key] = true
 	}
 
 	for _, tool := range tools {
+		// no dependency, pass
 		if tool.DependsOn == "" {
 			continue
 		}
 
 		dependencies := strings.Split(tool.DependsOn, ",")
+		// for each dependency
 		for _, dependency := range dependencies {
 			dependency = strings.TrimSpace(dependency)
+			// skip empty string
 			if dependency == "" {
 				continue
 			}
+
+			// generate an error if the dependency isn't in the config set,
 			if _, ok := toolMap[dependency]; !ok {
 				errors = append(errors, fmt.Errorf("tool %s's dependency %s doesn't exist in the config", tool.Name, dependency))
 			}
