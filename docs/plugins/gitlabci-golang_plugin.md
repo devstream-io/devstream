@@ -16,11 +16,11 @@ tools:
     kind: gitlabci-golang
     # version of the plugin
     # checkout the version from the GitHub releases
-    version: 0.0.2
+    version: 0.2.0
   # options for the plugin
   options:
-    # owner/repo; "path with namespace" is only GitLab API's way of saying the same thing.
-    pathWithNamespace: ironcore864/golang-demo
+    # owner/repo; "path with namespace" is only GitLab API's way of saying the same thing; please change the values below.
+    pathWithNamespace: YOUR_GITLAB_USERNAME/YOUR_GITLAB_REPO_NAME
     # main branch of the repo (to which branch the plugin will submit the workflows)
     branch: main
 ```

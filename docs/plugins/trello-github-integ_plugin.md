@@ -24,17 +24,18 @@ tools:
     # kind of this plugin
     kind: trello-github-integ
     # version of the plugin
-    version: 0.0.1
+    version: 0.2.0
   # options for the plugin
   # checkout the version from the GitHub releases
   options:
-    # the repo's owner
-    owner: ironcore864
-    # the repo where you'd like to setup GitHub Actions
-    repo: go-hello-http
+    # the repo's owner. It should be case-sensitive here; strictly use your GitHub user name; please change the value below.
+    owner: YOUR_GITHUB_USERNAME
+    # the repo where you'd like to setup GitHub Actions; please change the value below.
+    repo: YOUR_REPO_NAME
     # integration tool name
     api:
       name: trello
+      # name of the Trello kanban board
       kanbanBoardName: kanban-name
     # main branch of the repo (to which branch the plugin will submit the workflows)
     branch: main

@@ -64,31 +64,81 @@ Want to remove or reinstall a specific piece in the workflow? DevStream has got 
 
 ## Supported DevOps Tools
 
-| Type                   | Plugin                         | Note                           |
-|------------------------|--------------------------------|--------------------------------|
-| Issue Tracking         | trello-github-integ            | Trello/GitHub integration      |
-| Source Code Management | github-repo-scaffolding-golang | Go WebApp scaffolding          |
-| CI                     | jenkins                        | Jenkins installation           |
-| CI                     | githubactions-golang           | GitHub Actions CI for Golang   |
-| CI                     | githubactions-python           | GitHub Actions CI for Python   |
-| CI                     | githubactions-nodejs           | GitHub Actions CI for Nodejs   |
-| CI                     | gitlabci-golang                | GitLab CI for Golang           |
-| CD/GitOps              | argocd                         | ArgoCD installation            |
-| CD/GitOps              | argocdapp                      | ArgoCD Application creation    |
-| Monitoring             | kube-prometheus                | Prometheus/Grafana K8s install |
-| DevLake                | devlake                        | DevLake installation           |
+| Type                   | Plugin                         | Note                           | Usage/Doc |
+|------------------------|--------------------------------|--------------------------------|-----------|
+| Issue Tracking         | trello-github-integ            | Trello/GitHub integration      | [doc](./docs/plugins/trello-github-integ_plugin.md) |
+| Source Code Management | github-repo-scaffolding-golang | Go WebApp scaffolding          | [doc](./docs/plugins/github-repo-scaffolding-golang_plugin.md) |
+| CI                     | jenkins                        | Jenkins installation           | [doc](./docs/plugins/jenkins_plugin.md) |
+| CI                     | githubactions-golang           | GitHub Actions CI for Golang   | [doc](./docs/plugins/githubactions-golang_plugin.md)          |
+| CI                     | githubactions-python           | GitHub Actions CI for Python   | [doc](./docs/plugins/githubactions-python_plugin.md)          |
+| CI                     | githubactions-nodejs           | GitHub Actions CI for Nodejs   | [doc](./docs/plugins/githubactions-nodejs_plugin.md)          |
+| CI                     | gitlabci-golang                | GitLab CI for Golang           | [doc](./docs/plugins/gitlabci-golang_plugin.md)          |
+| CD/GitOps              | argocd                         | ArgoCD installation            | [doc](./docs/plugins/argocd_plugin.md)          |
+| CD/GitOps              | argocdapp                      | ArgoCD Application creation    | [doc](./docs/plugins/argocdapp_plugin.md)          |
+| Monitoring             | kube-prometheus                | Prometheus/Grafana K8s install | [doc](./docs/plugins/kube-prometheus_plugin.md)          |
+| Observability          | devlake                        | DevLake installation           | [doc](./docs/plugins/devlake_plugin.md)          |
 
-## Quick Install
+## Quick Start
 
-### Binary (Cross-platform)
+If you want to get a quick start, follow our quick start doc: [English](./docs/quickstart_en.md), [中文](./docs/quickstart_zh.md) now.
 
-Download the appropriate dtm version for your platform from [DevStream Releases](https://github.com/merico-dev/stream/releases).
+## Configuration
 
-Once downloaded, you can run the binary from anywhere. You don’t need to install it into a global location.
+This is an example of DevStream config: [examples/quick_start.yaml](./examples/quick_start.yaml).
 
-Ideally, you should install it somewhere in your PATH(eg: */usr/local/bin*) for easy use.
+Remember to open this configuration file, modify all FULL_UPPER_CASE_STRINGS (like YOUR_GITHUB_USERNAME, for example) in it to your own.
 
-Remember to rename the binary file to `dtm`(eg: `mv dtm-$(go env GOOS)-$(go env GOARCH) dtm`).
+Pay attention to the meaning of each item to ensure that it is what you want.
+
+For other plugins, checkout the [docs/plugins](./docs/plugins/) folder for detailed usage in their documentations.
+
+## Run
+
+To apply the config, run:
+
+```bash
+./dtm apply -f YOUR_CONFIG_FILE.yaml
+```
+
+If you don't specify the config file with the "-f" parameter, it will try to use the default value which is "config.yaml" from the current directory.
+
+_`dtm` will compare the config, the state, and the resources to decide whether a "create", "update", or "delete" is needed. For more information, see [this document here](./docs/config_state_resource_explanation.md)._
+
+The command above will ask you for confirmation before actually executing the changes. To apply without confirmation (like `apt-get -y update`), run:
+
+```bash
+./dtm -y apply -f YOUR_CONFIG_FILE.yaml
+```
+
+To delete everything defined in the config, run:
+
+```bash
+./dtm delete -f YOUR_CONFIG_FILE.yaml
+```
+
+_Note that this deletes everything defined in the config. If some config is deleted after apply (state has it but config not), `dtm delete` won't delete it. It differs from `dtm destroy`._
+
+Similarly, to delete without confirmation:
+
+```bash
+./dtm -y delete -f YOUR_CONFIG_FILE.yaml
+```
+
+To verify, run:
+
+```bash
+./dtm verify -f YOUR_CONFIG_FILE.yaml
+```
+
+To destroy everything, run:
+
+```bash
+./dtm destroy
+```
+
+_`dtm` will read the state, then determine which tools are installed, and then remove those tools. It's same as `dtm apply -f empty.yaml` (empty.yaml is an empty config file)._
+
+## Dev Info
 
 ### Source
 
@@ -131,7 +181,7 @@ Usage:
   e2e-down            Stop kind cluster for e2e tests
 ```
 
-## Test
+#### Test
 
 Run unit tests:
 
@@ -144,58 +194,6 @@ Run e2e tests:
 ```bash
 make e2e
 ```
-
-## Configuration
-
-This is an example of DevStream config: [examples/config.yaml](./examples/config.yaml).
-
-Remember to open this configuration file, modify all **DO_CHANGE_ME** in it to your own.
-
-Pay attention to the meaning of each item to ensure that it is what you want.
-
-## Run
-
-To apply the config, run:
-
-```bash
-./dtm apply -f examples/config.yaml
-```
-
-_`dtm` will compare the config, the state, and the resources to decide whether a "create", "update", or "delete" is needed._
-
-The command above will ask you for confirmation before actually executing the changes. To apply without confirmation (like `apt-get -y update`), run:
-
-```bash
-./dtm -y apply -f examples/config.yaml
-```
-
-To delete everything defined in the config, run:
-
-```bash
-./dtm delete -f examples/config.yaml
-```
-
-_Note that this deletes everything defined in the config. If some config is deleted after apply (state has it but config not), `dtm delete` won't delete it. It differs from `dtm destroy`._
-
-Similarly, to delete without confirmation:
-
-```bash
-./dtm -y delete -f examples/config.yaml
-```
-
-To verify, run:
-
-```bash
-./dtm verify -f examples/config.yaml
-```
-
-To destroy everything, run:
-
-```bash
-./dtm destroy
-```
-
-_`dtm` will read the state, then determine which tools are installed, and then remove those tools. It's same as `dtm apply -f empty.yaml` (empty.yaml is an empty config file)._
 
 ## Architecture
 

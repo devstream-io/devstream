@@ -24,6 +24,7 @@ build/working_dir
 
 # YAML for testings
 config*.yaml
+config*.yaml.bak
 app*.yaml
 
 # IDE
