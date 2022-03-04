@@ -15,8 +15,13 @@ func renderTemplate(workflow *github.Workflow, options *Options) (string, error)
 	if err != nil {
 		return "", err
 	}
+	// let Build is false when empty
 	if opts.Build == nil {
 		opts.Build = &Build{false, ""}
+	}
+	// let Docker is false when empty
+	if opts.Docker == nil {
+		opts.Docker = &Docker{false, ""}
 	}
 
 	//if use default {{.}}, it will confict (github actions vars also use them)

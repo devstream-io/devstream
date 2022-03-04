@@ -26,7 +26,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 	log.Debugf("language is %s.", ga.GetLanguage(opt.Language))
 
 	// if docker is enabled, delete repo secrets DOCKERHUB_USERNAME and DOCKERHUB_TOKEN
-	if opt.Docker.Enable {
+	if opt.Docker != nil && opt.Docker.Enable {
 		for _, secret := range []string{"DOCKERHUB_USERNAME", "DOCKERHUB_TOKEN"} {
 			if err := ghClient.DeleteRepoSecret(secret); err != nil {
 				return false, err

@@ -80,7 +80,7 @@ Want to remove or reinstall a specific piece in the workflow? DevStream has got 
 
 ## Quick Start
 
-If you want to get a quick start, follow our quick start doc: [English](./docs/quickstart_en.md), [中文](./docs/quickstart_zh.md) now.
+If you want to get a quick start, follow our [quick start](./docs/quickstart_en.md) doc now.
 
 ## Configuration
 
