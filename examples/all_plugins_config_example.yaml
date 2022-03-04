@@ -19,7 +19,7 @@ tools:
     image_repo: DO_CHANGE_ME/golang-demo
 - name: golang-demo-actions
   plugin:
-    # name of the plugin
+    # the repo's owner. It should be case-sensitive here; strictly use your GitHub user name.
     kind: githubactions-golang
     # version of the plugin, checkout the version from the GitHub releases
     version: 0.2.0
@@ -69,7 +69,7 @@ tools:
     pathWithNamespace: DO_CHANGE_ME/golang-demo
     # main branch of the repo (to which branch the plugin will submit the workflows)
     branch: main
-- name: default
+- name: trello-github
   # plugin profile
   plugin:
     # kind of this plugin
@@ -88,12 +88,12 @@ tools:
       kanbanBoardName: kanban-name
     # main branch of the repo (to which branch the plugin will submit the workflows)
     branch: main
-- name: dev
+- name: argocd-dev
   plugin:
     # name of the plugin
     kind: argocd
     # version of the plugin
-    version: 0.0.2
+    version: 0.2.0
   options:
     # need to create the namespace or not, default: false
     create_namespace: true
@@ -116,7 +116,7 @@ tools:
       timeout: 5m
       # whether to perform a CRD upgrade during installation
       upgradeCRDs: true
-- name: hello
+- name: hello-app
   plugin:
     # name of the plugin
     kind: argocdapp
@@ -145,7 +145,7 @@ tools:
       # Helm chart repo URL
       repoURL: https://github.com/DO_CHANGE_ME/DO_CHANGE_ME.git
 # name of the instance with kube-prometheus
-- name: dev
+- name: prome-dev
   plugin:
     # kind of the plugin
     kind: kube-prometheus
@@ -181,7 +181,6 @@ tools:
     kind: devlake
     # version of the plugin
     version: 0.2.0
-
 # name of the instance with jenkins
 - name: jenkins-dev # "you need to create the ~/data/jenkins-volumes/ directory first and chown this directory to 1000:1000"
   plugin:

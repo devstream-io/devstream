@@ -4,7 +4,15 @@ This plugin creates some Golang GitHub Actions workflows.
 
 ## 2 Usage:
 
-_This plugin depends on an environment variable "GITHUB_TOKEN". Set it before using this plugin._
+_This plugin depends on the following environment variable:_
+
+- GITHUB_TOKEN
+
+ Set it before using this plugin.
+
+_If Docker image build/push is enabled (see the example below), you also need to set the following two environment variables:_
+- DOCKERHUB_USERNAME
+- DOCKERHUB_TOKEN
 
 ```yaml
 tools:

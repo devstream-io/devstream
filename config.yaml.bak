@@ -1,0 +1,28 @@
+---
+tools:
+- name: go-webapp-repo
+  plugin:
+    kind: github-repo-scaffolding-golang
+    version: 0.2.0
+  options:
+    owner: IronCore864
+    repo: go-webapp-devstream-demo
+    branch: main
+    image_repo: YOUR_DOCKER_USERNAME/go-webapp-devstream-demo
+- name: golang-demo-actions
+  plugin:
+    kind: githubactions-golang
+    version: 0.2.0
+  options:
+    owner: IronCore864
+    repo: go-webapp-devstream-demo
+    language:
+      name: go
+      version: "1.17"
+    branch: main
+    build:
+      enable: True
+    test:
+      enable: True
+      coverage:
+        enable: True
