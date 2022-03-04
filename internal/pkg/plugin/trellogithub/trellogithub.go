@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/google/go-github/v42/github"
 	"github.com/mitchellh/mapstructure"
 
+	"github.com/merico-dev/stream/pkg/util/github"
 	"github.com/merico-dev/stream/pkg/util/log"
 	"github.com/merico-dev/stream/pkg/util/mapz"
 	"github.com/merico-dev/stream/pkg/util/slicez"
@@ -42,14 +42,19 @@ func NewTrelloGithub(options map[string]interface{}) (*TrelloGithub, error) {
 		return nil, fmt.Errorf("params are illegal")
 	}
 
-	client, err := getGitHubClient(ctx)
+	ghOptions := &github.Option{
+		Owner:    opt.Owner,
+		Repo:     opt.Repo,
+		NeedAuth: true,
+	}
+	ghClient, err := github.NewClient(ghOptions)
 	if err != nil {
 		return nil, err
 	}
 
 	return &TrelloGithub{
 		ctx:     ctx,
-		client:  client,
+		client:  ghClient,
 		options: &opt,
 	}, nil
 }

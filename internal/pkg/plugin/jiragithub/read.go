@@ -1,11 +1,10 @@
-package python
+package jiragithub
 
 import (
-	ga "github.com/merico-dev/stream/internal/pkg/plugin/githubactions"
 	"github.com/merico-dev/stream/pkg/util/github"
-	"github.com/merico-dev/stream/pkg/util/log"
 )
 
+// Read get jira-github-integ workflows.
 func Read(options map[string]interface{}) (map[string]interface{}, error) {
 	opt, err := parseAndValidateOptions(options)
 	if err != nil {
@@ -26,12 +25,12 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	if path == "" {
-		// file not found
-		return nil, nil
-	}
 
-	log.Debugf("Language is: %s.", ga.GetLanguage(opt.Language))
+	return BuildReadState(path), nil
+}
 
-	return ga.BuildReadState(path), nil
+func BuildReadState(path string) map[string]interface{} {
+	res := make(map[string]interface{})
+	res["workflowDir"] = path
+	return res
 }

@@ -42,6 +42,9 @@ func buildReadState(param *Param) (map[string]interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
+	if repo == nil {
+		return nil, nil
+	}
 
 	res := make(map[string]interface{})
 	res["owner"] = *repo.Owner.Login

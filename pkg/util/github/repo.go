@@ -2,9 +2,8 @@ package github
 
 import (
 	"context"
-	"fmt"
+	"net/http"
 
-	"github.com/go-errors/errors"
 	"github.com/google/go-github/v42/github"
 
 	"github.com/merico-dev/stream/pkg/util/log"
@@ -23,10 +22,15 @@ func (c *Client) CreateRepo() error {
 }
 
 func (c *Client) Delete() error {
-	_, err := c.Client.Repositories.Delete(
+	response, err := c.Client.Repositories.Delete(
 		c.Context,
 		c.Owner,
 		c.Repo)
+
+	if response.StatusCode == http.StatusNotFound {
+		log.Successf("GitHub repo %s was already removed.", c.Repo)
+		return nil
+	}
 
 	if err != nil {
 		return err
@@ -36,18 +40,18 @@ func (c *Client) Delete() error {
 }
 
 func (c *Client) GetRepoDescription() (*github.Repository, error) {
-	rps, resp, err := c.Client.Repositories.Get(
+	repo, resp, err := c.Client.Repositories.Get(
 		c.Context,
 		c.Owner,
 		c.Repo)
 
-	if err != nil {
+	if repo == nil && resp.StatusCode == http.StatusNotFound {
+		return repo, nil
+	}
+
+	if resp.StatusCode != http.StatusOK {
 		return nil, err
 	}
 
-	if resp.StatusCode != 200 {
-		return nil, errors.New("response status is not 200 OK, but is " + fmt.Sprintf("%d", resp.StatusCode))
-	}
-
-	return rps, nil
+	return repo, nil
 }
