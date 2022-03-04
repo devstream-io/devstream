@@ -92,3 +92,7 @@ func (gi *TrelloGithub) buildReadState(api *Api) (map[string]interface{}, error)
 	listIds["workflowDir"] = path
 	return listIds, nil
 }
+
+func generateGitHubWorkflowFileByName(f string) string {
+	return fmt.Sprintf(".github/workflows/%s", f)
+}
