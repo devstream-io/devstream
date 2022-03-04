@@ -2,36 +2,70 @@ package configloader
 
 import (
 	"fmt"
+	"strings"
 
 	"k8s.io/apimachinery/pkg/util/validation"
 )
 
-func (c *Config) Validate() []error {
-	retErrors := make([]error, 0)
+func validate(config *Config) []error {
+	errors := make([]error, 0)
 
-	for _, t := range c.Tools {
-		retErrors = append(retErrors, t.validate()...)
+	for _, t := range config.Tools {
+		errors = append(errors, validateTool(&t)...)
 	}
-	return retErrors
+
+	errors = append(errors, validateDependency(config.Tools)...)
+
+	return errors
 }
 
-func (t *Tool) validate() []error {
-	retErrors := make([]error, 0)
+func validateTool(t *Tool) []error {
+	errors := make([]error, 0)
 
 	// Name
 	if t.Name == "" {
-		retErrors = append(retErrors, fmt.Errorf("name is empty"))
+		errors = append(errors, fmt.Errorf("name is empty"))
 	}
 
 	errs := validation.IsDNS1123Subdomain(t.Name)
 	for _, e := range errs {
-		retErrors = append(retErrors, fmt.Errorf("name %s is invalid: %s", t.Name, e))
+		errors = append(errors, fmt.Errorf("name %s is invalid: %s", t.Name, e))
 	}
 
 	// Plugin
 	if t.Plugin.Kind == "" {
-		retErrors = append(retErrors, fmt.Errorf("plugin.kind is empty"))
+		errors = append(errors, fmt.Errorf("plugin.kind is empty"))
 	}
 
-	return retErrors
+	return errors
+}
+
+func validateDependency(tools []Tool) []error {
+	errors := make([]error, 0)
+
+	toolMap := make(map[string]bool)
+
+	for _, tool := range tools {
+		key := fmt.Sprintf("%s.%s", tool.Name, tool.Plugin.Kind)
+		toolMap[key] = true
+	}
+
+	for _, tool := range tools {
+		if tool.DependsOn == "" {
+			continue
+		}
+
+		dependencies := strings.Split(tool.DependsOn, ",")
+		for _, dependency := range dependencies {
+			dependency = strings.TrimSpace(dependency)
+			if dependency == "" {
+				continue
+			}
+			if _, ok := toolMap[dependency]; !ok {
+				errors = append(errors, fmt.Errorf("tool %s's dependency %s doesn't exist in the config", tool.Name, dependency))
+			}
+		}
+	}
+
+	return errors
 }

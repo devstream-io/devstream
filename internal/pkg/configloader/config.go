@@ -27,9 +27,10 @@ type Tool struct {
 	// contain only lowercase alphanumeric characters, '-' or '.'
 	// start with an alphanumeric character
 	// end with an alphanumeric character
-	Name    string                 `yaml:"name"`
-	Plugin  Plugin                 `yaml:"plugin"`
-	Options map[string]interface{} `yaml:"options"`
+	Name      string                 `yaml:"name"`
+	Plugin    Plugin                 `yaml:"plugin"`
+	DependsOn string                 `yaml:"dependsOn"`
+	Options   map[string]interface{} `yaml:"options"`
 }
 
 func (t *Tool) DeepCopy() *Tool {
@@ -69,7 +70,7 @@ func LoadConf(fname string) *Config {
 		return nil
 	}
 
-	errs := config.Validate()
+	errs := validate(&config)
 
 	if len(errs) != 0 {
 		for _, e := range errs {
