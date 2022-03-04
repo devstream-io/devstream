@@ -128,7 +128,7 @@ tools:
     app:
       # name of the ArgoCD application
       name: hello
-      # where the ArgoCD application CRD will be created
+      # where the ArgoCD Application(CR) will be created
       namespace: argocd
     # destination of the application
     destination:
