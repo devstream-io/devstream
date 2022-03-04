@@ -1,5 +1,7 @@
 # Quick Start
 
+> English | [中文](./quickstart_zh.md)
+
 ## 1. Download DevStream (`dtm`)
 
 Download the appropriate `dtm` version for your platform from [DevStream Releases](https://github.com/merico-dev/stream/releases).
@@ -97,7 +99,7 @@ Enter a value (Default is n): y
 ```
 ## 5. Check the Results
 
-Go to your GitHub account, and we can see a new repo named "go-webapp-devstream-demo" has been created; there are some Go web app scaffolding lying around already, and the GitHub Actions for building the app is also ready. Hooray!
+Go to your GitHub account, and we can see a new repo named "go-webapp-devstream-demo" has been created; there are some Golang web app scaffolding lying around already, and the GitHub Actions for building the app is also ready. Hooray!
 
 ## 6. Clean Up
 

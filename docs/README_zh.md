@@ -17,6 +17,8 @@
 
 > [English](../README.md) | 中文
 
+**注意：我们会优先更新英文版 [README](../README.md) ，中文版有一定的滞后，强烈建议大家直接阅读英文版**
+
 如果你懒得看下面的一大串文字：一个开源 DevOps 工具链管理工具。
 
 不过我还是建议你看下下面的一大串文字：
@@ -44,6 +46,10 @@
 4. CD/GitOps - ArgoCD / ArgoCD App
 5. Monitoring - kube-prometheus
 6. ……
+
+## 快速开始
+
+如果你想要快速上手体验，可以跳转到我们的[快速开始](./quickstart_zh.md)文档。
 
 ## 你想问 DevStream 的将来？
 
