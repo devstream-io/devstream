@@ -11,7 +11,7 @@ tools:
 - name: devlake
   plugin:
     kind: devlake
-    version: 0.1.0
+    version: 0.2.0
 ```
 
 All the parameters in the example above are mandatory.

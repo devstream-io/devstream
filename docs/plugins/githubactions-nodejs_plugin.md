@@ -14,13 +14,13 @@ tools:
     kind: githubactions-nodejs
     # version of the plugin
     # checkout the version from the GitHub releases
-    version: 0.0.2
+    version: 0.2.0
   # options for the plugin
   options:
-    # the repo's owner
-    owner: ironcore864
-    # the repo where you'd like to setup GitHub Actions
-    repo: nodejs-demo
+    # the repo's owner. It should be case-sensitive here; strictly use your GitHub user name; please change the value below.
+    owner: YOUR_GITHUB_USERNAME
+    # the repo where you'd like to setup GitHub Actions; please change the value below to an existing repo.
+    repo: YOURE_REPO_NAME
     # programming language specific settings
     language:
       name: nodejs

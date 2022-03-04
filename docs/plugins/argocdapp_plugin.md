@@ -11,13 +11,13 @@ This plugin creates an ArgoCD Application.
 
 ```yaml
 tools:
-- name: argocdapp
+- name: helloworld
   plugin:
     # name of the plugin
     kind: argocdapp
     # version of the plugin
     # checkout the version from the GitHub releases
-    version: 0.0.2
+    version: 0.2.0
   # options for the plugin
   options:
     # information on the ArgoCD application
@@ -38,7 +38,7 @@ tools:
       valuefile: values.yaml
       # path of the Helm chart
       path: charts/go-hello-http
-      # Helm chart repo URL
+      # Helm chart repo URL, this is only an example, do not use this
       repoURL: https://github.com/ironcore864/openstream-gitops-test.git
 ```
 

@@ -21,7 +21,7 @@ tools:
     # kind of the plugin
     kind: jenkins
     # version of the plugin
-    version: 0.0.1
+    version: 0.2.0
   # options for the plugin
   options:
     # need to create the namespace or not, default: false
