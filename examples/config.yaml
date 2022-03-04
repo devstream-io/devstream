@@ -88,6 +88,17 @@ tools:
       kanbanBoardName: kanban-name
     # main branch of the repo (to which branch the plugin will submit the workflows)
     branch: main
+- name: jira-github-integ-golang-demo
+  plugin:
+    kind: jira-github-integ
+    version: 0.2.0
+  options:
+    owner: ironcore864
+    repo:  golang-demo
+    jiraBaseUrl: https://merico.atlassian.net # "base url: https://id.atlassian.net"
+    jiraUserEmail: fangbao.li@merico.dev # "need real user email in cloud Jira"
+    jiraProjectKey: PROJECT  # "get it from project url, like 'DTM' from https://merico.atlassian.net/jira/software/projects/DTM/pages"
+    branch: main
 - name: dev
   plugin:
     # name of the plugin

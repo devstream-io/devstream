@@ -10,6 +10,7 @@ go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o output/githubaction
 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o output/githubactions-python-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/githubactions/python
 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o output/githubactions-nodejs-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/githubactions/nodejs
 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o output/trello-github-integ-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/trellogithub/
+go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o output/jira-github-integ-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/jiragithub/
 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o output/argocd-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/argocd/
 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o output/argocdapp-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/argocdapp/
 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o output/jenkins-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/jenkins/
