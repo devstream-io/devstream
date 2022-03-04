@@ -22,10 +22,15 @@ func (c *Client) CreateRepo() error {
 }
 
 func (c *Client) Delete() error {
-	_, err := c.Client.Repositories.Delete(
+	response, err := c.Client.Repositories.Delete(
 		c.Context,
 		c.Owner,
 		c.Repo)
+
+	if response.StatusCode == http.StatusNotFound {
+		log.Successf("GitHub repo %s was already removed.", c.Repo)
+		return nil
+	}
 
 	if err != nil {
 		return err
