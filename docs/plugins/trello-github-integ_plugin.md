@@ -27,7 +27,7 @@ tools:
     # checkout the version from the GitHub releases
     version: 0.2.0
   # optional; if specified, dtm will make sure the dependency is applied first before handling this tool.
-  dependsOn: TOOL1_NAME.TOOL1_KIND,TOOL2_NAME.TOOL2_KIND,...
+  dependsOn: [ "TOOL1_NAME.TOOL1_KIND", "TOOL2_NAME.TOOL2_KIND" ]
   # options for the plugin
   options:
     # the repo's owner. It should be case-sensitive here; strictly use your GitHub user name; please change the value below.
