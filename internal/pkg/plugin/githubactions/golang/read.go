@@ -23,13 +23,12 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 	}
 
 	path, err := gitHubClient.GetWorkflowPath()
-	if path == "" && err == nil {
-		// file not found
-		return nil, nil
-	}
-
 	if err != nil {
 		return nil, err
+	}
+	if path == "" {
+		// file not found
+		return nil, nil
 	}
 
 	log.Debugf("Language is: %s.", ga.GetLanguage(opt.Language))
