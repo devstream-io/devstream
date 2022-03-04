@@ -11,7 +11,7 @@ This plugin creates an ArgoCD Application.
 
 ```yaml
 tools:
-- name: argocdapp-helloworld
+- name: helloworld
   plugin:
     # name of the plugin
     kind: argocdapp

@@ -23,8 +23,7 @@ build/working_dir
 .glide/
 
 # YAML for testings
-config*.yaml
-config*.yaml.bak
+config*.yaml*
 app*.yaml
 
 # IDE
