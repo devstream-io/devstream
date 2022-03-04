@@ -18,6 +18,8 @@ tools:
     # version of the plugin
     # checkout the version from the GitHub releases
     version: 0.2.0
+  # optional; if specified, dtm will make sure the dependency is applied first before handling this tool.
+  dependsOn: TOOL_NAME.TOOL_KIND
   # options for the plugin
   options:
     # information on the ArgoCD application
@@ -41,5 +43,3 @@ tools:
       # Helm chart repo URL, this is only an example, do not use this
       repoURL: https://github.com/ironcore864/openstream-gitops-test.git
 ```
-
-Currently, all the parameters in the example above are mandatory.
