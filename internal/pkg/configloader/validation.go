@@ -53,15 +53,14 @@ func validateDependency(tools []Tool) []error {
 
 	for _, tool := range tools {
 		// no dependency, pass
-		if tool.DependsOn == "" {
+		if len(tool.DependsOn) == 0 {
 			continue
 		}
 
-		dependencies := strings.Split(tool.DependsOn, ",")
 		// for each dependency
-		for _, dependency := range dependencies {
-			dependency = strings.TrimSpace(dependency)
+		for _, dependency := range tool.DependsOn {
 			// skip empty string
+			dependency = strings.TrimSpace(dependency)
 			if dependency == "" {
 				continue
 			}

@@ -29,7 +29,7 @@ type Tool struct {
 	// end with an alphanumeric character
 	Name      string                 `yaml:"name"`
 	Plugin    Plugin                 `yaml:"plugin"`
-	DependsOn string                 `yaml:"dependsOn"`
+	DependsOn []string               `yaml:"dependsOn"`
 	Options   map[string]interface{} `yaml:"options"`
 }
 

@@ -13,6 +13,7 @@ tools:
   plugin:
     kind: githubactions-golang
     version: 0.2.0
+  dependsOn: ["go-webapp-repo.github-repo-scaffolding-golang"]
   options:
     owner: YOUR_GITHUB_USERNAME_CASE_SENSITIVE
     repo: go-webapp-devstream-demo
