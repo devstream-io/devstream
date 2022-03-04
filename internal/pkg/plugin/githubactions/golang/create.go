@@ -20,7 +20,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		Repo:     opt.Repo,
 		NeedAuth: true,
 	}
-	gitHubClient, err := github.NewClient(ghOptions)
+	ghClient, err := github.NewClient(ghOptions)
 	if err != nil {
 		return nil, err
 	}
@@ -29,10 +29,10 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 
 	// if docker is enabled, create repo secrets for DOCKERHUB_USERNAME and DOCKERHUB_TOKEN
 	if opt.Docker.Enable {
-		if err := gitHubClient.AddRepoSecret("DOCKERHUB_USERNAME", viper.GetString("dockerhub_username")); err != nil {
+		if err := ghClient.AddRepoSecret("DOCKERHUB_USERNAME", viper.GetString("dockerhub_username")); err != nil {
 			return nil, err
 		}
-		if err := gitHubClient.AddRepoSecret("DOCKERHUB_TOKEN", viper.GetString("dockerhub_token")); err != nil {
+		if err := ghClient.AddRepoSecret("DOCKERHUB_TOKEN", viper.GetString("dockerhub_token")); err != nil {
 			return nil, err
 		}
 	}
@@ -43,7 +43,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 			return nil, err
 		}
 		w.WorkflowContent = content
-		if err := gitHubClient.AddWorkflow(w, opt.Branch); err != nil {
+		if err := ghClient.AddWorkflow(w, opt.Branch); err != nil {
 			return nil, err
 		}
 	}

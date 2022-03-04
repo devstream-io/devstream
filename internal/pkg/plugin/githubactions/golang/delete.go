@@ -18,7 +18,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 		Repo:     opt.Repo,
 		NeedAuth: true,
 	}
-	gitHubClient, err := github.NewClient(ghOptions)
+	ghClient, err := github.NewClient(ghOptions)
 	if err != nil {
 		return false, err
 	}
@@ -28,14 +28,14 @@ func Delete(options map[string]interface{}) (bool, error) {
 	// if docker is enabled, delete repo secrets DOCKERHUB_USERNAME and DOCKERHUB_TOKEN
 	if opt.Docker.Enable {
 		for _, secret := range []string{"DOCKERHUB_USERNAME", "DOCKERHUB_TOKEN"} {
-			if err := gitHubClient.DeleteRepoSecret(secret); err != nil {
+			if err := ghClient.DeleteRepoSecret(secret); err != nil {
 				return false, err
 			}
 		}
 	}
 
 	for _, pipeline := range workflows {
-		err := gitHubClient.DeleteWorkflow(pipeline, opt.Branch)
+		err := ghClient.DeleteWorkflow(pipeline, opt.Branch)
 		if err != nil {
 			return false, err
 		}

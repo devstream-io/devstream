@@ -18,7 +18,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		Repo:     opt.Repo,
 		NeedAuth: true,
 	}
-	gitHubClient, err := github.NewClient(ghOptions)
+	ghClient, err := github.NewClient(ghOptions)
 	if err != nil {
 		return nil, err
 	}
@@ -26,7 +26,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	log.Debugf("Language is: %s.", ga.GetLanguage(opt.Language))
 
 	for _, w := range workflows {
-		if err := gitHubClient.AddWorkflow(w, opt.Branch); err != nil {
+		if err := ghClient.AddWorkflow(w, opt.Branch); err != nil {
 			return nil, err
 		}
 	}
