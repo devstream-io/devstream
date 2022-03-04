@@ -53,5 +53,15 @@ func validate(param *Options) []error {
 		}
 	}
 
+	if param.Docker == nil {
+		return retErrors
+	}
+
+	if errs := param.Docker.Validate(); len(errs) != 0 {
+		for _, e := range errs {
+			retErrors = append(retErrors, fmt.Errorf("docker is invalid: %s", e))
+		}
+	}
+
 	return retErrors
 }
