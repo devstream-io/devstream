@@ -28,7 +28,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	log.Debugf("Language is: %s.", ga.GetLanguage(opt.Language))
 
 	// if docker is enabled, create repo secrets for DOCKERHUB_USERNAME and DOCKERHUB_TOKEN
-	if opt.Docker.Enable {
+	if opt.Docker != nil && opt.Docker.Enable {
 		if err := ghClient.AddRepoSecret("DOCKERHUB_USERNAME", viper.GetString("dockerhub_username")); err != nil {
 			return nil, err
 		}

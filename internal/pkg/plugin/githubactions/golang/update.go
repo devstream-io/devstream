@@ -27,7 +27,7 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 
 	log.Debugf("Language is %s.", ga.GetLanguage(opt.Language))
 
-	if opt.Docker.Enable {
+	if opt.Docker != nil && opt.Docker.Enable {
 		for _, secret := range []string{"DOCKERHUB_USERNAME", "DOCKERHUB_TOKEN"} {
 			if err := ghClient.DeleteRepoSecret(secret); err != nil {
 				return nil, err
@@ -47,6 +47,12 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 		if err != nil {
 			return nil, err
 		}
+
+		content, err := renderTemplate(pipeline, opt)
+		if err != nil {
+			return nil, err
+		}
+		pipeline.WorkflowContent = content
 
 		err = ghClient.AddWorkflow(pipeline, opt.Branch)
 		if err != nil {
