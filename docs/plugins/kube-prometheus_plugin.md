@@ -37,6 +37,10 @@ tools:
       timeout: 5m
       # whether to perform a CRD upgrade during installation
       upgradeCRDs: true
+      # custom configuration (Optional). You can refer to [kube-prometheus-stack values.yaml](https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml)
+      values_yaml: |
+        namespaceOverride: "monitoring"
+
 ```
 
-Currently, all the parameters in the example above are mandatory.
+Currently, except for `values_yaml`, all the parameters in the example above are mandatory.

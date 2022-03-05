@@ -46,6 +46,14 @@ tools:
       timeout: 5m
       # whether to perform a CRD upgrade during installation
       upgradeCRDs: true
+      # custom configuration (Optional). You can refer to [Jenkins values.yaml](https://github.com/jenkinsci/helm-charts/blob/main/charts/jenkins/values.yaml)
+      values_yaml: |
+        persistence:
+          storageClass: jenkins-pv
+        serviceAccount:
+          create: false
+          name: jenkins
+
 ```
 
 Currently, all the parameters in the example above are mandatory.

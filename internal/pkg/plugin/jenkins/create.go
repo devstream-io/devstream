@@ -24,8 +24,6 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, fmt.Errorf("params are illegal")
 	}
 
-	renderValuesYamlForJenkins(&param)
-
 	if err := DealWithNsWhenInstall(&param); err != nil {
 		return nil, err
 	}
@@ -69,13 +67,4 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	log.Debugf("Return map: %v.", retMap)
 
 	return retMap, nil
-}
-
-func renderValuesYamlForJenkins(param *Param) {
-	param.Chart.ValuesYaml = `persistence:
-  storageClass: jenkins-pv
-serviceAccount:
-  create: false
-  name: jenkins
-`
 }
