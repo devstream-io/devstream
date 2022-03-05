@@ -34,6 +34,15 @@ tools:
       timeout: 5m
       # whether to perform a CRD upgrade during installation
       upgradeCRDs: true
+      # custom configuration (Optinal). You can refer to [argo-cd values.yaml](https://github.com/argoproj/argo-helm/blob/master/charts/argo-cd/values.yaml)
+      values_yaml: |
+        controller:
+          service: 
+            port: 8080
+        redis:
+          image:
+            tag: 6.2.6-alpine3.15
+        
 ```
 
-Currently, all the parameters in the example above are mandatory.
+Except for `values_yaml`, all the parameters in the example above are mandatory.
