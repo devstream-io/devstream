@@ -5,92 +5,26 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/google/go-github/v42/github"
+	githubx "github.com/google/go-github/v42/github"
 	"github.com/spf13/viper"
 
-	gh "github.com/merico-dev/stream/pkg/util/github"
+	"github.com/merico-dev/stream/pkg/util/github"
 	"github.com/merico-dev/stream/pkg/util/log"
 	"github.com/merico-dev/stream/pkg/util/mapz"
 )
-
-func (gi *TrelloGithub) AddWorkflow(workflow *Workflow) error {
-	sha, err := gi.getFileSHA(workflow.workflowFileName)
-	if err != nil {
-		return err
-	}
-	if sha != "" {
-		log.Infof("GitHub Actions workflow %s already exists.", workflow.workflowFileName)
-		return nil
-	}
-
-	// Note: the file needs to be absent from the repository as you are not
-	// specifying a SHA reference here.
-	opts := &github.RepositoryContentFileOptions{
-		Message: github.String(workflow.commitMessage),
-		Content: []byte(workflow.workflowContent),
-		Branch:  github.String(gi.options.Branch),
-	}
-
-	log.Infof("Creating GitHub Actions workflow %s ...", workflow.workflowFileName)
-	_, _, err = gi.client.Repositories.CreateFile(
-		gi.ctx,
-		gi.options.Owner,
-		gi.options.Repo,
-		generateGitHubWorkflowFileByName(workflow.workflowFileName),
-		opts)
-
-	if err != nil {
-		return err
-	}
-	log.Infof("Github Actions workflow %s created.", workflow.workflowFileName)
-	return nil
-}
-
-func (gi *TrelloGithub) DeleteWorkflow(workflow *Workflow) error {
-	sha, err := gi.getFileSHA(workflow.workflowFileName)
-	if err != nil {
-		return err
-	}
-	if sha == "" {
-		log.Successf("Github Actions workflow %s already removed.", workflow.workflowFileName)
-		return nil
-	}
-
-	// Note: the file needs to be absent from the repository as you are not
-	// specifying a SHA reference here.
-	opts := &github.RepositoryContentFileOptions{
-		Message: github.String(workflow.commitMessage),
-		SHA:     github.String(sha),
-		Branch:  github.String(gi.options.Branch),
-	}
-
-	log.Infof("Deleting GitHub Actions workflow %s ...", workflow.workflowFileName)
-	_, _, err = gi.client.Repositories.DeleteFile(
-		gi.ctx,
-		gi.options.Owner,
-		gi.options.Repo,
-		generateGitHubWorkflowFileByName(workflow.workflowFileName),
-		opts)
-
-	if err != nil {
-		return err
-	}
-	log.Successf("GitHub Actions workflow %s removed.", workflow.workflowFileName)
-	return nil
-}
 
 // VerifyWorkflows get the workflows with names "wf1.yml", "wf2.yml", then:
 // If all workflows is ok => return ({"wf1.yml":nil, "wf2.yml:nil}, nil)
 // If some error occurred => return (nil, error)
 // If wf1.yml is not found => return ({"wf1.yml":error("not found"), "wf2.yml:nil},nil)
-func (gi *TrelloGithub) VerifyWorkflows(workflows []*Workflow) (map[string]error, error) {
+func (tg *TrelloGithub) VerifyWorkflows(workflows []*github.Workflow) (map[string]error, error) {
 	wsFiles := make([]string, 0)
 	for _, w := range workflows {
-		wsFiles = append(wsFiles, w.workflowFileName)
+		wsFiles = append(wsFiles, w.WorkflowFileName)
 	}
 
 	fmt.Printf("Workflow files: %v", wsFiles)
-	filesInRemoteDir, rMap, err := gi.FetchRemoteContent(wsFiles)
+	filesInRemoteDir, rMap, err := tg.FetchRemoteContent(wsFiles)
 	if err != nil {
 		return nil, err
 	}
@@ -98,17 +32,17 @@ func (gi *TrelloGithub) VerifyWorkflows(workflows []*Workflow) (map[string]error
 		return rMap, nil
 	}
 
-	return gi.CompareFiles(wsFiles, filesInRemoteDir), nil
+	return tg.CompareFiles(wsFiles, filesInRemoteDir), nil
 }
 
-func (gi *TrelloGithub) FetchRemoteContent(wsFiles []string) ([]string, map[string]error, error) {
+func (tg *TrelloGithub) FetchRemoteContent(wsFiles []string) ([]string, map[string]error, error) {
 	var filesInRemoteDir = make([]string, 0)
-	_, dirContent, resp, err := gi.client.Repositories.GetContents(
-		gi.ctx,
-		gi.options.Owner,
-		gi.options.Repo,
+	_, dirContent, resp, err := tg.client.Repositories.GetContents(
+		tg.ctx,
+		tg.options.Owner,
+		tg.options.Repo,
 		".github/workflows",
-		&github.RepositoryContentGetOptions{},
+		&githubx.RepositoryContentGetOptions{},
 	)
 
 	// error reason is not 404
@@ -136,13 +70,13 @@ func (gi *TrelloGithub) FetchRemoteContent(wsFiles []string) ([]string, map[stri
 }
 
 // AddTrelloIdSecret add trello ids to secret
-func (gi *TrelloGithub) AddTrelloIdSecret(trelloId *TrelloItemId) error {
-	ghOptions := &gh.Option{
-		Owner:    gi.options.Owner,
-		Repo:     gi.options.Repo,
+func (tg *TrelloGithub) AddTrelloIdSecret(trelloId *TrelloItemId) error {
+	ghOptions := &github.Option{
+		Owner:    tg.options.Owner,
+		Repo:     tg.options.Repo,
 		NeedAuth: true,
 	}
-	c, err := gh.NewClient(ghOptions)
+	c, err := github.NewClient(ghOptions)
 	if err != nil {
 		return err
 	}
@@ -184,13 +118,13 @@ func (gi *TrelloGithub) AddTrelloIdSecret(trelloId *TrelloItemId) error {
 	return nil
 }
 
-func (gi *TrelloGithub) GetWorkflowPath() (string, error) {
-	_, _, resp, err := gi.client.Repositories.GetContents(
-		gi.ctx,
-		gi.options.Owner,
-		gi.options.Repo,
+func (tg *TrelloGithub) GetWorkflowPath() (string, error) {
+	_, _, resp, err := tg.client.Repositories.GetContents(
+		tg.ctx,
+		tg.options.Owner,
+		tg.options.Repo,
 		".github/workflows",
-		&github.RepositoryContentGetOptions{},
+		&githubx.RepositoryContentGetOptions{},
 	)
 
 	// error reason is not 404
