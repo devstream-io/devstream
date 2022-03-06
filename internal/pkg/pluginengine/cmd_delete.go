@@ -11,7 +11,7 @@ import (
 	"github.com/merico-dev/stream/pkg/util/log"
 )
 
-func Remove(configFile string, continueDirectly bool) error {
+func Remove(configFile string, continueDirectly bool, isForce bool) error {
 	cfg := configloader.LoadConf(configFile)
 	if cfg == nil {
 		return fmt.Errorf("failed to load the config file")
@@ -29,7 +29,8 @@ func Remove(configFile string, continueDirectly bool) error {
 		return err
 	}
 
-	changes, err := GetChangesForDelete(smgr, cfg)
+	changes, err := GetChangesForDelete(smgr, cfg, isForce)
+
 	if err != nil {
 		return err
 	}

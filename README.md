@@ -123,6 +123,11 @@ Similarly, to delete without confirmation:
 ```bash
 ./dtm -y delete -f YOUR_CONFIG_FILE.yaml
 ```
+To delete everything defined in the config, regardless of the state: 
+
+```bash
+./dtm delete -r -f YOUR_CONFIG_FILE.yaml
+```
 
 To verify, run:
 
