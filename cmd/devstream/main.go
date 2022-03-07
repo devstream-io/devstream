@@ -16,6 +16,7 @@ var (
 	pluginDir        string
 	continueDirectly bool
 	isDebug          bool
+	isForceDelete    bool
 
 	rootCMD = &cobra.Command{
 		Use:   "dtm",

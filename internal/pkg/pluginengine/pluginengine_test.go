@@ -84,7 +84,7 @@ var _ = Describe("Pluginengine", func() {
 
 		err = smgr.AddState(fmt.Sprintf("%s_%s", name, kind), statemanager.State{})
 		Expect(err).NotTo(HaveOccurred())
-		changes, _ := pluginengine.GetChangesForDelete(smgr, cfg)
+		changes, _ := pluginengine.GetChangesForDelete(smgr, cfg, false)
 
 		Expect(len(changes)).To(Equal(1))
 		c := changes[0]
