@@ -64,7 +64,7 @@ func changesForApply(smgr statemanager.Manager, cfg *configloader.Config) ([]*Ch
 
 	// 2, for each tool in the config, generate changes.
 	for _, tool := range cfg.Tools {
-		state := smgr.GetState(getStateKeyFromTool(&tool))
+		state := smgr.GetState(statemanager.StateKeyGenerateFunc(&tool))
 
 		if state == nil {
 			// tool not in the state, create, no need to Read resource before Create
@@ -101,7 +101,7 @@ func changesForApply(smgr statemanager.Manager, cfg *configloader.Config) ([]*Ch
 		}
 
 		// delete the tool from the temporary state map since it's already been processed above
-		tmpStatesMap.Delete(getStateKeyFromTool(&tool))
+		tmpStatesMap.Delete(statemanager.StateKeyGenerateFunc(&tool))
 	}
 
 	// what's left in the temporary state map "tmpStatesMap" contains tools that:
@@ -125,13 +125,13 @@ func changesForDelete(smgr statemanager.Manager, cfg *configloader.Config) []*Ch
 	// reverse loop, a hack to solve dependency issues when deleting
 	for i := len(cfg.Tools) - 1; i >= 0; i-- {
 		tool := cfg.Tools[i]
-		state := smgr.GetState(getStateKeyFromTool(&tool))
+		state := smgr.GetState(statemanager.StateKeyGenerateFunc(&tool))
 		if state == nil {
 			continue
 		}
 		description := fmt.Sprintf("Tool < %s > will be deleted.", tool.Name)
 		changes = append(changes, generateDeleteAction(&tool, description))
-		tmpStates.Delete(tool.Name)
+		tmpStates.Delete(statemanager.StateKeyGenerateFunc(&tool))
 	}
 
 	return changes
@@ -147,8 +147,8 @@ func changesForForceDelete(smgr statemanager.Manager, cfg *configloader.Config) 
 		tool := cfg.Tools[i]
 		description := fmt.Sprintf("Tool < %s > will be deleted.", tool.Name)
 		changes = append(changes, generateDeleteAction(&tool, description))
-		if err := smgr.DeleteState(getStateKeyFromTool(&tool)); err != nil {
-			log.Errorf("Failed to delete %s from state.", getStateKeyFromTool(&tool))
+		if err := smgr.DeleteState(statemanager.StateKeyGenerateFunc(&tool)); err != nil {
+			log.Errorf("Failed to delete %s from state.", statemanager.StateKeyGenerateFunc(&tool))
 			return make([]*Change, 0)
 		}
 	}

@@ -2,6 +2,7 @@ package statemanager
 
 import (
 	"bytes"
+	"fmt"
 
 	"gopkg.in/yaml.v3"
 
@@ -24,7 +25,7 @@ type StatesMap struct {
 
 func NewStatesMap() StatesMap {
 	return StatesMap{
-		ConcurrentMap: concurrentmap.NewConcurrentMap("", State{}),
+		ConcurrentMap: concurrentmap.NewConcurrentMap(StateKey(""), State{}),
 	}
 }
 
@@ -38,9 +39,9 @@ func (s StatesMap) DeepCopy() StatesMap {
 }
 
 func (s StatesMap) Format() []byte {
-	tmpMap := make(map[string]State)
+	tmpMap := make(map[StateKey]State)
 	s.Range(func(key, value interface{}) bool {
-		tmpMap[key.(string)] = value.(State)
+		tmpMap[key.(StateKey)] = value.(State)
 		return true
 	})
 
@@ -58,4 +59,11 @@ func (s StatesMap) Format() []byte {
 	}
 
 	return buf.Bytes()
+}
+
+// Note: Please use the StateKeyGenerateFunc function to generate StateKey instance.
+type StateKey string
+
+func StateKeyGenerateFunc(t *configloader.Tool) StateKey {
+	return StateKey(fmt.Sprintf("%s_%s", t.Name, t.Plugin.Kind))
 }

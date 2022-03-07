@@ -6,13 +6,8 @@ import (
 
 	"github.com/tcnksm/go-input"
 
-	"github.com/merico-dev/stream/internal/pkg/configloader"
 	"github.com/merico-dev/stream/pkg/util/log"
 )
-
-func getStateKeyFromTool(t *configloader.Tool) string {
-	return fmt.Sprintf("%s_%s", t.Name, t.Plugin.Kind)
-}
 
 func readUserInput() string {
 	ui := &input.UI{

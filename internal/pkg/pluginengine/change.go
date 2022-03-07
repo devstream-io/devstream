@@ -143,7 +143,7 @@ func handleResult(smgr statemanager.Manager, change *Change) error {
 	}
 
 	if change.ActionName == statemanager.ActionDelete {
-		key := getStateKeyFromTool(change.Tool)
+		key := statemanager.StateKeyGenerateFunc(change.Tool)
 		log.Infof("Prepare to delete '%s' from States.", key)
 		err := smgr.DeleteState(key)
 		if err != nil {
@@ -154,7 +154,7 @@ func handleResult(smgr statemanager.Manager, change *Change) error {
 		return nil
 	}
 
-	key := getStateKeyFromTool(change.Tool)
+	key := statemanager.StateKeyGenerateFunc(change.Tool)
 	state := statemanager.State{
 		Name:     change.Tool.Name,
 		Plugin:   change.Tool.Plugin,

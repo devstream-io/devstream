@@ -23,7 +23,7 @@ var _ = Describe("Statemanager", func() {
 		})
 
 		It("Should get the state right", func() {
-			key := "name_githubactions"
+			key := statemanager.StateKey("name_githubactions")
 			stateA := statemanager.State{
 				Name:     "name",
 				Plugin:   configloader.Plugin{Kind: "githubactions", Version: "0.0.2"},
