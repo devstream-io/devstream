@@ -143,7 +143,7 @@ func changesForForceDelete(smgr statemanager.Manager, cfg *configloader.Config) 
 	tmpStates := smgr.GetStatesMap().DeepCopy()
 
 	log.Debug("tools: ", cfg.Tools)
-	//
+
 	for i := len(cfg.Tools) - 1; i >= 0; i-- {
 		tool := cfg.Tools[i]
 		description := fmt.Sprintf("Tool < %s > will be deleted.", tool.Name)

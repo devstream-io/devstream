@@ -126,7 +126,7 @@ Similarly, to delete without confirmation:
 To delete everything defined in the config, regardless of the state: 
 
 ```bash
-./dtm delete -r -f YOUR_CONFIG_FILE.yaml
+./dtm delete --force -f YOUR_CONFIG_FILE.yaml
 ```
 
 To verify, run:

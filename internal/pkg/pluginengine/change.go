@@ -45,22 +45,22 @@ func GetChangesForApply(smgr statemanager.Manager, cfg *configloader.Config) ([]
 
 // GetChangesForDelete takes "State Manager" & "Config" then do some calculation and return a Plan to delete all plugins in the Config.
 // All actions should be execute is included in this Plan.changes.
-func GetChangesForDelete(smgr statemanager.Manager, cfg *configloader.Config, isForce bool) ([]*Change, error) {
-	return getChanges(smgr, cfg, CommandDelete, isForce)
+func GetChangesForDelete(smgr statemanager.Manager, cfg *configloader.Config, isForceDelete bool) ([]*Change, error) {
+	return getChanges(smgr, cfg, CommandDelete, isForceDelete)
 }
 
-func getChanges(smgr statemanager.Manager, cfg *configloader.Config, commandType CommandType, isForce bool) ([]*Change, error) {
+func getChanges(smgr statemanager.Manager, cfg *configloader.Config, commandType CommandType, isForceDelete bool) ([]*Change, error) {
 	if cfg == nil {
 		return make([]*Change, 0), nil
 	}
-	log.Debug("isForce:", isForce)
+	log.Debug("isForce:", isForceDelete)
 	// calculate changes from config and state
 	var changes []*Change
 	var err error
 	if commandType == CommandApply {
 		changes, err = changesForApply(smgr, cfg)
 	} else if commandType == CommandDelete {
-		if isForce {
+		if isForceDelete {
 			changes = changesForForceDelete(smgr, cfg)
 		} else {
 			changes = changesForDelete(smgr, cfg)

@@ -16,7 +16,7 @@ var (
 	pluginDir        string
 	continueDirectly bool
 	isDebug          bool
-	isForce          bool
+	isForceDelete    bool
 
 	rootCMD = &cobra.Command{
 		Use:   "dtm",
@@ -44,7 +44,6 @@ func init() {
 	rootCMD.PersistentFlags().StringVarP(&pluginDir, "plugin-dir", "p", pluginengine.DefaultPluginDir, "plugins directory")
 	rootCMD.PersistentFlags().BoolVarP(&continueDirectly, "yes", "y", false, "apply/delete directly without confirmation")
 	rootCMD.PersistentFlags().BoolVarP(&isDebug, "debug", "d", false, "debug level log")
-	rootCMD.PersistentFlags().BoolVarP(&isForce, "force", "r", false, "force to delete from config")
 	rootCMD.AddCommand(versionCMD)
 	rootCMD.AddCommand(initCMD)
 	rootCMD.AddCommand(applyCMD)
