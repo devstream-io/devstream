@@ -140,15 +140,17 @@ func changesForDelete(smgr statemanager.Manager, cfg *configloader.Config) []*Ch
 // changesForForceDelete  for force delete from config, ignore state file
 func changesForForceDelete(smgr statemanager.Manager, cfg *configloader.Config) []*Change {
 	changes := make([]*Change, 0)
-	tmpStates := smgr.GetStatesMap().DeepCopy()
 
-	log.Debug("tools: ", cfg.Tools)
+	log.Debugf("Tools prepare to deal with: %v", cfg.Tools)
 
 	for i := len(cfg.Tools) - 1; i >= 0; i-- {
 		tool := cfg.Tools[i]
 		description := fmt.Sprintf("Tool < %s > will be deleted.", tool.Name)
 		changes = append(changes, generateDeleteAction(&tool, description))
-		tmpStates.Delete(tool.Name)
+		if err := smgr.DeleteState(getStateKeyFromTool(&tool)); err != nil {
+			log.Errorf("Failed to delete %s from state.", getStateKeyFromTool(&tool))
+			return make([]*Change, 0)
+		}
 	}
 	return changes
 }
