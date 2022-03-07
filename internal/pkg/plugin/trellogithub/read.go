@@ -5,16 +5,16 @@ import (
 )
 
 func Read(options map[string]interface{}) (map[string]interface{}, error) {
-	gis, err := NewTrelloGithub(options)
+	tg, err := NewTrelloGithub(options)
 	if err != nil {
 		return nil, err
 	}
 
-	api := gis.GetApi()
+	api := tg.GetApi()
 	log.Infof("API is: %s.", api.Name)
 
 	ws := defaultWorkflows.GetWorkflowByNameVersionTypeString(api.Name)
-	retMap, err := gis.VerifyWorkflows(ws)
+	retMap, err := tg.VerifyWorkflows(ws)
 	if err != nil {
 		return nil, err
 	}
@@ -31,5 +31,5 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, nil
 	}
 
-	return gis.buildReadState(api)
+	return tg.buildReadState(api)
 }

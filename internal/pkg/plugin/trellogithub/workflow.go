@@ -2,6 +2,7 @@ package trellogithub
 
 import (
 	"github.com/merico-dev/stream/internal/pkg/plugin/trellogithub/trello"
+	"github.com/merico-dev/stream/pkg/util/github"
 )
 
 const (
@@ -15,7 +16,11 @@ var extTrello = &Api{
 
 var defaultWorkflows = workflows{
 	extTrello.Name: {
-		{defaultCommitMessage, BuilderYmlTrello, trello.IssuesBuilder},
+		{
+			CommitMessage:    defaultCommitMessage,
+			WorkflowFileName: BuilderYmlTrello,
+			WorkflowContent:  trello.IssuesBuilder,
+		},
 	},
 }
 
@@ -33,18 +38,9 @@ type Api struct {
 	KanbanBoardName string
 }
 
-// Workflow is the struct for a GitHub Actions Workflow.
-type Workflow struct {
-	commitMessage    string
-	workflowFileName string
-	workflowContent  string
-}
+type workflows map[string][]*github.Workflow
 
-type ToolString string
-
-type workflows map[string][]*Workflow
-
-func (ws *workflows) GetWorkflowByNameVersionTypeString(nvtStr string) []*Workflow {
+func (ws *workflows) GetWorkflowByNameVersionTypeString(nvtStr string) []*github.Workflow {
 	workflowList, exist := (*ws)[nvtStr]
 	if exist {
 		return workflowList

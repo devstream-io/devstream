@@ -59,12 +59,12 @@ func NewTrelloGithub(options map[string]interface{}) (*TrelloGithub, error) {
 	}, nil
 }
 
-func (gi *TrelloGithub) GetApi() *Api {
-	return gi.options.Api
+func (tg *TrelloGithub) GetApi() *Api {
+	return tg.options.Api
 }
 
 // CompareFiles compare files between local and remote
-func (gi *TrelloGithub) CompareFiles(wsFiles, filesInRemoteDir []string) map[string]error {
+func (tg *TrelloGithub) CompareFiles(wsFiles, filesInRemoteDir []string) map[string]error {
 	lostFiles := slicez.SliceInSliceStr(wsFiles, filesInRemoteDir)
 	// all files exist
 	if len(lostFiles) == 0 {
@@ -83,13 +83,13 @@ func (gi *TrelloGithub) CompareFiles(wsFiles, filesInRemoteDir []string) map[str
 
 // CreateTrelloItems create board/lists, and set secret by ids
 // TODO(daniel-hutao): rename the function name
-func (gi *TrelloGithub) CreateTrelloItems() (*TrelloItemId, error) {
+func (tg *TrelloGithub) CreateTrelloItems() (*TrelloItemId, error) {
 	c, err := trello.NewClient()
 	if err != nil {
 		return nil, err
 	}
 
-	board, err := c.CreateBoard(gi.options.Api.KanbanBoardName, gi.options.Owner, gi.options.Repo)
+	board, err := c.CreateBoard(tg.options.Api.KanbanBoardName, tg.options.Owner, tg.options.Repo)
 	if err != nil {
 		return nil, err
 	}

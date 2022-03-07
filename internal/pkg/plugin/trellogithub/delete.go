@@ -6,17 +6,17 @@ import (
 
 // Delete remove trello-github-integ workflows.
 func Delete(options map[string]interface{}) (bool, error) {
-	gis, err := NewTrelloGithub(options)
+	tg, err := NewTrelloGithub(options)
 	if err != nil {
 		return false, err
 	}
 
-	api := gis.GetApi()
+	api := tg.GetApi()
 	log.Infof("API is %s.", api.Name)
 	ws := defaultWorkflows.GetWorkflowByNameVersionTypeString(api.Name)
 
 	for _, w := range ws {
-		err := gis.DeleteWorkflow(w)
+		err := tg.client.DeleteWorkflow(w, tg.options.Branch)
 		if err != nil {
 			return false, err
 		}
