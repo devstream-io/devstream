@@ -66,7 +66,7 @@ func getChanges(smgr statemanager.Manager, cfg *configloader.Config, commandType
 			changes = changesForDelete(smgr, cfg)
 		}
 	} else {
-		log.Fatalf("That's not impossible!")
+		log.Fatalf("That's impossible!")
 	}
 
 	if err != nil {
