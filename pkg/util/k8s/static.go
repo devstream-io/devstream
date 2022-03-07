@@ -42,7 +42,10 @@ func (c *Client) DeleteNamespace(namespace string) error {
 	if namespace == "default" || namespace == "kube-system" {
 		return fmt.Errorf("you can't delete the default or kube-system namespace")
 	}
-	return c.CoreV1().Namespaces().Delete(context.TODO(), namespace, metav1.DeleteOptions{})
+
+	gracePeriodSeconds := int64(0)
+	return c.CoreV1().Namespaces().Delete(
+		context.TODO(), namespace, metav1.DeleteOptions{GracePeriodSeconds: &gracePeriodSeconds})
 }
 
 func (c *Client) IsNamespaceExists(namespace string) (bool, error) {
