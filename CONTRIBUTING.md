@@ -64,3 +64,7 @@ Both "body" and "footer" are optional; BREAKING CHANGE can be addressed both in 
 ### Creating a New Plugin
 
 See [creating_a_plugin.md](./docs/creating_a_plugin.md).
+
+## Development Workflow
+
+See [development_workflow](./docs/development_workflow.md).
