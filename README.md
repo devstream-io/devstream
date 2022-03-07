@@ -178,12 +178,13 @@ Usage:
   help                Display this help.
   build               Build dtm & plugins locally.
   build-core          Build dtm core only, without plugins, locally.
-  build-linux-amd64   Cross-platform build for linux/amd64
+  clean               Remove local plugins and locally built artifacts.
+  build-linux-amd64   Cross-platform build for "linux/amd64".
   fmt                 Run 'go fmt' & goimports against code.
   vet                 Run go vet against code.
   e2e                 Run e2e tests.
-  e2e-up              Start kind cluster for e2e tests
-  e2e-down            Stop kind cluster for e2e tests
+  e2e-up              Start kind cluster for e2e tests.
+  e2e-down            Stop kind cluster for e2e tests.
 ```
 
 #### Test
