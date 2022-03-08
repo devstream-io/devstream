@@ -3,7 +3,6 @@ package log
 import (
 	"bytes"
 	"fmt"
-	"runtime"
 
 	"github.com/sirupsen/logrus"
 	"gopkg.in/gookit/color.v1"
@@ -17,12 +16,6 @@ const (
 	ERROR   = "[ERROR] "
 	FATAL   = "[FATAL] "
 )
-
-// ROOTCALLER should be main proc
-const ROOTCALLER = "main.main"
-
-// REMOVELEVEL logrus stack level is 9, should be removed from stack trace
-const REMOVELEVEL = 10
 
 type CliLoggerFormatter struct {
 	level           logrus.Level
@@ -43,11 +36,6 @@ func (m *CliLoggerFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	m.levelPrintRender()
 
 	timestamp := entry.Time.Format("2006-01-02 15:04:05")
-
-	if m.level == logrus.ErrorLevel {
-		entry.Message = addCallStackIgnoreLogrus(entry.Message)
-	}
-
 	newLog := fmt.Sprintf("%s %s %s %s\n", timestamp, m.prefix, m.formatLevelName, entry.Message)
 
 	b.WriteString(newLog)
@@ -104,18 +92,4 @@ func (s *SeparatorFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 
 	b.WriteString(newLog)
 	return b.Bytes(), nil
-}
-
-// addCallStackIgnoreLogrus add call stack to log message without logrus stack
-func addCallStackIgnoreLogrus(rawMessage string) string {
-	stackMessage := rawMessage
-	for i := REMOVELEVEL; ; i++ {
-		pc, file, line, _ := runtime.Caller(i)
-		stackMessage = stackMessage + "\n  -- " + file + fmt.Sprintf(" %d", line)
-		entrance := runtime.FuncForPC(pc).Name()
-		if entrance == ROOTCALLER {
-			break
-		}
-	}
-	return stackMessage
 }
