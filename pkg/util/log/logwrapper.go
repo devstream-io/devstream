@@ -113,7 +113,7 @@ func addCallStackIgnoreLogrus(rawMessage string) string {
 		pc, file, line, _ := runtime.Caller(i)
 		stackMessage = stackMessage + "\n  -- " + file + fmt.Sprintf(" %d", line)
 		entrance := runtime.FuncForPC(pc).Name()
-		if entrance == ROOTCALLER {
+		if entrance == ROOTCALLER || entrance == "" {
 			break
 		}
 	}
