@@ -34,18 +34,35 @@ type Repo struct {
 }
 
 func InitRepoLocalAndPushToRemote(repoPath string, param *Param, ghClient *github.Client) error {
+	var retErr error
 	if err := ghClient.CreateRepo(); err != nil {
 		log.Infof("Failed to create repo: %s.", err)
 		return err
 	}
-	log.Info("Repo created.")
+	log.Infof("The repo %s has been created.", param.Repo)
 
-	if err := WalkLocalRepoPath(repoPath, param, ghClient); err != nil {
-		return err
+	defer func() {
+		if retErr == nil {
+			return
+		}
+		// need to clean the repo created when retErr != nil
+		if err := ghClient.DeleteRepo(); err != nil {
+			log.Errorf("Failed to delete the repo %s: %s.", param.Repo, err)
+		}
+	}()
+
+	if retErr = WalkLocalRepoPath(repoPath, param, ghClient); retErr != nil {
+		log.Debugf("Failed to walk local repo-path: %s.", retErr)
+		return retErr
 	}
 
 	mainBranch := getMainBranchName(param)
-	return MergeCommits(ghClient, mainBranch)
+	if retErr = MergeCommits(ghClient, mainBranch); retErr != nil {
+		log.Debugf("Failed to merge commits: %s.", retErr)
+		return retErr
+	}
+
+	return nil
 }
 
 func WalkLocalRepoPath(repoPath string, param *Param, ghClient *github.Client) error {
