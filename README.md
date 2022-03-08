@@ -19,7 +19,9 @@ DevStream is an open-source DevOps toolchain manager.
 Imagine you are in a new project. Before writing the first line of code, you would have to figure out the tools needed in the whole Software Development Life Cycle (SDLC). You would probably need the following pieces:
 
 - some kind of project management software or issue tracking tools (e.g., Jira);
+- 
 - someplace for source code management (GitHub and alike);
+- 
 - some tools for continuous integration (e.g., Jenkins, GitHub Actions, CircleCI, Travis CI);
 - some tools for continuous delivery or continuous deployment (e.g., fluxcd/flux2, ArgoCD, etc.);
 - someplace serving as the single source of truth for secrets and credentials (secrets manager, e.g., Vault by HashiCorp);
