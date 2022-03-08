@@ -32,7 +32,6 @@ func (m *CliLoggerFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	} else {
 		b = &bytes.Buffer{}
 	}
-
 	m.levelPrintRender()
 
 	timestamp := entry.Time.Format("2006-01-02 15:04:05")
@@ -82,14 +81,12 @@ func (s *SeparatorFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	} else {
 		b = &bytes.Buffer{}
 	}
-
 	timestamp := entry.Time.Format("2006-01-02 15:04:05")
 	newLog := fmt.Sprintf("%s %s %s %s\n",
 		timestamp,
 		color.Blue.Render(normal.Info),
 		color.Blue.Render(INFO),
 		color.Blue.Render(fmt.Sprintf("%s %s %s", "-------------------- [ ", entry.Message, " ] --------------------")))
-
 	b.WriteString(newLog)
 	return b.Bytes(), nil
 }
