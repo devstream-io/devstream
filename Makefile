@@ -33,7 +33,7 @@ clean: ## Remove local plugins and locally built artifacts.
 	rm -f dtm*
 	rm -rf build/working_dir
 
-build-linux-amd64: ## Cross-platform build for linux/amd64
+build-linux-amd64: ## Cross-platform build for "linux/amd64".
 	echo "Building in ${BUILD_PATH}"
 	mkdir -p .devstream
 	rm -rf ${BUILD_PATH} && mkdir ${BUILD_PATH}
@@ -61,8 +61,8 @@ e2e: build ## Run e2e tests.
 	./dtm-${GOOS}-${GOARCH} verify -f config.yaml
 	./dtm-${GOOS}-${GOARCH} delete -f config.yaml
 
-e2e-up: ## Start kind cluster for e2e tests
+e2e-up: ## Start kind cluster for e2e tests.
 	sh hack/e2e/e2e-up.sh
 
-e2e-down: ## Stop kind cluster for e2e tests
+e2e-down: ## Stop kind cluster for e2e tests.
 	sh hack/e2e/e2e-down.sh

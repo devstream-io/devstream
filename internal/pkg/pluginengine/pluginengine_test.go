@@ -82,7 +82,7 @@ var _ = Describe("Pluginengine", func() {
 			Tools: []configloader.Tool{*getTool(name, kind, version)},
 		}
 
-		err = smgr.AddState(fmt.Sprintf("%s_%s", name, kind), statemanager.State{})
+		err = smgr.AddState(statemanager.StateKey(fmt.Sprintf("%s_%s", name, kind)), statemanager.State{})
 		Expect(err).NotTo(HaveOccurred())
 		changes, _ := pluginengine.GetChangesForDelete(smgr, cfg, false)
 

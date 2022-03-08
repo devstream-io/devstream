@@ -24,10 +24,10 @@ type Manager interface {
 
 	GetStatesMap() StatesMap
 
-	GetState(key string) *State
-	AddState(key string, state State) error
-	UpdateState(key string, state State) error
-	DeleteState(key string) error
+	GetState(key StateKey) *State
+	AddState(key StateKey, state State) error
+	UpdateState(key StateKey, state State) error
+	DeleteState(key StateKey) error
 }
 
 // manager is the default implement with Manager
@@ -64,7 +64,7 @@ func NewManager() (Manager, error) {
 		return nil, err
 	}
 
-	tmpMap := make(map[string]State)
+	tmpMap := make(map[StateKey]State)
 	if err = yaml.Unmarshal(data, tmpMap); err != nil {
 		log.Errorf("Failed to unmarshal the state file < %s >. error: %s.", local.DefaultStateFile, err)
 		log.Errorf("Reading the state file failed, it might have been compromised/modified by someone other than DTM.")
@@ -83,7 +83,7 @@ func (m *manager) GetStatesMap() StatesMap {
 	return m.statesMap
 }
 
-func (m *manager) GetState(key string) *State {
+func (m *manager) GetState(key StateKey) *State {
 	m.statesMap.Load(key)
 	if s, exist := m.statesMap.Load(key); exist {
 		state, _ := s.(State)
@@ -92,17 +92,17 @@ func (m *manager) GetState(key string) *State {
 	return nil
 }
 
-func (m *manager) AddState(key string, state State) error {
+func (m *manager) AddState(key StateKey, state State) error {
 	m.statesMap.Store(key, state)
 	return m.Write(m.GetStatesMap().Format())
 }
 
-func (m *manager) UpdateState(key string, state State) error {
+func (m *manager) UpdateState(key StateKey, state State) error {
 	m.statesMap.Store(key, state)
 	return m.Write(m.GetStatesMap().Format())
 }
 
-func (m *manager) DeleteState(key string) error {
+func (m *manager) DeleteState(key StateKey) error {
 	m.statesMap.Delete(key)
 	return m.Write(m.GetStatesMap().Format())
 }
