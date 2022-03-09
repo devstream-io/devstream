@@ -18,12 +18,14 @@ jobs:
         go-version: 1.17
     - name: Test
       run: go test ./... -race -covermode=atomic -coverprofile=coverage.out
+    - name: html
+      run: go tool cover -html=coverage.out -o coverage.html
     - name: comment PR
       uses: machine-learning-apps/pr-comment@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        path: coverage.out
+        path: coverage.html
   tag:
     name: Tag
     needs: [test]
