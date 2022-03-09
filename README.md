@@ -77,6 +77,7 @@ Want to remove or reinstall a specific piece in the workflow? DevStream has got 
 | CD/GitOps              | argocdapp                      | ArgoCD Application creation    | [doc](./docs/plugins/argocdapp_plugin.md)          |
 | Monitoring             | kube-prometheus                | Prometheus/Grafana K8s install | [doc](./docs/plugins/kube-prometheus_plugin.md)          |
 | Observability          | devlake                        | DevLake installation           | [doc](./docs/plugins/devlake_plugin.md)          |
+| LDAP                   | openldap                       | OpenLDAP installation          | [doc](./docs/plugins/openldap_plugin.md)          |
 
 ## Quick Start
 

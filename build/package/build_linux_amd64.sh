@@ -18,3 +18,4 @@ go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o output/kube-prometh
 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o output/github-repo-scaffolding-golang-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/reposcaffolding/github/golang/
 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o output/devlake-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/devlake/
 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o output/gitlabci-golang-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/gitlabci/golang
+go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o output/openldap-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/openldap/
