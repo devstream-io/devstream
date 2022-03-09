@@ -34,88 +34,49 @@ tools:
       timeout: 5m
       # custom configuration (Optional). You can refer to https://github.com/jp-gouin/helm-openldap/blob/master/values.yaml
       values_yaml: |
+        replicaCount: 1
         service: 
           type: NodePort  
         env:
-          LDAP_LOG_LEVEL: "256"
           LDAP_ORGANISATION: "DevStream Inc."
           LDAP_DOMAIN: "devstream.org"
-          LDAP_READONLY_USER: "false"
-          LDAP_READONLY_USER_USERNAME: "readonly"
-          LDAP_READONLY_USER_PASSWORD: "readonly"
-          LDAP_RFC2307BIS_SCHEMA: "false"
-          LDAP_BACKEND: "mdb"
-          LDAP_TLS: "true"
-          LDAP_TLS_CRT_FILENAME: "tls.crt"
-          LDAP_TLS_KEY_FILENAME: "tls.key"
-          LDAP_TLS_DH_PARAM_FILENAME: "dhparam.pem"
-          LDAP_TLS_CA_CRT_FILENAME: "ca.crt"
-          LDAP_TLS_ENFORCE: "false"
-          CONTAINER_LOG_LEVEL: "4"
-          LDAP_TLS_REQCERT: "never"
-          KEEP_EXISTING_CONFIG: "false"
-          LDAP_REMOVE_CONFIG_AFTER_SETUP: "true"
-          LDAP_SSL_HELPER_PREFIX: "ldap"
-          LDAP_TLS_VERIFY_CLIENT: "never"
-          LDAP_TLS_PROTOCOL_MIN: "3.0"
-          LDAP_TLS_CIPHER_SUITE: "NORMAL"
         persistence:
-          enabled: true
-          storageClass: "alicloud-nas-subpath"
-          accessModes:
-            - ReadWriteOnce
-          size: 8Gi
+          enabled: false
         adminPassword: Not@SecurePassw0rd
         configPassword: Not@SecurePassw0rd
 
         ltb-passwd:
-          enabled : true
-          ingress:
-            enabled: true
-            annotations: {}
-            path: /
-            pathType: Prefix
-            ## Ingress Host
-            hosts:
-            - "ssl-ldap2.example"
-          ldap:
-            server: ldap://openldap-openldap-stack-ha
-            searchBase: dc=devstream,dc=org
-            # existingSecret: openldaptest
-            bindDN: cn=admin,dc=devstream,dc=org
-            bindPWKey: LDAP_ADMIN_PASSWORD
+          enabled : false
 
         phpldapadmin:
           enabled: true
           ingress:
-            enabled: true
-            annotations: {}
-            path: /
-            pathType: Prefix
-            ## Ingress Host
-            hosts:
-            - phpldapadmin.example
-          env:
-            PHPLDAPADMIN_LDAP_HOSTS: openldap-openldap-stack-ha
+            enabled: false
 ```
 
-## Description of key fields in values_yaml
-- `service.type`: The default value is `ClusterIP`, if you have services outside the Kubernetes cluster that require ldap integration, the value preferably be set to `NodePort`, so that services outside the Kubernetes cluster can access the ldap service via `ldap://ip:389` instead of `ldap://openldap.openldap-openldap-stack-ha`
-- `env`: List of key value pairs as env variables to be sent to the docker image. See https://github.com/osixia/docker-openldap for available ones. Please change the value of `LDAP_DOMAIN`. Of course even if you use **devstream.org** it will be fine, except that the search base will be `dc=devstream,dc=org`. 
-- `persistence.storageClass`: Please use your own `storage class`, or use the `storage class` provided by the Kubernetes cluster hosted in the public cloud directly. The above example uses the NFS-based `storage class` provided by AliCloud ACK
+## Description of Key Fields in `values_yaml`
+- `replicaCount`: The default value is 3, for the convenience of local testing, the above example is set to 1
+- `service.type`: The default value is `ClusterIP`, if you have services outside the Kubernetes cluster that require ldap integration, the value preferably be set to `NodePort`, so that services outside the Kubernetes cluster can access the ldap service via `ldap://ip:389` instead of `ldap://openldap.openldap-openldap-stack-ha:389`
 - `adminPassword`: Use your own custom password
 - `configPassword`: Use your own custom password
-- `ltb-passwd.ingress`: Ingress of the Ltb-Passwd service by which you can modify your password. Please change **ssl-ldap2.example** to your own domain name
-- `ltb-passwd.ldap`: Ldap configuration for the Ltb-Passwd service. If you change the `env.LDAP_DOMAIN`, don't forget to change the values of `ltb-passwd.ldap.searchBase` and `ltb-passwd.ldap.bindDN`
-- `phpldapadmin.ingress`: Ingress of Phpldapadmin service by which you can manage your ldap service. Please change **phpldapadmin.example** to your own domain name
+- `ltb-passwd`: Ingress of the Ltb-Passwd service by which you can modify your password. If you need this service, you can set `ltb-passwd.enabled` to `true`.
+- `phpldapadmin.ingress`: Ingress of Phpldapadmin service by which you can manage your ldap service. If you wish to expose the service to the Internet, you can change the `phpldapadmin.ingress.enabled` to `true` and configure your own domain name
 
-## Post-installation operations
+## Post-installation Operations
 
-Once the installation is complete, you can manage ldap service through **phpldapadmin**. Access the service by visiting the domain name (e.g. **phpldapadmin.example**) in the `phpldapadmin.ingress` configuration section of the above example. If you have not changed the default values in the above example, its account will be **cn=admin,dc=devstream,dc=org** and password will be **Not@SecurePassw0rd**.
+Once the installation is complete, you can manage ldap service through **phpldapadmin**. For local testing, you can access the service through port forwarding. The commands are as follows.
 
-If you're familiar with OpenLDAP, then you don't need to continue reading the tutorial below, you can just go ahead and integrate ldap for your service.
+```bash
+kubectl port-forward svc/openldap-phpldapadmin 8080:80 -n openldap
+```
 
-### Importing your data
+Now you can now access the phpldapadmin service on your browser via http://127.0.0.1:8080
+
+If you have not changed the default values in the above example, its account will be **cn=admin,dc=devstream,dc=org** and password will be **Not@SecurePassw0rd**.
+
+**Note**: If you're familiar with OpenLDAP, then you don't need to continue reading the tutorial below, you can just go ahead and integrate ldap for your service.
+
+### Importing Your Data
 
 The following is a sample file, if you have changed the above configuration, remember to replace `dc=devstream,dc=org` with your own.
 
@@ -194,7 +155,7 @@ Login your `phpldapadmin` service and import the sample configuration above.Afte
 
 ![](../images/openldap-example.png)
 
-### Verify the ldap service
+### Verify the LDAP Service
 
 Log in to the container where the ldap service is located, and then use the `ldapsearch` command to query the user(`uid=example,ou=people,dc=devstream,dc=org`) created above
 
@@ -233,5 +194,4 @@ result: 0 Success
 # numEntries: 1
 ```
 
-
-Then you can create users in the **People** group, assign them to different groups, and integrate with ldap-enabled services, and you can implement unified authentication based on OpenLDAP.
+If your command output is as above, your ldap service is fine. The above `values_yaml` is only to facilitate your local testing, if you want production available, you also have to configure `replicaCount`, data persistence, etc., refer to [OpenLDAP values.yaml](https://github.com/jp-gouin/helm-openldap/blob/master/values.yaml)
