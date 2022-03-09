@@ -33,7 +33,7 @@ func install(param *Param) (map[string]interface{}, error) {
 	// Clear workpath before return
 	defer func() {
 		if err := os.RemoveAll(DefaultWorkPath); err != nil {
-			log.Errorf("Failed to clear workpath: %s.", err)
+			log.Errorf("Failed to clear workpath %s: %s.", DefaultWorkPath, err)
 		}
 	}()
 

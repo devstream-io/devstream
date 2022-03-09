@@ -1,7 +1,6 @@
 package github
 
 import (
-	"context"
 	"net/http"
 
 	"github.com/google/go-github/v42/github"
@@ -14,27 +13,25 @@ func (c *Client) CreateRepo() error {
 		Name: &c.Repo,
 	}
 
-	_, _, err := c.Repositories.Create(context.TODO(), "", repo)
+	_, _, err := c.Repositories.Create(c.Context, "", repo)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (c *Client) Delete() error {
-	response, err := c.Client.Repositories.Delete(
-		c.Context,
-		c.Owner,
-		c.Repo)
-
+func (c *Client) DeleteRepo() error {
+	response, err := c.Client.Repositories.Delete(c.Context, c.Owner, c.Repo)
 	if response.StatusCode == http.StatusNotFound {
-		log.Successf("GitHub repo %s was already removed.", c.Repo)
+		log.Infof("GitHub repo %s was not found. Nothing to do here.", c.Repo)
 		return nil
 	}
 
 	if err != nil {
+		log.Debugf("Delete repo failed: %s.", err)
 		return err
 	}
+
 	log.Successf("GitHub repo %s removed.", c.Repo)
 	return nil
 }

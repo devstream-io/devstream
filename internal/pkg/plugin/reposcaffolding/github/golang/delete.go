@@ -37,7 +37,7 @@ func uninstall(param *Param) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	if err := ghClient.Delete(); err != nil {
+	if err := ghClient.DeleteRepo(); err != nil {
 		return false, err
 	}
 	return true, nil
