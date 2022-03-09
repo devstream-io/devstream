@@ -27,6 +27,7 @@ Imagine you are in a new project. Before writing the first line of code, you wou
 - some tools for continuous delivery or continuous deployment (e.g., fluxcd/flux2, ArgoCD, etc.);
 - 
 - someplace serving as the single source of truth for secrets and credentials (secrets manager, e.g., Vault by HashiCorp);
+- 
 - some tools for centralized logging and monitoring (for example, ELK, Prometheus/Grafana);
 
 And maybe more. The list could go on for quite a bit.
