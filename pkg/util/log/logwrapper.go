@@ -44,7 +44,7 @@ func (m *CliLoggerFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 
 	timestamp := entry.Time.Format("2006-01-02 15:04:05")
 
-	if m.level == logrus.ErrorLevel {
+	if m.level == logrus.ErrorLevel && logrus.GetLevel() == logrus.DebugLevel {
 		entry.Message = addCallStackIgnoreLogrus(entry.Message)
 	}
 
