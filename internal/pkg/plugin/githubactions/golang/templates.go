@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Build
-      run: [[- if not .Build.Command]] go build ./...[[- else]][[.Build.Command]][[- end]]
+      run: [[- if not .Build.Command]] go build ./...[[- else]] [[.Build.Command]][[- end]]
   [[- else]]
   [[- end]]
   [[- if .Test.Enable]]
@@ -23,14 +23,16 @@ jobs:
       with:
         go-version: 1.17
     - name: Test
-      run: [[- if not .Test.Command]] go test ./...[[- else]][[.Test.Command]][[- end]] [[- if .Test.Coverage.Enable]] -race -covermode=atomic -coverprofile=[[- if not .Test.Coverage.Output]]coverage.out[[- else]][[.Test.Coverage.Output]][[- end]] [[- end]]
+      run: [[- if not .Test.Command]] go test ./...[[- else]] [[.Test.Command]][[- end]] [[- if .Test.Coverage.Enable]] -race -covermode=atomic -coverprofile=[[- if not .Test.Coverage.Output]]coverage.out[[- else]][[.Test.Coverage.Output]][[- end]] [[- end]]
     [[- if .Test.Coverage.Enable]]
+    - name: Generate Coverage
+      run: go tool cover -func=[[- if not .Test.Coverage.Output]]coverage.out[[- else]][[.Test.Coverage.Output]][[- end]] >> coverage.cov
     - name: comment PR
       uses: machine-learning-apps/pr-comment@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        path: [[- if not .Test.Coverage.Output]]coverage.out[[- else]][[.Test.Coverage.Output]][[- end]]
+        path: coverage.cov
     [[- end]]
   [[- else]]
   [[- end]]
@@ -81,7 +83,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Build
-      run: [[- if not .Build.Command]] go build ./...[[- else]][[.Build.Command]][[- end]]
+      run: [[- if not .Build.Command]] go build ./...[[- else]] [[.Build.Command]][[- end]]
   [[- else]]
   [[- end]]
   [[- if .Test.Enable]]
@@ -94,14 +96,23 @@ jobs:
       with:
         go-version: 1.17
     - name: Test
-      run: [[- if not .Test.Command]] go test ./...[[- else]][[.Test.Command]][[- end]] [[- if .Test.Coverage.Enable]] -race -covermode=atomic -coverprofile=[[- if not .Test.Coverage.Output]]coverage.out[[- else]][[.Test.Coverage.Output]][[- end]] [[- end]]
+      run: [[- if not .Test.Command]] go test ./...[[- else]] [[.Test.Command]][[- end]] [[- if .Test.Coverage.Enable]] -race -covermode=atomic -coverprofile=[[- if not .Test.Coverage.Output]]coverage.out[[- else]][[.Test.Coverage.Output]][[- end]] [[- end]]
     [[- if .Test.Coverage.Enable]]
-    - name: comment PR
-      uses: machine-learning-apps/pr-comment@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Generate Coverage
+      run: go tool cover -func=[[- if not .Test.Coverage.Output]]coverage.out[[- else]][[.Test.Coverage.Output]][[- end]] >> coverage.cov
+    - name: Get comment body
+      id: get-comment-body
+      run: |
+        cat coverage.cov
+        body=$(cat coverage.cov)
+        body="${body//'%'/'%25'}"
+        body="${body//$'\n'/'%0A'}"
+        body="${body//$'\r'/'%0D'}" 
+        echo ::set-output name=body::$body
+    - name: Create commit comment
+      uses: peter-evans/commit-comment@v1
       with:
-        path: [[- if not .Test.Coverage.Output]]coverage.out[[- else]][[.Test.Coverage.Output]][[- end]]
+       body: ${{ steps.get-comment-body.outputs.body }}
     [[- end]]
   [[- else]]
   [[- end]]
