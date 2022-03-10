@@ -26,6 +26,7 @@ tools:
     # kind of the plugin
     kind: github-repo-scaffolding-golang
     # version of the plugin
+    # checkout the version from the GitHub releases
     version: 0.2.0
   # options for the plugin
   options:
