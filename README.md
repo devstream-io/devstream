@@ -26,7 +26,7 @@ Typically, you'd need the following pieces in place to work effectively:
 - Project management software or issue tracking tools (JIRA, etc.)
 - Source code management (GitHub, Bitbucket, etc.)
 - Continuous integration tools (Jenkins, CircleCI, Travis CI, etc.)
-- Continuous delivery/deployment tools (FluxCD/Flux2, ArgoCD, etc.)
+- Continuous delivery/deployment tools (Flux CD/Flux2, Argo CD, etc.)
 - A single source of truth for secrets and credentials (secrets manager, e.g., Vault by HashiCorp)
 - Some tools for centralized logging and monitoring (for example, ELK, Prometheus/Grafana);
 
