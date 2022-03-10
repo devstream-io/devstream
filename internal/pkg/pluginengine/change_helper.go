@@ -121,7 +121,7 @@ func changesForApply(smgr statemanager.Manager, cfg *configloader.Config) ([]*Ch
 	// thus, we need to generate a "delete" change for it.
 	tmpStatesMap.Range(func(key, value interface{}) bool {
 		changes = append(changes, generateDeleteActionFromState(value.(statemanager.State)))
-		log.Infof("Change added: %s -> %s", key.(string), statemanager.ActionDelete)
+		log.Infof("Change added: %s -> %s", key.(statemanager.StateKey), statemanager.ActionDelete)
 		return true
 	})
 
