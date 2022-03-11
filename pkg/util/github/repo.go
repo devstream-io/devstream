@@ -42,6 +42,10 @@ func (c *Client) GetRepoDescription() (*github.Repository, error) {
 		c.Owner,
 		c.Repo)
 
+	if err != nil {
+		return nil, err
+	}
+
 	if repo == nil && resp.StatusCode == http.StatusNotFound {
 		return repo, nil
 	}
