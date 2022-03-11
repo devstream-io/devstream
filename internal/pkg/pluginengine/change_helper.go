@@ -59,49 +59,61 @@ func drifted(a, b map[string]interface{}) bool {
 func changesForApply(smgr statemanager.Manager, cfg *configloader.Config) ([]*Change, error) {
 	changes := make([]*Change, 0)
 
-	// 1, create a temporary state map used to store unprocessed tools.
+	// 1. create a temporary state map used to store unprocessed tools.
 	tmpStatesMap := smgr.GetStatesMap().DeepCopy()
 
-	// 2, for each tool in the config, generate changes.
-	for _, tool := range cfg.Tools {
-		state := smgr.GetState(statemanager.StateKeyGenerateFunc(&tool))
+	// 2. handle dependency and sort the tools in the config into "batches" of tools
+	var batchesOfTools [][]configloader.Tool
+	// the elements in batchesOfTools are sorted "batches"
+	// and each element/batch is a list of tools that, in theory, can run in parallel
+	// that is to say, the tools in the same batch won't depend on each other
+	batchesOfTools, err := topologicalSort(cfg.Tools)
+	if err != nil {
+		return changes, err
+	}
 
-		if state == nil {
-			// tool not in the state, create, no need to Read resource before Create
-			description := fmt.Sprintf("Tool < %s > found in config but doesn't exist in the state, will be created.", tool.Name)
-			changes = append(changes, generateCreateAction(&tool, description))
-		} else {
-			// tool found in the state
-			if drifted(tool.Options, state.Options) {
-				// tool's config differs from State's, Update
-				description := fmt.Sprintf("Tool < %s > config drifted from the state, will be updated.", tool.Name)
-				changes = append(changes, generateUpdateAction(&tool, description))
+	// 3. generate changes for each tool
+	for _, batch := range batchesOfTools {
+		for _, tool := range batch {
+			state := smgr.GetState(statemanager.StateKeyGenerateFunc(&tool))
+
+			if state == nil {
+				// tool not in the state, create, no need to Read resource before Create
+				description := fmt.Sprintf("Tool < %s > found in config but doesn't exist in the state, will be created.", tool.Name)
+				changes = append(changes, generateCreateAction(&tool, description))
 			} else {
-				// tool's config is the same as State's
-
-				// read resource status
-				resource, err := Read(&tool)
-				if err != nil {
-					return changes, err
-				}
-
-				if resource == nil {
-					// tool exists in the state, but resource doesn't exist, Create
-					description := fmt.Sprintf("Tool < %s > state found but it seems the tool isn't created, will be created.", tool.Name)
-					changes = append(changes, generateCreateAction(&tool, description))
-				} else if drifted(resource, state.Resource) {
-					// resource drifted from state, Update
-					description := fmt.Sprintf("Tool < %s > drifted from the state, will be updated.", tool.Name)
+				// tool found in the state
+				if drifted(tool.Options, state.Options) {
+					// tool's config differs from State's, Update
+					description := fmt.Sprintf("Tool < %s > config drifted from the state, will be updated.", tool.Name)
 					changes = append(changes, generateUpdateAction(&tool, description))
 				} else {
-					// resource is the same as the state, do nothing
-					log.Debugf("Tool < %s > is the same as the state, do nothing.", tool.Name)
+					// tool's config is the same as State's
+
+					// read resource status
+					resource, err := Read(&tool)
+					if err != nil {
+						return changes, err
+					}
+
+					if resource == nil {
+						// tool exists in the state, but resource doesn't exist, Create
+						description := fmt.Sprintf("Tool < %s > state found but it seems the tool isn't created, will be created.", tool.Name)
+						changes = append(changes, generateCreateAction(&tool, description))
+					} else if drifted(resource, state.Resource) {
+						// resource drifted from state, Update
+						description := fmt.Sprintf("Tool < %s > drifted from the state, will be updated.", tool.Name)
+						changes = append(changes, generateUpdateAction(&tool, description))
+					} else {
+						// resource is the same as the state, do nothing
+						log.Debugf("Tool < %s > is the same as the state, do nothing.", tool.Name)
+					}
 				}
 			}
-		}
 
-		// delete the tool from the temporary state map since it's already been processed above
-		tmpStatesMap.Delete(statemanager.StateKeyGenerateFunc(&tool))
+			// delete the tool from the temporary state map since it's already been processed above
+			tmpStatesMap.Delete(statemanager.StateKeyGenerateFunc(&tool))
+		}
 	}
 
 	// what's left in the temporary state map "tmpStatesMap" contains tools that:
