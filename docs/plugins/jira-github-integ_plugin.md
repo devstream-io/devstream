@@ -21,28 +21,27 @@ To create a Jira API token, see [here](https://support.atlassian.com/atlassian-a
 
 ```yaml
 tools:
-- name: jira-github-integ-default
-  # plugin profile
+- name: default
   plugin:
     # kind of this plugin
     kind: jira-github-integ
     # version of the plugin
-    version: 0.3.0
+    # checkout the version from the GitHub releases
+    version: 0.2.0
   # options for the plugin
-  # checkout the version from the GitHub releases
   options:
     # the repo's owner
-    owner: lfbdev
+    owner: YOUR_GITHUB_USERNAME
     # the repo where you'd like to setup GitHub Actions
-    repo: opendeveloper
+    repo: YOUR_REPO_NAME
     # "base url: https://id.atlassian.net"
-    jiraBaseUrl: https://merico.atlassian.net
+    jiraBaseUrl: https://JIRA_ID.atlassian.net
     # "need real user email in cloud Jira"
-    jiraUserEmail: fangbao.li@merico.dev
+    jiraUserEmail: JIRA_USER_EMAIL
     # "get it from project url, like 'HEAP' from https://merico.atlassian.net/jira/software/projects/HEAP/pages"
-    jiraProjectKey: HEAP 
+    jiraProjectKey: JIRA_PROJECT_KEY 
     # main branch of the repo (to which branch the plugin will submit the workflows)
-    branch: master
+    branch: main
 ```
 
 Currently, all the parameters in the example above are mandatory.

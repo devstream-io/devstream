@@ -50,7 +50,7 @@ tools:
       command: "go test ./..."
       coverage:
         # default to false
-        enable: True
+        enable: False
         # go test profile subcommand, OPTIONAL, the given value below is default value
         profile: "-race -covermode=atomic"
         output: "coverage.out"

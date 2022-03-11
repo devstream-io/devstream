@@ -10,7 +10,10 @@ Note that this isn't a production-ready installation; it's only meant as an alte
 tools:
 - name: devlake
   plugin:
+    # name of the plugin
     kind: devlake
+    # version of the plugin
+    # checkout the version from the GitHub releases
     version: 0.2.0
 ```
 

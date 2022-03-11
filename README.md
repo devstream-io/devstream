@@ -83,6 +83,18 @@ Want to remove or reinstall a specific piece in the workflow? DevStream has got 
 
 If you want to get a quick start, follow our [quick start](./docs/quickstart_en.md) doc now.
 
+## Best Practices Toolchain Integration
+
+DevStream supports the management of many tools. You can flexibly combine some tools to meet the DevOps toolchain your need.
+
+And yes, if you ask me if any recommended practices that can be used out of the box, 
+
+I am happy to tell you that we have, and we are constantly adding more possible combinations, 
+
+so you are more than welcome to tell us what combinations you expect.
+
+- [GitOps Toolchain](docs/best_practices/gitops.md)
+
 ## Configuration
 
 This is an example of DevStream config: [examples/quickstart.yaml](./examples/quickstart.yaml).
