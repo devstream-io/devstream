@@ -11,6 +11,22 @@ func generateKeyFromTool(tool configloader.Tool) string {
 	return fmt.Sprintf("%s.%s", tool.Name, tool.Plugin.Kind)
 }
 
+func dependencyResolved(tool configloader.Tool, unprocessedNodeSet map[string]bool) bool {
+	res := true
+
+	for _, dep := range tool.DependsOn {
+		// if the tool's dependency is still not processed yet / still in the graph
+		log.Debugf("TOOL %s.%s dependency NOT solved\n", tool.Name, tool.Plugin.Kind)
+		if _, ok := unprocessedNodeSet[dep]; ok {
+			res = false
+			break
+		}
+	}
+
+	log.Debugf("TOOL %s %s %t\n", tool.Name, tool.Plugin.Kind, res)
+	return res
+}
+
 func topologicalSort(tools []configloader.Tool) ([][]configloader.Tool, error) {
 	// the final result that contains sorted Tools
 	// it's a sorted/ordered slice,
@@ -42,19 +58,7 @@ func topologicalSort(tools []configloader.Tool) ([][]configloader.Tool, error) {
 				log.Debugf("TOOL %s.%s dependency already solved\n", tool.Name, tool.Plugin.Kind)
 				batch = append(batch, tool)
 			} else {
-				dependency_resolved := true
-				for _, dep := range tool.DependsOn {
-					// if the tool's dependency is still in the graph
-					log.Debugf("TOOL %s.%s dependency NOT solved\n", tool.Name, tool.Plugin.Kind)
-					if _, ok := unprocessedNodeSet[dep]; ok {
-						dependency_resolved = false
-						break
-					}
-				}
-				log.Debugf("TOOL %s %s %t\n", tool.Name, tool.Plugin.Kind, dependency_resolved)
-
-				// if all dependencies are already processed
-				if dependency_resolved {
+				if dependencyResolved(tool, unprocessedNodeSet) {
 					log.Debugf("TOOL %s.%s dependency already solved\n", tool.Name, tool.Plugin.Kind)
 					batch = append(batch, tool)
 				}

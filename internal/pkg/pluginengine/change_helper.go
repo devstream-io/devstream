@@ -62,17 +62,18 @@ func changesForApply(smgr statemanager.Manager, cfg *configloader.Config) ([]*Ch
 	// 1. create a temporary state map used to store unprocessed tools.
 	tmpStatesMap := smgr.GetStatesMap().DeepCopy()
 
-	// 2. handle dependency and sort the tools in the config
-	var tools [][]configloader.Tool
-	// the elements in tools are sorted "batches"
-	// and each element
-	tools, err := topologicalSort(cfg.Tools)
+	// 2. handle dependency and sort the tools in the config into "batches" of tools
+	var batchesOfTools [][]configloader.Tool
+	// the elements in batchesOfTools are sorted "batches"
+	// and each element/batch is a list of tools that, in theory, can run in parallel
+	// that is to say, the tools in the same batch won't depend on each other
+	batchesOfTools, err := topologicalSort(cfg.Tools)
 	if err != nil {
 		return changes, err
 	}
 
 	// 3. generate changes for each tool
-	for _, batch := range tools {
+	for _, batch := range batchesOfTools {
 		for _, tool := range batch {
 			state := smgr.GetState(statemanager.StateKeyGenerateFunc(&tool))
 
