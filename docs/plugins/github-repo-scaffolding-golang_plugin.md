@@ -8,6 +8,9 @@ _This plugin depends on the following environment variable:_
 
 Set it before using this plugin.
 
+If you don't know how to create this token, check out:
+- [Creating a personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+
 ***Tips:***
 
 *1. if uninstall, the repo on github will be completely removed*
