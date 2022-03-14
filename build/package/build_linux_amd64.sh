@@ -9,6 +9,7 @@ go build -trimpath -gcflags="all=-N -l" -ldflags "-X github.com/merico-dev/strea
 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o output/githubactions-golang-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/githubactions/golang
 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o output/githubactions-python-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/githubactions/python
 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o output/githubactions-nodejs-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/githubactions/nodejs
+go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o output/trello-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/trello/
 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o output/trello-github-integ-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/trellogithub/
 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o output/jira-github-integ-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/jiragithub/
 go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o output/argocd-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/argocd/
