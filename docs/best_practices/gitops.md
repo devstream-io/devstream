@@ -18,7 +18,7 @@ Download the appropriate `dtm` version for your platform from [DevStream Release
 
 ## Prepare the Config File
 
-Copy the [examples/gitops.yaml](../examples/gitops.yaml) to your working directory:
+Copy the [examples/gitops.yaml](../../examples/gitops.yaml) to your working directory:
 
 ```bash
 cp examples/gitops.yaml config-gitops.yaml
