@@ -178,6 +178,8 @@ git clone https://github.com/merico-dev/stream.git
 ```bash
 cd ~/gocode/stream
 make build
+# this step is only required before v0.3
+# TODO(daniel-hutao): remove all `mv` operations including quick-start documents when the next version is released
 mv dtm-$(go env GOOS)-$(go env GOARCH) dtm
 ```
 
