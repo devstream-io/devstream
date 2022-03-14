@@ -57,6 +57,9 @@ func initConfig() {
 	if err := viper.BindEnv("github_token"); err != nil {
 		log.Fatal(err)
 	}
+	if err := viper.BindEnv("kubeconfig"); err != nil {
+		log.Fatal(err)
+	}
 	if err := viper.BindEnv("dockerhub_username"); err != nil {
 		log.Fatal(err)
 	}
