@@ -230,7 +230,10 @@ A: Inspired by [`git`](https://github.com/git/git#readme), the name is (dependin
 
 ## Community
 
-- <a href="https://discord.com/invite/83rDG6ydVZ" target="_blank">Discord</a>: Message us on Discord
+We will regularly organize `DevStream Community Meeting`, please visit the [wiki](https://github.com/merico-dev/stream/wiki) page for details.
+
+- Message us on <a href="https://discord.com/invite/83rDG6ydVZ" target="_blank">Discord.</a>
+- For Chinese users, the WeChat group QR code can be obtained from [here](docs/README_zh.md).
 
 ## Contribute
 
