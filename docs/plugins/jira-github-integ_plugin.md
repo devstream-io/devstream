@@ -16,8 +16,9 @@ _This plugin depends on the following two environment variables:_
 
 Set the values accordingly before using this plugin.
 
-
-To create a Jira API token, see [here](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/).
+If you don't know how to create these tokens, check out:
+- [Creating a personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+- [Manage API tokens for your Atlassian account](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/).
 
 ```yaml
 tools:
