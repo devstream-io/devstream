@@ -13,23 +13,23 @@ import (
 )
 
 // Create installs github-repo-scaffolding-golang with provided options.
-func Create(options map[string]interface{}) (map[string]interface{}, error) {
-	var param Param
-	if err := mapstructure.Decode(options, &param); err != nil {
+func Create(param map[string]interface{}) (map[string]interface{}, error) {
+	var opts Options
+	if err := mapstructure.Decode(param, &opts); err != nil {
 		return nil, err
 	}
 
-	if errs := validate(&param); len(errs) != 0 {
+	if errs := validate(&opts); len(errs) != 0 {
 		for _, e := range errs {
-			log.Errorf("Param error: %s.", e)
+			log.Errorf("Options error: %s.", e)
 		}
-		return nil, fmt.Errorf("params are illegal")
+		return nil, fmt.Errorf("options are illegal")
 	}
 
-	return install(&param)
+	return install(&opts)
 }
 
-func install(param *Param) (map[string]interface{}, error) {
+func install(opts *Options) (map[string]interface{}, error) {
 	// Clear workpath before return
 	defer func() {
 		if err := os.RemoveAll(DefaultWorkPath); err != nil {
@@ -45,11 +45,11 @@ func install(param *Param) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	if err := push(param); err != nil {
+	if err := push(opts); err != nil {
 		return nil, err
 	}
 
-	return buildState(param), nil
+	return buildState(opts), nil
 }
 
 func download() error {
@@ -71,10 +71,10 @@ func download() error {
 	return nil
 }
 
-func push(param *Param) error {
+func push(opts *Options) error {
 	ghOption := &github.Option{
-		Owner:    param.Owner,
-		Repo:     param.Repo,
+		Owner:    opts.Owner,
+		Repo:     opts.Repo,
 		NeedAuth: true,
 	}
 	ghClient, err := github.NewClient(ghOption)
@@ -82,7 +82,7 @@ func push(param *Param) error {
 		return err
 	}
 
-	err = InitRepoLocalAndPushToRemote(filepath.Join(DefaultWorkPath, DefaultTemplateRepo+"-main"), param, ghClient)
+	err = InitRepoLocalAndPushToRemote(filepath.Join(DefaultWorkPath, DefaultTemplateRepo+"-main"), opts, ghClient)
 	if err != nil {
 		return err
 	}

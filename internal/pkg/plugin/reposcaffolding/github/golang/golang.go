@@ -33,13 +33,13 @@ type Repo struct {
 	Owner string
 }
 
-func InitRepoLocalAndPushToRemote(repoPath string, param *Param, ghClient *github.Client) error {
+func InitRepoLocalAndPushToRemote(repoPath string, opts *Options, ghClient *github.Client) error {
 	var retErr error
 	if err := ghClient.CreateRepo(); err != nil {
 		log.Infof("Failed to create repo: %s.", err)
 		return err
 	}
-	log.Infof("The repo %s has been created.", param.Repo)
+	log.Infof("The repo %s has been created.", opts.Repo)
 
 	defer func() {
 		if retErr == nil {
@@ -47,16 +47,16 @@ func InitRepoLocalAndPushToRemote(repoPath string, param *Param, ghClient *githu
 		}
 		// need to clean the repo created when retErr != nil
 		if err := ghClient.DeleteRepo(); err != nil {
-			log.Errorf("Failed to delete the repo %s: %s.", param.Repo, err)
+			log.Errorf("Failed to delete the repo %s: %s.", opts.Repo, err)
 		}
 	}()
 
-	if retErr = WalkLocalRepoPath(repoPath, param, ghClient); retErr != nil {
+	if retErr = WalkLocalRepoPath(repoPath, opts, ghClient); retErr != nil {
 		log.Debugf("Failed to walk local repo-path: %s.", retErr)
 		return retErr
 	}
 
-	mainBranch := getMainBranchName(param)
+	mainBranch := getMainBranchName(opts)
 	if retErr = MergeCommits(ghClient, mainBranch); retErr != nil {
 		log.Debugf("Failed to merge commits: %s.", retErr)
 		return retErr
@@ -65,9 +65,9 @@ func InitRepoLocalAndPushToRemote(repoPath string, param *Param, ghClient *githu
 	return nil
 }
 
-func WalkLocalRepoPath(repoPath string, param *Param, ghClient *github.Client) error {
-	appName := param.Repo
-	mainBranch := getMainBranchName(param)
+func WalkLocalRepoPath(repoPath string, opts *Options, ghClient *github.Client) error {
+	appName := opts.Repo
+	mainBranch := getMainBranchName(opts)
 
 	if err := filepath.Walk(repoPath, func(path string, info fs.FileInfo, err error) error {
 		if err != nil {
@@ -98,7 +98,7 @@ func WalkLocalRepoPath(repoPath string, param *Param, ghClient *github.Client) e
 
 		var content []byte
 		if strings.Contains(path, "tpl") {
-			content, err = Render(path, param)
+			content, err = Render(path, opts)
 			if err != nil {
 				return err
 			}
@@ -141,13 +141,13 @@ func MergeCommits(ghClient *github.Client, mainBranch string) error {
 	return ghClient.MergePullRequest(number, github.MergeMethodSquash)
 }
 
-func Render(filePath string, param *Param) ([]byte, error) {
+func Render(filePath string, opts *Options) ([]byte, error) {
 	config := Config{
-		AppName:   param.Repo,
-		ImageRepo: param.ImageRepo,
+		AppName:   opts.Repo,
+		ImageRepo: opts.ImageRepo,
 		Repo: Repo{
-			Name:  param.Repo,
-			Owner: param.Owner,
+			Name:  opts.Repo,
+			Owner: opts.Owner,
 		},
 	}
 	log.Debugf("FilePath: %s.", filePath)
@@ -200,23 +200,23 @@ func replaceAppNameInPathStr(filePath, appName string) (string, error) {
 	return newFilePath, nil
 }
 
-func buildState(param *Param) map[string]interface{} {
+func buildState(opts *Options) map[string]interface{} {
 	res := make(map[string]interface{})
-	res["owner"] = param.Owner
-	res["repoName"] = param.Repo
+	res["owner"] = opts.Owner
+	res["repoName"] = opts.Repo
 
 	outputs := make(map[string]interface{})
-	outputs["owner"] = param.Owner
-	outputs["repo"] = param.Repo
-	outputs["repoURL"] = fmt.Sprintf("https://github.com/%s/%s.git", param.Owner, param.Repo)
+	outputs["owner"] = opts.Owner
+	outputs["repo"] = opts.Repo
+	outputs["repoURL"] = fmt.Sprintf("https://github.com/%s/%s.git", opts.Owner, opts.Repo)
 	res["outputs"] = outputs
 
 	return res
 }
 
-func getMainBranchName(param *Param) string {
-	if param.Branch == "" {
+func getMainBranchName(opts *Options) string {
+	if opts.Branch == "" {
 		return DefaultMainBranch
 	}
-	return param.Branch
+	return opts.Branch
 }

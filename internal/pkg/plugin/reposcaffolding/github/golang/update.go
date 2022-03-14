@@ -9,23 +9,23 @@ import (
 )
 
 // Update re-installs github-repo-scaffolding-golang with provided options.
-func Update(options map[string]interface{}) (map[string]interface{}, error) {
-	var param Param
-	if err := mapstructure.Decode(options, &param); err != nil {
+func Update(param map[string]interface{}) (map[string]interface{}, error) {
+	var opts Options
+	if err := mapstructure.Decode(param, &opts); err != nil {
 		return nil, err
 	}
 
-	if errs := validate(&param); len(errs) != 0 {
+	if errs := validate(&opts); len(errs) != 0 {
 		for _, e := range errs {
-			log.Errorf("Param error: %s.", e)
+			log.Errorf("Options error: %s.", e)
 		}
-		return nil, fmt.Errorf("params are illegal")
+		return nil, fmt.Errorf("options are illegal")
 	}
 
-	_, err := uninstall(&param)
+	_, err := uninstall(&opts)
 	if err != nil {
 		return nil, err
 	}
 
-	return install(&param)
+	return install(&opts)
 }

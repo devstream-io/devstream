@@ -9,27 +9,27 @@ import (
 	"github.com/merico-dev/stream/pkg/util/log"
 )
 
-// Read check the health for github-repo-scaffolding-golang with provided options.
-func Read(options map[string]interface{}) (map[string]interface{}, error) {
-	var param Param
-	if err := mapstructure.Decode(options, &param); err != nil {
+// Read check the health for github-repo-scaffolding-golang with provided param.
+func Read(param map[string]interface{}) (map[string]interface{}, error) {
+	var opts Options
+	if err := mapstructure.Decode(param, &opts); err != nil {
 		return nil, err
 	}
 
-	if errs := validate(&param); len(errs) != 0 {
+	if errs := validate(&opts); len(errs) != 0 {
 		for _, e := range errs {
-			log.Errorf("Param error: %s.", e)
+			log.Errorf("Options error: %s.", e)
 		}
-		return nil, fmt.Errorf("params are illegal")
+		return nil, fmt.Errorf("options are illegal")
 	}
 
-	return buildReadState(&param)
+	return buildReadState(&opts)
 }
 
-func buildReadState(param *Param) (map[string]interface{}, error) {
+func buildReadState(opts *Options) (map[string]interface{}, error) {
 	ghOptions := &github.Option{
-		Owner:    param.Owner,
-		Repo:     param.Repo,
+		Owner:    opts.Owner,
+		Repo:     opts.Repo,
 		NeedAuth: true,
 	}
 
@@ -51,9 +51,9 @@ func buildReadState(param *Param) (map[string]interface{}, error) {
 	res["repoName"] = *repo.Name
 
 	outputs := make(map[string]interface{})
-	outputs["owner"] = param.Owner
-	outputs["repo"] = param.Repo
-	outputs["repoURL"] = fmt.Sprintf("https://github.com/%s/%s.git", param.Owner, param.Repo)
+	outputs["owner"] = opts.Owner
+	outputs["repo"] = opts.Repo
+	outputs["repoURL"] = fmt.Sprintf("https://github.com/%s/%s.git", opts.Owner, opts.Repo)
 
 	res["outputs"] = outputs
 
