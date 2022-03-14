@@ -11,6 +11,7 @@ tools:
     # name of the plugin
     kind: argocd
     # version of the plugin
+    # checkout the version from the GitHub releases
     version: 0.2.0
   options:
     # need to create the namespace or not, default: false

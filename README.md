@@ -26,7 +26,7 @@ Typically, you'd need the following pieces in place to work effectively:
 - Project management software or issue tracking tools (JIRA, etc.)
 - Source code management (GitHub, Bitbucket, etc.)
 - Continuous integration tools (Jenkins, CircleCI, Travis CI, etc.)
-- Continuous delivery/deployment tools (fluxcd/flux2, ArgoCD, etc.)
+- Continuous delivery/deployment tools (Flux CD/Flux2, Argo CD, etc.)
 - A single source of truth for secrets and credentials (secrets manager, e.g., Vault by HashiCorp)
 - Some tools for centralized logging and monitoring (for example, ELK, Prometheus/Grafana);
 
@@ -77,10 +77,23 @@ Want to remove or reinstall a specific piece in the workflow? DevStream has got 
 | CD/GitOps              | argocdapp                      | ArgoCD Application creation    | [doc](./docs/plugins/argocdapp_plugin.md)          |
 | Monitoring             | kube-prometheus                | Prometheus/Grafana K8s install | [doc](./docs/plugins/kube-prometheus_plugin.md)          |
 | Observability          | devlake                        | DevLake installation           | [doc](./docs/plugins/devlake_plugin.md)          |
+| LDAP                   | openldap                       | OpenLDAP installation          | [doc](./docs/plugins/openldap_plugin.md)          |
 
 ## Quick Start
 
 If you want to get a quick start, follow our [quick start](./docs/quickstart_en.md) doc now.
+
+## Best Practices Toolchain Integration
+
+DevStream supports the management of many tools. You can flexibly combine some tools to meet the DevOps toolchain your need.
+
+And yes, if you ask me if any recommended practices that can be used out of the box, 
+
+I am happy to tell you that we have, and we are constantly adding more possible combinations, 
+
+so you are more than welcome to tell us what combinations you expect.
+
+- [GitOps Toolchain](docs/best_practices/gitops.md)
 
 ## Configuration
 
@@ -217,7 +230,10 @@ A: Inspired by [`git`](https://github.com/git/git#readme), the name is (dependin
 
 ## Community
 
-- <a href="https://discord.com/invite/83rDG6ydVZ" target="_blank">Discord</a>: Message us on Discord
+We will regularly organize `DevStream Community Meeting`, please visit the [wiki](https://github.com/merico-dev/stream/wiki) page for details.
+
+- Message us on <a href="https://discord.com/invite/83rDG6ydVZ" target="_blank">Discord.</a>
+- For Chinese users, the WeChat group QR code can be obtained from [here](docs/README_zh.md).
 
 ## Contribute
 

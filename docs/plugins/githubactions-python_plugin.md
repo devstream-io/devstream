@@ -6,6 +6,9 @@ This plugin creates Python GitHub Actions workflows.
 
 _This plugin depends on an environment variable "GITHUB_TOKEN". Set it before using this plugin._
 
+If you don't know how to create this token, check out:
+- [Creating a personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+
 ```yaml
 tools:
 - name: python-demo-app

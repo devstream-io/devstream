@@ -11,6 +11,9 @@ _This plugin depends on the following two environment variables:_
 
 Set the values accordingly before using this plugin.
 
+If you don't know how to create these two tokens, check out:
+- [Generate a Trello API key and token](https://docs.servicenow.com/bundle/quebec-it-asset-management/page/product/software-asset-management2/task/generate-trello-apikey-token.html)
+
 ## 3 Tips:
 _Trello board description is managed by DevStream, please don't modify it._
 

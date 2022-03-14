@@ -66,6 +66,7 @@ func NewClient(option *Option) (*Client, error) {
 
 	// b. client with auth enabled
 
+	// TL;DR: Don't use viper.GetString("xxx") in the `util/xxx` package.
 	// Don't use `token := viper.GetString("github_token")` here,
 	// it will fail without calling `viper.BindEnv("github_token")` first.
 	// os.Getenv() function is more clear and reasonable here.

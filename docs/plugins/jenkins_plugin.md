@@ -21,6 +21,7 @@ tools:
     # kind of the plugin
     kind: jenkins
     # version of the plugin
+    # checkout the version from the GitHub releases
     version: 0.2.0
   # options for the plugin
   options:
