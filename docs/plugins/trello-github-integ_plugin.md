@@ -1,23 +1,10 @@
 ## 1 `trello-github-integ` Plugin
 
-This plugin creates a new Trello board and integrate it with your GitHub repo.
+This plugin creates a new github actions file(trello-github-integration) and upload to your GitHub repo.
 
 ## 2 Usage:
 
-_This plugin depends on the following two environment variables:_
-
-- TRELLO_API_KEY
-- TRELLO_TOKEN
-
-Set the values accordingly before using this plugin.
-
-If you don't know how to create these two tokens, check out:
-- [Generate a Trello API key and token](https://docs.servicenow.com/bundle/quebec-it-asset-management/page/product/software-asset-management2/task/generate-trello-apikey-token.html)
-
-## 3 Tips:
-_Trello board description is managed by DevStream, please don't modify it._
-
-To create a Trello API key and token, see [here](https://docs.servicenow.com/bundle/quebec-it-asset-management/page/product/software-asset-management2/task/generate-trello-apikey-token.html).
+_This plugin depends on the plugin `trello`:_
 
 ```yaml
 tools:
@@ -37,13 +24,51 @@ tools:
     owner: YOUR_GITHUB_USERNAME
     # the repo where you'd like to setup GitHub Actions; please change the value below.
     repo: YOUR_REPO_NAME
-    # integration tool name
-    api:
-      name: trello
-      # name of the Trello kanban board
-      kanbanBoardName: kanban-name
+    # reference from dependency
+    boardId: ${{ default.trello.outputs.boardId }}
+    todoListId: ${{ default.trello.outputs.todoListId }}
+    doingListId: ${{ default.trello.outputs.doingListId }}
+    doneListId: ${{ default.trello.outputs.doneListId }}
     # main branch of the repo (to which branch the plugin will submit the workflows)
     branch: main
 ```
 
-Currently, all the parameters in the example above are mandatory.
+## 3. Use Together with the `trello` Plugin
+
+This plugin can be used together with the `trello` plugin (see document [here](./trello_plugin.md).)
+
+See the example below:
+
+```yaml
+---
+tools:
+  - name: default
+    plugin:
+      kind: trello
+      version: 0.2.0
+    options:
+      owner: lfbdev
+      repo: golang-demo
+      kanbanBoardName: kanban-name
+  - name: default_trello_github
+    plugin:
+      kind: trello-github-integ
+      version: 0.2.0
+    dependsOn: ["default.trello"]
+    options:
+      owner: lfbdev
+      repo: golang-demo
+      boardId: ${{ default.trello.outputs.bid }}
+      todoListId: ${{ default.trello.outputs.todoid }}
+      doingListId: ${{ default.trello.outputs.doingid }}
+      doneListId: ${{ default.trello.outputs.doneid }}
+      branch: main
+```
+
+In the example above:
+
+- We put `default.trello` as dependency by using the `dependsOn` keyword.
+- We use `default.trello`'s output as input for the `default_trello_github` plugin.
+
+Pay attention to the `${{ xxx }}` part in the example. `${{ TOOL_NAME.TOOL_KIND.outputs.var}}` is the syntax for using an output.
+
