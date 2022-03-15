@@ -23,7 +23,7 @@ func (c *Client) CreateRepo() error {
 
 func (c *Client) DeleteRepo() error {
 	response, err := c.Client.Repositories.Delete(c.Context, c.Owner, c.Repo)
-	
+
 	// error reason is not 404
 	if err != nil && !strings.Contains(err.Error(), "404") {
 		log.Errorf("Delete repo failed: %s.", err)

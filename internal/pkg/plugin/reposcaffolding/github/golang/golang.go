@@ -204,6 +204,13 @@ func buildState(param *Param) map[string]interface{} {
 	res := make(map[string]interface{})
 	res["owner"] = param.Owner
 	res["repoName"] = param.Repo
+
+	outputs := make(map[string]interface{})
+	outputs["owner"] = param.Owner
+	outputs["repo"] = param.Repo
+	outputs["repoURL"] = fmt.Sprintf("https://github.com/%s/%s.git", param.Owner, param.Repo)
+	res["outputs"] = outputs
+
 	return res
 }
 

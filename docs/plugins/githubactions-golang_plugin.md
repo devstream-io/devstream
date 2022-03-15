@@ -2,7 +2,7 @@
 
 This plugin creates some Golang GitHub Actions workflows.
 
-## 2 Usage:
+## 2 Usage
 
 _This plugin depends on the following environment variable:_
 
@@ -65,3 +65,55 @@ tools:
 ```
 
 Some parameters are optional. See the default values and optional parameters in the example above.
+
+## 3. Use Together with the `github-repo-scaffolding-golang` Plugin
+
+This plugin can be used together with the `github-repo-scaffolding-golang` plugin (see document [here](./github-repo-scaffolding-golang_plugin.md).)
+
+For example, you can first use `github-repo-scaffolding-golang` to bootstrap a Golang repo, then use this plugin to set up basic GitHub Actions CI workflows. In this scenario:
+
+- This plugin can specify `github-repo-scaffolding-golang` as a dependency, so that the dependency is first satisfied before executing this plugin.
+- This plugin can refer to `github-repo-scaffolding-golang`'s output to reduce copy/paste human error.
+
+See the example below:
+
+```yaml
+---
+tools:
+- name: go-webapp-repo
+  plugin:
+    kind: github-repo-scaffolding-golang
+    version: 0.2.0
+  options:
+    owner: IronCore864
+    repo: go-webapp-devstream-demo
+    branch: main
+    image_repo: ironcore864/go-webapp-devstream-demo
+- name: golang-demo-actions
+  plugin:
+    kind: githubactions-golang
+    version: 0.2.0
+  dependsOn: ["go-webapp-repo.github-repo-scaffolding-golang"]
+  options:
+    owner: ${{go-webapp-repo.github-repo-scaffolding-golang.outputs.owner}}
+    repo: ${{go-webapp-repo.github-repo-scaffolding-golang.outputs.repo}}
+    language:
+      name: go
+      version: "1.17"
+    branch: main
+    build:
+      enable: True
+    test:
+      enable: True
+      coverage:
+        enable: True
+    docker:
+      enable: False
+```
+
+In the example above:
+
+- We put `go-webapp-repo.github-repo-scaffolding-golang` as dependency by using the `dependsOn` keyword.
+- We used `go-webapp-repo.github-repo-scaffolding-golang`'s output as input for the `githubactions-golang` plugin.
+
+Pay attention to the `${{ xxx }}` part in the example. `${{ TOOL_NAME.TOOL_KIND.outputs.var}}` is the syntax for using an output.
