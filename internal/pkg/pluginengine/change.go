@@ -95,7 +95,7 @@ func execute(smgr statemanager.Manager, changes []*Change) map[string]error {
 
 	for i, c := range changes {
 		log.Separatorf("Processing progress: %d/%d.", i+1, numOfChanges)
-		log.Infof("Processing: %s -> %s ...", c.Tool.Name, c.ActionName)
+		log.Infof("Processing: %s(kind: %s) -> %s ...", c.Tool.Name, c.Tool.Plugin.Kind, c.ActionName)
 
 		var succeeded bool
 		var err error
@@ -151,8 +151,8 @@ func handleResult(smgr statemanager.Manager, change *Change) error {
 	}()
 
 	if !change.Result.Succeeded {
-		log.Errorf("Plugin %s %s failed.", change.Tool.Name, change.ActionName)
-		return fmt.Errorf("plugin %s %s failed", change.Tool.Name, change.ActionName)
+		log.Errorf("The tool < %s/%s > %s failed.", change.Tool.Name, change.Tool.Plugin.Kind, change.ActionName)
+		return fmt.Errorf("the tool < %s/%s > %s failed", change.Tool.Name, change.Tool.Plugin.Kind, change.ActionName)
 	}
 
 	if change.ActionName == statemanager.ActionDelete {
@@ -163,7 +163,7 @@ func handleResult(smgr statemanager.Manager, change *Change) error {
 			log.Debugf("Failed to delete state %s: %s.", key, err)
 			return err
 		}
-		log.Successf("Plugin %s delete done.", change.Tool.Name)
+		log.Successf("Plugin %s/%s delete done.", change.Tool.Name, change.Tool.Plugin.Kind)
 		return nil
 	}
 
@@ -179,7 +179,7 @@ func handleResult(smgr statemanager.Manager, change *Change) error {
 		log.Debugf("Failed to add state %s: %s.", key, err)
 		return err
 	}
-	log.Successf("Plugin %s %s done.", change.Tool.Name, change.ActionName)
+	log.Successf("Plugin %s(%s) %s done.", change.Tool.Name, change.Tool.Plugin.Kind, change.ActionName)
 	return nil
 }
 

@@ -13,7 +13,7 @@ func buildState(tg *TrelloGithub, ti *TrelloItemId) map[string]interface{} {
 func (tg *TrelloGithub) buildReadState() (map[string]interface{}, error) {
 	listIds := make(map[string]interface{})
 
-	path, err := tg.GetWorkflowPath()
+	path, err := tg.client.GetWorkflowPath()
 	if err != nil {
 		return nil, err
 	}
