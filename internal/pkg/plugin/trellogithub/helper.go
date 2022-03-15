@@ -3,7 +3,6 @@ package trellogithub
 import (
 	"bytes"
 	"fmt"
-
 	"text/template"
 
 	"github.com/mitchellh/mapstructure"
@@ -54,7 +53,7 @@ func (tg *TrelloGithub) buildReadState(api *Api) (map[string]interface{}, error)
 		return nil, err
 	}
 
-	path, err := tg.GetWorkflowPath()
+	path, err := tg.client.GetWorkflowPath()
 	if err != nil {
 		return nil, err
 	}

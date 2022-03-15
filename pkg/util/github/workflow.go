@@ -162,3 +162,37 @@ func (c *Client) GetWorkflowPath() (string, error) {
 
 	return resp.Request.URL.Path, nil
 }
+
+func (c *Client) FetchRemoteContent(wsFiles []string) ([]string, map[string]error, error) {
+	var filesInRemoteDir = make([]string, 0)
+	_, dirContent, resp, err := c.Repositories.GetContents(
+		c.Context,
+		c.Owner,
+		c.Repo,
+		".github/workflows",
+		&github.RepositoryContentGetOptions{},
+	)
+
+	// error reason is not 404
+	if err != nil && !strings.Contains(err.Error(), "404") {
+		log.Errorf("GetContents failed with error: %s.", err)
+		return nil, nil, err
+	}
+	// StatusCode == 404
+	if resp.StatusCode == http.StatusNotFound {
+		log.Error("GetContents returned with status code 404.")
+		retMap := mapz.FillMapWithStrAndError(wsFiles, fmt.Errorf("not found"))
+		return nil, retMap, nil
+	}
+	// StatusCode != 200
+	if resp.StatusCode != http.StatusOK {
+		return nil, nil, fmt.Errorf("got some error: %s", resp.Status)
+	}
+	// StatusCode == 200
+	log.Info("GetContents return with status code 200.")
+	for _, f := range dirContent {
+		log.Infof("Found remote file: %s.", f.GetName())
+		filesInRemoteDir = append(filesInRemoteDir, f.GetName())
+	}
+	return filesInRemoteDir, nil, nil
+}
