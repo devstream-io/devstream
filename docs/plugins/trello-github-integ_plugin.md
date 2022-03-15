@@ -1,6 +1,6 @@
 ## 1 `trello-github-integ` Plugin
 
-This plugin creates a new github actions file(trello-github-integration) and upload to your GitHub repo.
+This plugin creates a new GitHub Actions file(trello-github-integration) and upload to your GitHub repo.
 
 ## 2 Usage:
 
@@ -24,7 +24,7 @@ tools:
     owner: YOUR_GITHUB_USERNAME
     # the repo where you'd like to setup GitHub Actions; please change the value below.
     repo: YOUR_REPO_NAME
-    # reference from dependency
+    # reference parameters come from dependency, their usage will be explained later
     boardId: ${{ default.trello.outputs.boardId }}
     todoListId: ${{ default.trello.outputs.todoListId }}
     doingListId: ${{ default.trello.outputs.doingListId }}
@@ -42,7 +42,7 @@ See the example below:
 ```yaml
 ---
 tools:
-  - name: default
+  - name: trello_init_demo
     plugin:
       kind: trello
       version: 0.2.0
@@ -50,18 +50,18 @@ tools:
       owner: lfbdev
       repo: golang-demo
       kanbanBoardName: kanban-name
-  - name: default_trello_github
+  - name: trello_github_integ_demo
     plugin:
       kind: trello-github-integ
       version: 0.2.0
-    dependsOn: ["default.trello"]
+    dependsOn: ["trello_init_demo.trello"]
     options:
       owner: lfbdev
       repo: golang-demo
-      boardId: ${{ default.trello.outputs.bid }}
-      todoListId: ${{ default.trello.outputs.todoid }}
-      doingListId: ${{ default.trello.outputs.doingid }}
-      doneListId: ${{ default.trello.outputs.doneid }}
+      boardId: ${{ trello_init_demo.trello.outputs.boardId }}
+      todoListId: ${{ trello_init_demo.trello.outputs.todoListId }}
+      doingListId: ${{ trello_init_demo.trello.outputs.doingListId }}
+      doneListId: ${{ trello_init_demo.trello.outputs.doneListId }}
       branch: main
 ```
 

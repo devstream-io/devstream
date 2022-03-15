@@ -103,7 +103,7 @@ func execute(smgr statemanager.Manager, changes []*Change) map[string]error {
 
 		log.Info("tool raw changes: ", c.Tool.Options)
 		// fill ref inputs
-		err = FillInputParams(smgr, c.Tool.Options)
+		err = fillRefValueWithOutputs(smgr, c.Tool.Options)
 		if err != nil {
 			succeeded = false
 		}
@@ -184,7 +184,7 @@ func handleResult(smgr statemanager.Manager, change *Change) error {
 }
 
 // FillInputParams fill inputs from state
-func FillInputParams(smgr statemanager.Manager, options map[string]interface{}) error {
+func fillRefValueWithOutputs(smgr statemanager.Manager, options map[string]interface{}) error {
 	// traverse options
 	for key, value := range options {
 		log.Debugf("Key: %s,  Value: %s.", key, value)
@@ -199,8 +199,12 @@ func FillInputParams(smgr statemanager.Manager, options map[string]interface{}) 
 					return errors.New("ref input format is not correct: " + ref)
 				}
 
-				outputs := smgr.GetOutputs(refParam)
+				outputs, err := smgr.GetOutputs(statemanager.GenStateKey(refParam))
+				if err != nil {
+					return err
+				}
 				log.Debug("Ref outputs: ", outputs)
+
 				if outs, ok := outputs.(map[string]interface{}); ok {
 					log.Debug("Ref outs: ", outs)
 					log.Debug("Ref param: ", refParam[3])
@@ -213,7 +217,7 @@ func FillInputParams(smgr statemanager.Manager, options map[string]interface{}) 
 		}
 		// judge wheter the format is map[string]interface{}, if true, then recursion
 		if _, ok := value.(map[string]interface{}); ok {
-			if err := FillInputParams(smgr, value.(map[string]interface{})); err != nil {
+			if err := fillRefValueWithOutputs(smgr, value.(map[string]interface{})); err != nil {
 				return err
 			}
 		}

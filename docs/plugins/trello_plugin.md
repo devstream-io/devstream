@@ -44,7 +44,7 @@ See the example below:
 ```yaml
 ---
 tools:
-  - name: default
+  - name: trello_init_demo
     plugin:
       kind: trello
       version: 0.2.0
@@ -52,20 +52,18 @@ tools:
       owner: lfbdev
       repo: golang-demo
       kanbanBoardName: kanban-name
-  - name: default_trello_github
+  - name: trello_github_integ_demo
     plugin:
       kind: trello-github-integ
       version: 0.2.0
-    dependsOn: ["default.trello"]
+    dependsOn: ["trello_init_demo.trello"]
     options:
       owner: lfbdev
       repo: golang-demo
-      api:
-        name: trello
-        boardId: ${{ default.trello.outputs.bid }}
-        todoListId: ${{ default.trello.outputs.todoid }}
-        doingListId: ${{ default.trello.outputs.doingid }}
-        doneListId: ${{ default.trello.outputs.doneid }}
+      boardId: ${{ trello_init_demo.trello.outputs.boardId }}
+      todoListId: ${{ trello_init_demo.trello.outputs.todoListId }}
+      doingListId: ${{ trello_init_demo.trello.outputs.doingListId }}
+      doneListId: ${{ trello_init_demo.trello.outputs.doneListId }}
       branch: main
 ```
 

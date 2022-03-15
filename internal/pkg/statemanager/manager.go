@@ -1,6 +1,7 @@
 package statemanager
 
 import (
+	"errors"
 	"fmt"
 
 	"gopkg.in/yaml.v3"
@@ -28,7 +29,7 @@ type Manager interface {
 	AddState(key StateKey, state State) error
 	UpdateState(key StateKey, state State) error
 	DeleteState(key StateKey) error
-	GetOutputs(refParam []string) interface{}
+	GetOutputs(key StateKey) (interface{}, error)
 }
 
 // manager is the default implement with Manager
@@ -108,7 +109,10 @@ func (m *manager) DeleteState(key StateKey) error {
 	return m.Write(m.GetStatesMap().Format())
 }
 
-func (m *manager) GetOutputs(refParam []string) interface{} {
-	state := m.GetState(GenStateKey(refParam))
-	return state.Resource["outputs"]
+func (m *manager) GetOutputs(key StateKey) (interface{}, error) {
+	state := m.GetState(key)
+	if value, ok := state.Resource["outputs"]; ok {
+		return value, nil
+	}
+	return nil, errors.New(fmt.Sprintf("cannot find outputs from state: %s.", state.Name))
 }
