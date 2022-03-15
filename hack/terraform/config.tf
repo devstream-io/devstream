@@ -17,8 +17,4 @@ terraform {
 
 provider "aws" {
   region = "ap-southeast-1"
-
-  ignore_tags {
-    key_prefixes = ["kubernetes.io/"]
-  }
 }
