@@ -30,15 +30,17 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 		}
 	}
 	log.Success("Adding workflow file succeeded.")
-	trelloIds, err := tg.CreateTrelloItems()
-	if err != nil {
-		return nil, err
+
+	trelloIds := &TrelloItemId{
+		boardId:     tg.GetApi().BoardId,
+		todoListId:  tg.GetApi().todoListId,
+		doingListId: tg.GetApi().doingListId,
+		doneListId:  tg.GetApi().doneListId,
 	}
-	log.Success("Creating trello board succeeded.")
+
 	if err := tg.AddTrelloIdSecret(trelloIds); err != nil {
 		return nil, err
 	}
-
 	log.Success("Adding secret keys for trello succeeded.")
 
 	return buildState(tg, trelloIds), nil

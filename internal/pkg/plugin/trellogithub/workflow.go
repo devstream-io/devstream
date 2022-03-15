@@ -34,8 +34,11 @@ type Options struct {
 }
 
 type Api struct {
-	Name            string
-	KanbanBoardName string
+	Name        string
+	BoardId     string
+	todoListId  string
+	doingListId string
+	doneListId  string
 }
 
 type workflows map[string][]*github.Workflow

@@ -1,13 +1,18 @@
 package pluginengine
 
 import (
+	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/merico-dev/stream/internal/pkg/configloader"
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
 	"github.com/merico-dev/stream/pkg/util/log"
 )
+
+const REF_PREFIX = "${{"
+const REF_SUFFIX = "}}"
 
 // Change is a wrapper with a single Tool and its Action should be execute.
 type Change struct {
@@ -96,6 +101,14 @@ func execute(smgr statemanager.Manager, changes []*Change) map[string]error {
 		var err error
 		var returnValue map[string]interface{}
 
+		log.Info("tool raw changes: ", c.Tool.Options)
+		// fill ref inputs
+		err = FillInputParams(smgr, c.Tool.Options)
+		if err != nil {
+			succeeded = false
+		}
+		log.Info("tool changes with filled inputs: ", c.Tool.Options)
+
 		switch c.ActionName {
 		case statemanager.ActionCreate:
 			if returnValue, err = Create(c.Tool); err == nil {
@@ -168,4 +181,47 @@ func handleResult(smgr statemanager.Manager, change *Change) error {
 	}
 	log.Successf("Plugin %s %s done.", change.Tool.Name, change.ActionName)
 	return nil
+}
+
+// FillInputParams fill inputs from state
+func FillInputParams(smgr statemanager.Manager, options map[string]interface{}) error {
+	//traverse options
+	for key, value := range options {
+		log.Debug("Key: ", key, ", Value: ", value)
+		// judge wheter the value is string
+		if inst, ok := value.(string); ok {
+			// judge wheter the format is ${{}}
+			if strings.HasPrefix(inst, REF_PREFIX) && strings.HasSuffix(inst, REF_SUFFIX) {
+				ref := strings.TrimSpace(strings.TrimSuffix(strings.TrimPrefix(inst, REF_PREFIX), REF_SUFFIX))
+				log.Debug("Ref inputs: ", ref)
+				refParam := strings.Split(ref, ".")
+				if len(refParam) <= 3 {
+					return errors.New("ref input format is not correct: " + ref)
+				}
+
+				state := smgr.GetState(genStateKey(refParam))
+				outputs := state.Resource["outputs"]
+				log.Debug("Ref outputs: ", outputs)
+				if outs, ok := outputs.(map[string]interface{}); ok {
+					log.Debug("Ref outs: ", outs)
+					log.Debug("Ref param: ", refParam[3])
+					options[key] = outs[refParam[3]]
+					if value == nil {
+						return errors.New("ref input value is null: " + refParam[3])
+					}
+				}
+			}
+		}
+		// judge wheter the format is map[string]interface{}, if true, then recursion
+		if _, ok := value.(map[string]interface{}); ok {
+			if err := FillInputParams(smgr, value.(map[string]interface{})); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func genStateKey(refParam []string) statemanager.StateKey {
+	return statemanager.StateKey(fmt.Sprintf("%s_%s", refParam[0], refParam[1]))
 }

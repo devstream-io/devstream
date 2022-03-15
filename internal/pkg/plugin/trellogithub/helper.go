@@ -9,7 +9,6 @@ import (
 	"github.com/mitchellh/mapstructure"
 
 	"github.com/merico-dev/stream/pkg/util/github"
-	"github.com/merico-dev/stream/pkg/util/trello"
 )
 
 // renderTemplate render the github actions template with config.yaml
@@ -37,27 +36,18 @@ func (tg *TrelloGithub) renderTemplate(workflow *github.Workflow) error {
 func buildState(tg *TrelloGithub, ti *TrelloItemId) map[string]interface{} {
 	res := make(map[string]interface{})
 	res["workflowDir"] = fmt.Sprintf("/repos/%s/%s/contents/.github/workflows", tg.options.Owner, tg.options.Repo)
-	res["boardId"] = ti.boardId
-	res["todoListId"] = ti.todoListId
-	res["doingListId"] = ti.doingListId
-	res["doneListId"] = ti.doneListId
 	return res
 }
 
 func (tg *TrelloGithub) buildReadState(api *Api) (map[string]interface{}, error) {
-	c, err := trello.NewClient()
-	if err != nil {
-		return nil, err
-	}
-	listIds, err := c.GetBoardIdAndListId(tg.options.Owner, tg.options.Repo, api.KanbanBoardName)
-	if err != nil {
-		return nil, err
-	}
+
+	listIds := make(map[string]interface{})
 
 	path, err := tg.GetWorkflowPath()
 	if err != nil {
 		return nil, err
 	}
 	listIds["workflowDir"] = path
+
 	return listIds, nil
 }
