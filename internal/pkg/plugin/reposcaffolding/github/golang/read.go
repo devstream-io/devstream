@@ -50,5 +50,12 @@ func buildReadState(param *Param) (map[string]interface{}, error) {
 	res["owner"] = *repo.Owner.Login
 	res["repoName"] = *repo.Name
 
+	outputs := make(map[string]interface{})
+	outputs["owner"] = param.Owner
+	outputs["repo"] = param.Repo
+	outputs["repoURL"] = fmt.Sprintf("https://github.com/%s/%s.git", param.Owner, param.Repo)
+
+	res["outputs"] = outputs
+
 	return res, nil
 }
