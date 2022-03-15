@@ -28,6 +28,7 @@ type Manager interface {
 	AddState(key StateKey, state State) error
 	UpdateState(key StateKey, state State) error
 	DeleteState(key StateKey) error
+	GetOutputs(refParam []string) interface{}
 }
 
 // manager is the default implement with Manager
@@ -105,4 +106,9 @@ func (m *manager) UpdateState(key StateKey, state State) error {
 func (m *manager) DeleteState(key StateKey) error {
 	m.statesMap.Delete(key)
 	return m.Write(m.GetStatesMap().Format())
+}
+
+func (m *manager) GetOutputs(refParam []string) interface{} {
+	state := m.GetState(GenStateKey(refParam))
+	return state.Resource["outputs"]
 }

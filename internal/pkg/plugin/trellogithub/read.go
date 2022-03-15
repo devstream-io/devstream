@@ -1,6 +1,7 @@
 package trellogithub
 
 import (
+	"github.com/merico-dev/stream/pkg/util/github"
 	"github.com/merico-dev/stream/pkg/util/log"
 )
 
@@ -10,10 +11,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	api := tg.GetApi()
-	log.Infof("API is: %s.", api.Name)
-
-	ws := defaultWorkflows.GetWorkflowByNameVersionTypeString(api.Name)
+	var ws = []*github.Workflow{trelloWorkflow}
 	retMap, err := tg.VerifyWorkflows(ws)
 	if err != nil {
 		return nil, err
@@ -31,5 +29,5 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, nil
 	}
 
-	return tg.buildReadState(api)
+	return tg.buildReadState()
 }

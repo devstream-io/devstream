@@ -11,31 +11,23 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	api := tg.GetApi()
-	log.Infof("API is %s.", api.Name)
-	ws := defaultWorkflows.GetWorkflowByNameVersionTypeString(api.Name)
-
-	for _, w := range ws {
-		err := tg.client.DeleteWorkflow(w, tg.options.Branch)
-		if err != nil {
-			return nil, err
-		}
-
-		if err := tg.renderTemplate(w); err != nil {
-			return nil, err
-		}
-		err = tg.client.AddWorkflow(w, tg.options.Branch)
-		if err != nil {
-			return nil, err
-		}
+	err = tg.client.DeleteWorkflow(trelloWorkflow, tg.options.Branch)
+	if err != nil {
+		return nil, err
 	}
+
+	err = tg.client.AddWorkflow(trelloWorkflow, tg.options.Branch)
+	if err != nil {
+		return nil, err
+	}
+
 	log.Success("Adding workflow file succeeded.")
 
 	trelloIds := &TrelloItemId{
-		boardId:     tg.GetApi().BoardId,
-		todoListId:  tg.GetApi().todoListId,
-		doingListId: tg.GetApi().doingListId,
-		doneListId:  tg.GetApi().doneListId,
+		boardId:     tg.options.BoardId,
+		todoListId:  tg.options.todoListId,
+		doingListId: tg.options.doingListId,
+		doneListId:  tg.options.doneListId,
 	}
 
 	if err := tg.AddTrelloIdSecret(trelloIds); err != nil {

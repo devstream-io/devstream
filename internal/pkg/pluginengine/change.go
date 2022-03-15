@@ -185,12 +185,12 @@ func handleResult(smgr statemanager.Manager, change *Change) error {
 
 // FillInputParams fill inputs from state
 func FillInputParams(smgr statemanager.Manager, options map[string]interface{}) error {
-	//traverse options
+	// traverse options
 	for key, value := range options {
-		log.Debug("Key: ", key, ", Value: ", value)
-		// judge wheter the value is string
+		log.Debugf("Key: %s,  Value: %s.", key, value)
+		// judge whether the value is a string
 		if inst, ok := value.(string); ok {
-			// judge wheter the format is ${{}}
+			// judge whether the format is ${{xxx}}
 			if strings.HasPrefix(inst, REF_PREFIX) && strings.HasSuffix(inst, REF_SUFFIX) {
 				ref := strings.TrimSpace(strings.TrimSuffix(strings.TrimPrefix(inst, REF_PREFIX), REF_SUFFIX))
 				log.Debug("Ref inputs: ", ref)
@@ -199,8 +199,7 @@ func FillInputParams(smgr statemanager.Manager, options map[string]interface{}) 
 					return errors.New("ref input format is not correct: " + ref)
 				}
 
-				state := smgr.GetState(genStateKey(refParam))
-				outputs := state.Resource["outputs"]
+				outputs := smgr.GetOutputs(refParam)
 				log.Debug("Ref outputs: ", outputs)
 				if outs, ok := outputs.(map[string]interface{}); ok {
 					log.Debug("Ref outs: ", outs)
@@ -220,8 +219,4 @@ func FillInputParams(smgr statemanager.Manager, options map[string]interface{}) 
 		}
 	}
 	return nil
-}
-
-func genStateKey(refParam []string) statemanager.StateKey {
-	return statemanager.StateKey(fmt.Sprintf("%s_%s", refParam[0], refParam[1]))
 }

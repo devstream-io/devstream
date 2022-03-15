@@ -67,3 +67,7 @@ type StateKey string
 func StateKeyGenerateFunc(t *configloader.Tool) StateKey {
 	return StateKey(fmt.Sprintf("%s_%s", t.Name, t.Plugin.Kind))
 }
+
+func GenStateKey(refParam []string) StateKey {
+	return StateKey(fmt.Sprintf("%s_%s", refParam[0], refParam[1]))
+}

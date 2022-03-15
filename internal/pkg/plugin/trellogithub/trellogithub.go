@@ -58,10 +58,6 @@ func NewTrelloGithub(options map[string]interface{}) (*TrelloGithub, error) {
 	}, nil
 }
 
-func (tg *TrelloGithub) GetApi() *Api {
-	return tg.options.Api
-}
-
 // CompareFiles compare files between local and remote
 func (tg *TrelloGithub) CompareFiles(wsFiles, filesInRemoteDir []string) map[string]error {
 	lostFiles := slicez.SliceInSliceStr(wsFiles, filesInRemoteDir)
