@@ -13,23 +13,23 @@ const NAME = "github-repo-scaffolding-golang"
 type Plugin string
 
 // Create implements the installation of the github-repo-scaffolding-golang.
-func (p Plugin) Create(param map[string]interface{}) (map[string]interface{}, error) {
-	return golang.Create(param)
+func (p Plugin) Create(params map[string]interface{}) (map[string]interface{}, error) {
+	return golang.Create(params)
 }
 
 // Update implements the reinstallation of the github-repo-scaffolding-golang.
-func (p Plugin) Update(param map[string]interface{}) (map[string]interface{}, error) {
-	return golang.Update(param)
+func (p Plugin) Update(params map[string]interface{}) (map[string]interface{}, error) {
+	return golang.Update(params)
 }
 
 // Read implements the healthy check of the github-repo-scaffolding-golang.
-func (p Plugin) Read(param map[string]interface{}) (map[string]interface{}, error) {
-	return golang.Read(param)
+func (p Plugin) Read(params map[string]interface{}) (map[string]interface{}, error) {
+	return golang.Read(params)
 }
 
 // Delete implements the uninstallation of the github-repo-scaffolding-golang.
-func (p Plugin) Delete(param map[string]interface{}) (bool, error) {
-	return golang.Delete(param)
+func (p Plugin) Delete(params map[string]interface{}) (bool, error) {
+	return golang.Delete(params)
 }
 
 // DevStreamPlugin is the exported variable used by the DevStream core.

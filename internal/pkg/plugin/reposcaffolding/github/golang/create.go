@@ -13,9 +13,9 @@ import (
 )
 
 // Create installs github-repo-scaffolding-golang with provided options.
-func Create(param map[string]interface{}) (map[string]interface{}, error) {
+func Create(params map[string]interface{}) (map[string]interface{}, error) {
 	var opts Options
-	if err := mapstructure.Decode(param, &opts); err != nil {
+	if err := mapstructure.Decode(params, &opts); err != nil {
 		return nil, err
 	}
 
