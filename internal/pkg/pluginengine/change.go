@@ -14,6 +14,15 @@ import (
 const REF_PREFIX = "${{"
 const REF_SUFFIX = "}}"
 
+// eg. ${{name.kind.outputs.key}},name setgment number is 0
+const NAME_SEGMENT_NUM = 0
+
+// eg. ${{name.kind.outputs.key}},kind setgment number is 1
+const KIND_SEGMENT_NUM = 1
+
+// eg. ${{name.kind.outputs.key}},key setgment number is 3
+const REF_SEGMENT_NUM = 3
+
 // Change is a wrapper with a single Tool and its Action should be execute.
 type Change struct {
 	Tool        *configloader.Tool
@@ -101,13 +110,13 @@ func execute(smgr statemanager.Manager, changes []*Change) map[string]error {
 		var err error
 		var returnValue map[string]interface{}
 
-		log.Info("tool raw changes: ", c.Tool.Options)
+		log.Infof("Tool's raw changes are: %s.", c.Tool.Options)
 		// fill ref inputs
 		err = fillRefValueWithOutputs(smgr, c.Tool.Options)
 		if err != nil {
 			succeeded = false
 		}
-		log.Info("tool changes with filled inputs: ", c.Tool.Options)
+		log.Infof("Tool's changes with filled inputs are: %s.", c.Tool.Options)
 
 		switch c.ActionName {
 		case statemanager.ActionCreate:
@@ -183,23 +192,22 @@ func handleResult(smgr statemanager.Manager, change *Change) error {
 	return nil
 }
 
-// FillInputParams fill inputs from state
+// fillRefValueWithOutputs fill inputs from state
 func fillRefValueWithOutputs(smgr statemanager.Manager, options map[string]interface{}) error {
-	// traverse options
 	for key, value := range options {
 		log.Debugf("Key: %s,  Value: %s.", key, value)
 		// judge whether the value is a string
 		if inst, ok := value.(string); ok {
 			// judge whether the format is ${{xxx}}
-			if strings.HasPrefix(inst, REF_PREFIX) && strings.HasSuffix(inst, REF_SUFFIX) {
-				ref := strings.TrimSpace(strings.TrimSuffix(strings.TrimPrefix(inst, REF_PREFIX), REF_SUFFIX))
+			if isValidRefFormat(inst) {
+				ref := getRefFormatString(inst)
 				log.Debug("Ref inputs: ", ref)
 				refParam := strings.Split(ref, ".")
 				if len(refParam) <= 3 {
-					return errors.New("ref input format is not correct: " + ref)
+					return errors.New("incorrect output reference: " + ref)
 				}
 
-				outputs, err := smgr.GetOutputs(statemanager.GenStateKey(refParam))
+				outputs, err := smgr.GetOutputs(statemanager.GenStateKey(refParam[NAME_SEGMENT_NUM], refParam[KIND_SEGMENT_NUM]))
 				if err != nil {
 					return err
 				}
@@ -207,10 +215,12 @@ func fillRefValueWithOutputs(smgr statemanager.Manager, options map[string]inter
 
 				if outs, ok := outputs.(map[string]interface{}); ok {
 					log.Debug("Ref outs: ", outs)
-					log.Debug("Ref param: ", refParam[3])
-					options[key] = outs[refParam[3]]
+					log.Debug("Ref param: ", refParam[REF_SEGMENT_NUM])
 					if value == nil {
-						return errors.New("ref input value is null: " + refParam[3])
+						return errors.New("ref input value is null: " + refParam[REF_SEGMENT_NUM])
+					}
+					if options[key], ok = outs[refParam[REF_SEGMENT_NUM]]; !ok {
+						return fmt.Errorf("can not find %s in dependency outputs", refParam[REF_SEGMENT_NUM])
 					}
 				}
 			}
@@ -223,4 +233,14 @@ func fillRefValueWithOutputs(smgr statemanager.Manager, options map[string]inter
 		}
 	}
 	return nil
+}
+
+// isValidRefFormat if the format is ${{abc}}
+func isValidRefFormat(ref string) bool {
+	return strings.HasPrefix(ref, REF_PREFIX) && strings.HasSuffix(ref, REF_SUFFIX)
+}
+
+// getRefFormatString get abc from ${{abc}} or ${{ abc }}
+func getRefFormatString(rawFormatString string) string {
+	return strings.TrimSpace(strings.TrimSuffix(strings.TrimPrefix(rawFormatString, REF_PREFIX), REF_SUFFIX))
 }

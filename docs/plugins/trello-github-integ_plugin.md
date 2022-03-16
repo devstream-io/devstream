@@ -1,6 +1,6 @@
 ## 1 `trello-github-integ` Plugin
 
-This plugin creates a new GitHub Actions file(trello-github-integration) and upload to your GitHub repo.
+This plugin creates a new GitHub Actions workflow(trello-github-integration) and uploads it to your GitHub repo.
 
 ## 2 Usage:
 
@@ -17,7 +17,7 @@ tools:
     # checkout the version from the GitHub releases
     version: 0.2.0
   # optional; if specified, dtm will make sure the dependency is applied first before handling this tool.
-  dependsOn: [ "TOOL1_NAME.TOOL1_KIND", "TOOL2_NAME.TOOL2_KIND" ]
+  dependsOn: [ "TRELLO_INSTANCE_NAME.trello" ]
   # options for the plugin
   options:
     # the repo's owner. It should be case-sensitive here; strictly use your GitHub user name; please change the value below.
@@ -25,10 +25,10 @@ tools:
     # the repo where you'd like to setup GitHub Actions; please change the value below.
     repo: YOUR_REPO_NAME
     # reference parameters come from dependency, their usage will be explained later
-    boardId: ${{ default.trello.outputs.boardId }}
-    todoListId: ${{ default.trello.outputs.todoListId }}
-    doingListId: ${{ default.trello.outputs.doingListId }}
-    doneListId: ${{ default.trello.outputs.doneListId }}
+    boardId: ${{ TRELLO_INSTANCE_NAME.trello.outputs.boardId }}
+    todoListId: ${{ TRELLO_INSTANCE_NAME.trello.outputs.todoListId }}
+    doingListId: ${{ TRELLO_INSTANCE_NAME.trello.outputs.doingListId }}
+    doneListId: ${{ TRELLO_INSTANCE_NAME.trello.outputs.doneListId }}
     # main branch of the repo (to which branch the plugin will submit the workflows)
     branch: main
 ```
@@ -67,8 +67,8 @@ tools:
 
 In the example above:
 
-- We put `default.trello` as dependency by using the `dependsOn` keyword.
-- We use `default.trello`'s output as input for the `default_trello_github` plugin.
+- We put `trello_init_demo.trello` as a dependency by using the `dependsOn` keyword.
+- We use `trello_init_demo.trello`'s output as input for the `trello_github_integ_demo` plugin.
 
 Pay attention to the `${{ xxx }}` part in the example. `${{ TOOL_NAME.TOOL_KIND.outputs.var}}` is the syntax for using an output.
 

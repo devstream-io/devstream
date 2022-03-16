@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-func buildState(tg *TrelloGithub, ti *TrelloItemId) map[string]interface{} {
+func buildState(tg *TrelloGithub) map[string]interface{} {
 	res := make(map[string]interface{})
 	res["workflowDir"] = fmt.Sprintf("/repos/%s/%s/contents/.github/workflows", tg.options.Owner, tg.options.Repo)
 	return res

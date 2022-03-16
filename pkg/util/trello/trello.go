@@ -78,11 +78,23 @@ func (c *Client) GetBoardIdAndListId(owner, repo, kanbanBoardName string) (map[s
 	return res, nil
 }
 
-func checkTargetBoard(owner, repo, kanbanBoardName string, b *trello.Board) bool {
-	if b.Name == kanbanBoardName && b.Desc == boardDesc(owner, repo) {
-		return true
+// CheckBoardExists check if board exists, which board name == kanbanBoardName, and board desc == owner/repo
+func (c *Client) CheckBoardExists(owner, repo, kanbanBoardName string) (bool, error) {
+	bs, err := c.Client.GetMyBoards()
+	if err != nil {
+		return false, err
 	}
-	return false
+
+	for _, b := range bs {
+		if checkTargetBoard(owner, repo, kanbanBoardName, b) {
+			return true, nil
+		}
+	}
+	return false, nil
+}
+
+func checkTargetBoard(owner, repo, kanbanBoardName string, b *trello.Board) bool {
+	return !b.Closed && b.Name == kanbanBoardName && b.Desc == boardDesc(owner, repo)
 }
 
 func boardDesc(owner, repo string) string {

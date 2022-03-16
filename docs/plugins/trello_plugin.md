@@ -69,7 +69,7 @@ tools:
 
 In the example above:
 
-- We put `default.trello` as dependency by using the `dependsOn` keyword.
+- We put `default.trello` as a dependency by using the `dependsOn` keyword.
 - We use `default.trello`'s output as input for the `default_trello_github` plugin.
 
 Pay attention to the `${{ xxx }}` part in the example. `${{ TOOL_NAME.TOOL_KIND.outputs.var}}` is the syntax for using an output.
