@@ -9,9 +9,9 @@ import (
 )
 
 // Update re-installs github-repo-scaffolding-golang with provided options.
-func Update(params map[string]interface{}) (map[string]interface{}, error) {
+func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	var opts Options
-	if err := mapstructure.Decode(params, &opts); err != nil {
+	if err := mapstructure.Decode(options, &opts); err != nil {
 		return nil, err
 	}
 

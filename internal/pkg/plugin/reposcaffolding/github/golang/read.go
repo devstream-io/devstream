@@ -10,9 +10,9 @@ import (
 )
 
 // Read check the health for github-repo-scaffolding-golang with provided param.
-func Read(params map[string]interface{}) (map[string]interface{}, error) {
+func Read(options map[string]interface{}) (map[string]interface{}, error) {
 	var opts Options
-	if err := mapstructure.Decode(params, &opts); err != nil {
+	if err := mapstructure.Decode(options, &opts); err != nil {
 		return nil, err
 	}
 
@@ -20,7 +20,7 @@ func Read(params map[string]interface{}) (map[string]interface{}, error) {
 		for _, e := range errs {
 			log.Errorf("Options error: %s.", e)
 		}
-		return nil, fmt.Errorf("options are illegal")
+		return nil, fmt.Errorf("opts are illegal")
 	}
 
 	return buildReadState(&opts)
