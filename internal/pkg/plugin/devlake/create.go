@@ -13,10 +13,10 @@ import (
 )
 
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
-	var param Param
+	var opts Options
 
 	// decode input parameters into a struct
-	err := mapstructure.Decode(options, &param)
+	err := mapstructure.Decode(options, &opts)
 	if err != nil {
 		return nil, err
 	}
@@ -53,5 +53,5 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	}
 
 	// build state & return results
-	return buildState(param), nil
+	return buildState(opts), nil
 }
