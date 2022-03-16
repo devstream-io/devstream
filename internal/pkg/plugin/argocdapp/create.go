@@ -12,16 +12,16 @@ import (
 
 // Create creates an ArgoCD app YAML and applys it.
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
-	var param Param
+	var opts Options
 
 	// decode input parameters into a struct
-	err := mapstructure.Decode(options, &param)
+	err := mapstructure.Decode(options, &opts)
 	if err != nil {
 		return nil, err
 	}
 
 	// validate parameters
-	if errs := validateParams(&param); len(errs) != 0 {
+	if errs := validateOptions(&opts); len(errs) != 0 {
 		for _, e := range errs {
 			log.Errorf("Param error: %s.", e)
 		}
@@ -29,7 +29,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	}
 
 	// render an ArgoCD App YAML file based on inputs and template
-	if err = writeContentToTmpFile(argoCDAppYAMLFile, argoCDAppTemplate, &param); err != nil {
+	if err = writeContentToTmpFile(argoCDAppYAMLFile, argoCDAppTemplate, &opts); err != nil {
 		return nil, err
 	}
 
@@ -44,5 +44,5 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	}
 
 	// build state & return results
-	return buildState(param), nil
+	return buildState(opts), nil
 }

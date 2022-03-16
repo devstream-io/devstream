@@ -7,7 +7,7 @@ import (
 )
 
 // Param is the struct for parameters used by the argocdapp package.
-type Param struct {
+type Options struct {
 	App         App
 	Destination Destination
 	Source      Source
@@ -32,22 +32,22 @@ type Source struct {
 	RepoURL   string
 }
 
-func validateParams(param *Param) []error {
+func validateOptions(opts *Options) []error {
 	retErrors := make([]error, 0)
 
-	if param.App.Name == "" {
+	if opts.App.Name == "" {
 		retErrors = append(retErrors, fmt.Errorf("app.name is empty"))
 	}
-	if errs := validation.IsDNS1123Subdomain(param.App.Name); len(errs) != 0 {
+	if errs := validation.IsDNS1123Subdomain(opts.App.Name); len(errs) != 0 {
 		for _, e := range errs {
-			retErrors = append(retErrors, fmt.Errorf("app.name %s is invalid: %s", param.App.Name, e))
+			retErrors = append(retErrors, fmt.Errorf("app.name %s is invalid: %s", opts.App.Name, e))
 		}
 	}
 
-	if param.Source.Path == "" {
+	if opts.Source.Path == "" {
 		retErrors = append(retErrors, fmt.Errorf("source.path is empty"))
 	}
-	if param.Source.RepoURL == "" {
+	if opts.Source.RepoURL == "" {
 		retErrors = append(retErrors, fmt.Errorf("source.repoURL is empty"))
 	}
 

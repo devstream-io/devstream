@@ -11,7 +11,7 @@ import (
 
 const argoCDAppYAMLFile = "./app.yaml"
 
-func writeContentToTmpFile(file string, content string, param *Param) error {
+func writeContentToTmpFile(file string, content string, opts *Options) error {
 	t, err := template.New("app").Option("missingkey=error").Parse(content)
 	if err != nil {
 		return err
@@ -22,7 +22,7 @@ func writeContentToTmpFile(file string, content string, param *Param) error {
 		return err
 	}
 
-	err = t.Execute(output, param)
+	err = t.Execute(output, opts)
 	if err != nil {
 		if strings.Contains(err.Error(), "can't evaluate field name") {
 			msg := err.Error()
@@ -36,23 +36,23 @@ func writeContentToTmpFile(file string, content string, param *Param) error {
 	return nil
 }
 
-func buildState(p Param) map[string]interface{} {
+func buildState(opts Options) map[string]interface{} {
 	res := make(map[string]interface{})
 
 	res["app"] = map[string]interface{}{
-		"name":      p.App.Name,
-		"namespace": p.App.Namespace,
+		"name":      opts.App.Name,
+		"namespace": opts.App.Namespace,
 	}
 
 	res["src"] = map[string]interface{}{
-		"repoURL":   p.Source.RepoURL,
-		"path":      p.Source.Path,
-		"valueFile": p.Source.Valuefile,
+		"repoURL":   opts.Source.RepoURL,
+		"path":      opts.Source.Path,
+		"valueFile": opts.Source.Valuefile,
 	}
 
 	res["dest"] = map[string]interface{}{
-		"server":    p.Destination.Server,
-		"namespace": p.Destination.Namespace,
+		"server":    opts.Destination.Server,
+		"namespace": opts.Destination.Namespace,
 	}
 
 	return res
