@@ -116,7 +116,7 @@ func execute(smgr statemanager.Manager, changes []*Change) map[string]error {
 		if err != nil {
 			succeeded = false
 		}
-		log.Infof("Tool's changes with filled inputs are: %s.", c.Tool.Options)
+		log.Debugf("Tool's changes with filled inputs: %s.", c.Tool.Options)
 
 		switch c.ActionName {
 		case statemanager.ActionCreate:
@@ -132,7 +132,7 @@ func execute(smgr statemanager.Manager, changes []*Change) map[string]error {
 		}
 
 		if err != nil {
-			key := fmt.Sprintf("%s-%s", c.Tool.Name, c.ActionName)
+			key := fmt.Sprintf("%s/%s-%s", c.Tool.Plugin.Kind, c.Tool.Name, c.ActionName)
 			errorsMap[key] = err
 		}
 
@@ -161,8 +161,8 @@ func handleResult(smgr statemanager.Manager, change *Change) error {
 	}()
 
 	if !change.Result.Succeeded {
-		log.Errorf("The tool < %s/%s > %s failed.", change.Tool.Name, change.Tool.Plugin.Kind, change.ActionName)
-		return fmt.Errorf("the tool < %s/%s > %s failed", change.Tool.Name, change.Tool.Plugin.Kind, change.ActionName)
+		// do nothing when the change failed
+		return nil
 	}
 
 	if change.ActionName == statemanager.ActionDelete {
