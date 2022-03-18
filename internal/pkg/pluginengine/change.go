@@ -110,7 +110,7 @@ func execute(smgr statemanager.Manager, changes []*Change) map[string]error {
 		var err error
 		var returnValue map[string]interface{}
 
-		log.Infof("Tool's raw changes are: %s.", c.Tool.Options)
+		log.Debugf("Tool's raw changes are: %s.", c.Tool.Options)
 		// fill ref inputs
 		err = fillRefValueWithOutputs(smgr, c.Tool.Options)
 		if err != nil {
@@ -148,6 +148,7 @@ func execute(smgr statemanager.Manager, changes []*Change) map[string]error {
 			errorsMap["handle-result"] = err
 		}
 	}
+	log.Separatorf("Processing done.")
 
 	return errorsMap
 }
