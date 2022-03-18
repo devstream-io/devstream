@@ -19,9 +19,9 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 
 	trelloItemId := &TrelloItemId{
 		boardId:     tg.options.BoardId,
-		todoListId:  tg.options.todoListId,
-		doingListId: tg.options.doingListId,
-		doneListId:  tg.options.doneListId,
+		todoListId:  tg.options.TodoListId,
+		doingListId: tg.options.DoingListId,
+		doneListId:  tg.options.DoneListId,
 	}
 
 	if err := tg.AddTrelloIdSecret(trelloItemId); err != nil {
