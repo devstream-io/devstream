@@ -1,3 +1,5 @@
+# Creating a Plugin
+
 ## 0 Thanks for Contributing!
 
 First, please read our [CONTRIBUTING](../CONTRIBUTING.md) doc.
@@ -29,3 +31,9 @@ TL;DR: each plugin should have a separate folder under the `cmd/` directory. Ref
 Put most of a plugin's code under the `internal/pkg/` directory and only use `cmd/` as the main entrance to the plugin code.
 
 Check out our [Standard Go Project Layout](./project_layout.md) document for detailed instruction on the project layout.
+
+```{toctree}
+---
+maxdepth: 1
+---
+```

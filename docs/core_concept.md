@@ -1,4 +1,4 @@
-# Config, State, Resource Detailed Explanation and How We Manage Changes
+# Core Concepts
 
 The architecture documentation explains how in general DevStream works. If you haven't read it yet, make sure you do that before continuing with this document.
 
@@ -36,3 +36,9 @@ When _deleting_ using `dtm`, here's what happens:
 ## 4. Changes for `dtm destroy`
 
 TODO.
+
+```{toctree}
+---
+maxdepth: 1
+---
+```
