@@ -1,4 +1,4 @@
-# Standard Go Project Layout
+# Project Layout
 
 See [`Go Project Layout`](https://medium.com/golang-learn/go-project-layout-e5213cdcfaa2) for additional background information.
 
@@ -168,3 +168,8 @@ Don't confuse the project level `/src` directory with the `/src` directory Go us
 
     [![Release](https://img.shields.io/github/release/golang-standards/project-layout.svg?style=flat-square)](https://github.com/golang-standards/project-layout/releases/latest)
 
+```{toctree}
+---
+maxdepth: 1
+---
+```

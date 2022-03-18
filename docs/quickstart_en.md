@@ -1,7 +1,5 @@
 # Quick Start
 
-> English | [中文](./quickstart_zh.md)
-
 ## 1. Download DevStream (`dtm`)
 
 Download the appropriate `dtm` version for your platform from [DevStream Releases](https://github.com/merico-dev/stream/releases).
@@ -134,4 +132,10 @@ Enter a value (Default is n): y
 2022-03-04 12:10:42 ✔ [SUCCESS]  Plugin golang-demo-actions delete done.
 2022-03-04 12:10:42 ✔ [SUCCESS]  All plugins destroyed successfully.
 2022-03-04 12:10:42 ✔ [SUCCESS]  Destroy finished.
+```
+
+```{toctree}
+---
+maxdepth: 1
+---
 ```
