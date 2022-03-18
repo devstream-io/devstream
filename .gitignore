@@ -12,6 +12,7 @@ dtm*
 smoke
 build/output
 build/working_dir
+docs/build
 
 # Test binary, build with `go test -c`
 *.test
