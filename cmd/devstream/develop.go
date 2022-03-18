@@ -26,8 +26,8 @@ func developCMDFunc(cmd *cobra.Command, args []string) {
 	}
 
 	developAction := develop.Action(args[0])
-	log.Debugf("The develop action is: %s", developAction)
-	if err := develop.BranchAction(developAction); err != nil {
+	log.Debugf("The develop action is: %s.", developAction)
+	if err := develop.ExecuteAction(developAction); err != nil {
 		log.Fatal(err)
 	}
 }

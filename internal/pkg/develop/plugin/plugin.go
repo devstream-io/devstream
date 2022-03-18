@@ -96,9 +96,9 @@ func (p *Plugin) PersistFiles(files []pluginTpl.File) error {
 	fileCount := len(files)
 	log.Debugf("There are %d files wait to persist.", fileCount)
 	for i, file := range files {
-		log.Debugf("Persist process: %d/%d", i+1, fileCount)
+		log.Debugf("Persist process: %d/%d.", i+1, fileCount)
 		if err := p.persistFile(&file); err != nil {
-			log.Errorf("Failed to persist: %s/%s", file.Dir, file.Name)
+			log.Errorf("Failed to persist: %s/%s.", file.Dir, file.Name)
 			return err
 		}
 	}

@@ -20,10 +20,10 @@ func IsValideAction(action Action) bool {
 	return ok
 }
 
-func BranchAction(action Action) error {
+func ExecuteAction(action Action) error {
 	switch action {
 	case ActionCreatePlugin:
-		log.Debugf("Action: %s", ActionCreatePlugin)
+		log.Debugf("Action: %s.", ActionCreatePlugin)
 		return plugin.Create()
 	default:
 		panic("This should be never happen!")
