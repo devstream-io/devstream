@@ -53,7 +53,7 @@ func Apply(configFile string, continueDirectly bool) error {
 	errsMap := execute(smgr, changes)
 	if len(errsMap) != 0 {
 		for k, e := range errsMap {
-			log.Infof("%s -> %s", k, e)
+			log.Errorf("%s -> %s", k, e)
 		}
 		return errors.New("some error(s) occurred during plugins apply process")
 	}
