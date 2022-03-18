@@ -10,40 +10,19 @@ const (
 	BuilderYmlTrello     = "trello-github-integ.yml"
 )
 
-var extTrello = &Api{
-	Name: "trello",
-}
-
-var defaultWorkflows = workflows{
-	extTrello.Name: {
-		{
-			CommitMessage:    defaultCommitMessage,
-			WorkflowFileName: BuilderYmlTrello,
-			WorkflowContent:  trello.IssuesBuilder,
-		},
-	},
+var trelloWorkflow = &github.Workflow{
+	CommitMessage:    defaultCommitMessage,
+	WorkflowFileName: BuilderYmlTrello,
+	WorkflowContent:  trello.IssuesBuilder,
 }
 
 // Options is the struct for configurations of the trellogithub plugin.
 type Options struct {
-	Owner  string
-	Repo   string
-	Branch string
-	Api    *Api
-	Jobs   *Jobs
-}
-
-type Api struct {
-	Name            string
-	KanbanBoardName string
-}
-
-type workflows map[string][]*github.Workflow
-
-func (ws *workflows) GetWorkflowByNameVersionTypeString(nvtStr string) []*github.Workflow {
-	workflowList, exist := (*ws)[nvtStr]
-	if exist {
-		return workflowList
-	}
-	return nil
+	Owner       string
+	Repo        string
+	Branch      string
+	BoardId     string
+	todoListId  string
+	doingListId string
+	doneListId  string
 }

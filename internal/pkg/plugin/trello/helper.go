@@ -37,6 +37,13 @@ func buildReadState(options *Options) (map[string]interface{}, error) {
 		return nil, err
 	}
 
+	output := make(map[string]interface{})
+	output["boardId"] = fmt.Sprint(listIds["boardId"])
+	output["todoListId"] = fmt.Sprint(listIds["todoListId"])
+	output["doingListId"] = fmt.Sprint(listIds["doingListId"])
+	output["doneListId"] = fmt.Sprint(listIds["doneListId"])
+
+	listIds["outputs"] = output
 	return listIds, nil
 }
 

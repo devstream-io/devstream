@@ -28,6 +28,7 @@ type Manager interface {
 	AddState(key StateKey, state State) error
 	UpdateState(key StateKey, state State) error
 	DeleteState(key StateKey) error
+	GetOutputs(key StateKey) (interface{}, error)
 }
 
 // manager is the default implement with Manager
@@ -105,4 +106,15 @@ func (m *manager) UpdateState(key StateKey, state State) error {
 func (m *manager) DeleteState(key StateKey) error {
 	m.statesMap.Delete(key)
 	return m.Write(m.GetStatesMap().Format())
+}
+
+func (m *manager) GetOutputs(key StateKey) (interface{}, error) {
+	state := m.GetState(key)
+	if state == nil {
+		return nil, fmt.Errorf("cannot find state by key: %s", key)
+	}
+	if value, ok := state.Resource["outputs"]; ok {
+		return value, nil
+	}
+	return nil, fmt.Errorf("cannot find outputs from state: %s", state.Name)
 }

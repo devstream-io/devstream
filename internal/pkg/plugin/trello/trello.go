@@ -28,6 +28,25 @@ func CreateTrelloBoard(options *Options) (*TrelloItemId, error) {
 		return nil, err
 	}
 
+	exist, err := c.CheckBoardExists(options.Owner, options.Repo, options.KanbanBoardName)
+	if err != nil {
+		return nil, err
+	}
+
+	if exist {
+		log.Infof("Board already exists, owner: %s, repo: %s, kanbanName: %s.", options.Owner, options.Repo, options.KanbanBoardName)
+		listIds, err := c.GetBoardIdAndListId(options.Owner, options.Repo, options.KanbanBoardName)
+		if err != nil {
+			return nil, err
+		}
+		return &TrelloItemId{
+			boardId:     fmt.Sprint(listIds["boardId"]),
+			todoListId:  fmt.Sprint(listIds["todoListId"]),
+			doingListId: fmt.Sprint(listIds["doingListId"]),
+			doneListId:  fmt.Sprint(listIds["doneListId"]),
+		}, nil
+	}
+
 	board, err := c.CreateBoard(options.KanbanBoardName, options.Owner, options.Repo)
 	if err != nil {
 		return nil, err

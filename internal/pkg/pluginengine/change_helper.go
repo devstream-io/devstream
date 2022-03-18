@@ -82,6 +82,9 @@ func changesForApply(smgr statemanager.Manager, cfg *configloader.Config) ([]*Ch
 				description := fmt.Sprintf("Tool < %s > found in config but doesn't exist in the state, will be created.", tool.Name)
 				changes = append(changes, generateCreateAction(&tool, description))
 			} else {
+				if err := renderRefByDependency(&tool, cfg.Tools, smgr); err != nil {
+					return nil, err
+				}
 				// tool found in the state
 				if drifted(tool.Options, state.Options) {
 					// tool's config differs from State's, Update
@@ -165,4 +168,34 @@ func changesForForceDelete(smgr statemanager.Manager, cfg *configloader.Config) 
 		}
 	}
 	return changes
+}
+
+// renderRefByDependency
+// 1. if dependency plugin changed, do not fill ${{***}} with ref value;
+// 2. if dependency plugin did not change, fill ${{***}} with ref value;
+func renderRefByDependency(tool *configloader.Tool, tools []configloader.Tool, smgr statemanager.Manager) error {
+	if len(tool.DependsOn) > 0 {
+		for _, dependency := range tool.DependsOn {
+			dependencyChange := false
+			for _, c := range tools {
+				log.Debugf("====== Name: %s kind: %s dependency: %s  =====", c.Name, c.Plugin.Kind, dependency)
+				if fmt.Sprintf("%s%s%s", c.Name, ".", c.Plugin.Kind) == dependency {
+					state := smgr.GetState(statemanager.StateKeyGenerateFunc(&c))
+					if drifted(c.Options, state.Options) {
+						dependencyChange = true
+					}
+				}
+			}
+			if !dependencyChange {
+				// fill ref inputs,
+				if err := fillRefValueWithOutputs(smgr, tool.Options); err != nil {
+					return err
+				}
+				log.Infof("Dependency plugin no changes, ref inputs will be filled: %s.", tool.Options)
+			} else {
+				log.Infof("Do not fill ref inputs now, they will be filled when dependency plugin complete: %s.", tool.Options)
+			}
+		}
+	}
+	return nil
 }
