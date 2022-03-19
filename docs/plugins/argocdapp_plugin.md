@@ -3,10 +3,12 @@
 This plugin creates an [ArgoCD Application](https://argo-cd.readthedocs.io/en/stable/core_concepts/) custom resource.
 
 **Notes:**
-- ArgoCD itself must have been already installed before the usage of this plugin. To install ArgoCD, use the [argocd plugin](https://github.com/merico-dev/stream/blob/main/docs/argocd_plugin.md).
+- ArgoCD itself must have been already installed before the usage of this plugin.
+  To install ArgoCD, use the [argocd plugin](https://github.com/merico-dev/stream/blob/main/docs/argocd_plugin.md).
+  Or you can use both plugins(argocd+argocdapp) at the same time.
+  See [GitOps Toolchain](../best_practices/gitops.md) for more info.
 - Currently, only the Helm chart is supported when creating the ArgoCD application.
-- At the moment, DevStream doesn't support dependency or concurrency yet. So, in the config file, the ArgoCD app plugin must be placed _after_ the ArgoCD plugin if you want to install ArgoCD first then create the ArgoCD application.
-
+- Modify the file accordingly. Especially remember to modify `ARGOCD_INSTANCE_NAME`.
 ## 2 Usage:
 
 ```yaml
@@ -18,8 +20,8 @@ tools:
     # version of the plugin
     # checkout the version from the GitHub releases
     version: 0.2.0
-  # optional; if specified, dtm will make sure the dependency is applied first before handling this tool.
-  dependsOn: [ "TOOL1_NAME.TOOL1_KIND", "TOOL2_NAME.TOOL2_KIND" ]
+  # if specified, dtm will make sure the dependency is applied first before handling this tool.
+  dependsOn: [ "ARGOCD_INSTANCE_NAME.argocd" ]
   # options for the plugin
   options:
     # information on the ArgoCD Application
