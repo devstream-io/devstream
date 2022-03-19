@@ -17,6 +17,12 @@ var _ = Describe("Pluginengine", func() {
 	var (
 		smgr statemanager.Manager
 		err  error
+
+		trelloToolName     = "mytrelloboard"
+		trelloPluginKind   = "trello"
+		expectedBoardId    = "1"
+		expectedTodoListId = "2"
+		trelloKey          = statemanager.StateKey(fmt.Sprintf("%s_%s", trelloToolName, trelloPluginKind))
 	)
 
 	BeforeEach(func() {
@@ -41,7 +47,7 @@ var _ = Describe("Pluginengine", func() {
 			Tools: []configloader.Tool{*getTool(name, kind, version)},
 		}
 		changes, _ := pluginengine.GetChangesForApply(smgr, cfg)
-
+		GinkgoWriter.Print(changes)
 		Expect(len(changes)).To(Equal(1))
 		c := changes[0]
 		Expect(c.Tool.Name).To(Equal(name))
@@ -92,6 +98,114 @@ var _ = Describe("Pluginengine", func() {
 		Expect(c.Tool.Plugin.Kind).To(Equal(kind))
 		Expect(c.Tool.Plugin.Version).To(Equal(version))
 		Expect(c.ActionName).To(Equal(statemanager.ActionDelete))
+	})
+
+	It("should handle outputs correctly", func() {
+		trelloState := statemanager.State{
+			Name:    "mytrelloboard",
+			Plugin:  configloader.Plugin{Kind: "trello", Version: "0.2.0"},
+			Options: map[string]interface{}{},
+			Resource: map[string]interface{}{
+				"outputs": map[string]interface{}{
+					"boardId":    expectedBoardId,
+					"todoListId": expectedTodoListId,
+				},
+			},
+		}
+		err = smgr.AddState(trelloKey, trelloState)
+		Expect(err).NotTo(HaveOccurred())
+
+		dependantOptions := map[string]interface{}{
+			"boardId":    fmt.Sprintf("${{ %s.%s.outputs.boardId }}", trelloToolName, trelloPluginKind),
+			"todoListId": fmt.Sprintf("${{ %s.%s.outputs.todoListId }}", trelloToolName, trelloPluginKind),
+		}
+		expectResult := map[string]interface{}{
+			"boardId":    expectedBoardId,
+			"todoListId": expectedTodoListId,
+		}
+		errs := pluginengine.HandleOutputsReferences(smgr, dependantOptions)
+		Expect(len(errs)).To(BeZero())
+		Expect(dependantOptions).To(Equal(expectResult))
+	})
+
+	It("should give an error when output doesn't exist in the state", func() {
+		trelloState := statemanager.State{
+			Name:     "mytrelloboard",
+			Plugin:   configloader.Plugin{Kind: "trello", Version: "0.2.0"},
+			Options:  map[string]interface{}{},
+			Resource: map[string]interface{}{},
+		}
+		err = smgr.AddState(trelloKey, trelloState)
+		Expect(err).NotTo(HaveOccurred())
+
+		dependantOptions := map[string]interface{}{
+			"boardId": fmt.Sprintf("${{ %s.%s.outputs.boardId }}", trelloToolName, trelloPluginKind),
+		}
+		expectResult := map[string]interface{}{
+			"boardId": fmt.Sprintf("${{ %s.%s.outputs.boardId }}", trelloToolName, trelloPluginKind),
+		}
+		errs := pluginengine.HandleOutputsReferences(smgr, dependantOptions)
+		Expect(len(errs)).To(Equal(1))
+		Expect(dependantOptions).To(Equal(expectResult))
+	})
+
+	It("should give an error when the referred key doesn't exist", func() {
+		trelloState := statemanager.State{
+			Name:    "mytrelloboard",
+			Plugin:  configloader.Plugin{Kind: "trello", Version: "0.2.0"},
+			Options: map[string]interface{}{},
+			Resource: map[string]interface{}{
+				"outputs": map[string]interface{}{
+					"boardId":    expectedBoardId,
+					"todoListId": expectedTodoListId,
+				},
+			},
+		}
+		err = smgr.AddState(trelloKey, trelloState)
+		Expect(err).NotTo(HaveOccurred())
+
+		dependantOptions := map[string]interface{}{
+			"boardId":    fmt.Sprintf("${{ %s.%s.outputs.boardId }}", trelloToolName, trelloPluginKind),
+			"todoListId": fmt.Sprintf("${{ %s.%s.outputs.todoListId }}", trelloToolName, trelloPluginKind),
+			"someKey":    fmt.Sprintf("${{ %s.%s.outputs.keyNotExist }}", trelloToolName, trelloPluginKind),
+		}
+		expectResult := map[string]interface{}{
+			"boardId":    expectedBoardId,
+			"todoListId": expectedTodoListId,
+			"someKey":    fmt.Sprintf("${{ %s.%s.outputs.keyNotExist }}", trelloToolName, trelloPluginKind),
+		}
+		errs := pluginengine.HandleOutputsReferences(smgr, dependantOptions)
+		Expect(len(errs)).To(Equal(1))
+		Expect(dependantOptions).To(Equal(expectResult))
+	})
+
+	It("should work for nested maps", func() {
+		trelloState := statemanager.State{
+			Name:    "mytrelloboard",
+			Plugin:  configloader.Plugin{Kind: "trello", Version: "0.2.0"},
+			Options: map[string]interface{}{},
+			Resource: map[string]interface{}{
+				"outputs": map[string]interface{}{
+					"boardId": expectedBoardId,
+				},
+			},
+		}
+		err = smgr.AddState(trelloKey, trelloState)
+		Expect(err).NotTo(HaveOccurred())
+
+		dependantOptions := map[string]interface{}{
+			"outerKey": map[string]interface{}{
+				"innerKey": fmt.Sprintf("${{ %s.%s.outputs.boardId }}", trelloToolName, trelloPluginKind),
+			},
+		}
+		expectResult := map[string]interface{}{
+			"outerKey": map[string]interface{}{
+				"innerKey": expectedBoardId,
+			},
+		}
+		errs := pluginengine.HandleOutputsReferences(smgr, dependantOptions)
+		Expect(len(errs)).To(Equal(0))
+		Expect(dependantOptions).To(Equal(expectResult))
 	})
 })
 
