@@ -6,12 +6,12 @@ import (
 	"github.com/mitchellh/mapstructure"
 
 	. "github.com/merico-dev/stream/internal/pkg/plugin/common/helm"
-	"github.com/merico-dev/stream/pkg/util/helm"
 	"github.com/merico-dev/stream/pkg/util/log"
 )
 
 // Create creates OpenLDAP with provided options.
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
+	// 1. decode options
 	var param Param
 	if err := mapstructure.Decode(options, &param); err != nil {
 		return nil, err
@@ -24,6 +24,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, fmt.Errorf("params are illegal")
 	}
 
+	// 2. deal with ns
 	if err := DealWithNsWhenInstall(&param); err != nil {
 		return nil, err
 	}
@@ -39,18 +40,12 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		log.Debugf("Deal with namespace when interruption succeeded.")
 	}()
 
-	var h *helm.Helm
-	h, retErr = helm.NewHelm(param.GetHelmParam())
-	if retErr != nil {
+	// 3. install or upgrade
+	if retErr = InstallOrUpgradeChart(&param); retErr != nil {
 		return nil, retErr
 	}
 
-	log.Info("Creating or updating openldap helm chart ...")
-	if retErr = h.InstallOrUpgradeChart(); retErr != nil {
-		log.Debugf("Failed to install or upgrade the Chart: %s.", retErr)
-		return nil, retErr
-	}
-
+	// 4. fill the return map
 	retMap := GetStaticState().ToStringInterfaceMap()
 	log.Debugf("Return map: %v", retMap)
 
