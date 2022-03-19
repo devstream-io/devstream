@@ -1,27 +1,13 @@
 package pluginengine
 
 import (
-	"errors"
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/merico-dev/stream/internal/pkg/configloader"
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
 	"github.com/merico-dev/stream/pkg/util/log"
 )
-
-const REF_PREFIX = "${{"
-const REF_SUFFIX = "}}"
-
-// eg. ${{name.kind.outputs.key}},name setgment number is 0
-const NAME_SEGMENT_NUM = 0
-
-// eg. ${{name.kind.outputs.key}},kind setgment number is 1
-const KIND_SEGMENT_NUM = 1
-
-// eg. ${{name.kind.outputs.key}},key setgment number is 3
-const REF_SEGMENT_NUM = 3
 
 // Change is a wrapper with a single Tool and its Action should be execute.
 type Change struct {
@@ -111,12 +97,19 @@ func execute(smgr statemanager.Manager, changes []*Change) map[string]error {
 		var returnValue map[string]interface{}
 
 		log.Debugf("Tool's raw changes are: %s.", c.Tool.Options)
-		// fill ref inputs
-		err = fillRefValueWithOutputs(smgr, c.Tool.Options)
-		if err != nil {
+
+		errs := HandleOutputsReferences(smgr, c.Tool.Options)
+		if len(errs) != 0 {
 			succeeded = false
+
+			for _, e := range errs {
+				log.Errorf("Error: %s.", e)
+			}
+			log.Errorf("The outputs reference in tool %s (%s) can't be resolved. Please double check your config.", c.Tool.Name, c.Tool.Plugin.Kind)
+
+			// not executing this change since its input isn't valid
+			continue
 		}
-		log.Debugf("Tool's changes with filled inputs: %s.", c.Tool.Options)
 
 		switch c.ActionName {
 		case statemanager.ActionCreate:
@@ -191,57 +184,4 @@ func handleResult(smgr statemanager.Manager, change *Change) error {
 	}
 	log.Successf("Plugin %s(%s) %s done.", change.Tool.Name, change.Tool.Plugin.Kind, change.ActionName)
 	return nil
-}
-
-// fillRefValueWithOutputs fill inputs from state
-func fillRefValueWithOutputs(smgr statemanager.Manager, options map[string]interface{}) error {
-	for key, value := range options {
-		log.Debugf("Key: %s,  Value: %s.", key, value)
-		// judge whether the value is a string
-		if inst, ok := value.(string); ok {
-			// judge whether the format is ${{xxx}}
-			if isValidRefFormat(inst) {
-				ref := getRefFormatString(inst)
-				log.Debug("Ref inputs: ", ref)
-				refParam := strings.Split(ref, ".")
-				if len(refParam) <= 3 {
-					return errors.New("incorrect output reference: " + ref)
-				}
-
-				outputs, err := smgr.GetOutputs(statemanager.GenStateKey(refParam[NAME_SEGMENT_NUM], refParam[KIND_SEGMENT_NUM]))
-				if err != nil {
-					return err
-				}
-				log.Debug("Ref outputs: ", outputs)
-
-				if outs, ok := outputs.(map[string]interface{}); ok {
-					log.Debug("Ref outs: ", outs)
-					log.Debug("Ref param: ", refParam[REF_SEGMENT_NUM])
-					if value == nil {
-						return errors.New("ref input value is null: " + refParam[REF_SEGMENT_NUM])
-					}
-					if options[key], ok = outs[refParam[REF_SEGMENT_NUM]]; !ok {
-						return fmt.Errorf("can not find %s in dependency outputs", refParam[REF_SEGMENT_NUM])
-					}
-				}
-			}
-		}
-		// judge wheter the format is map[string]interface{}, if true, then recursion
-		if _, ok := value.(map[string]interface{}); ok {
-			if err := fillRefValueWithOutputs(smgr, value.(map[string]interface{})); err != nil {
-				return err
-			}
-		}
-	}
-	return nil
-}
-
-// isValidRefFormat if the format is ${{abc}}
-func isValidRefFormat(ref string) bool {
-	return strings.HasPrefix(ref, REF_PREFIX) && strings.HasSuffix(ref, REF_SUFFIX)
-}
-
-// getRefFormatString get abc from ${{abc}} or ${{ abc }}
-func getRefFormatString(rawFormatString string) string {
-	return strings.TrimSpace(strings.TrimSuffix(strings.TrimPrefix(rawFormatString, REF_PREFIX), REF_SUFFIX))
 }
