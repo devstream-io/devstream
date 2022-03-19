@@ -2,11 +2,21 @@
 
 ## Plugins needed
 
-1. github-repo-scaffolding-golang 
-2. jira-github
-3. githubactions-golang
-4. argocd
-5. argocdapp
+1. [github-repo-scaffolding-golang](../plugins/github-repo-scaffolding-golang_plugin.md)
+2. [jira-github](../plugins/jira-github-integ_plugin.md)
+3. [githubactions-golang](../plugins/githubactions-golang_plugin.md)
+4. [argocd](../plugins/argocd_plugin.md)
+5. [argocdapp](../plugins/argocdapp_plugin.md)
+
+The dependencies of these plugins are(`a -> b` means for `a depends on b`):
+
+- `jira-github` -> `github-repo-scaffolding-golang`
+- `githubactions-golang` -> `github-repo-scaffolding-golang`
+- `argocdapp` -> `argocd`
+
+Note: These dependencies are not consistent, such as when the repo operated by `jira-github` and `github-repo-scaffolding-golang` are not the same, the dependencies disappear.
+
+We should use the `dependency` according to the actual usage situation.
 
 ## Download DevStream (`dtm`)
 
