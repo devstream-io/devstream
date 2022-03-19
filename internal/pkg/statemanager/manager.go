@@ -111,10 +111,12 @@ func (m *manager) DeleteState(key StateKey) error {
 func (m *manager) GetOutputs(key StateKey) (interface{}, error) {
 	state := m.GetState(key)
 	if state == nil {
-		return nil, fmt.Errorf("cannot find state by key: %s", key)
+		return nil, fmt.Errorf("key %s not in state", key)
 	}
+
 	if value, ok := state.Resource["outputs"]; ok {
 		return value, nil
 	}
-	return nil, fmt.Errorf("cannot find outputs from state: %s", state.Name)
+
+	return nil, fmt.Errorf("outputs not in state %s", state.Name)
 }
