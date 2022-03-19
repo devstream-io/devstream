@@ -38,6 +38,7 @@ func Apply(configFile string, continueDirectly bool) error {
 		log.Info("No changes done since last apply. There is nothing to do.")
 		return nil
 	}
+
 	for _, change := range changes {
 		log.Info(change.Description)
 	}
@@ -52,7 +53,7 @@ func Apply(configFile string, continueDirectly bool) error {
 	errsMap := execute(smgr, changes)
 	if len(errsMap) != 0 {
 		for k, e := range errsMap {
-			log.Infof("%s -> %s", k, e)
+			log.Errorf("Error: key(%s) -> msg: %s", k, e)
 		}
 		return errors.New("some error(s) occurred during plugins apply process")
 	}

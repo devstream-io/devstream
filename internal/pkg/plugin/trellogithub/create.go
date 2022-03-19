@@ -11,29 +11,24 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	api := tg.GetApi()
-	log.Infof("API is: %s.", api.Name)
-	ws := defaultWorkflows.GetWorkflowByNameVersionTypeString(api.Name)
-
-	for _, w := range ws {
-		if err := tg.renderTemplate(w); err != nil {
-			return nil, err
-		}
-		if err := tg.client.AddWorkflow(w, tg.options.Branch); err != nil {
-			return nil, err
-		}
-	}
-	log.Success("Adding workflow file succeeded.")
-	trelloIds, err := tg.CreateTrelloItems()
-	if err != nil {
+	if err := tg.client.AddWorkflow(trelloWorkflow, tg.options.Branch); err != nil {
 		return nil, err
 	}
-	log.Success("Creating trello board succeeded.")
-	if err := tg.AddTrelloIdSecret(trelloIds); err != nil {
+
+	log.Success("Adding workflow file succeeded.")
+
+	trelloItemId := &TrelloItemId{
+		boardId:     tg.options.BoardId,
+		todoListId:  tg.options.todoListId,
+		doingListId: tg.options.doingListId,
+		doneListId:  tg.options.doneListId,
+	}
+
+	if err := tg.AddTrelloIdSecret(trelloItemId); err != nil {
 		return nil, err
 	}
 
 	log.Success("Adding secret keys for trello succeeded.")
 
-	return buildState(tg, trelloIds), nil
+	return buildState(tg), nil
 }

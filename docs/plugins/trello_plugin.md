@@ -18,60 +18,36 @@ To create a Trello API key and token, see [here](https://trello.com/app-key).
 
 ```yaml
 tools:
-  - name: default
-    # plugin profile
-    plugin:
-      # kind of this plugin
-      kind: trello
-      # version of the plugin
-      version: 0.2.0
-    # options for the plugin, checkout the version from the GitHub releases
-    options:
-      # the repo's owner (if kanbanBoardName is empty, use owner/repo as the boardname)
-      owner: lfbdev
-      # the repo name  (if kanbanBoardName is empty, use owner/repo as the boardname)
-      repo: golang-demo
-      # the Tello board name 
-      kanbanBoardName: kanban-name
+- name: my-trello-board
+  # plugin profile
+  plugin:
+    # kind of this plugin
+    kind: trello
+    # version of the plugin
+    version: 0.2.0
+  # options for the plugin, checkout the version from the GitHub releases
+  options:
+    # the repo's owner
+    owner: YOUR_GITHUB_USERNAME
+    # for which repo this board will be used
+    repo: YOUR_REPO_NAME
+    # the Tello board name. If empty, use owner/repo as the board's name.
+    kanbanBoardName: KANBAN_BOARD_NAME
 ```
 
-## 3. Use Together with the `trello-github-integ` Plugin
+Replace the following from the config above:
 
-This plugin can be used together with the `trello-github-integ` plugin (see document [here](./trello-github-integ_plugin.md).)
+- `YOUR_GITHUB_USERNAME`
+- `YOUR_REPO_NAME`
+- `KANBAN_BOARD_NAME`
 
-See the example below:
+## 3. Outputs
 
-```yaml
----
-tools:
-  - name: default
-    plugin:
-      kind: trello
-      version: 0.2.0
-    options:
-      owner: lfbdev
-      repo: golang-demo
-      kanbanBoardName: kanban-name
-  - name: default_trello_github
-    plugin:
-      kind: trello-github-integ
-      version: 0.2.0
-    dependsOn: ["default.trello"]
-    options:
-      owner: lfbdev
-      repo: golang-demo
-      api:
-        name: trello
-        boardId: ${{ default.trello.outputs.bid }}
-        todoListId: ${{ default.trello.outputs.todoid }}
-        doingListId: ${{ default.trello.outputs.doingid }}
-        doneListId: ${{ default.trello.outputs.doneid }}
-      branch: main
-```
+This plugin has four outputs:
 
-In the example above:
+- `boardId`
+- `todoListId`
+- `doingListId`
+- `doneListId`
 
-- We put `default.trello` as dependency by using the `dependsOn` keyword.
-- We use `default.trello`'s output as input for the `default_trello_github` plugin.
-
-Pay attention to the `${{ xxx }}` part in the example. `${{ TOOL_NAME.TOOL_KIND.outputs.var}}` is the syntax for using an output.
+which can be used by the `trello-github-integ` plugin. Refer to the [`trello-github-integ` plugin doc](./trello-github-integ_plugin.md) for more details.

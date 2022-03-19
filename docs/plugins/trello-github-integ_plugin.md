@@ -1,27 +1,25 @@
 ## 1 `trello-github-integ` Plugin
 
-This plugin creates a new Trello board and integrate it with your GitHub repo.
+This plugin creates a new GitHub Actions workflow(trello-github-integration) and uploads it to your GitHub repo.
 
 ## 2 Usage:
 
-_This plugin depends on the following two environment variables:_
+This plugin depends on and can be used together with the `trello` plugin (see document [here](./trello_plugin.md)).
 
-- TRELLO_API_KEY
-- TRELLO_TOKEN
-
-Set the values accordingly before using this plugin.
-
-If you don't know how to create these two tokens, check out:
-- [Generate a Trello API key and token](https://docs.servicenow.com/bundle/quebec-it-asset-management/page/product/software-asset-management2/task/generate-trello-apikey-token.html)
-
-## 3 Tips:
-_Trello board description is managed by DevStream, please don't modify it._
-
-To create a Trello API key and token, see [here](https://docs.servicenow.com/bundle/quebec-it-asset-management/page/product/software-asset-management2/task/generate-trello-apikey-token.html).
+`trello-github-integ` plugin can also use `trello` plugin's outputs as input. See the example below:
 
 ```yaml
 tools:
-- name: trello-github-integ-default
+- name: my-trello-board
+  plugin:
+    kind: trello
+    version: 0.2.0
+  dependsOn: ["demo.github-repo-scaffolding-golang"]
+  options:
+    owner: YOUR_GITHUB_USERNAME
+    repo: YOUR_REPO_NAME
+    kanbanBoardName: KANBAN_BOARD_NAME
+- name: trello-github
   # plugin profile
   plugin:
     # kind of this plugin
@@ -30,20 +28,31 @@ tools:
     # checkout the version from the GitHub releases
     version: 0.2.0
   # optional; if specified, dtm will make sure the dependency is applied first before handling this tool.
-  dependsOn: [ "TOOL1_NAME.TOOL1_KIND", "TOOL2_NAME.TOOL2_KIND" ]
+  dependsOn: [ "my-trello-board.trello" ]
   # options for the plugin
   options:
     # the repo's owner. It should be case-sensitive here; strictly use your GitHub user name; please change the value below.
     owner: YOUR_GITHUB_USERNAME
     # the repo where you'd like to setup GitHub Actions; please change the value below.
     repo: YOUR_REPO_NAME
-    # integration tool name
-    api:
-      name: trello
-      # name of the Trello kanban board
-      kanbanBoardName: kanban-name
+    # reference parameters come from dependency, their usage will be explained later
+    boardId: ${{ my-trello-board.trello.outputs.boardId }}
+    todoListId: ${{ my-trello-board.trello.outputs.todoListId }}
+    doingListId: ${{ my-trello-board.trello.outputs.doingListId }}
+    doneListId: ${{ my-trello-board.trello.outputs.doneListId }}
     # main branch of the repo (to which branch the plugin will submit the workflows)
     branch: main
 ```
 
-Currently, all the parameters in the example above are mandatory.
+Replace the following from the config above:
+
+- `YOUR_GITHUB_USERNAME`
+- `YOUR_REPO_NAME`
+- `KANBAN_BOARD_NAME`
+
+In the example above:
+
+- We create a Trello board using `trello` plugin, and the board is marked to be used for repo YOUR_GITHUB_USERNAME/YOUR_REPO_NAME.
+- `trello-github-integ` plugin depends on `trello` plugin, because we use `trello` plugin's outputs as the input for the `trello-github-integ` plugin.
+
+Pay attention to the `${{ xxx }}` part in the example. `${{ TOOL_NAME.TOOL_KIND.outputs.var}}` is the syntax for using an output.

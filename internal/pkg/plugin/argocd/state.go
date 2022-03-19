@@ -3,8 +3,9 @@ package argocd
 import "github.com/merico-dev/stream/pkg/util/helm"
 
 var DefaultDeploymentList = []string{
-	"argocd-application-controller",
+	"argocd-applicationset-controller",
 	"argocd-dex-server",
+	"argocd-notifications-controller",
 	"argocd-redis",
 	"argocd-repo-server",
 	"argocd-server",

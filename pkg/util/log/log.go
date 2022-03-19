@@ -86,8 +86,14 @@ func Success(args ...interface{}) {
 	logrus.Info(args...)
 }
 
-// Separator prints a line for separating as green color
+// Separatorf prints a line for separating as green color
 func Separatorf(format string, args ...interface{}) {
 	logrus.SetFormatter(separatorLog)
 	logrus.Infof(format, args...)
+}
+
+// Separator prints a line for separating as green color
+func Separator(args ...interface{}) {
+	logrus.SetFormatter(separatorLog)
+	logrus.Info(args...)
 }

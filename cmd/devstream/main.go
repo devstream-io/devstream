@@ -50,6 +50,7 @@ func init() {
 	rootCMD.AddCommand(deleteCMD)
 	rootCMD.AddCommand(destroyCMD)
 	rootCMD.AddCommand(verifyCMD)
+	rootCMD.AddCommand(developCMD)
 }
 
 func initConfig() {
@@ -73,6 +74,9 @@ func initConfig() {
 		log.Fatal(err)
 	}
 	if err := viper.BindPFlags(rootCMD.Flags()); err != nil {
+		log.Fatal(err)
+	}
+	if err := viper.BindPFlags(developCMD.Flags()); err != nil {
 		log.Fatal(err)
 	}
 }
