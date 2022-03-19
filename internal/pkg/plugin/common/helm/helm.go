@@ -19,21 +19,21 @@ import (
 // see pr #174 for more info
 
 // Param is the struct for parameters used by the argocd package.
-type Param struct {
+type Options struct {
 	CreateNamespace bool `mapstructure:"create_namespace"`
 	Repo            helm.Repo
 	Chart           helm.Chart
 }
 
-func (p *Param) GetHelmParam() *helm.HelmParam {
+func (opts *Options) GetHelmParam() *helm.HelmParam {
 	return &helm.HelmParam{
-		Repo:  p.Repo,
-		Chart: p.Chart,
+		Repo:  opts.Repo,
+		Chart: opts.Chart,
 	}
 }
 
-func InstallOrUpgradeChart(param *Param) error {
-	h, err := helm.NewHelm(param.GetHelmParam())
+func InstallOrUpgradeChart(opts *Options) error {
+	h, err := helm.NewHelm(opts.GetHelmParam())
 	if err != nil {
 		return err
 	}
@@ -46,47 +46,47 @@ func InstallOrUpgradeChart(param *Param) error {
 	return nil
 }
 
-func DealWithNsWhenInstall(param *Param) error {
-	if !param.CreateNamespace {
+func DealWithNsWhenInstall(opts *Options) error {
+	if !opts.CreateNamespace {
 		log.Debugf("There's no need to delete the namespace for the create_namespace == false in the config file.")
 		return nil
 	}
 
-	log.Debugf("Prepare to create the namespace: %s.", param.Chart.Namespace)
+	log.Debugf("Prepare to create the namespace: %s.", opts.Chart.Namespace)
 
 	kubeClient, err := k8s.NewClient()
 	if err != nil {
 		return err
 	}
 
-	err = kubeClient.CreateNamespace(param.Chart.Namespace)
+	err = kubeClient.CreateNamespace(opts.Chart.Namespace)
 	if err != nil {
-		log.Debugf("Failed to create the namespace: %s.", param.Chart.Namespace)
+		log.Debugf("Failed to create the namespace: %s.", opts.Chart.Namespace)
 		return err
 	}
 
-	log.Debugf("The namespace %s has been created.", param.Chart.Namespace)
+	log.Debugf("The namespace %s has been created.", opts.Chart.Namespace)
 	return nil
 }
 
-func DealWithNsWhenInterruption(param *Param) error {
-	if !param.CreateNamespace {
+func DealWithNsWhenInterruption(opts *Options) error {
+	if !opts.CreateNamespace {
 		return nil
 	}
 
-	log.Debugf("Prepare to delete the namespace: %s.", param.Chart.Namespace)
+	log.Debugf("Prepare to delete the namespace: %s.", opts.Chart.Namespace)
 
 	kubeClient, err := k8s.NewClient()
 	if err != nil {
 		return err
 	}
 
-	err = kubeClient.DeleteNamespace(param.Chart.Namespace)
+	err = kubeClient.DeleteNamespace(opts.Chart.Namespace)
 	if err != nil {
-		log.Debugf("Failed to delete the namespace: %s.", param.Chart.Namespace)
+		log.Debugf("Failed to delete the namespace: %s.", opts.Chart.Namespace)
 		return err
 	}
 
-	log.Debugf("The namespace %s has been deleted.", param.Chart.Namespace)
+	log.Debugf("The namespace %s has been deleted.", opts.Chart.Namespace)
 	return nil
 }
