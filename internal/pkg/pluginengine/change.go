@@ -103,7 +103,7 @@ func execute(smgr statemanager.Manager, changes []*Change) map[string]error {
 			succeeded = false
 
 			for _, e := range errs {
-				log.Errorf("Error: %s", e)
+				log.Errorf("Error: %s.", e)
 			}
 			log.Errorf("The outputs reference in tool %s (%s) can't be resolved. Please double check your config.", c.Tool.Name, c.Tool.Plugin.Kind)
 

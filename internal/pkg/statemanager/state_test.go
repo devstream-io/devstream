@@ -15,7 +15,7 @@ var generateStateKeyByToolNameAndPluginKindTests = []generateStateKeyByToolNameA
 func TestGenerateStateKeyByToolNameAndPluginKind(t *testing.T) {
 	for _, test := range generateStateKeyByToolNameAndPluginKindTests {
 		if got := GenerateStateKeyByToolNameAndPluginKind(test.arg1, test.arg2); got != test.expected {
-			t.Errorf("Output %s not equal to expected %s. Input: %s, %s", got, test.expected, test.arg1, test.arg2)
+			t.Errorf("Output %s not equal to expected %s. Input: %s, %s.", got, test.expected, test.arg1, test.arg2)
 		}
 	}
 }

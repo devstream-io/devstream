@@ -19,7 +19,7 @@ var stripOutputReferencePrefixAndSuffixTests = []stripOutputReferencePrefixAndSu
 func TestStripOutputReferencePrefixAndSuffix(t *testing.T) {
 	for _, test := range stripOutputReferencePrefixAndSuffixTests {
 		if got := stripOutputReferencePrefixAndSuffix(test.arg); got != test.expected {
-			t.Errorf("Output %s not equal to expected %s. Input: %s", got, test.expected, test.arg)
+			t.Errorf("Output %s not equal to expected %s. Input: %s.", got, test.expected, test.arg)
 		}
 	}
 }
@@ -42,7 +42,7 @@ var isValidOutputsReferenceTests = []isValidOutputsReferenceTest{
 func TestIsValidOutputsReference(t *testing.T) {
 	for _, test := range isValidOutputsReferenceTests {
 		if got := isValidOutputsReferenceFormat(test.arg); got != test.expected {
-			t.Errorf("Output %t not equal to expected %t. Input: %s", got, test.expected, test.arg)
+			t.Errorf("Output %t not equal to expected %t. Input: %s.", got, test.expected, test.arg)
 		}
 	}
 }
