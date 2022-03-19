@@ -74,13 +74,8 @@ func isValidOutputsReferenceFormat(rawOutputReference string) bool {
 	}
 
 	outputReferenceStr := stripOutputReferencePrefixAndSuffix(rawOutputReference)
-
 	sections := strings.Split(outputReferenceStr, SECTION_SEPARATOR)
-	if len(sections) < OUTPUT_REFERENCE_TOTAL_SECTIONS {
-		return false
-	}
-
-	return true
+	return len(sections) >= OUTPUT_REFERENCE_TOTAL_SECTIONS
 }
 
 // stripOutputReferencePrefixSuffix returns "abc" given an input "${{ abc }}"
