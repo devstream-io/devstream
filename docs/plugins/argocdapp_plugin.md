@@ -4,11 +4,11 @@ This plugin creates an [ArgoCD Application](https://argo-cd.readthedocs.io/en/st
 
 **Notes:**
 - ArgoCD itself must have been already installed before the usage of this plugin.
-  To install ArgoCD, use the [argocd plugin](https://github.com/merico-dev/stream/blob/main/docs/argocd_plugin.md).
+  To install ArgoCD, use the [argocd plugin](../plugins/argocd_plugin.md).
   Or you can use both plugins(argocd+argocdapp) at the same time.
   See [GitOps Toolchain](../best_practices/gitops.md) for more info.
 - Currently, only the Helm chart is supported when creating the ArgoCD application.
-- Modify the file accordingly. Especially remember to modify `ARGOCD_INSTANCE_NAME`.
+- Modify the file accordingly. Especially remember to modify `ARGOCD_TOOL_NAME`.
 ## 2 Usage:
 
 ```yaml
@@ -21,7 +21,7 @@ tools:
     # checkout the version from the GitHub releases
     version: 0.2.0
   # if specified, dtm will make sure the dependency is applied first before handling this tool.
-  dependsOn: [ "ARGOCD_INSTANCE_NAME.argocd" ]
+  dependsOn: [ "ARGOCD_TOOL_NAME.argocd" ]
   # options for the plugin
   options:
     # information on the ArgoCD Application
