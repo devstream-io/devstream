@@ -93,6 +93,22 @@ func (c *Client) CheckBoardExists(owner, repo, kanbanBoardName string) (bool, er
 	return false, nil
 }
 
+// CheckAndDeleteBoard if the board exists, delete it
+func (c *Client) CheckAndDeleteBoard(owner, repo, kanbanBoardName string) error {
+	bs, err := c.Client.GetMyBoards()
+	if err != nil {
+		return err
+	}
+
+	for _, b := range bs {
+		if checkTargetBoard(owner, repo, kanbanBoardName, b) {
+			log.Infof("Board will be deleted, name: %s, description: %s.", b.Name, b.Desc)
+			return b.Delete()
+		}
+	}
+	return nil
+}
+
 func checkTargetBoard(owner, repo, kanbanBoardName string, b *trello.Board) bool {
 	return !b.Closed && b.Name == kanbanBoardName && b.Desc == boardDesc(owner, repo)
 }
