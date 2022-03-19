@@ -8,14 +8,14 @@ import (
 
 // Update remove and set up GitHub Actions workflows.
 func Update(options map[string]interface{}) (map[string]interface{}, error) {
-	opt, err := parseAndValidateOptions(options)
+	opts, err := parseAndValidateOptions(options)
 	if err != nil {
 		return nil, err
 	}
 
 	ghOptions := &github.Option{
-		Owner:    opt.Owner,
-		Repo:     opt.Repo,
+		Owner:    opts.Owner,
+		Repo:     opts.Repo,
 		NeedAuth: true,
 	}
 	ghClient, err := github.NewClient(ghOptions)
@@ -23,19 +23,19 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	log.Debugf("language is %s.", ga.GetLanguage(opt.Language))
+	log.Debugf("language is %s.", ga.GetLanguage(opts.Language))
 
 	for _, pipeline := range workflows {
-		err := ghClient.DeleteWorkflow(pipeline, opt.Branch)
+		err := ghClient.DeleteWorkflow(pipeline, opts.Branch)
 		if err != nil {
 			return nil, err
 		}
 
-		err = ghClient.AddWorkflow(pipeline, opt.Branch)
+		err = ghClient.AddWorkflow(pipeline, opts.Branch)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	return ga.BuildState(opt.Owner, opt.Repo), nil
+	return ga.BuildState(opts.Owner, opts.Repo), nil
 }
