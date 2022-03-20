@@ -32,6 +32,20 @@ func (p *Param) GetHelmParam() *helm.HelmParam {
 	}
 }
 
+func InstallOrUpgradeChart(param *Param) error {
+	h, err := helm.NewHelm(param.GetHelmParam())
+	if err != nil {
+		return err
+	}
+
+	log.Info("Creating or updating helm chart ...")
+	if err := h.InstallOrUpgradeChart(); err != nil {
+		log.Debugf("Failed to install or upgrade the chart: %s.", err)
+		return err
+	}
+	return nil
+}
+
 func DealWithNsWhenInstall(param *Param) error {
 	if !param.CreateNamespace {
 		log.Debugf("There's no need to delete the namespace for the create_namespace == false in the config file.")

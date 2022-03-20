@@ -6,12 +6,12 @@ import (
 	"github.com/mitchellh/mapstructure"
 
 	. "github.com/merico-dev/stream/internal/pkg/plugin/common/helm"
-	"github.com/merico-dev/stream/pkg/util/helm"
 	"github.com/merico-dev/stream/pkg/util/log"
 )
 
 // Create creates jenkins with provided options.
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
+	// 1. decode options
 	var param Param
 	if err := mapstructure.Decode(options, &param); err != nil {
 		return nil, err
@@ -24,6 +24,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, fmt.Errorf("params are illegal")
 	}
 
+	// 2. deal with ns
 	if err := DealWithNsWhenInstall(&param); err != nil {
 		return nil, err
 	}
@@ -44,24 +45,18 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		}
 	}()
 
-	var h *helm.Helm
-	h, retErr = helm.NewHelm(param.GetHelmParam())
-	if retErr != nil {
-		return nil, retErr
-	}
-
-	// pre-create
+	// 3. pre-create
 	if retErr = preCreate(); retErr != nil {
 		log.Errorf("The pre-create logic failed: %s.", retErr)
 		return nil, retErr
 	}
 
-	log.Info("Installing or updating jenkins helm chart ...")
-	if retErr = h.InstallOrUpgradeChart(); retErr != nil {
-		log.Debugf("Failed to install or upgrade the Chart: %s.", retErr)
+	// 4. install or upgrade
+	if retErr = InstallOrUpgradeChart(&param); retErr != nil {
 		return nil, retErr
 	}
 
+	// 5. fill the return map
 	releaseName := param.Chart.ReleaseName
 	retMap := GetStaticState(releaseName).ToStringInterfaceMap()
 	log.Debugf("Return map: %v.", retMap)
