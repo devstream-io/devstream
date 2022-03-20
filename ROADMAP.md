@@ -16,14 +16,6 @@
 - Trello plugin that creates boards
 - Trello-GitLab Integration
 
-### Add a "Destroy" or "Force Delete" Feature
-
-- Everything can be cleared up without any residue or side effects.
-
-### Add an "Output" Feature
-
-- All plugin's output is printed for users to review.
-
 ---
 
 ## 2 Technical Roadmap
@@ -62,3 +54,7 @@ Background: currently, we use GitHub releases to store pre-built binaries and pl
 ---
 
 ## 3 Already Done
+
+v0.3.0:
+- "Destroy" and "force delete": everything can be cleared up without any residue or side effects.
+- "Output": all plugin's output is printed for users to review.
