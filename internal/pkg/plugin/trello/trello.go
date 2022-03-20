@@ -79,3 +79,12 @@ func CreateTrelloBoard(options *Options) (*TrelloItemId, error) {
 		doneListId:  done,
 	}, nil
 }
+
+// DeleteTrelloBoard delete specified board
+func DeleteTrelloBoard(options *Options) error {
+	c, err := trello.NewClient()
+	if err != nil {
+		return err
+	}
+	return c.CheckAndDeleteBoard(options.Owner, options.Repo, options.KanbanBoardName)
+}

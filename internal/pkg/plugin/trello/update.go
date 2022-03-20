@@ -14,6 +14,10 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
+	if err = DeleteTrelloBoard(opt); err != nil {
+		return nil, err
+	}
+
 	trelloIds, err := CreateTrelloBoard(opt)
 	if err != nil {
 		return nil, err

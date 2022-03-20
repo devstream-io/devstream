@@ -22,7 +22,7 @@ type Options struct {
 	Repo        string
 	Branch      string
 	BoardId     string
-	todoListId  string
-	doingListId string
-	doneListId  string
+	TodoListId  string
+	DoingListId string
+	DoneListId  string
 }
