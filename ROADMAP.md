@@ -1,7 +1,5 @@
 # Roadmap
 
----
-
 ## 1 User-Facing Features Roadmap
 
 ### New Tools to Support (Plugins)
@@ -15,8 +13,6 @@
 - FluxCD plugin
 - Trello plugin that creates boards
 - Trello-GitLab Integration
-
----
 
 ## 2 Technical Roadmap
 
@@ -50,8 +46,6 @@ Background: currently, we use GitHub releases to store pre-built binaries and pl
 ### Automated Release
 
 - When a new tag is generated, build binaries for different platforms/OS and distribute the binaries to the plugin storage.
-
----
 
 ## 3 Already Done
 
