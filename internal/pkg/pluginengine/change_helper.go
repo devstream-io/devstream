@@ -79,7 +79,7 @@ func changesForApply(smgr statemanager.Manager, cfg *configloader.Config) ([]*Ch
 
 			if state == nil {
 				// tool not in the state, create, no need to Read resource before Create
-				description := fmt.Sprintf("Tool < %s > found in config but doesn't exist in the state, will be created.", tool.Name)
+				description := fmt.Sprintf("Tool %s (%s) found in config but doesn't exist in the state, will be created.", tool.Name, tool.Plugin.Kind)
 				changes = append(changes, generateCreateAction(&tool, description))
 			} else {
 				if err := renderRefByDependency(&tool, cfg.Tools, smgr); err != nil {
@@ -88,7 +88,7 @@ func changesForApply(smgr statemanager.Manager, cfg *configloader.Config) ([]*Ch
 				// tool found in the state
 				if drifted(tool.Options, state.Options) {
 					// tool's config differs from State's, Update
-					description := fmt.Sprintf("Tool < %s > config drifted from the state, will be updated.", tool.Name)
+					description := fmt.Sprintf("Tool %s (%s) config drifted from the state, will be updated.", tool.Name, tool.Plugin.Kind)
 					changes = append(changes, generateUpdateAction(&tool, description))
 				} else {
 					// tool's config is the same as State's
@@ -101,15 +101,15 @@ func changesForApply(smgr statemanager.Manager, cfg *configloader.Config) ([]*Ch
 
 					if resource == nil {
 						// tool exists in the state, but resource doesn't exist, Create
-						description := fmt.Sprintf("Tool < %s > state found but it seems the tool isn't created, will be created.", tool.Name)
+						description := fmt.Sprintf("Tool %s (%s) state found but it seems the tool isn't created, will be created.", tool.Name, tool.Plugin.Kind)
 						changes = append(changes, generateCreateAction(&tool, description))
 					} else if drifted(resource, state.Resource) {
 						// resource drifted from state, Update
-						description := fmt.Sprintf("Tool < %s > drifted from the state, will be updated.", tool.Name)
+						description := fmt.Sprintf("Tool %s (%s) drifted from the state, will be updated.", tool.Name, tool.Plugin.Kind)
 						changes = append(changes, generateUpdateAction(&tool, description))
 					} else {
 						// resource is the same as the state, do nothing
-						log.Debugf("Tool < %s > is the same as the state, do nothing.", tool.Name)
+						log.Debugf("Tool %s (%s) is the same as the state, do nothing.", tool.Name, tool.Plugin.Kind)
 					}
 				}
 			}
@@ -144,7 +144,7 @@ func changesForDelete(smgr statemanager.Manager, cfg *configloader.Config) []*Ch
 		if state == nil {
 			continue
 		}
-		description := fmt.Sprintf("Tool < %s > will be deleted.", tool.Name)
+		description := fmt.Sprintf("Tool %s (%s) will be deleted.", tool.Name, tool.Plugin.Kind)
 		changes = append(changes, generateDeleteAction(&tool, description))
 		tmpStates.Delete(statemanager.StateKeyGenerateFunc(&tool))
 	}
@@ -160,7 +160,7 @@ func changesForForceDelete(smgr statemanager.Manager, cfg *configloader.Config) 
 
 	for i := len(cfg.Tools) - 1; i >= 0; i-- {
 		tool := cfg.Tools[i]
-		description := fmt.Sprintf("Tool < %s > will be deleted.", tool.Name)
+		description := fmt.Sprintf("Tool %s (%s) will be deleted.", tool.Name, tool.Plugin.Kind)
 		changes = append(changes, generateDeleteAction(&tool, description))
 		if err := smgr.DeleteState(statemanager.StateKeyGenerateFunc(&tool)); err != nil {
 			log.Errorf("Failed to delete %s from state.", statemanager.StateKeyGenerateFunc(&tool))
@@ -178,7 +178,7 @@ func renderRefByDependency(tool *configloader.Tool, tools []configloader.Tool, s
 		for _, dependency := range tool.DependsOn {
 			dependencyChange := false
 			for _, c := range tools {
-				log.Debugf("====== Name: %s kind: %s dependency: %s  =====", c.Name, c.Plugin.Kind, dependency)
+				log.Debugf("====== Name: %s (%s) dependency: %s  =====", c.Name, c.Plugin.Kind, dependency)
 				if fmt.Sprintf("%s%s%s", c.Name, ".", c.Plugin.Kind) == dependency {
 					state := smgr.GetState(statemanager.StateKeyGenerateFunc(&c))
 					if drifted(c.Options, state.Options) {

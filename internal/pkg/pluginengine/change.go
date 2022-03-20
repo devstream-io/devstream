@@ -104,7 +104,7 @@ func execute(smgr statemanager.Manager, changes []*Change) map[string]error {
 
 	for i, c := range changes {
 		log.Separatorf("Processing progress: %d/%d.", i+1, numOfChanges)
-		log.Infof("Processing: %s(kind: %s) -> %s ...", c.Tool.Name, c.Tool.Plugin.Kind, c.ActionName)
+		log.Infof("Processing: %s (%s) -> %s ...", c.Tool.Name, c.Tool.Plugin.Kind, c.ActionName)
 
 		var succeeded bool
 		var err error
@@ -116,7 +116,7 @@ func execute(smgr statemanager.Manager, changes []*Change) map[string]error {
 		if err != nil {
 			succeeded = false
 		}
-		log.Infof("Tool's changes with filled inputs are: %s.", c.Tool.Options)
+		log.Debugf("Tool's changes with filled inputs are: %s.", c.Tool.Options)
 
 		switch c.ActionName {
 		case statemanager.ActionCreate:
@@ -161,8 +161,8 @@ func handleResult(smgr statemanager.Manager, change *Change) error {
 	}()
 
 	if !change.Result.Succeeded {
-		log.Errorf("The tool < %s/%s > %s failed.", change.Tool.Name, change.Tool.Plugin.Kind, change.ActionName)
-		return fmt.Errorf("the tool < %s/%s > %s failed", change.Tool.Name, change.Tool.Plugin.Kind, change.ActionName)
+		log.Errorf("The tool %s (%s) %s failed.", change.Tool.Name, change.Tool.Plugin.Kind, change.ActionName)
+		return fmt.Errorf("the tool %s (%s) %s failed", change.Tool.Name, change.Tool.Plugin.Kind, change.ActionName)
 	}
 
 	if change.ActionName == statemanager.ActionDelete {
@@ -173,7 +173,7 @@ func handleResult(smgr statemanager.Manager, change *Change) error {
 			log.Debugf("Failed to delete state %s: %s.", key, err)
 			return err
 		}
-		log.Successf("Plugin %s/%s delete done.", change.Tool.Name, change.Tool.Plugin.Kind)
+		log.Successf("Plugin %s (%s) delete done.", change.Tool.Name, change.Tool.Plugin.Kind)
 		return nil
 	}
 
