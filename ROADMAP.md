@@ -18,7 +18,6 @@
 
 ### Plugins Dependency Management
 
-- A common way to handle plugin dependencies and execution order using graph/topology sort or other applicable algorithms.
 - Parallel/concurrency for plugins.
 
 ### Automated End-to-End Testing in a Staging Environment
@@ -52,3 +51,4 @@ Background: currently, we use GitHub releases to store pre-built binaries and pl
 v0.3.0:
 - "Destroy" and "force delete": everything can be cleared up without any residue or side effects.
 - "Output": all plugin's output is printed for users to review.
+- Plugin dependency management: a common way to handle plugin dependencies and execution order using graph/topology sort.
