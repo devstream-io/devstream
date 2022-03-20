@@ -12,7 +12,7 @@ tools:
     kind: argocd
     # version of the plugin
     # checkout the version from the GitHub releases
-    version: 0.2.0
+    version: 0.3.0
   options:
     # need to create the namespace or not, default: false
     create_namespace: true

@@ -19,7 +19,7 @@ tools:
     kind: argocdapp
     # version of the plugin
     # checkout the version from the GitHub releases
-    version: 0.2.0
+    version: 0.3.0
   # if specified, dtm will make sure the dependency is applied first before handling this tool.
   dependsOn: [ "ARGOCD_TOOL_NAME.argocd" ]
   # options for the plugin

@@ -13,7 +13,7 @@ tools:
 - name: my-trello-board
   plugin:
     kind: trello
-    version: 0.2.0
+    version: 0.3.0
   dependsOn: ["demo.github-repo-scaffolding-golang"]
   options:
     owner: YOUR_GITHUB_USERNAME
@@ -26,7 +26,7 @@ tools:
     kind: trello-github-integ
     # version of the plugin
     # checkout the version from the GitHub releases
-    version: 0.2.0
+    version: 0.3.0
   # optional; if specified, dtm will make sure the dependency is applied first before handling this tool.
   dependsOn: [ "my-trello-board.trello" ]
   # options for the plugin

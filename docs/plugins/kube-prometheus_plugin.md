@@ -13,7 +13,7 @@ tools:
     kind: kube-prometheus
     # version of the plugin
     # checkout the version from the GitHub releases
-    version: 0.2.0
+    version: 0.3.0
   # options for the plugin
   options:
     # need to create the namespace or not, default: false

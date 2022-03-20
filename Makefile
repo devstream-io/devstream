@@ -1,6 +1,6 @@
 MKFILE_PATH=$(abspath $(lastword $(MAKEFILE_LIST)))
 BUILD_PATH=$(patsubst %/,%,$(dir $(MKFILE_PATH)))/build/working_dir
-VERSION=0.2.0
+VERSION=0.3.0
 GOOS=$(shell go env GOOS)
 GOARCH=$(shell go env GOARCH)
 

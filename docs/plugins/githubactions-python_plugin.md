@@ -17,7 +17,7 @@ tools:
     kind: githubactions-python
     # version of the plugin
     # checkout the version from the GitHub releases
-    version: 0.2.0
+    version: 0.3.0
   # optional; if specified, dtm will make sure the dependency is applied first before handling this tool.
   dependsOn: [ "TOOL1_NAME.TOOL1_KIND", "TOOL2_NAME.TOOL2_KIND" ]
   # options for the plugin

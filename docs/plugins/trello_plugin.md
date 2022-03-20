@@ -24,7 +24,7 @@ tools:
     # kind of this plugin
     kind: trello
     # version of the plugin
-    version: 0.2.0
+    version: 0.3.0
   # options for the plugin, checkout the version from the GitHub releases
   options:
     # the repo's owner
