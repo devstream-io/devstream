@@ -88,3 +88,8 @@ func LoadConf(fname string) *Config {
 func GetPluginFileName(t *Tool) string {
 	return fmt.Sprintf("%s-%s-%s_%s.so", t.Plugin.Kind, GOOS, GOARCH, t.Plugin.Version)
 }
+
+// GetPluginMD5FileName  If the plugin {githubactions 0.0.1}, the generated name will be "githubactions_0.0.1.md5"
+func GetPluginMD5FileName(t *Tool) string {
+	return fmt.Sprintf("%s-%s-%s_%s.md5", t.Plugin.Kind, GOOS, GOARCH, t.Plugin.Version)
+}

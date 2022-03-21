@@ -7,11 +7,10 @@ import (
 	"path/filepath"
 
 	"github.com/merico-dev/stream/cmd/devstream/version"
-
-	"github.com/spf13/viper"
-
 	"github.com/merico-dev/stream/internal/pkg/configloader"
 	"github.com/merico-dev/stream/pkg/util/log"
+
+	"github.com/spf13/viper"
 )
 
 func DownloadPlugins(conf *configloader.Config) error {
@@ -27,37 +26,49 @@ func DownloadPlugins(conf *configloader.Config) error {
 
 	for _, tool := range conf.Tools {
 		pluginFileName := configloader.GetPluginFileName(&tool)
+		pluginMD5FileName := configloader.GetPluginMD5FileName(&tool)
+		// plugin does not exist
 		if _, err := os.Stat(filepath.Join(pluginDir, pluginFileName)); errors.Is(err, os.ErrNotExist) {
-			// plugin does not exist
-			err := dc.download(pluginDir, pluginFileName, tool.Plugin.Version)
-			if err != nil {
+			// download .so file
+			if err := dc.download(pluginDir, pluginFileName, tool.Plugin.Version); err != nil {
+				return err
+			}
+			// download .md5 file
+			if err := dc.download(pluginDir, pluginMD5FileName, tool.Plugin.Version); err != nil {
+				return err
+			}
+			// check if the downloaded plugin md5 matches with dtm core
+			if err := checkPluginMismatch(pluginDir, pluginFileName, tool.Name); err != nil {
 				return err
 			}
 			continue
 		}
-		// check md5
-		dup, err := checkFileMD5(filepath.Join(pluginDir, pluginFileName), dc, pluginFileName, tool.Plugin.Version)
+
+		// if .so exists
+		existsInDtm, err := version.ValidatePlugInMD5(filepath.Join(pluginDir, pluginFileName))
 		if err != nil {
 			return err
 		}
-
-		if dup {
+		// if .so exists, and matches with dtm core, continue
+		if existsInDtm {
 			log.Infof("Plugin: %s already exists, no need to download.", pluginFileName)
 			continue
 		}
-
-		log.Infof("Plugin: %s changed and will be overrided.", pluginFileName)
-		if err = os.Remove(filepath.Join(pluginDir, pluginFileName)); err != nil {
+		// if .so exists, but mismatches with dtm core, re-download plugins
+		log.Infof("Plugin: %s doesn't match with dtm core and will be downloaded.", pluginFileName)
+		if err := redownloadPlugins(dc, pluginDir, pluginFileName, pluginMD5FileName, tool.Plugin.Version); err != nil {
 			return err
 		}
-		if err = dc.download(pluginDir, pluginFileName, tool.Plugin.Version); err != nil {
+
+		// check if the downloaded plugin md5 matches with dtm core
+		if err := checkPluginMismatch(pluginDir, pluginFileName, tool.Name); err != nil {
 			return err
 		}
 	}
-
 	return nil
 }
 
+// CheckLocalPlugins check if the local plugins match with dtm core
 func CheckLocalPlugins(conf *configloader.Config) error {
 	pluginDir := viper.GetString("plugin-dir")
 	if pluginDir == "" {
@@ -74,31 +85,40 @@ func CheckLocalPlugins(conf *configloader.Config) error {
 			}
 			return fmt.Errorf("plugin %s doesn't exist", tool.Name)
 		}
-
-		exists, err := version.ValidatePlugInMD5(filepath.Join(pluginDir, pluginFileName))
-		if err != nil {
+		if err := checkPluginMismatch(pluginDir, pluginFileName, tool.Name); err != nil {
 			return err
 		}
-		if !exists {
-			return fmt.Errorf("plugin %s doesn't match with dtm core", tool.Name)
-		}
 	}
-
 	return nil
 }
 
-func checkFileMD5(file string, dc *PbDownloadClient, pluginFileName string, version string) (bool, error) {
-	localmd5, err := LocalContentMD5(file)
+// checkPluginMismatch check if the plugins match with dtm core(in dtm plugin md5 list)
+func checkPluginMismatch(pluginDir, fileName, tooName string) error {
+	exists, err := version.ValidatePlugInMD5(filepath.Join(pluginDir, fileName))
 	if err != nil {
-		return false, err
+		return err
 	}
-	remotemd5, err := dc.fetchContentMD5(pluginFileName, version)
-	if err != nil {
-		return false, err
+	if !exists {
+		return fmt.Errorf("plugin %s doesn't match with dtm core", tooName)
 	}
+	return nil
+}
 
-	if localmd5 == remotemd5 {
-		return true, nil
+// redownloadPlugins re-download from remote
+func redownloadPlugins(dc *PbDownloadClient, pluginDir, pluginFileName, pluginMD5FileName, version string) error {
+	if err := os.Remove(filepath.Join(pluginDir, pluginFileName)); err != nil {
+		return err
 	}
-	return false, nil
+	if err := os.Remove(filepath.Join(pluginDir, pluginMD5FileName)); err != nil {
+		return err
+	}
+	// download .so file
+	if err := dc.download(pluginDir, pluginFileName, version); err != nil {
+		return err
+	}
+	// download .md5 file
+	if err := dc.download(pluginDir, pluginMD5FileName, version); err != nil {
+		return err
+	}
+	return nil
 }

@@ -6,9 +6,8 @@ import (
 
 const delimiter = ":"
 
-// MD5String is the .
-// Assignment by the command:
-// -o dtm-${GOOS}-${GOARCH} ./cmd/devstream/`
+// MD5String is the plugins' .md5 contents
+// format is MD5String=a:b:c:d
 // See the Makefile for more info.
 var MD5String string
 
@@ -33,6 +32,5 @@ func ValidatePlugInMD5(fileName string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-
 	return validateMD5(currentPlugInMD5, parseMD5String(MD5String)), nil
 }

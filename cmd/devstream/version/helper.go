@@ -11,15 +11,12 @@ import (
 func calcFileMD5(filename string) (string, error) {
 	f, err := os.Open(filename)
 	if nil != err {
-		fmt.Println(err)
 		return "", err
 	}
 	defer f.Close()
 
 	md5Handle := md5.New()
-	_, err = io.Copy(md5Handle, f)
-	if nil != err {
-		fmt.Println(err)
+	if _, err := io.Copy(md5Handle, f); nil != err {
 		return "", err
 	}
 	md := md5Handle.Sum(nil)
