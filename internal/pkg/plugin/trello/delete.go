@@ -8,7 +8,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 	if opt, err = convertMap2Options(options); err != nil {
 		return false, err
 	}
-	if err := validateOptions(opt); err != nil {
+	if err = validateOptions(opt); err != nil {
 		return false, err
 	}
 
