@@ -6,6 +6,8 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/merico-dev/stream/cmd/devstream/version"
+
 	"github.com/spf13/viper"
 
 	"github.com/merico-dev/stream/internal/pkg/configloader"
@@ -71,6 +73,14 @@ func CheckLocalPlugins(conf *configloader.Config) error {
 				return err
 			}
 			return fmt.Errorf("plugin %s doesn't exist", tool.Name)
+		}
+
+		exists, err := version.ValidatePlugInMD5(filepath.Join(pluginDir, pluginFileName))
+		if err != nil {
+			return err
+		}
+		if !exists {
+			return fmt.Errorf("plugin %s doesn't match with dtm core", tool.Name)
 		}
 	}
 

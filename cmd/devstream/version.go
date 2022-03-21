@@ -16,5 +16,5 @@ var versionCMD = &cobra.Command{
 }
 
 func versionCMDFunc(cmd *cobra.Command, args []string) {
-	fmt.Println(version.Version)
+	fmt.Println("Version:", version.Version, "\nSupported plugins MD5:", version.MD5String)
 }

@@ -7,7 +7,7 @@ GOARCH=$(shell go env GOARCH)
 help: ## Display this help.
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
-build: fmt vet ## Build dtm & plugins locally.
+build-plugin: fmt vet ## Build plugins locally.
 	go mod tidy
 	rm -f .devstream/sum.md5
 	mkdir -p .devstream
@@ -67,12 +67,15 @@ build: fmt vet ## Build dtm & plugins locally.
 	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/openldap-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/openldap/
 	md5 -q .devstream/openldap-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/openldap-${GOOS}-${GOARCH}_${VERSION}.md5
 	cat .devstream/openldap-${GOOS}-${GOARCH}_${VERSION}.md5 >> .devstream/sum.md5
+	data=shell awk BEGIN{RS=EOF}'{gsub(/\n/,":");print}' .devstream/sum.md5
 
+build: fmt vet build-plugin ## Build dtm & plugins locally.
+	go mod tidy
 	go build -trimpath -gcflags="all=-N -l" -ldflags "-X github.com/merico-dev/stream/cmd/devstream/version.Version=${VERSION} -X github.com/merico-dev/stream/cmd/devstream/version.MD5String=$(shell awk BEGIN{RS=EOF}'{gsub(/\n/,":");print}' .devstream/sum.md5)" -o dtm-${GOOS}-${GOARCH} ./cmd/devstream/
 
-build-core: fmt vet ## Build dtm core only, without plugins, locally.
+build-core: fmt vet build-plugin ## Build dtm & plugins locally.
 	go mod tidy
-	go build -trimpath -gcflags="all=-N -l" -ldflags "-X github.com/merico-dev/stream/cmd/devstream/version.Version=${VERSION}" -o dtm-${GOOS}-${GOARCH} ./cmd/devstream/
+	go build -trimpath -gcflags="all=-N -l" -ldflags "-X github.com/merico-dev/stream/cmd/devstream/version.Version=${VERSION} -X github.com/merico-dev/stream/cmd/devstream/version.MD5String=$(shell awk BEGIN{RS=EOF}'{gsub(/\n/,":");print}' .devstream/sum.md5)" -o dtm-${GOOS}-${GOARCH} ./cmd/devstream/
 
 clean: ## Remove local plugins and locally built artifacts.
 	rm -rf .devstream
