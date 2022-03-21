@@ -8,7 +8,7 @@ import (
 )
 
 // CalcFileMD5 calculate file md5
-func calcFileMD5(filename string) (string, error) {
+func CalcFileMD5(filename string) (string, error) {
 	f, err := os.Open(filename)
 	if nil != err {
 		return "", err

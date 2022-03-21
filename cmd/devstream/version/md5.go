@@ -28,7 +28,7 @@ func parseMD5String(md5String string) []string {
 
 // ValidatePlugInMD5 check current PlugIn MD5 if exists
 func ValidatePlugInMD5(fileName string) (bool, error) {
-	currentPlugInMD5, err := calcFileMD5(fileName)
+	currentPlugInMD5, err := CalcFileMD5(fileName)
 	if err != nil {
 		return false, err
 	}
