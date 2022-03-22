@@ -8,14 +8,14 @@ import (
 
 // Create sets up jira-github-integ workflows.
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
-	opt, err := parseAndValidateOptions(options)
+	opts, err := parseAndValidateOptions(options)
 	if err != nil {
 		return nil, err
 	}
 
 	ghOptions := &github.Option{
-		Owner:    opt.Owner,
-		Repo:     opt.Repo,
+		Owner:    opts.Owner,
+		Repo:     opts.Repo,
 		NeedAuth: true,
 	}
 	ghClient, err := github.NewClient(ghOptions)
@@ -23,13 +23,13 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	content, err := renderTemplate(workflow, opt)
+	content, err := renderTemplate(workflow, opts)
 	if err != nil {
 		return nil, err
 	}
 	workflow.WorkflowContent = content
 
-	if err := ghClient.AddWorkflow(workflow, opt.Branch); err != nil {
+	if err := ghClient.AddWorkflow(workflow, opts.Branch); err != nil {
 		return nil, err
 	}
 
@@ -37,7 +37,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	return BuildState(opt.Owner, opt.Repo), nil
+	return BuildState(opts.Owner, opts.Repo), nil
 }
 
 func BuildState(owner, repo string) map[string]interface{} {
