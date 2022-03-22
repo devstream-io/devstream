@@ -3,7 +3,7 @@ package golang
 import "github.com/merico-dev/stream/pkg/util/gitlab"
 
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
-	opt, err := parseAndValidateOptions(options)
+	opts, err := parseAndValidateOptions(options)
 	if err != nil {
 		return nil, err
 	}
@@ -18,9 +18,9 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	if err = client.CommitSingleFile(opt.PathWithNamespace, opt.Branch, commitMessage, ciFileName, ciFileContent); err != nil {
+	if err = client.CommitSingleFile(opts.PathWithNamespace, opts.Branch, commitMessage, ciFileName, ciFileContent); err != nil {
 		return nil, err
 	}
 
-	return buildState(opt), nil
+	return buildState(opts), nil
 }

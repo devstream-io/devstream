@@ -3,7 +3,7 @@ package golang
 import "github.com/merico-dev/stream/pkg/util/gitlab"
 
 func Read(options map[string]interface{}) (map[string]interface{}, error) {
-	opt, err := parseAndValidateOptions(options)
+	opts, err := parseAndValidateOptions(options)
 	if err != nil {
 		return nil, err
 	}
@@ -13,7 +13,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	exists, err := client.FileExists(opt.PathWithNamespace, opt.Branch, ciFileName)
+	exists, err := client.FileExists(opts.PathWithNamespace, opts.Branch, ciFileName)
 	if err != nil {
 		return nil, err
 	}
@@ -22,5 +22,5 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, nil
 	}
 
-	return buildState(opt), nil
+	return buildState(opts), nil
 }
