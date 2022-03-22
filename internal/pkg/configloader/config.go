@@ -93,3 +93,8 @@ func GetPluginFileName(t *Tool) string {
 func GetPluginMD5FileName(t *Tool) string {
 	return fmt.Sprintf("%s-%s-%s_%s.md5", t.Plugin.Kind, GOOS, GOARCH, t.Plugin.Version)
 }
+
+// GetDtmMD5FileName format likes dtm-linux-amd64
+func GetDtmMD5FileName() string {
+	return fmt.Sprintf("%s-%s-%s.md5", "dtm", GOOS, GOARCH)
+}

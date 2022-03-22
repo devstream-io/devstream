@@ -14,31 +14,21 @@ import (
 
 // TestCheckLocalPlugins test plguin .so matches dtm core md5
 func TestCheckLocalPlugins(t *testing.T) {
-	clearMD5string()
 	viper.Set("plugin-dir", "./")
 
 	tools := []configloader.Tool{
 		{Name: "a", Plugin: configloader.Plugin{Kind: "a"}},
-		{Name: "b", Plugin: configloader.Plugin{Kind: "b"}},
 	}
 
-	fileA := configloader.GetPluginFileName(&tools[0])
-	fileB := configloader.GetPluginFileName(&tools[1])
-
-	defer func() { clearMD5string() }()
+	file := configloader.GetPluginFileName(&tools[0])
+	fileMD5 := configloader.GetPluginMD5FileName(&tools[0])
 
 	config := &configloader.Config{Tools: tools}
 
-	err := createNewFile(fileA)
+	err := createNewFile(file)
 	assert.NoError(t, err)
 
-	err = addMD5string(fileA)
-	assert.NoError(t, err)
-
-	err = createNewFile(fileB)
-	assert.NoError(t, err)
-
-	err = addMD5string(fileB)
+	err = addMD5File(file, fileMD5)
 	assert.NoError(t, err)
 
 	err = CheckLocalPlugins(config)
@@ -48,20 +38,22 @@ func TestCheckLocalPlugins(t *testing.T) {
 
 // TestCheckPluginMismatch test checkPluginMismatch error
 func TestCheckPluginMismatch(t *testing.T) {
-	clearMD5string()
 	viper.Set("plugin-dir", "./")
 
 	tools := []configloader.Tool{
 		{Name: "c", Plugin: configloader.Plugin{Kind: "c"}},
 	}
-	defer func() { clearMD5string() }()
-	fileC := configloader.GetPluginFileName(&tools[0])
+	file := configloader.GetPluginFileName(&tools[0])
+	fileMD5 := configloader.GetPluginMD5FileName(&tools[0])
 
-	err := createNewFile(fileC)
+	err := createNewFile(file)
 	assert.NoError(t, err)
 
-	err = checkPluginMismatch(viper.GetString("plugin-dir"), fileC, tools[0].Name)
-	expectErrMsg := fmt.Sprintf("plugin %s doesn't match with dtm core", tools[0].Name)
+	err = createNewFile(fileMD5)
+	assert.NoError(t, err)
+
+	err = checkPluginMismatch(viper.GetString("plugin-dir"), file, fileMD5, tools[0].Name)
+	expectErrMsg := fmt.Sprintf("plugin %s doesn't match with .md5", tools[0].Name)
 	assert.EqualError(t, err, expectErrMsg)
 }
 
@@ -74,19 +66,18 @@ func createNewFile(fileName string) error {
 	return nil
 }
 
-func addMD5string(fileName string) error {
+func addMD5File(fileName, md5FileName string) error {
 	md5, err := version.CalcFileMD5(fileName)
 	if err != nil {
 		return err
 	}
-	if version.MD5String == "" {
-		version.MD5String = md5
-	} else {
-		version.MD5String = fmt.Sprintf("%s:%s", version.MD5String, md5)
+	md5File, err := os.Create(md5FileName)
+	if err != nil {
+		return err
+	}
+	_, err = md5File.Write([]byte(md5))
+	if err != nil {
+		return err
 	}
 	return nil
-}
-
-func clearMD5string() {
-	version.MD5String = ""
 }
