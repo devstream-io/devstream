@@ -8,11 +8,10 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/merico-dev/stream/cmd/devstream/version"
-
 	"github.com/merico-dev/stream/internal/pkg/configloader"
 	"github.com/merico-dev/stream/internal/pkg/pluginmanager"
 	"github.com/merico-dev/stream/pkg/util/log"
+	md5helper "github.com/merico-dev/stream/pkg/util/md5"
 )
 
 const DTMRemoteMD5 = ".remote"
@@ -58,7 +57,7 @@ func compareDtmMD5() error {
 		return err
 	}
 
-	isMD5Match, err := version.ValidateFileMatchMD5(selfDtmName, filepath.Join(DTMRemoteMD5, dtmMD5FileName))
+	isMD5Match, err := md5helper.ValidateFileMatchMD5(selfDtmName, filepath.Join(DTMRemoteMD5, dtmMD5FileName))
 	if err != nil {
 		return err
 	}

@@ -63,7 +63,7 @@ build: fmt vet ## Build dtm & plugins locally.
 	go build -trimpath -gcflags="all=-N -l" -ldflags "-X github.com/merico-dev/stream/cmd/devstream/version.Version=${VERSION}" -o dtm-${GOOS}-${GOARCH} ./cmd/devstream/
 	${MD5} dtm-${GOOS}-${GOARCH} > dtm-${GOOS}-${GOARCH}.md5
 
-build-core: fmt vet build-plugin ## Build dtm locally.
+build-core: fmt vet ## Build dtm core only, without plugins, locally.
 	go mod tidy
 	go build -trimpath -gcflags="all=-N -l" -ldflags "-X github.com/merico-dev/stream/cmd/devstream/version.Version=${VERSION}" -o dtm-${GOOS}-${GOARCH} ./cmd/devstream/
 	${MD5} dtm-${GOOS}-${GOARCH} > dtm-${GOOS}-${GOARCH}.md5

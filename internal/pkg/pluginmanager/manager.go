@@ -9,6 +9,7 @@ import (
 	"github.com/merico-dev/stream/cmd/devstream/version"
 	"github.com/merico-dev/stream/internal/pkg/configloader"
 	"github.com/merico-dev/stream/pkg/util/log"
+	md5helper "github.com/merico-dev/stream/pkg/util/md5"
 
 	"github.com/spf13/viper"
 )
@@ -45,7 +46,7 @@ func DownloadPlugins(conf *configloader.Config) error {
 		}
 
 		// if .so exists
-		isMD5Match, err := version.ValidateFileMatchMD5(filepath.Join(pluginDir, pluginFileName), filepath.Join(pluginDir, pluginMD5FileName))
+		isMD5Match, err := md5helper.ValidateFileMatchMD5(filepath.Join(pluginDir, pluginFileName), filepath.Join(pluginDir, pluginMD5FileName))
 		if err != nil {
 			return err
 		}
@@ -102,7 +103,7 @@ func CheckLocalPlugins(conf *configloader.Config) error {
 
 // checkPluginMismatch check if the plugins match with .md5
 func checkPluginMismatch(pluginDir, soFileName, md5FileName, tooName string) error {
-	isMD5Match, err := version.ValidateFileMatchMD5(filepath.Join(pluginDir, soFileName), filepath.Join(pluginDir, md5FileName))
+	isMD5Match, err := md5helper.ValidateFileMatchMD5(filepath.Join(pluginDir, soFileName), filepath.Join(pluginDir, md5FileName))
 	if err != nil {
 		return err
 	}

@@ -8,8 +8,8 @@ import (
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/merico-dev/stream/cmd/devstream/version"
 	"github.com/merico-dev/stream/internal/pkg/configloader"
+	md5helper "github.com/merico-dev/stream/pkg/util/md5"
 )
 
 // TestCheckLocalPlugins test plguin .so matches dtm core md5
@@ -67,7 +67,7 @@ func createNewFile(fileName string) error {
 }
 
 func addMD5File(fileName, md5FileName string) error {
-	md5, err := version.CalcFileMD5(fileName)
+	md5, err := md5helper.CalcFileMD5(fileName)
 	if err != nil {
 		return err
 	}
