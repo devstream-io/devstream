@@ -28,13 +28,13 @@ type TrelloItemId struct {
 func NewTrelloGithub(options map[string]interface{}) (*TrelloGithub, error) {
 	ctx := context.Background()
 
-	var opt Options
-	err := mapstructure.Decode(options, &opt)
+	var opts Options
+	err := mapstructure.Decode(options, &opts)
 	if err != nil {
 		return nil, err
 	}
 
-	if errs := validate(&opt); len(errs) != 0 {
+	if errs := validate(&opts); len(errs) != 0 {
 		for _, e := range errs {
 			log.Errorf("Param error: %s.", e)
 		}
@@ -42,8 +42,8 @@ func NewTrelloGithub(options map[string]interface{}) (*TrelloGithub, error) {
 	}
 
 	ghOptions := &github.Option{
-		Owner:    opt.Owner,
-		Repo:     opt.Repo,
+		Owner:    opts.Owner,
+		Repo:     opts.Repo,
 		NeedAuth: true,
 	}
 	ghClient, err := github.NewClient(ghOptions)
@@ -54,7 +54,7 @@ func NewTrelloGithub(options map[string]interface{}) (*TrelloGithub, error) {
 	return &TrelloGithub{
 		ctx:     ctx,
 		client:  ghClient,
-		options: &opt,
+		options: &opts,
 	}, nil
 }
 
