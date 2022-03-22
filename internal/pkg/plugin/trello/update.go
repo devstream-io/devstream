@@ -3,25 +3,25 @@ package trello
 // Update recreate trello board and lists.
 func Update(options map[string]interface{}) (map[string]interface{}, error) {
 
-	var opt *Options
+	var opts *Options
 	var err error
 
-	if opt, err = convertMap2Options(options); err != nil {
+	if opts, err = convertMap2Options(options); err != nil {
 		return nil, err
 	}
 
-	if err := validateOptions(opt); err != nil {
+	if err := validateOptions(opts); err != nil {
 		return nil, err
 	}
 
-	if err = DeleteTrelloBoard(opt); err != nil {
+	if err = DeleteTrelloBoard(opts); err != nil {
 		return nil, err
 	}
 
-	trelloIds, err := CreateTrelloBoard(opt)
+	trelloIds, err := CreateTrelloBoard(opts)
 	if err != nil {
 		return nil, err
 	}
 
-	return buildState(opt, trelloIds), nil
+	return buildState(opts, trelloIds), nil
 }

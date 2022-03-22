@@ -9,7 +9,7 @@ import (
 	"github.com/merico-dev/stream/pkg/util/trello"
 )
 
-func buildState(options *Options, ti *TrelloItemId) map[string]interface{} {
+func buildState(opts *Options, ti *TrelloItemId) map[string]interface{} {
 	res := make(map[string]interface{})
 	res["boardId"] = ti.boardId
 	res["todoListId"] = ti.todoListId
@@ -27,12 +27,12 @@ func buildState(options *Options, ti *TrelloItemId) map[string]interface{} {
 	return res
 }
 
-func buildReadState(options *Options) (map[string]interface{}, error) {
+func buildReadState(opts *Options) (map[string]interface{}, error) {
 	c, err := trello.NewClient()
 	if err != nil {
 		return nil, err
 	}
-	listIds, err := c.GetBoardIdAndListId(options.Owner, options.Repo, options.KanbanBoardName)
+	listIds, err := c.GetBoardIdAndListId(opts.Owner, opts.Repo, opts.KanbanBoardName)
 	if err != nil {
 		return nil, err
 	}
@@ -48,20 +48,20 @@ func buildReadState(options *Options) (map[string]interface{}, error) {
 }
 
 func convertMap2Options(options map[string]interface{}) (*Options, error) {
-	var opt Options
-	err := mapstructure.Decode(options, &opt)
+	var opts Options
+	err := mapstructure.Decode(options, &opts)
 	if err != nil {
 		return nil, err
 	}
-	return &opt, nil
+	return &opts, nil
 }
 
-func validateOptions(options *Options) error {
-	if errs := validate(options); len(errs) != 0 {
+func validateOptions(opts *Options) error {
+	if errs := validate(opts); len(errs) != 0 {
 		for _, e := range errs {
-			log.Errorf("Param error: %s.", e)
+			log.Errorf("Options error: %s.", e)
 		}
-		return fmt.Errorf("params are illegal")
+		return fmt.Errorf("opts are illegal")
 	}
 	return nil
 }

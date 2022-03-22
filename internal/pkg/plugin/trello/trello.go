@@ -22,20 +22,20 @@ type TrelloItemId struct {
 }
 
 // CreateTrelloItems create board, and lists will be created automatically
-func CreateTrelloBoard(options *Options) (*TrelloItemId, error) {
+func CreateTrelloBoard(opts *Options) (*TrelloItemId, error) {
 	c, err := trello.NewClient()
 	if err != nil {
 		return nil, err
 	}
 
-	exist, err := c.CheckBoardExists(options.Owner, options.Repo, options.KanbanBoardName)
+	exist, err := c.CheckBoardExists(opts.Owner, opts.Repo, opts.KanbanBoardName)
 	if err != nil {
 		return nil, err
 	}
 
 	if exist {
-		log.Infof("Board already exists, owner: %s, repo: %s, kanbanName: %s.", options.Owner, options.Repo, options.KanbanBoardName)
-		listIds, err := c.GetBoardIdAndListId(options.Owner, options.Repo, options.KanbanBoardName)
+		log.Infof("Board already exists, owner: %s, repo: %s, kanbanName: %s.", opts.Owner, opts.Repo, opts.KanbanBoardName)
+		listIds, err := c.GetBoardIdAndListId(opts.Owner, opts.Repo, opts.KanbanBoardName)
 		if err != nil {
 			return nil, err
 		}
@@ -47,7 +47,7 @@ func CreateTrelloBoard(options *Options) (*TrelloItemId, error) {
 		}, nil
 	}
 
-	board, err := c.CreateBoard(options.KanbanBoardName, options.Owner, options.Repo)
+	board, err := c.CreateBoard(opts.KanbanBoardName, opts.Owner, opts.Repo)
 	if err != nil {
 		return nil, err
 	}
@@ -81,10 +81,10 @@ func CreateTrelloBoard(options *Options) (*TrelloItemId, error) {
 }
 
 // DeleteTrelloBoard delete specified board
-func DeleteTrelloBoard(options *Options) error {
+func DeleteTrelloBoard(opts *Options) error {
 	c, err := trello.NewClient()
 	if err != nil {
 		return err
 	}
-	return c.CheckAndDeleteBoard(options.Owner, options.Repo, options.KanbanBoardName)
+	return c.CheckAndDeleteBoard(opts.Owner, opts.Repo, opts.KanbanBoardName)
 }
