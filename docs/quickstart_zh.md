@@ -2,7 +2,7 @@
 
 > 中文 | [English](./quickstart_en.md)
 
-## 1. 下载 DevStream (`dtm`)
+## 1 下载 DevStream (`dtm`)
 
 根据你的实际环境从 [DevStream Releases](https://github.com/merico-dev/stream/releases) 下载合适的 `dtm` 版本。
 
@@ -10,7 +10,7 @@
 
 > 一旦下载完成，你就可以将 dtm 文件放到任何目录下运行了。当然更加建议你将 dtm 加到 PATH 下(比如 `/usr/local/bin`)。
 
-## 2. 准备一个配置文件
+## 2 准备一个配置文件
 
 将 [examples/quickstart.yaml](../examples/quickstart.yaml) 文件拷贝到你到工作目录下，然后重命名成 `config.yaml`：
 
@@ -38,7 +38,7 @@ export GITHUB_TOKEN="YOUR_GITHUB_TOKEN_HERE"
 
 如果你不知道怎么创建一个 GitHub token 可以看下[官方文档](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) 。
 
-## 3. 初始化
+## 3 初始化
 
 运行：
 
@@ -62,7 +62,7 @@ dtm init -f config.yaml
 
 这一步会根据配置文件来下载需要的插件。
 
-## 4. 开始执行
+## 4 开始执行
 
 运行：
 
@@ -97,12 +97,12 @@ Enter a value (Default is n): y
 2022-03-04 12:09:26 ✔ [SUCCESS]  All plugins applied successfully.
 2022-03-04 12:09:26 ✔ [SUCCESS]  Apply finished.
 ```
-## 5. 检查结果
+## 5 检查结果
 
 登录你自己的 GitHub 账户，然后你可以看到一个新的名字叫做 "go-webapp-devstream-demo" 的项目已经被创建出来了，
 而且里面已经有了一些 Golang 的 web 应用脚手架代码。另外你还可以看到用于构建这个应用的一些 GitHub Actions 也已经被配置好了。酷吧？
 
-## 6. 清理
+## 6 清理
 
 运行：
 

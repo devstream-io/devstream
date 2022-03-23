@@ -154,7 +154,7 @@ func changesForDelete(smgr statemanager.Manager, cfg *configloader.Config) []*Ch
 	return changes
 }
 
-// changesForForceDelete  for force delete from config, ignore state file
+// changesForForceDelete for force delete from config, ignore state file
 func changesForForceDelete(smgr statemanager.Manager, cfg *configloader.Config) []*Change {
 	changes := make([]*Change, 0)
 
