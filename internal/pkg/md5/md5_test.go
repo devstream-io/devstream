@@ -1,4 +1,4 @@
-package version
+package md5
 
 import (
 	"fmt"
@@ -15,7 +15,7 @@ func TestValidateFileMatchMD5(t *testing.T) {
 	md5FileName, err := createFileAndMD5File(fileName)
 	assert.NoError(t, err)
 
-	exist, err := ValidateFileMatchMD5(fileName, md5FileName)
+	exist, err := FileMatchesMD5(fileName, md5FileName)
 	assert.NoError(t, err)
 	assert.True(t, exist)
 
@@ -32,7 +32,7 @@ func TestValidateFileMatchMD5NotExist(t *testing.T) {
 	md5FileName, err := createFileAndMD5File(fileName)
 	assert.NoError(t, err)
 
-	exist, err := ValidateFileMatchMD5(fileName, md5FileName)
+	exist, err := FileMatchesMD5(fileName, md5FileName)
 	assert.NoError(t, err)
 	assert.True(t, exist)
 }

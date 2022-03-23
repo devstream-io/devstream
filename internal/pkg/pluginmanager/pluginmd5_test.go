@@ -9,10 +9,10 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/merico-dev/stream/internal/pkg/configloader"
-	md5helper "github.com/merico-dev/stream/pkg/util/md5"
+	md5helper "github.com/merico-dev/stream/internal/pkg/md5"
 )
 
-// TestCheckLocalPlugins test plguin .so matches dtm core md5
+// TestCheckLocalPlugins tests plguin .so matches md5
 func TestCheckLocalPlugins(t *testing.T) {
 	viper.Set("plugin-dir", "./")
 
@@ -52,7 +52,7 @@ func TestCheckPluginMismatch(t *testing.T) {
 	err = createNewFile(fileMD5)
 	assert.NoError(t, err)
 
-	err = checkPluginMismatch(viper.GetString("plugin-dir"), file, fileMD5, tools[0].Name)
+	err = pluginAndMD5Matches(viper.GetString("plugin-dir"), file, fileMD5, tools[0].Name)
 	expectErrMsg := fmt.Sprintf("plugin %s doesn't match with .md5", tools[0].Name)
 	assert.EqualError(t, err, expectErrMsg)
 }

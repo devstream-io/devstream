@@ -36,6 +36,8 @@ func (pd *PbDownloadClient) download(pluginsDir, pluginFilename, version string)
 	}
 
 	downloadURL := fmt.Sprintf("%s/v%s/%s", defaultReleaseUrl, version, pluginFilename)
+	log.Debugf("downloading url is: %s.", downloadURL)
+
 	tmpName := pluginFilename + ".tmp"
 
 	pd.Timeout = time.Second * 60 * 60
@@ -59,7 +61,6 @@ func (pd *PbDownloadClient) download(pluginsDir, pluginFilename, version string)
 			log.Error(errSetup)
 			return errSetup
 		}
-		log.Successf("[%s] download succeeded.", pluginFilename)
 	} else {
 		log.Errorf("[%s] download failed, %s.", pluginFilename, resp.Status)
 		if err = os.Remove(filepath.Join(pluginsDir, tmpName)); err != nil {

@@ -1,4 +1,4 @@
-package version
+package md5
 
 import (
 	"crypto/md5"
