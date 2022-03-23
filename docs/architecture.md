@@ -2,7 +2,7 @@
 
 This document summarizes the main components of DevStream and how data flows between these components.
 
-## 0. Data Flow
+## 0 Data Flow
 
 The following diagram shows an approximation of how DevStream executes a user command:
 
@@ -14,7 +14,7 @@ There are three major parts:
 - `pluginengine`: the plugin engine, which achieves the core functionalities by calling other modules (`configloader`, `pluginmanager`, `statemanager`, etc.)
 - plugins: implements the actual CRUD interfaces for a certain DevOps tool
 
-## 1. CLI (The `devstream` Package)
+## 1 CLI (The `devstream` Package)
 
 Note: for simplicity, the CLI is named `dtm`(DevOps Tool Manager) instead of the full name DevStream.
 
@@ -28,7 +28,7 @@ Then it calls the `pluginmanager` to download the required plugins.
 
 After that, the `pluginengine` calls the state manager to calculate "changes" between the congfig, the state, and the actual DevOps tool's status. At last, the `pluginengine` executes actions according to the changes, and updates the state. During the execution, the `pluginengine` loads each plugin (`*.so` file) and calls the predefined interface according to each change.
 
-## 2. Plugin Engine
+## 2 Plugin Engine
 
 The `pluginengine` has various responsibilities:
 
@@ -54,7 +54,7 @@ The [`statemanager`](https://github.com/merico-dev/stream/blob/main/internal/pkg
 
 The `statemanager` stores the state in a [`backend`](https://github.com/merico-dev/stream/blob/main/internal/pkg/backend/backend.go).
 
-## 3. Plugin
+## 3 Plugin
 
 A _plugin_ implements the aforementioned, predefined interfaces.
 

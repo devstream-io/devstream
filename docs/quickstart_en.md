@@ -1,6 +1,6 @@
 # Quick Start
 
-## 1. Download DevStream (`dtm`)
+## 1 Download DevStream (`dtm`)
 
 Download the appropriate `dtm` version for your platform from [DevStream Releases](https://github.com/merico-dev/stream/releases).
 
@@ -8,7 +8,7 @@ Download the appropriate `dtm` version for your platform from [DevStream Release
 
 > Once downloaded, you can run the binary from anywhere. Ideally, you want to put it in a place that is in your PATH (e.g., `/usr/local/bin`).
 
-## 2. Prepare a Config File
+## 2 Prepare a Config File
 
 Copy the [examples/quickstart.yaml](../examples/quickstart.yaml) to your working directory and rename it to `config.yaml`:
 
@@ -36,7 +36,7 @@ export GITHUB_TOKEN="YOUR_GITHUB_TOKEN_HERE"
 
 If you don't know how to create a GitHub token, check out [the official document here](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).
 
-## 3. Initialize
+## 3 Initialize
 
 Run:
 
@@ -60,7 +60,7 @@ and you should see similar output to:
 
 This step downloads the required plugins according to the config file.
 
-## 4. Apply
+## 4 Apply
 
 Run:
 
@@ -95,11 +95,11 @@ Enter a value (Default is n): y
 2022-03-04 12:09:26 ✔ [SUCCESS]  All plugins applied successfully.
 2022-03-04 12:09:26 ✔ [SUCCESS]  Apply finished.
 ```
-## 5. Check the Results
+## 5 Check the Results
 
 Go to your GitHub account, and we can see a new repo named "go-webapp-devstream-demo" has been created; there are some Golang web app scaffolding lying around already, and the GitHub Actions for building the app is also ready. Hooray!
 
-## 6. Clean Up
+## 6 Clean Up
 
 Run:
 

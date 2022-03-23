@@ -8,10 +8,11 @@ maxdepth: 1
 ---
 overview
 quickstart_en
-core_concept
+architecture
+core_concepts
+commands_explained
 development_workflow
 project_layout
-architecture
 creating_a_plugin
 roadmap
 Releases ⧉ <https://github.com/merico-dev/stream/releases>
