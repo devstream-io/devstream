@@ -107,10 +107,6 @@ For other plugins, checkout the [docs/plugins](./docs/plugins/) folder for detai
 
 ## Run
 
-_Please make sure the following tips before running_
-- If you debug and develop dtm core locally, then the plugin also needs to be built locally, not init.
-- if you want to use this init, please make sure that dtm is downloaded from release rather than self-compiled.
-
 To apply the config, run:
 
 ```bash

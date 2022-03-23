@@ -76,9 +76,6 @@ Run:
 dtm init -f config.yaml
 ```
 
-This step downloads the required plugins according to the config file.
-If your dtm does not match the remote dtm, you will not be able to download plugins.
-
 ## 4. Apply
 
 Run:
