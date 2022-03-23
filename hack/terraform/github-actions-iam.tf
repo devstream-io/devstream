@@ -11,6 +11,13 @@ data "aws_iam_policy_document" "githubactions" {
     ]
     resources = ["${module.cluster.cluster_arn}"]
   }
+
+  statement {
+    actions = [
+      "sts:TagSession",
+    ]
+    resources = ["*"]
+  }
 }
 
 resource "aws_iam_user_policy" "githubactions" {
