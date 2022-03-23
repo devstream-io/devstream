@@ -143,10 +143,9 @@ resource "aws_iam_user" "devstream" {
 resource "aws_iam_user_login_profile" "devstream" {
   for_each = toset(local.users)
 
-  user                    = aws_iam_user.devstream[each.key].name
-  password_reset_required = true
+  user = aws_iam_user.devstream[each.key].name
+  # password_reset_required = true
 }
-
 
 output "users" {
   value = {
