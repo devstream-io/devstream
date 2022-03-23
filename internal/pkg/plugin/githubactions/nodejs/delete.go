@@ -8,14 +8,14 @@ import (
 
 // Delete remove GitHub Actions workflows.
 func Delete(options map[string]interface{}) (bool, error) {
-	opt, err := parseAndValidateOptions(options)
+	opts, err := parseAndValidateOptions(options)
 	if err != nil {
 		return false, err
 	}
 
 	ghOptions := &github.Option{
-		Owner:    opt.Owner,
-		Repo:     opt.Repo,
+		Owner:    opts.Owner,
+		Repo:     opts.Repo,
 		NeedAuth: true,
 	}
 	ghClient, err := github.NewClient(ghOptions)
@@ -23,10 +23,10 @@ func Delete(options map[string]interface{}) (bool, error) {
 		return false, err
 	}
 
-	log.Debugf("Language is %s.", ga.GetLanguage(opt.Language))
+	log.Debugf("Language is %s.", ga.GetLanguage(opts.Language))
 
 	for _, pipeline := range workflows {
-		err := ghClient.DeleteWorkflow(pipeline, opt.Branch)
+		err := ghClient.DeleteWorkflow(pipeline, opts.Branch)
 		if err != nil {
 			return false, err
 		}

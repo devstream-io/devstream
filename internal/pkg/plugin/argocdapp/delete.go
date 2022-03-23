@@ -11,24 +11,24 @@ import (
 )
 
 func Delete(options map[string]interface{}) (bool, error) {
-	var param Param
+	var opts Options
 
 	// decode input parameters into a struct
-	err := mapstructure.Decode(options, &param)
+	err := mapstructure.Decode(options, &opts)
 	if err != nil {
 		return false, err
 	}
 
 	// validate parameters
-	if errs := validateParams(&param); len(errs) != 0 {
+	if errs := validateOptions(&opts); len(errs) != 0 {
 		for _, e := range errs {
-			log.Errorf("Param error: %s.", e)
+			log.Errorf("Options error: %s.", e)
 		}
-		return false, fmt.Errorf("params are illegal")
+		return false, fmt.Errorf("opts are illegal")
 	}
 
 	// render an ArgoCD App YAML file based on inputs and template
-	if err = writeContentToTmpFile(argoCDAppYAMLFile, argoCDAppTemplate, &param); err != nil {
+	if err = writeContentToTmpFile(argoCDAppYAMLFile, argoCDAppTemplate, &opts); err != nil {
 		return false, err
 	}
 

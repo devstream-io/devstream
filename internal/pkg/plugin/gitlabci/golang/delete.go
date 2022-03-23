@@ -3,7 +3,7 @@ package golang
 import "github.com/merico-dev/stream/pkg/util/gitlab"
 
 func Delete(options map[string]interface{}) (bool, error) {
-	opt, err := parseAndValidateOptions(options)
+	opts, err := parseAndValidateOptions(options)
 	if err != nil {
 		return false, err
 	}
@@ -13,7 +13,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 		return false, err
 	}
 
-	if err = client.DeleteSingleFile(opt.PathWithNamespace, opt.Branch, commitMessage, ciFileName); err != nil {
+	if err = client.DeleteSingleFile(opts.PathWithNamespace, opts.Branch, commitMessage, ciFileName); err != nil {
 		return false, err
 	}
 

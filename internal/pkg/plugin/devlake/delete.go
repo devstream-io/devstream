@@ -11,10 +11,10 @@ import (
 )
 
 func Delete(options map[string]interface{}) (bool, error) {
-	var param Param
+	var opts Options
 
 	// decode input parameters into a struct
-	err := mapstructure.Decode(options, &param)
+	err := mapstructure.Decode(options, &opts)
 	if err != nil {
 		return false, err
 	}

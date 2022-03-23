@@ -19,20 +19,20 @@ type Options struct {
 }
 
 func parseAndValidateOptions(options map[string]interface{}) (*Options, error) {
-	var opt Options
-	err := mapstructure.Decode(options, &opt)
+	var opts Options
+	err := mapstructure.Decode(options, &opts)
 	if err != nil {
 		return nil, err
 	}
 
-	if errs := validateParameters(&opt); len(errs) != 0 {
+	if errs := validateParameters(&opts); len(errs) != 0 {
 		for _, e := range errs {
-			log.Errorf("Param error: %s.", e)
+			log.Errorf("Options error: %s.", e)
 		}
-		return nil, fmt.Errorf("incorrect params")
+		return nil, fmt.Errorf("opts are illegal")
 	}
 
-	return &opt, nil
+	return &opts, nil
 }
 
 func validateParameters(param *Options) []error {
@@ -49,9 +49,9 @@ func validateParameters(param *Options) []error {
 	return retErrors
 }
 
-func buildState(opt *Options) map[string]interface{} {
+func buildState(opts *Options) map[string]interface{} {
 	return map[string]interface{}{
-		"pathWithNamespace": opt.PathWithNamespace,
-		"branch":            opt.Branch,
+		"pathWithNamespace": opts.PathWithNamespace,
+		"branch":            opts.Branch,
 	}
 }

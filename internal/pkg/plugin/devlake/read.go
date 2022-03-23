@@ -9,10 +9,10 @@ const (
 )
 
 func Read(options map[string]interface{}) (map[string]interface{}, error) {
-	var param Param
+	var opts Options
 
 	// decode input parameters into a struct
-	err := mapstructure.Decode(options, &param)
+	err := mapstructure.Decode(options, &opts)
 	if err != nil {
 		return nil, err
 	}

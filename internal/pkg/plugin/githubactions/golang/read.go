@@ -7,14 +7,14 @@ import (
 )
 
 func Read(options map[string]interface{}) (map[string]interface{}, error) {
-	opt, err := parseAndValidateOptions(options)
+	opts, err := parseAndValidateOptions(options)
 	if err != nil {
 		return nil, err
 	}
 
 	ghOptions := &github.Option{
-		Owner:    opt.Owner,
-		Repo:     opt.Repo,
+		Owner:    opts.Owner,
+		Repo:     opts.Repo,
 		NeedAuth: true,
 	}
 	ghClient, err := github.NewClient(ghOptions)
@@ -31,7 +31,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, nil
 	}
 
-	log.Debugf("Language is: %s.", ga.GetLanguage(opt.Language))
+	log.Debugf("Language is: %s.", ga.GetLanguage(opts.Language))
 
 	return ga.BuildReadState(path), nil
 }

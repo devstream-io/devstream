@@ -20,7 +20,7 @@ var devLakeDeployments = [4]string{
 	"devlake",
 }
 
-func buildState(p Param) map[string]interface{} {
+func buildState(opts Options) map[string]interface{} {
 	res := make(map[string]interface{})
 
 	res["deployments"] = make(map[string]interface{})

@@ -6,14 +6,14 @@ import (
 
 // Delete remove jira-github-integ workflows.
 func Delete(options map[string]interface{}) (bool, error) {
-	opt, err := parseAndValidateOptions(options)
+	opts, err := parseAndValidateOptions(options)
 	if err != nil {
 		return false, err
 	}
 
 	ghOptions := &github.Option{
-		Owner:    opt.Owner,
-		Repo:     opt.Repo,
+		Owner:    opts.Owner,
+		Repo:     opts.Repo,
 		NeedAuth: true,
 	}
 	ghClient, err := github.NewClient(ghOptions)
@@ -21,7 +21,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 		return false, err
 	}
 
-	if err := ghClient.DeleteWorkflow(workflow, opt.Branch); err != nil {
+	if err := ghClient.DeleteWorkflow(workflow, opts.Branch); err != nil {
 		return false, err
 	}
 

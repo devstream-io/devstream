@@ -17,19 +17,19 @@ const (
 )
 
 func Read(options map[string]interface{}) (map[string]interface{}, error) {
-	var param Param
-	if err := mapstructure.Decode(options, &param); err != nil {
+	var opts Options
+	if err := mapstructure.Decode(options, &opts); err != nil {
 		return nil, err
 	}
 
-	if errs := validate(&param); len(errs) != 0 {
+	if errs := validate(&opts); len(errs) != 0 {
 		for _, e := range errs {
-			log.Errorf("Param error: %s.", e)
+			log.Errorf("Options error: %s.", e)
 		}
-		return nil, fmt.Errorf("params are illegal")
+		return nil, fmt.Errorf("opts are illegal")
 	}
 
-	namespace := param.Chart.Namespace
+	namespace := opts.Chart.Namespace
 	if namespace == "" {
 		namespace = ArgocdDefaultNamespace
 	}

@@ -19,45 +19,45 @@ type Options struct {
 }
 
 // validate validates the options provided by the core.
-func validate(param *Options) []error {
+func validate(opts *Options) []error {
 	retErrors := make([]error, 0)
 
 	// owner/repo/branch
-	if param.Owner == "" {
+	if opts.Owner == "" {
 		retErrors = append(retErrors, fmt.Errorf("owner is empty"))
 	}
-	if param.Repo == "" {
+	if opts.Repo == "" {
 		retErrors = append(retErrors, fmt.Errorf("repo is empty"))
 	}
-	if param.Branch == "" {
+	if opts.Branch == "" {
 		retErrors = append(retErrors, fmt.Errorf("branch is empty"))
 	}
 
 	// language
-	if param.Language == nil {
+	if opts.Language == nil {
 		retErrors = append(retErrors, fmt.Errorf("language is empty"))
 	}
-	if errs := param.Language.Validate(); len(errs) != 0 {
+	if errs := opts.Language.Validate(); len(errs) != 0 {
 		for _, e := range errs {
 			retErrors = append(retErrors, fmt.Errorf("language is invalid: %s", e))
 		}
 	}
 
 	// jobs
-	if param.Test == nil {
+	if opts.Test == nil {
 		retErrors = append(retErrors, fmt.Errorf("test is empty"))
 	}
-	if errs := param.Test.Validate(); len(errs) != 0 {
+	if errs := opts.Test.Validate(); len(errs) != 0 {
 		for _, e := range errs {
 			retErrors = append(retErrors, fmt.Errorf("test is invalid: %s", e))
 		}
 	}
 
-	if param.Docker == nil {
+	if opts.Docker == nil {
 		return retErrors
 	}
 
-	if errs := param.Docker.Validate(); len(errs) != 0 {
+	if errs := opts.Docker.Validate(); len(errs) != 0 {
 		for _, e := range errs {
 			retErrors = append(retErrors, fmt.Errorf("docker is invalid: %s", e))
 		}

@@ -11,25 +11,25 @@ import (
 
 // Delete uninstalls github-repo-scaffolding-golang with provided options.
 func Delete(options map[string]interface{}) (bool, error) {
-	var param Param
-	if err := mapstructure.Decode(options, &param); err != nil {
+	var opts Options
+	if err := mapstructure.Decode(options, &opts); err != nil {
 		return false, err
 	}
 
-	if errs := validate(&param); len(errs) != 0 {
+	if errs := validate(&opts); len(errs) != 0 {
 		for _, e := range errs {
-			log.Errorf("Param error: %s.", e)
+			log.Errorf("Options error: %s.", e)
 		}
-		return false, fmt.Errorf("params are illegal")
+		return false, fmt.Errorf("opts are illegal")
 	}
 
-	return uninstall(&param)
+	return uninstall(&opts)
 }
 
-func uninstall(param *Param) (bool, error) {
+func uninstall(opts *Options) (bool, error) {
 	ghOptions := &github.Option{
-		Owner:    param.Owner,
-		Repo:     param.Repo,
+		Owner:    opts.Owner,
+		Repo:     opts.Repo,
 		NeedAuth: true,
 	}
 

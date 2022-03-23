@@ -2,16 +2,16 @@ package trello
 
 func Read(options map[string]interface{}) (map[string]interface{}, error) {
 
-	var opt *Options
+	var opts *Options
 	var err error
 
-	if opt, err = convertMap2Options(options); err != nil {
+	if opts, err = convertMap2Options(options); err != nil {
 		return nil, err
 	}
 
-	if err := validateOptions(opt); err != nil {
+	if err := validateOptions(opts); err != nil {
 		return nil, err
 	}
 
-	return buildReadState(opt)
+	return buildReadState(opts)
 }

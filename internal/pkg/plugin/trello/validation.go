@@ -2,14 +2,14 @@ package trello
 
 import "fmt"
 
-func validate(param *Options) []error {
+func validate(opts *Options) []error {
 	retErrors := make([]error, 0)
 
 	// owner/repo/branch
-	if param.Owner == "" {
+	if opts.Owner == "" {
 		retErrors = append(retErrors, fmt.Errorf("owner is empty"))
 	}
-	if param.Repo == "" {
+	if opts.Repo == "" {
 		retErrors = append(retErrors, fmt.Errorf("repo is empty"))
 	}
 

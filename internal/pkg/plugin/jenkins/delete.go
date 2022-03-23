@@ -13,19 +13,19 @@ import (
 
 // Delete deletes jenkins with provided options.
 func Delete(options map[string]interface{}) (bool, error) {
-	var param Param
-	if err := mapstructure.Decode(options, &param); err != nil {
+	var opts Options
+	if err := mapstructure.Decode(options, &opts); err != nil {
 		return false, err
 	}
 
-	if errs := validate(&param); len(errs) != 0 {
+	if errs := validate(&opts); len(errs) != 0 {
 		for _, e := range errs {
-			log.Errorf("Param error: %s.", e)
+			log.Errorf("Options error: %s.", e)
 		}
-		return false, fmt.Errorf("params are illegal")
+		return false, fmt.Errorf("opts are illegal")
 	}
 
-	h, err := helm.NewHelm(param.GetHelmParam())
+	h, err := helm.NewHelm(opts.GetHelmParam())
 	if err != nil {
 		return false, err
 	}
@@ -35,7 +35,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 		return false, err
 	}
 
-	if err := dealWithNsWhenDelete(&param); err != nil {
+	if err := dealWithNsWhenDelete(&opts); err != nil {
 		return false, err
 	}
 
@@ -47,8 +47,8 @@ func Delete(options map[string]interface{}) (bool, error) {
 	return true, nil
 }
 
-func dealWithNsWhenDelete(param *Param) error {
-	if !param.CreateNamespace {
+func dealWithNsWhenDelete(opts *Options) error {
+	if !opts.CreateNamespace {
 		return nil
 	}
 
@@ -57,5 +57,5 @@ func dealWithNsWhenDelete(param *Param) error {
 		return err
 	}
 
-	return kubeClient.DeleteNamespace(param.Chart.Namespace)
+	return kubeClient.DeleteNamespace(opts.Chart.Namespace)
 }
