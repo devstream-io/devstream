@@ -58,7 +58,9 @@ and you should see similar output to:
 2022-03-04 12:08:20 ✔ [SUCCESS]  Initialize finished.
 ```
 
-This step downloads the required plugins according to the config file.
+- This step downloads the required plugins according to the config file.
+- If your dtm does not match the remote, you will not be able to download plugins.
+- So if you want to use this function, please make sure that dtm is downloaded from release rather than self-compiled.
 
 ## 4. Apply
 
