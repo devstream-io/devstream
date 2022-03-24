@@ -58,7 +58,9 @@ and you should see similar output to:
 2022-03-04 12:08:20 ✔ [SUCCESS]  Initialize finished.
 ```
 
-This step downloads the required plugins according to the config file.
+This step verifies the MD5 sum of your dtm binary, downloads the required plugins according to the config file, and verifies the plugins' MD5 sums as well.
+
+Note: if your dtm binary's MD5 sum doesn't match the MD5 sum from our release page, dtm init will stop. If your local dtm MD5 differs, it indicates that you built the binary yourself (for developing purposes, for example). Due to the nature of the Go plugin, dtm must be built together with the corresponding plugins. So, if you are building dtm, you should also build the plugins as well, in which case, you do not need to run dtm init to download the plugins.
 
 ## 4 Apply
 

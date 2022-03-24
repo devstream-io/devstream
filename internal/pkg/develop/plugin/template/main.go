@@ -16,23 +16,23 @@ const NAME = "{{ .Name }}"
 type Plugin string
 
 // Create implements the create of {{ .Name }}.
-func (p Plugin) Create(params map[string]interface{}) (map[string]interface{}, error) {
-	return {{ .Name }}.Create(params)
+func (p Plugin) Create(options map[string]interface{}) (map[string]interface{}, error) {
+	return {{ .Name }}.Create(options)
 }
 
 // Update implements the update of {{ .Name }}.
-func (p Plugin) Update(params map[string]interface{}) (map[string]interface{}, error) {
-	return {{ .Name }}.Update(params)
+func (p Plugin) Update(options map[string]interface{}) (map[string]interface{}, error) {
+	return {{ .Name }}.Update(options)
 }
 
 // Delete implements the delete of {{ .Name }}.
-func (p Plugin) Delete(params map[string]interface{}) (bool, error) {
-	return {{ .Name }}.Delete(params)
+func (p Plugin) Delete(options map[string]interface{}) (bool, error) {
+	return {{ .Name }}.Delete(options)
 }
 
 // Read implements the read of {{ .Name }}.
-func (p Plugin) Read(params map[string]interface{}) (map[string]interface{}, error) {
-	return {{ .Name }}.Read(params)
+func (p Plugin) Read(options map[string]interface{}) (map[string]interface{}, error) {
+	return {{ .Name }}.Read(options)
 }
 
 // DevStreamPlugin is the exported variable used by the DevStream core.

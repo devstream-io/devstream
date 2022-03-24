@@ -1,13 +1,19 @@
 package nodejs
 
 import (
-	ga "github.com/merico-dev/stream/internal/pkg/plugin/githubactions"
+	"fmt"
+
+	"github.com/mitchellh/mapstructure"
+
+	"github.com/merico-dev/stream/internal/pkg/plugin/githubactions"
 	"github.com/merico-dev/stream/pkg/util/github"
 	"github.com/merico-dev/stream/pkg/util/log"
 )
 
 func Read(options map[string]interface{}) (map[string]interface{}, error) {
-	opts, err := parseAndValidateOptions(options)
+	var opts Options
+
+	err := mapstructure.Decode(options, &opts)
 	if err != nil {
 		return nil, err
 	}
@@ -16,6 +22,13 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 		Owner:    opts.Owner,
 		Repo:     opts.Repo,
 		NeedAuth: true,
+	}
+
+	if errs := validate(&opts); len(errs) != 0 {
+		for _, e := range errs {
+			log.Errorf("Options error: %s.", e)
+		}
+		return nil, fmt.Errorf("opts are illegal")
 	}
 	ghClient, err := github.NewClient(ghOptions)
 	if err != nil {
@@ -31,7 +44,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, nil
 	}
 
-	log.Debugf("Language is: %s.", ga.GetLanguage(opts.Language))
+	log.Debugf("Language is: %s.", githubactions.GetLanguage(opts.Language))
 
-	return ga.BuildReadState(path), nil
+	return githubactions.BuildReadState(path), nil
 }

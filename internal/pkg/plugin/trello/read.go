@@ -9,6 +9,7 @@ import (
 )
 
 func Read(options map[string]interface{}) (map[string]interface{}, error) {
+
 	var opts Options
 	if err := mapstructure.Decode(options, &opts); err != nil {
 		return nil, err

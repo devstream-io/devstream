@@ -36,6 +36,8 @@ func (pd *PbDownloadClient) download(pluginsDir, pluginFilename, version string)
 	}
 
 	downloadURL := fmt.Sprintf("%s/v%s/%s", defaultReleaseUrl, version, pluginFilename)
+	log.Debugf("Downloading url is: %s.", downloadURL)
+
 	tmpName := pluginFilename + ".tmp"
 
 	pd.Timeout = time.Second * 60 * 60
@@ -59,15 +61,12 @@ func (pd *PbDownloadClient) download(pluginsDir, pluginFilename, version string)
 			log.Error(errSetup)
 			return errSetup
 		}
-		log.Successf("[%s] download succeeded.", pluginFilename)
 	} else {
 		log.Errorf("[%s] download failed, %s.", pluginFilename, resp.Status)
 		if err = os.Remove(filepath.Join(pluginsDir, tmpName)); err != nil {
-			return err
+			log.Errorf("Remove [%s] failed, %s.", filepath.Join(pluginsDir, tmpName), err)
 		}
-		err = fmt.Errorf("downloading plugin %s from %s status code %d", pluginFilename, downloadURL, resp.StatusCode)
-		log.Error(err)
-		return err
+		return fmt.Errorf("downloading %s from %s status code %d", pluginFilename, downloadURL, resp.StatusCode)
 	}
 
 	// rename, tmp file to real file
@@ -114,24 +113,4 @@ func createPathIfNotExists(path string) error {
 		return err
 	}
 	return nil
-}
-
-// fetchContentMD5 get Content-MD5
-func (pd *PbDownloadClient) fetchContentMD5(pluginFilename, version string) (string, error) {
-	downloadURL := fmt.Sprintf("%s/v%s/%s", defaultReleaseUrl, version, pluginFilename)
-	pd.Timeout = time.Second * 60 * 60
-
-	resp, err := pd.Get(downloadURL)
-	if err != nil {
-		return "", err
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode == http.StatusOK {
-		log.Successf("[%s] check success.", pluginFilename)
-		return resp.Header.Get("Content-MD5"), nil
-	} else {
-		log.Errorf("[%s] check failed, %s.", pluginFilename, resp.Status)
-		return "", err
-	}
 }

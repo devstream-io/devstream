@@ -21,7 +21,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	}
 
 	// validate parameters
-	if errs := validateOptions(&opts); len(errs) != 0 {
+	if errs := validate(&opts); len(errs) != 0 {
 		for _, e := range errs {
 			log.Errorf("Options error: %s.", e)
 		}
@@ -44,5 +44,5 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	}
 
 	// build state & return results
-	return buildState(opts), nil
+	return buildState(&opts), nil
 }
