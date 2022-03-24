@@ -36,7 +36,7 @@ func writeContentToTmpFile(file string, content string, opts *Options) error {
 	return nil
 }
 
-func buildState(opts Options) map[string]interface{} {
+func buildState(opts *Options) map[string]interface{} {
 	res := make(map[string]interface{})
 
 	res["app"] = map[string]interface{}{

@@ -1,14 +1,20 @@
 package nodejs
 
 import (
-	ga "github.com/merico-dev/stream/internal/pkg/plugin/githubactions"
+	"fmt"
+
+	"github.com/mitchellh/mapstructure"
+
+	"github.com/merico-dev/stream/internal/pkg/plugin/githubactions"
 	"github.com/merico-dev/stream/pkg/util/github"
 	"github.com/merico-dev/stream/pkg/util/log"
 )
 
 // Update remove and set up GitHub Actions workflows.
 func Update(options map[string]interface{}) (map[string]interface{}, error) {
-	opts, err := parseAndValidateOptions(options)
+	var opts Options
+
+	err := mapstructure.Decode(options, &opts)
 	if err != nil {
 		return nil, err
 	}
@@ -18,12 +24,19 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 		Repo:     opts.Repo,
 		NeedAuth: true,
 	}
+
+	if errs := validate(&opts); len(errs) != 0 {
+		for _, e := range errs {
+			log.Errorf("Options error: %s.", e)
+		}
+		return nil, fmt.Errorf("opts are illegal")
+	}
 	ghClient, err := github.NewClient(ghOptions)
 	if err != nil {
 		return nil, err
 	}
 
-	log.Debugf("language is %s.", ga.GetLanguage(opts.Language))
+	log.Debugf("language is %s.", githubactions.GetLanguage(opts.Language))
 
 	for _, pipeline := range workflows {
 		err := ghClient.DeleteWorkflow(pipeline, opts.Branch)
@@ -37,5 +50,5 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 		}
 	}
 
-	return ga.BuildState(opts.Owner, opts.Repo), nil
+	return githubactions.BuildState(opts.Owner, opts.Repo), nil
 }

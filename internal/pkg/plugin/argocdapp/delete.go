@@ -20,7 +20,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 	}
 
 	// validate parameters
-	if errs := validateOptions(&opts); len(errs) != 0 {
+	if errs := validate(&opts); len(errs) != 0 {
 		for _, e := range errs {
 			log.Errorf("Options error: %s.", e)
 		}
