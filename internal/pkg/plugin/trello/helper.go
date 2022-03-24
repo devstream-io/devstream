@@ -3,9 +3,6 @@ package trello
 import (
 	"fmt"
 
-	"github.com/mitchellh/mapstructure"
-
-	"github.com/merico-dev/stream/pkg/util/log"
 	"github.com/merico-dev/stream/pkg/util/trello"
 )
 
@@ -45,23 +42,4 @@ func buildReadState(opts *Options) (map[string]interface{}, error) {
 
 	listIds["outputs"] = output
 	return listIds, nil
-}
-
-func convertMap2Options(options map[string]interface{}) (*Options, error) {
-	var opts Options
-	err := mapstructure.Decode(options, &opts)
-	if err != nil {
-		return nil, err
-	}
-	return &opts, nil
-}
-
-func validateOptions(opts *Options) error {
-	if errs := validate(opts); len(errs) != 0 {
-		for _, e := range errs {
-			log.Errorf("Options error: %s.", e)
-		}
-		return fmt.Errorf("opts are illegal")
-	}
-	return nil
 }

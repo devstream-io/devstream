@@ -1,18 +1,28 @@
 package trello
 
+import (
+	"fmt"
+
+	"github.com/mitchellh/mapstructure"
+
+	"github.com/merico-dev/stream/pkg/util/log"
+)
+
 // Delete delete trello board and lists
 func Delete(options map[string]interface{}) (bool, error) {
-	var opts *Options
-	var err error
-
-	if opts, err = convertMap2Options(options); err != nil {
-		return false, err
-	}
-	if err := validateOptions(opts); err != nil {
+	var opts Options
+	if err := mapstructure.Decode(options, &opts); err != nil {
 		return false, err
 	}
 
-	if err = DeleteTrelloBoard(opts); err != nil {
+	if errs := validate(&opts); len(errs) != 0 {
+		for _, e := range errs {
+			log.Errorf("Options error: %s.", e)
+		}
+		return false, fmt.Errorf("opts are illegal")
+	}
+
+	if err := DeleteTrelloBoard(&opts); err != nil {
 		return false, err
 	}
 	return true, nil
