@@ -44,5 +44,5 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	}
 
 	// build state & return results
-	return buildState(opts), nil
+	return buildState(&opts), nil
 }
