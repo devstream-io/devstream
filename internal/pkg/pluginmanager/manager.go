@@ -32,20 +32,26 @@ func DownloadPlugins(conf *configloader.Config) error {
 		pluginFileName := configloader.GetPluginFileName(&tool)
 		pluginMD5FileName := configloader.GetPluginMD5FileName(&tool)
 		// plugin does not exist
-		if _, err := os.Stat(filepath.Join(pluginDir, pluginFileName)); errors.Is(err, os.ErrNotExist) {
-			// download .so file
-			if err := dc.download(pluginDir, pluginFileName, tool.Plugin.Version); err != nil {
-				return err
+		if _, err := os.Stat(filepath.Join(pluginDir, pluginFileName)); err != nil {
+			if errors.Is(err, os.ErrNotExist) {
+				// download .so file
+				if err := dc.download(pluginDir, pluginFileName, tool.Plugin.Version); err != nil {
+					return err
+				}
+				log.Successf("[%s] download succeeded.", pluginFileName)
 			}
-			log.Successf("[%s] download succeeded.", pluginFileName)
+			return err
 		}
 		// .md5 does not exist
-		if _, err := os.Stat(filepath.Join(pluginDir, pluginMD5FileName)); errors.Is(err, os.ErrNotExist) {
-			// download .md5 file
-			if err := dc.download(pluginDir, pluginMD5FileName, tool.Plugin.Version); err != nil {
-				return err
+		if _, err := os.Stat(filepath.Join(pluginDir, pluginMD5FileName)); err != nil {
+			if errors.Is(err, os.ErrNotExist) {
+				// download .md5 file
+				if err := dc.download(pluginDir, pluginMD5FileName, tool.Plugin.Version); err != nil {
+					return err
+				}
+				log.Successf("[%s] download succeeded.", pluginMD5FileName)
 			}
-			log.Successf("[%s] download succeeded.", pluginMD5FileName)
+			return err
 		}
 		// check if the plugin matches with .md5
 		isMD5Match, err := md5.FileMatchesMD5(filepath.Join(pluginDir, pluginFileName), filepath.Join(pluginDir, pluginMD5FileName))
@@ -83,11 +89,17 @@ func CheckLocalPlugins(conf *configloader.Config) error {
 	for _, tool := range conf.Tools {
 		pluginFileName := configloader.GetPluginFileName(&tool)
 		pluginMD5FileName := configloader.GetPluginMD5FileName(&tool)
-		if _, err := os.Stat(filepath.Join(pluginDir, pluginFileName)); errors.Is(err, os.ErrNotExist) {
-			return fmt.Errorf("plugin %s doesn't exist", tool.Name)
+		if _, err := os.Stat(filepath.Join(pluginDir, pluginFileName)); err != nil {
+			if errors.Is(err, os.ErrNotExist) {
+				return fmt.Errorf("plugin %s doesn't exist", tool.Name)
+			}
+			return err
 		}
-		if _, err := os.Stat(filepath.Join(pluginDir, pluginMD5FileName)); errors.Is(err, os.ErrNotExist) {
-			return fmt.Errorf(".md5 file of plugin %s doesn't exist", tool.Name)
+		if _, err := os.Stat(filepath.Join(pluginDir, pluginMD5FileName)); err != nil {
+			if errors.Is(err, os.ErrNotExist) {
+				return fmt.Errorf(".md5 file of plugin %s doesn't exist", tool.Name)
+			}
+			return err
 		}
 
 		if err := pluginAndMD5Matches(pluginDir, pluginFileName, pluginMD5FileName, tool.Name); err != nil {
