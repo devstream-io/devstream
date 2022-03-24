@@ -5,9 +5,9 @@ GOOS=$(shell go env GOOS)
 GOARCH=$(shell go env GOARCH)
 
 ifeq ($(GOOS),linux)
-MD5=md5sum
+  MD5SUM=md5sum
 else
-MD5=md5 -q
+  MD5SUM=md5 -q
 endif
 
 help: ## Display this help.
@@ -42,23 +42,23 @@ build-plugins: fmt vet ## Build dtm plugins only, without core, locally.
 md5: md5-core md5-plugins
 
 md5-core:
-	${MD5} dtm-${GOOS}-${GOARCH} > dtm-${GOOS}-${GOARCH}.md5
+	${MD5SUM} dtm-${GOOS}-${GOARCH} > dtm-${GOOS}-${GOARCH}.md5
 
 md5-plugins:
-	${MD5} .devstream/githubactions-golang-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/githubactions-golang-${GOOS}-${GOARCH}_${VERSION}.md5
-	${MD5} .devstream/githubactions-python-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/githubactions-python-${GOOS}-${GOARCH}_${VERSION}.md5
-	${MD5} .devstream/githubactions-nodejs-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/githubactions-nodejs-${GOOS}-${GOARCH}_${VERSION}.md5
-	${MD5} .devstream/trello-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/trello-${GOOS}-${GOARCH}_${VERSION}.md5
-	${MD5} .devstream/trello-github-integ-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/trello-github-integ-${GOOS}-${GOARCH}_${VERSION}.md5
-	${MD5} .devstream/argocd-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/argocd-${GOOS}-${GOARCH}_${VERSION}.md5
-	${MD5} .devstream/argocdapp-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/argocdapp-${GOOS}-${GOARCH}_${VERSION}.md5
-	${MD5} .devstream/jenkins-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/jenkins-${GOOS}-${GOARCH}_${VERSION}.md5
-	${MD5} .devstream/kube-prometheus-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/kube-prometheus-${GOOS}-${GOARCH}_${VERSION}.md5
-	${MD5} .devstream/github-repo-scaffolding-golang-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/github-repo-scaffolding-golang-${GOOS}-${GOARCH}_${VERSION}.md5
-	${MD5} .devstream/devlake-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/devlake-${GOOS}-${GOARCH}_${VERSION}.md5
-	${MD5} .devstream/gitlabci-golang-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/gitlabci-golang-${GOOS}-${GOARCH}_${VERSION}.md5
-	${MD5} .devstream/jira-github-integ-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/jira-github-integ-${GOOS}-${GOARCH}_${VERSION}.md5
-	${MD5} .devstream/openldap-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/openldap-${GOOS}-${GOARCH}_${VERSION}.md5
+	${MD5SUM} .devstream/githubactions-golang-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/githubactions-golang-${GOOS}-${GOARCH}_${VERSION}.md5
+	${MD5SUM} .devstream/githubactions-python-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/githubactions-python-${GOOS}-${GOARCH}_${VERSION}.md5
+	${MD5SUM} .devstream/githubactions-nodejs-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/githubactions-nodejs-${GOOS}-${GOARCH}_${VERSION}.md5
+	${MD5SUM} .devstream/trello-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/trello-${GOOS}-${GOARCH}_${VERSION}.md5
+	${MD5SUM} .devstream/trello-github-integ-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/trello-github-integ-${GOOS}-${GOARCH}_${VERSION}.md5
+	${MD5SUM} .devstream/argocd-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/argocd-${GOOS}-${GOARCH}_${VERSION}.md5
+	${MD5SUM} .devstream/argocdapp-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/argocdapp-${GOOS}-${GOARCH}_${VERSION}.md5
+	${MD5SUM} .devstream/jenkins-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/jenkins-${GOOS}-${GOARCH}_${VERSION}.md5
+	${MD5SUM} .devstream/kube-prometheus-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/kube-prometheus-${GOOS}-${GOARCH}_${VERSION}.md5
+	${MD5SUM} .devstream/github-repo-scaffolding-golang-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/github-repo-scaffolding-golang-${GOOS}-${GOARCH}_${VERSION}.md5
+	${MD5SUM} .devstream/devlake-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/devlake-${GOOS}-${GOARCH}_${VERSION}.md5
+	${MD5SUM} .devstream/gitlabci-golang-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/gitlabci-golang-${GOOS}-${GOARCH}_${VERSION}.md5
+	${MD5SUM} .devstream/jira-github-integ-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/jira-github-integ-${GOOS}-${GOARCH}_${VERSION}.md5
+	${MD5SUM} .devstream/openldap-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/openldap-${GOOS}-${GOARCH}_${VERSION}.md5
 
 clean: ## Remove local plugins and locally built artifacts.
 	rm -rf .devstream
