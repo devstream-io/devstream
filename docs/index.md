@@ -10,6 +10,7 @@ overview
 quickstart_en
 architecture
 core_concepts
+output
 commands_explained
 development_workflow
 project_layout
