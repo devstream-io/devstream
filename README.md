@@ -156,7 +156,6 @@ To destroy everything, run:
 
 _`dtm` will read the state, then determine which tools are installed, and then remove those tools. It's same as `dtm apply -f empty.yaml` (empty.yaml is an empty config file)._
 
-
 ## Dev Info
 
 ### Source

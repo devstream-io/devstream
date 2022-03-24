@@ -36,7 +36,7 @@ func (pd *PbDownloadClient) download(pluginsDir, pluginFilename, version string)
 	}
 
 	downloadURL := fmt.Sprintf("%s/v%s/%s", defaultReleaseUrl, version, pluginFilename)
-	log.Debugf("downloading url is: %s.", downloadURL)
+	log.Debugf("Downloading url is: %s.", downloadURL)
 
 	tmpName := pluginFilename + ".tmp"
 
@@ -64,11 +64,9 @@ func (pd *PbDownloadClient) download(pluginsDir, pluginFilename, version string)
 	} else {
 		log.Errorf("[%s] download failed, %s.", pluginFilename, resp.Status)
 		if err = os.Remove(filepath.Join(pluginsDir, tmpName)); err != nil {
-			return err
+			log.Errorf("Remove [%s] failed, %s.", filepath.Join(pluginsDir, tmpName), err)
 		}
-		err = fmt.Errorf("downloading plugin %s from %s status code %d", pluginFilename, downloadURL, resp.StatusCode)
-		log.Error(err)
-		return err
+		return fmt.Errorf("downloading %s from %s status code %d", pluginFilename, downloadURL, resp.StatusCode)
 	}
 
 	// rename, tmp file to real file

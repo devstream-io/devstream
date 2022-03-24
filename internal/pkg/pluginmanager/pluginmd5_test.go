@@ -3,59 +3,77 @@ package pluginmanager
 import (
 	"fmt"
 	"os"
-	"testing"
 
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 	"github.com/spf13/viper"
-	"github.com/stretchr/testify/assert"
 
 	"github.com/merico-dev/stream/internal/pkg/configloader"
-	md5helper "github.com/merico-dev/stream/internal/pkg/md5"
+	"github.com/merico-dev/stream/pkg/util/md5"
 )
 
-// TestCheckLocalPlugins tests plguin .so matches md5
-func TestCheckLocalPlugins(t *testing.T) {
-	viper.Set("plugin-dir", "./")
+var _ = Describe("CheckLocalPlugins", func() {
+	var err error
+	var config *configloader.Config
+	var file, fileMD5 string
+	var tools []configloader.Tool
 
-	tools := []configloader.Tool{
-		{Name: "a", Plugin: configloader.Plugin{Kind: "a"}},
-	}
+	Context("MD5", func() {
+		BeforeEach(func() {
+			viper.Set("plugin-dir", "./")
+			tools = []configloader.Tool{
+				{Name: "a", Plugin: configloader.Plugin{Kind: "a"}},
+			}
+			config = &configloader.Config{Tools: tools}
 
-	file := configloader.GetPluginFileName(&tools[0])
-	fileMD5 := configloader.GetPluginMD5FileName(&tools[0])
+			file = configloader.GetPluginFileName(&tools[0])
+			fileMD5 = configloader.GetPluginMD5FileName(&tools[0])
+			err := createNewFile(file)
+			Expect(err).NotTo(HaveOccurred())
+		})
 
-	config := &configloader.Config{Tools: tools}
+		It("CheckLocalPlugins, md5 sum should match .md5 file content", func() {
+			err = addMD5File(file, fileMD5)
+			Expect(err).NotTo(HaveOccurred())
 
-	err := createNewFile(file)
-	assert.NoError(t, err)
+			err = CheckLocalPlugins(config)
+			Expect(err).NotTo(HaveOccurred())
+		})
 
-	err = addMD5File(file, fileMD5)
-	assert.NoError(t, err)
+		It("CheckLocalPlugins, md5 sum should mismatch .md5 file content", func() {
+			err = createNewFile(fileMD5)
+			Expect(err).NotTo(HaveOccurred())
 
-	err = CheckLocalPlugins(config)
-	assert.NoError(t, err)
+			err = CheckLocalPlugins(config)
+			expectErrMsg := fmt.Sprintf("plugin %s doesn't match with .md5", tools[0].Name)
+			Expect(err.Error()).To(Equal(expectErrMsg))
+		})
 
-}
+		It("pluginAndMD5Matches, md5 sum should match .md5 file content", func() {
+			err = addMD5File(file, fileMD5)
+			Expect(err).NotTo(HaveOccurred())
 
-// TestCheckPluginMismatch test checkPluginMismatch error
-func TestCheckPluginMismatch(t *testing.T) {
-	viper.Set("plugin-dir", "./")
+			err = pluginAndMD5Matches(viper.GetString("plugin-dir"), file, fileMD5, tools[0].Name)
+			Expect(err).NotTo(HaveOccurred())
+		})
 
-	tools := []configloader.Tool{
-		{Name: "c", Plugin: configloader.Plugin{Kind: "c"}},
-	}
-	file := configloader.GetPluginFileName(&tools[0])
-	fileMD5 := configloader.GetPluginMD5FileName(&tools[0])
+		It("pluginAndMD5Matches, md5 sum should mismatch .md5 file content", func() {
+			err = createNewFile(fileMD5)
+			Expect(err).NotTo(HaveOccurred())
 
-	err := createNewFile(file)
-	assert.NoError(t, err)
+			err = pluginAndMD5Matches(viper.GetString("plugin-dir"), file, fileMD5, tools[0].Name)
+			expectErrMsg := fmt.Sprintf("plugin %s doesn't match with .md5", tools[0].Name)
+			Expect(err.Error()).To(Equal(expectErrMsg))
+		})
 
-	err = createNewFile(fileMD5)
-	assert.NoError(t, err)
-
-	err = pluginAndMD5Matches(viper.GetString("plugin-dir"), file, fileMD5, tools[0].Name)
-	expectErrMsg := fmt.Sprintf("plugin %s doesn't match with .md5", tools[0].Name)
-	assert.EqualError(t, err, expectErrMsg)
-}
+		AfterEach(func() {
+			err = os.Remove(file)
+			Expect(err).NotTo(HaveOccurred())
+			err = os.Remove(fileMD5)
+			Expect(err).NotTo(HaveOccurred())
+		})
+	})
+})
 
 func createNewFile(fileName string) error {
 	f1, err := os.Create(fileName)
@@ -67,7 +85,7 @@ func createNewFile(fileName string) error {
 }
 
 func addMD5File(fileName, md5FileName string) error {
-	md5, err := md5helper.CalcFileMD5(fileName)
+	md5, err := md5.CalcFileMD5(fileName)
 	if err != nil {
 		return err
 	}

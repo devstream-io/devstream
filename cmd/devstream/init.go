@@ -23,7 +23,7 @@ func initCMDFunc(cmd *cobra.Command, args []string) {
 
 	log.Info("Initialize started.")
 	if err := pluginmanager.CompareDtmMD5(); err != nil {
-		log.Error(err)
+		log.Errorf("Got error when verifying the consistency of dtm md5 sum. Error: %s.", err)
 		return
 	}
 

@@ -11,11 +11,11 @@ import (
 
 	"github.com/merico-dev/stream/cmd/devstream/version"
 	"github.com/merico-dev/stream/internal/pkg/configloader"
-	md5helper "github.com/merico-dev/stream/internal/pkg/md5"
 	"github.com/merico-dev/stream/pkg/util/log"
+	"github.com/merico-dev/stream/pkg/util/md5"
 )
 
-const DTMRemoteMD5 = ".remote"
+const DTMRemoteMD5Dir = ".remote"
 
 func DownloadPlugins(conf *configloader.Config) error {
 	// create plugins dir if not exist
@@ -37,10 +37,10 @@ func DownloadPlugins(conf *configloader.Config) error {
 			if err := dc.download(pluginDir, pluginFileName, tool.Plugin.Version); err != nil {
 				return err
 			}
-			log.Successf("[%s] download succeeded.", pluginMD5FileName)
+			log.Successf("[%s] download succeeded.", pluginFileName)
 		}
 		// .md5 does not exist
-		if _, err := os.Stat(filepath.Join(pluginDir, pluginFileName)); errors.Is(err, os.ErrNotExist) {
+		if _, err := os.Stat(filepath.Join(pluginDir, pluginMD5FileName)); errors.Is(err, os.ErrNotExist) {
 			// download .md5 file
 			if err := dc.download(pluginDir, pluginMD5FileName, tool.Plugin.Version); err != nil {
 				return err
@@ -48,7 +48,7 @@ func DownloadPlugins(conf *configloader.Config) error {
 			log.Successf("[%s] download succeeded.", pluginMD5FileName)
 		}
 		// check if the plugin matches with .md5
-		isMD5Match, err := md5helper.FileMatchesMD5(filepath.Join(pluginDir, pluginFileName), filepath.Join(pluginDir, pluginMD5FileName))
+		isMD5Match, err := md5.FileMatchesMD5(filepath.Join(pluginDir, pluginFileName), filepath.Join(pluginDir, pluginMD5FileName))
 		if err != nil {
 			return err
 		}
@@ -84,15 +84,9 @@ func CheckLocalPlugins(conf *configloader.Config) error {
 		pluginFileName := configloader.GetPluginFileName(&tool)
 		pluginMD5FileName := configloader.GetPluginMD5FileName(&tool)
 		if _, err := os.Stat(filepath.Join(pluginDir, pluginFileName)); errors.Is(err, os.ErrNotExist) {
-			if err != nil {
-				return err
-			}
 			return fmt.Errorf("plugin %s doesn't exist", tool.Name)
 		}
 		if _, err := os.Stat(filepath.Join(pluginDir, pluginMD5FileName)); errors.Is(err, os.ErrNotExist) {
-			if err != nil {
-				return err
-			}
 			return fmt.Errorf(".md5 file of plugin %s doesn't exist", tool.Name)
 		}
 
@@ -105,7 +99,7 @@ func CheckLocalPlugins(conf *configloader.Config) error {
 
 // pluginAndMD5Matches checks if the plugins match with .md5
 func pluginAndMD5Matches(pluginDir, soFileName, md5FileName, tooName string) error {
-	isMD5Match, err := md5helper.FileMatchesMD5(filepath.Join(pluginDir, soFileName), filepath.Join(pluginDir, md5FileName))
+	isMD5Match, err := md5.FileMatchesMD5(filepath.Join(pluginDir, soFileName), filepath.Join(pluginDir, md5FileName))
 	if err != nil {
 		return err
 	}
@@ -149,7 +143,7 @@ func DownloadDTMsMD5(remoteMD5Dir, dtmFileName string) error {
 func CompareDtmMD5() error {
 	// get remote dtm .md5
 	dtmMD5FileName := configloader.GetDtmMD5FileName()
-	if err := DownloadDTMsMD5(DTMRemoteMD5, dtmMD5FileName); err != nil {
+	if err := DownloadDTMsMD5(DTMRemoteMD5Dir, dtmMD5FileName); err != nil {
 		return err
 	}
 
@@ -158,7 +152,7 @@ func CompareDtmMD5() error {
 		return err
 	}
 
-	isMD5Match, err := md5helper.FileMatchesMD5(selfDtmName, filepath.Join(DTMRemoteMD5, dtmMD5FileName))
+	isMD5Match, err := md5.FileMatchesMD5(selfDtmName, filepath.Join(DTMRemoteMD5Dir, dtmMD5FileName))
 	if err != nil {
 		return err
 	}
