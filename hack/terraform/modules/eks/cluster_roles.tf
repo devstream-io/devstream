@@ -1,20 +1,21 @@
-resource "aws_iam_role" "eks_role" {
-  name = "eks-cluster-${var.cluster_name}-role"
+data "aws_iam_policy_document" "eks-assume-role-policy" {
+  statement {
+    actions = [
+      "sts:AssumeRole"
+    ]
 
-  assume_role_policy = <<POLICY
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "eks.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
+    principals {
+      type        = "Service"
+      identifiers = ["eks.amazonaws.com"]
     }
-  ]
+  }
 }
-POLICY
+
+resource "aws_iam_role" "eks_role" {
+  name               = "eks-cluster-${var.cluster_name}-role"
+  assume_role_policy = data.aws_iam_policy_document.eks-assume-role-policy.json
+
+  max_session_duration = 43200
 
   tags = {
     Team = var.team
