@@ -76,8 +76,6 @@ Run:
 dtm init -f config.yaml
 ```
 
-This step downloads the required plugins according to the config file.
-
 ## 4. Apply
 
 Run:
