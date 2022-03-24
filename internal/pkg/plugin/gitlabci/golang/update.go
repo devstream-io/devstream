@@ -1,11 +1,29 @@
 package golang
 
-import "github.com/merico-dev/stream/pkg/util/gitlab"
+import (
+	"fmt"
+
+	"github.com/mitchellh/mapstructure"
+
+	"github.com/merico-dev/stream/pkg/util/gitlab"
+	"github.com/merico-dev/stream/pkg/util/log"
+)
 
 func Update(options map[string]interface{}) (map[string]interface{}, error) {
-	opts, err := parseAndValidateOptions(options)
+	var opts Options
+
+	// decode input parameters into a struct
+	err := mapstructure.Decode(options, &opts)
 	if err != nil {
 		return nil, err
+	}
+
+	// validate parameters
+	if errs := validate(&opts); len(errs) != 0 {
+		for _, e := range errs {
+			log.Errorf("Options error: %s.", e)
+		}
+		return nil, fmt.Errorf("opts are illegal")
 	}
 
 	client, err := gitlab.NewClient()
@@ -23,5 +41,5 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	return buildState(opts), nil
+	return buildState(&opts), nil
 }
