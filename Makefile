@@ -3,6 +3,9 @@ BUILD_PATH=$(patsubst %/,%,$(dir $(MKFILE_PATH)))/build/working_dir
 VERSION=0.3.0
 GOOS=$(shell go env GOOS)
 GOARCH=$(shell go env GOARCH)
+PLUGINS_CMD_ROOT=./cmd/plugin
+GO_BUILD=go build -buildmode=plugin -trimpath -gcflags="all=-N -l"
+PLUGIN_SUFFIX=${GOOS}-${GOARCH}_${VERSION}.so
 
 ifeq ($(GOOS),linux)
   MD5SUM=md5sum
@@ -24,20 +27,20 @@ build-core: fmt vet ## Build dtm core only, without plugins, locally.
 build-plugins: fmt vet ## Build dtm plugins only, without core, locally.
 	go mod tidy
 	mkdir -p .devstream
-	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/githubactions-golang-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/githubactions/golang
-	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/githubactions-python-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/githubactions/python
-	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/githubactions-nodejs-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/githubactions/nodejs
-	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/trello-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/trello/
-	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/trello-github-integ-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/trellogithub/
-	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/argocd-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/argocd/
-	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/argocdapp-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/argocdapp/
-	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/jenkins-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/jenkins/
-	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/kube-prometheus-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/kubeprometheus/
-	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/github-repo-scaffolding-golang-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/reposcaffolding/github/golang/
-	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/devlake-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/devlake/
-	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/gitlabci-golang-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/gitlabci/golang
-	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/jira-github-integ-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/jiragithub/
-	go build -buildmode=plugin -trimpath -gcflags="all=-N -l" -o .devstream/openldap-${GOOS}-${GOARCH}_${VERSION}.so ./cmd/openldap/
+	${GO_BUILD} -o .devstream/githubactions-golang-${PLUGIN_SUFFIX} ${PLUGINS_CMD_ROOT}/githubactions-golang
+	${GO_BUILD} -o .devstream/githubactions-python-${PLUGIN_SUFFIX} ${PLUGINS_CMD_ROOT}/githubactions-python
+	${GO_BUILD} -o .devstream/githubactions-nodejs-${PLUGIN_SUFFIX} ${PLUGINS_CMD_ROOT}/githubactions-nodejs
+	${GO_BUILD} -o .devstream/trello-${PLUGIN_SUFFIX} ${PLUGINS_CMD_ROOT}/trello
+	${GO_BUILD} -o .devstream/trello-github-integ-${PLUGIN_SUFFIX} ${PLUGINS_CMD_ROOT}/trellogithub
+	${GO_BUILD} -o .devstream/argocd-${PLUGIN_SUFFIX} ${PLUGINS_CMD_ROOT}/argocd
+	${GO_BUILD} -o .devstream/argocdapp-${PLUGIN_SUFFIX} ${PLUGINS_CMD_ROOT}/argocdapp
+	${GO_BUILD} -o .devstream/jenkins-${PLUGIN_SUFFIX} ${PLUGINS_CMD_ROOT}/jenkins
+	${GO_BUILD} -o .devstream/kube-prometheus-${PLUGIN_SUFFIX} ${PLUGINS_CMD_ROOT}/kubeprometheus
+	${GO_BUILD} -o .devstream/github-repo-scaffolding-golang-${PLUGIN_SUFFIX} ${PLUGINS_CMD_ROOT}/github-repo-scaffolding-golang
+	${GO_BUILD} -o .devstream/devlake-${PLUGIN_SUFFIX} ${PLUGINS_CMD_ROOT}/devlake
+	${GO_BUILD} -o .devstream/gitlabci-golang-${PLUGIN_SUFFIX} ${PLUGINS_CMD_ROOT}/gitlabci-golang
+	${GO_BUILD} -o .devstream/jira-github-integ-${PLUGIN_SUFFIX} ${PLUGINS_CMD_ROOT}/jiragithub
+	${GO_BUILD} -o .devstream/openldap-${PLUGIN_SUFFIX} ${PLUGINS_CMD_ROOT}/openldap
 
 md5: md5-core md5-plugins
 
@@ -89,9 +92,9 @@ vet: ## Run go vet against code.
 	go vet ./...
 
 e2e: build ## Run e2e tests.
-	./dtm-${GOOS}-${GOARCH} apply -f config.yaml
-	./dtm-${GOOS}-${GOARCH} verify -f config.yaml
-	./dtm-${GOOS}-${GOARCH} delete -f config.yaml
+	./dtm apply -f config.yaml
+	./dtm verify -f config.yaml
+	./dtm delete -f config.yaml
 
 e2e-up: ## Start kind cluster for e2e tests.
 	sh hack/e2e/e2e-up.sh
