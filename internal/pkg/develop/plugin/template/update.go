@@ -4,7 +4,28 @@ var update_go_nameTpl = "update.go"
 var update_go_dirTpl = "internal/pkg/plugin/{{ .Name }}/"
 var update_go_contentTpl = `package {{ .Name }}
 
+import (
+	"fmt"
+
+	"github.com/mitchellh/mapstructure"
+
+	"github.com/merico-dev/stream/pkg/util/log"
+)
+
+
 func Update(options map[string]interface{}) (map[string]interface{}, error) {
+	var opts Options
+	if err := mapstructure.Decode(options, &opts); err != nil {
+		return nil, err
+	}
+
+	if errs := validate(&opts); len(errs) != 0 {
+		for _, e := range errs {
+			log.Errorf("Options error: %s.", e)
+		}
+		return nil, fmt.Errorf("opts are illegal")
+	}
+
     // TODO(dtm): Add your logic here.
 
     return nil, nil
