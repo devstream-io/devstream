@@ -1,7 +1,7 @@
 package template
 
 var main_go_nameTpl = "main.go"
-var main_go_dirTpl = "cmd/{{ .Name }}/"
+var main_go_dirTpl = "cmd/plugin/{{ .Name }}/"
 var main_go_contentTpl = `package main
 
 import (
