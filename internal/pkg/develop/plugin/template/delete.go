@@ -15,14 +15,14 @@ import (
 func Delete(options map[string]interface{}) (bool, error) {
 	var opts Options
 	if err := mapstructure.Decode(options, &opts); err != nil {
-		return nil, err
+		return false, err
 	}
 
 	if errs := validate(&opts); len(errs) != 0 {
 		for _, e := range errs {
 			log.Errorf("Options error: %s.", e)
 		}
-		return nil, fmt.Errorf("opts are illegal")
+		return false, fmt.Errorf("opts are illegal")
 	}
 
 	// TODO(dtm): Add your logic here.
