@@ -5,69 +5,61 @@ GOOS=$(shell go env GOOS)
 GOARCH=$(shell go env GOARCH)
 PLUGINS_CMD_ROOT=./cmd/plugin
 GO_BUILD=go build -buildmode=plugin -trimpath -gcflags="all=-N -l"
-PLUGIN_SUFFIX=${GOOS}-${GOARCH}_${VERSION}.so
+PLUGINS_DIR=$(shell find ${PLUGINS_CMD_ROOT} -name "main.go" -exec dirname {} \;)
+PLUGINS_NAME=$(notdir ${PLUGINS_DIR})
+PLUGIN_SUFFIX=${GOOS}-${GOARCH}_${VERSION}
 
 ifeq ($(GOOS),linux)
-  MD5SUM=md5sum
+	MD5SUM=md5sum
 else
-  MD5SUM=md5 -q
+	MD5SUM=md5 -q
 endif
-
+.PHONY: help
 help: ## Display this help.
-	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
+	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_0-9.%-]+:.*?##/ { printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
+.PHONY: build
 build: build-core build-plugins md5 ## Build dtm core & plugins locally.
 	rm -f dtm
 	mv dtm-${GOOS}-${GOARCH} dtm
 
+.PHONY: build-core
 build-core: fmt vet ## Build dtm core only, without plugins, locally.
 	go mod tidy
 	go build -trimpath -gcflags="all=-N -l" -ldflags "-X github.com/merico-dev/stream/cmd/devstream/version.Version=${VERSION}" -o dtm-${GOOS}-${GOARCH} ./cmd/devstream/
 
-build-plugins: fmt vet ## Build dtm plugins only, without core, locally.
-	go mod tidy
+.PHONY: build-plugin.%
+build-plugin.%: fmt vet mod-tidy ## Build one dtm plugin, like "make build-plugin.argocd"
 	mkdir -p .devstream
-	${GO_BUILD} -o .devstream/githubactions-golang-${PLUGIN_SUFFIX} ${PLUGINS_CMD_ROOT}/githubactions-golang
-	${GO_BUILD} -o .devstream/githubactions-python-${PLUGIN_SUFFIX} ${PLUGINS_CMD_ROOT}/githubactions-python
-	${GO_BUILD} -o .devstream/githubactions-nodejs-${PLUGIN_SUFFIX} ${PLUGINS_CMD_ROOT}/githubactions-nodejs
-	${GO_BUILD} -o .devstream/trello-${PLUGIN_SUFFIX} ${PLUGINS_CMD_ROOT}/trello
-	${GO_BUILD} -o .devstream/trello-github-integ-${PLUGIN_SUFFIX} ${PLUGINS_CMD_ROOT}/trellogithub
-	${GO_BUILD} -o .devstream/argocd-${PLUGIN_SUFFIX} ${PLUGINS_CMD_ROOT}/argocd
-	${GO_BUILD} -o .devstream/argocdapp-${PLUGIN_SUFFIX} ${PLUGINS_CMD_ROOT}/argocdapp
-	${GO_BUILD} -o .devstream/jenkins-${PLUGIN_SUFFIX} ${PLUGINS_CMD_ROOT}/jenkins
-	${GO_BUILD} -o .devstream/kube-prometheus-${PLUGIN_SUFFIX} ${PLUGINS_CMD_ROOT}/kubeprometheus
-	${GO_BUILD} -o .devstream/github-repo-scaffolding-golang-${PLUGIN_SUFFIX} ${PLUGINS_CMD_ROOT}/github-repo-scaffolding-golang
-	${GO_BUILD} -o .devstream/devlake-${PLUGIN_SUFFIX} ${PLUGINS_CMD_ROOT}/devlake
-	${GO_BUILD} -o .devstream/gitlabci-golang-${PLUGIN_SUFFIX} ${PLUGINS_CMD_ROOT}/gitlabci-golang
-	${GO_BUILD} -o .devstream/jira-github-integ-${PLUGIN_SUFFIX} ${PLUGINS_CMD_ROOT}/jiragithub
-	${GO_BUILD} -o .devstream/openldap-${PLUGIN_SUFFIX} ${PLUGINS_CMD_ROOT}/openldap
+	$(eval plugin_name := $(strip $*))
+	${GO_BUILD} -o .devstream/${plugin_name}-${PLUGIN_SUFFIX}.so ${PLUGINS_CMD_ROOT}/${plugin_name}
 
+.PHONY: build-plugins
+build-plugins: fmt vet mod-tidy $(addprefix build-plugin.,$(PLUGINS_NAME)) ## Build dtm plugins only, without core, locally.
+
+.PHONY: md5
 md5: md5-core md5-plugins
 
+.PHONY: md5-core
 md5-core:
 	${MD5SUM} dtm-${GOOS}-${GOARCH} > dtm-${GOOS}-${GOARCH}.md5
 
-md5-plugins:
-	${MD5SUM} .devstream/githubactions-golang-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/githubactions-golang-${GOOS}-${GOARCH}_${VERSION}.md5
-	${MD5SUM} .devstream/githubactions-python-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/githubactions-python-${GOOS}-${GOARCH}_${VERSION}.md5
-	${MD5SUM} .devstream/githubactions-nodejs-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/githubactions-nodejs-${GOOS}-${GOARCH}_${VERSION}.md5
-	${MD5SUM} .devstream/trello-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/trello-${GOOS}-${GOARCH}_${VERSION}.md5
-	${MD5SUM} .devstream/trello-github-integ-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/trello-github-integ-${GOOS}-${GOARCH}_${VERSION}.md5
-	${MD5SUM} .devstream/argocd-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/argocd-${GOOS}-${GOARCH}_${VERSION}.md5
-	${MD5SUM} .devstream/argocdapp-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/argocdapp-${GOOS}-${GOARCH}_${VERSION}.md5
-	${MD5SUM} .devstream/jenkins-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/jenkins-${GOOS}-${GOARCH}_${VERSION}.md5
-	${MD5SUM} .devstream/kube-prometheus-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/kube-prometheus-${GOOS}-${GOARCH}_${VERSION}.md5
-	${MD5SUM} .devstream/github-repo-scaffolding-golang-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/github-repo-scaffolding-golang-${GOOS}-${GOARCH}_${VERSION}.md5
-	${MD5SUM} .devstream/devlake-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/devlake-${GOOS}-${GOARCH}_${VERSION}.md5
-	${MD5SUM} .devstream/gitlabci-golang-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/gitlabci-golang-${GOOS}-${GOARCH}_${VERSION}.md5
-	${MD5SUM} .devstream/jira-github-integ-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/jira-github-integ-${GOOS}-${GOARCH}_${VERSION}.md5
-	${MD5SUM} .devstream/openldap-${GOOS}-${GOARCH}_${VERSION}.so > .devstream/openldap-${GOOS}-${GOARCH}_${VERSION}.md5
+.PHONY: md5-plugins
+md5-plugins: $(addprefix md5-plugin.,$(PLUGINS_NAME))
 
+.PHONY: md5-plugin.%
+md5-plugin.%:
+	$(eval plugin_name := $(strip $*))
+	${MD5SUM} .devstream/${plugin_name}-${PLUGIN_SUFFIX}.so > .devstream/${plugin_name}-${PLUGIN_SUFFIX}.md5
+
+
+.PHONY: clean
 clean: ## Remove local plugins and locally built artifacts.
 	rm -rf .devstream
 	rm -f dtm*
 	rm -rf build/working_dir
 
+.PHONY: build-linux-amd64
 build-linux-amd64: ## Cross-platform build for "linux/amd64".
 	echo "Building in ${BUILD_PATH}"
 	mkdir -p .devstream
@@ -77,9 +69,12 @@ build-linux-amd64: ## Cross-platform build for "linux/amd64".
 	chmod +x ${BUILD_PATH}/build_linux_amd64.sh
 	docker run --rm --platform linux/amd64 -v ${BUILD_PATH}:/devstream mericodev/stream-builder:v${VERSION}
 	mv ${BUILD_PATH}/output/*.so .devstream/
+	mv ${BUILD_PATH}/output/*.md5 .devstream/
 	mv ${BUILD_PATH}/output/dtm* .
 	rm -rf ${BUILD_PATH}
 
+
+.PHONY: fmt
 fmt: ## Run 'go fmt' & goimports against code.
 	go install golang.org/x/tools/cmd/goimports@latest
 	goimports -local="github.com/merico-dev/stream" -d -w cmd
@@ -88,16 +83,24 @@ fmt: ## Run 'go fmt' & goimports against code.
 	goimports -local="github.com/merico-dev/stream" -d -w test
 	go fmt ./...
 
+.PHONY: vet
 vet: ## Run go vet against code.
 	go vet ./...
 
+.PHONE: mod-tidy
+mod-tidy: ## Run go mod tidy
+	go mod tidy
+
+.PHONY: e2e
 e2e: build ## Run e2e tests.
 	./dtm apply -f config.yaml
 	./dtm verify -f config.yaml
 	./dtm delete -f config.yaml
 
+.PHONY: e2e-up
 e2e-up: ## Start kind cluster for e2e tests.
 	sh hack/e2e/e2e-up.sh
 
+.PHONY: e2e-down
 e2e-down: ## Stop kind cluster for e2e tests.
 	sh hack/e2e/e2e-down.sh
