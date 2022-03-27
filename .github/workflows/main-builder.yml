@@ -1,4 +1,4 @@
-name: pushed to main
+name: main builder
 on:
   push:
     branches: [ main ]
