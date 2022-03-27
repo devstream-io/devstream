@@ -50,7 +50,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	}
 
 	for _, w := range workflows {
-		content, err := renderTemplate(w, opts)
+		content, err := renderTemplate(w, &opts)
 		if err != nil {
 			return nil, err
 		}

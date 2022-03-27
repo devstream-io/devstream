@@ -59,7 +59,7 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 			return nil, err
 		}
 
-		content, err := renderTemplate(pipeline, opts)
+		content, err := renderTemplate(pipeline, &opts)
 		if err != nil {
 			return nil, err
 		}
