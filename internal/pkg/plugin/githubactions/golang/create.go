@@ -13,7 +13,6 @@ import (
 
 // Create sets up GitHub Actions workflow(s).
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
-
 	var opts Options
 
 	if err := mapstructure.Decode(options, &opts); err != nil {
