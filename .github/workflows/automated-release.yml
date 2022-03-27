@@ -1,0 +1,116 @@
+name: Automated Release
+on:
+  release:
+    types: [published]
+jobs:
+  # release for linux
+  build-and-release-on-linux:
+    env:
+      TAG: ${{ github.ref_name }}
+      USER: merico-dev
+      REPO: stream
+      PLUGINDIR: .devstream
+      GOOS: linux
+      GOARCH: amd64
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🐧 This job is now running on a ${{ runner.os }}-${{ runner.arch }} server hosted by GitHub!"
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Golang env
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.17
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+      - name: Build
+        run: make build
+      - name: Install Github-release
+        run: go install github.com/github-release/github-release@latest
+      - name: upload
+        run: |
+          #upload dtm
+          echo 'Uploading 'dtm-${GOOS}-${GOARCH}' ...'
+          github-release upload --security-token ${{ secrets.GITHUB_TOKEN }} --user ${{ env.USER }} --repo ${{ env.REPO }}  --tag ${{ env.TAG }} --file dtm --name dtm-${GOOS}-${GOARCH}
+          echo dtm-${GOOS}-${GOARCH}' uploaded.'
+
+          #upload dtm .md5
+          echo 'Uploading 'dtm-${GOOS}-${GOARCH}.md5' ...'
+          github-release upload --security-token ${{ secrets.GITHUB_TOKEN }} --user ${{ env.USER }} --repo ${{ env.REPO }}  --tag ${{ env.TAG }} --file dtm-${GOOS}-${GOARCH}.md5 --name dtm-${GOOS}-${GOARCH}.md5
+          echo dtm-${GOOS}-${GOARCH}.md5' uploaded.'
+          
+          # upload plugins
+          for file in `ls ${{ env.PLUGINDIR }}`
+            do
+             if [ -d ${{ env.PLUGINDIR }}"/"$file ]
+             then
+               read_dir ${{ env.PLUGINDIR }}"/"$file
+             else
+               echo 'Uploading '$file' ...'
+               github-release upload --security-token ${{ secrets.GITHUB_TOKEN }} --user ${{ env.USER }} --repo ${{ env.REPO }}  --tag ${{ env.TAG }}  --file  ${{ env.PLUGINDIR }}"/"$file --name $file
+               echo $file' uploaded.'
+             fi
+          done
+
+  # release for darwin-amd64
+  build-and-release-on-darwin-amd64:
+    env:
+      TAG: ${{ github.ref_name }}
+      USER: merico-dev
+      REPO: stream
+      PLUGINDIR: .devstream
+      GOOS: darwin
+      GOARCH: amd64
+    runs-on: macos-latest
+    steps:
+      - run: echo "🐧 This job is now running on a ${{ runner.os }}-${{ runner.arch }} server hosted by GitHub!"
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Golang env
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.17
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+      - name: Build
+        run: make build
+      - name: Install Github-release
+        run: go install github.com/github-release/github-release@latest
+      - name: upload
+        run: |
+          #upload dtm
+          echo 'Uploading 'dtm-${GOOS}-${GOARCH}' ...'
+          github-release upload --security-token ${{ secrets.GITHUB_TOKEN }} --user ${{ env.USER }} --repo ${{ env.REPO }}  --tag ${{ env.TAG }} --file dtm --name dtm-${GOOS}-${GOARCH}
+          echo dtm-${GOOS}-${GOARCH}' uploaded.'
+
+          #upload dtm .md5
+          echo 'Uploading 'dtm-${GOOS}-${GOARCH}.md5' ...'
+          github-release upload --security-token ${{ secrets.GITHUB_TOKEN }} --user ${{ env.USER }} --repo ${{ env.REPO }}  --tag ${{ env.TAG }} --file dtm-${GOOS}-${GOARCH}.md5 --name dtm-${GOOS}-${GOARCH}.md5
+          echo dtm-${GOOS}-${GOARCH}.md5' uploaded.'
+          
+          #upload plugins
+          for file in `ls ${{ env.PLUGINDIR }}`
+            do
+             if [ -d ${{ env.PLUGINDIR }}"/"$file ]
+             then
+               read_dir ${{ env.PLUGINDIR }}"/"$file
+             else
+               echo 'Uploading '$file' ...'
+               github-release upload --security-token ${{ secrets.GITHUB_TOKEN }} --user ${{ env.USER }} --repo ${{ env.REPO }}  --tag ${{ env.TAG }}  --file  ${{ env.PLUGINDIR }}"/"$file --name $file
+               echo $file' uploaded.'
+             fi
+          done
