@@ -6,7 +6,7 @@ import (
 )
 
 // NAME is the name of this DevStream plugin.
-const NAME = "jiragithub"
+const NAME = "jira-github-integ"
 
 // Plugin is the type used by DevStream core. It's a string.
 type Plugin string
