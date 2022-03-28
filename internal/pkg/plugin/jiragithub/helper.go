@@ -1,31 +1,10 @@
 package jiragithub
 
 import (
-	"fmt"
-
-	"github.com/mitchellh/mapstructure"
 	"github.com/spf13/viper"
 
 	"github.com/merico-dev/stream/pkg/util/github"
-	"github.com/merico-dev/stream/pkg/util/log"
 )
-
-func parseAndValidateOptions(options map[string]interface{}) (*Options, error) {
-	var opts Options
-	err := mapstructure.Decode(options, &opts)
-	if err != nil {
-		return nil, err
-	}
-
-	if errs := validate(&opts); len(errs) != 0 {
-		for _, e := range errs {
-			log.Errorf("Param error: %s.", e)
-		}
-		return nil, fmt.Errorf("incorrect params")
-	}
-
-	return &opts, nil
-}
 
 func setRepoSecrets(gitHubClient *github.Client) error {
 

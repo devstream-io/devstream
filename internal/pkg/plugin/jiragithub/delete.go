@@ -1,14 +1,27 @@
 package jiragithub
 
 import (
+	"fmt"
+
+	"github.com/mitchellh/mapstructure"
+
 	"github.com/merico-dev/stream/pkg/util/github"
+	"github.com/merico-dev/stream/pkg/util/log"
 )
 
 // Delete remove jira-github-integ workflows.
 func Delete(options map[string]interface{}) (bool, error) {
-	opts, err := parseAndValidateOptions(options)
+	var opts Options
+	err := mapstructure.Decode(options, &opts)
 	if err != nil {
 		return false, err
+	}
+
+	if errs := validate(&opts); len(errs) != 0 {
+		for _, e := range errs {
+			log.Errorf("Options error: %s.", e)
+		}
+		return false, fmt.Errorf("options are illegal")
 	}
 
 	ghOptions := &github.Option{

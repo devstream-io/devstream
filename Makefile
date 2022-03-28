@@ -24,13 +24,11 @@ build: build-core build-plugins md5 ## Build dtm core & plugins locally.
 	mv dtm-${GOOS}-${GOARCH} dtm
 
 .PHONY: build-core
-build-core: fmt vet ## Build dtm core only, without plugins, locally.
-	go mod tidy
+build-core: fmt vet mod-tidy ## Build dtm core only, without plugins, locally.
 	go build -trimpath -gcflags="all=-N -l" -ldflags "-X github.com/merico-dev/stream/cmd/devstream/version.Version=${VERSION}" -o dtm-${GOOS}-${GOARCH} ./cmd/devstream/
 
 .PHONY: build-plugin.%
-build-plugin.%: fmt vet mod-tidy ## Build one dtm plugin, like "make build-plugin.argocd"
-	mkdir -p .devstream
+build-plugin.%: fmt vet mod-tidy mkdir.devstream ## Build one dtm plugin, like "make build-plugin.argocd"
 	$(eval plugin_name := $(strip $*))
 	${GO_BUILD} -o .devstream/${plugin_name}-${PLUGIN_SUFFIX}.so ${PLUGINS_CMD_ROOT}/${plugin_name}
 
@@ -87,9 +85,13 @@ fmt: ## Run 'go fmt' & goimports against code.
 vet: ## Run go vet against code.
 	go vet ./...
 
-.PHONE: mod-tidy
+.PHONY: mod-tidy
 mod-tidy: ## Run go mod tidy
 	go mod tidy
+
+.PHONY: mkdir.devstream
+mkdir.devstream:  ## make .devstream directory
+	mkdir -p .devstream
 
 .PHONY: e2e
 e2e: build ## Run e2e tests.

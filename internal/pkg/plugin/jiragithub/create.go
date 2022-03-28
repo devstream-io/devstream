@@ -3,14 +3,25 @@ package jiragithub
 import (
 	"fmt"
 
+	"github.com/mitchellh/mapstructure"
+
 	"github.com/merico-dev/stream/pkg/util/github"
+	"github.com/merico-dev/stream/pkg/util/log"
 )
 
 // Create sets up jira-github-integ workflows.
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
-	opts, err := parseAndValidateOptions(options)
+	var opts Options
+	err := mapstructure.Decode(options, &opts)
 	if err != nil {
 		return nil, err
+	}
+
+	if errs := validate(&opts); len(errs) != 0 {
+		for _, e := range errs {
+			log.Errorf("Options error: %s.", e)
+		}
+		return nil, fmt.Errorf("options are illegal")
 	}
 
 	ghOptions := &github.Option{
@@ -23,7 +34,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	content, err := renderTemplate(workflow, opts)
+	content, err := renderTemplate(workflow, &opts)
 	if err != nil {
 		return nil, err
 	}
