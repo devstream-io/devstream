@@ -4,7 +4,7 @@ github_token=$1
 tag=$2
 GOOS=$3
 GOARCH=$4
-user=lfbdev
+user=merico-dev
 repo=stream
 plugin_dir=.devstream
 
