@@ -1,10 +1,13 @@
+VERSION=0.3.0
+
 MKFILE_PATH=$(abspath $(lastword $(MAKEFILE_LIST)))
 BUILD_PATH=$(patsubst %/,%,$(dir $(MKFILE_PATH)))/build/working_dir
-VERSION=0.3.0
+
 GOOS=$(shell go env GOOS)
 GOARCH=$(shell go env GOARCH)
-PLUGINS_CMD_ROOT=./cmd/plugin
 GO_BUILD=go build -buildmode=plugin -trimpath -gcflags="all=-N -l"
+
+PLUGINS_CMD_ROOT=./cmd/plugin
 PLUGINS_DIR=$(shell find ${PLUGINS_CMD_ROOT} -name "main.go" -exec dirname {} \;)
 PLUGINS_NAME=$(notdir ${PLUGINS_DIR})
 PLUGIN_SUFFIX=${GOOS}-${GOARCH}_${VERSION}
@@ -14,14 +17,17 @@ ifeq ($(GOOS),linux)
 else
 	MD5SUM=md5 -q
 endif
+
 .PHONY: help
 help: ## Display this help.
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_0-9.%-]+:.*?##/ { printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
-.PHONY: build
-build: build-core build-plugins md5 ## Build dtm core & plugins locally.
-	rm -f dtm
-	mv dtm-${GOOS}-${GOARCH} dtm
+.PHONY: clean
+clean: ## Remove dtm and plugins. It's best to run a "clean" before "build".
+	rm -rf .devstream
+	rm -f dtm*
+	rm -f *.md5
+	rm -rf build/working_dir
 
 .PHONY: build-core
 build-core: fmt vet mod-tidy ## Build dtm core only, without plugins, locally.
@@ -33,10 +39,15 @@ build-plugin.%: fmt vet mod-tidy mkdir.devstream ## Build one dtm plugin, like "
 	${GO_BUILD} -o .devstream/${plugin_name}-${PLUGIN_SUFFIX}.so ${PLUGINS_CMD_ROOT}/${plugin_name}
 
 .PHONY: build-plugins
-build-plugins: fmt vet mod-tidy $(addprefix build-plugin.,$(PLUGINS_NAME)) ## Build dtm plugins only, without core, locally.
+build-plugins: fmt vet mod-tidy $(addprefix build-plugin.,$(PLUGINS_NAME)) ## Build dtm plugins only. Use multi-threaded like "make build-plugins -j8" to speed up.
 
-.PHONY: md5
-md5: md5-core md5-plugins
+.PHONY: build
+build: build-core build-plugins ## Build everything. Use multi-threaded like "make build -j8" to speed up.
+	cp dtm-${GOOS}-${GOARCH} dtm
+
+.PHONY: release
+release: md5-core md5-plugins ## Create md5 sums for all plugins and dtm and make a release.
+	echo "TODO: run scripts for release (uploading plugins and md5 sums)"
 
 .PHONY: md5-core
 md5-core:
@@ -50,12 +61,6 @@ md5-plugin.%:
 	$(eval plugin_name := $(strip $*))
 	${MD5SUM} .devstream/${plugin_name}-${PLUGIN_SUFFIX}.so > .devstream/${plugin_name}-${PLUGIN_SUFFIX}.md5
 
-
-.PHONY: clean
-clean: ## Remove local plugins and locally built artifacts.
-	rm -rf .devstream
-	rm -f dtm*
-	rm -rf build/working_dir
 
 .PHONY: build-linux-amd64
 build-linux-amd64: ## Cross-platform build for "linux/amd64".
@@ -71,7 +76,6 @@ build-linux-amd64: ## Cross-platform build for "linux/amd64".
 	mv ${BUILD_PATH}/output/dtm* .
 	rm -rf ${BUILD_PATH}
 
-
 .PHONY: fmt
 fmt: ## Run 'go fmt' & goimports against code.
 	go install golang.org/x/tools/cmd/goimports@latest
@@ -82,15 +86,15 @@ fmt: ## Run 'go fmt' & goimports against code.
 	go fmt ./...
 
 .PHONY: vet
-vet: ## Run go vet against code.
+vet: ## Run "go vet ./...".
 	go vet ./...
 
 .PHONY: mod-tidy
-mod-tidy: ## Run go mod tidy
+mod-tidy: ## Run "go mod tidy".
 	go mod tidy
 
 .PHONY: mkdir.devstream
-mkdir.devstream:  ## make .devstream directory
+mkdir.devstream:  ## Create ".devstream" (default directory for plugins) directory.
 	mkdir -p .devstream
 
 .PHONY: e2e
