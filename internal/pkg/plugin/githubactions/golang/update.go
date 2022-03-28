@@ -1,6 +1,9 @@
 package golang
 
 import (
+	"fmt"
+
+	"github.com/mitchellh/mapstructure"
 	"github.com/spf13/viper"
 
 	ga "github.com/merico-dev/stream/internal/pkg/plugin/githubactions"
@@ -10,9 +13,17 @@ import (
 
 // Update remove and set up GitHub Actions workflows.
 func Update(options map[string]interface{}) (map[string]interface{}, error) {
-	opts, err := parseAndValidateOptions(options)
-	if err != nil {
+	var opts Options
+
+	if err := mapstructure.Decode(options, &opts); err != nil {
 		return nil, err
+	}
+
+	if errs := validate(&opts); len(errs) != 0 {
+		for _, e := range errs {
+			log.Errorf("Options error: %s.", e)
+		}
+		return nil, fmt.Errorf("opts are illegal")
 	}
 
 	ghOptions := &github.Option{
@@ -48,7 +59,7 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 			return nil, err
 		}
 
-		content, err := renderTemplate(pipeline, opts)
+		content, err := renderTemplate(pipeline, &opts)
 		if err != nil {
 			return nil, err
 		}
