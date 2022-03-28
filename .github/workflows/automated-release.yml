@@ -35,29 +35,7 @@ jobs:
       - name: Install Github-release
         run: go install github.com/github-release/github-release@latest
       - name: upload
-        run: |
-          #upload dtm
-          echo 'Uploading 'dtm-${GOOS}-${GOARCH}' ...'
-          github-release upload --security-token ${{ secrets.GITHUB_TOKEN }} --user ${{ env.USER }} --repo ${{ env.REPO }}  --tag ${{ env.TAG }} --file dtm --name dtm-${GOOS}-${GOARCH}
-          echo dtm-${GOOS}-${GOARCH}' uploaded.'
-
-          #upload dtm .md5
-          echo 'Uploading 'dtm-${GOOS}-${GOARCH}.md5' ...'
-          github-release upload --security-token ${{ secrets.GITHUB_TOKEN }} --user ${{ env.USER }} --repo ${{ env.REPO }}  --tag ${{ env.TAG }} --file dtm-${GOOS}-${GOARCH}.md5 --name dtm-${GOOS}-${GOARCH}.md5
-          echo dtm-${GOOS}-${GOARCH}.md5' uploaded.'
-          
-          # upload plugins
-          for file in `ls ${{ env.PLUGINDIR }}`
-            do
-             if [ -d ${{ env.PLUGINDIR }}"/"$file ]
-             then
-               read_dir ${{ env.PLUGINDIR }}"/"$file
-             else
-               echo 'Uploading '$file' ...'
-               github-release upload --security-token ${{ secrets.GITHUB_TOKEN }} --user ${{ env.USER }} --repo ${{ env.REPO }}  --tag ${{ env.TAG }}  --file  ${{ env.PLUGINDIR }}"/"$file --name $file
-               echo $file' uploaded.'
-             fi
-          done
+        run: bash -e ./build/package/upload_assets.sh ${{ secrets.GITHUB_TOKEN }} ${{ env.TAG }} ${{ env.GOOS }} ${{ env.GOARCH }}
 
   # release for darwin-amd64
   build-and-release-on-darwin-amd64:
@@ -91,26 +69,5 @@ jobs:
       - name: Install Github-release
         run: go install github.com/github-release/github-release@latest
       - name: upload
-        run: |
-          #upload dtm
-          echo 'Uploading 'dtm-${GOOS}-${GOARCH}' ...'
-          github-release upload --security-token ${{ secrets.GITHUB_TOKEN }} --user ${{ env.USER }} --repo ${{ env.REPO }}  --tag ${{ env.TAG }} --file dtm --name dtm-${GOOS}-${GOARCH}
-          echo dtm-${GOOS}-${GOARCH}' uploaded.'
+        run: bash -e ./build/package/upload_assets.sh ${{ secrets.GITHUB_TOKEN }} ${{ env.TAG }} ${{ env.GOOS }} ${{ env.GOARCH }}
 
-          #upload dtm .md5
-          echo 'Uploading 'dtm-${GOOS}-${GOARCH}.md5' ...'
-          github-release upload --security-token ${{ secrets.GITHUB_TOKEN }} --user ${{ env.USER }} --repo ${{ env.REPO }}  --tag ${{ env.TAG }} --file dtm-${GOOS}-${GOARCH}.md5 --name dtm-${GOOS}-${GOARCH}.md5
-          echo dtm-${GOOS}-${GOARCH}.md5' uploaded.'
-          
-          #upload plugins
-          for file in `ls ${{ env.PLUGINDIR }}`
-            do
-             if [ -d ${{ env.PLUGINDIR }}"/"$file ]
-             then
-               read_dir ${{ env.PLUGINDIR }}"/"$file
-             else
-               echo 'Uploading '$file' ...'
-               github-release upload --security-token ${{ secrets.GITHUB_TOKEN }} --user ${{ env.USER }} --repo ${{ env.REPO }}  --tag ${{ env.TAG }}  --file  ${{ env.PLUGINDIR }}"/"$file --name $file
-               echo $file' uploaded.'
-             fi
-          done
