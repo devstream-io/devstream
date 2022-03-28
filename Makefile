@@ -32,22 +32,23 @@ clean: ## Remove dtm and plugins. It's best to run a "clean" before "build".
 .PHONY: build-core
 build-core: fmt vet mod-tidy ## Build dtm core only, without plugins, locally.
 	go build -trimpath -gcflags="all=-N -l" -ldflags "-X github.com/merico-dev/stream/cmd/devstream/version.Version=${VERSION}" -o dtm-${GOOS}-${GOARCH} ./cmd/devstream/
+	$(MAKE) md5-core
+	cp dtm-${GOOS}-${GOARCH} dtm
 
 .PHONY: build-plugin.%
 build-plugin.%: fmt vet mod-tidy mkdir.devstream ## Build one dtm plugin, like "make build-plugin.argocd"
 	$(eval plugin_name := $(strip $*))
 	${GO_BUILD} -o .devstream/${plugin_name}-${PLUGIN_SUFFIX}.so ${PLUGINS_CMD_ROOT}/${plugin_name}
+	$(MAKE) md5-plugin.$(plugin_name)
 
 .PHONY: build-plugins
 build-plugins: fmt vet mod-tidy $(addprefix build-plugin.,$(PLUGINS_NAME)) ## Build dtm plugins only. Use multi-threaded like "make build-plugins -j8" to speed up.
 
 .PHONY: build
 build: build-core build-plugins ## Build everything. Use multi-threaded like "make build -j8" to speed up.
-	cp dtm-${GOOS}-${GOARCH} dtm
 
-.PHONY: release
-release: md5-core md5-plugins ## Create md5 sums for all plugins and dtm and make a release.
-	echo "TODO: run scripts for release (uploading plugins and md5 sums)"
+.PHONY: md5
+md5: md5-core md5-plugins ## Create md5 sums for all plugins and dtm
 
 .PHONY: md5-core
 md5-core:

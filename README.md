@@ -174,45 +174,22 @@ git clone https://github.com/merico-dev/stream.git
 
 #### Build
 
+To do a multi-threaded build, run:
+
 ```bash
 cd ~/gocode/stream
 make clean
 make build -j8
-mv dtm-$(go env GOOS)-$(go env GOARCH) dtm
 ```
 
-We now support build only "dtm", build a specific plugin, and build all plugins. Examples:
+This builds everything: `dtm` and all the plugins.
 
-```bash
-cd ~/gocode/stream
-make build-core
-make build-plugins -j8
-make build-plugin make build-plugin.argocd
-```
+We also support the following build modes:
+- Build `dtm` only: `make build-core`.
+- Build a specific plugin: `make build-plugin.PLUGIN_NAME`. Example: `make build-plugin.argocd`.
+- Build all plugins: `make build-plugins -j8` (multi-threaded build.)
 
-See the Makefile for more info.
-
-```makefile
-$ make help
-
-Usage:
-  make <target>
-  help                Display this help.
-  clean               Remove dtm and plugins. It's best to run a "clean" before "build".
-  build-core          Build dtm core only, without plugins, locally.
-  build-plugin.%      Build one dtm plugin, like "make build-plugin.argocd"
-  build-plugins       Build dtm plugins only. Use multi-threaded like "make build-plugins -j8" to speed up.
-  build               Build everything. Use multi-threaded like "make build -j8" to speed up.
-  release             Create md5 sums for all plugins and dtm and make a release.
-  build-linux-amd64   Cross-platform build for "linux/amd64".
-  fmt                 Run 'go fmt' & goimports against code.
-  vet                 Run "go vet ./...".
-  mod-tidy            Run "go mod tidy".
-  mkdir.devstream     Create ".devstream" (default directory for plugins) directory.
-  e2e                 Run e2e tests.
-  e2e-up              Start kind cluster for e2e tests.
-  e2e-down            Stop kind cluster for e2e tests.
-```
+See `make help` for more information.
 
 #### Test
 
