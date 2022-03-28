@@ -7,7 +7,6 @@ var options_go_contentTpl = `package {{ .Name }}
 // Options is the struct for configurations of the {{ .Name }} plugin.
 type Options struct {
     // TODO(dtm): Add your params here.
-	Foo string
 }
 `
 
