@@ -174,32 +174,22 @@ git clone https://github.com/merico-dev/stream.git
 
 #### Build
 
+To do a multi-threaded build, run:
+
 ```bash
 cd ~/gocode/stream
-make build
-# this step is only required before v0.3
-# TODO(daniel-hutao): remove all `mv` operations including quick-start documents when the next version is released
-mv dtm-$(go env GOOS)-$(go env GOARCH) dtm
+make clean
+make build -j8
 ```
 
-See the Makefile for more info.
+This builds everything: `dtm` and all the plugins.
 
-```makefile
-$ make help
+We also support the following build modes:
+- Build `dtm` only: `make build-core`.
+- Build a specific plugin: `make build-plugin.PLUGIN_NAME`. Example: `make build-plugin.argocd`.
+- Build all plugins: `make build-plugins -j8` (multi-threaded build.)
 
-Usage:
-  make <target>
-  help                Display this help.
-  build               Build dtm & plugins locally.
-  build-core          Build dtm core only, without plugins, locally.
-  clean               Remove local plugins and locally built artifacts.
-  build-linux-amd64   Cross-platform build for "linux/amd64".
-  fmt                 Run 'go fmt' & goimports against code.
-  vet                 Run go vet against code.
-  e2e                 Run e2e tests.
-  e2e-up              Start kind cluster for e2e tests.
-  e2e-down            Stop kind cluster for e2e tests.
-```
+See `make help` for more information.
 
 #### Test
 
