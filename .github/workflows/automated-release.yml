@@ -17,6 +17,8 @@ jobs:
       - run: echo "🐧 This job is now running on a ${{ runner.os }}-${{ runner.arch }} server hosted by GitHub!"
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          ref: ${{ env.TAG }}
       - name: Setup Golang env
         uses: actions/setup-go@v2
         with:
@@ -51,6 +53,8 @@ jobs:
       - run: echo "🐧 This job is now running on a ${{ runner.os }}-${{ runner.arch }} server hosted by GitHub!"
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          ref: ${{ env.TAG }}
       - name: Setup Golang env
         uses: actions/setup-go@v2
         with:
