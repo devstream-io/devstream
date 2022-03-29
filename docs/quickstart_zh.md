@@ -30,7 +30,7 @@ sed -i.bak "s/YOUR_DOCKER_USERNAME/ironcore864/g" config.yaml
 
 > 这个配置文件会使用两个插件，一个用来创建 GitHub 项目，而且初始化成一个 Golang 的 web 应用结构。接着另外一个插件会给这个项目创建对应的 GitHub Actions 工作流。
 
-这两个插件[需要配置一个环境变量](./plugins/github-repo-scaffolding-golang_plugin.md) 才能工作，我们看下怎么配置：
+这两个插件[需要配置一个环境变量](./plugins/github-repo-scaffolding-golang.md) 才能工作，我们看下怎么配置：
 
 ```bash
 export GITHUB_TOKEN="YOUR_GITHUB_TOKEN_HERE"

@@ -65,18 +65,18 @@ Want to remove or reinstall a specific piece in the workflow? DevStream has got 
 
 | Type                   | Plugin                         | Note                           | Usage/Doc |
 |------------------------|--------------------------------|--------------------------------|-----------|
-| Issue Tracking         | trello-github-integ            | Trello/GitHub integration      | [doc](./docs/plugins/trello-github-integ_plugin.md) |
-| Source Code Management | github-repo-scaffolding-golang | Go WebApp scaffolding          | [doc](./docs/plugins/github-repo-scaffolding-golang_plugin.md) |
-| CI                     | jenkins                        | Jenkins installation           | [doc](./docs/plugins/jenkins_plugin.md) |
-| CI                     | githubactions-golang           | GitHub Actions CI for Golang   | [doc](./docs/plugins/githubactions-golang_plugin.md)          |
-| CI                     | githubactions-python           | GitHub Actions CI for Python   | [doc](./docs/plugins/githubactions-python_plugin.md)          |
-| CI                     | githubactions-nodejs           | GitHub Actions CI for Nodejs   | [doc](./docs/plugins/githubactions-nodejs_plugin.md)          |
-| CI                     | gitlabci-golang                | GitLab CI for Golang           | [doc](./docs/plugins/gitlabci-golang_plugin.md)          |
-| CD/GitOps              | argocd                         | ArgoCD installation            | [doc](./docs/plugins/argocd_plugin.md)          |
-| CD/GitOps              | argocdapp                      | ArgoCD Application creation    | [doc](./docs/plugins/argocdapp_plugin.md)          |
-| Monitoring             | kube-prometheus                | Prometheus/Grafana K8s install | [doc](./docs/plugins/kube-prometheus_plugin.md)          |
-| Observability          | devlake                        | DevLake installation           | [doc](./docs/plugins/devlake_plugin.md)          |
-| LDAP                   | openldap                       | OpenLDAP installation          | [doc](./docs/plugins/openldap_plugin.md)          |
+| Issue Tracking         | trello-github-integ            | Trello/GitHub integration      | [doc](./docs/plugins/trello-github-integ.md) |
+| Source Code Management | github-repo-scaffolding-golang | Go WebApp scaffolding          | [doc](./docs/plugins/github-repo-scaffolding-golang.md) |
+| CI                     | jenkins                        | Jenkins installation           | [doc](./docs/plugins/jenkins.md) |
+| CI                     | githubactions-golang           | GitHub Actions CI for Golang   | [doc](./docs/plugins/githubactions-golang.md)          |
+| CI                     | githubactions-python           | GitHub Actions CI for Python   | [doc](./docs/plugins/githubactions-python.md)          |
+| CI                     | githubactions-nodejs           | GitHub Actions CI for Nodejs   | [doc](./docs/plugins/githubactions-nodejs.md)          |
+| CI                     | gitlabci-golang                | GitLab CI for Golang           | [doc](./docs/plugins/gitlabci-golang.md)          |
+| CD/GitOps              | argocd                         | ArgoCD installation            | [doc](./docs/plugins/argocd.md)          |
+| CD/GitOps              | argocdapp                      | ArgoCD Application creation    | [doc](./docs/plugins/argocdapp.md)          |
+| Monitoring             | kube-prometheus                | Prometheus/Grafana K8s install | [doc](./docs/plugins/kube-prometheus.md)          |
+| Observability          | devlake                        | DevLake installation           | [doc](./docs/plugins/devlake.md)          |
+| LDAP                   | openldap                       | OpenLDAP installation          | [doc](./docs/plugins/openldap.md)          |
 
 ## Quick Start
 

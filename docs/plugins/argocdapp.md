@@ -4,7 +4,7 @@ This plugin creates an [ArgoCD Application](https://argo-cd.readthedocs.io/en/st
 
 **Notes:**
 - ArgoCD itself must have been already installed before the usage of this plugin.
-  To install ArgoCD, use the [argocd plugin](../plugins/argocd_plugin.md).
+  To install ArgoCD, use the [argocd plugin](../plugins/argocd.md).
   Or you can use both plugins(argocd+argocdapp) at the same time.
   See [GitOps Toolchain](../best_practices/gitops.md) for more info.
 - Currently, only the Helm chart is supported when creating the ArgoCD application.
@@ -48,7 +48,7 @@ tools:
 
 ## 3. Use Together with the `github-repo-scaffolding-golang` Plugin
 
-This plugin can be used together with the `github-repo-scaffolding-golang` plugin (see document [here](./github-repo-scaffolding-golang_plugin.md).)
+This plugin can be used together with the `github-repo-scaffolding-golang` plugin (see document [here](./github-repo-scaffolding-golang.md).)
 
 For example, you can first use `github-repo-scaffolding-golang` to bootstrap a Golang repo, then use this plugin to set up basic GitHub Actions CI workflows. In this scenario:
 
