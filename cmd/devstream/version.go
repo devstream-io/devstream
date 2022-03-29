@@ -5,7 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/merico-dev/stream/cmd/devstream/version"
+	"github.com/merico-dev/stream/internal/pkg/version"
 )
 
 var versionCMD = &cobra.Command{
