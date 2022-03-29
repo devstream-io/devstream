@@ -1,6 +1,6 @@
 package template
 
-var NAME_plugin_md_nameTpl = "{{ .Name }}_plugin.md"
+var NAME_plugin_md_nameTpl = "{{ .Name }}.md"
 var NAME_plugin_md_dirTpl = "docs/plugins/"
 
 // TODO(daniel-hutao): * -> `

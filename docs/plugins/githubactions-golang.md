@@ -68,7 +68,7 @@ Some parameters are optional. See the default values and optional parameters in 
 
 ## 3. Use Together with the `github-repo-scaffolding-golang` Plugin
 
-This plugin can be used together with the `github-repo-scaffolding-golang` plugin (see document [here](./github-repo-scaffolding-golang_plugin.md).)
+This plugin can be used together with the `github-repo-scaffolding-golang` plugin (see document [here](./github-repo-scaffolding-golang.md).)
 
 For example, you can first use `github-repo-scaffolding-golang` to bootstrap a Golang repo, then use this plugin to set up basic GitHub Actions CI workflows. In this scenario:
 

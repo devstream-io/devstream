@@ -4,7 +4,7 @@ This plugin creates a new GitHub Actions workflow(trello-github-integration) and
 
 ## 2 Usage:
 
-This plugin depends on and can be used together with the `trello` plugin (see document [here](./trello_plugin.md)).
+This plugin depends on and can be used together with the `trello` plugin (see document [here](./trello.md)).
 
 `trello-github-integ` plugin can also use `trello` plugin's outputs as input. See the example below:
 
