@@ -22,7 +22,7 @@ var _ = Describe("CheckLocalPlugins", func() {
 		BeforeEach(func() {
 			viper.Set("plugin-dir", "./")
 			tools = []configloader.Tool{
-				{Name: "a", Plugin: configloader.Plugin{Kind: "a"}},
+				{Name: "a", Plugin: "a"},
 			}
 			config = &configloader.Config{Tools: tools}
 
