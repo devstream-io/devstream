@@ -14,7 +14,7 @@ import (
 // State is the single component's state.
 type State struct {
 	Name     string
-	Plugin   configloader.Plugin
+	Plugin   string
 	Options  map[string]interface{}
 	Resource map[string]interface{}
 }
@@ -65,7 +65,7 @@ func (s StatesMap) Format() []byte {
 type StateKey string
 
 func StateKeyGenerateFunc(t *configloader.Tool) StateKey {
-	return StateKey(fmt.Sprintf("%s_%s", t.Name, t.Plugin.Kind))
+	return StateKey(fmt.Sprintf("%s_%s", t.Name, t.Plugin))
 }
 
 func GenerateStateKeyByToolNameAndPluginKind(toolName string, pluginKind string) StateKey {

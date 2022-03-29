@@ -33,8 +33,8 @@ func validateTool(t *Tool) []error {
 	}
 
 	// Plugin
-	if t.Plugin.Kind == "" {
-		errors = append(errors, fmt.Errorf("plugin.kind is empty"))
+	if t.Plugin == "" {
+		errors = append(errors, fmt.Errorf("plugin is empty"))
 	}
 
 	return errors
@@ -47,7 +47,7 @@ func validateDependency(tools []Tool) []error {
 	toolMap := make(map[string]bool)
 	// creating the set
 	for _, tool := range tools {
-		key := fmt.Sprintf("%s.%s", tool.Name, tool.Plugin.Kind)
+		key := fmt.Sprintf("%s.%s", tool.Name, tool.Plugin)
 		toolMap[key] = true
 	}
 

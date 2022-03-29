@@ -26,8 +26,8 @@ type ChangeResult struct {
 }
 
 func (c *Change) String() string {
-	return fmt.Sprintf("\n{\n  ActionName: %s,\n  Tool: {Name: %s, Plugin: {Kind: %s, Version: %s}}\n}",
-		c.ActionName, c.Tool.Name, c.Tool.Plugin.Kind, c.Tool.Plugin.Version)
+	return fmt.Sprintf("\n{\n  ActionName: %s,\n  Tool: {Name: %s, Plugin: %s}}\n}",
+		c.ActionName, c.Tool.Name, c.Tool.Plugin)
 }
 
 type CommandType string
@@ -90,7 +90,7 @@ func execute(smgr statemanager.Manager, changes []*Change) map[string]error {
 
 	for i, c := range changes {
 		log.Separatorf("Processing progress: %d/%d.", i+1, numOfChanges)
-		log.Infof("Processing: %s (%s) -> %s ...", c.Tool.Name, c.Tool.Plugin.Kind, c.ActionName)
+		log.Infof("Processing: %s (%s) -> %s ...", c.Tool.Name, c.Tool.Plugin, c.ActionName)
 
 		var succeeded bool
 		var err error
@@ -105,7 +105,7 @@ func execute(smgr statemanager.Manager, changes []*Change) map[string]error {
 			for _, e := range errs {
 				log.Errorf("Error: %s.", e)
 			}
-			log.Errorf("The outputs reference in tool %s (%s) can't be resolved. Please double check your config.", c.Tool.Name, c.Tool.Plugin.Kind)
+			log.Errorf("The outputs reference in tool %s (%s) can't be resolved. Please double check your config.", c.Tool.Name, c.Tool.Plugin)
 
 			// not executing this change since its input isn't valid
 			continue
@@ -125,7 +125,7 @@ func execute(smgr statemanager.Manager, changes []*Change) map[string]error {
 		}
 
 		if err != nil {
-			key := fmt.Sprintf("%s/%s-%s", c.Tool.Plugin.Kind, c.Tool.Name, c.ActionName)
+			key := fmt.Sprintf("%s/%s-%s", c.Tool.Plugin, c.Tool.Name, c.ActionName)
 			errorsMap[key] = err
 		}
 
@@ -166,7 +166,7 @@ func handleResult(smgr statemanager.Manager, change *Change) error {
 			log.Debugf("Failed to delete state %s: %s.", key, err)
 			return err
 		}
-		log.Successf("Plugin %s (%s) delete done.", change.Tool.Name, change.Tool.Plugin.Kind)
+		log.Successf("Plugin %s (%s) delete done.", change.Tool.Name, change.Tool.Plugin)
 		return nil
 	}
 
@@ -182,6 +182,6 @@ func handleResult(smgr statemanager.Manager, change *Change) error {
 		log.Debugf("Failed to add state %s: %s.", key, err)
 		return err
 	}
-	log.Successf("Plugin %s(%s) %s done.", change.Tool.Name, change.Tool.Plugin.Kind, change.ActionName)
+	log.Successf("Plugin %s(%s) %s done.", change.Tool.Name, change.Tool.Plugin, change.ActionName)
 	return nil
 }

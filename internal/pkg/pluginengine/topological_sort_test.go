@@ -11,18 +11,18 @@ import (
 
 func TestNoDependency(t *testing.T) {
 	tools := []configloader.Tool{
-		{Name: "a", Plugin: configloader.Plugin{Kind: "a"}},
-		{Name: "b", Plugin: configloader.Plugin{Kind: "b"}},
-		{Name: "c", Plugin: configloader.Plugin{Kind: "c"}},
-		{Name: "d", Plugin: configloader.Plugin{Kind: "d"}},
+		{Name: "a", Plugin: "a"},
+		{Name: "b", Plugin: "b"},
+		{Name: "c", Plugin: "c"},
+		{Name: "d", Plugin: "d"},
 	}
 	expectedRes :=
 		[][]configloader.Tool{
 			{
-				{Name: "a", Plugin: configloader.Plugin{Kind: "a"}},
-				{Name: "b", Plugin: configloader.Plugin{Kind: "b"}},
-				{Name: "c", Plugin: configloader.Plugin{Kind: "c"}},
-				{Name: "d", Plugin: configloader.Plugin{Kind: "d"}},
+				{Name: "a", Plugin: "a"},
+				{Name: "b", Plugin: "b"},
+				{Name: "c", Plugin: "c"},
+				{Name: "d", Plugin: "d"},
 			},
 		}
 	actualRes, err := topologicalSort(tools)
@@ -32,20 +32,16 @@ func TestNoDependency(t *testing.T) {
 
 func TestSingleDependency(t *testing.T) {
 	tools := []configloader.Tool{
-		{Name: "a", Plugin: configloader.Plugin{Kind: "a"}},
-		// {Name: "b", Plugin: configloader.Plugin{Kind: "b"}},
-		{Name: "c", Plugin: configloader.Plugin{Kind: "c"}, DependsOn: []string{"a.a"}},
-		// {Name: "d", Plugin: configloader.Plugin{Kind: "d"}},
+		{Name: "a", Plugin: "a"},
+		{Name: "c", Plugin: "c", DependsOn: []string{"a.a"}},
 	}
 	expectedRes :=
 		[][]configloader.Tool{
 			{
-				{Name: "a", Plugin: configloader.Plugin{Kind: "a"}},
-				// {Name: "b", Plugin: configloader.Plugin{Kind: "b"}},
-				// {Name: "d", Plugin: configloader.Plugin{Kind: "d"}},
+				{Name: "a", Plugin: "a"},
 			},
 			{
-				{Name: "c", Plugin: configloader.Plugin{Kind: "c"}, DependsOn: []string{"a.a"}},
+				{Name: "c", Plugin: "c", DependsOn: []string{"a.a"}},
 			},
 		}
 	actualRes, err := topologicalSort(tools)
@@ -55,22 +51,22 @@ func TestSingleDependency(t *testing.T) {
 
 func TestMultiDependencies(t *testing.T) {
 	tools := []configloader.Tool{
-		{Name: "a", Plugin: configloader.Plugin{Kind: "a"}},
-		{Name: "b", Plugin: configloader.Plugin{Kind: "b"}},
-		{Name: "c", Plugin: configloader.Plugin{Kind: "c"}, DependsOn: []string{"a.a", "b.b"}},
-		{Name: "d", Plugin: configloader.Plugin{Kind: "d"}, DependsOn: []string{"c.c"}},
+		{Name: "a", Plugin: "a"},
+		{Name: "b", Plugin: "b"},
+		{Name: "c", Plugin: "c", DependsOn: []string{"a.a", "b.b"}},
+		{Name: "d", Plugin: "d", DependsOn: []string{"c.c"}},
 	}
 	expectedRes :=
 		[][]configloader.Tool{
 			{
-				{Name: "a", Plugin: configloader.Plugin{Kind: "a"}},
-				{Name: "b", Plugin: configloader.Plugin{Kind: "b"}},
+				{Name: "a", Plugin: "a"},
+				{Name: "b", Plugin: "b"},
 			},
 			{
-				{Name: "c", Plugin: configloader.Plugin{Kind: "c"}, DependsOn: []string{"a.a", "b.b"}},
+				{Name: "c", Plugin: "c", DependsOn: []string{"a.a", "b.b"}},
 			},
 			{
-				{Name: "d", Plugin: configloader.Plugin{Kind: "d"}, DependsOn: []string{"c.c"}},
+				{Name: "d", Plugin: "d", DependsOn: []string{"c.c"}},
 			},
 		}
 	actualRes, err := topologicalSort(tools)
@@ -80,22 +76,22 @@ func TestMultiDependencies(t *testing.T) {
 
 func TestDependencyLoop(t *testing.T) {
 	tools := []configloader.Tool{
-		{Name: "a", Plugin: configloader.Plugin{Kind: "a"}},
-		{Name: "b", Plugin: configloader.Plugin{Kind: "b"}, DependsOn: []string{"d.d"}},
-		{Name: "c", Plugin: configloader.Plugin{Kind: "c"}, DependsOn: []string{"b.b"}},
-		{Name: "d", Plugin: configloader.Plugin{Kind: "d"}, DependsOn: []string{"c.c"}},
+		{Name: "a", Plugin: "a"},
+		{Name: "b", Plugin: "b", DependsOn: []string{"d.d"}},
+		{Name: "c", Plugin: "c", DependsOn: []string{"b.b"}},
+		{Name: "d", Plugin: "d", DependsOn: []string{"c.c"}},
 	}
 	expectedRes :=
 		[][]configloader.Tool{
 			{
-				{Name: "a", Plugin: configloader.Plugin{Kind: "a"}},
-				{Name: "b", Plugin: configloader.Plugin{Kind: "b"}},
+				{Name: "a", Plugin: "a"},
+				{Name: "b", Plugin: "b"},
 			},
 			{
-				{Name: "c", Plugin: configloader.Plugin{Kind: "c"}, DependsOn: []string{"a.a", "b.b"}},
+				{Name: "c", Plugin: "c", DependsOn: []string{"a.a", "b.b"}},
 			},
 			{
-				{Name: "d", Plugin: configloader.Plugin{Kind: "d"}, DependsOn: []string{"c.c"}},
+				{Name: "d", Plugin: "d", DependsOn: []string{"c.c"}},
 			},
 		}
 	actualRes, err := topologicalSort(tools)

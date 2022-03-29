@@ -7,6 +7,7 @@ import (
 
 	"gopkg.in/yaml.v3"
 
+	"github.com/merico-dev/stream/internal/pkg/version"
 	"github.com/merico-dev/stream/pkg/util/log"
 )
 
@@ -28,7 +29,7 @@ type Tool struct {
 	// start with an alphanumeric character
 	// end with an alphanumeric character
 	Name      string                 `yaml:"name"`
-	Plugin    Plugin                 `yaml:"plugin"`
+	Plugin    string                 `yaml:"plugin"`
 	DependsOn []string               `yaml:"dependsOn"`
 	Options   map[string]interface{} `yaml:"options"`
 }
@@ -46,12 +47,6 @@ func (t *Tool) DeepCopy() *Tool {
 	return &retTool
 }
 
-// Plugin is the struct for the plugin section of each tool of the DevStream configuration file.
-type Plugin struct {
-	Kind    string `mapstructure:"kind"`
-	Version string `mapstructure:"version"`
-}
-
 // LoadConf reads an input file as a Config struct.
 func LoadConf(fname string) *Config {
 	fileBytes, err := ioutil.ReadFile(fname)
@@ -67,7 +62,8 @@ func LoadConf(fname string) *Config {
 	var config Config
 	err = yaml.Unmarshal(fileBytes, &config)
 	if err != nil {
-		log.Errorf("Unmarshal the config failed: %s.", err)
+		log.Error("Please verify the format of your config file.")
+		log.Errorf("Reading config file failed. %s.", err)
 		return nil
 	}
 
@@ -86,12 +82,12 @@ func LoadConf(fname string) *Config {
 // GetPluginFileName creates the file name based on the tool's name and version
 // If the plugin {githubactions 0.0.1}, the generated name will be "githubactions_0.0.1.so"
 func GetPluginFileName(t *Tool) string {
-	return fmt.Sprintf("%s-%s-%s_%s.so", t.Plugin.Kind, GOOS, GOARCH, t.Plugin.Version)
+	return fmt.Sprintf("%s-%s-%s_%s.so", t.Plugin, GOOS, GOARCH, version.Version)
 }
 
 // GetPluginMD5FileName  If the plugin {githubactions 0.0.1}, the generated name will be "githubactions_0.0.1.md5"
 func GetPluginMD5FileName(t *Tool) string {
-	return fmt.Sprintf("%s-%s-%s_%s.md5", t.Plugin.Kind, GOOS, GOARCH, t.Plugin.Version)
+	return fmt.Sprintf("%s-%s-%s_%s.md5", t.Plugin, GOOS, GOARCH, version.Version)
 }
 
 // GetDtmMD5FileName format likes dtm-linux-amd64

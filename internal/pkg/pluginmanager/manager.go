@@ -9,8 +9,8 @@ import (
 
 	"github.com/spf13/viper"
 
-	"github.com/merico-dev/stream/cmd/devstream/version"
 	"github.com/merico-dev/stream/internal/pkg/configloader"
+	"github.com/merico-dev/stream/internal/pkg/version"
 	"github.com/merico-dev/stream/pkg/util/log"
 	"github.com/merico-dev/stream/pkg/util/md5"
 )
@@ -35,7 +35,7 @@ func DownloadPlugins(conf *configloader.Config) error {
 		if _, err := os.Stat(filepath.Join(pluginDir, pluginFileName)); err != nil {
 			if errors.Is(err, os.ErrNotExist) {
 				// download .so file
-				if err := dc.download(pluginDir, pluginFileName, tool.Plugin.Version); err != nil {
+				if err := dc.download(pluginDir, pluginFileName, version.Version); err != nil {
 					return err
 				}
 				log.Successf("[%s] download succeeded.", pluginFileName)
@@ -46,7 +46,7 @@ func DownloadPlugins(conf *configloader.Config) error {
 		if _, err := os.Stat(filepath.Join(pluginDir, pluginMD5FileName)); err != nil {
 			if errors.Is(err, os.ErrNotExist) {
 				// download .md5 file
-				if err := dc.download(pluginDir, pluginMD5FileName, tool.Plugin.Version); err != nil {
+				if err := dc.download(pluginDir, pluginMD5FileName, version.Version); err != nil {
 					return err
 				}
 				log.Successf("[%s] download succeeded.", pluginMD5FileName)
@@ -65,7 +65,7 @@ func DownloadPlugins(conf *configloader.Config) error {
 		}
 		// if existing .so doesn't matches with .md5, re-download
 		log.Infof("Plugin: %s doesn't match with .md5 and will be downloaded.", pluginFileName)
-		if err := redownloadPlugins(dc, pluginDir, pluginFileName, pluginMD5FileName, tool.Plugin.Version); err != nil {
+		if err := redownloadPlugins(dc, pluginDir, pluginFileName, pluginMD5FileName, version.Version); err != nil {
 			return err
 		}
 

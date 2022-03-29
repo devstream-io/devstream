@@ -31,8 +31,9 @@ clean: ## Remove dtm and plugins. It's best to run a "clean" before "build".
 
 .PHONY: build-core
 build-core: fmt vet mod-tidy ## Build dtm core only, without plugins, locally.
-	go build -trimpath -gcflags="all=-N -l" -ldflags "-X github.com/merico-dev/stream/cmd/devstream/version.Version=${VERSION}" -o dtm-${GOOS}-${GOARCH} ./cmd/devstream/
+	go build -trimpath -gcflags="all=-N -l" -ldflags "-X github.com/merico-dev/stream/internal/pkg/version.Version=${VERSION}" -o dtm-${GOOS}-${GOARCH} ./cmd/devstream/
 	$(MAKE) md5-core
+	rm -f dtm
 	cp dtm-${GOOS}-${GOARCH} dtm
 
 .PHONY: build-plugin.%

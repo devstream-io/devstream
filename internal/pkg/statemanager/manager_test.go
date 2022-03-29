@@ -7,7 +7,6 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.com/merico-dev/stream/internal/pkg/backend/local"
-	"github.com/merico-dev/stream/internal/pkg/configloader"
 	"github.com/merico-dev/stream/internal/pkg/statemanager"
 )
 
@@ -26,7 +25,7 @@ var _ = Describe("Statemanager", func() {
 			key := statemanager.StateKey("name_githubactions")
 			stateA := statemanager.State{
 				Name:     "name",
-				Plugin:   configloader.Plugin{Kind: "githubactions", Version: "0.0.2"},
+				Plugin:   "githubactions",
 				Options:  map[string]interface{}{"a": "value"},
 				Resource: map[string]interface{}{"a": "value"},
 			}
