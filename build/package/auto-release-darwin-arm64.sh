@@ -12,7 +12,7 @@ GOARCH=$(go env GOARCH)
 
 # call build core and plugins
 cd ../..
-make build
+make build  -j8
 
 # install github-release for uploading
 go install github.com/github-release/github-release@latest
