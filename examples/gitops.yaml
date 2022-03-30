@@ -1,12 +1,7 @@
 tools:
 # name of the instance with github-repo-scaffolding-golang
 - name: go-webapp-repo
-  plugin:
-    # kind of the plugin
-    kind: github-repo-scaffolding-golang
-    # version of the plugin
-    # checkout the version from the GitHub releases
-    version: 0.2.0
+  plugin: github-repo-scaffolding-golang
   # options for the plugin
   options:
     # the repo's owner. It should be case-sensitive here; strictly use your GitHub username; please change the value below.
@@ -18,12 +13,7 @@ tools:
     # the image repo you'd like to push the container image; please change the value below.
     image_repo: YOUR_DOCKERHUB_USERNAME/YOUR_DOCKERHUB_IMAGE_REPO_NAME
 - name: jira-github-default
-  plugin:
-    # kind of this plugin
-    kind: jira-github-integ
-    # version of the plugin
-    # checkout the version from the GitHub releases
-    version: 0.2.0
+  plugin: jira-github-integ
   # optional; if specified, dtm will make sure the dependency is applied first before handling this tool.
   dependsOn: [ "go-webapp-repo.github-repo-scaffolding-golang" ]
   # options for the plugin
@@ -41,12 +31,7 @@ tools:
     # main branch of the repo (to which branch the plugin will submit the workflows)
     branch: main
 - name: golang-webapp-actions
-  plugin:
-    # name of the plugin
-    kind: githubactions-golang
-    # version of the plugin
-    # checkout the version from the GitHub releases
-    version: 0.2.0
+  plugin: githubactions-golang
   # optional; if specified, dtm will make sure the dependency is applied first before handling this tool.
   dependsOn: [ "go-webapp-repo.github-repo-scaffolding-golang" ]
   # options for the plugin
@@ -84,12 +69,7 @@ tools:
       # dockerhub image repo; please change the value below.
       repo: YOUR_DOCKERHUB_IMAGE_REPO_NAME
 - name: argocd-dev
-  plugin:
-    # name of the plugin
-    kind: argocd
-    # version of the plugin
-    # checkout the version from the GitHub releases
-    version: 0.2.0
+  plugin: argocd
   options:
     # need to create the namespace or not, default: false
     create_namespace: true
@@ -113,13 +93,7 @@ tools:
       # whether to perform a CRD upgrade during installation
       upgradeCRDs: true
 - name: helloworld
-  plugin:
-    # name of the plugin
-    kind: argocdapp
-    # version of the plugin
-    # checkout the version from the GitHub releases
-    version: 0.2.0
-  # if specified, dtm will make sure the dependency is applied first before handling this tool.
+  plugin: argocdapp
   dependsOn: [ "argocd-dev.argocd" ]
   # options for the plugin
   options:
