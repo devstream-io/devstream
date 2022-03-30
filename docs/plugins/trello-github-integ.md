@@ -11,22 +11,16 @@ This plugin depends on and can be used together with the `trello` plugin (see do
 ```yaml
 tools:
 - name: my-trello-board
-  plugin:
-    kind: trello
-    version: 0.3.0
+  # name of the plugin
+  plugin: trello
   dependsOn: ["demo.github-repo-scaffolding-golang"]
   options:
     owner: YOUR_GITHUB_USERNAME
     repo: YOUR_REPO_NAME
     kanbanBoardName: KANBAN_BOARD_NAME
 - name: trello-github
-  # plugin profile
-  plugin:
-    # kind of this plugin
-    kind: trello-github-integ
-    # version of the plugin
-    # checkout the version from the GitHub releases
-    version: 0.3.0
+  # name of the plugin
+  plugin: trello-github-integ
   # optional; if specified, dtm will make sure the dependency is applied first before handling this tool.
   dependsOn: [ "my-trello-board.trello" ]
   # options for the plugin
@@ -55,4 +49,4 @@ In the example above:
 - We create a Trello board using `trello` plugin, and the board is marked to be used for repo YOUR_GITHUB_USERNAME/YOUR_REPO_NAME.
 - `trello-github-integ` plugin depends on `trello` plugin, because we use `trello` plugin's outputs as the input for the `trello-github-integ` plugin.
 
-Pay attention to the `${{ xxx }}` part in the example. `${{ TOOL_NAME.TOOL_KIND.outputs.var}}` is the syntax for using an output.
+Pay attention to the `${{ xxx }}` part in the example. `${{ TOOL_NAME.PLUGIN.outputs.var}}` is the syntax for using an output.

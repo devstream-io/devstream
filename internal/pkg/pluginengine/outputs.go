@@ -12,7 +12,7 @@ const (
 	OUTPUT_REFERENCE_PREFIX = "${{"
 	OUTPUT_REFERENCE_SUFFIX = "}}"
 
-	// e.g., ${{ TOOL_NAME.PLUGIN_KIND.outputs.some_key }}
+	// e.g., ${{ TOOL_NAME.PLUGIN.outputs.some_key }}
 
 	// it has 4 sections, separated by "."
 	OUTPUT_REFERENCE_TOTAL_SECTIONS = 4
@@ -22,7 +22,7 @@ const (
 	TOOL_NAME = 0
 
 	// the second section is the plugin's kind
-	PLUGIN_KIND = 1
+	PLUGIN = 1
 
 	// the third section is a constant string "outputs"
 	// and the last section is the key to refer to
@@ -87,5 +87,5 @@ func stripOutputReferencePrefixAndSuffix(s string) string {
 func getToolNamePluginKindAndOutputReferenceKey(s string) (string, string, string) {
 	outputReferenceStr := stripOutputReferencePrefixAndSuffix(s)
 	sections := strings.Split(outputReferenceStr, SECTION_SEPARATOR)
-	return sections[0], sections[1], sections[3]
+	return sections[TOOL_NAME], sections[PLUGIN], sections[OUTPUT_REFERENCE_KEY]
 }

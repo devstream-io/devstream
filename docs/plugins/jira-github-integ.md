@@ -23,12 +23,8 @@ If you don't know how to create these tokens, check out:
 ```yaml
 tools:
 - name: default
-  plugin:
-    # kind of this plugin
-    kind: jira-github-integ
-    # version of the plugin
-    # checkout the version from the GitHub releases
-    version: 0.3.0
+  # name of the plugin
+  plugin: jira-github-integ
   # options for the plugin
   options:
     # the repo's owner

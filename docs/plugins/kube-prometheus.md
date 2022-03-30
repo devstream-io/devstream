@@ -8,12 +8,8 @@ This plugin installs [kube-prometheus](https://github.com/prometheus-operator/ku
 tools:
 # name of the instance with kube-prometheus
 - name: kube-prometheus-dev
-  plugin:
-    # kind of the plugin
-    kind: kube-prometheus
-    # version of the plugin
-    # checkout the version from the GitHub releases
-    version: 0.3.0
+  # name of the plugin
+  plugin: kube-prometheus
   # options for the plugin
   options:
     # need to create the namespace or not, default: false

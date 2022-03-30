@@ -16,7 +16,7 @@ Notes:
 To use the output, follow this format:
 
 ```
-${{ TOOL_NAME.TOOL_KIND.outputs.OUTPUT_KEY }}
+${{ TOOL_NAME.PLUGIN.outputs.OUTPUT_KEY }}
 ```
 
 For example, given config:
@@ -24,9 +24,7 @@ For example, given config:
 ```yaml
 tools:
 - name: kanban
-  plugin:
-    kind: trello
-    version: 0.3.0
+  plugin: trello
   options:
     owner: IronCore864
     repo: golang-demo
@@ -34,7 +32,7 @@ tools:
 ```
 
 - TOOL_NAME is "kanban"
-- TOOL_KIND is "trello"
+- PLUGIN is "trello"
 
 If the "trello" plugin has an output key name "boardId", then we can use its value by the following syntax:
 
@@ -50,18 +48,14 @@ Config:
 ---
 tools:
 - name: repo
-  plugin:
-    kind: github-repo-scaffolding-golang
-    version: 0.3.0
+  plugin: github-repo-scaffolding-golang
   options:
     owner: IronCore864
     repo: golang-demo
     branch: main
     image_repo: ironcore864/golang-demo
 - name: cd
-  plugin:
-    kind: argocd
-    version: 0.3.0
+  plugin: argocd
   options:
     create_namespace: true
     repo:
@@ -75,9 +69,7 @@ tools:
       timeout: 10m
       upgradeCRDs: true
 - name: demo
-  plugin:
-    kind: argocdapp
-    version: 0.3.0
+  plugin: argocdapp
   dependsOn: [ "cd.argocd", "demo.github-repo-scaffolding-golang" ]
   options:
     app:
@@ -93,7 +85,7 @@ tools:
 ```
 
 In this example:
-- Tool "demo" (kind: argocdapp) depends on tool "repo" (kind: github-repo-scaffolding-golang);
+- Tool "demo" (plugin: argocdapp) depends on tool "repo" (plugin: github-repo-scaffolding-golang);
 - tool "demo" has an user option "options.source.repoURL", which uses tool "repo" output "repoURL" (`${{ demo.github-repo-scaffolding-golang.outputs.repoURL }}`)
 
 

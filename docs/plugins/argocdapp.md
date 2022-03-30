@@ -14,12 +14,8 @@ This plugin creates an [ArgoCD Application](https://argo-cd.readthedocs.io/en/st
 ```yaml
 tools:
 - name: helloworld
-  plugin:
-    # name of the plugin
-    kind: argocdapp
-    # version of the plugin
-    # checkout the version from the GitHub releases
-    version: 0.3.0
+  # name of the plugin
+  plugin: argocdapp
   # if specified, dtm will make sure the dependency is applied first before handling this tool.
   dependsOn: [ "ARGOCD_TOOL_NAME.argocd" ]
   # options for the plugin
@@ -61,18 +57,14 @@ See the example below:
 ---
 tools:
 - name: go-webapp-repo
-  plugin:
-    kind: github-repo-scaffolding-golang
-    version: 0.2.0
+  plugin: github-repo-scaffolding-golang
   options:
     owner: IronCore864
     repo: go-webapp-devstream-demo
     branch: main
     image_repo: ironcore864/go-webapp-devstream-demo
 - name: go-webapp-argocd-deploy
-  plugin:
-    kind: argocdapp
-    version: 0.2.0
+  plugin: argocdapp
   dependsOn: ["go-webapp-repo.github-repo-scaffolding-golang"]
   options:
     app:
@@ -92,4 +84,4 @@ In the example above:
 - We put `go-webapp-repo.github-repo-scaffolding-golang` as dependency by using the `dependsOn` keyword.
 - We used `go-webapp-repo.github-repo-scaffolding-golang`'s output as input for the `githubactions-golang` plugin.
 
-Pay attention to the `${{ xxx }}` part in the example. `${{ TOOL_NAME.TOOL_KIND.outputs.var}}` is the syntax for using an output.
+Pay attention to the `${{ xxx }}` part in the example. `${{ TOOL_NAME.PLUGIN.outputs.var}}` is the syntax for using an output.

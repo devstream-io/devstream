@@ -25,12 +25,8 @@ If you don't know how to create this token, check out:
 tools:
 # name of the instance with github-repo-scaffolding-golang
 - name: go-webapp-repo
-  plugin:
-    # kind of the plugin
-    kind: github-repo-scaffolding-golang
-    # version of the plugin
-    # checkout the version from the GitHub releases
-    version: 0.3.0
+  # name of the plugin
+  plugin: github-repo-scaffolding-golang
   # options for the plugin
   options:
     # the repo's owner. It should be case-sensitive here; strictly use your GitHub user name; please change the value below.
@@ -68,18 +64,14 @@ If, for example, you want to use the outputs as inputs for another plugin, you c
 ---
 tools:
 - name: go-webapp-repo
-  plugin:
-    kind: github-repo-scaffolding-golang
-    version: 0.3.0
+  plugin: github-repo-scaffolding-golang
   options:
     owner: IronCore864
     repo: go-webapp-devstream-demo
     branch: main
     image_repo: ironcore864/go-webapp-devstream-demo
 - name: golang-demo-actions
-  plugin:
-    kind: githubactions-golang
-    version: 0.3.0
+  plugin: githubactions-golang
   dependsOn: ["go-webapp-repo.github-repo-scaffolding-golang"]
   options:
     owner: ${{go-webapp-repo.github-repo-scaffolding-golang.outputs.owner}}
@@ -98,4 +90,4 @@ tools:
       enable: False
 ```
 
-Pay attention to the `${{ xxx }}` part in the example. `${{ TOOL_NAME.TOOL_KIND.outputs.var}}` is the syntax for using an output.
+Pay attention to the `${{ xxx }}` part in the example. `${{ TOOL_NAME.PLUGIN.outputs.var}}` is the syntax for using an output.

@@ -7,12 +7,8 @@ This plugin installs [OpenLDAP](https://www.openldap.org/) in an existing Kubern
 ```yaml
 tools:
 - name: openldap
-  plugin:
-    # name of the plugin
-    kind: openldap
-    # version of the plugin
-    # checkout the version from the GitHub releases
-    version: 0.3.0
+  # name of the plugin
+  plugin: openldap
   options:
     # need to create the namespace or not, default: false
     create_namespace: true
