@@ -1,6 +1,6 @@
 #! /bin/bash -e
 
-tag=v0.4.0
+tag=v0.3.1
 
 user=merico-dev
 repo=stream
@@ -12,7 +12,7 @@ GOARCH=$(go env GOARCH)
 
 # call build core and plugins
 cd ../..
-make build
+make build -j8
 
 # install github-release for uploading
 go install github.com/github-release/github-release@latest

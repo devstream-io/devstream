@@ -20,14 +20,10 @@ _If Docker image build/push is enabled (see the example below), you also need to
 ```yaml
 tools:
 - name: golang-demo-app
-  plugin:
-    # name of the plugin
-    kind: githubactions-golang
-    # version of the plugin
-    # checkout the version from the GitHub releases
-    version: 0.3.0
+  # name of the plugin
+  plugin: githubactions-golang
   # optional; if specified, dtm will make sure the dependency is applied first before handling this tool.
-  dependsOn: [ "TOOL1_NAME.TOOL1_KIND", "TOOL2_NAME.TOOL2_KIND" ]
+  dependsOn: [ "TOOL1_NAME.TOOL1_PLUGIN", "TOOL2_NAME.TOOL2_PLUGIN" ]
   # options for the plugin
   options:
     # the repo's owner. It should be case-sensitive here; strictly use your GitHub user name; please change the value below.
@@ -81,18 +77,14 @@ See the example below:
 ---
 tools:
 - name: go-webapp-repo
-  plugin:
-    kind: github-repo-scaffolding-golang
-    version: 0.3.0
+  plugin: github-repo-scaffolding-golang
   options:
     owner: IronCore864
     repo: go-webapp-devstream-demo
     branch: main
     image_repo: ironcore864/go-webapp-devstream-demo
 - name: golang-demo-actions
-  plugin:
-    kind: githubactions-golang
-    version: 0.3.0
+  plugin: githubactions-golang
   dependsOn: ["go-webapp-repo.github-repo-scaffolding-golang"]
   options:
     owner: ${{go-webapp-repo.github-repo-scaffolding-golang.outputs.owner}}
@@ -116,4 +108,4 @@ In the example above:
 - We put `go-webapp-repo.github-repo-scaffolding-golang` as dependency by using the `dependsOn` keyword.
 - We used `go-webapp-repo.github-repo-scaffolding-golang`'s output as input for the `githubactions-golang` plugin.
 
-Pay attention to the `${{ xxx }}` part in the example. `${{ TOOL_NAME.TOOL_KIND.outputs.var}}` is the syntax for using an output.
+Pay attention to the `${{ xxx }}` part in the example. `${{ TOOL_NAME.PLUGIN.outputs.var}}` is the syntax for using an output.

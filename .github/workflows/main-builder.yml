@@ -25,7 +25,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
       - name: Build
-        run: make build
+        run: make build -j8
       - name: Test
         run: go test -v ./...
   build-and-test-on-macos:
@@ -48,6 +48,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
       - name: Build
-        run: make build
+        run: make build -j8
       - name: Test
         run: go test -v ./...

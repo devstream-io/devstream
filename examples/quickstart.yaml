@@ -1,18 +1,14 @@
 ---
 tools:
 - name: go-webapp-repo
-  plugin:
-    kind: github-repo-scaffolding-golang
-    version: 0.2.0
+  plugin: github-repo-scaffolding-golang
   options:
     owner: YOUR_GITHUB_USERNAME_CASE_SENSITIVE
     repo: go-webapp-devstream-demo
     branch: main
     image_repo: YOUR_DOCKER_USERNAME/go-webapp-devstream-demo
 - name: golang-demo-actions
-  plugin:
-    kind: githubactions-golang
-    version: 0.2.0
+  plugin: githubactions-golang
   dependsOn: ["go-webapp-repo.github-repo-scaffolding-golang"]
   options:
     owner: YOUR_GITHUB_USERNAME_CASE_SENSITIVE

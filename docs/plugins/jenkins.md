@@ -17,12 +17,8 @@ chown -R 1000:1000 ~/data/jenkins-volumes/
 tools:
 # name of the instance with jenkins
 - name: jenkins-dev
-  plugin:
-    # kind of the plugin
-    kind: jenkins
-    # version of the plugin
-    # checkout the version from the GitHub releases
-    version: 0.3.0
+  # name of the plugin
+  plugin: jenkins
   # options for the plugin
   options:
     # need to create the namespace or not, default: false

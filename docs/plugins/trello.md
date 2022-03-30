@@ -19,12 +19,8 @@ To create a Trello API key and token, see [here](https://trello.com/app-key).
 ```yaml
 tools:
 - name: my-trello-board
-  # plugin profile
-  plugin:
-    # kind of this plugin
-    kind: trello
-    # version of the plugin
-    version: 0.3.0
+  # name of the plugin
+  plugin: trello
   # options for the plugin, checkout the version from the GitHub releases
   options:
     # the repo's owner

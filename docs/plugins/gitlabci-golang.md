@@ -11,12 +11,8 @@ See the [official document](https://docs.gitlab.com/ee/user/profile/personal_acc
 ```yaml
 tools:
 - name: go-hello-world
-  plugin:
-    # name of the plugin
-    kind: gitlabci-golang
-    # version of the plugin
-    # checkout the version from the GitHub releases
-    version: 0.3.0
+  # name of the plugin
+  plugin: gitlabci-golang
   # options for the plugin
   options:
     # owner/repo; "path with namespace" is only GitLab API's way of saying the same thing; please change the values below.
