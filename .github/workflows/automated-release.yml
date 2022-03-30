@@ -35,7 +35,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
       - name: Build
-        run: make build
+        run: make build -j8
       - name: Install Github-release
         run: go install github.com/github-release/github-release@latest
       - name: upload
@@ -73,7 +73,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
       - name: Build
-        run: make build
+        run: make build -j8
       - name: Install Github-release
         run: go install github.com/github-release/github-release@latest
       - name: upload
