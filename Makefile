@@ -1,4 +1,4 @@
-VERSION=0.3.0
+VERSION=0.3.1
 
 MKFILE_PATH=$(abspath $(lastword $(MAKEFILE_LIST)))
 BUILD_PATH=$(patsubst %/,%,$(dir $(MKFILE_PATH)))/build/working_dir
@@ -62,21 +62,6 @@ md5-plugins: $(addprefix md5-plugin.,$(PLUGINS_NAME))
 md5-plugin.%:
 	$(eval plugin_name := $(strip $*))
 	${MD5SUM} .devstream/${plugin_name}-${PLUGIN_SUFFIX}.so > .devstream/${plugin_name}-${PLUGIN_SUFFIX}.md5
-
-
-.PHONY: build-linux-amd64
-build-linux-amd64: ## Cross-platform build for "linux/amd64".
-	echo "Building in ${BUILD_PATH}"
-	mkdir -p .devstream
-	rm -rf ${BUILD_PATH} && mkdir ${BUILD_PATH}
-	docker buildx build --platform linux/amd64 --load -t mericodev/stream-builder:v${VERSION} --build-arg VERSION=${VERSION} -f build/package/Dockerfile .
-	cp -r go.mod go.sum cmd internal pkg build/package/build_linux_amd64.sh ${BUILD_PATH}/
-	chmod +x ${BUILD_PATH}/build_linux_amd64.sh
-	docker run --rm --platform linux/amd64 -v ${BUILD_PATH}:/devstream mericodev/stream-builder:v${VERSION}
-	mv ${BUILD_PATH}/output/*.so .devstream/
-	mv ${BUILD_PATH}/output/*.md5 .devstream/
-	mv ${BUILD_PATH}/output/dtm* .
-	rm -rf ${BUILD_PATH}
 
 .PHONY: fmt
 fmt: ## Run 'go fmt' & goimports against code.
