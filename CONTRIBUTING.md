@@ -32,7 +32,7 @@ We use `golangci-lint` ([official website](https://golangci-lint.run/), [GitHub]
 - It can be [integrated with IDE](https://golangci-lint.run/usage/integrations/)
 - You can [run it locally](https://golangci-lint.run/usage/quick-start/).
 
-Besides, we also use the [Go Report Card](https://goreportcard.com/report/github.com/merico-dev/stream). There is a badge like [![Go Report Card](https://goreportcard.com/badge/github.com/merico-dev/stream)](https://goreportcard.com/report/github.com/merico-dev/stream) in the main README.md.
+Besides, we also use the [Go Report Card](https://goreportcard.com/report/github.com/devstream-io/devstream). There is a badge like [![Go Report Card](https://goreportcard.com/badge/github.com/devstream-io/devstream)](https://goreportcard.com/report/github.com/devstream-io/devstream) in the main README.md.
 
 ### Git Commit Message
 

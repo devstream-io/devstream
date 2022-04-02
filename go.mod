@@ -1,4 +1,4 @@
-module github.com/merico-dev/stream
+module github.com/devstream-io/devstream
 
 go 1.17
 

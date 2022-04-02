@@ -8,14 +8,14 @@ First, please read our [CONTRIBUTING](../CONTRIBUTING.md) doc.
 
 ### 1.1 Definition
 
-Each plugin needs to satisfy all the interfaces defined in the [plugin engine](https://github.com/merico-dev/stream/blob/main/internal/pkg/pluginengine/plugin.go#L10).
+Each plugin needs to satisfy all the interfaces defined in the [plugin engine](https://github.com/devstream-io/devstream/blob/main/internal/pkg/pluginengine/plugin.go#L10).
 
 At the moment, there are 4 interfaces, which might be subject to change. Currently, the three interfaces are:
 
-- [`Create`](https://github.com/merico-dev/stream/blob/main/internal/pkg/pluginengine/plugin.go#L12)
-- [`Read`](https://github.com/merico-dev/stream/blob/main/internal/pkg/pluginengine/plugin.go#L13)
-- [`Update`](https://github.com/merico-dev/stream/blob/main/internal/pkg/pluginengine/plugin.go#L14)
-- [`Delete`](https://github.com/merico-dev/stream/blob/main/internal/pkg/pluginengine/plugin.go#L16)
+- [`Create`](https://github.com/devstream-io/devstream/blob/main/internal/pkg/pluginengine/plugin.go#L12)
+- [`Read`](https://github.com/devstream-io/devstream/blob/main/internal/pkg/pluginengine/plugin.go#L13)
+- [`Update`](https://github.com/devstream-io/devstream/blob/main/internal/pkg/pluginengine/plugin.go#L14)
+- [`Delete`](https://github.com/devstream-io/devstream/blob/main/internal/pkg/pluginengine/plugin.go#L16)
 
 ### 1.2 Return Value
 

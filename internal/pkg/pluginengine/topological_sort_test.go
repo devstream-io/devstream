@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/merico-dev/stream/internal/pkg/configloader"
+	"github.com/devstream-io/devstream/internal/pkg/configloader"
 )
 
 func TestNoDependency(t *testing.T) {

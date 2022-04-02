@@ -5,9 +5,9 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
-	ga "github.com/merico-dev/stream/internal/pkg/plugin/githubactions"
-	"github.com/merico-dev/stream/pkg/util/github"
-	"github.com/merico-dev/stream/pkg/util/log"
+	ga "github.com/devstream-io/devstream/internal/pkg/plugin/githubactions"
+	"github.com/devstream-io/devstream/pkg/util/github"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 // Delete remove GitHub Actions workflows.

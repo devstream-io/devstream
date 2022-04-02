@@ -3,8 +3,8 @@ package trello
 import (
 	"fmt"
 
-	"github.com/merico-dev/stream/pkg/util/log"
-	"github.com/merico-dev/stream/pkg/util/trello"
+	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/trello"
 )
 
 // Options is the struct for configurations of the trellogithub plugin.

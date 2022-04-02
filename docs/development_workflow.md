@@ -4,7 +4,7 @@ This document shows the workflow of how to develop DevStream.
 
 ## Step 1 - Fork the repo
 
-1. Visit the DevStream repo: [https://github.com/merico-dev/stream](https://github.com/merico-dev/stream);
+1. Visit the DevStream repo: [https://github.com/devstream-io/devstream](https://github.com/devstream-io/devstream);
 2. Click the `Fork` button to create a fork of the DevStream.
 
 ## Step 2 - Clone the repo
@@ -42,7 +42,7 @@ Execute `git remote -v` and you'll see output like below:
 ```sh
 origin	git@github.com:daniel-hutao/stream.git (fetch)
 origin	git@github.com:daniel-hutao/stream.git (push)
-upstream	https://github.com/merico-dev/stream (fetch)
+upstream	https://github.com/devstream-io/devstream (fetch)
 upstream	no_push (push)
 ```
 

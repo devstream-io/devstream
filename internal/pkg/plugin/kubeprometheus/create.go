@@ -5,8 +5,8 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
-	. "github.com/merico-dev/stream/internal/pkg/plugin/common/helm"
-	"github.com/merico-dev/stream/pkg/util/log"
+	. "github.com/devstream-io/devstream/internal/pkg/plugin/common/helm"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 // Create creates kube-prometheus with provided options.

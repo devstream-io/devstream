@@ -28,5 +28,5 @@ If you find a security-related bug in DevStream, we kindly ask you to disclose r
 
 We do our best to react quickly. Sometimes, it might take a little longer (e.g. out-of-office conditions); please bear with us in these cases.
 
-We publish security advisories using the [Git Hub Security Advisories](https://github.com/merico-dev/stream/security/advisories) feature to keep our community well informed, and will credit you for your
+We publish security advisories using the [Git Hub Security Advisories](https://github.com/devstream-io/devstream/security/advisories) feature to keep our community well informed, and will credit you for your
 findings (unless you prefer to stay anonymous, of course).

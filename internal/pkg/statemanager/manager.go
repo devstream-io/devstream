@@ -5,9 +5,9 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/merico-dev/stream/internal/pkg/backend"
-	"github.com/merico-dev/stream/internal/pkg/backend/local"
-	"github.com/merico-dev/stream/pkg/util/log"
+	"github.com/devstream-io/devstream/internal/pkg/backend"
+	"github.com/devstream-io/devstream/internal/pkg/backend/local"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 type ComponentAction string

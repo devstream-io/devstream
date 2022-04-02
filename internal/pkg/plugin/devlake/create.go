@@ -7,9 +7,9 @@ import (
 	"github.com/cenkalti/backoff/v4"
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/merico-dev/stream/pkg/util/downloader"
-	"github.com/merico-dev/stream/pkg/util/kubectl"
-	"github.com/merico-dev/stream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/downloader"
+	"github.com/devstream-io/devstream/pkg/util/kubectl"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 func Create(options map[string]interface{}) (map[string]interface{}, error) {

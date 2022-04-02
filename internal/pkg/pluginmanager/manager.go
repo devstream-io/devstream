@@ -9,10 +9,10 @@ import (
 
 	"github.com/spf13/viper"
 
-	"github.com/merico-dev/stream/internal/pkg/configloader"
-	"github.com/merico-dev/stream/internal/pkg/version"
-	"github.com/merico-dev/stream/pkg/util/log"
-	"github.com/merico-dev/stream/pkg/util/md5"
+	"github.com/devstream-io/devstream/internal/pkg/configloader"
+	"github.com/devstream-io/devstream/internal/pkg/version"
+	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/md5"
 )
 
 const DTMRemoteMD5Dir = ".remote"

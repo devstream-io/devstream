@@ -6,7 +6,7 @@ import (
 
 	"github.com/tcnksm/go-input"
 
-	"github.com/merico-dev/stream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 func readUserInput() string {

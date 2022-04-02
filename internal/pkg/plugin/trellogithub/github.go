@@ -5,7 +5,7 @@ import (
 
 	"github.com/spf13/viper"
 
-	"github.com/merico-dev/stream/pkg/util/github"
+	"github.com/devstream-io/devstream/pkg/util/github"
 )
 
 // VerifyWorkflows get the workflows with names "wf1.yml", "wf2.yml", then:

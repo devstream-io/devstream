@@ -6,10 +6,10 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/merico-dev/stream/pkg/util/github"
-	"github.com/merico-dev/stream/pkg/util/log"
-	"github.com/merico-dev/stream/pkg/util/mapz"
-	"github.com/merico-dev/stream/pkg/util/slicez"
+	"github.com/devstream-io/devstream/pkg/util/github"
+	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/mapz"
+	"github.com/devstream-io/devstream/pkg/util/slicez"
 )
 
 type TrelloGithub struct {

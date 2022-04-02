@@ -3,8 +3,8 @@ package main
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/merico-dev/stream/internal/pkg/pluginengine"
-	"github.com/merico-dev/stream/pkg/util/log"
+	"github.com/devstream-io/devstream/internal/pkg/pluginengine"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 var verifyCMD = &cobra.Command{

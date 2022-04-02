@@ -5,9 +5,9 @@
 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat&logo=github&color=2370ff&labelColor=454545)](http://makeapullrequest.com)
 [![Discord](https://img.shields.io/discord/844603288082186240.svg?style=flat?label=&logo=discord&logoColor=ffffff&color=747df7&labelColor=454545)](https://discord.gg/83rDG6ydVZ)
-![Test](https://github.com/merico-dev/stream/actions/workflows/main-builder.yml/badge.svg)
-[![Go Report Card](https://goreportcard.com/badge/github.com/merico-dev/stream)](https://goreportcard.com/report/github.com/merico-dev/stream)
-[![Downloads](https://img.shields.io/github/downloads/merico-dev/stream/total.svg)](https://github.com/merico-dev/stream/releases)
+![Test](https://github.com/devstream-io/devstream/actions/workflows/main-builder.yml/badge.svg)
+[![Go Report Card](https://goreportcard.com/badge/github.com/devstream-io/devstream)](https://goreportcard.com/report/github.com/devstream-io/devstream)
+[![Downloads](https://img.shields.io/github/downloads/devstream-io/devstream/total.svg)](https://github.com/devstream-io/devstream/releases)
   
 # DevStream
 </div>
@@ -169,7 +169,7 @@ _`dtm` will read the state, then determine which tools are installed, and then r
 ```bash
 mkdir -p ~/gocode
 cd ~/gocode
-git clone https://github.com/merico-dev/stream.git
+git clone https://github.com/devstream-io/devstream.git
 ```
 
 #### Build
@@ -221,7 +221,7 @@ A: Inspired by [`git`](https://github.com/git/git#readme), the name is (dependin
 
 ## Community
 
-We will regularly organize `DevStream Community Meeting`, please visit the [wiki](https://github.com/merico-dev/stream/wiki) page for details.
+We will regularly organize `DevStream Community Meeting`, please visit the [wiki](https://github.com/devstream-io/devstream/wiki) page for details.
 
 - Message us on <a href="https://discord.com/invite/83rDG6ydVZ" target="_blank">Discord.</a>
 - For Chinese users, the WeChat group QR code can be obtained from [here](docs/README_zh.md).

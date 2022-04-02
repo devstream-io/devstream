@@ -6,7 +6,7 @@ import (
 
 	"github.com/adlio/trello"
 
-	"github.com/merico-dev/stream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 type Client struct {

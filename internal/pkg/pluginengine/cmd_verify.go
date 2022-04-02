@@ -1,10 +1,10 @@
 package pluginengine
 
 import (
-	"github.com/merico-dev/stream/internal/pkg/configloader"
-	"github.com/merico-dev/stream/internal/pkg/pluginmanager"
-	"github.com/merico-dev/stream/internal/pkg/statemanager"
-	"github.com/merico-dev/stream/pkg/util/log"
+	"github.com/devstream-io/devstream/internal/pkg/configloader"
+	"github.com/devstream-io/devstream/internal/pkg/pluginmanager"
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 // Verify returns true if all the comments in this function are met

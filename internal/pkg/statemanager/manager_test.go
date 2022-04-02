@@ -6,8 +6,8 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/merico-dev/stream/internal/pkg/backend/local"
-	"github.com/merico-dev/stream/internal/pkg/statemanager"
+	"github.com/devstream-io/devstream/internal/pkg/backend/local"
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 )
 
 var _ = Describe("Statemanager", func() {

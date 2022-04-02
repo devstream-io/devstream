@@ -11,12 +11,12 @@ import (
 
 	"github.com/go-resty/resty/v2"
 
-	"github.com/merico-dev/stream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 const (
 	defaultRetryCount = 3
-	defaultReleaseUrl = "https://github.com/merico-dev/stream/releases/download"
+	defaultReleaseUrl = "https://github.com/devstream-io/devstream/releases/download"
 )
 
 type DownloadClient struct {

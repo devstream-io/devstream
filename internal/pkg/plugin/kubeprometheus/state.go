@@ -3,8 +3,8 @@ package kubeprometheus
 import (
 	"fmt"
 
-	"github.com/merico-dev/stream/pkg/util/helm"
-	"github.com/merico-dev/stream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/helm"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 var DefaultDeploymentTplList = []string{
