@@ -1,9 +1,9 @@
 #! /bin/bash -e
 
-tag=v0.3.1
+tag=v0.3.2
 
-user=merico-dev
-repo=stream
+user=devstream-io
+repo=devstream
 github_token=$GITHUB_TOKEN
 plugin_dir=.devstream
 

@@ -1,4 +1,4 @@
-VERSION=0.3.1
+VERSION=0.3.2
 
 MKFILE_PATH=$(abspath $(lastword $(MAKEFILE_LIST)))
 BUILD_PATH=$(patsubst %/,%,$(dir $(MKFILE_PATH)))/build/working_dir
