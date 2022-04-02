@@ -16,8 +16,8 @@ Please set the appropriate values according to your actual environment.
 ```sh
 export WORKING_PATH="~/gocode"
 export USER="daniel-hutao"
-export PROJECT="stream"
-export ORG="merico-dev"
+export PROJECT="devstream"
+export ORG="devstream-io"
 ```
 
 2. Create your clone locally
@@ -40,8 +40,8 @@ git remote set-url --push upstream no_push
 Execute `git remote -v` and you'll see output like below:
 
 ```sh
-origin	git@github.com:daniel-hutao/stream.git (fetch)
-origin	git@github.com:daniel-hutao/stream.git (push)
+origin	git@github.com:daniel-hutao/devstream.git (fetch)
+origin	git@github.com:daniel-hutao/devstream.git (push)
 upstream	https://github.com/devstream-io/devstream (fetch)
 upstream	no_push (push)
 ```
