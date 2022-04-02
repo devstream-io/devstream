@@ -7,8 +7,8 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/merico-dev/stream/internal/pkg/version"
-	"github.com/merico-dev/stream/pkg/util/log"
+	"github.com/devstream-io/devstream/internal/pkg/version"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 var (

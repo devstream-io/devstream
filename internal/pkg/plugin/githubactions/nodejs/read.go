@@ -5,9 +5,9 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/merico-dev/stream/internal/pkg/plugin/githubactions"
-	"github.com/merico-dev/stream/pkg/util/github"
-	"github.com/merico-dev/stream/pkg/util/log"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/githubactions"
+	"github.com/devstream-io/devstream/pkg/util/github"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 func Read(options map[string]interface{}) (map[string]interface{}, error) {

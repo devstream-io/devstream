@@ -7,9 +7,9 @@ import (
 
 	"github.com/google/go-github/v42/github"
 
-	"github.com/merico-dev/stream/pkg/util/log"
-	"github.com/merico-dev/stream/pkg/util/mapz"
-	"github.com/merico-dev/stream/pkg/util/slicez"
+	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/mapz"
+	"github.com/devstream-io/devstream/pkg/util/slicez"
 )
 
 // Workflow is the struct for a GitHub Actions Workflow.

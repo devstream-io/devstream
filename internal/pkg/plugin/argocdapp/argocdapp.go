@@ -6,7 +6,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/merico-dev/stream/pkg/util/k8s"
+	"github.com/devstream-io/devstream/pkg/util/k8s"
 )
 
 const argoCDAppYAMLFile = "./app.yaml"

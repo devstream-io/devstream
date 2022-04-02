@@ -8,8 +8,8 @@ import (
 	. "github.com/onsi/gomega"
 	"github.com/spf13/viper"
 
-	"github.com/merico-dev/stream/internal/pkg/configloader"
-	"github.com/merico-dev/stream/pkg/util/md5"
+	"github.com/devstream-io/devstream/internal/pkg/configloader"
+	"github.com/devstream-io/devstream/pkg/util/md5"
 )
 
 var _ = Describe("CheckLocalPlugins", func() {

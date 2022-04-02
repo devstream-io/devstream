@@ -5,7 +5,7 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/merico-dev/stream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 // Update recreate trello board and lists.

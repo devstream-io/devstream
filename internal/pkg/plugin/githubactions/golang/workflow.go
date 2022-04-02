@@ -1,8 +1,8 @@
 package golang
 
 import (
-	ga "github.com/merico-dev/stream/internal/pkg/plugin/githubactions"
-	github "github.com/merico-dev/stream/pkg/util/github"
+	ga "github.com/devstream-io/devstream/internal/pkg/plugin/githubactions"
+	github "github.com/devstream-io/devstream/pkg/util/github"
 )
 
 var workflows = []*github.Workflow{

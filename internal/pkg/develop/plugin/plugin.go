@@ -7,8 +7,8 @@ import (
 	"path"
 	"text/template"
 
-	pluginTpl "github.com/merico-dev/stream/internal/pkg/develop/plugin/template"
-	"github.com/merico-dev/stream/pkg/util/log"
+	pluginTpl "github.com/devstream-io/devstream/internal/pkg/develop/plugin/template"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 type Plugin struct {

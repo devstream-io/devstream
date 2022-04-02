@@ -4,7 +4,7 @@
 
 ## 1 下载 DevStream (`dtm`)
 
-根据你的实际环境从 [DevStream Releases](https://github.com/merico-dev/stream/releases) 下载合适的 `dtm` 版本。
+根据你的实际环境从 [DevStream Releases](https://github.com/devstream-io/devstream/releases) 下载合适的 `dtm` 版本。
 
 > 记得将二进制文件重命名为 `dtm`，这样用起来更简单。比如：`mv dtm-darwin-arm64 dtm`。
 

@@ -6,7 +6,7 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
-	github "github.com/merico-dev/stream/pkg/util/github"
+	github "github.com/devstream-io/devstream/pkg/util/github"
 )
 
 func renderTemplate(workflow *github.Workflow, options *Options) (string, error) {

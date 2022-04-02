@@ -5,10 +5,10 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
-	. "github.com/merico-dev/stream/internal/pkg/plugin/common/helm"
-	"github.com/merico-dev/stream/pkg/util/helm"
-	"github.com/merico-dev/stream/pkg/util/k8s"
-	"github.com/merico-dev/stream/pkg/util/log"
+	. "github.com/devstream-io/devstream/internal/pkg/plugin/common/helm"
+	"github.com/devstream-io/devstream/pkg/util/helm"
+	"github.com/devstream-io/devstream/pkg/util/k8s"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 func Delete(options map[string]interface{}) (bool, error) {

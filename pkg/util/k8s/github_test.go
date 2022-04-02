@@ -3,7 +3,7 @@ package k8s_test
 import (
 	. "github.com/onsi/ginkgo/v2"
 	//. "github.com/onsi/gomega"
-	//"github.com/merico-dev/stream/pkg/util/k8s"
+	//"github.com/devstream-io/devstream/pkg/util/k8s"
 )
 
 var _ = Describe("K8S", func() {

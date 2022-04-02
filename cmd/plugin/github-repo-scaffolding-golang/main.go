@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/merico-dev/stream/internal/pkg/plugin/reposcaffolding/github/golang"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/reposcaffolding/github/golang"
 )
 
 // NAME is the name of this DevStream plugin.

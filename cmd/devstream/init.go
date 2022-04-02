@@ -3,9 +3,9 @@ package main
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/merico-dev/stream/internal/pkg/configloader"
-	"github.com/merico-dev/stream/internal/pkg/pluginmanager"
-	"github.com/merico-dev/stream/pkg/util/log"
+	"github.com/devstream-io/devstream/internal/pkg/configloader"
+	"github.com/devstream-io/devstream/internal/pkg/pluginmanager"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 var initCMD = &cobra.Command{

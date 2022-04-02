@@ -5,8 +5,8 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/merico-dev/stream/pkg/util/github"
-	"github.com/merico-dev/stream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/github"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 // Update remove and set up jira-github-integ workflows.

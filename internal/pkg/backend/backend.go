@@ -3,8 +3,8 @@ package backend
 import (
 	"fmt"
 
-	"github.com/merico-dev/stream/internal/pkg/backend/local"
-	"github.com/merico-dev/stream/pkg/util/log"
+	"github.com/devstream-io/devstream/internal/pkg/backend/local"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 type Type string

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/merico-dev/stream/internal/pkg/statemanager"
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 )
 
 const (

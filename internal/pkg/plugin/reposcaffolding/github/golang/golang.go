@@ -10,14 +10,14 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/merico-dev/stream/pkg/util/github"
-	"github.com/merico-dev/stream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/github"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 const (
 	DefaultWorkPath      = ".github-repo-scaffolding-golang"
 	DefaultTemplateRepo  = "dtm-scaffolding-golang"
-	DefaultTemplateOwner = "merico-dev"
+	DefaultTemplateOwner = "devstream-io"
 	TransitBranch        = "init-with-devstream"
 	DefaultMainBranch    = "main"
 )

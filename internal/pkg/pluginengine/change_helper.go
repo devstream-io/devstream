@@ -6,9 +6,9 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
 
-	"github.com/merico-dev/stream/internal/pkg/configloader"
-	"github.com/merico-dev/stream/internal/pkg/statemanager"
-	"github.com/merico-dev/stream/pkg/util/log"
+	"github.com/devstream-io/devstream/internal/pkg/configloader"
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 func generateCreateAction(tool *configloader.Tool, description string) *Change {

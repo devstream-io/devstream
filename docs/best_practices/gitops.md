@@ -20,7 +20,7 @@ We should use the `dependency` according to the actual usage situation.
 
 ## Download DevStream (`dtm`)
 
-Download the appropriate `dtm` version for your platform from [DevStream Releases](https://github.com/merico-dev/stream/releases).
+Download the appropriate `dtm` version for your platform from [DevStream Releases](https://github.com/devstream-io/devstream/releases).
 
 > Remember to rename the binary file to `dtm` so that it's easier to use. For example: `mv dtm-darwin-arm64 dtm`.
 

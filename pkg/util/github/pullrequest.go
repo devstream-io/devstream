@@ -3,7 +3,7 @@ package github
 import (
 	"fmt"
 
-	"github.com/merico-dev/stream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/log"
 
 	"github.com/google/go-github/v42/github"
 )

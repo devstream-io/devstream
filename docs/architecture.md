@@ -18,9 +18,9 @@ There are three major parts:
 
 Note: for simplicity, the CLI is named `dtm`(DevOps Tool Manager) instead of the full name DevStream.
 
-Every time a user runs the `dtm` program, the execution transfers immediately into one of the "command" implementations in the [`devstream`](https://github.com/merico-dev/stream/tree/main/cmd/devstream) package, in which folder all commands' definitions reside.
+Every time a user runs the `dtm` program, the execution transfers immediately into one of the "command" implementations in the [`devstream`](https://github.com/devstream-io/devstream/tree/main/cmd/devstream) package, in which folder all commands' definitions reside.
 
-Then, each command calls the `pluginengine` package under [`internal/pkg`](https://github.com/merico-dev/stream/tree/main/internal/pkg/pluginengine).
+Then, each command calls the `pluginengine` package under [`internal/pkg`](https://github.com/devstream-io/devstream/tree/main/internal/pkg/pluginengine).
 
 The `pluginengine` calls the `configloader` first to read the local YAML config file into a struct.
 
@@ -40,19 +40,19 @@ It achieves the goal by calling the following modules:
 
 ### 2.1 Configuration Loader
 
-Model types in package [`configloader`](https://github.com/merico-dev/stream/blob/main/internal/pkg/configloader/config.go#L19) represent the top-level configuration structure.
+Model types in package [`configloader`](https://github.com/devstream-io/devstream/blob/main/internal/pkg/configloader/config.go#L19) represent the top-level configuration structure.
 
 ### 2.2 Plugin Manager
 
-The [`pluginmanager`](https://github.com/merico-dev/stream/blob/main/internal/pkg/pluginmanager/manager.go) is in charge of downloading necessary plugins according to the configuration.
+The [`pluginmanager`](https://github.com/devstream-io/devstream/blob/main/internal/pkg/pluginmanager/manager.go) is in charge of downloading necessary plugins according to the configuration.
 
 If a plugin with the desired version already exists locally, it will not download it again.
 
 ### 2.3 State Manager
 
-The [`statemanager`](https://github.com/merico-dev/stream/blob/main/internal/pkg/statemanager/manager.go) manages the "state", i.e., what has been done successfully and what not.
+The [`statemanager`](https://github.com/devstream-io/devstream/blob/main/internal/pkg/statemanager/manager.go) manages the "state", i.e., what has been done successfully and what not.
 
-The `statemanager` stores the state in a [`backend`](https://github.com/merico-dev/stream/blob/main/internal/pkg/backend/backend.go).
+The `statemanager` stores the state in a [`backend`](https://github.com/devstream-io/devstream/blob/main/internal/pkg/backend/backend.go).
 
 ## 3 Plugin
 

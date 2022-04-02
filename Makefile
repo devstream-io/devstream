@@ -31,7 +31,7 @@ clean: ## Remove dtm and plugins. It's best to run a "clean" before "build".
 
 .PHONY: build-core
 build-core: fmt vet mod-tidy ## Build dtm core only, without plugins, locally.
-	go build -trimpath -gcflags="all=-N -l" -ldflags "-X github.com/merico-dev/stream/internal/pkg/version.Version=${VERSION}" -o dtm-${GOOS}-${GOARCH} ./cmd/devstream/
+	go build -trimpath -gcflags="all=-N -l" -ldflags "-X github.com/devstream-io/devstream/internal/pkg/version.Version=${VERSION}" -o dtm-${GOOS}-${GOARCH} ./cmd/devstream/
 	$(MAKE) md5-core
 	rm -f dtm
 	cp dtm-${GOOS}-${GOARCH} dtm
@@ -66,10 +66,10 @@ md5-plugin.%:
 .PHONY: fmt
 fmt: ## Run 'go fmt' & goimports against code.
 	go install golang.org/x/tools/cmd/goimports@latest
-	goimports -local="github.com/merico-dev/stream" -d -w cmd
-	goimports -local="github.com/merico-dev/stream" -d -w pkg
-	goimports -local="github.com/merico-dev/stream" -d -w internal
-	goimports -local="github.com/merico-dev/stream" -d -w test
+	goimports -local="github.com/devstream-io/devstream" -d -w cmd
+	goimports -local="github.com/devstream-io/devstream" -d -w pkg
+	goimports -local="github.com/devstream-io/devstream" -d -w internal
+	goimports -local="github.com/devstream-io/devstream" -d -w test
 	go fmt ./...
 
 .PHONY: vet

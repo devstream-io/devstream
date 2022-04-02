@@ -6,7 +6,7 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/merico-dev/stream/pkg/util/github"
+	"github.com/devstream-io/devstream/pkg/util/github"
 )
 
 var _ = Describe("GitHub", func() {

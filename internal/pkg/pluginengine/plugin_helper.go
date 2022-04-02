@@ -6,7 +6,7 @@ import (
 
 	"github.com/spf13/viper"
 
-	"github.com/merico-dev/stream/internal/pkg/configloader"
+	"github.com/devstream-io/devstream/internal/pkg/configloader"
 )
 
 func getPluginDir() string {

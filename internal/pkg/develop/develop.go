@@ -1,8 +1,8 @@
 package develop
 
 import (
-	"github.com/merico-dev/stream/internal/pkg/develop/plugin"
-	"github.com/merico-dev/stream/pkg/util/log"
+	"github.com/devstream-io/devstream/internal/pkg/develop/plugin"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 type Action string

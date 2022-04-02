@@ -3,7 +3,7 @@ package jiragithub
 import (
 	"github.com/spf13/viper"
 
-	"github.com/merico-dev/stream/pkg/util/github"
+	"github.com/devstream-io/devstream/pkg/util/github"
 )
 
 func setRepoSecrets(gitHubClient *github.Client) error {

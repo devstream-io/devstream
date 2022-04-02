@@ -1,7 +1,7 @@
 package jiragithub
 
 import (
-	github "github.com/merico-dev/stream/pkg/util/github"
+	github "github.com/devstream-io/devstream/pkg/util/github"
 )
 
 const (

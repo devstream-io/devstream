@@ -1,7 +1,7 @@
 package pluginengine
 
 import (
-	"github.com/merico-dev/stream/internal/pkg/configloader"
+	"github.com/devstream-io/devstream/internal/pkg/configloader"
 )
 
 const DefaultPluginDir = ".devstream"

@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/merico-dev/stream/internal/pkg/configloader"
-	"github.com/merico-dev/stream/internal/pkg/statemanager"
-	"github.com/merico-dev/stream/pkg/util/log"
+	"github.com/devstream-io/devstream/internal/pkg/configloader"
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 // Change is a wrapper with a single Tool and its Action should be execute.

@@ -6,9 +6,9 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/merico-dev/stream/internal/pkg/configloader"
-	"github.com/merico-dev/stream/pkg/util/log"
-	"github.com/merico-dev/stream/pkg/util/mapz/concurrentmap"
+	"github.com/devstream-io/devstream/internal/pkg/configloader"
+	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/mapz/concurrentmap"
 )
 
 // State is the single component's state.

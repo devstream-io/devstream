@@ -1,6 +1,6 @@
 package argocd
 
-import "github.com/merico-dev/stream/pkg/util/helm"
+import "github.com/devstream-io/devstream/pkg/util/helm"
 
 var DefaultDeploymentList = []string{
 	"argocd-applicationset-controller",

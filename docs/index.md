@@ -16,6 +16,6 @@ development_workflow
 project_layout
 creating_a_plugin
 roadmap
-Releases ⧉ <https://github.com/merico-dev/stream/releases>
+Releases ⧉ <https://github.com/devstream-io/devstream/releases>
 Blog ⧉ <https://blog.dtm.dev>
 ```

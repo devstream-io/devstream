@@ -4,7 +4,7 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/merico-dev/stream/pkg/util/mapz/concurrentmap"
+	"github.com/devstream-io/devstream/pkg/util/mapz/concurrentmap"
 )
 
 var _ = Describe("Concurrentmap", func() {

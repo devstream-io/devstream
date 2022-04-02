@@ -5,8 +5,8 @@ var main_go_dirTpl = "cmd/plugin/{{ .Name }}/"
 var main_go_contentTpl = `package main
 
 import (
-	"github.com/merico-dev/stream/internal/pkg/plugin/{{ .Name }}"
-	"github.com/merico-dev/stream/pkg/util/log"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/{{ .Name }}"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 // NAME is the name of this DevStream plugin.

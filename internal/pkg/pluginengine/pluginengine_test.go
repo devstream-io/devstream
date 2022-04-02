@@ -7,10 +7,10 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/merico-dev/stream/internal/pkg/backend/local"
-	"github.com/merico-dev/stream/internal/pkg/configloader"
-	"github.com/merico-dev/stream/internal/pkg/pluginengine"
-	"github.com/merico-dev/stream/internal/pkg/statemanager"
+	"github.com/devstream-io/devstream/internal/pkg/backend/local"
+	"github.com/devstream-io/devstream/internal/pkg/configloader"
+	"github.com/devstream-io/devstream/internal/pkg/pluginengine"
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 )
 
 var _ = Describe("Pluginengine", func() {

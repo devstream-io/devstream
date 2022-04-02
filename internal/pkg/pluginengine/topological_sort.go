@@ -3,8 +3,8 @@ package pluginengine
 import (
 	"fmt"
 
-	"github.com/merico-dev/stream/internal/pkg/configloader"
-	"github.com/merico-dev/stream/pkg/util/log"
+	"github.com/devstream-io/devstream/internal/pkg/configloader"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 func generateKeyFromTool(tool configloader.Tool) string {
