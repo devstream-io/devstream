@@ -46,6 +46,15 @@
 5. Monitoring - kube-prometheus
 6. ……
 
+## 下载
+
+### macOS
+
+通过 [Homebrew](https://brew.sh/) 下载 `dtm`:
+
+1. 添加 DevStream 的 tap: `brew tap devstream-io/devstream`
+2. 安装 `dtm`: `brew install dtm`
+
 ## 快速开始
 
 如果你想要快速上手体验，可以跳转到我们的[快速开始](./quickstart_zh.md)文档。

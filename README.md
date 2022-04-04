@@ -8,7 +8,7 @@
 ![Test](https://github.com/devstream-io/devstream/actions/workflows/main-builder.yml/badge.svg)
 [![Go Report Card](https://goreportcard.com/badge/github.com/devstream-io/devstream)](https://goreportcard.com/report/github.com/devstream-io/devstream)
 [![Downloads](https://img.shields.io/github/downloads/devstream-io/devstream/total.svg)](https://github.com/devstream-io/devstream/releases)
-  
+
 # DevStream
 </div>
 
@@ -18,7 +18,7 @@
 
 TL;DR: DevStream (CLI tool named `dtm`) is an open-source DevOps toolchain manager.
 
-Imagine you are starting a new project or ramping up a new team. Before writing the first line of code, you have to figure out the tools to run an effective SDLC process and from development to deployment. 
+Imagine you are starting a new project or ramping up a new team. Before writing the first line of code, you have to figure out the tools to run an effective SDLC process and from development to deployment.
 
 Typically, you'd need the following pieces in place to work effectively:
 
@@ -78,6 +78,15 @@ Want to remove or reinstall a specific piece in the workflow? DevStream has got 
 | Observability          | devlake                        | DevLake installation           | [doc](./docs/plugins/devlake.md)          |
 | LDAP                   | openldap                       | OpenLDAP installation          | [doc](./docs/plugins/openldap.md)          |
 
+## Installation
+
+### macOS
+
+Install `dtm` via [Homebrew](https://brew.sh/):
+
+1. Add DevStream's tap to Homebrew: `brew tap devstream-io/devstream`
+2. Install `dtm`: `brew install dtm`
+
 ## Quick Start
 
 If you want to get a quick start, follow our [quick start](./docs/quickstart_en.md) doc now.
@@ -86,9 +95,9 @@ If you want to get a quick start, follow our [quick start](./docs/quickstart_en.
 
 DevStream supports the management of many tools. You can flexibly combine some tools to meet the DevOps toolchain your need.
 
-And yes, if you ask me if any recommended practices that can be used out of the box, 
+And yes, if you ask me if any recommended practices that can be used out of the box,
 
-I am happy to tell you that we have, and we are constantly adding more possible combinations, 
+I am happy to tell you that we have, and we are constantly adding more possible combinations,
 
 so you are more than welcome to tell us what combinations you expect.
 
@@ -135,7 +144,7 @@ Similarly, to delete without confirmation:
 ```bash
 ./dtm -y delete -f YOUR_CONFIG_FILE.yaml
 ```
-To delete everything defined in the config, regardless of the state: 
+To delete everything defined in the config, regardless of the state:
 
 ```bash
 ./dtm delete --force -f YOUR_CONFIG_FILE.yaml
