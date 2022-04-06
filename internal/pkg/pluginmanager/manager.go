@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 
 	"github.com/spf13/viper"
@@ -139,13 +138,4 @@ func redownloadPlugins(dc *PbDownloadClient, pluginDir, pluginFileName, pluginMD
 	}
 	log.Successf("[%s] download succeeded.", pluginMD5FileName)
 	return nil
-}
-
-// getDtmSelf get executing dtm itself
-func getDtmSelf() (string, error) {
-	path, err := exec.LookPath(os.Args[0])
-	if err != nil {
-		return "", err
-	}
-	return path, nil
 }
