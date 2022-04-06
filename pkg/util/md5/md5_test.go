@@ -19,6 +19,8 @@ func TestValidateFileMatchMD5(t *testing.T) {
 	assert.NoError(t, err)
 	assert.True(t, exist)
 
+	os.Remove(fileName)
+	os.Remove(fileName + ".md5")
 }
 
 // TestValidatePlugInMD5NotExist file exists, but md5 info does not match with .md5
@@ -35,6 +37,10 @@ func TestValidateFileMatchMD5NotExist(t *testing.T) {
 	exist, err := FileMatchesMD5(fileName, md5FileName)
 	assert.NoError(t, err)
 	assert.True(t, exist)
+
+	os.Remove(fileName)
+	os.Remove(fileName + ".md5")
+	os.Remove(fileNameMisMatch)
 }
 
 func createFileAndMD5File(fileName string) (string, error) {
