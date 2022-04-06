@@ -141,39 +141,6 @@ func redownloadPlugins(dc *PbDownloadClient, pluginDir, pluginFileName, pluginMD
 	return nil
 }
 
-// DownloadDTMsMD5 download remote dtm .md5 for compare with local .md5
-func DownloadDTMsMD5(remoteMD5Dir, dtmFileName string) error {
-	dc := NewPbDownloadClient()
-	if err := dc.download(remoteMD5Dir, dtmFileName, version.Version); err != nil {
-		return err
-	}
-	return nil
-}
-
-// CompareDtmMD5 compare dtm itself and remote md5, if does not match, cannot  download plugins from remote
-func CompareDtmMD5() error {
-	// get remote dtm .md5
-	dtmMD5FileName := configloader.GetDtmMD5FileName()
-	if err := DownloadDTMsMD5(DTMRemoteMD5Dir, dtmMD5FileName); err != nil {
-		return err
-	}
-
-	selfDtmName, err := getDtmSelf()
-	if err != nil {
-		return err
-	}
-
-	isMD5Match, err := md5.FileMatchesMD5(selfDtmName, filepath.Join(DTMRemoteMD5Dir, dtmMD5FileName))
-	if err != nil {
-		return err
-	}
-	if !isMD5Match {
-		return fmt.Errorf("DTM %s doesn't match with remote .md5, cannot download Plugins from remote release version", selfDtmName)
-	}
-	log.Info("DTM md5 check passed, continue...")
-	return nil
-}
-
 // getDtmSelf get executing dtm itself
 func getDtmSelf() (string, error) {
 	path, err := exec.LookPath(os.Args[0])
