@@ -70,7 +70,7 @@ tools:
       upgradeCRDs: true
 - name: demo
   plugin: argocdapp
-  dependsOn: [ "cd.argocd", "demo.github-repo-scaffolding-golang" ]
+  dependsOn: [ "cd.argocd", "repo.github-repo-scaffolding-golang" ]
   options:
     app:
       name: golang-demo
@@ -81,12 +81,12 @@ tools:
     source:
       valuefile: values.yaml
       path: helm/golang-demo
-      repoURL: ${{ demo.github-repo-scaffolding-golang.outputs.repoURL }} # pay attention here
+      repoURL: ${{ repo.github-repo-scaffolding-golang.outputs.repoURL }} # pay attention here
 ```
 
 In this example:
-- Tool "demo" (plugin: argocdapp) depends on tool "repo" (plugin: github-repo-scaffolding-golang);
-- tool "demo" has an user option "options.source.repoURL", which uses tool "repo" output "repoURL" (`${{ demo.github-repo-scaffolding-golang.outputs.repoURL }}`)
+- Tool "demo" (plugin: argocdapp) depends on tool "repo" (plugin: github-repo-scaffolding-golang)
+- Tool "demo" has an user option "options.source.repoURL", which uses tool "repo" output "repoURL" (`${{ repo.github-repo-scaffolding-golang.outputs.repoURL }}`)
 
 
 ```{toctree}
