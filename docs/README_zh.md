@@ -53,7 +53,7 @@
 通过 [Homebrew](https://brew.sh/) 下载 `dtm`:
 
 1. 添加 DevStream 的 tap: `brew tap devstream-io/devstream`
-2. 安装 `dtm`: `brew install dtm`
+2. 安装 `dtm`: `brew install devstream-io/devstream/dtm`
 
 ## 快速开始
 
