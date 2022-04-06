@@ -6,11 +6,14 @@ BUILD_PATH=$(patsubst %/,%,$(dir $(MKFILE_PATH)))/build/working_dir
 GOOS=$(shell go env GOOS)
 GOARCH=$(shell go env GOARCH)
 GO_BUILD=go build -buildmode=plugin -trimpath -gcflags="all=-N -l"
-
 PLUGINS_CMD_ROOT=./cmd/plugin
 PLUGINS_DIR=$(shell find ${PLUGINS_CMD_ROOT} -name "main.go" -exec dirname {} \;)
 PLUGINS_NAME=$(notdir ${PLUGINS_DIR})
 PLUGIN_SUFFIX=${GOOS}-${GOARCH}_${VERSION}
+
+DTM_INTER_PKG=github.com/devstream-io/devstream/internal/pkg
+GO_LDFLAGS += -X '$(DTM_INTER_PKG)/version.Version=$(VERSION)' \
+		-X '$(DTM_INTER_PKG)/list.PluginsName=$(PLUGINS_NAME)'
 
 ifeq ($(GOOS),linux)
 	MD5SUM=md5sum
@@ -31,7 +34,7 @@ clean: ## Remove dtm and plugins. It's best to run a "clean" before "build".
 
 .PHONY: build-core
 build-core: fmt vet mod-tidy ## Build dtm core only, without plugins, locally.
-	go build -trimpath -gcflags="all=-N -l" -ldflags "-X github.com/devstream-io/devstream/internal/pkg/version.Version=${VERSION}" -o dtm-${GOOS}-${GOARCH} ./cmd/devstream/
+	go build -trimpath -gcflags="all=-N -l" -ldflags "$(GO_LDFLAGS)" -o dtm-${GOOS}-${GOARCH} ./cmd/devstream/
 	rm -f dtm
 	cp dtm-${GOOS}-${GOARCH} dtm
 

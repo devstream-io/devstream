@@ -51,6 +51,7 @@ func init() {
 	rootCMD.AddCommand(destroyCMD)
 	rootCMD.AddCommand(verifyCMD)
 	rootCMD.AddCommand(developCMD)
+	rootCMD.AddCommand(listCMD)
 }
 
 func initConfig() {
