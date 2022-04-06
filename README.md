@@ -85,7 +85,7 @@ Want to remove or reinstall a specific piece in the workflow? DevStream has got 
 Install `dtm` via [Homebrew](https://brew.sh/):
 
 1. Add DevStream's tap to Homebrew: `brew tap devstream-io/devstream`
-2. Install `dtm`: `brew install dtm`
+2. Install `dtm`: `brew install devstream-io/devstream/dtm`
 
 ## Quick Start
 
