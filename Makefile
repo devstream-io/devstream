@@ -32,7 +32,6 @@ clean: ## Remove dtm and plugins. It's best to run a "clean" before "build".
 .PHONY: build-core
 build-core: fmt vet mod-tidy ## Build dtm core only, without plugins, locally.
 	go build -trimpath -gcflags="all=-N -l" -ldflags "-X github.com/devstream-io/devstream/internal/pkg/version.Version=${VERSION}" -o dtm-${GOOS}-${GOARCH} ./cmd/devstream/
-	$(MAKE) md5-core
 	rm -f dtm
 	cp dtm-${GOOS}-${GOARCH} dtm
 
@@ -49,11 +48,7 @@ build-plugins: fmt vet mod-tidy $(addprefix build-plugin.,$(PLUGINS_NAME)) ## Bu
 build: build-core build-plugins ## Build everything. Use multi-threaded like "make build -j8" to speed up.
 
 .PHONY: md5
-md5: md5-core md5-plugins ## Create md5 sums for all plugins and dtm
-
-.PHONY: md5-core
-md5-core:
-	${MD5SUM} dtm-${GOOS}-${GOARCH} > dtm-${GOOS}-${GOARCH}.md5
+md5: md5-plugins ## Create md5 sums for all plugins and dtm
 
 .PHONY: md5-plugins
 md5-plugins: $(addprefix md5-plugin.,$(PLUGINS_NAME))

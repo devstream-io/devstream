@@ -37,10 +37,5 @@ echo 'Uploading 'dtm-${GOOS}-${GOARCH}' ...'
 github-release upload --security-token $github_token --user $user --repo $repo --tag $tag --file dtm --name dtm-${GOOS}-${GOARCH}
 echo dtm-${GOOS}-${GOARCH}' uploaded.'
 
-# upload dtm .md5
-echo 'Uploading 'dtm-${GOOS}-${GOARCH}.md5' ...'
-github-release upload --security-token $github_token --user $user --repo $repo --tag $tag --file dtm-${GOOS}-${GOARCH}.md5 --name dtm-${GOOS}-${GOARCH}.md5
-echo dtm-${GOOS}-${GOARCH}.md5' uploaded.'
-
 # upload plugins and .md5 files
 upload $plugin_dir
