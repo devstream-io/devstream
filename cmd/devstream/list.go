@@ -13,8 +13,8 @@ var listCMD = &cobra.Command{
 	Use:   "list",
 	Short: "This command lists all of the plugins",
 	Long: `This command lists all of the plugins.
-eg.
-- dtm list plugins`,
+Examples:
+  dtm list plugins`,
 	Run: listCMDFunc,
 }
 

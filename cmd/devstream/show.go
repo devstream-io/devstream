@@ -12,11 +12,11 @@ import (
 var plugin string
 
 var showCMD = &cobra.Command{
-	Use:   "show",
+	Use:   "show [plugin]",
 	Short: "Show is used to print some useful information",
 	Long: `Show is used to print some useful information. 
-eg.
-- dtm show config --plugin=A-PLUGIN-NAME`,
+Examples:
+  dtm show config --plugin=A-PLUGIN-NAME`,
 	Run: showCMDFunc,
 }
 
