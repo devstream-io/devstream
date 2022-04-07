@@ -1,6 +1,6 @@
 package generic
 
-// Options is the struct for configurations of the githubci-generic plugin.
+// Options is the struct for configurations of the gitlabci-generic plugin.
 type Options struct {
 	PathWithNamespace string
 	Branch            string

@@ -6,27 +6,27 @@ import (
 )
 
 // NAME is the name of this DevStream plugin.
-const NAME = "githubci-generic"
+const NAME = "gitlabci-generic"
 
 // Plugin is the type used by DevStream core. It's a string.
 type Plugin string
 
-// Create implements the create of githubci-generic.
+// Create implements the create of gitlabci-generic.
 func (p Plugin) Create(options map[string]interface{}) (map[string]interface{}, error) {
 	return generic.Create(options)
 }
 
-// Update implements the update of githubci-generic.
+// Update implements the update of gitlabci-generic.
 func (p Plugin) Update(options map[string]interface{}) (map[string]interface{}, error) {
 	return generic.Update(options)
 }
 
-// Delete implements the delete of githubci-generic.
+// Delete implements the delete of gitlabci-generic.
 func (p Plugin) Delete(options map[string]interface{}) (bool, error) {
 	return generic.Delete(options)
 }
 
-// Read implements the read of githubci-generic.
+// Read implements the read of gitlabci-generic.
 func (p Plugin) Read(options map[string]interface{}) (map[string]interface{}, error) {
 	return generic.Read(options)
 }
