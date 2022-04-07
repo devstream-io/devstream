@@ -21,7 +21,7 @@ eg.
 }
 
 func developCMDFunc(cmd *cobra.Command, args []string) {
-	if err := validateArgs(args); err != nil {
+	if err := validateDevelopArgs(args); err != nil {
 		log.Fatal(err)
 	}
 
@@ -32,7 +32,7 @@ func developCMDFunc(cmd *cobra.Command, args []string) {
 	}
 }
 
-func validateArgs(args []string) error {
+func validateDevelopArgs(args []string) error {
 	// "create-plugin"/ maybe it will be "delete-plugin"/"rename-plugin" in future.
 	if len(args) != 1 {
 		return fmt.Errorf("got illegal args count (expect 1, got %d). "+

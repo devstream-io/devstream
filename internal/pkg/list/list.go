@@ -1,8 +1,8 @@
 package list
 
 import (
-	"github.com/devstream-io/devstream/internal/pkg/list/plugins"
-	"github.com/devstream-io/devstream/pkg/util/log"
+	"fmt"
+	"strings"
 )
 
 // list is the version of DevStream.
@@ -12,27 +12,10 @@ import (
 
 var PluginsName string
 
-type Action string
-
-const (
-	ActionListPlugin Action = "plugins"
-)
-
-var ActionSet = map[Action]struct{}{
-	ActionListPlugin: {},
-}
-
-func IsValideAction(action Action) bool {
-	_, ok := ActionSet[action]
-	return ok
-}
-
-func ExecuteAction(action Action) error {
-	switch action {
-	case ActionListPlugin:
-		log.Debugf("Action: %s.", ActionListPlugin)
-		return plugins.List(PluginsName)
-	default:
-		panic("This should be never happen!")
+// List all of plugins name
+func List() {
+	listPluginsName := strings.Fields(PluginsName)
+	for _, pluginName := range listPluginsName {
+		fmt.Println(pluginName)
 	}
 }

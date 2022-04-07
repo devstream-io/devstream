@@ -23,29 +23,21 @@ func listCMDFunc(cmd *cobra.Command, args []string) {
 		log.Fatal(err)
 	}
 
-	listAction := list.Action(args[0])
-	log.Debugf("The list action is: %s.", listAction)
-	if err := list.ExecuteAction(listAction); err != nil {
-		log.Fatal(err)
-	}
+	list.List()
 }
 
 func validateListCMDArgs(args []string) error {
-	// "plugins"/ maybe it will be "core" in future.
+	// only support "plugins" now
 	if len(args) != 1 {
 		return fmt.Errorf("got illegal args count (expect 1, got %d). "+
 			"See `help` command for more info", len(args))
 	}
-	listAction := list.Action(args[0])
-	if !list.IsValideAction(listAction) {
-		return fmt.Errorf("invalide Develop Action")
+
+	if args[0] != "plugins" {
+		return fmt.Errorf("arg should be \"plugins\" only")
 	}
 	return nil
 }
 
 // TODO Use `--filter=someone` (can support regex) to filter plugins on feature,
 // TODO Use `--group=somegroup` to filter the specified groups on feature
-// func init() {
-// 	developCMD.PersistentFlags().StringVarP(&filter, "filter", "f", "", "filter plugins; support regex ")
-// 	developCMD.PersistentFlags().StringVarP(&group, "group", "g", "", "filter the specified groups; support regex")
-// }
