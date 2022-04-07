@@ -7,7 +7,7 @@ import (
 
 // list is the version of DevStream.
 // Assign the value when building with the -X parameter. Example:
-// -X github.com/devstream-io/devstream/internal/pkg/list.PluginsName=${PLUGINS_NAME}
+// -X github.com/devstream-io/devstream/cmd/devstream/list.PluginsName=${PLUGINS_NAME}
 // See the Makefile for more info.
 
 var PluginsName string

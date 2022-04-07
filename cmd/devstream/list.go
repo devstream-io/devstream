@@ -5,7 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/devstream-io/devstream/internal/pkg/list"
+	"github.com/devstream-io/devstream/cmd/devstream/list"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 

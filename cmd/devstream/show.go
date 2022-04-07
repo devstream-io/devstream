@@ -12,7 +12,7 @@ import (
 var plugin string
 
 var showCMD = &cobra.Command{
-	Use:   "show [plugin]",
+	Use:   "show [config]",
 	Short: "Show is used to print some useful information",
 	Long: `Show is used to print some useful information. 
 Examples:
