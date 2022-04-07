@@ -1,8 +1,8 @@
-## 1 `githubactions-python` Plugin
+# `githubactions-python` Plugin
 
 This plugin creates Python GitHub Actions workflows.
 
-## 2 Usage:
+## Usage:
 
 _This plugin depends on an environment variable "GITHUB_TOKEN". Set it before using this plugin._
 

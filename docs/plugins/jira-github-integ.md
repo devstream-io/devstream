@@ -1,8 +1,8 @@
-## 1 `jira-github-integ` Plugin
+# `jira-github-integ` Plugin
 
 This plugin integrates Jira with your GitHub repo.
 
-## 2 Usage:
+## Usage:
 
 _Please confirm the preconditions:_
 

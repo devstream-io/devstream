@@ -110,3 +110,9 @@ and you should see similar output:
 2022-03-11 13:39:11 ✔ [SUCCESS]  All plugins destroyed successfully.
 2022-03-11 13:39:11 ✔ [SUCCESS]  Destroy finished.
 ```
+
+```{toctree}
+---
+maxdepth: 1
+---
+```

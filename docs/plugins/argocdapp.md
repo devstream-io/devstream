@@ -1,4 +1,4 @@
-## 1 `argocdapp` Plugin
+# `argocdapp` Plugin
 
 This plugin creates an [ArgoCD Application](https://argo-cd.readthedocs.io/en/stable/core_concepts/) custom resource.
 
@@ -9,7 +9,8 @@ This plugin creates an [ArgoCD Application](https://argo-cd.readthedocs.io/en/st
   See [GitOps Toolchain](../best_practices/gitops.md) for more info.
 - Currently, only the Helm chart is supported when creating the ArgoCD application.
 - Modify the file accordingly. Especially remember to modify `ARGOCD_TOOL_NAME`.
-## 2 Usage:
+
+## Usage:
 
 ```yaml
 tools:
@@ -42,7 +43,7 @@ tools:
       repoURL: https://github.com/ironcore864/openstream-gitops-test.git
 ```
 
-## 3. Use Together with the `github-repo-scaffolding-golang` Plugin
+## Use Together with the `github-repo-scaffolding-golang` Plugin
 
 This plugin can be used together with the `github-repo-scaffolding-golang` plugin (see document [here](./github-repo-scaffolding-golang.md).)
 
