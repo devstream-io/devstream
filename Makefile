@@ -11,9 +11,9 @@ PLUGINS_DIR=$(shell find ${PLUGINS_CMD_ROOT} -name "main.go" -exec dirname {} \;
 PLUGINS_NAME=$(notdir ${PLUGINS_DIR})
 PLUGIN_SUFFIX=${GOOS}-${GOARCH}_${VERSION}
 
-DTM_INTER_PKG=github.com/devstream-io/devstream/internal/pkg
-GO_LDFLAGS += -X '$(DTM_INTER_PKG)/version.Version=$(VERSION)' \
-		-X '$(DTM_INTER_PKG)/list.PluginsName=$(PLUGINS_NAME)'
+DTM_ROOT=github.com/devstream-io/devstream
+GO_LDFLAGS += -X '$(DTM_ROOT)/internal/pkg/version.Version=$(VERSION)' \
+		-X '$(DTM_ROOT)/cmd/devstream/list.PluginsName=$(PLUGINS_NAME)'
 
 ifeq ($(GOOS),linux)
 	MD5SUM=md5sum

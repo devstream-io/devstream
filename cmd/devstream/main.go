@@ -52,6 +52,7 @@ func init() {
 	rootCMD.AddCommand(verifyCMD)
 	rootCMD.AddCommand(developCMD)
 	rootCMD.AddCommand(listCMD)
+	rootCMD.AddCommand(showCMD)
 }
 
 func initConfig() {
@@ -78,6 +79,9 @@ func initConfig() {
 		log.Fatal(err)
 	}
 	if err := viper.BindPFlags(developCMD.Flags()); err != nil {
+		log.Fatal(err)
+	}
+	if err := viper.BindPFlags(showCMD.Flags()); err != nil {
 		log.Fatal(err)
 	}
 }

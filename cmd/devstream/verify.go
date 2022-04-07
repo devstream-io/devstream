@@ -9,7 +9,7 @@ import (
 
 var verifyCMD = &cobra.Command{
 	Use:   "verify",
-	Short: "Verify DevOps tools according to DevStream config file and state.",
+	Short: "Verify DevOps tools according to DevStream config file and state",
 	Long:  `Verify DevOps tools according to DevStream config file and state.`,
 	Run:   verifyCMDFunc,
 }
