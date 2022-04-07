@@ -29,8 +29,7 @@ func listCMDFunc(cmd *cobra.Command, args []string) {
 func validateListCMDArgs(args []string) error {
 	// only support "plugins" now
 	if len(args) != 1 {
-		return fmt.Errorf("got illegal args count (expect 1, got %d). "+
-			"See `help` command for more info", len(args))
+		return fmt.Errorf("got illegal args count (expect 1, got %d)", len(args))
 	}
 
 	if args[0] != "plugins" {

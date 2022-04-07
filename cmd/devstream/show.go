@@ -35,8 +35,7 @@ func showCMDFunc(cmd *cobra.Command, args []string) {
 func validateShowArgs(args []string) error {
 	// arg is "config" here, maybe will have "output" in the future.
 	if len(args) != 1 {
-		return fmt.Errorf("got illegal args count (expect 1, got %d). "+
-			"See `help` command for more info", len(args))
+		return fmt.Errorf("got illegal args count (expect 1, got %d)", len(args))
 	}
 	showInfo := show.Info(args[0])
 	if !show.IsValideInfo(showInfo) {
