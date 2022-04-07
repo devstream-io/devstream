@@ -1,8 +1,8 @@
-## 1 `trello` Plugin
+# `trello` Plugin
 
 This plugin creates a new Trello board and lists.
 
-## 2 Usage:
+## Usage:
 
 _This plugin depends on the following two environment variables:_
 
@@ -11,7 +11,7 @@ _This plugin depends on the following two environment variables:_
 
 Set the values accordingly before using this plugin.
 
-## 3 Tips:
+## Tips:
 _Trello board description is managed by DevStream, please don't modify it._
 
 To create a Trello API key and token, see [here](https://trello.com/app-key).
@@ -37,7 +37,7 @@ Replace the following from the config above:
 - `YOUR_REPO_NAME`
 - `KANBAN_BOARD_NAME`
 
-## 3. Outputs
+## Outputs
 
 This plugin has four outputs:
 

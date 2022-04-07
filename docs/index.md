@@ -12,9 +12,12 @@ architecture
 core_concepts
 output
 commands_explained
+plugins
 development_workflow
 project_layout
 creating_a_plugin
+best_practices
+creating_a_document
 roadmap
 Releases ⧉ <https://github.com/devstream-io/devstream/releases>
 Blog ⧉ <https://blog.dtm.dev>

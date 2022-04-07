@@ -1,8 +1,8 @@
-## 1 `githubactions-golang` Plugin
+# `githubactions-golang` Plugin
 
 This plugin creates some Golang GitHub Actions workflows.
 
-## 2 Usage
+## Usage
 
 _This plugin depends on the following environment variable:_
 
@@ -62,7 +62,7 @@ tools:
 
 Some parameters are optional. See the default values and optional parameters in the example above.
 
-## 3. Use Together with the `github-repo-scaffolding-golang` Plugin
+## Use Together with the `github-repo-scaffolding-golang` Plugin
 
 This plugin can be used together with the `github-repo-scaffolding-golang` plugin (see document [here](./github-repo-scaffolding-golang.md).)
 

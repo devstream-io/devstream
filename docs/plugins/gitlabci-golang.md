@@ -1,8 +1,8 @@
-## 1 `gitlabci-golang` Plugin
+# `gitlabci-golang` Plugin
 
 This plugin creates Golang GitLab CI workflow.
 
-## 2 Usage:
+## Usage:
 
 _This plugin depends on an environment variable "GITLAB_TOKEN", which is your GitLab personal access token. Set it before using this plugin._
 

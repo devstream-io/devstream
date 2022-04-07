@@ -1,4 +1,4 @@
-## 1 `github-repo-scaffolding-golang` Plugin
+# `github-repo-scaffolding-golang` Plugin
 
 This plugin bootstraps a GitHub repo with scaffolding code for a Golang web application.
 
@@ -17,7 +17,7 @@ If you don't know how to create this token, check out:
 
 *2. If the `Update` interface is called, the repo on github will be completely removed and recreated. However, given our current implementation, this interface shall not be called, as of in v0.2.0.*
 
-## 2 Usage
+## Usage
 
 **Please note that the `owner` parameter is case-sensitive.**
 
@@ -50,7 +50,7 @@ The "branch" in the example above is "main", but you can adjust accordingly.
 
 Currently, all the parameters in the example above are mandatory.
 
-## 3. Outputs
+## Outputs
 
 This plugin has three outputs:
 
