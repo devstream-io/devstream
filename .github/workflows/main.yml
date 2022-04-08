@@ -1,0 +1,45 @@
+name: main builder
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '**.go'
+      - 'Makefile'
+      - 'go.mod'
+      - 'go.sum'
+      - '.github/workflows/*.yml'
+      - 'test/**'
+      - 'hack/e2e/**'
+      - 'hack/terraform/**'
+jobs:
+  build-and-test:
+    strategy:
+      matrix:
+        os: [macos-latest]
+        go: [1.17.x]
+        include:
+          - os: macos-latest
+            go-build: ~/Library/Caches/go-build
+    runs-on: ${{ matrix.os }}
+    name: build-test-${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Golang env
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ matrix.go }}
+      - name: Cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ${{ matrix.go-build }}
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ matrix.go }}-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-${{ matrix.go }}-
+      - name: Test
+        run: go test -v ./...
+      - name: Build
+        run: make build -j8
