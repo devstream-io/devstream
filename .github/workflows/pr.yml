@@ -1,0 +1,65 @@
+name: pull request builder
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - '**.go'
+      - 'Makefile'
+      - 'go.mod'
+      - 'go.sum'
+      - '.github/workflows/*.yml'
+      - 'test/**'
+      - 'hack/e2e/**'
+      - 'hack/terraform/**'
+
+env:
+  go-version: 1.17.x
+jobs:
+  golang-lint:
+    name: Golang lint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Go ${{ env.go-version }}
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ env.go-version }}
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: v1.29
+          args: --timeout 3m0s
+  build-and-test:
+    needs: [golang-lint]
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        go: [1.17.x]
+        include:
+          - os: ubuntu-latest
+            go-build: ~/.cache/go-build
+    runs-on: ${{ matrix.os }}
+    name: build-test-${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Golang env
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ matrix.go }}
+      - name: Cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ${{ matrix.go-build }}
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ matrix.go }}-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-${{ matrix.go }}-
+      - name: Test
+        run: go test -v ./...
+      - name: Build
+        run: make build -j8
