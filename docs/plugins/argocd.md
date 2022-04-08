@@ -2,7 +2,7 @@
 
 This plugin installs [ArgoCD](https://argoproj.github.io/cd/) in an existing Kubernetes cluster using the Helm chart.
 
-## Usage:
+## Usage
 
 ```yaml
 tools:

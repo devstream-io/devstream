@@ -2,7 +2,7 @@
 
 This plugin installs [jenkins](https://jenkins.io) in an existing Kubernetes cluster using the Helm chart.
 
-## Usage:
+## Usage
 
 NOTICE:
 

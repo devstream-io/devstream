@@ -2,7 +2,7 @@
 
 This plugin installs [OpenLDAP](https://www.openldap.org/) in an existing Kubernetes cluster using the Helm chart. Please at least make sure your Kubernetes's version is greater than 1.18.
 
-## Usage:
+## Usage
 
 ```yaml
 tools:

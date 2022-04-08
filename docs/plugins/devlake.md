@@ -4,7 +4,7 @@ This plugin installs [DevLake](https://github.com/merico-dev/lake) in an existin
 
 Note that this isn't a production-ready installation; it's only meant as an alternative for [the original docker-compose installation](https://github.com/merico-dev/lake/blob/main/docker-compose.yml) should you prefer K8s.
 
-## Usage:
+## Usage
 
 ```yaml
 tools:

@@ -2,7 +2,7 @@
 
 This plugin creates a new Trello board and lists.
 
-## Usage:
+## Usage
 
 _This plugin depends on the following two environment variables:_
 

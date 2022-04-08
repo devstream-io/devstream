@@ -2,7 +2,7 @@
 
 This plugin installs [kube-prometheus](https://github.com/prometheus-operator/kube-prometheus) in an existing Kubernetes cluster using the Helm chart.
 
-## Usage:
+## Usage
 
 ```yaml
 tools:

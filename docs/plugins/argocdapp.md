@@ -10,7 +10,7 @@ This plugin creates an [ArgoCD Application](https://argo-cd.readthedocs.io/en/st
 - Currently, only the Helm chart is supported when creating the ArgoCD application.
 - Modify the file accordingly. Especially remember to modify `ARGOCD_TOOL_NAME`.
 
-## Usage:
+## Usage
 
 ```yaml
 tools:

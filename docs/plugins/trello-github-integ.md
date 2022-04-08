@@ -2,7 +2,7 @@
 
 This plugin creates a new GitHub Actions workflow(trello-github-integration) and uploads it to your GitHub repo.
 
-## Usage:
+## Usage
 
 This plugin depends on and can be used together with the `trello` plugin (see document [here](./trello.md)).
 
