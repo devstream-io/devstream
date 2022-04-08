@@ -6,6 +6,7 @@
 
 - Jira-GitHub, Jira-GitLab integration
 - Jenkins-GitHub, Jenkins-GitLab integration
+- HashiCorp Vault
 - ArgoCD-GitHub SSO integration
 - Repository bootstrapping for Python/Nodejs for GitHub
 - Repository bootstrapping for Golang/Python/Nodejs for GitLab
@@ -15,14 +16,17 @@
 
 ## 2 Technical Roadmap
 
-### Automated End-to-End Testing in a Staging Environment
+### Variables
 
-- AWS EC2 (linux-amd64) creation with Terraform/Ansible
-- Push notification to Slack/Lark when the testing environment is occupied or released
+Support defining variables (global or local), and use it in the config.
 
-### Automated Release
+### `dtm show config`
 
-- When a new tag is generated, build binaries for different platforms/OS and distribute the binaries to the plugin storage.
+This is already supported, but we will improve the features of it, for example:
+
+- show the default config of one plugin
+- show the default configs of multiple plugins that are used together
+- interactive: user select plugin then show the default config
 
 ### Plugin Storage
 
@@ -31,16 +35,21 @@ Background: currently, we use GitHub releases to store pre-built binaries and pl
 - Consider AWS S3 or similar choices for plugin storage.
 - Make sure people who don't have optimum internet connections (e.g., users behind firewall or proxy) can still use DevStream smoothly.
 
-### Plugins Dependency Management
+### Automated End-to-End Testing in a Staging Environment
 
-- Parallel/concurrency for plugins.
+- AWS EC2 (linux-amd64) creation with Terraform/Ansible
+- Push notification to Slack/Lark when the testing environment is occupied or released
 
 ### Misc
 
-- Shorter CI time: for example, adding packages into a base image.
-- Send push notification to core committers when there is a pull request ready for review.
+- Shorter CI time: for example, adding packages into a base image
+- More end-to-end tests coverage, to test more typical usecases and plugins
+- Push notification to core committers when there is a new PR ready for review
 
 ## 3 Already Done
+
+v0.3.1:
+- automated release: when a new tag is generated, build binaries for different platforms/OS and distribute the binaries to the plugin storage.
 
 v0.3.0:
 - "Destroy" and "force delete": everything can be cleared up without any residue or side effects.
