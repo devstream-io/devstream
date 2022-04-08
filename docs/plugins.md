@@ -13,6 +13,7 @@ plugins/github-repo-scaffolding-golang
 plugins/githubactions-golang
 plugins/githubactions-nodejs
 plugins/githubactions-python
+plugins/gitlabci-generic
 plugins/gitlabci-golang
 plugins/jenkins
 plugins/jira-github-integ

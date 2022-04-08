@@ -9,7 +9,8 @@ import (
 )
 
 var pluginDefaultConfigs = map[string]string{
-	"argocd": plugin.ArgocdDefaultConfig,
+	"argocd":           plugin.ArgocdDefaultConfig,
+	"gitlabci-generic": plugin.GitlabCIGenericDefaultConfig,
 }
 
 func Show() error {

@@ -2,7 +2,7 @@
 
 This plugin integrates Jira with your GitHub repo.
 
-## Usage:
+## Usage
 
 _Please confirm the preconditions:_
 
