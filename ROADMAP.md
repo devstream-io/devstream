@@ -16,6 +16,18 @@
 
 ## 2 Technical Roadmap
 
+### Variables
+
+Support defining variables (global or local), and use it in the config.
+
+### `dtm show config`
+
+This is already supported, but we will improve the features of it, for example:
+
+- show the default config of one plugin
+- show the default configs of multiple plugins that are used together
+- interactive: user select plugin then show the default config
+
 ### Plugin Storage
 
 Background: currently, we use GitHub releases to store pre-built binaries and plugins. We might need to figure out a better way to store/distribute plugins and binaries.
