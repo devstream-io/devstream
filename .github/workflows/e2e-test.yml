@@ -15,11 +15,11 @@ on:
       - 'hack/terraform/**'
 
 env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-  DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-  TRELLO_API_KEY: ${{ secrets.TRELLO_API_KEY }}
-  TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
+  GITHUB_TOKEN: ${{ secrets.E2E_GITHUB_TOKEN }}
+  DOCKERHUB_USERNAME: ${{ secrets.E2E_DOCKERHUB_USERNAME }}
+  DOCKERHUB_TOKEN: ${{ secrets.E2E_DOCKERHUB_TOKEN }}
+  TRELLO_API_KEY: ${{ secrets.E2E_TRELLO_API_KEY }}
+  TRELLO_TOKEN: ${{ secrets.E2E_TRELLO_TOKEN }}
 
 jobs:
   e2e-test:
