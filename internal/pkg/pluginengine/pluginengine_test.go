@@ -121,6 +121,31 @@ var _ = Describe("Pluginengine", func() {
 		Expect(dependantOptions).To(Equal(expectResult))
 	})
 
+	It("should handle output interpolation correctly", func() {
+		trelloState := statemanager.State{
+			Name:    "mytrelloboard",
+			Plugin:  "trello",
+			Options: map[string]interface{}{},
+			Resource: map[string]interface{}{
+				"outputs": map[string]interface{}{
+					"boardId": expectedBoardId,
+				},
+			},
+		}
+		err = smgr.AddState(trelloKey, trelloState)
+		Expect(err).NotTo(HaveOccurred())
+
+		dependantOptions := map[string]interface{}{
+			"boardId": fmt.Sprintf("prefix/${{ %s.%s.outputs.boardId }}/suffix", trelloToolName, trelloPluginKind),
+		}
+		expectResult := map[string]interface{}{
+			"boardId": fmt.Sprintf("prefix/%s/suffix", expectedBoardId),
+		}
+		errs := pluginengine.HandleOutputsReferences(smgr, dependantOptions)
+		Expect(len(errs)).To(BeZero())
+		Expect(dependantOptions).To(Equal(expectResult))
+	})
+
 	It("should give an error when output doesn't exist in the state", func() {
 		trelloState := statemanager.State{
 			Name:     "mytrelloboard",

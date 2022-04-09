@@ -2,7 +2,7 @@ package pluginengine
 
 import (
 	"fmt"
-	"strings"
+	"regexp"
 
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 )
@@ -36,12 +36,11 @@ func HandleOutputsReferences(smgr statemanager.Manager, options map[string]inter
 		// only process string values in the options
 		// since all outputs references are strings, not ints, not booleans, not maps
 		if optionValueStr, ok := optionValue.(string); ok {
+			match, toolName, pluginKind, outputReferenceKey := getToolNamePluginOutputKey(optionValueStr)
 			// do nothing, if the value string isn't in the format of a valid output reference
-			if !isValidOutputsReferenceFormat(optionValueStr) {
+			if !match {
 				continue
 			}
-
-			toolName, pluginKind, outputReferenceKey := getToolNamePluginKindAndOutputReferenceKey(optionValueStr)
 
 			outputs, err := smgr.GetOutputs(statemanager.GenerateStateKeyByToolNameAndPluginKind(toolName, pluginKind))
 			if err != nil {
@@ -50,7 +49,7 @@ func HandleOutputsReferences(smgr statemanager.Manager, options map[string]inter
 			}
 
 			if val, ok := outputs.(map[string]interface{})[outputReferenceKey]; ok {
-				options[optionKey] = val
+				options[optionKey] = replaceOutputKeyWithValue(optionValueStr, val.(string))
 			} else {
 				errorsList = append(errorsList, fmt.Errorf("can't find Output reference key %s", outputReferenceKey))
 			}
@@ -65,27 +64,20 @@ func HandleOutputsReferences(smgr statemanager.Manager, options map[string]inter
 	return errorsList
 }
 
-// isValidOutputsReference returns true if:
-// - the str is in the format of ${{ xyz }}
-// - xyz has at least OUTPUT_REFERENCE_TOTAL_SECTIONS number of sections if we split it by "period"
-func isValidOutputsReferenceFormat(rawOutputReference string) bool {
-	if !strings.HasPrefix(rawOutputReference, OUTPUT_REFERENCE_PREFIX) || !strings.HasSuffix(rawOutputReference, OUTPUT_REFERENCE_SUFFIX) {
-		return false
+// getToolNamePluginKindAndOutputReferenceKey returns (false, "", "", "") if regex doesn't match
+// if match, returns (true, name, kind, key)
+func getToolNamePluginOutputKey(s string) (bool, string, string, string) {
+	regex := `.*\${{\s*([^.]*)\.([^.]*)\.outputs\.([^.\s]*)\s*}}.*`
+	r := regexp.MustCompile(regex)
+	if !r.MatchString(s) {
+		return false, "", "", ""
 	}
-
-	outputReferenceStr := stripOutputReferencePrefixAndSuffix(rawOutputReference)
-	sections := strings.Split(outputReferenceStr, SECTION_SEPARATOR)
-	return len(sections) >= OUTPUT_REFERENCE_TOTAL_SECTIONS
+	results := r.FindStringSubmatch(s)
+	return true, results[1], results[2], results[3]
 }
 
-// stripOutputReferencePrefixSuffix returns "abc" given an input "${{ abc }}"
-func stripOutputReferencePrefixAndSuffix(s string) string {
-	return strings.TrimSpace(strings.TrimSuffix(strings.TrimPrefix(s, OUTPUT_REFERENCE_PREFIX), OUTPUT_REFERENCE_SUFFIX))
-}
-
-// getToolNamePluginKindAndOutputReferenceKey returns "name, kind, key" given input "name.kind.outputs.key"
-func getToolNamePluginKindAndOutputReferenceKey(s string) (string, string, string) {
-	outputReferenceStr := stripOutputReferencePrefixAndSuffix(s)
-	sections := strings.Split(outputReferenceStr, SECTION_SEPARATOR)
-	return sections[TOOL_NAME], sections[PLUGIN], sections[OUTPUT_REFERENCE_KEY]
+func replaceOutputKeyWithValue(s, val string) string {
+	regex := `\${{\s*[^.]*\.[^.]*\.outputs\.[^.]*\s*}}`
+	r := regexp.MustCompile(regex)
+	return r.ReplaceAllString(s, val)
 }
