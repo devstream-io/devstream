@@ -2,6 +2,7 @@ package list
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 )
 
@@ -15,6 +16,7 @@ var PluginsName string
 // List all of plugins name
 func List() {
 	listPluginsName := strings.Fields(PluginsName)
+	sort.Strings(listPluginsName)
 	for _, pluginName := range listPluginsName {
 		fmt.Println(pluginName)
 	}

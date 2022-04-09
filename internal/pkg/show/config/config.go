@@ -10,14 +10,20 @@ import (
 
 var pluginDefaultConfigs = map[string]string{
 	"argocd":                         plugin.ArgocdDefaultConfig,
-	"gitlabci-generic":               plugin.GitlabCIGenericDefaultConfig,
 	"argocdapp":                      plugin.ArgocdappDefaultConfig,
+	"devlake":                        plugin.DevlakeDefaultConfig,
 	"github-repo-scaffolding-golang": plugin.GithubRepoScaffoldingGolangDefaultConfig,
 	"githubactions-golang":           plugin.GithubActionsGolangDefaultConfig,
-	"devlake":                        plugin.DevlakeDefaultConfig,
-	"githubactions-python":           plugin.GithubActionsPythonDefaultConfig,
 	"githubactions-nodejs":           plugin.GithubActionsNodejsDefaultConfig,
+	"githubactions-python":           plugin.GithubActionsPythonDefaultConfig,
+	"gitlabci-generic":               plugin.GitlabCIGenericDefaultConfig,
 	"gitlabci-golang":                plugin.GitlabCIGolangDefaultConfig,
+	"jenkins":                        plugin.JenkinsDefaultConfig,
+	"jira-github-integ":              plugin.JiraGithubDefaultConfig,
+	"kube-prometheus":                plugin.KubePrometheusDefaultConfig,
+	"openldap":                       plugin.OpenldapDefaultConfig,
+	"trello-github-integ":            plugin.TrelloGithubDefaultConfig,
+	"trello":                         plugin.TrelloDefaultConfig,
 }
 
 func Show() error {
