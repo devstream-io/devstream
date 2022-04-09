@@ -66,7 +66,7 @@ jobs:
       - name: apply twice
         run: ./dtm apply -f ./test/e2e/yaml/e2e-config.yaml -y
       - name: check if pod is ready
-      run: while [[ $(kubectl get pods -l app=dtm-e2e-go -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "pod not ready yet..."; sleep 3; done
+        run: while [[ $(kubectl get pods -l app=dtm-e2e-go -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "pod not ready yet..."; sleep 3; done
         timeout-minutes: 10
       - name: verify
         run: ./dtm verify -f ./test/e2e/yaml/e2e-config.yaml
