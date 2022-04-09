@@ -1,4 +1,5 @@
 name: e2e test
+
 on:
   push:
     branches:
@@ -12,6 +13,14 @@ on:
       - 'test/**'
       - 'hack/e2e/**'
       - 'hack/terraform/**'
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+  DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  TRELLO_API_KEY: ${{ secrets.TRELLO_API_KEY }}
+  TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
+
 jobs:
   e2e-test:
     if: github.repository == 'devstream-io/devstream'
@@ -56,7 +65,10 @@ jobs:
         run: ./dtm apply -f ./test/e2e/yaml/e2e-config.yaml -y
       - name: apply twice
         run: ./dtm apply -f ./test/e2e/yaml/e2e-config.yaml -y
+      - name: check if pod is ready
+      run: while [[ $(kubectl get pods -l app=dtm-e2e-go -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "pod not ready yet..."; sleep 3; done
+        timeout-minutes: 10
       - name: verify
         run: ./dtm verify -f ./test/e2e/yaml/e2e-config.yaml
       - name: clean
-        run: ./dtm delete -f ./test/e2e/yaml/e2e-config.yaml --force -y
+        run: ./dtm delete -f ./test/e2e/yaml/e2e-config.yaml -y

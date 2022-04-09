@@ -1,25 +1,54 @@
 tools:
-  - name: argocd
-    plugin: argocd
-    options:
-      # need to create the namespace or not, default: false
-      create_namespace: true
-      repo:
-        # name of the Helm repo
-        name: argo
-        # url of the Helm repo
-        url: https://argoproj.github.io/argo-helm
-      # Helm chart information
-      chart:
-        # name of the chart
-        chart_name: argo/argo-cd
-        # release name of the chart
-        release_name: argocd
-        # k8s namespace where ArgoCD will be installed
-        namespace: argocd
-        # whether to wait for the release to be deployed or not
-        wait: true
-        # the time to wait for any individual Kubernetes operation (like Jobs for hooks). This defaults to 5m0s
-        timeout: 5m
-        # whether to perform a CRD upgrade during installation
-        upgradeCRDs: true
+- name: go-webapp-repo
+  plugin: github-repo-scaffolding-golang
+  options:
+    owner: IronCore864
+    repo: dtm-e2e-go
+    branch: main
+    image_repo: ironcore864/dtm-e2e-go
+- name: golang-demo-actions
+  plugin: githubactions-golang
+  dependsOn: ["go-webapp-repo.github-repo-scaffolding-golang"]
+  options:
+    owner: ${{go-webapp-repo.github-repo-scaffolding-golang.outputs.owner}}
+    repo: ${{go-webapp-repo.github-repo-scaffolding-golang.outputs.repo}}
+    language:
+      name: go
+      version: "1.17"
+    branch: main
+    build:
+      enable: True
+    test:
+      enable: True
+      coverage:
+        enable: True
+    docker:
+      enable: True
+- name: argocd
+  plugin: argocd
+  options:
+    create_namespace: true
+    repo:
+      name: argo
+      url: https://argoproj.github.io/argo-helm
+    chart:
+      chart_name: argo/argo-cd
+      release_name: argocd
+      namespace: argocd
+      wait: true
+      timeout: 10m
+      upgradeCRDs: true
+- name: go-webapp-argocd-deploy
+  plugin: argocdapp
+  dependsOn: ["argocd.argocd", "go-webapp-repo.github-repo-scaffolding-golang"]
+  options:
+    app:
+      name: ${{go-webapp-repo.github-repo-scaffolding-golang.outputs.repo}}
+      namespace: argocd
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: default
+    source:
+      valuefile: values.yaml
+      path: helm/${{go-webapp-repo.github-repo-scaffolding-golang.outputs.repo}}
+      repoURL: ${{go-webapp-repo.github-repo-scaffolding-golang.outputs.repoURL}}
