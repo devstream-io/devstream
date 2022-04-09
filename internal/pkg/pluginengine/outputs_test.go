@@ -4,64 +4,51 @@ import (
 	"testing"
 )
 
-type stripOutputReferencePrefixAndSuffixTest struct {
-	arg      string
+type getToolNamePluginOutputKeyTest struct {
+	arg    string
+	match  bool
+	name   string
+	plugin string
+	key    string
+}
+
+var getToolNamePluginOutputKeyTests = []getToolNamePluginOutputKeyTest{
+	{"${{a.b.outputs.d}}", true, "a", "b", "d"},
+	{"prefix${{a.b.outputs.d}}suffix", true, "a", "b", "d"},
+	{"${{  a.b.outputs.d  }}", true, "a", "b", "d"},
+	{"${{  a.b.c  }}", false, "", "", ""},
+}
+
+func TestGetToolNamePluginOutputKey(t *testing.T) {
+	for _, test := range getToolNamePluginOutputKeyTests {
+		match, name, plugin, key := getToolNamePluginOutputKey(test.arg)
+		if match != test.match || name != test.name || plugin != test.plugin || key != test.key {
+			t.Errorf(
+				"Output %t, %s, %s, %s not equal to expected %t, %s, %s, %s. Input: %s.",
+				match, name, plugin, key,
+				test.match, test.name, test.plugin, test.key,
+				test.arg,
+			)
+		}
+	}
+}
+
+type replaceOutputKeyWithValueTest struct {
+	arg1     string
+	arg2     string
 	expected string
 }
 
-var stripOutputReferencePrefixAndSuffixTests = []stripOutputReferencePrefixAndSuffixTest{
-	{"${{a.b.c.d}}", "a.b.c.d"},
-	{"${{ a.b.c.d }}", "a.b.c.d"},
-	{"${{  a.b.c.d  }}", "a.b.c.d"},
-	{"${{  a.b.c  }}", "a.b.c"},
-}
-
-func TestStripOutputReferencePrefixAndSuffix(t *testing.T) {
-	for _, test := range stripOutputReferencePrefixAndSuffixTests {
-		if got := stripOutputReferencePrefixAndSuffix(test.arg); got != test.expected {
-			t.Errorf("Output %s not equal to expected %s. Input: %s.", got, test.expected, test.arg)
-		}
-	}
-}
-
-type isValidOutputsReferenceTest struct {
-	arg      string
-	expected bool
-}
-
-var isValidOutputsReferenceTests = []isValidOutputsReferenceTest{
-	{"${{a.b.c.d}}", true},
-	{"${{ a.b.c.d }}", true},
-	{"${{  a.b.c.d  }}", true},
-	{"${{ a.b.c }}", false},
-	{"${{ a.b.c.d.e }}", true},
-	{"${ a.b.c.d.e }", false},
-	{"{{ a.b.c.d.e }}", false},
+var replaceOutputKeyWithValueTests = []replaceOutputKeyWithValueTest{
+	{"${{a.b.outputs.d}}", "value", "value"},
+	{"prefix/${{ a.b.outputs.d }}/suffix", "value", "prefix/value/suffix"},
+	{"${{a.b.c}}", "value", "${{a.b.c}}"},
 }
 
 func TestIsValidOutputsReference(t *testing.T) {
-	for _, test := range isValidOutputsReferenceTests {
-		if got := isValidOutputsReferenceFormat(test.arg); got != test.expected {
-			t.Errorf("Output %t not equal to expected %t. Input: %s.", got, test.expected, test.arg)
-		}
-	}
-}
-
-type getToolNamePluginKindAndOutputReferenceKeyTest struct {
-	arg       string
-	expected1 string
-	expected2 string
-	expected3 string
-}
-
-var getToolNamePluginKindAndOutputReferenceKeyTests = []getToolNamePluginKindAndOutputReferenceKeyTest{
-	{"name.kind.outputs.key", "name", "kind", "key"},
-}
-
-func TestGetToolNamePluginKindAndOutputReferenceKey(t *testing.T) {
-	for _, test := range getToolNamePluginKindAndOutputReferenceKeyTests {
-		if got1, got2, got3 := getToolNamePluginKindAndOutputReferenceKey(test.arg); got1 != test.expected1 || got2 != test.expected2 || got3 != test.expected3 {
-			t.Errorf("Output %s, %s, %s not equal to expected %s, %s, %s.", got1, got2, got3, test.expected1, test.expected2, test.expected3)
+	for _, test := range replaceOutputKeyWithValueTests {
+		if got := replaceOutputKeyWithValue(test.arg1, test.arg2); got != test.expected {
+			t.Errorf("Output %s not equal to expected %s. Input: %s, %s.", got, test.expected, test.arg1, test.arg2)
 		}
 	}
 }
