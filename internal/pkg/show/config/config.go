@@ -9,8 +9,15 @@ import (
 )
 
 var pluginDefaultConfigs = map[string]string{
-	"argocd":           plugin.ArgocdDefaultConfig,
-	"gitlabci-generic": plugin.GitlabCIGenericDefaultConfig,
+	"argocd":                         plugin.ArgocdDefaultConfig,
+	"gitlabci-generic":               plugin.GitlabCIGenericDefaultConfig,
+	"argocdapp":                      plugin.ArgocdappDefaultConfig,
+	"github-repo-scaffolding-golang": plugin.GithubRepoScaffoldingGolangDefaultConfig,
+	"githubactions-golang":           plugin.GithubActionsGolangDefaultConfig,
+	"devlake":                        plugin.DevlakeDefaultConfig,
+	"githubactions-python":           plugin.GithubActionsPythonDefaultConfig,
+	"githubactions-nodejs":           plugin.GithubActionsNodejsDefaultConfig,
+	"gitlabci-golang":                plugin.GitlabCIGolangDefaultConfig,
 }
 
 func Show() error {
