@@ -9,7 +9,12 @@ import (
 )
 
 func (c *Client) GetLastCommit() (*github.RepositoryCommit, error) {
-	commits, _, err := c.Client.Repositories.ListCommits(c.Context, c.Owner, c.Repo, &github.CommitsListOptions{})
+	var owner = c.Owner
+	if c.Org != "" {
+		owner = c.Org
+	}
+
+	commits, _, err := c.Client.Repositories.ListCommits(c.Context, owner, c.Repo, &github.CommitsListOptions{})
 	if err != nil {
 		log.Debugf("Failed to get RepositoryCommits: %s.", err)
 		return nil, err

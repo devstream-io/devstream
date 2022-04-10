@@ -19,6 +19,8 @@ var TrelloGithubDefaultConfig = `tools:
     # the repo's owner. It should be case-sensitive here; strictly use your GitHub user name; please change the value below.
     owner: YOUR_GITHUB_USERNAME
     # the repo where you'd like to setup GitHub Actions; please change the value below.
+    # the repo's org. If you set this property, then the new repo will be created under the org you're given, and the "owner" setting above will be ignored.
+    org: YOUR_ORGANIZATION_NAME
     repo: YOUR_REPO_NAME
     # reference parameters come from dependency, their usage will be explained later
     boardId: ${{ my-trello-board.trello.outputs.boardId }}

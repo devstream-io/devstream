@@ -72,12 +72,13 @@ func download() error {
 }
 
 func push(opts *Options) error {
-	ghOption := &github.Option{
+	ghOptions := &github.Option{
 		Owner:    opts.Owner,
+		Org:      opts.Org,
 		Repo:     opts.Repo,
 		NeedAuth: true,
 	}
-	ghClient, err := github.NewClient(ghOption)
+	ghClient, err := github.NewClient(ghOptions)
 	if err != nil {
 		return err
 	}

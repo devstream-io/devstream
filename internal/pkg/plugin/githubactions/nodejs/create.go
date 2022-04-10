@@ -21,6 +21,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 
 	ghOptions := &github.Option{
 		Owner:    opts.Owner,
+		Org:      opts.Org,
 		Repo:     opts.Repo,
 		NeedAuth: true,
 	}

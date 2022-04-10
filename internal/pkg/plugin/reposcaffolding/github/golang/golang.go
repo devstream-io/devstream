@@ -35,7 +35,8 @@ type Repo struct {
 
 func InitRepoLocalAndPushToRemote(repoPath string, opts *Options, ghClient *github.Client) error {
 	var retErr error
-	if err := ghClient.CreateRepo(); err != nil {
+	// It's ok to give the opts.Org to CreateRepo() when create a repository for a authenticated user.
+	if err := ghClient.CreateRepo(opts.Org); err != nil {
 		log.Infof("Failed to create repo: %s.", err)
 		return err
 	}
@@ -117,7 +118,7 @@ func WalkLocalRepoPath(repoPath string, opts *Options, ghClient *github.Client) 
 			if strings.Contains(newPathForGithub, "gitignore") {
 				err := ghClient.CreateFile(content, strings.TrimSuffix(newPathForGithub, ".tpl"), mainBranch)
 				if err != nil {
-					log.Debugf("Failed to add the .gitignore file.")
+					log.Debugf("Failed to add the .gitignore file: %s.", err)
 					return err
 				}
 				log.Debugf("Added the .gitignore file.")
@@ -142,12 +143,17 @@ func MergeCommits(ghClient *github.Client, mainBranch string) error {
 }
 
 func Render(filePath string, opts *Options) ([]byte, error) {
+	var owner = opts.Owner
+	if opts.Org != "" {
+		owner = opts.Org
+	}
+
 	config := Config{
 		AppName:   opts.Repo,
 		ImageRepo: opts.ImageRepo,
 		Repo: Repo{
 			Name:  opts.Repo,
-			Owner: opts.Owner,
+			Owner: owner,
 		},
 	}
 	log.Debugf("FilePath: %s.", filePath)
@@ -195,7 +201,7 @@ func replaceAppNameInPathStr(filePath, appName string) (string, error) {
 	}
 	newFilePath := reg.ReplaceAllString(filePath, appName)
 
-	log.Debugf("New filePath: %s.", newFilePath)
+	log.Debugf("New filePath: \"%s\".", newFilePath)
 
 	return newFilePath, nil
 }

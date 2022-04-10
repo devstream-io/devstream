@@ -8,9 +8,9 @@ import (
 func validate(opts *Options) []error {
 	retErrors := make([]error, 0)
 
-	// owner/repo/branch
-	if opts.Owner == "" {
-		retErrors = append(retErrors, fmt.Errorf("owner is empty"))
+	// owner/org/repo/branch
+	if opts.Owner == "" && opts.Org == "" {
+		retErrors = append(retErrors, fmt.Errorf("owner and org are empty"))
 	}
 	if opts.Repo == "" {
 		retErrors = append(retErrors, fmt.Errorf("repo is empty"))

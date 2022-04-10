@@ -19,6 +19,7 @@ var trelloWorkflow = &github.Workflow{
 // Options is the struct for configurations of the trellogithub plugin.
 type Options struct {
 	Owner       string
+	Org         string
 	Repo        string
 	Branch      string
 	BoardId     string

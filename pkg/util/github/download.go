@@ -12,8 +12,13 @@ import (
 )
 
 func (c *Client) DownloadAsset(tagName, assetName string) error {
+	var owner = c.Owner
+	if c.Org != "" {
+		owner = c.Org
+	}
+
 	// 1. get releases
-	releases, resp, err := c.Repositories.ListReleases(context.TODO(), c.Owner, c.Repo, &github.ListOptions{})
+	releases, resp, err := c.Repositories.ListReleases(context.TODO(), owner, c.Repo, &github.ListOptions{})
 	if err != nil {
 		return err
 	}
@@ -76,7 +81,12 @@ func (c *Client) DownloadAsset(tagName, assetName string) error {
 }
 
 func (c *Client) DownloadLatestCodeAsZipFile() error {
-	latestCodeZipfileDownloadUrl := fmt.Sprintf(DefaultLatestCodeZipfileDownloadUrlFormat, c.Owner, c.Repo)
+	var owner = c.Owner
+	if c.Org != "" {
+		owner = c.Org
+	}
+
+	latestCodeZipfileDownloadUrl := fmt.Sprintf(DefaultLatestCodeZipfileDownloadUrlFormat, owner, c.Repo)
 	log.Debugf("LatestCodeZipfileDownloadUrl: %s.", latestCodeZipfileDownloadUrl)
 
 	n, err := downloader.Download(latestCodeZipfileDownloadUrl, DefaultLatestCodeZipfileName, c.WorkPath)

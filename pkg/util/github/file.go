@@ -13,6 +13,11 @@ func (c *Client) CreateFile(content []byte, filePath, targetBranch string) error
 		Branch:  &targetBranch,
 	}
 
-	_, _, err := c.Repositories.CreateFile(c.Context, c.Owner, c.Repo, filePath, opt)
+	var owner = c.Owner
+	if c.Org != "" {
+		owner = c.Org
+	}
+
+	_, _, err := c.Repositories.CreateFile(c.Context, owner, c.Repo, filePath, opt)
 	return err
 }
