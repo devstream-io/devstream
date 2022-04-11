@@ -20,6 +20,11 @@ type Workflow struct {
 }
 
 func (c *Client) AddWorkflow(workflow *Workflow, branch string) error {
+	var owner = c.Owner
+	if c.Org != "" {
+		owner = c.Org
+	}
+
 	sha, err := c.getFileSHA(workflow.WorkflowFileName)
 	if err != nil {
 		return err
@@ -40,8 +45,8 @@ func (c *Client) AddWorkflow(workflow *Workflow, branch string) error {
 	log.Infof("Creating GitHub Actions workflow %s ...", workflow.WorkflowFileName)
 	_, _, err = c.Client.Repositories.CreateFile(
 		c.Context,
-		c.Option.Owner,
-		c.Option.Repo,
+		owner,
+		c.Repo,
 		generateGitHubWorkflowFileByName(workflow.WorkflowFileName),
 		opts)
 
@@ -52,6 +57,11 @@ func (c *Client) AddWorkflow(workflow *Workflow, branch string) error {
 	return nil
 }
 func (c *Client) DeleteWorkflow(workflow *Workflow, branch string) error {
+	var owner = c.Owner
+	if c.Org != "" {
+		owner = c.Org
+	}
+
 	sha, err := c.getFileSHA(workflow.WorkflowFileName)
 	if err != nil {
 		return err
@@ -72,8 +82,8 @@ func (c *Client) DeleteWorkflow(workflow *Workflow, branch string) error {
 	log.Infof("Deleting GitHub Actions workflow %s ...", workflow.WorkflowFileName)
 	_, _, err = c.Client.Repositories.DeleteFile(
 		c.Context,
-		c.Option.Owner,
-		c.Option.Repo,
+		owner,
+		c.Repo,
 		generateGitHubWorkflowFileByName(workflow.WorkflowFileName),
 		opts)
 
@@ -89,6 +99,11 @@ func (c *Client) DeleteWorkflow(workflow *Workflow, branch string) error {
 // If some error occurred => return (nil, error)
 // If wf1.yml is not found => return ({"wf1.yml":error("not found"), "wf2.yml:nil},nil)
 func (c *Client) VerifyWorkflows(workflows []*Workflow) (map[string]error, error) {
+	var owner = c.Owner
+	if c.Org != "" {
+		owner = c.Org
+	}
+
 	wsFiles := make([]string, 0)
 	for _, w := range workflows {
 		wsFiles = append(wsFiles, w.WorkflowFileName)
@@ -97,8 +112,8 @@ func (c *Client) VerifyWorkflows(workflows []*Workflow) (map[string]error, error
 
 	_, dirContent, resp, err := c.Client.Repositories.GetContents(
 		c.Context,
-		c.Option.Owner,
-		c.Option.Repo,
+		owner,
+		c.Repo,
 		".github/workflows",
 		&github.RepositoryContentGetOptions{},
 	)
@@ -144,9 +159,14 @@ func (c *Client) VerifyWorkflows(workflows []*Workflow) (map[string]error, error
 }
 
 func (c *Client) GetWorkflowPath() (string, error) {
+	var owner = c.Owner
+	if c.Org != "" {
+		owner = c.Org
+	}
+
 	_, _, resp, err := c.Client.Repositories.GetContents(
 		c.Context,
-		c.Owner,
+		owner,
 		c.Repo,
 		".github/workflows",
 		&github.RepositoryContentGetOptions{},
@@ -164,10 +184,15 @@ func (c *Client) GetWorkflowPath() (string, error) {
 }
 
 func (c *Client) FetchRemoteContent(wsFiles []string) ([]string, map[string]error, error) {
+	var owner = c.Owner
+	if c.Org != "" {
+		owner = c.Org
+	}
+
 	var filesInRemoteDir = make([]string, 0)
 	_, dirContent, resp, err := c.Repositories.GetContents(
 		c.Context,
-		c.Owner,
+		owner,
 		c.Repo,
 		".github/workflows",
 		&github.RepositoryContentGetOptions{},

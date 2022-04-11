@@ -9,12 +9,15 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func (c *Client) CreateRepo() error {
+func (c *Client) CreateRepo(org string) error {
 	repo := &github.Repository{
 		Name: &c.Repo,
 	}
 
-	_, _, err := c.Repositories.Create(c.Context, "", repo)
+	if org != "" {
+		log.Infof("Prepare to create an organization repository: %s", org)
+	}
+	_, _, err := c.Repositories.Create(c.Context, org, repo)
 	if err != nil {
 		return err
 	}
@@ -22,7 +25,12 @@ func (c *Client) CreateRepo() error {
 }
 
 func (c *Client) DeleteRepo() error {
-	response, err := c.Client.Repositories.Delete(c.Context, c.Owner, c.Repo)
+	var owner = c.Owner
+	if c.Org != "" {
+		owner = c.Org
+	}
+
+	response, err := c.Client.Repositories.Delete(c.Context, owner, c.Repo)
 
 	// error reason is not 404
 	if err != nil && !strings.Contains(err.Error(), "404") {
@@ -40,9 +48,14 @@ func (c *Client) DeleteRepo() error {
 }
 
 func (c *Client) GetRepoDescription() (*github.Repository, error) {
+	var owner = c.Owner
+	if c.Org != "" {
+		owner = c.Org
+	}
+
 	repo, resp, err := c.Client.Repositories.Get(
 		c.Context,
-		c.Owner,
+		owner,
 		c.Repo)
 
 	if err != nil {

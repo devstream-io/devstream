@@ -29,6 +29,7 @@ type Client struct {
 
 type Option struct {
 	Owner    string
+	Org      string
 	Repo     string
 	NeedAuth bool
 	WorkPath string

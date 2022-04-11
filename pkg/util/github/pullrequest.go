@@ -17,6 +17,11 @@ const (
 )
 
 func (c *Client) NewPullRequest(fromBranch, toBranch string) (int, error) {
+	var owner = c.Owner
+	if c.Org != "" {
+		owner = c.Org
+	}
+
 	title := "Scaffolding with DevStream"
 	head := fromBranch
 	base := toBranch
@@ -24,7 +29,7 @@ func (c *Client) NewPullRequest(fromBranch, toBranch string) (int, error) {
 	mcm := false
 	draft := false
 
-	pr, _, err := c.PullRequests.Create(c.Context, c.Owner, c.Repo, &github.NewPullRequest{
+	pr, _, err := c.PullRequests.Create(c.Context, owner, c.Repo, &github.NewPullRequest{
 		Title:               &title,
 		Head:                &head,
 		Base:                &base,
@@ -43,8 +48,13 @@ func (c *Client) NewPullRequest(fromBranch, toBranch string) (int, error) {
 }
 
 func (c *Client) MergePullRequest(number int, mergeMethod MergeMethod) error {
+	var owner = c.Owner
+	if c.Org != "" {
+		owner = c.Org
+	}
+
 	commitMsg := "Scaffolding with DevStream"
-	ret, _, err := c.PullRequests.Merge(c.Context, c.Owner, c.Repo, number, commitMsg, &github.PullRequestOptions{
+	ret, _, err := c.PullRequests.Merge(c.Context, owner, c.Repo, number, commitMsg, &github.PullRequestOptions{
 		CommitTitle: commitMsg,
 		SHA:         "",
 		// "merge", "squash", and "rebase"

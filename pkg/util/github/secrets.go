@@ -12,11 +12,16 @@ import (
 
 // AddRepoSecret adds a secret to a GitHub repo.
 func (c *Client) AddRepoSecret(secretKey, secretValue string) error {
+	var owner = c.Owner
+	if c.Org != "" {
+		owner = c.Org
+	}
+
 	// The transmission of the secret value to GitHub using the api requires the secret value to be encrypted
 	// with the public key of the repo.
 	// First, the public key of the repo is retrieved.
 	ctx := context.Background()
-	publicKey, _, err := client.Actions.GetRepoPublicKey(ctx, c.Owner, c.Repo)
+	publicKey, _, err := client.Actions.GetRepoPublicKey(ctx, owner, c.Repo)
 	if err != nil {
 		return err
 	}
@@ -29,7 +34,7 @@ func (c *Client) AddRepoSecret(secretKey, secretValue string) error {
 
 	// Finally, the github.EncodedSecret is passed into the GitHub client.Actions.CreateOrUpdateRepoSecret method to
 	// create the secret in the GitHub repo
-	if _, err := client.Actions.CreateOrUpdateRepoSecret(ctx, c.Owner, c.Repo, encryptedSecret); err != nil {
+	if _, err := client.Actions.CreateOrUpdateRepoSecret(ctx, owner, c.Repo, encryptedSecret); err != nil {
 		return fmt.Errorf("github Actions.CreateOrUpdateRepoSecret returned error: %v", err)
 	}
 
@@ -69,8 +74,13 @@ func encryptSecretWithPublicKey(publicKey *github.PublicKey, secretName string, 
 
 // DeleteRepoSecret deletes a secret in a GitHub repo.
 func (c *Client) DeleteRepoSecret(secretKey string) error {
+	var owner = c.Owner
+	if c.Org != "" {
+		owner = c.Org
+	}
+
 	ctx := context.Background()
-	response, err := client.Actions.DeleteRepoSecret(ctx, c.Owner, c.Repo, secretKey)
+	response, err := client.Actions.DeleteRepoSecret(ctx, owner, c.Repo, secretKey)
 	if err != nil {
 		if response.StatusCode == 404 {
 			return nil
@@ -83,8 +93,13 @@ func (c *Client) DeleteRepoSecret(secretKey string) error {
 
 // RepoSecretExists detects if a secret exists in a GitHub repo.
 func (c *Client) RepoSecretExists(secretKey string) (bool, error) {
+	var owner = c.Owner
+	if c.Org != "" {
+		owner = c.Org
+	}
+
 	ctx := context.Background()
-	_, response, err := client.Actions.GetRepoSecret(ctx, c.Owner, c.Repo, secretKey)
+	_, response, err := client.Actions.GetRepoSecret(ctx, owner, c.Repo, secretKey)
 	if err != nil {
 		if response.StatusCode == 404 {
 			return false, nil

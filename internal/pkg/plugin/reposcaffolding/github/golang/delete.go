@@ -29,6 +29,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 func uninstall(opts *Options) (bool, error) {
 	ghOptions := &github.Option{
 		Owner:    opts.Owner,
+		Org:      opts.Org,
 		Repo:     opts.Repo,
 		NeedAuth: true,
 	}

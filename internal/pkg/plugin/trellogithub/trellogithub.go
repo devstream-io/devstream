@@ -43,6 +43,7 @@ func NewTrelloGithub(options map[string]interface{}) (*TrelloGithub, error) {
 
 	ghOptions := &github.Option{
 		Owner:    opts.Owner,
+		Org:      opts.Org,
 		Repo:     opts.Repo,
 		NeedAuth: true,
 	}

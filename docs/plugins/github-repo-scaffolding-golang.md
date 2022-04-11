@@ -31,6 +31,8 @@ tools:
   options:
     # the repo's owner. It should be case-sensitive here; strictly use your GitHub user name; please change the value below.
     owner: YOUR_GITHUB_USERNAME
+    # the repo's org. If you set this property, then the new repo will be created under the org you're given, and the "owner" setting above will be ignored.
+    org: YOUR_ORGANIZATION_NAME
     # the repo which you'd like to create; please change the value below.
     repo: YOUR_REPO_NAME
     # the branch of the repo you'd like to hold the code
