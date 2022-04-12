@@ -20,5 +20,5 @@ best_practices
 creating_a_document
 roadmap
 Releases ⧉ <https://github.com/devstream-io/devstream/releases>
-Blog ⧉ <https://blog.dtm.dev>
+Blog ⧉ <https://www.devstream.io/blog>
 ```
