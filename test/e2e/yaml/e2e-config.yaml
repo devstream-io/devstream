@@ -2,10 +2,11 @@ tools:
 - name: go-webapp-repo
   plugin: github-repo-scaffolding-golang
   options:
-    owner: IronCore864
+    owner: ""
+    org: devstream-io
     repo: dtm-e2e-go
     branch: main
-    image_repo: ironcore864/dtm-e2e-go
+    image_repo: dtme2etest/dtm-e2e-go
 - name: golang-demo-actions
   plugin: githubactions-golang
   dependsOn: ["go-webapp-repo.github-repo-scaffolding-golang"]
