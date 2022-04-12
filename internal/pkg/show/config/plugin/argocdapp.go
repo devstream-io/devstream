@@ -27,4 +27,4 @@ var ArgocdappDefaultConfig = `tools:
       # path of the Helm chart
       path: charts/go-hello-http
       # Helm chart repo URL, this is only an example, do not use this
-      repoURL: https://github.com/ironcore864/openstream-gitops-test.git`
+      repoURL: YOUR_CHART_REPO_URL

@@ -43,6 +43,7 @@ Then modify the file accordingly. The variables you need to care about are the f
 - JIRA_ID
 - JIRA_USER_EMAIL
 - JIRA_PROJECT_KEY
+- YOUR_CHART_REPO_URL
 
 For me I can set these variables like:
 
@@ -54,7 +55,8 @@ For me I can set these variables like:
 | YOUR_DOCKERHUB_IMAGE_REPO_NAME | go-webapp         | It is recommended that you use the same name as the project, please make sure that there is no project with the same name in your DockerHub account |
 | JIRA_ID                        | merico            | This is a domain name prefix like merico in https://merico.atlassian.net |
 | JIRA_PROJECT_KEY               | DT                | A descriptive prefix for your project’s issue keys to recognize work from this project |
-| JIRA_USER_EMAIL                | tao.hu@merico.dev | The email you use to log in to Jira                          |
+| JIRA_USER_EMAIL                | tao.hu@merico.dev | The email you use to log in to Jira |
+| YOUR_CHART_REPO_URL            | https://github.com/daniel-hutao/dtm-gitops-test.git | Helm chart repo URL |
 
 These plugins require some environment variables to work, so let's set them:
 
