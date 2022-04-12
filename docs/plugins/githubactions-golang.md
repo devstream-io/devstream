@@ -31,7 +31,7 @@ tools:
     # the repo's org. If you set this property, then the new repo will be created under the org you're given, and the "owner" setting above will be ignored.
     org: YOUR_ORGANIZATION_NAME
     # the repo where you'd like to setup GitHub Actions; please change the value below to an existing repo.
-    repo: YOURE_REPO_NAME
+    repo: YOUR_REPO_NAME
     # programming language specific settings
     language:
       name: go
