@@ -41,4 +41,4 @@ var GithubActionsGolangDefaultConfig = `tools:
       # docker build/push related, default to false
       enable: True
       # dockerhub image repo; please change the value below.
-      repo: YOUR_DOCKERHUB_IMAGE_REPO_NAME`
+      repo: YOUR_DOCKERHUB_REPOSITORY`

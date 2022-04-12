@@ -16,4 +16,4 @@ var GithubRepoScaffoldingGolangDefaultConfig = `tools:
     # the branch of the repo you'd like to hold the code
     branch: main
     # the image repo you'd like to push the container image; please change the value below.
-    image_repo: YOUR_DOCKERHUB_USERNAME/YOUR_DOCKERHUB_IMAGE_REPO_NAME`
+    image_repo: YOUR_DOCKERHUB_USERNAME/YOUR_DOCKERHUB_REPOSITORY`

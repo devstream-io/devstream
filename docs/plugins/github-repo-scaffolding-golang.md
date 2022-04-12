@@ -38,15 +38,16 @@ tools:
     # the branch of the repo you'd like to hold the code
     branch: main
     # the image repo you'd like to push the container image; please change the value below.
-    image_repo: YOUR_DOCKERHUB_USERNAME/YOUR_DOCKERHUB_IMAGE_REPO_NAME
+    image_repo: YOUR_DOCKERHUB_USERNAME/YOUR_DOCKERHUB_REPOSITORY
 ```
 
 Replace the following from the config above:
 
 - `YOUR_GITHUB_USERNAME`
+- `YOUR_ORGANIZATION_NAME`
 - `YOUR_REPO_NAME`
 - `YOUR_DOCKERHUB_USERNAME`
-- `YOUR_DOCKERHUB_IMAGE_REPO_NAME`
+- `YOUR_DOCKERHUB_REPOSITORY`
 
 The "branch" in the example above is "main", but you can adjust accordingly.
 
@@ -68,10 +69,10 @@ tools:
 - name: go-webapp-repo
   plugin: github-repo-scaffolding-golang
   options:
-    owner: IronCore864
-    repo: go-webapp-devstream-demo
+    owner: YOUR_GITHUB_USERNAME
+    repo: YOUR_REPO_NAME
     branch: main
-    image_repo: ironcore864/go-webapp-devstream-demo
+    image_repo: YOUR_DOCKERHUB_REPOSITORY
 - name: golang-demo-actions
   plugin: githubactions-golang
   dependsOn: ["go-webapp-repo.github-repo-scaffolding-golang"]
