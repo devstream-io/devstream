@@ -232,7 +232,7 @@ A: Inspired by [`git`](https://github.com/git/git#readme), the name is (dependin
 
 We will regularly organize `DevStream Community Meeting`, please visit the [wiki](https://github.com/devstream-io/devstream/wiki) page for details.
 
-- Message us on <a href="https://discord.com/invite/83rDG6ydVZ" target="_blank">Discord.</a>
+- Message us on <a href="https://join.slack.com/t/devstream-io/shared_invite/zt-16tb0iwzr-krcFGYRN7~Vv1suGZjdv4w" target="_blank">Slack.</a>
 - For Chinese users, the WeChat group QR code can be obtained from [here](docs/README_zh.md).
 
 ## Contribute
