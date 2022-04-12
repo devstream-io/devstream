@@ -4,10 +4,10 @@
 ![](./docs/images/logo-120px.jpg)
 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat&logo=github&color=2370ff&labelColor=454545)](http://makeapullrequest.com)
-[![Discord](https://img.shields.io/discord/844603288082186240.svg?style=flat?label=&logo=discord&logoColor=ffffff&color=747df7&labelColor=454545)](https://discord.gg/83rDG6ydVZ)
 ![Test](https://github.com/devstream-io/devstream/actions/workflows/main.yml/badge.svg)
 [![Go Report Card](https://goreportcard.com/badge/github.com/devstream-io/devstream)](https://goreportcard.com/report/github.com/devstream-io/devstream)
 [![Downloads](https://img.shields.io/github/downloads/devstream-io/devstream/total.svg)](https://github.com/devstream-io/devstream/releases)
+[![Slack](https://img.shields.io/badge/slack-join_chat-success.svg?logo=slack)](https://join.slack.com/t/devstream-io/shared_invite/zt-16tb0iwzr-krcFGYRN7~Vv1suGZjdv4w)
 
 # DevStream
 </div>
@@ -232,7 +232,7 @@ A: Inspired by [`git`](https://github.com/git/git#readme), the name is (dependin
 
 We will regularly organize `DevStream Community Meeting`, please visit the [wiki](https://github.com/devstream-io/devstream/wiki) page for details.
 
-- Message us on <a href="https://discord.com/invite/83rDG6ydVZ" target="_blank">Discord.</a>
+- Message us on <a href="https://join.slack.com/t/devstream-io/shared_invite/zt-16tb0iwzr-krcFGYRN7~Vv1suGZjdv4w" target="_blank">Slack.</a>
 - For Chinese users, the WeChat group QR code can be obtained from [here](docs/README_zh.md).
 
 ## Contribute
