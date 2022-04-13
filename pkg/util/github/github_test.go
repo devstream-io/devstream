@@ -18,8 +18,8 @@ var _ = Describe("GitHub", func() {
 		var err error
 		BeforeEach(func() {
 			ghClient, err = github.NewClient(&github.Option{
-				// TODO(daniel-hutao): update it to merico-dev after merico-dev/dtm-scaffolding-golang has a stable asset
-				Owner:    "daniel-hutao",
+				Owner:    "",
+				Org:      "devstream-io",
 				Repo:     "dtm-scaffolding-golang",
 				NeedAuth: false,
 			})

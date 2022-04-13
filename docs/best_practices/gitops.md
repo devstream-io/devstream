@@ -39,10 +39,11 @@ Then modify the file accordingly. The variables you need to care about are the f
 - YOUR_GITHUB_USERNAME
 - YOUR_REPO_NAME
 - YOUR_DOCKERHUB_USERNAME
-- YOUR_DOCKERHUB_IMAGE_REPO_NAME
+- YOUR_DOCKERHUB_REPOSITORY
 - JIRA_ID
 - JIRA_USER_EMAIL
 - JIRA_PROJECT_KEY
+- YOUR_CHART_REPO_URL
 
 For me I can set these variables like:
 
@@ -51,10 +52,11 @@ For me I can set these variables like:
 | YOUR_GITHUB_USERNAME           | daniel-hutao      | It should be case-sensitive here; strictly use your GitHub username |
 | YOUR_REPO_NAME                 | go-webapp         | As long as it doesn't exist in your GitHub account and the name is legal |
 | YOUR_DOCKERHUB_USERNAME        | exploitht         | It should be case-sensitive here; strictly use your DockerHub username |
-| YOUR_DOCKERHUB_IMAGE_REPO_NAME | go-webapp         | It is recommended that you use the same name as the project, please make sure that there is no project with the same name in your DockerHub account |
+| YOUR_DOCKERHUB_REPOSITORY      | go-webapp         | It is recommended that you use the same name as the project, please make sure that there is no project with the same name in your DockerHub account |
 | JIRA_ID                        | merico            | This is a domain name prefix like merico in https://merico.atlassian.net |
 | JIRA_PROJECT_KEY               | DT                | A descriptive prefix for your project’s issue keys to recognize work from this project |
-| JIRA_USER_EMAIL                | tao.hu@merico.dev | The email you use to log in to Jira                          |
+| JIRA_USER_EMAIL                | tao.hu@merico.dev | The email you use to log in to Jira |
+| YOUR_CHART_REPO_URL            | https://github.com/daniel-hutao/dtm-gitops-test.git | Helm chart repo URL |
 
 These plugins require some environment variables to work, so let's set them:
 

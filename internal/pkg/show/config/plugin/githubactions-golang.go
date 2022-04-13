@@ -13,7 +13,7 @@ var GithubActionsGolangDefaultConfig = `tools:
     # the repo where you'd like to setup GitHub Actions; please change the value below to an existing repo.
     # the repo's org. If you set this property, then the new repo will be created under the org you're given, and the "owner" setting above will be ignored.
     org: YOUR_ORGANIZATION_NAME    
-    repo: YOURE_REPO_NAME
+    repo: YOUR_REPO_NAME
     # programming language specific settings
     language:
       name: go
@@ -41,4 +41,4 @@ var GithubActionsGolangDefaultConfig = `tools:
       # docker build/push related, default to false
       enable: True
       # dockerhub image repo; please change the value below.
-      repo: YOUR_DOCKERHUB_IMAGE_REPO_NAME`
+      repo: YOUR_DOCKERHUB_REPOSITORY`
