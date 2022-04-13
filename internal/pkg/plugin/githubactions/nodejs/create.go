@@ -46,5 +46,5 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		}
 	}
 
-	return githubactions.BuildState(opts.Owner, opts.Repo), nil
+	return githubactions.BuildState(opts.Owner, opts.Org, opts.Repo), nil
 }

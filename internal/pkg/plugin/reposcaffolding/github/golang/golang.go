@@ -209,12 +209,18 @@ func replaceAppNameInPathStr(filePath, appName string) (string, error) {
 func buildState(opts *Options) map[string]interface{} {
 	res := make(map[string]interface{})
 	res["owner"] = opts.Owner
+	res["org"] = opts.Org
 	res["repoName"] = opts.Repo
 
 	outputs := make(map[string]interface{})
 	outputs["owner"] = opts.Owner
+	outputs["org"] = opts.Org
 	outputs["repo"] = opts.Repo
-	outputs["repoURL"] = fmt.Sprintf("https://github.com/%s/%s.git", opts.Owner, opts.Repo)
+	if opts.Owner != "" {
+		outputs["repoURL"] = fmt.Sprintf("https://github.com/%s/%s.git", opts.Owner, opts.Repo)
+	} else {
+		outputs["repoURL"] = fmt.Sprintf("https://github.com/%s/%s.git", opts.Org, opts.Repo)
+	}
 	res["outputs"] = outputs
 
 	return res

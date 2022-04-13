@@ -60,11 +60,7 @@ func getChanges(smgr statemanager.Manager, cfg *configloader.Config, commandType
 	if commandType == CommandApply {
 		changes, err = changesForApply(smgr, cfg)
 	} else if commandType == CommandDelete {
-		if isForceDelete {
-			changes = changesForForceDelete(smgr, cfg)
-		} else {
-			changes = changesForDelete(smgr, cfg)
-		}
+		changes, err = changesForDelete(smgr, cfg, isForceDelete)
 	} else {
 		log.Fatalf("That's impossible!")
 	}

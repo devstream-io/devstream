@@ -2,7 +2,6 @@ tools:
 - name: go-webapp-repo
   plugin: github-repo-scaffolding-golang
   options:
-    owner: ""
     org: devstream-io
     repo: dtm-e2e-go
     branch: main
@@ -11,7 +10,7 @@ tools:
   plugin: githubactions-golang
   dependsOn: ["go-webapp-repo.github-repo-scaffolding-golang"]
   options:
-    owner: ${{go-webapp-repo.github-repo-scaffolding-golang.outputs.owner}}
+    org: ${{go-webapp-repo.github-repo-scaffolding-golang.outputs.org}}
     repo: ${{go-webapp-repo.github-repo-scaffolding-golang.outputs.repo}}
     language:
       name: go

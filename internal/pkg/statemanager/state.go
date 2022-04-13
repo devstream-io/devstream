@@ -39,6 +39,15 @@ func (s StatesMap) DeepCopy() StatesMap {
 	return newStatesMap
 }
 
+func (s StatesMap) ToList() []State {
+	var res []State
+	s.Range(func(key, value interface{}) bool {
+		res = append(res, value.(State))
+		return true
+	})
+	return res
+}
+
 func (s StatesMap) Format() []byte {
 	tmpMap := make(map[StateKey]State)
 	s.Range(func(key, value interface{}) bool {

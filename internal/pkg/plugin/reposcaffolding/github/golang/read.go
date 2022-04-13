@@ -27,11 +27,6 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 }
 
 func buildReadState(opts *Options) (map[string]interface{}, error) {
-	var owner = opts.Owner
-	if opts.Org != "" {
-		owner = opts.Org
-	}
-
 	ghOptions := &github.Option{
 		Owner:    opts.Owner,
 		Org:      opts.Org,
@@ -53,14 +48,24 @@ func buildReadState(opts *Options) (map[string]interface{}, error) {
 	}
 
 	res := make(map[string]interface{})
-	res["owner"] = owner
+	res["owner"] = opts.Owner
+	res["org"] = opts.Org
 	res["repoName"] = *repo.Name
 
 	outputs := make(map[string]interface{})
-	outputs["owner"] = owner
-	outputs["repo"] = opts.Repo
-	outputs["repoURL"] = fmt.Sprintf("https://github.com/%s/%s.git", opts.Owner, opts.Repo)
 
+	if opts.Owner == "" {
+		outputs["owner"] = opts.Owner
+	} else {
+		outputs["owner"] = *repo.Owner.Login
+	}
+	if opts.Org == "" {
+		outputs["org"] = opts.Org
+	} else {
+		outputs["org"] = *repo.Organization.Login
+	}
+	outputs["repo"] = opts.Repo
+	outputs["repoURL"] = *repo.CloneURL
 	res["outputs"] = outputs
 
 	return res, nil

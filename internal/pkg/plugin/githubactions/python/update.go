@@ -50,5 +50,5 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 		}
 	}
 
-	return ga.BuildState(opts.Owner, opts.Repo), nil
+	return ga.BuildState(opts.Owner, opts.Org, opts.Repo), nil
 }
