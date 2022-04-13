@@ -43,7 +43,7 @@ func init() {
 	rootCMD.PersistentFlags().StringVarP(&configFile, "config-file", "f", "config.yaml", "config file")
 	rootCMD.PersistentFlags().StringVarP(&pluginDir, "plugin-dir", "d", pluginengine.DefaultPluginDir, "plugins directory")
 	rootCMD.PersistentFlags().BoolVarP(&continueDirectly, "yes", "y", false, "apply/delete directly without confirmation")
-	rootCMD.PersistentFlags().BoolVarP(&isDebug, "debug", "d", false, "debug level log")
+	rootCMD.PersistentFlags().BoolVarP(&isDebug, "debug", "", false, "debug level log")
 	rootCMD.AddCommand(versionCMD)
 	rootCMD.AddCommand(initCMD)
 	rootCMD.AddCommand(applyCMD)
