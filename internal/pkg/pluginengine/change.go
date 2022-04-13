@@ -60,11 +60,7 @@ func getChanges(smgr statemanager.Manager, cfg *configloader.Config, commandType
 	if commandType == CommandApply {
 		changes, err = changesForApply(smgr, cfg)
 	} else if commandType == CommandDelete {
-		if isForceDelete {
-			changes = changesForForceDelete(smgr, cfg)
-		} else {
-			changes = changesForDelete(smgr, cfg)
-		}
+		changes, err = changesForDelete(smgr, cfg, isForceDelete)
 	} else {
 		log.Fatalf("That's impossible!")
 	}
@@ -172,10 +168,11 @@ func handleResult(smgr statemanager.Manager, change *Change) error {
 
 	key := statemanager.StateKeyGenerateFunc(change.Tool)
 	state := statemanager.State{
-		Name:     change.Tool.Name,
-		Plugin:   change.Tool.Plugin,
-		Options:  change.Tool.Options,
-		Resource: change.Result.ReturnValue,
+		Name:      change.Tool.Name,
+		Plugin:    change.Tool.Plugin,
+		DependsOn: change.Tool.DependsOn,
+		Options:   change.Tool.Options,
+		Resource:  change.Result.ReturnValue,
 	}
 	err := smgr.AddState(key, state)
 	if err != nil {
