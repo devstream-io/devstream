@@ -41,7 +41,7 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	rootCMD.PersistentFlags().StringVarP(&configFile, "config-file", "f", "config.yaml", "config file")
-	rootCMD.PersistentFlags().StringVarP(&pluginDir, "plugin-dir", "p", pluginengine.DefaultPluginDir, "plugins directory")
+	rootCMD.PersistentFlags().StringVarP(&pluginDir, "plugin-dir", "d", pluginengine.DefaultPluginDir, "plugins directory")
 	rootCMD.PersistentFlags().BoolVarP(&continueDirectly, "yes", "y", false, "apply/delete directly without confirmation")
 	rootCMD.PersistentFlags().BoolVarP(&isDebug, "debug", "d", false, "debug level log")
 	rootCMD.AddCommand(versionCMD)
