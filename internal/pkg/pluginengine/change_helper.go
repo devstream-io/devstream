@@ -135,39 +135,60 @@ func changesForApply(smgr statemanager.Manager, cfg *configloader.Config) ([]*Ch
 }
 
 // changesForDelete is to create a plan that deletes all the Tools in cfg
-func changesForDelete(smgr statemanager.Manager, cfg *configloader.Config) []*Change {
+func changesForDelete(smgr statemanager.Manager, cfg *configloader.Config, isForceDelete bool) ([]*Change, error) {
 	changes := make([]*Change, 0)
-	tmpStates := smgr.GetStatesMap().DeepCopy()
-
-	// reverse loop, a hack to solve dependency issues when deleting
-	for i := len(cfg.Tools) - 1; i >= 0; i-- {
-		tool := cfg.Tools[i]
-		state := smgr.GetState(statemanager.StateKeyGenerateFunc(&tool))
-		if state == nil {
-			continue
-		}
-		description := fmt.Sprintf("Tool %s (%s) will be deleted.", tool.Name, tool.Plugin)
-		changes = append(changes, generateDeleteAction(&tool, description))
-		tmpStates.Delete(statemanager.StateKeyGenerateFunc(&tool))
+	batchesOfTools, err := topologicalSort(cfg.Tools)
+	if err != nil {
+		return changes, err
 	}
 
-	return changes
+	for i := len(batchesOfTools) - 1; i >= 0; i-- {
+		batch := batchesOfTools[i]
+		for _, tool := range batch {
+			if !isForceDelete {
+				state := smgr.GetState(statemanager.StateKeyGenerateFunc(&tool))
+				if state == nil {
+					continue
+				}
+			}
+
+			description := fmt.Sprintf("Tool %s (%s) will be deleted.", tool.Name, tool.Plugin)
+			changes = append(changes, generateDeleteAction(&tool, description))
+		}
+	}
+
+	return changes, nil
 }
 
-// changesForForceDelete for force delete from config, ignore state file
-func changesForForceDelete(smgr statemanager.Manager, cfg *configloader.Config) []*Change {
+func GetChangesForDestroy(smgr statemanager.Manager) ([]*Change, error) {
 	changes := make([]*Change, 0)
 
-	log.Debugf("Tools prepare to deal with: %v", cfg.Tools)
+	// rebuilding tools from config
+	// because destroy will only be used when the config file is missing
+	var tools []configloader.Tool
+	for _, state := range smgr.GetStatesMap().ToList() {
+		tool := configloader.Tool{
+			Name:      state.Name,
+			Plugin:    state.Plugin,
+			DependsOn: state.DependsOn,
+			Options:   state.Options,
+		}
+		tools = append(tools, tool)
+	}
 
-	for i := len(cfg.Tools) - 1; i >= 0; i-- {
-		tool := cfg.Tools[i]
-		description := fmt.Sprintf("Tool %s (%s) will be deleted.", tool.Name, tool.Plugin)
-		changes = append(changes, generateDeleteAction(&tool, description))
-		if err := smgr.DeleteState(statemanager.StateKeyGenerateFunc(&tool)); err != nil {
-			log.Errorf("Failed to delete %s from state.", statemanager.StateKeyGenerateFunc(&tool))
-			return make([]*Change, 0)
+	batchesOfTools, err := topologicalSort(tools)
+	if err != nil {
+		return changes, err
+	}
+
+	// reverse, for deletion
+	for i := len(batchesOfTools) - 1; i >= 0; i-- {
+		batch := batchesOfTools[i]
+		for _, tool := range batch {
+			description := fmt.Sprintf("Tool %s (%s) will be deleted.", tool.Name, tool.Plugin)
+			changes = append(changes, generateDeleteAction(&tool, description))
 		}
 	}
-	return changes
+
+	return changes, nil
 }

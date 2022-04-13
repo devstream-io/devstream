@@ -4,22 +4,18 @@ import (
 	"errors"
 	"os"
 
-	"github.com/devstream-io/devstream/internal/pkg/configloader"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 func Destroy(continueDirectly bool) error {
-	emptyConfig := new(configloader.Config)
-
 	smgr, err := statemanager.NewManager()
 	if err != nil {
 		log.Debugf("Failed to get the manager: %s.", err)
 		return err
 	}
 
-	// GetChangesForApply with the empty config will return the changes all with "delete" action.
-	changes, err := GetChangesForApply(smgr, emptyConfig)
+	changes, err := GetChangesForDestroy(smgr)
 	if err != nil {
 		log.Debugf("Get changes failed: %s.", err)
 		return err
