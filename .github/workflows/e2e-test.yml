@@ -28,10 +28,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         go: [1.17.x]
-    permissions:
-      id-token: write
-      contents: write
-      repository-projects: write
+    permissions: write-all
     runs-on: ${{ matrix.os }}
     name: e2e-test-${{ matrix.os }}
     steps:
