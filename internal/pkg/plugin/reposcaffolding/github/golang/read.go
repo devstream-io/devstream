@@ -27,11 +27,6 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 }
 
 func buildReadState(opts *Options) (map[string]interface{}, error) {
-	// var owner = opts.Owner
-	// if opts.Org != "" {
-	// 	owner = opts.Org
-	// }
-
 	ghOptions := &github.Option{
 		Owner:    opts.Owner,
 		Org:      opts.Org,
