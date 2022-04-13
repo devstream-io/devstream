@@ -13,10 +13,11 @@ import (
 
 // State is the single component's state.
 type State struct {
-	Name     string
-	Plugin   string
-	Options  map[string]interface{}
-	Resource map[string]interface{}
+	Name      string
+	Plugin    string
+	DependsOn []string
+	Options   map[string]interface{}
+	Resource  map[string]interface{}
 }
 
 type StatesMap struct {
