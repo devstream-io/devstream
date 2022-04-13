@@ -24,34 +24,20 @@ type Status struct {
 // If the resource has drifted, status.State & status.Resource must NOT be nil and status.InnerStatus should be nil.
 // If the resource hasn't drifted, status.State & status.Resource should be nil and status.InnerStatus must NOT be nil.
 func NewOutput(name, plugin string, options map[string]interface{}, status *Status) (*Output, error) {
-	// params validation
-	if name == "" || plugin == "" {
-		return nil, fmt.Errorf("name or plugin cannot be nil")
-	}
-	if options == nil {
-		return nil, fmt.Errorf("options cannot be nil")
+	if ok, err := validateParams(name, plugin, options, status); !ok {
+		return nil, err
 	}
 
-	if status == nil {
-		return nil, fmt.Errorf("status cannot be nil")
-	}
-	if status.InnerStatus != nil && (status.State != nil || status.Resource != nil) {
-		return nil, fmt.Errorf("illegal status content")
-	}
-	if status.InnerStatus == nil && (status.State == nil || status.Resource == nil) {
-		return nil, fmt.Errorf("illegal status content")
-	}
-
-	// fill the output object
 	output := &Output{
 		Name:    name,
 		Plugin:  plugin,
+		Drifted: false,
 		Options: options,
 		Status:  status,
 	}
 
-	if status.InnerStatus != nil {
-		output.Drifted = false
+	if status.InnerStatus == nil {
+		output.Drifted = true
 	}
 
 	return output, nil
@@ -69,4 +55,25 @@ func (o *Output) Print() error {
 
 	fmt.Println(buf.String())
 	return nil
+}
+
+func validateParams(name, plugin string, options map[string]interface{}, status *Status) (bool, error) {
+	if name == "" || plugin == "" {
+		return false, fmt.Errorf("name or plugin cannot be nil")
+	}
+	if options == nil {
+		return false, fmt.Errorf("options cannot be nil")
+	}
+
+	if status == nil {
+		return false, fmt.Errorf("status cannot be nil")
+	}
+	if status.InnerStatus != nil && (status.State != nil || status.Resource != nil) {
+		return false, fmt.Errorf("illegal status content")
+	}
+	if status.InnerStatus == nil && (status.State == nil || status.Resource == nil) {
+		return false, fmt.Errorf("illegal status content")
+	}
+
+	return true, nil
 }
