@@ -43,6 +43,31 @@ var _ = Describe("Statemanager", func() {
 			Expect(stateC).To(BeZero())
 		})
 
+		It("Should get the state list", func() {
+			key := statemanager.StateKey("a_githubactions")
+			stateA := statemanager.State{
+				Name:     "a",
+				Plugin:   "githubactions",
+				Options:  map[string]interface{}{"a": "value"},
+				Resource: map[string]interface{}{"a": "value"},
+			}
+			err = smgr.AddState(key, stateA)
+			Expect(err).NotTo(HaveOccurred())
+
+			key = statemanager.StateKey("b_githubactions")
+			stateB := statemanager.State{
+				Name:     "b",
+				Plugin:   "githubactions",
+				Options:  map[string]interface{}{"b": "value"},
+				Resource: map[string]interface{}{"b": "value"},
+			}
+			err = smgr.AddState(key, stateB)
+			Expect(err).NotTo(HaveOccurred())
+
+			stateList := smgr.GetStatesMap().ToList()
+			Expect(stateList).To(Equal([]statemanager.State{stateA, stateB}))
+		})
+
 		AfterEach(func() {
 			err = os.RemoveAll(local.DefaultStateFile)
 			Expect(err).NotTo(HaveOccurred())

@@ -13,10 +13,11 @@ import (
 
 // State is the single component's state.
 type State struct {
-	Name     string
-	Plugin   string
-	Options  map[string]interface{}
-	Resource map[string]interface{}
+	Name      string
+	Plugin    string
+	DependsOn []string
+	Options   map[string]interface{}
+	Resource  map[string]interface{}
 }
 
 type StatesMap struct {
@@ -36,6 +37,15 @@ func (s StatesMap) DeepCopy() StatesMap {
 		return true
 	})
 	return newStatesMap
+}
+
+func (s StatesMap) ToList() []State {
+	var res []State
+	s.Range(func(key, value interface{}) bool {
+		res = append(res, value.(State))
+		return true
+	})
+	return res
 }
 
 func (s StatesMap) Format() []byte {
