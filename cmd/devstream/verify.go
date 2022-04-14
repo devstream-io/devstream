@@ -17,7 +17,7 @@ var verifyCMD = &cobra.Command{
 func verifyCMDFunc(cmd *cobra.Command, args []string) {
 	log.Info("Verify started.")
 
-	if pluginengine.Verify(configFile) {
+	if pluginengine.Verify(configFile, varFile) {
 		log.Success("Verify succeeded.")
 	} else {
 		log.Info("Verify finished.")

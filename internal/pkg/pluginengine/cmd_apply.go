@@ -11,8 +11,8 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func Apply(configFile string, continueDirectly bool) error {
-	cfg := configloader.LoadConf(configFile)
+func Apply(configFile, varFile string, continueDirectly bool) error {
+	cfg := configloader.LoadConf(configFile, varFile)
 	if cfg == nil {
 		return fmt.Errorf("failed to load the config file")
 	}
