@@ -10,13 +10,16 @@ import (
 )
 
 var plugin string
+var instanceName string
 
 var showCMD = &cobra.Command{
-	Use:   "show [config]",
+	Use:   "show [config | status]",
 	Short: "Show is used to print some useful information",
 	Long: `Show is used to print some useful information. 
 Examples:
-  dtm show config --plugin=A-PLUGIN-NAME`,
+  dtm show config --plugin=A-PLUGIN-NAME
+  dtm show status --plugin=A-PLUGIN-NAME --name=A-PLUGIN-INSTANCE-NAME
+  dtm show status -p=A-PLUGIN-NAME -n=A-PLUGIN-INSTANCE-NAME`,
 	Run: showCMDFunc,
 }
 
@@ -33,7 +36,7 @@ func showCMDFunc(cmd *cobra.Command, args []string) {
 }
 
 func validateShowArgs(args []string) error {
-	// arg is "config" here, maybe will have "output" in the future.
+	// arg is "config" or "status" here, maybe will have "output" in the future.
 	if len(args) != 1 {
 		return fmt.Errorf("got illegal args count (expect 1, got %d)", len(args))
 	}
@@ -45,5 +48,6 @@ func validateShowArgs(args []string) error {
 }
 
 func init() {
-	showCMD.PersistentFlags().StringVarP(&plugin, "plugin", "", "", "specify name with the plugin")
+	showCMD.PersistentFlags().StringVarP(&plugin, "plugin", "p", "", "specify name with the plugin")
+	showCMD.PersistentFlags().StringVarP(&instanceName, "name", "n", "", "specify name with the plugin instance")
 }
