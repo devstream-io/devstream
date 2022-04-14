@@ -92,7 +92,7 @@ func execute(smgr statemanager.Manager, changes []*Change) map[string]error {
 		var err error
 		var returnValue map[string]interface{}
 
-		log.Debugf("Tool's raw changes are: %s.", c.Tool.Options)
+		log.Debugf("Tool's raw changes are: %v.", c.Tool.Options)
 
 		errs := HandleOutputsReferences(smgr, c.Tool.Options)
 		if len(errs) != 0 {

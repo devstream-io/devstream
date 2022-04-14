@@ -37,7 +37,7 @@ func InitRepoLocalAndPushToRemote(repoPath string, opts *Options, ghClient *gith
 	var retErr error
 	// It's ok to give the opts.Org to CreateRepo() when create a repository for a authenticated user.
 	if err := ghClient.CreateRepo(opts.Org); err != nil {
-		log.Infof("Failed to create repo: %s.", err)
+		log.Errorf("Failed to create repo: %s.", err)
 		return err
 	}
 	log.Infof("The repo %s has been created.", opts.Repo)
