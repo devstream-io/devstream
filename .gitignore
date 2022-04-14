@@ -27,6 +27,7 @@ docs/build
 config*.yaml*
 app*.yaml
 variables*.yaml
+variables*.yaml.bak
 
 # IDE
 .idea/
