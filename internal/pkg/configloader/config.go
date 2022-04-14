@@ -48,8 +48,8 @@ func (t *Tool) DeepCopy() *Tool {
 }
 
 // LoadConf reads an input file as a Config struct.
-func LoadConf(fname string) *Config {
-	fileBytes, err := ioutil.ReadFile(fname)
+func LoadConf(configFileName, varFileName string) *Config {
+	configFileBytes, err := ioutil.ReadFile(configFileName)
 	if err != nil {
 		log.Error(err)
 		log.Info("Maybe the default file doesn't exist or you forgot to pass your config file to the \"-f\" option?")
@@ -57,10 +57,19 @@ func LoadConf(fname string) *Config {
 		return nil
 	}
 
-	log.Debugf("Config file: \n%s\n", string(fileBytes))
+	log.Debugf("Original config: \n%s\n", string(configFileBytes))
+
+	// handle variables in the config file
+	configFileBytesWithVarsRendered, err := renderVariables(varFileName, configFileBytes)
+	if err != nil {
+		log.Error(err)
+		return nil
+	}
+
+	log.Debugf("Config file after rendering with variables: \n%s\n", string(configFileBytesWithVarsRendered))
 
 	var config Config
-	err = yaml.Unmarshal(fileBytes, &config)
+	err = yaml.Unmarshal(configFileBytesWithVarsRendered, &config)
 	if err != nil {
 		log.Error("Please verify the format of your config file.")
 		log.Errorf("Reading config file failed. %s.", err)
