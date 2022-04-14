@@ -3,6 +3,7 @@ package statemanager
 import (
 	"bytes"
 	"fmt"
+	"sort"
 
 	"gopkg.in/yaml.v3"
 
@@ -45,6 +46,13 @@ func (s StatesMap) ToList() []State {
 		res = append(res, value.(State))
 		return true
 	})
+
+	sort.Slice(res, func(i, j int) bool {
+		keyi := fmt.Sprintf("%s.%s", res[i].Name, res[i].Plugin)
+		keyj := fmt.Sprintf("%s.%s", res[j].Name, res[j].Plugin)
+		return keyi < keyj
+	})
+
 	return res
 }
 
