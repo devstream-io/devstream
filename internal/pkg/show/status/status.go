@@ -95,12 +95,12 @@ func showOne(smgr statemanager.Manager, name, plugin string) error {
 	// assemble the status
 	var status = &Status{}
 	if reflect.DeepEqual(state.Resource, stateFromRead) {
-		status.InnerStatus = state.Resource
+		status.InlineStatus = state.Resource
 		// set-to-nil has no effect, but make the logic more readable. Same as below.
 		status.State = nil
 		status.Resource = nil
 	} else {
-		status.InnerStatus = nil
+		status.InlineStatus = nil
 		status.State = state.Resource
 		status.Resource = stateFromRead
 	}
