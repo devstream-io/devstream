@@ -44,6 +44,8 @@ var _ = Describe("Statemanager", func() {
 		})
 
 		It("Should get the state list", func() {
+			// Adding order: A,C,B
+			// List order should be: A,B,C
 			key := statemanager.StateKey("a_githubactions")
 			stateA := statemanager.State{
 				Name:     "a",
@@ -52,6 +54,16 @@ var _ = Describe("Statemanager", func() {
 				Resource: map[string]interface{}{"a": "value"},
 			}
 			err = smgr.AddState(key, stateA)
+			Expect(err).NotTo(HaveOccurred())
+
+			key = statemanager.StateKey("c_githubactions")
+			stateC := statemanager.State{
+				Name:     "c",
+				Plugin:   "githubactions",
+				Options:  map[string]interface{}{"c": "value"},
+				Resource: map[string]interface{}{"c": "value"},
+			}
+			err = smgr.AddState(key, stateC)
 			Expect(err).NotTo(HaveOccurred())
 
 			key = statemanager.StateKey("b_githubactions")
@@ -65,7 +77,7 @@ var _ = Describe("Statemanager", func() {
 			Expect(err).NotTo(HaveOccurred())
 
 			stateList := smgr.GetStatesMap().ToList()
-			Expect(stateList).To(Equal([]statemanager.State{stateA, stateB}))
+			Expect(stateList).To(Equal([]statemanager.State{stateA, stateB, stateC}))
 		})
 
 		AfterEach(func() {
