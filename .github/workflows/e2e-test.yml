@@ -15,7 +15,8 @@ on:
       - 'hack/terraform/**'
 
 env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  # Do NOT use the GITHUB_TOKEN here, see https://github.com/devstream-io/devstream/pull/414 for more info.
+  GITHUB_TOKEN: ${{ secrets.E2E_GITHUB_TOKEN }}
   DOCKERHUB_USERNAME: ${{ secrets.E2E_DOCKERHUB_USERNAME }}
   DOCKERHUB_TOKEN: ${{ secrets.E2E_DOCKERHUB_TOKEN }}
   TRELLO_API_KEY: ${{ secrets.E2E_TRELLO_API_KEY }}
