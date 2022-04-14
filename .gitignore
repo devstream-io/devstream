@@ -26,6 +26,8 @@ docs/build
 # YAML for testings
 config*.yaml*
 app*.yaml
+variables*.yaml
+variables*.yaml.bak
 
 # IDE
 .idea/
