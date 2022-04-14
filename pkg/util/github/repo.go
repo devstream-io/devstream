@@ -15,7 +15,7 @@ func (c *Client) CreateRepo(org string) error {
 	}
 
 	if org != "" {
-		log.Infof("Prepare to create an organization repository: %s", org)
+		log.Infof("Prepare to create an organization repository: %s/%s", org, repo.GetName())
 	}
 	_, _, err := c.Repositories.Create(c.Context, org, repo)
 	if err != nil {
