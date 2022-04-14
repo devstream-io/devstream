@@ -18,6 +18,7 @@ project_layout
 creating_a_plugin
 best_practices
 creating_a_document
+fig
 roadmap
 Releases ⧉ <https://github.com/devstream-io/devstream/releases>
 Blog ⧉ <https://www.devstream.io/blog>
