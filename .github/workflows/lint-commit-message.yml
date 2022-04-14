@@ -1,4 +1,4 @@
-name: lint-commit-message
+name: lint commit message
 on: [ push, pull_request ]
 
 jobs:

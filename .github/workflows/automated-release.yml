@@ -1,4 +1,4 @@
-name: Automated Release
+name: automated release
 on:
   release:
     types: [published]
