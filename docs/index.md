@@ -8,6 +8,7 @@ maxdepth: 1
 ---
 overview
 quickstart_en
+config
 architecture
 core_concepts
 output
