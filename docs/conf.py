@@ -6,8 +6,8 @@ project = 'DevStream'
 copyright = '2022, Merico'
 author = 'Merico'
 
-release = '0.3.2'
-version = '0.3.2'
+release = '0.4.0'
+version = '0.4.0'
 
 # -- General configuration
 

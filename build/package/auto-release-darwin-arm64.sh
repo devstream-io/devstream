@@ -1,6 +1,6 @@
 #! /bin/bash -e
 
-tag=v0.3.2
+tag=v0.4.0
 
 user=devstream-io
 repo=devstream
