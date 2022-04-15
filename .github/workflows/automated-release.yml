@@ -7,8 +7,8 @@ jobs:
   build-and-release-on-linux:
     env:
       TAG: ${{ github.ref_name }}
-      USER: merico-dev
-      REPO: stream
+      USER: devstream-io
+      REPO: devstream
       PLUGINDIR: .devstream
       GOOS: linux
       GOARCH: amd64
@@ -43,8 +43,8 @@ jobs:
   build-and-release-on-darwin-amd64:
     env:
       TAG: ${{ github.ref_name }}
-      USER: merico-dev
-      REPO: stream
+      USER: devstream-io
+      REPO: devstream
       PLUGINDIR: .devstream
       GOOS: darwin
       GOARCH: amd64
