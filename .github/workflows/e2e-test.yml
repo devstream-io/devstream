@@ -62,13 +62,13 @@ jobs:
         run: |
           aws eks update-kubeconfig --region ap-southeast-1 --name dtm-test
       - name: apply
-        run: ./dtm apply -f ./test/e2e/yaml/e2e-config.yaml -y
+        run: ./dtm apply -f ./test/e2e/yaml/e2e-config.yaml --var-file ./test/e2e/yaml/e2e-variables.yaml -y
       - name: apply twice
-        run: ./dtm apply -f ./test/e2e/yaml/e2e-config.yaml -y
+        run: ./dtm apply -f ./test/e2e/yaml/e2e-config.yaml --var-file ./test/e2e/yaml/e2e-variables.yaml -y
       - name: check if pod is ready
         run: while [[ $(kubectl get pods -l app=dtm-e2e-go -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "pod not ready yet..."; sleep 3; done
         timeout-minutes: 10
       - name: verify
-        run: ./dtm verify -f ./test/e2e/yaml/e2e-config.yaml
+        run: ./dtm verify -f ./test/e2e/yaml/e2e-config.yaml --var-file ./test/e2e/yaml/e2e-variables.yaml
       - name: clean
-        run: ./dtm delete -f ./test/e2e/yaml/e2e-config.yaml -y
+        run: ./dtm delete -f ./test/e2e/yaml/e2e-config.yaml --var-file ./test/e2e/yaml/e2e-variables.yaml -y
