@@ -4,8 +4,8 @@ github_token=$1
 tag=$2
 GOOS=$3
 GOARCH=$4
-user=merico-dev
-repo=stream
+user=devstream-io
+repo=devstream
 plugin_dir=.devstream
 
 # upload dtm
