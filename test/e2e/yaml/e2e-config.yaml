@@ -2,7 +2,7 @@ tools:
 - name: go-webapp-repo
   plugin: github-repo-scaffolding-golang
   options:
-    org: [[ githubOrganization]]
+    org: [[ githubOrganization ]]
     repo: [[ repoName ]]
     branch: [[ defaultBranch ]]
     image_repo: [[ dockerRegistryUserName ]]/[[ repoName ]]
