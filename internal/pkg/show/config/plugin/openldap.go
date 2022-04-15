@@ -4,6 +4,9 @@ var OpenldapDefaultConfig = `tools:
 - name: openldap
   # name of the plugin
   plugin: openldap
+  # optional; if specified, dtm will make sure the dependency is applied first before handling this tool.
+  dependsOn: [ "TOOL1_NAME.TOOL1_PLUGIN", "TOOL2_NAME.TOOL2_PLUGIN" ]
+  # options for the plugin  
   options:
     # need to create the namespace or not, default: false
     create_namespace: true
@@ -31,7 +34,7 @@ var OpenldapDefaultConfig = `tools:
           type: NodePort  
         env:
           LDAP_ORGANISATION: "DevStream Inc."
-          LDAP_DOMAIN: "devstream.org"
+          LDAP_DOMAIN: "devstream.io"
         persistence:
           enabled: false
         adminPassword: Not@SecurePassw0rd
