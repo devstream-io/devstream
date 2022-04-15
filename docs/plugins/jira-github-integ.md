@@ -25,6 +25,8 @@ tools:
 - name: default
   # name of the plugin
   plugin: jira-github-integ
+  # optional; if specified, dtm will make sure the dependency is applied first before handling this tool.
+  dependsOn: [ "TOOL1_NAME.TOOL1_PLUGIN", "TOOL2_NAME.TOOL2_PLUGIN" ]
   # options for the plugin
   options:
     # the repo's owner
