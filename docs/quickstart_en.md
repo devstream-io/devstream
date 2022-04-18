@@ -1,5 +1,7 @@
 # Quick Start
 
+> English | [中文](./quickstart_zh.md)
+
 ## 1 Download DevStream (`dtm`)
 
 Download the appropriate `dtm` version for your platform from [DevStream Releases](https://github.com/devstream-io/devstream/releases).

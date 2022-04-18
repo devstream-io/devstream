@@ -77,8 +77,8 @@
 
 当然我们也有微信群，可以直接扫下方群二维码加入用户群。
 
-![](images/group-wechat.jpeg)
+![](images/qr-group.jpg)
 
 如果上方二维码失效了，就扫下面管理员微信二维码添加好友，然后发送暗号【进群】吧！
 
-![](images/wxy-wechat.jpeg)
+![](images/qr-ht.jpg)
