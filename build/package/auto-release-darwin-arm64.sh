@@ -1,4 +1,5 @@
 #! /bin/bash -e
+set -o nounset
 
 tag=v0.4.0
 
@@ -15,7 +16,11 @@ if [ ! $tag ] || [ ! $user ] || [ ! $repo ] || [ ! $github_token ] || [ ! $plugi
   echo "tag="$tag
   echo "user="$user
   echo "repo="$repo
-  echo "github_token="$github_token
+  if [ ! $github_token ]; then
+    echo "github_token="$github_token
+  else
+    echo "github_token=***"
+  fi
   echo "plugin_dir="$plugin_dir
   exit
 fi
