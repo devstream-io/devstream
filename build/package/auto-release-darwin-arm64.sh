@@ -1,4 +1,5 @@
 #! /bin/bash -e
+set -o nounset
 
 tag=v0.4.0
 
@@ -9,6 +10,20 @@ plugin_dir=.devstream
 
 GOOS=$(go env GOOS)
 GOARCH=$(go env GOARCH)
+
+if [ ! $tag ] || [ ! $user ] || [ ! $repo ] || [ ! $github_token ] || [ ! $plugin_dir ]; then
+  echo "The following variables cannot be empty!"
+  echo "tag="$tag
+  echo "user="$user
+  echo "repo="$repo
+  if [ ! $github_token ]; then
+    echo "github_token="$github_token
+  else
+    echo "github_token=***"
+  fi
+  echo "plugin_dir="$plugin_dir
+  exit
+fi
 
 # call build core and plugins
 cd ../..
