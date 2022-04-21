@@ -10,6 +10,16 @@ plugin_dir=.devstream
 GOOS=$(go env GOOS)
 GOARCH=$(go env GOARCH)
 
+if [ ! $tag ] || [ ! $user ] || [ ! $repo ] || [ ! $github_token ] || [ ! $plugin_dir ]; then
+  echo "The following variables cannot be empty!"
+  echo "tag="$tag
+  echo "user="$user
+  echo "repo="$repo
+  echo "github_token="$github_token
+  echo "plugin_dir="$plugin_dir
+  exit
+fi
+
 # call build core and plugins
 cd ../..
 make build -j8
