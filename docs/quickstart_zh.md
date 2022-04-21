@@ -14,7 +14,7 @@
 
 将 [examples/quickstart.yaml](../examples/quickstart.yaml) 文件拷贝到你到工作目录下，然后重命名成 `config.yaml`：
 
-```bash
+```shell
 cp examples/quickstart.yaml config.yaml
 ```
 
@@ -22,7 +22,7 @@ cp examples/quickstart.yaml config.yaml
 
 比如我的 GitHub 用户名是 "IronCore864", 然后我的 Dockerhub 用户名是 "ironcore864"，这样我就可以运行：
 
-```bash
+```shell
 sed -i.bak "s/YOUR_GITHUB_USERNAME_CASE_SENSITIVE/IronCore864/g" config.yaml
 
 sed -i.bak "s/YOUR_DOCKER_USERNAME/ironcore864/g" config.yaml
@@ -30,9 +30,9 @@ sed -i.bak "s/YOUR_DOCKER_USERNAME/ironcore864/g" config.yaml
 
 > 这个配置文件会使用两个插件，一个用来创建 GitHub 项目，而且初始化成一个 Golang 的 web 应用结构。接着另外一个插件会给这个项目创建对应的 GitHub Actions 工作流。
 
-这两个插件[需要配置一个环境变量](./plugins/github-repo-scaffolding-golang.md) 才能工作，我们看下怎么配置：
+这两个插件[需要配置一个环境变量](https://www.devstream.io/docs/plugins/github-repo-scaffolding-golang) 才能工作，我们看下怎么配置：
 
-```bash
+```shell
 export GITHUB_TOKEN="YOUR_GITHUB_TOKEN_HERE"
 ```
 
@@ -42,7 +42,7 @@ export GITHUB_TOKEN="YOUR_GITHUB_TOKEN_HERE"
 
 运行：
 
-```bash
+```shell
 dtm init -f config.yaml
 ```
 
@@ -68,7 +68,7 @@ dtm init -f config.yaml
 
 运行：
 
-```bash
+```shell
 dtm apply -f config.yaml
 ```
 
@@ -108,7 +108,7 @@ Enter a value (Default is n): y
 
 运行：
 
-```bash
+```shell
 dtm destroy
 ```
 
