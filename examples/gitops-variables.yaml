@@ -1,0 +1,9 @@
+defaultBranch: main
+githubUsername: daniel-hutao
+repoName: dtm-test-go
+jiraID: merico
+jiraUserEmail: tao.hu@merico.dev
+jiraProjectKey: DT
+dockerhubUsername: exploitht
+argocdNameSpace: argocd
+argocdDeployTimeout: 10m
