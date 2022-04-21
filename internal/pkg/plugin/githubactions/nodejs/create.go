@@ -5,7 +5,7 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugin/githubactions"
+	ga "github.com/devstream-io/devstream/internal/pkg/plugin/githubactions"
 	"github.com/devstream-io/devstream/pkg/util/github"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
@@ -38,7 +38,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	log.Debugf("Language is: %s.", githubactions.GetLanguage(opts.Language))
+	log.Debugf("Language is: %s.", ga.GetLanguage(opts.Language))
 
 	for _, w := range workflows {
 		if err := ghClient.AddWorkflow(w, opts.Branch); err != nil {
@@ -46,5 +46,5 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		}
 	}
 
-	return githubactions.BuildState(opts.Owner, opts.Org, opts.Repo), nil
+	return ga.BuildState(opts.Owner, opts.Org, opts.Repo), nil
 }

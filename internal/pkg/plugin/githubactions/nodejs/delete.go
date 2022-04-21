@@ -5,7 +5,7 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugin/githubactions"
+	ga "github.com/devstream-io/devstream/internal/pkg/plugin/githubactions"
 	"github.com/devstream-io/devstream/pkg/util/github"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
@@ -37,7 +37,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 		return false, err
 	}
 
-	log.Debugf("Language is %s.", githubactions.GetLanguage(opts.Language))
+	log.Debugf("Language is %s.", ga.GetLanguage(opts.Language))
 
 	for _, pipeline := range workflows {
 		err := ghClient.DeleteWorkflow(pipeline, opts.Branch)
