@@ -51,6 +51,16 @@ DevStream aims to be the package manager for DevOps tools.
 
 To be more ambitious, DevStream wants to be the Linux kernel, around which different distros can be created with various components so that you can always have the best components for each part of your SDLC workflow.
 
+## Why `dtm`?
+
+Q: The CLI tool is named `dtm`, while the tool itself is called DevStream. What the heck?! Where is the consistency?
+
+A: Inspired by [`git`](https://github.com/git/git#readme), the name is (depending on your mood):
+
+- a symmetric, scientific acronym of **d**evs**t**rea**m**.
+- "devops toolchain manager": you're in a good mood, and it actually works for you.
+- "dead to me": when it breaks.
+
 ## Why Use DevStream?
 
 No more manual curl/wget download, apt install, helm install; no more local experiments and playing around just to get a piece of tool installed correctly.
@@ -61,35 +71,74 @@ Want to install another different tool for a try? No problem.
 
 Want to remove or reinstall a specific piece in the workflow? DevStream has got your back!
 
-## Supported DevOps Tools
-
-| Type                   | Plugin                         | Note                           | Usage/Doc |
-|------------------------|--------------------------------|--------------------------------|-----------|
-| Issue Tracking         | trello-github-integ            | Trello/GitHub integration      | [doc](./docs/plugins/trello-github-integ.md) |
-| Source Code Management | github-repo-scaffolding-golang | Go WebApp scaffolding          | [doc](./docs/plugins/github-repo-scaffolding-golang.md) |
-| CI                     | jenkins                        | Jenkins installation           | [doc](./docs/plugins/jenkins.md) |
-| CI                     | githubactions-golang           | GitHub Actions CI for Golang   | [doc](./docs/plugins/githubactions-golang.md)          |
-| CI                     | githubactions-python           | GitHub Actions CI for Python   | [doc](./docs/plugins/githubactions-python.md)          |
-| CI                     | githubactions-nodejs           | GitHub Actions CI for Nodejs   | [doc](./docs/plugins/githubactions-nodejs.md)          |
-| CI                     | gitlabci-golang                | GitLab CI for Golang           | [doc](./docs/plugins/gitlabci-golang.md)          |
-| CD/GitOps              | argocd                         | ArgoCD installation            | [doc](./docs/plugins/argocd.md)          |
-| CD/GitOps              | argocdapp                      | ArgoCD Application creation    | [doc](./docs/plugins/argocdapp.md)          |
-| Monitoring             | kube-prometheus                | Prometheus/Grafana K8s install | [doc](./docs/plugins/kube-prometheus.md)          |
-| Observability          | devlake                        | DevLake installation           | [doc](./docs/plugins/devlake.md)          |
-| LDAP                   | openldap                       | OpenLDAP installation          | [doc](./docs/plugins/openldap.md)          |
-
 ## Installation
 
-### macOS
-
-Install `dtm` via [Homebrew](https://brew.sh/):
-
-1. Add DevStream's tap to Homebrew: `brew tap devstream-io/devstream`
-2. Install `dtm`: `brew install devstream-io/devstream/dtm`
+Please visit GitHub [Releases](https://github.com/devstream-io/devstream/releases) page and download the appropriate binary according to your operating system and architecture.
 
 ## Quick Start
 
 If you want to get a quick start, follow our [quick start](./docs/quickstart_en.md) doc now.
+
+## Configuration
+
+This is an example of DevStream config: [examples/quickstart.yaml](./examples/quickstart.yaml).
+
+Remember to open this configuration file, modify all FULL_UPPER_CASE_STRINGS (like YOUR_GITHUB_USERNAME, for example) in it to your own.
+
+Pay attention to the meaning of each item to ensure that it is what you want.
+
+For other plugins, checkout the "Plugins" section in our [doc](https://www.devstream.io/docs/index) for detailed usage.
+
+## Usage
+
+To apply the config, run:
+
+```shell
+./dtm apply -f YOUR_CONFIG_FILE.yaml
+```
+
+If you don't specify the config file with the "-f" parameter, it will try to use the default value which is "config.yaml" from the current directory.
+
+_`dtm` will compare the config, the state, and the resources to decide whether a "create", "update", or "delete" is needed. For more information, read our [Core Concepts documentation here](https://www.devstream.io/docs/core-concepts)._
+
+The command above will ask you for confirmation before actually executing the changes. To apply without confirmation (like `apt-get -y update`), run:
+
+```shell
+./dtm -y apply -f YOUR_CONFIG_FILE.yaml
+```
+
+To delete everything defined in the config, run:
+
+```shell
+./dtm delete -f YOUR_CONFIG_FILE.yaml
+```
+
+_Note that this deletes everything defined in the config. If some config is deleted after apply (state has it but config not), `dtm delete` won't delete it. It differs from `dtm destroy`._
+
+Similarly, to delete without confirmation:
+
+```shell
+./dtm -y delete -f YOUR_CONFIG_FILE.yaml
+```
+To delete everything defined in the config, regardless of the state:
+
+```shell
+./dtm delete --force -f YOUR_CONFIG_FILE.yaml
+```
+
+To verify, run:
+
+```shell
+./dtm verify -f YOUR_CONFIG_FILE.yaml
+```
+
+To destroy everything, run:
+
+```shell
+./dtm destroy
+```
+
+_`dtm` will read the state, then determine which tools are installed, and then remove those tools. It's same as `dtm apply -f empty.yaml` (empty.yaml is an empty config file)._
 
 ## Best Practices Toolchain Integration
 
@@ -101,94 +150,27 @@ I am happy to tell you that we have, and we are constantly adding more possible 
 
 so you are more than welcome to tell us what combinations you expect.
 
-- [GitOps Toolchain](docs/best_practices/gitops.md)
+- [GitOps Toolchain](https://www.devstream.io/docs/best-practices/gitops)
 
-## Configuration
+## Supported DevOps Tools
 
-This is an example of DevStream config: [examples/quickstart.yaml](./examples/quickstart.yaml).
+DevStream already supports many tools and it's still growing. For a complete list of supported tools, check out our [list of plugins](https://www.devstream.io/docs/plugins/plugins-list) document.
 
-Remember to open this configuration file, modify all FULL_UPPER_CASE_STRINGS (like YOUR_GITHUB_USERNAME, for example) in it to your own.
-
-Pay attention to the meaning of each item to ensure that it is what you want.
-
-For other plugins, checkout the [docs/plugins](./docs/plugins/) folder for detailed usage in their documentations.
-
-## Run
-
-To apply the config, run:
-
-```bash
-./dtm apply -f YOUR_CONFIG_FILE.yaml
-```
-
-If you don't specify the config file with the "-f" parameter, it will try to use the default value which is "config.yaml" from the current directory.
-
-_`dtm` will compare the config, the state, and the resources to decide whether a "create", "update", or "delete" is needed. For more information, see [this document here](./docs/config_state_resource_explanation.md)._
-
-The command above will ask you for confirmation before actually executing the changes. To apply without confirmation (like `apt-get -y update`), run:
-
-```bash
-./dtm -y apply -f YOUR_CONFIG_FILE.yaml
-```
-
-To delete everything defined in the config, run:
-
-```bash
-./dtm delete -f YOUR_CONFIG_FILE.yaml
-```
-
-_Note that this deletes everything defined in the config. If some config is deleted after apply (state has it but config not), `dtm delete` won't delete it. It differs from `dtm destroy`._
-
-Similarly, to delete without confirmation:
-
-```bash
-./dtm -y delete -f YOUR_CONFIG_FILE.yaml
-```
-To delete everything defined in the config, regardless of the state:
-
-```bash
-./dtm delete --force -f YOUR_CONFIG_FILE.yaml
-```
-
-To verify, run:
-
-```bash
-./dtm verify -f YOUR_CONFIG_FILE.yaml
-```
-
-To destroy everything, run:
-
-```bash
-./dtm destroy
-```
-
-_`dtm` will read the state, then determine which tools are installed, and then remove those tools. It's same as `dtm apply -f empty.yaml` (empty.yaml is an empty config file)._
+Alternatively, run `dtm list plugins` and it will show you all the available plugins.
 
 ## Dev Info
 
-### Source
-
-#### Prerequisite Tools
+### Pre-requisites
 
 - Git
 - Go (1.17+)
 
-#### Fetch from GitHub
+### Build
 
-```bash
-mkdir -p ~/gocode
-cd ~/gocode
-git clone https://github.com/devstream-io/devstream.git
-```
-
-#### Build
-
-To do a multi-threaded build, run:
-
-```bash
-cd ~/gocode/stream
+```shell
+cd path/to/devstream
 make clean
-make build -j8
+make build -j8 # multi-threaded build
 ```
 
 This builds everything: `dtm` and all the plugins.
@@ -200,33 +182,19 @@ We also support the following build modes:
 
 See `make help` for more information.
 
-#### Test
+### Test
 
-Run unit tests:
+Run all unit tests:
 
-```bash
+```shell
 go test ./...
 ```
 
-Run e2e tests:
+e2e test runs on GitHub actions.
 
-```bash
-make e2e
-```
+## Contribute
 
-## Architecture
-
-See [docs/architecture.md](./docs/architecture.md).
-
-## Why `dtm`?
-
-Q: The CLI tool is named `dtm`, while the tool itself is called DevStream. What the heck?! Where is the consistency?
-
-A: Inspired by [`git`](https://github.com/git/git#readme), the name is (depending on your mood):
-
-- a symmetric, scientific acronym of **d**evs**t**rea**m**.
-- "devops toolchain manager": you're in a good mood, and it actually works for you.
-- "dead to me": when it breaks.
+First of all, thanks for wanting to contribute to DevStream! For more details on how to contribute, contributor growth program, style guide and more, please check out our [CONTRIBUTING](./CONTRIBUTING.md) document.
 
 ## Community
 
@@ -234,7 +202,3 @@ We will regularly organize `DevStream Community Meeting`, please visit the [wiki
 
 - Message us on <a href="https://join.slack.com/t/devstream-io/shared_invite/zt-16tb0iwzr-krcFGYRN7~Vv1suGZjdv4w" target="_blank">Slack.</a>
 - For Chinese users, the WeChat group QR code can be obtained from [here](docs/README_zh.md).
-
-## Contribute
-
-See [CONTRIBUTING.md](./CONTRIBUTING.md).

@@ -14,7 +14,7 @@ Download the appropriate `dtm` version for your platform from [DevStream Release
 
 Copy the [examples/quickstart.yaml](../examples/quickstart.yaml) to your working directory and rename it to `config.yaml`:
 
-```bash
+```shell
 cp examples/quickstart.yaml config.yaml
 ```
 
@@ -22,7 +22,7 @@ Then modify the file accordingly.
 
 For example, my GitHub username is "IronCore864", and my Dockerhub username is "ironcore864", then I can run:
 
-```bash
+```shell
 sed -i.bak "s/YOUR_GITHUB_USERNAME_CASE_SENSITIVE/IronCore864/g" config.yaml
 
 sed -i.bak "s/YOUR_DOCKER_USERNAME/ironcore864/g" config.yaml
@@ -30,9 +30,9 @@ sed -i.bak "s/YOUR_DOCKER_USERNAME/ironcore864/g" config.yaml
 
 > This config file uses two plugins, one will create a GitHub repository and bootstrap it into a Golang web app, and the other will create GitHub Actions workflow for it.
 
-The two plugins [require an environment variable](./plugins/github-repo-scaffolding-golang.md) to work, so let's set it:
+The two plugins [require an environment variable](https://www.devstream.io/docs/plugins/github-repo-scaffolding-golang) to work, so let's set it:
 
-```bash
+```shell
 export GITHUB_TOKEN="YOUR_GITHUB_TOKEN_HERE"
 ```
 
@@ -42,7 +42,7 @@ If you don't know how to create a GitHub token, check out [the official document
 
 Run:
 
-```bash
+```shell
 dtm init -f config.yaml
 ```
 
@@ -68,7 +68,7 @@ Note: if your dtm binary's MD5 sum doesn't match the MD5 sum from our release pa
 
 Run:
 
-```bash
+```shell
 dtm apply -f config.yaml
 ```
 
@@ -107,7 +107,7 @@ Go to your GitHub account, and we can see a new repo named "go-webapp-devstream-
 
 Run:
 
-```bash
+```shell
 dtm destroy
 ```
 
@@ -136,10 +136,4 @@ Enter a value (Default is n): y
 2022-03-04 12:10:42 ✔ [SUCCESS]  Plugin golang-demo-actions delete done.
 2022-03-04 12:10:42 ✔ [SUCCESS]  All plugins destroyed successfully.
 2022-03-04 12:10:42 ✔ [SUCCESS]  Destroy finished.
-```
-
-```{toctree}
----
-maxdepth: 1
----
 ```
