@@ -29,7 +29,7 @@ func TestMultipleDependencies(t *testing.T) {
 	tools := []Tool{
 		{InstanceID: "argocd", Name: "argocd"},
 		{InstanceID: "repo", Name: "github"},
-		{InstanceID: "argocdapp", Name: "argocdapp", DependsOn: []string{"argocd.argocd", "repo.github"}},
+		{InstanceID: "argocdapp", Name: "argocdapp", DependsOn: []string{"argocd.argocd", "github.repo"}},
 	}
 	errors := validateDependency(tools)
 	assert.Equal(t, len(errors), 0)

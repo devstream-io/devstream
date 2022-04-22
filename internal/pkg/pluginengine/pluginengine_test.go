@@ -18,11 +18,11 @@ var _ = Describe("Pluginengine", func() {
 		smgr statemanager.Manager
 		err  error
 
-		trelloToolName     = "mytrelloboard"
-		trelloPluginKind   = "trello"
+		trelloInstance     = "mytrelloboard"
+		trelloName         = "trello"
 		expectedBoardId    = "1"
 		expectedTodoListId = "2"
-		trelloKey          = statemanager.StateKey(fmt.Sprintf("%s_%s", trelloToolName, trelloPluginKind))
+		trelloKey          = statemanager.StateKey(fmt.Sprintf("%s_%s", trelloName, trelloInstance))
 	)
 
 	BeforeEach(func() {
@@ -39,57 +39,57 @@ var _ = Describe("Pluginengine", func() {
 	})
 
 	It("should be 'one install'", func() {
-		name := "a"
-		kind := "tool-a"
+		instanceID := "a"
+		name := "tool-a"
 
 		cfg := &configloader.Config{
-			Tools: []configloader.Tool{*getTool(name, kind)},
+			Tools: []configloader.Tool{*getTool(name, instanceID)},
 		}
 		changes, _ := pluginengine.GetChangesForApply(smgr, cfg)
 		GinkgoWriter.Print(changes)
 		Expect(len(changes)).To(Equal(1))
 		c := changes[0]
-		Expect(c.Tool.InstanceID).To(Equal(name))
+		Expect(c.Tool.InstanceID).To(Equal(instanceID))
 		Expect(c.ActionName).To(Equal(statemanager.ActionCreate))
 	})
 
 	It("should be 'two install'", func() {
-		name1, name2 := "a", "b"
-		plugin1, plugin2 := "tool-a", "too-b"
+		instanceID1, instanceID2 := "a", "b"
+		name1, name2 := "tool-a", "too-b"
 
 		cfg := &configloader.Config{
-			Tools: []configloader.Tool{*getTool(name1, plugin1), *getTool(name2, plugin2)},
+			Tools: []configloader.Tool{*getTool(name1, instanceID1), *getTool(name2, instanceID2)},
 		}
 		changes, _ := pluginengine.GetChangesForApply(smgr, cfg)
 
 		Expect(len(changes)).To(Equal(2))
 		c1 := changes[0]
-		Expect(c1.Tool.InstanceID).To(Equal(name1))
-		Expect(c1.Tool.Name).To(Equal(plugin1))
+		Expect(c1.Tool.InstanceID).To(Equal(instanceID1))
+		Expect(c1.Tool.Name).To(Equal(name1))
 		Expect(c1.ActionName).To(Equal(statemanager.ActionCreate))
 
 		c2 := changes[1]
-		Expect(c2.Tool.InstanceID).To(Equal(name2))
-		Expect(c2.Tool.Name).To(Equal(plugin2))
+		Expect(c2.Tool.InstanceID).To(Equal(instanceID2))
+		Expect(c2.Tool.Name).To(Equal(name2))
 		Expect(c2.ActionName).To(Equal(statemanager.ActionCreate))
 	})
 
 	It("should be 1 uninstall when `dtm delete` is triggered against a config with 1 tool and a successful state", func() {
-		name := "a"
-		plugin := "tool-a"
+		instanceID := "a"
+		name := "tool-a"
 
 		cfg := &configloader.Config{
-			Tools: []configloader.Tool{*getTool(name, plugin)},
+			Tools: []configloader.Tool{*getTool(name, instanceID)},
 		}
 
-		err = smgr.AddState(statemanager.StateKey(fmt.Sprintf("%s_%s", name, plugin)), statemanager.State{})
+		err = smgr.AddState(statemanager.StateKey(fmt.Sprintf("%s_%s", name, instanceID)), statemanager.State{})
 		Expect(err).NotTo(HaveOccurred())
 		changes, _ := pluginengine.GetChangesForDelete(smgr, cfg, false)
 
 		Expect(len(changes)).To(Equal(1))
 		c := changes[0]
-		Expect(c.Tool.InstanceID).To(Equal(name))
-		Expect(c.Tool.Name).To(Equal(plugin))
+		Expect(c.Tool.InstanceID).To(Equal(instanceID))
+		Expect(c.Tool.Name).To(Equal(name))
 		Expect(c.ActionName).To(Equal(statemanager.ActionDelete))
 	})
 
@@ -109,8 +109,8 @@ var _ = Describe("Pluginengine", func() {
 		Expect(err).NotTo(HaveOccurred())
 
 		dependantOptions := map[string]interface{}{
-			"boardId":    fmt.Sprintf("${{ %s.%s.outputs.boardId }}", trelloToolName, trelloPluginKind),
-			"todoListId": fmt.Sprintf("${{ %s.%s.outputs.todoListId }}", trelloToolName, trelloPluginKind),
+			"boardId":    fmt.Sprintf("${{ %s.%s.outputs.boardId }}", trelloName, trelloInstance),
+			"todoListId": fmt.Sprintf("${{ %s.%s.outputs.todoListId }}", trelloName, trelloInstance),
 		}
 		expectResult := map[string]interface{}{
 			"boardId":    expectedBoardId,
@@ -136,7 +136,7 @@ var _ = Describe("Pluginengine", func() {
 		Expect(err).NotTo(HaveOccurred())
 
 		dependantOptions := map[string]interface{}{
-			"boardId": fmt.Sprintf("prefix/${{ %s.%s.outputs.boardId }}/suffix", trelloToolName, trelloPluginKind),
+			"boardId": fmt.Sprintf("prefix/${{ %s.%s.outputs.boardId }}/suffix", trelloName, trelloInstance),
 		}
 		expectResult := map[string]interface{}{
 			"boardId": fmt.Sprintf("prefix/%s/suffix", expectedBoardId),
@@ -148,8 +148,8 @@ var _ = Describe("Pluginengine", func() {
 
 	It("should give an error when output doesn't exist in the state", func() {
 		trelloState := statemanager.State{
-			InstanceID: "mytrelloboard",
 			Name:       "trello",
+			InstanceID: "mytrelloboard",
 			Options:    map[string]interface{}{},
 			Resource:   map[string]interface{}{},
 		}
@@ -157,10 +157,10 @@ var _ = Describe("Pluginengine", func() {
 		Expect(err).NotTo(HaveOccurred())
 
 		dependantOptions := map[string]interface{}{
-			"boardId": fmt.Sprintf("${{ %s.%s.outputs.boardId }}", trelloToolName, trelloPluginKind),
+			"boardId": fmt.Sprintf("${{ %s.%s.outputs.boardId }}", trelloName, trelloInstance),
 		}
 		expectResult := map[string]interface{}{
-			"boardId": fmt.Sprintf("${{ %s.%s.outputs.boardId }}", trelloToolName, trelloPluginKind),
+			"boardId": fmt.Sprintf("${{ %s.%s.outputs.boardId }}", trelloName, trelloInstance),
 		}
 		errs := pluginengine.HandleOutputsReferences(smgr, dependantOptions)
 		Expect(len(errs)).To(Equal(1))
@@ -169,8 +169,8 @@ var _ = Describe("Pluginengine", func() {
 
 	It("should give an error when the referred key doesn't exist", func() {
 		trelloState := statemanager.State{
-			InstanceID: "mytrelloboard",
 			Name:       "trello",
+			InstanceID: "mytrelloboard",
 			Options:    map[string]interface{}{},
 			Resource: map[string]interface{}{
 				"outputs": map[string]interface{}{
@@ -183,14 +183,14 @@ var _ = Describe("Pluginengine", func() {
 		Expect(err).NotTo(HaveOccurred())
 
 		dependantOptions := map[string]interface{}{
-			"boardId":    fmt.Sprintf("${{ %s.%s.outputs.boardId }}", trelloToolName, trelloPluginKind),
-			"todoListId": fmt.Sprintf("${{ %s.%s.outputs.todoListId }}", trelloToolName, trelloPluginKind),
-			"someKey":    fmt.Sprintf("${{ %s.%s.outputs.keyNotExist }}", trelloToolName, trelloPluginKind),
+			"boardId":    fmt.Sprintf("${{ %s.%s.outputs.boardId }}", trelloName, trelloInstance),
+			"todoListId": fmt.Sprintf("${{ %s.%s.outputs.todoListId }}", trelloName, trelloInstance),
+			"someKey":    fmt.Sprintf("${{ %s.%s.outputs.keyNotExist }}", trelloName, trelloInstance),
 		}
 		expectResult := map[string]interface{}{
 			"boardId":    expectedBoardId,
 			"todoListId": expectedTodoListId,
-			"someKey":    fmt.Sprintf("${{ %s.%s.outputs.keyNotExist }}", trelloToolName, trelloPluginKind),
+			"someKey":    fmt.Sprintf("${{ %s.%s.outputs.keyNotExist }}", trelloName, trelloInstance),
 		}
 		errs := pluginengine.HandleOutputsReferences(smgr, dependantOptions)
 		Expect(len(errs)).To(Equal(1))
@@ -199,8 +199,8 @@ var _ = Describe("Pluginengine", func() {
 
 	It("should work for nested maps", func() {
 		trelloState := statemanager.State{
-			InstanceID: "mytrelloboard",
 			Name:       "trello",
+			InstanceID: "mytrelloboard",
 			Options:    map[string]interface{}{},
 			Resource: map[string]interface{}{
 				"outputs": map[string]interface{}{
@@ -213,7 +213,7 @@ var _ = Describe("Pluginengine", func() {
 
 		dependantOptions := map[string]interface{}{
 			"outerKey": map[string]interface{}{
-				"innerKey": fmt.Sprintf("${{ %s.%s.outputs.boardId }}", trelloToolName, trelloPluginKind),
+				"innerKey": fmt.Sprintf("${{ %s.%s.outputs.boardId }}", trelloName, trelloInstance),
 			},
 		}
 		expectResult := map[string]interface{}{
@@ -227,10 +227,10 @@ var _ = Describe("Pluginengine", func() {
 	})
 })
 
-func getTool(name, kind string) *configloader.Tool {
+func getTool(name, instance string) *configloader.Tool {
 	return &configloader.Tool{
-		InstanceID: name,
-		Name:       kind,
+		Name:       name,
+		InstanceID: instance,
 		Options:    map[string]interface{}{"key": "value"},
 	}
 }
