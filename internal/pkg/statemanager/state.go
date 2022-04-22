@@ -83,9 +83,9 @@ func (s StatesMap) Format() []byte {
 type StateKey string
 
 func StateKeyGenerateFunc(t *configloader.Tool) StateKey {
-	return StateKey(fmt.Sprintf("%s_%s", t.InstanceID, t.Name))
+	return StateKey(fmt.Sprintf("%s_%s", t.Name, t.InstanceID))
 }
 
-func GenerateStateKeyByToolNameAndPluginKind(toolName string, pluginKind string) StateKey {
-	return StateKey(fmt.Sprintf("%s_%s", toolName, pluginKind))
+func GenerateStateKeyByToolNameAndPluginKind(toolName string, instalceID string) StateKey {
+	return StateKey(fmt.Sprintf("%s_%s", toolName, instalceID))
 }
