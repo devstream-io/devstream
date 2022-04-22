@@ -26,8 +26,8 @@ type ChangeResult struct {
 }
 
 func (c *Change) String() string {
-	return fmt.Sprintf("\n{\n  ActionName: %s,\n  Tool: {Name: %s, Plugin: %s}}\n}",
-		c.ActionName, c.Tool.Name, c.Tool.Plugin)
+	return fmt.Sprintf("\n{\n  ActionName: %s,\n  Tool: {InstanceID: %s, InstanceID: %s}}\n}",
+		c.ActionName, c.Tool.InstanceID, c.Tool.Name)
 }
 
 type CommandType string
@@ -86,7 +86,7 @@ func execute(smgr statemanager.Manager, changes []*Change) map[string]error {
 
 	for i, c := range changes {
 		log.Separatorf("Processing progress: %d/%d.", i+1, numOfChanges)
-		log.Infof("Processing: %s (%s) -> %s ...", c.Tool.Name, c.Tool.Plugin, c.ActionName)
+		log.Infof("Processing: %s (%s) -> %s ...", c.Tool.InstanceID, c.Tool.Name, c.ActionName)
 
 		var succeeded bool
 		var err error
@@ -101,7 +101,7 @@ func execute(smgr statemanager.Manager, changes []*Change) map[string]error {
 			for _, e := range errs {
 				log.Errorf("Error: %s.", e)
 			}
-			log.Errorf("The outputs reference in tool %s (%s) can't be resolved. Please double check your config.", c.Tool.Name, c.Tool.Plugin)
+			log.Errorf("The outputs reference in tool %s (%s) can't be resolved. Please double check your config.", c.Tool.InstanceID, c.Tool.Name)
 
 			// not executing this change since its input isn't valid
 			continue
@@ -121,7 +121,7 @@ func execute(smgr statemanager.Manager, changes []*Change) map[string]error {
 		}
 
 		if err != nil {
-			key := fmt.Sprintf("%s/%s-%s", c.Tool.Plugin, c.Tool.Name, c.ActionName)
+			key := fmt.Sprintf("%s/%s-%s", c.Tool.Name, c.Tool.InstanceID, c.ActionName)
 			errorsMap[key] = err
 		}
 
@@ -162,23 +162,23 @@ func handleResult(smgr statemanager.Manager, change *Change) error {
 			log.Debugf("Failed to delete state %s: %s.", key, err)
 			return err
 		}
-		log.Successf("Plugin %s (%s) delete done.", change.Tool.Name, change.Tool.Plugin)
+		log.Successf("Tool %s (%s) delete done.", change.Tool.InstanceID, change.Tool.Name)
 		return nil
 	}
 
 	key := statemanager.StateKeyGenerateFunc(change.Tool)
 	state := statemanager.State{
-		Name:      change.Tool.Name,
-		Plugin:    change.Tool.Plugin,
-		DependsOn: change.Tool.DependsOn,
-		Options:   change.Tool.Options,
-		Resource:  change.Result.ReturnValue,
+		InstanceID: change.Tool.InstanceID,
+		Name:       change.Tool.Name,
+		DependsOn:  change.Tool.DependsOn,
+		Options:    change.Tool.Options,
+		Resource:   change.Result.ReturnValue,
 	}
 	err := smgr.AddState(key, state)
 	if err != nil {
 		log.Debugf("Failed to add state %s: %s.", key, err)
 		return err
 	}
-	log.Successf("Plugin %s(%s) %s done.", change.Tool.Name, change.Tool.Plugin, change.ActionName)
+	log.Successf("InstanceID %s(%s) %s done.", change.Tool.InstanceID, change.Tool.Name, change.ActionName)
 	return nil
 }

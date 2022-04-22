@@ -22,18 +22,18 @@ func validateConfig(config *Config) []error {
 func validateTool(t *Tool) []error {
 	errors := make([]error, 0)
 
-	// Name
-	if t.Name == "" {
+	// InstanceID
+	if t.InstanceID == "" {
 		errors = append(errors, fmt.Errorf("name is empty"))
 	}
 
-	errs := validation.IsDNS1123Subdomain(t.Name)
+	errs := validation.IsDNS1123Subdomain(t.InstanceID)
 	for _, e := range errs {
-		errors = append(errors, fmt.Errorf("name %s is invalid: %s", t.Name, e))
+		errors = append(errors, fmt.Errorf("name %s is invalid: %s", t.InstanceID, e))
 	}
 
-	// Plugin
-	if t.Plugin == "" {
+	// InstanceID
+	if t.Name == "" {
 		errors = append(errors, fmt.Errorf("plugin is empty"))
 	}
 
@@ -47,7 +47,7 @@ func validateDependency(tools []Tool) []error {
 	toolMap := make(map[string]bool)
 	// creating the set
 	for _, tool := range tools {
-		key := fmt.Sprintf("%s.%s", tool.Name, tool.Plugin)
+		key := fmt.Sprintf("%s.%s", tool.InstanceID, tool.Name)
 		toolMap[key] = true
 	}
 
@@ -67,7 +67,7 @@ func validateDependency(tools []Tool) []error {
 
 			// generate an error if the dependency isn't in the config set,
 			if _, ok := toolMap[dependency]; !ok {
-				errors = append(errors, fmt.Errorf("tool %s's dependency %s doesn't exist in the config", tool.Name, dependency))
+				errors = append(errors, fmt.Errorf("tool %s's dependency %s doesn't exist in the config", tool.InstanceID, dependency))
 			}
 		}
 	}

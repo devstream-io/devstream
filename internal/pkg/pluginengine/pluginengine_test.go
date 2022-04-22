@@ -49,7 +49,7 @@ var _ = Describe("Pluginengine", func() {
 		GinkgoWriter.Print(changes)
 		Expect(len(changes)).To(Equal(1))
 		c := changes[0]
-		Expect(c.Tool.Name).To(Equal(name))
+		Expect(c.Tool.InstanceID).To(Equal(name))
 		Expect(c.ActionName).To(Equal(statemanager.ActionCreate))
 	})
 
@@ -64,13 +64,13 @@ var _ = Describe("Pluginengine", func() {
 
 		Expect(len(changes)).To(Equal(2))
 		c1 := changes[0]
-		Expect(c1.Tool.Name).To(Equal(name1))
-		Expect(c1.Tool.Plugin).To(Equal(plugin1))
+		Expect(c1.Tool.InstanceID).To(Equal(name1))
+		Expect(c1.Tool.Name).To(Equal(plugin1))
 		Expect(c1.ActionName).To(Equal(statemanager.ActionCreate))
 
 		c2 := changes[1]
-		Expect(c2.Tool.Name).To(Equal(name2))
-		Expect(c2.Tool.Plugin).To(Equal(plugin2))
+		Expect(c2.Tool.InstanceID).To(Equal(name2))
+		Expect(c2.Tool.Name).To(Equal(plugin2))
 		Expect(c2.ActionName).To(Equal(statemanager.ActionCreate))
 	})
 
@@ -88,16 +88,16 @@ var _ = Describe("Pluginengine", func() {
 
 		Expect(len(changes)).To(Equal(1))
 		c := changes[0]
-		Expect(c.Tool.Name).To(Equal(name))
-		Expect(c.Tool.Plugin).To(Equal(plugin))
+		Expect(c.Tool.InstanceID).To(Equal(name))
+		Expect(c.Tool.Name).To(Equal(plugin))
 		Expect(c.ActionName).To(Equal(statemanager.ActionDelete))
 	})
 
 	It("should handle outputs correctly", func() {
 		trelloState := statemanager.State{
-			Name:    "mytrelloboard",
-			Plugin:  "trello",
-			Options: map[string]interface{}{},
+			InstanceID: "mytrelloboard",
+			Name:       "trello",
+			Options:    map[string]interface{}{},
 			Resource: map[string]interface{}{
 				"outputs": map[string]interface{}{
 					"boardId":    expectedBoardId,
@@ -123,9 +123,9 @@ var _ = Describe("Pluginengine", func() {
 
 	It("should handle output interpolation correctly", func() {
 		trelloState := statemanager.State{
-			Name:    "mytrelloboard",
-			Plugin:  "trello",
-			Options: map[string]interface{}{},
+			InstanceID: "mytrelloboard",
+			Name:       "trello",
+			Options:    map[string]interface{}{},
 			Resource: map[string]interface{}{
 				"outputs": map[string]interface{}{
 					"boardId": expectedBoardId,
@@ -148,10 +148,10 @@ var _ = Describe("Pluginengine", func() {
 
 	It("should give an error when output doesn't exist in the state", func() {
 		trelloState := statemanager.State{
-			Name:     "mytrelloboard",
-			Plugin:   "trello",
-			Options:  map[string]interface{}{},
-			Resource: map[string]interface{}{},
+			InstanceID: "mytrelloboard",
+			Name:       "trello",
+			Options:    map[string]interface{}{},
+			Resource:   map[string]interface{}{},
 		}
 		err = smgr.AddState(trelloKey, trelloState)
 		Expect(err).NotTo(HaveOccurred())
@@ -169,9 +169,9 @@ var _ = Describe("Pluginengine", func() {
 
 	It("should give an error when the referred key doesn't exist", func() {
 		trelloState := statemanager.State{
-			Name:    "mytrelloboard",
-			Plugin:  "trello",
-			Options: map[string]interface{}{},
+			InstanceID: "mytrelloboard",
+			Name:       "trello",
+			Options:    map[string]interface{}{},
 			Resource: map[string]interface{}{
 				"outputs": map[string]interface{}{
 					"boardId":    expectedBoardId,
@@ -199,9 +199,9 @@ var _ = Describe("Pluginengine", func() {
 
 	It("should work for nested maps", func() {
 		trelloState := statemanager.State{
-			Name:    "mytrelloboard",
-			Plugin:  "trello",
-			Options: map[string]interface{}{},
+			InstanceID: "mytrelloboard",
+			Name:       "trello",
+			Options:    map[string]interface{}{},
 			Resource: map[string]interface{}{
 				"outputs": map[string]interface{}{
 					"boardId": expectedBoardId,
@@ -229,8 +229,8 @@ var _ = Describe("Pluginengine", func() {
 
 func getTool(name, kind string) *configloader.Tool {
 	return &configloader.Tool{
-		Name:    name,
-		Plugin:  kind,
-		Options: map[string]interface{}{"key": "value"},
+		InstanceID: name,
+		Name:       kind,
+		Options:    map[string]interface{}{"key": "value"},
 	}
 }

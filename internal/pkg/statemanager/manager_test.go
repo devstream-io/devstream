@@ -24,10 +24,10 @@ var _ = Describe("Statemanager", func() {
 		It("Should get the state right", func() {
 			key := statemanager.StateKey("name_githubactions")
 			stateA := statemanager.State{
-				Name:     "name",
-				Plugin:   "githubactions",
-				Options:  map[string]interface{}{"a": "value"},
-				Resource: map[string]interface{}{"a": "value"},
+				InstanceID: "name",
+				Name:       "githubactions",
+				Options:    map[string]interface{}{"a": "value"},
+				Resource:   map[string]interface{}{"a": "value"},
 			}
 
 			err = smgr.AddState(key, stateA)
@@ -48,30 +48,30 @@ var _ = Describe("Statemanager", func() {
 			// List order should be: A,B,C
 			key := statemanager.StateKey("a_githubactions")
 			stateA := statemanager.State{
-				Name:     "a",
-				Plugin:   "githubactions",
-				Options:  map[string]interface{}{"a": "value"},
-				Resource: map[string]interface{}{"a": "value"},
+				InstanceID: "a",
+				Name:       "githubactions",
+				Options:    map[string]interface{}{"a": "value"},
+				Resource:   map[string]interface{}{"a": "value"},
 			}
 			err = smgr.AddState(key, stateA)
 			Expect(err).NotTo(HaveOccurred())
 
 			key = statemanager.StateKey("c_githubactions")
 			stateC := statemanager.State{
-				Name:     "c",
-				Plugin:   "githubactions",
-				Options:  map[string]interface{}{"c": "value"},
-				Resource: map[string]interface{}{"c": "value"},
+				InstanceID: "c",
+				Name:       "githubactions",
+				Options:    map[string]interface{}{"c": "value"},
+				Resource:   map[string]interface{}{"c": "value"},
 			}
 			err = smgr.AddState(key, stateC)
 			Expect(err).NotTo(HaveOccurred())
 
 			key = statemanager.StateKey("b_githubactions")
 			stateB := statemanager.State{
-				Name:     "b",
-				Plugin:   "githubactions",
-				Options:  map[string]interface{}{"b": "value"},
-				Resource: map[string]interface{}{"b": "value"},
+				InstanceID: "b",
+				Name:       "githubactions",
+				Options:    map[string]interface{}{"b": "value"},
+				Resource:   map[string]interface{}{"b": "value"},
 			}
 			err = smgr.AddState(key, stateB)
 			Expect(err).NotTo(HaveOccurred())

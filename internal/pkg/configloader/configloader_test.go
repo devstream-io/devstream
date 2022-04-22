@@ -8,8 +8,8 @@ import (
 
 func TestDependencyPass(t *testing.T) {
 	tools := []Tool{
-		{Name: "argocd", Plugin: "argocd"},
-		{Name: "argocdapp", Plugin: "argocdapp", DependsOn: []string{"argocd.argocd"}},
+		{InstanceID: "argocd", Name: "argocd"},
+		{InstanceID: "argocdapp", Name: "argocdapp", DependsOn: []string{"argocd.argocd"}},
 	}
 	errors := validateDependency(tools)
 	assert.Equal(t, len(errors), 0, "Dependency check passed.")
@@ -18,7 +18,7 @@ func TestDependencyPass(t *testing.T) {
 
 func TestDependencyNotExist(t *testing.T) {
 	tools := []Tool{
-		{Name: "argocdapp", Plugin: "argocdapp", DependsOn: []string{"argocd.argocd"}},
+		{InstanceID: "argocdapp", Name: "argocdapp", DependsOn: []string{"argocd.argocd"}},
 	}
 	errors := validateDependency(tools)
 	assert.Equal(t, len(errors), 1)
@@ -27,9 +27,9 @@ func TestDependencyNotExist(t *testing.T) {
 
 func TestMultipleDependencies(t *testing.T) {
 	tools := []Tool{
-		{Name: "argocd", Plugin: "argocd"},
-		{Name: "repo", Plugin: "github"},
-		{Name: "argocdapp", Plugin: "argocdapp", DependsOn: []string{"argocd.argocd", "repo.github"}},
+		{InstanceID: "argocd", Name: "argocd"},
+		{InstanceID: "repo", Name: "github"},
+		{InstanceID: "argocdapp", Name: "argocdapp", DependsOn: []string{"argocd.argocd", "repo.github"}},
 	}
 	errors := validateDependency(tools)
 	assert.Equal(t, len(errors), 0)
@@ -37,8 +37,8 @@ func TestMultipleDependencies(t *testing.T) {
 
 func TestEmptyDependency(t *testing.T) {
 	tools := []Tool{
-		{Name: "argocd", Plugin: "argocd"},
-		{Name: "argocdapp", Plugin: "argocdapp", DependsOn: []string{}},
+		{InstanceID: "argocd", Name: "argocd"},
+		{InstanceID: "argocdapp", Name: "argocdapp", DependsOn: []string{}},
 	}
 	errors := validateDependency(tools)
 	assert.Equal(t, len(errors), 0)

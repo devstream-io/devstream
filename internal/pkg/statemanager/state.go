@@ -14,11 +14,11 @@ import (
 
 // State is the single component's state.
 type State struct {
-	Name      string
-	Plugin    string
-	DependsOn []string
-	Options   map[string]interface{}
-	Resource  map[string]interface{}
+	Name       string
+	InstanceID string
+	DependsOn  []string
+	Options    map[string]interface{}
+	Resource   map[string]interface{}
 }
 
 type StatesMap struct {
@@ -48,8 +48,8 @@ func (s StatesMap) ToList() []State {
 	})
 
 	sort.Slice(res, func(i, j int) bool {
-		keyi := fmt.Sprintf("%s.%s", res[i].Name, res[i].Plugin)
-		keyj := fmt.Sprintf("%s.%s", res[j].Name, res[j].Plugin)
+		keyi := fmt.Sprintf("%s.%s", res[i].InstanceID, res[i].Name)
+		keyj := fmt.Sprintf("%s.%s", res[j].InstanceID, res[j].Name)
 		return keyi < keyj
 	})
 
@@ -83,7 +83,7 @@ func (s StatesMap) Format() []byte {
 type StateKey string
 
 func StateKeyGenerateFunc(t *configloader.Tool) StateKey {
-	return StateKey(fmt.Sprintf("%s_%s", t.Name, t.Plugin))
+	return StateKey(fmt.Sprintf("%s_%s", t.InstanceID, t.Name))
 }
 
 func GenerateStateKeyByToolNameAndPluginKind(toolName string, pluginKind string) StateKey {
