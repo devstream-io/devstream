@@ -26,8 +26,8 @@ type ChangeResult struct {
 }
 
 func (c *Change) String() string {
-	return fmt.Sprintf("\n{\n  ActionName: %s,\n  Tool: {InstanceID: %s, InstanceID: %s}}\n}",
-		c.ActionName, c.Tool.InstanceID, c.Tool.Name)
+	return fmt.Sprintf("\n{\n  ActionName: %s,\n  Tool: {Name: %s, InstanceID: %s}}\n}",
+		c.ActionName, c.Tool.Name, c.Tool.InstanceID)
 }
 
 type CommandType string
@@ -86,7 +86,7 @@ func execute(smgr statemanager.Manager, changes []*Change) map[string]error {
 
 	for i, c := range changes {
 		log.Separatorf("Processing progress: %d/%d.", i+1, numOfChanges)
-		log.Infof("Processing: %s (%s) -> %s ...", c.Tool.InstanceID, c.Tool.Name, c.ActionName)
+		log.Infof("Processing: %s (%s) -> %s ...", c.Tool.Name, c.Tool.InstanceID, c.ActionName)
 
 		var succeeded bool
 		var err error
@@ -101,7 +101,7 @@ func execute(smgr statemanager.Manager, changes []*Change) map[string]error {
 			for _, e := range errs {
 				log.Errorf("Error: %s.", e)
 			}
-			log.Errorf("The outputs reference in tool %s (%s) can't be resolved. Please double check your config.", c.Tool.InstanceID, c.Tool.Name)
+			log.Errorf("The outputs reference in tool %s (%s) can't be resolved. Please double check your config.", c.Tool.Name, c.Tool.InstanceID)
 
 			// not executing this change since its input isn't valid
 			continue
@@ -162,14 +162,14 @@ func handleResult(smgr statemanager.Manager, change *Change) error {
 			log.Debugf("Failed to delete state %s: %s.", key, err)
 			return err
 		}
-		log.Successf("Tool %s (%s) delete done.", change.Tool.InstanceID, change.Tool.Name)
+		log.Successf("Tool %s (%s) delete done.", change.Tool.Name, change.Tool.InstanceID)
 		return nil
 	}
 
 	key := statemanager.StateKeyGenerateFunc(change.Tool)
 	state := statemanager.State{
-		InstanceID: change.Tool.InstanceID,
 		Name:       change.Tool.Name,
+		InstanceID: change.Tool.InstanceID,
 		DependsOn:  change.Tool.DependsOn,
 		Options:    change.Tool.Options,
 		Resource:   change.Result.ReturnValue,
@@ -179,6 +179,6 @@ func handleResult(smgr statemanager.Manager, change *Change) error {
 		log.Debugf("Failed to add state %s: %s.", key, err)
 		return err
 	}
-	log.Successf("InstanceID %s(%s) %s done.", change.Tool.InstanceID, change.Tool.Name, change.ActionName)
+	log.Successf("Tool %s(%s) %s done.", change.Tool.Name, change.Tool.InstanceID, change.ActionName)
 	return nil
 }

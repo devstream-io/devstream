@@ -47,7 +47,7 @@ func validateDependency(tools []Tool) []error {
 	toolMap := make(map[string]bool)
 	// creating the set
 	for _, tool := range tools {
-		key := fmt.Sprintf("%s.%s", tool.InstanceID, tool.Name)
+		key := fmt.Sprintf("%s.%s", tool.Name, tool.InstanceID)
 		toolMap[key] = true
 	}
 
