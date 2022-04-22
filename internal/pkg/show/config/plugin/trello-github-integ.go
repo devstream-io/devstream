@@ -5,8 +5,8 @@ var TrelloGithubDefaultConfig = `tools:
 - name: trello-github-integ
   # id of the tool instance
   instanceID: default
-  # optional; if specified, dtm will make sure the dependency is applied first before handling this tool.
-  dependsOn: [ "TRELLO_TOOL_NAME.trello" ]
+  # format: name.instanceID; If specified, dtm will make sure the dependency is applied first before handling this tool.
+  dependsOn: [ "trello.default" ]
   # options for the plugin
   options:
     # the repo's owner. It should be case-sensitive here; strictly use your GitHub user name; please change the value below.
@@ -16,9 +16,9 @@ var TrelloGithubDefaultConfig = `tools:
     org: YOUR_ORGANIZATION_NAME
     repo: YOUR_REPO_NAME
     # reference parameters come from dependency, their usage will be explained later
-    boardId: ${{ TRELLO_TOOL_NAME.trello.outputs.boardId }}
-    todoListId: ${{ TRELLO_TOOL_NAME.trello.outputs.todoListId }}
-    doingListId: ${{ TRELLO_TOOL_NAME.trello.outputs.doingListId }}
-    doneListId: ${{ TRELLO_TOOL_NAME.trello.outputs.doneListId }}
+    boardId: ${{ trello.default.outputs.boardId }}
+    todoListId: ${{ trello.default.outputs.todoListId }}
+    doingListId: ${{ trello.default.outputs.doingListId }}
+    doneListId: ${{ trello.default.outputs.doneListId }}
     # main branch of the repo (to which branch the plugin will submit the workflows)
     branch: main`

@@ -5,8 +5,8 @@ var ArgocdappDefaultConfig = `tools:
 - name: argocdapp
   # id of the tool instance
   instanceID: default
-  # if specified, dtm will make sure the dependency is applied first before handling this tool.
-  dependsOn: [ "ARGOCD_TOOL_NAME.argocd" ]
+  # format: name.instanceID; If specified, dtm will make sure the dependency is applied first before handling this tool.
+  dependsOn: [ "argocd.ARGOCD_INSTANCE_NAME" ]
   # options for the plugin
   options:
     # information on the ArgoCD Application
