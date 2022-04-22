@@ -1,9 +1,10 @@
 package plugin
 
 var ArgocdDefaultConfig = `tools:
+# name of the tool
 - name: argocd
-  # name of the plugin
-  plugin: argocd
+  # id of the tool instance
+  instanceID: argocd
   # if specified, dtm will make sure the dependency is applied first before handling this tool.
   dependsOn: [ "TOOL1_NAME.TOOL1_PLUGIN", "TOOL2_NAME.TOOL2_PLUGIN" ]
   # options for the plugin

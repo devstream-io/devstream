@@ -1,9 +1,10 @@
 package plugin
 
 var GitlabCIGenericDefaultConfig = `tools:
-- name: myapp-ci
-  # name of the plugin
-  plugin: gitlabci-generic
+# name of the tool
+- name: gitlabci-generic
+  # id of the tool instance
+  instanceID: myapp-ci
   # optional; if specified, dtm will make sure the dependency is applied first before handling this tool.
   dependsOn: [ "TOOL1_NAME.TOOL1_PLUGIN", "TOOL2_NAME.TOOL2_PLUGIN" ]
   # options for the plugin

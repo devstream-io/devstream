@@ -1,9 +1,10 @@
 package plugin
 
 var GithubActionsPythonDefaultConfig = `tools:
-- name: python-demo-app
-  # name of the plugin
-  plugin: githubactions-python
+# name of the tool
+- name: githubactions-python
+  # id of the tool instance
+  instanceID: python-demo-app
   # optional; if specified, dtm will make sure the dependency is applied first before handling this tool.
   dependsOn: [ "TOOL1_NAME.TOOL1_PLUGIN", "TOOL2_NAME.TOOL2_PLUGIN" ]
   # options for the plugin

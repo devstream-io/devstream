@@ -1,10 +1,10 @@
 package plugin
 
 var JenkinsDefaultConfig = `tools:
-# name of the instance with jenkins
-- name: jenkins-dev
-  # name of the plugin
-  plugin: jenkins
+# name of the tool
+- name: jenkins
+  # id of the tool instance
+  instanceID: jenkins-dev
   # optional; if specified, dtm will make sure the dependency is applied first before handling this tool.
   dependsOn: [ "TOOL1_NAME.TOOL1_PLUGIN", "TOOL2_NAME.TOOL2_PLUGIN" ]
   # options for the plugin

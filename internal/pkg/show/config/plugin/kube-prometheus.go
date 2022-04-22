@@ -1,10 +1,10 @@
 package plugin
 
 var KubePrometheusDefaultConfig = `tools:
-# name of the instance with kube-prometheus
-- name: kube-prometheus-dev
-  # name of the plugin
-  plugin: kube-prometheus
+# name of the tool
+- name: kube-prometheus
+  # id of the tool instance
+  instanceID: kube-prometheus-dev
   # optional; if specified, dtm will make sure the dependency is applied first before handling this tool.
   dependsOn: [ "TOOL1_NAME.TOOL1_PLUGIN", "TOOL2_NAME.TOOL2_PLUGIN" ]
   # options for the plugin

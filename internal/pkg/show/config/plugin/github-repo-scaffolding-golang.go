@@ -1,10 +1,10 @@
 package plugin
 
 var GithubRepoScaffoldingGolangDefaultConfig = `tools:
-# name of the instance with github-repo-scaffolding-golang
-- name: go-webapp-repo
-  # name of the plugin
-  plugin: github-repo-scaffolding-golang
+# name of the tool
+- name: github-repo-scaffolding-golang
+  # id of the tool instance
+  instanceID: go-webapp-repo
   # if specified, dtm will make sure the dependency is applied first before handling this tool.
   dependsOn: [ "TOOL1_NAME.TOOL1_PLUGIN", "TOOL2_NAME.TOOL2_PLUGIN" ]
   # options for the plugin

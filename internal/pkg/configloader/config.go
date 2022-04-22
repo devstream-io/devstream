@@ -23,13 +23,13 @@ type Config struct {
 
 // Tool is the struct for one section of the DevStream configuration file.
 type Tool struct {
-	Name string `yaml:"plugin"`
+	Name string `yaml:"name"`
 	// RFC 1123 - DNS Subdomain Names style
 	// contain no more than 253 characters
 	// contain only lowercase alphanumeric characters, '-' or '.'
 	// start with an alphanumeric character
 	// end with an alphanumeric character
-	InstanceID string                 `yaml:"name"`
+	InstanceID string                 `yaml:"instance_id"`
 	DependsOn  []string               `yaml:"dependsOn"`
 	Options    map[string]interface{} `yaml:"options"`
 }

@@ -1,9 +1,10 @@
 package plugin
 
 var GitlabCIGolangDefaultConfig = `tools:
-- name: go-hello-world
-  # name of the plugin
-  plugin: gitlabci-golang
+# name of the tool
+- name: gitlabci-golang
+  # id of the tool instance
+  instanceID: go-hello-world
   # optional; if specified, dtm will make sure the dependency is applied first before handling this tool.
   dependsOn: [ "TOOL1_NAME.TOOL1_PLUGIN", "TOOL2_NAME.TOOL2_PLUGIN" ]
   # options for the plugin
