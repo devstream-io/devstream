@@ -29,7 +29,7 @@ type Tool struct {
 	// contain only lowercase alphanumeric characters, '-' or '.'
 	// start with an alphanumeric character
 	// end with an alphanumeric character
-	InstanceID string                 `yaml:"instance_id"`
+	InstanceID string                 `yaml:"instanceID"`
 	DependsOn  []string               `yaml:"dependsOn"`
 	Options    map[string]interface{} `yaml:"options"`
 }

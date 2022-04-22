@@ -4,7 +4,7 @@ var TrelloGithubDefaultConfig = `tools:
 # name of the tool
 - name: trello-github-integ
   # id of the tool instance
-  instanceID: trello-github
+  instanceID: default
   # optional; if specified, dtm will make sure the dependency is applied first before handling this tool.
   dependsOn: [ "TRELLO_TOOL_NAME.trello" ]
   # options for the plugin
