@@ -1,12 +1,12 @@
 package plugin
 
 var GithubRepoScaffoldingGolangDefaultConfig = `tools:
-# name of the instance with github-repo-scaffolding-golang
-- name: go-webapp-repo
-  # name of the plugin
-  plugin: github-repo-scaffolding-golang
-  # if specified, dtm will make sure the dependency is applied first before handling this tool.
-  dependsOn: [ "TOOL1_NAME.TOOL1_PLUGIN", "TOOL2_NAME.TOOL2_PLUGIN" ]
+# name of the tool
+- name: github-repo-scaffolding-golang
+  # id of the tool instance
+  instanceID: default
+  # format: name.instanceID; If specified, dtm will make sure the dependency is applied first before handling this tool.
+  dependsOn: []
   # options for the plugin
   options:
     # the repo's owner. It should be case-sensitive here; strictly use your GitHub user name; please change the value below.

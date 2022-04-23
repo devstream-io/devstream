@@ -23,23 +23,23 @@ type Config struct {
 
 // Tool is the struct for one section of the DevStream configuration file.
 type Tool struct {
+	Name string `yaml:"name"`
 	// RFC 1123 - DNS Subdomain Names style
 	// contain no more than 253 characters
 	// contain only lowercase alphanumeric characters, '-' or '.'
 	// start with an alphanumeric character
 	// end with an alphanumeric character
-	Name      string                 `yaml:"name"`
-	Plugin    string                 `yaml:"plugin"`
-	DependsOn []string               `yaml:"dependsOn"`
-	Options   map[string]interface{} `yaml:"options"`
+	InstanceID string                 `yaml:"instanceID"`
+	DependsOn  []string               `yaml:"dependsOn"`
+	Options    map[string]interface{} `yaml:"options"`
 }
 
 func (t *Tool) DeepCopy() *Tool {
 	var retTool = Tool{
-		Name:      t.Name,
-		Plugin:    t.Plugin,
-		DependsOn: t.DependsOn,
-		Options:   map[string]interface{}{},
+		Name:       t.Name,
+		InstanceID: t.InstanceID,
+		DependsOn:  t.DependsOn,
+		Options:    map[string]interface{}{},
 	}
 	for k, v := range t.Options {
 		retTool.Options[k] = v
@@ -91,12 +91,12 @@ func LoadConf(configFileName, varFileName string) *Config {
 // GetPluginFileName creates the file name based on the tool's name and version
 // If the plugin {githubactions 0.0.1}, the generated name will be "githubactions_0.0.1.so"
 func GetPluginFileName(t *Tool) string {
-	return fmt.Sprintf("%s-%s-%s_%s.so", t.Plugin, GOOS, GOARCH, version.Version)
+	return fmt.Sprintf("%s-%s-%s_%s.so", t.Name, GOOS, GOARCH, version.Version)
 }
 
 // GetPluginMD5FileName  If the plugin {githubactions 0.0.1}, the generated name will be "githubactions_0.0.1.md5"
 func GetPluginMD5FileName(t *Tool) string {
-	return fmt.Sprintf("%s-%s-%s_%s.md5", t.Plugin, GOOS, GOARCH, version.Version)
+	return fmt.Sprintf("%s-%s-%s_%s.md5", t.Name, GOOS, GOARCH, version.Version)
 }
 
 // GetDtmMD5FileName format likes dtm-linux-amd64

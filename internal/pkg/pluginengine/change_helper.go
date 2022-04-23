@@ -26,9 +26,9 @@ func generateDeleteAction(tool *configloader.Tool, description string) *Change {
 func generateDeleteActionFromState(state statemanager.State) *Change {
 	return &Change{
 		Tool: &configloader.Tool{
-			Name:    state.Name,
-			Plugin:  state.Plugin,
-			Options: state.Options,
+			InstanceID: state.InstanceID,
+			Name:       state.Name,
+			Options:    state.Options,
 		},
 		ActionName: statemanager.ActionDelete,
 	}
@@ -79,7 +79,7 @@ func changesForApply(smgr statemanager.Manager, cfg *configloader.Config) ([]*Ch
 
 			if state == nil {
 				// tool not in the state, create, no need to Read resource before Create
-				description := fmt.Sprintf("Tool %s (%s) found in config but doesn't exist in the state, will be created.", tool.Name, tool.Plugin)
+				description := fmt.Sprintf("Tool %s (%s) found in config but doesn't exist in the state, will be created.", tool.Name, tool.InstanceID)
 				changes = append(changes, generateCreateAction(&tool, description))
 			} else {
 				// tool found in the state
@@ -90,7 +90,7 @@ func changesForApply(smgr statemanager.Manager, cfg *configloader.Config) ([]*Ch
 
 				if drifted(tool.Options, state.Options) {
 					// tool's config differs from State's, Update
-					description := fmt.Sprintf("Tool %s (%s) config drifted from the state, will be updated.", tool.Name, tool.Plugin)
+					description := fmt.Sprintf("Tool %s (%s) config drifted from the state, will be updated.", tool.Name, tool.InstanceID)
 					changes = append(changes, generateUpdateAction(&tool, description))
 				} else {
 					// tool's config is the same as State's
@@ -103,15 +103,15 @@ func changesForApply(smgr statemanager.Manager, cfg *configloader.Config) ([]*Ch
 
 					if resource == nil {
 						// tool exists in the state, but resource doesn't exist, Create
-						description := fmt.Sprintf("Tool %s (%s) state found but it seems the tool isn't created, will be created.", tool.Name, tool.Plugin)
+						description := fmt.Sprintf("Tool %s (%s) state found but it seems the tool isn't created, will be created.", tool.Name, tool.InstanceID)
 						changes = append(changes, generateCreateAction(&tool, description))
 					} else if drifted(resource, state.Resource) {
 						// resource drifted from state, Update
-						description := fmt.Sprintf("Tool %s (%s) drifted from the state, will be updated.", tool.Name, tool.Plugin)
+						description := fmt.Sprintf("Tool %s (%s) drifted from the state, will be updated.", tool.Name, tool.InstanceID)
 						changes = append(changes, generateUpdateAction(&tool, description))
 					} else {
 						// resource is the same as the state, do nothing
-						log.Debugf("Tool %s (%s) is the same as the state, do nothing.", tool.Name, tool.Plugin)
+						log.Debugf("Tool %s (%s) is the same as the state, do nothing.", tool.Name, tool.InstanceID)
 					}
 				}
 			}
@@ -152,7 +152,7 @@ func changesForDelete(smgr statemanager.Manager, cfg *configloader.Config, isFor
 				}
 			}
 
-			description := fmt.Sprintf("Tool %s (%s) will be deleted.", tool.Name, tool.Plugin)
+			description := fmt.Sprintf("Tool %s (%s) will be deleted.", tool.Name, tool.InstanceID)
 			changes = append(changes, generateDeleteAction(&tool, description))
 		}
 	}
@@ -168,10 +168,10 @@ func GetChangesForDestroy(smgr statemanager.Manager) ([]*Change, error) {
 	var tools []configloader.Tool
 	for _, state := range smgr.GetStatesMap().ToList() {
 		tool := configloader.Tool{
-			Name:      state.Name,
-			Plugin:    state.Plugin,
-			DependsOn: state.DependsOn,
-			Options:   state.Options,
+			InstanceID: state.InstanceID,
+			Name:       state.Name,
+			DependsOn:  state.DependsOn,
+			Options:    state.Options,
 		}
 		tools = append(tools, tool)
 	}
@@ -185,7 +185,7 @@ func GetChangesForDestroy(smgr statemanager.Manager) ([]*Change, error) {
 	for i := len(batchesOfTools) - 1; i >= 0; i-- {
 		batch := batchesOfTools[i]
 		for _, tool := range batch {
-			description := fmt.Sprintf("Tool %s (%s) will be deleted.", tool.Name, tool.Plugin)
+			description := fmt.Sprintf("Tool %s (%s) will be deleted.", tool.Name, tool.InstanceID)
 			changes = append(changes, generateDeleteAction(&tool, description))
 		}
 	}

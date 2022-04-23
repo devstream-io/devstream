@@ -1,11 +1,12 @@
 package plugin
 
 var TrelloDefaultConfig = `tools:
-- name: my-trello-board
-  # name of the plugin
-  plugin: trello
-  # optional; if specified, dtm will make sure the dependency is applied first before handling this tool
-  dependsOn: [ "TOOL1_NAME.TOOL1_PLUGIN", "TOOL2_NAME.TOOL2_PLUGIN" ]
+# name of the tool
+- name: trello
+  # id of the tool instance
+  instanceID: default
+  # format: name.instanceID; If specified, dtm will make sure the dependency is applied first before handling this tool
+  dependsOn: []
   # options for the plugin
   options:
     # the repo's owner

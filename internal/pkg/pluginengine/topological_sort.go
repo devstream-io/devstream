@@ -8,7 +8,7 @@ import (
 )
 
 func generateKeyFromTool(tool configloader.Tool) string {
-	return fmt.Sprintf("%s.%s", tool.Name, tool.Plugin)
+	return fmt.Sprintf("%s.%s", tool.Name, tool.InstanceID)
 }
 
 func dependencyResolved(tool configloader.Tool, unprocessedNodeSet map[string]bool) bool {
@@ -16,14 +16,14 @@ func dependencyResolved(tool configloader.Tool, unprocessedNodeSet map[string]bo
 
 	for _, dep := range tool.DependsOn {
 		// if the tool's dependency is still not processed yet / still in the graph
-		log.Debugf("TOOL %s.%s dependency NOT solved\n", tool.Name, tool.Plugin)
+		log.Debugf("TOOL %s.%s dependency NOT solved\n", tool.Name, tool.InstanceID)
 		if _, ok := unprocessedNodeSet[dep]; ok {
 			res = false
 			break
 		}
 	}
 
-	log.Debugf("TOOL %s %s %t\n", tool.Name, tool.Plugin, res)
+	log.Debugf("TOOL %s %s %t\n", tool.Name, tool.InstanceID, res)
 	return res
 }
 
@@ -55,11 +55,11 @@ func topologicalSort(tools []configloader.Tool) ([][]configloader.Tool, error) {
 			// if there isn't any dependency: it's the "start" of the graph
 			// we can put it into the first batch
 			if len(tool.DependsOn) == 0 {
-				log.Debugf("TOOL %s.%s dependency already solved\n", tool.Name, tool.Plugin)
+				log.Debugf("TOOL %s.%s dependency already solved\n", tool.Name, tool.InstanceID)
 				batch = append(batch, tool)
 			} else {
 				if dependencyResolved(tool, unprocessedNodeSet) {
-					log.Debugf("TOOL %s.%s dependency already solved\n", tool.Name, tool.Plugin)
+					log.Debugf("TOOL %s.%s dependency already solved\n", tool.Name, tool.InstanceID)
 					batch = append(batch, tool)
 				}
 			}

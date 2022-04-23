@@ -1,17 +1,17 @@
 tools:
-- name: go-webapp-repo
-  plugin: github-repo-scaffolding-golang
+- name: github-repo-scaffolding-golang
+  instanceID: default
   options:
     org: [[ githubOrganization ]]
     repo: [[ repoName ]]
     branch: [[ defaultBranch ]]
     image_repo: [[ dockerRegistryUserName ]]/[[ repoName ]]
-- name: golang-demo-actions
-  plugin: githubactions-golang
-  dependsOn: ["go-webapp-repo.github-repo-scaffolding-golang"]
+- name: githubactions-golang
+  instanceID: default
+  dependsOn: ["github-repo-scaffolding-golang.default"]
   options:
-    org: ${{go-webapp-repo.github-repo-scaffolding-golang.outputs.org}}
-    repo: ${{go-webapp-repo.github-repo-scaffolding-golang.outputs.repo}}
+    org: ${{github-repo-scaffolding-golang.default.outputs.org}}
+    repo: ${{github-repo-scaffolding-golang.default.outputs.repo}}
     language:
       name: go
       version: "1.17"
@@ -25,7 +25,7 @@ tools:
     docker:
       enable: True
 - name: argocd
-  plugin: argocd
+  instanceID: default
   options:
     create_namespace: true
     repo:
@@ -38,17 +38,17 @@ tools:
       wait: true
       timeout: [[ argocdDeployTimeout ]]
       upgradeCRDs: true
-- name: go-webapp-argocd-deploy
-  plugin: argocdapp
-  dependsOn: ["argocd.argocd", "go-webapp-repo.github-repo-scaffolding-golang"]
+- name: argocdapp
+  instanceID: default
+  dependsOn: ["argocd.default", "github-repo-scaffolding-golang.default"]
   options:
     app:
-      name: ${{go-webapp-repo.github-repo-scaffolding-golang.outputs.repo}}
+      name: ${{github-repo-scaffolding-golang.default.outputs.repo}}
       namespace: [[ argocdNameSpace ]]
     destination:
       server: https://kubernetes.default.svc
       namespace: default
     source:
       valuefile: values.yaml
-      path: helm/${{go-webapp-repo.github-repo-scaffolding-golang.outputs.repo}}
-      repoURL: ${{go-webapp-repo.github-repo-scaffolding-golang.outputs.repoURL}}
+      path: helm/${{github-repo-scaffolding-golang.default.outputs.repo}}
+      repoURL: ${{github-repo-scaffolding-golang.default.outputs.repoURL}}

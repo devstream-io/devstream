@@ -1,11 +1,12 @@
 package plugin
 
 var GithubActionsNodejsDefaultConfig = `tools:
-- name: nodejs-demo-app
-  # name of the plugin
-  plugin: githubactions-nodejs
-  # optional; if specified, dtm will make sure the dependency is applied first before handling this tool.
-  dependsOn: [ "TOOL1_NAME.TOOL1_PLUGIN", "TOOL2_NAME.TOOL2_PLUGIN" ]
+# name of the tool
+- name: githubactions-nodejs
+  # id of the tool instance
+  instanceID: default
+  # format: name.instanceID; If specified, dtm will make sure the dependency is applied first before handling this tool.
+  dependsOn: []
   # options for the plugin
   options:
     # the repo's owner. It should be case-sensitive here; strictly use your GitHub user name; please change the value below.

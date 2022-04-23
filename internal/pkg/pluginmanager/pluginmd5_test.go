@@ -22,7 +22,7 @@ var _ = Describe("CheckLocalPlugins", func() {
 		BeforeEach(func() {
 			viper.Set("plugin-dir", "./")
 			tools = []configloader.Tool{
-				{Name: "a", Plugin: "a"},
+				{InstanceID: "a", Name: "a"},
 			}
 			config = &configloader.Config{Tools: tools}
 
@@ -45,7 +45,7 @@ var _ = Describe("CheckLocalPlugins", func() {
 			Expect(err).NotTo(HaveOccurred())
 
 			err = CheckLocalPlugins(config)
-			expectErrMsg := fmt.Sprintf("plugin %s doesn't match with .md5", tools[0].Name)
+			expectErrMsg := fmt.Sprintf("plugin %s doesn't match with .md5", tools[0].InstanceID)
 			Expect(err.Error()).To(Equal(expectErrMsg))
 		})
 
@@ -53,7 +53,7 @@ var _ = Describe("CheckLocalPlugins", func() {
 			err = addMD5File(file, fileMD5)
 			Expect(err).NotTo(HaveOccurred())
 
-			err = pluginAndMD5Matches(viper.GetString("plugin-dir"), file, fileMD5, tools[0].Name)
+			err = pluginAndMD5Matches(viper.GetString("plugin-dir"), file, fileMD5, tools[0].InstanceID)
 			Expect(err).NotTo(HaveOccurred())
 		})
 
@@ -61,8 +61,8 @@ var _ = Describe("CheckLocalPlugins", func() {
 			err = createNewFile(fileMD5)
 			Expect(err).NotTo(HaveOccurred())
 
-			err = pluginAndMD5Matches(viper.GetString("plugin-dir"), file, fileMD5, tools[0].Name)
-			expectErrMsg := fmt.Sprintf("plugin %s doesn't match with .md5", tools[0].Name)
+			err = pluginAndMD5Matches(viper.GetString("plugin-dir"), file, fileMD5, tools[0].InstanceID)
+			expectErrMsg := fmt.Sprintf("plugin %s doesn't match with .md5", tools[0].InstanceID)
 			Expect(err.Error()).To(Equal(expectErrMsg))
 		})
 

@@ -5,7 +5,7 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugin/githubactions"
+	ga "github.com/devstream-io/devstream/internal/pkg/plugin/githubactions"
 	"github.com/devstream-io/devstream/pkg/util/github"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
@@ -45,7 +45,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, nil
 	}
 
-	log.Debugf("Language is: %s.", githubactions.GetLanguage(opts.Language))
+	log.Debugf("Language is: %s.", ga.GetLanguage(opts.Language))
 
-	return githubactions.BuildReadState(path), nil
+	return ga.BuildReadState(path), nil
 }

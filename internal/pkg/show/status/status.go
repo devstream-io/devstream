@@ -56,8 +56,8 @@ func showAll(smgr statemanager.Manager) error {
 	var retErrs = make([]string, 0)
 	for i, state := range stateList {
 		fmt.Printf("================= %d/%d =================\n\n", i+1, len(stateList))
-		if err := showOne(smgr, state.Name, state.Plugin); err != nil {
-			fmt.Printf("Failed to show the status with %s.%s.", state.Name, state.Plugin)
+		if err := showOne(smgr, state.InstanceID, state.Name); err != nil {
+			fmt.Printf("Failed to show the status with %s.%s.", state.InstanceID, state.Name)
 			retErrs = append(retErrs, err.Error())
 			// the "continue" here is used to tell you we don't need to return when ONE plugin show failed
 			continue
@@ -81,10 +81,10 @@ func showOne(smgr statemanager.Manager, name, plugin string) error {
 
 	// get state from read
 	tool := &configloader.Tool{
-		Name:      name,
-		Plugin:    plugin,
-		DependsOn: state.DependsOn,
-		Options:   state.Options,
+		InstanceID: name,
+		Name:       plugin,
+		DependsOn:  state.DependsOn,
+		Options:    state.Options,
 	}
 	stateFromRead, err := pluginengine.Read(tool)
 	if err != nil {

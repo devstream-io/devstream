@@ -1,11 +1,12 @@
 package plugin
 
 var GitlabCIGenericDefaultConfig = `tools:
-- name: myapp-ci
-  # name of the plugin
-  plugin: gitlabci-generic
-  # optional; if specified, dtm will make sure the dependency is applied first before handling this tool.
-  dependsOn: [ "TOOL1_NAME.TOOL1_PLUGIN", "TOOL2_NAME.TOOL2_PLUGIN" ]
+# name of the tool
+- name: gitlabci-generic
+  # id of the tool instance
+  instanceID: default
+  # format: name.instanceID; If specified, dtm will make sure the dependency is applied first before handling this tool.
+  dependsOn: []
   # options for the plugin
   options:
     # owner/repo; "path with namespace" is only GitLab API's way of saying the same thing; please change the values below.
