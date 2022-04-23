@@ -64,7 +64,7 @@ func topologicalSort(tools []configloader.Tool) ([][]configloader.Tool, error) {
 				}
 			}
 		}
-		log.Debugf("BATCH: %s", batch)
+		log.Debugf("BATCH: %v", batch)
 
 		// there are still nodes unprocessed but there is no node whose dependency is solved
 		// this means there might be a loop in the graph
