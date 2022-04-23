@@ -9,6 +9,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v2
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.17
     - name: Build
       run: [[- if not .Build.Command]] go build ./...[[- else]] [[.Build.Command]][[- end]]
   [[- else]]
@@ -82,6 +87,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v2
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.17
     - name: Build
       run: [[- if not .Build.Command]] go build ./...[[- else]] [[.Build.Command]][[- end]]
   [[- else]]
