@@ -137,3 +137,7 @@ vault-1                              1/1     Running   0          2m29s
 vault-2                              1/1     Running   0          2m29s
 vault-agent-injector-68dc986-bnsj2   1/1     Running   0          2m28s
 ```
+7. After these above operations, you will want to use vault to write/read/delete secrets, how to do this?
+   You should follow the hashicorp vault documentation:
+ - https://learn.hashicorp.com/tutorials/vault/kubernetes-minikube?in=vault/kubernetes#set-a-secret-in-vault
+ - https://learn.hashicorp.com/tutorials/vault/getting-started-first-secret
