@@ -39,7 +39,7 @@ tools:
         profile: "-race -covermode=atomic"
         output: "coverage.out"
     docker:
-      enable: False
+      enable: True
       repo: ${{github-repo-scaffolding-golang.default.outputs.repo}}
 - name: argocd
   instanceID: default
