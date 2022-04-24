@@ -1,9 +1,9 @@
-package vault
+package hashicorpvault
 
 import "github.com/devstream-io/devstream/pkg/util/helm"
 
 var DefaultDeploymentList = []string{
-	"vault-agent-injector",
+	"hashicorpvault-agent-injector",
 }
 
 func GetStaticState() *helm.InstanceState {

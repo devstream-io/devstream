@@ -1,4 +1,4 @@
-package vault
+package hashicorpvault
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-// Create creates vault with provided options.
+// Create creates hashicorpvault with provided options.
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	// 1. decode options
 	var opts Options

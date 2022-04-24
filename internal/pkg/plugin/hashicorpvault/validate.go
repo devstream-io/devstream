@@ -1,4 +1,4 @@
-package vault
+package hashicorpvault
 
 import (
 	. "github.com/devstream-io/devstream/internal/pkg/plugin/common/helm"

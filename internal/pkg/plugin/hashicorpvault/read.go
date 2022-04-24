@@ -1,4 +1,4 @@
-package vault
+package hashicorpvault
 
 import (
 	"fmt"
@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	DefaultNamespace = "devstream-vault-test1"
+	DefaultNamespace = "devstream-hashicorpvault-test1"
 )
 
 func Read(options map[string]interface{}) (map[string]interface{}, error) {
