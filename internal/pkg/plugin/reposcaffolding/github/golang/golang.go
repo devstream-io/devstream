@@ -5,7 +5,6 @@ import (
 	"io/fs"
 	"io/ioutil"
 	"path/filepath"
-	"regexp"
 	"strings"
 
 	rs "github.com/devstream-io/devstream/internal/pkg/plugin/common/reposcaffolding"
@@ -121,21 +120,6 @@ func mergeCommits(ghClient *github.Client, mainBranch string) error {
 	}
 
 	return ghClient.MergePullRequest(number, github.MergeMethodSquash)
-}
-
-func replaceAppNameInPathStr(filePath, appName string) (string, error) {
-	log.Debugf("Got filePath %s.", filePath)
-
-	pet := "_app_name_"
-	reg, err := regexp.Compile(pet)
-	if err != nil {
-		return "", err
-	}
-	newFilePath := reg.ReplaceAllString(filePath, appName)
-
-	log.Debugf("New filePath: \"%s\".", newFilePath)
-
-	return newFilePath, nil
 }
 
 func getMainBranchName(opts *rs.Options) string {
