@@ -70,8 +70,8 @@ func getChanges(smgr statemanager.Manager, cfg *configloader.Config, commandType
 	}
 
 	log.Debugf("Changes for the plan:")
-	for _, c := range changes {
-		log.Debugf(c.String())
+	for i, c := range changes {
+		log.Debugf("Change - %d/%d -> %s", i+1, len(changes), c.String())
 	}
 
 	return changes, nil
@@ -86,7 +86,7 @@ func execute(smgr statemanager.Manager, changes []*Change) map[string]error {
 
 	for i, c := range changes {
 		log.Separatorf("Processing progress: %d/%d.", i+1, numOfChanges)
-		log.Infof("Processing: %s (%s) -> %s ...", c.Tool.Name, c.Tool.InstanceID, c.ActionName)
+		log.Infof("Processing: (%s/%s) -> %s ...", c.Tool.Name, c.Tool.InstanceID, c.ActionName)
 
 		var succeeded bool
 		var err error
@@ -101,7 +101,7 @@ func execute(smgr statemanager.Manager, changes []*Change) map[string]error {
 			for _, e := range errs {
 				log.Errorf("Error: %s.", e)
 			}
-			log.Errorf("The outputs reference in tool %s (%s) can't be resolved. Please double check your config.", c.Tool.Name, c.Tool.InstanceID)
+			log.Errorf("The outputs reference in tool (%s/%s) can't be resolved. Please double check your config.", c.Tool.Name, c.Tool.InstanceID)
 
 			// not executing this change since its input isn't valid
 			continue
@@ -144,9 +144,9 @@ func execute(smgr statemanager.Manager, changes []*Change) map[string]error {
 
 // handleResult is used to Write the latest StatesMap to the Backend.
 func handleResult(smgr statemanager.Manager, change *Change) error {
-	log.Debugf("Start: \n%s", string(smgr.GetStatesMap().Format()))
+	log.Debugf("Start -> StatesMap now is:\n%s", string(smgr.GetStatesMap().Format()))
 	defer func() {
-		log.Debugf("End:\n%s", string(smgr.GetStatesMap().Format()))
+		log.Debugf("End -> StatesMap now is:\n%s", string(smgr.GetStatesMap().Format()))
 	}()
 
 	if !change.Result.Succeeded {
@@ -162,7 +162,7 @@ func handleResult(smgr statemanager.Manager, change *Change) error {
 			log.Debugf("Failed to delete state %s: %s.", key, err)
 			return err
 		}
-		log.Successf("Tool %s (%s) delete done.", change.Tool.Name, change.Tool.InstanceID)
+		log.Successf("Tool (%s/%s) delete done.", change.Tool.Name, change.Tool.InstanceID)
 		return nil
 	}
 
@@ -179,6 +179,6 @@ func handleResult(smgr statemanager.Manager, change *Change) error {
 		log.Debugf("Failed to add state %s: %s.", key, err)
 		return err
 	}
-	log.Successf("Tool %s(%s) %s done.", change.Tool.Name, change.Tool.InstanceID, change.ActionName)
+	log.Successf("Tool (%s/%s) %s done.", change.Tool.Name, change.Tool.InstanceID, change.ActionName)
 	return nil
 }

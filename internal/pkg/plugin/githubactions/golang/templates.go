@@ -9,6 +9,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v2
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.17
     - name: Build
       run: [[- if not .Build.Command]] go build ./...[[- else]] [[.Build.Command]][[- end]]
   [[- else]]
@@ -62,14 +67,14 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@v1
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          username: [[.Docker.Registry.Username]]
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/[[- if not .Docker.Repo]][[.Repo]][[- else]][[.Docker.Repo]][[- end]]:${{needs.tag.outputs.new_tag}}
+          tags: [[.Docker.Registry.Username]]/[[- if not .Docker.Registry.Repository]][[.Repo]][[- else]][[.Docker.Registry.Repository]][[- end]]:${{needs.tag.outputs.new_tag}}
   [[- end]]
 `
 
@@ -82,6 +87,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v2
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.17
     - name: Build
       run: [[- if not .Build.Command]] go build ./...[[- else]] [[.Build.Command]][[- end]]
   [[- else]]
@@ -142,13 +152,13 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@v1
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          username: [[.Docker.Registry.Username]]
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/[[- if not .Docker.Repo]][[.Repo]][[- else]][[.Docker.Repo]][[- end]]:${{needs.tag.outputs.new_tag}}
+          tags: [[.Docker.Registry.Username]]/[[- if not .Docker.Registry.Repository]][[.Repo]][[- else]][[.Docker.Registry.Repository]][[- end]]:${{needs.tag.outputs.new_tag}}
   [[- end]]
 `
