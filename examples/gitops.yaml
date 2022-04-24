@@ -40,7 +40,10 @@ tools:
         output: "coverage.out"
     docker:
       enable: True
-      repo: ${{github-repo-scaffolding-golang.default.outputs.repo}}
+      registry:
+        type: dockerhub
+        username: [[ dockerhubUsername ]]
+        repository: ${{github-repo-scaffolding-golang.default.outputs.repo}}
 - name: argocd
   instanceID: default
   options:

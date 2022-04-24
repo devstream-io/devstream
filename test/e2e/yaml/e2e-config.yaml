@@ -24,6 +24,9 @@ tools:
         enable: True
     docker:
       enable: True
+      registry:
+        type: dockerhub
+        username: dtme2etest
 - name: argocd
   instanceID: default
   options:
