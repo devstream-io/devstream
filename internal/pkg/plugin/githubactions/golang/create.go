@@ -41,10 +41,12 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 
 	// if docker is enabled, create repo secrets for DOCKERHUB_USERNAME and DOCKERHUB_TOKEN
 	if opts.Docker != nil && opts.Docker.Enable {
-		if err := ghClient.AddRepoSecret("DOCKERHUB_USERNAME", viper.GetString("dockerhub_username")); err != nil {
-			return nil, err
+		dockerhubToken := viper.GetString("dockerhub_token")
+		if dockerhubToken == "" {
+			return nil, fmt.Errorf("DockerHub Token is empty")
 		}
-		if err := ghClient.AddRepoSecret("DOCKERHUB_TOKEN", viper.GetString("dockerhub_token")); err != nil {
+
+		if err := ghClient.AddRepoSecret("DOCKERHUB_TOKEN", dockerhubToken); err != nil {
 			return nil, err
 		}
 	}

@@ -41,5 +41,10 @@ var GithubActionsGolangDefaultConfig = `tools:
     docker:
       # docker build/push related, default to false
       enable: True
-      # dockerhub image repo; please change the value below.
-      repo: YOUR_DOCKERHUB_REPOSITORY`
+      registry:
+        # dockerhub or harbor, default to dockerhub
+        type: dockerhub
+        # dockerhub/harbor username
+        username: YOUR_DOCKERHUB_USERNAME
+        # dockerhub/harbor image repository name
+        repository: YOUR_DOCKERHUB_REPOSITORY`
