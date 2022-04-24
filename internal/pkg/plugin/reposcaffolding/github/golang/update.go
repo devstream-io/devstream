@@ -5,17 +5,18 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
+	rs "github.com/devstream-io/devstream/internal/pkg/plugin/common/reposcaffolding"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 // Update re-installs github-repo-scaffolding-golang with provided options.
 func Update(options map[string]interface{}) (map[string]interface{}, error) {
-	var opts Options
+	var opts rs.Options
 	if err := mapstructure.Decode(options, &opts); err != nil {
 		return nil, err
 	}
 
-	if errs := validate(&opts); len(errs) != 0 {
+	if errs := rs.Validate(&opts); len(errs) != 0 {
 		for _, e := range errs {
 			log.Errorf("Options error: %s.", e)
 		}
