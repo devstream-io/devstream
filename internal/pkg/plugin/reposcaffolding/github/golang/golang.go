@@ -123,16 +123,6 @@ func mergeCommits(ghClient *github.Client, mainBranch string) error {
 	return ghClient.MergePullRequest(number, github.MergeMethodSquash)
 }
 
-func genPathForGithub(filePath string) (string, error) {
-	splitStrs := strings.SplitN(filePath, "/", 3)
-	if len(splitStrs) != 3 {
-		return "", fmt.Errorf("unknown format: %s", filePath)
-	}
-	retStr := splitStrs[2]
-	log.Debugf("Path for github: %s.", retStr)
-	return retStr, nil
-}
-
 func replaceAppNameInPathStr(filePath, appName string) (string, error) {
 	log.Debugf("Got filePath %s.", filePath)
 
