@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	DefaultNamespace = "devstream-hashicorpvault-test1"
+	DefaultNamespace = "hashicorp"
 )
 
 func Read(options map[string]interface{}) (map[string]interface{}, error) {

@@ -11,22 +11,22 @@ const NAME = "hashicorp-vault"
 // Plugin is the type used by DevStream core. It's a string.
 type Plugin string
 
-// Create implements the create of vault.
+// Create implements the create of hashicorp-vault.
 func (p Plugin) Create(options map[string]interface{}) (map[string]interface{}, error) {
 	return hashicorpvault.Create(options)
 }
 
-// Update implements the update of vault.
+// Update implements the update of hashicorp-vault.
 func (p Plugin) Update(options map[string]interface{}) (map[string]interface{}, error) {
 	return hashicorpvault.Update(options)
 }
 
-// Delete implements the delete of vault.
+// Delete implements the delete of hashicorp-vault.
 func (p Plugin) Delete(options map[string]interface{}) (bool, error) {
 	return hashicorpvault.Delete(options)
 }
 
-// Read implements the read of vault.
+// Read implements the read of hashicorp-vault.
 func (p Plugin) Read(options map[string]interface{}) (map[string]interface{}, error) {
 	return hashicorpvault.Read(options)
 }
