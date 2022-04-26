@@ -2,9 +2,9 @@ package reposcaffolding
 
 import "github.com/devstream-io/devstream/pkg/util/github"
 
-func download(owner, repo, workpath string) error {
+func download(org, repo, workpath string) error {
 	ghOption := &github.Option{
-		Owner:    owner,
+		Org:      org,
 		Repo:     repo,
 		NeedAuth: false,
 		WorkPath: workpath,

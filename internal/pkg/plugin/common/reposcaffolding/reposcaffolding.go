@@ -10,7 +10,7 @@ import (
 
 const (
 	TemplateRepo       = "dtm-scaffolding-golang"
-	TemplateOwner      = "devstream-io"
+	TemplateOrg        = "devstream-io"
 	TransitBranch      = "init-with-devstream"
 	MainBranch         = "main"
 	AppNamePlaceHolder = "_app_name_"
@@ -39,7 +39,7 @@ func CreateAndRenderLocalRepo(workpath string, opts *Options) error {
 		return err
 	}
 
-	if err := download(TemplateOwner, TemplateRepo, workpath); err != nil {
+	if err := download(TemplateOrg, TemplateRepo, workpath); err != nil {
 		return err
 	}
 

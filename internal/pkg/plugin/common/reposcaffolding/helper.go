@@ -92,8 +92,8 @@ func render(filePath, output string, opts *Options) error {
 	}
 
 	log.Debugf("Render filePath: %s.", filePath)
-	log.Debugf("Render config: %v", config)
-	log.Debugf("Render output: %s", output)
+	log.Debugf("Render config: %v.", config)
+	log.Debugf("Render output: %s.", output)
 
 	textBytes, err := ioutil.ReadFile(filePath)
 	if err != nil {
