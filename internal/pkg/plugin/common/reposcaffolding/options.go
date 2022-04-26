@@ -1,9 +1,17 @@
-package golang
+package reposcaffolding
 
 import "fmt"
 
-// validate validates the options provided by the core.
-func validate(opts *Options) []error {
+type Options struct {
+	Owner     string
+	Org       string
+	Repo      string
+	Branch    string
+	ImageRepo string `mapstructure:"image_repo"`
+}
+
+// Validate validates the options provided by the core.
+func Validate(opts *Options) []error {
 	retErrors := make([]error, 0)
 
 	// owner/org/repo/branch

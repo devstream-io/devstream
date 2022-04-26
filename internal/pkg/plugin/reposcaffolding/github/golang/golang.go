@@ -1,25 +1,21 @@
 package golang
 
 import (
-	"bytes"
 	"fmt"
 	"io/fs"
 	"io/ioutil"
 	"path/filepath"
-	"regexp"
 	"strings"
-	"text/template"
 
+	rs "github.com/devstream-io/devstream/internal/pkg/plugin/common/reposcaffolding"
 	"github.com/devstream-io/devstream/pkg/util/github"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 const (
-	DefaultWorkPath      = ".github-repo-scaffolding-golang"
-	DefaultTemplateRepo  = "dtm-scaffolding-golang"
-	DefaultTemplateOwner = "devstream-io"
-	TransitBranch        = "init-with-devstream"
-	DefaultMainBranch    = "main"
+	DefaultWorkPath   = ".github-repo-scaffolding-golang"
+	TransitBranch     = "init-with-devstream"
+	DefaultMainBranch = "main"
 )
 
 type Config struct {
@@ -33,7 +29,18 @@ type Repo struct {
 	Owner string
 }
 
-func InitRepoLocalAndPushToRemote(repoPath string, opts *Options, ghClient *github.Client) error {
+func pushToRemote(repoPath string, opts *rs.Options) error {
+	ghOptions := &github.Option{
+		Owner:    opts.Owner,
+		Org:      opts.Org,
+		Repo:     opts.Repo,
+		NeedAuth: true,
+	}
+	ghClient, err := github.NewClient(ghOptions)
+	if err != nil {
+		return err
+	}
+
 	var retErr error
 	// It's ok to give the opts.Org to CreateRepo() when create a repository for a authenticated user.
 	if err := ghClient.CreateRepo(opts.Org); err != nil {
@@ -52,13 +59,13 @@ func InitRepoLocalAndPushToRemote(repoPath string, opts *Options, ghClient *gith
 		}
 	}()
 
-	if retErr = WalkLocalRepoPath(repoPath, opts, ghClient); retErr != nil {
+	if retErr = walkLocalRepoPath(repoPath, opts, ghClient); retErr != nil {
 		log.Debugf("Failed to walk local repo-path: %s.", retErr)
 		return retErr
 	}
 
 	mainBranch := getMainBranchName(opts)
-	if retErr = MergeCommits(ghClient, mainBranch); retErr != nil {
+	if retErr = mergeCommits(ghClient, mainBranch); retErr != nil {
 		log.Debugf("Failed to merge commits: %s.", retErr)
 		return retErr
 	}
@@ -66,8 +73,7 @@ func InitRepoLocalAndPushToRemote(repoPath string, opts *Options, ghClient *gith
 	return nil
 }
 
-func WalkLocalRepoPath(repoPath string, opts *Options, ghClient *github.Client) error {
-	appName := opts.Repo
+func walkLocalRepoPath(repoPath string, opts *rs.Options, ghClient *github.Client) error {
 	mainBranch := getMainBranchName(opts)
 
 	if err := filepath.Walk(repoPath, func(path string, info fs.FileInfo, err error) error {
@@ -80,52 +86,26 @@ func WalkLocalRepoPath(repoPath string, opts *Options, ghClient *github.Client) 
 			log.Debugf("Found dir: %s.", path)
 			return nil
 		}
+
 		log.Debugf("Found file: %s.", path)
 
-		if strings.Contains(path, ".git/") {
-			log.Debugf("Ignore this file -> %s.", "./git/xxx")
-			return nil
-		}
-
-		if strings.HasSuffix(path, "README.md") {
-			log.Debugf("Ignore this file -> %s.", "README.md")
-			return nil
-		}
-
-		pathForGithub, err := genPathForGithub(path)
+		content, err := ioutil.ReadFile(path)
 		if err != nil {
 			return err
 		}
 
-		var content []byte
-		if strings.Contains(path, "tpl") {
-			content, err = Render(path, opts)
+		githubPath := strings.Join(strings.Split(path, "/")[2:], "/")
+		// the main branch needs a initial commit
+		if strings.Contains(path, "gitignore") {
+			err := ghClient.CreateFile(content, githubPath, mainBranch)
 			if err != nil {
+				log.Debugf("Failed to add the .gitignore file: %s.", err)
 				return err
 			}
-		} else {
-			content, err = ioutil.ReadFile(path)
-			if err != nil {
-				return err
-			}
+			log.Debugf("Added the .gitignore file.")
+			return ghClient.NewBranch(mainBranch, TransitBranch)
 		}
-		log.Debugf("Content size: %d", len(content))
-
-		if newPathForGithub, err := replaceAppNameInPathStr(pathForGithub, appName); err != nil {
-			return err
-		} else {
-			// the main branch needs a initial commit
-			if strings.Contains(newPathForGithub, "gitignore") {
-				err := ghClient.CreateFile(content, strings.TrimSuffix(newPathForGithub, ".tpl"), mainBranch)
-				if err != nil {
-					log.Debugf("Failed to add the .gitignore file: %s.", err)
-					return err
-				}
-				log.Debugf("Added the .gitignore file.")
-				return ghClient.NewBranch(mainBranch, TransitBranch)
-			}
-			return ghClient.CreateFile(content, strings.TrimSuffix(newPathForGithub, ".tpl"), TransitBranch)
-		}
+		return ghClient.CreateFile(content, githubPath, TransitBranch)
 	}); err != nil {
 		return err
 	}
@@ -133,7 +113,7 @@ func WalkLocalRepoPath(repoPath string, opts *Options, ghClient *github.Client) 
 	return nil
 }
 
-func MergeCommits(ghClient *github.Client, mainBranch string) error {
+func mergeCommits(ghClient *github.Client, mainBranch string) error {
 	number, err := ghClient.NewPullRequest(TransitBranch, mainBranch)
 	if err != nil {
 		return err
@@ -142,71 +122,14 @@ func MergeCommits(ghClient *github.Client, mainBranch string) error {
 	return ghClient.MergePullRequest(number, github.MergeMethodSquash)
 }
 
-func Render(filePath string, opts *Options) ([]byte, error) {
-	var owner = opts.Owner
-	if opts.Org != "" {
-		owner = opts.Org
+func getMainBranchName(opts *rs.Options) string {
+	if opts.Branch == "" {
+		return DefaultMainBranch
 	}
-
-	config := Config{
-		AppName:   opts.Repo,
-		ImageRepo: opts.ImageRepo,
-		Repo: Repo{
-			Name:  opts.Repo,
-			Owner: owner,
-		},
-	}
-	log.Debugf("FilePath: %s.", filePath)
-	log.Debugf("Config %v", config)
-
-	textBytes, err := ioutil.ReadFile(filePath)
-	if err != nil {
-		return nil, err
-	}
-	textStr := string(textBytes)
-
-	tpl := template.New("github-repo-scaffolding-golang").Delims("[[", "]]")
-	parsed, err := tpl.Parse(textStr)
-	if err != nil {
-		log.Debugf("Template parse file failed: %s.", err)
-		return nil, err
-	}
-
-	var buf bytes.Buffer
-	if err = parsed.Execute(&buf, config); err != nil {
-		log.Debugf("Template execute failed: %s.", err)
-		return nil, err
-	}
-
-	return buf.Bytes(), nil
+	return opts.Branch
 }
 
-func genPathForGithub(filePath string) (string, error) {
-	splitStrs := strings.SplitN(filePath, "/", 3)
-	if len(splitStrs) != 3 {
-		return "", fmt.Errorf("unknown format: %s", filePath)
-	}
-	retStr := splitStrs[2]
-	log.Debugf("Path for github: %s.", retStr)
-	return retStr, nil
-}
-
-func replaceAppNameInPathStr(filePath, appName string) (string, error) {
-	log.Debugf("Got filePath %s.", filePath)
-
-	pet := "_app_name_"
-	reg, err := regexp.Compile(pet)
-	if err != nil {
-		return "", err
-	}
-	newFilePath := reg.ReplaceAllString(filePath, appName)
-
-	log.Debugf("New filePath: \"%s\".", newFilePath)
-
-	return newFilePath, nil
-}
-
-func buildState(opts *Options) map[string]interface{} {
+func buildState(opts *rs.Options) map[string]interface{} {
 	res := make(map[string]interface{})
 	res["owner"] = opts.Owner
 	res["org"] = opts.Org
@@ -224,11 +147,4 @@ func buildState(opts *Options) map[string]interface{} {
 	res["outputs"] = outputs
 
 	return res
-}
-
-func getMainBranchName(opts *Options) string {
-	if opts.Branch == "" {
-		return DefaultMainBranch
-	}
-	return opts.Branch
 }

@@ -5,18 +5,19 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
+	rs "github.com/devstream-io/devstream/internal/pkg/plugin/common/reposcaffolding"
 	"github.com/devstream-io/devstream/pkg/util/github"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 // Delete uninstalls github-repo-scaffolding-golang with provided options.
 func Delete(options map[string]interface{}) (bool, error) {
-	var opts Options
+	var opts rs.Options
 	if err := mapstructure.Decode(options, &opts); err != nil {
 		return false, err
 	}
 
-	if errs := validate(&opts); len(errs) != 0 {
+	if errs := rs.Validate(&opts); len(errs) != 0 {
 		for _, e := range errs {
 			log.Errorf("Options error: %s.", e)
 		}
@@ -26,7 +27,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 	return uninstall(&opts)
 }
 
-func uninstall(opts *Options) (bool, error) {
+func uninstall(opts *rs.Options) (bool, error) {
 	ghOptions := &github.Option{
 		Owner:    opts.Owner,
 		Org:      opts.Org,
