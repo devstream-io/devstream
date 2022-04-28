@@ -68,7 +68,7 @@ func pushToRemote(repoPath string, opts *rs.Options) error {
 func walkLocalRepoPath(repoPath string, opts *rs.Options, c *gitlab.Client) error {
 	mainBranch := getMainBranchName(opts)
 
-	var files = make(map[string][]byte, 0)
+	var files = make(map[string][]byte)
 
 	if err := filepath.Walk(repoPath, func(path string, info fs.FileInfo, err error) error {
 		if err != nil {
