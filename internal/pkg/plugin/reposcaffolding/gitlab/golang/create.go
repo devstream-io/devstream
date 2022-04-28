@@ -11,7 +11,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-// Create installs github-repo-scaffolding-golang with provided options.
+// Create installs gitlab-repo-scaffolding-golang with provided options.
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	var opts rs.Options
 	if err := mapstructure.Decode(options, &opts); err != nil {

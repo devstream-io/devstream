@@ -9,7 +9,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-// Update re-installs github-repo-scaffolding-golang with provided options.
+// Update re-installs gitlab-repo-scaffolding-golang with provided options.
 func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	var opts rs.Options
 	if err := mapstructure.Decode(options, &opts); err != nil {

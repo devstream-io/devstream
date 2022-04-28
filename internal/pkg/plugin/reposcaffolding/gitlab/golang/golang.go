@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	DefaultWorkPath      = ".github-repo-scaffolding-golang"
+	DefaultWorkPath      = ".gitlab-repo-scaffolding-golang"
 	TransitBranch        = "init-with-devstream"
 	DefaultMainBranch    = "main"
 	DefaultCommitMessage = "initialized by DevStream"
