@@ -11,22 +11,22 @@ const NAME = "helm-generic"
 // Plugin is the type used by DevStream core. It's a string.
 type Plugin string
 
-// Create implements the create of helmgeneric.
+// Create implements the create of helm-generic.
 func (p Plugin) Create(options map[string]interface{}) (map[string]interface{}, error) {
 	return helmgeneric.Create(options)
 }
 
-// Update implements the update of helmgeneric.
+// Update implements the update of helm-generic.
 func (p Plugin) Update(options map[string]interface{}) (map[string]interface{}, error) {
 	return helmgeneric.Update(options)
 }
 
-// Delete implements the delete of helmgeneric.
+// Delete implements the delete of helm-generic.
 func (p Plugin) Delete(options map[string]interface{}) (bool, error) {
 	return helmgeneric.Delete(options)
 }
 
-// Read implements the read of helmgeneric.
+// Read implements the read of helm-generic.
 func (p Plugin) Read(options map[string]interface{}) (map[string]interface{}, error) {
 	return helmgeneric.Read(options)
 }
