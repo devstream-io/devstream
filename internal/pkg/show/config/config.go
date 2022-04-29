@@ -25,6 +25,7 @@ var pluginDefaultConfigs = map[string]string{
 	"trello-github-integ":            plugin.TrelloGithubDefaultConfig,
 	"trello":                         plugin.TrelloDefaultConfig,
 	"gitlab-repo-scaffolding-golang": plugin.GitLabRepoScaffoldingGolangDefaultConfig,
+	"hashicorp-vault":                plugin.VaultDefaultConfig,
 }
 
 func Show() error {
