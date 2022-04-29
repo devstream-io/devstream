@@ -24,7 +24,8 @@ var pluginDefaultConfigs = map[string]string{
 	"openldap":                       plugin.OpenldapDefaultConfig,
 	"trello-github-integ":            plugin.TrelloGithubDefaultConfig,
 	"trello":                         plugin.TrelloDefaultConfig,
-	"helmgeneric":                    plugin.HelmGenericDefaultConfig,
+	"helm-generic":                   plugin.HelmGenericDefaultConfig,
+	"hashicorp-vault":                plugin.VaultDefaultConfig,
 }
 
 func Show() error {
