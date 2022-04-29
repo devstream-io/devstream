@@ -34,4 +34,4 @@ var HelmGenericDefaultConfig = `tools:
       values_yaml: |
         controller:
           service: 
-            port: 8080
+            port: 8080`
