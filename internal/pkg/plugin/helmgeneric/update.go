@@ -28,7 +28,7 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	}
 
 	// 3. fill the return map
-	retMap := GetStaticState(opts.DeploymentList).ToStringInterfaceMap()
+	retMap := make(map[string]interface{})
 	log.Debugf("Return map: %v", retMap)
 
 	return nil, nil

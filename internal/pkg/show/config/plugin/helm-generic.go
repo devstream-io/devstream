@@ -35,5 +35,3 @@ var HelmGenericDefaultConfig = `tools:
         controller:
           service: 
             port: 8080
-    # needed deployments for validation
-    deploymentList: ["argocd-applicationset-controller","argocd-dex-server","argocd-notifications-controller","argocd-redis","argocd-repo-server","argocd-server"]`

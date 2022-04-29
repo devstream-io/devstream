@@ -4,11 +4,8 @@ import (
 	"fmt"
 
 	"github.com/mitchellh/mapstructure"
-	"k8s.io/utils/strings/slices"
 
 	. "github.com/devstream-io/devstream/internal/pkg/plugin/common/helm"
-	"github.com/devstream-io/devstream/pkg/util/helm"
-	"github.com/devstream-io/devstream/pkg/util/k8s"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -25,30 +22,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, fmt.Errorf("opts are illegal")
 	}
 
-	kubeClient, err := k8s.NewClient()
-	if err != nil {
-		return nil, err
-	}
-
-	dps, err := kubeClient.ListDeployments(opts.Chart.Namespace)
-	if err != nil {
-		return nil, err
-	}
-
-	retState := &helm.InstanceState{}
-	for _, dp := range dps {
-		dpName := dp.GetName()
-		if !slices.Contains(opts.DeploymentList, dpName) {
-			log.Infof("Found unknown deployment: %s.", dpName)
-		}
-
-		ready := kubeClient.IsDeploymentReady(&dp)
-		retState.Workflows.AddDeployment(dpName, ready)
-		log.Debugf("The deployment %s is %t.", dp.GetName(), ready)
-	}
-
-	retMap := retState.ToStringInterfaceMap()
-	log.Debugf("Return map: %v.", retMap)
+	retMap := make(map[string]interface{})
 
 	return retMap, nil
 }
