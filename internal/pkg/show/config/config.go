@@ -24,6 +24,7 @@ var pluginDefaultConfigs = map[string]string{
 	"openldap":                       plugin.OpenldapDefaultConfig,
 	"trello-github-integ":            plugin.TrelloGithubDefaultConfig,
 	"trello":                         plugin.TrelloDefaultConfig,
+	"gitlab-repo-scaffolding-golang": plugin.GitLabRepoScaffoldingGolangDefaultConfig,
 	"hashicorp-vault":                plugin.VaultDefaultConfig,
 }
 
