@@ -25,6 +25,7 @@ var pluginDefaultConfigs = map[string]string{
 	"trello-github-integ":            plugin.TrelloGithubDefaultConfig,
 	"trello":                         plugin.TrelloDefaultConfig,
 	"helm-generic":                   plugin.HelmGenericDefaultConfig,
+	"gitlab-repo-scaffolding-golang": plugin.GitLabRepoScaffoldingGolangDefaultConfig,
 	"hashicorp-vault":                plugin.VaultDefaultConfig,
 }
 
