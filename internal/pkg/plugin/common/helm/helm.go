@@ -23,7 +23,6 @@ type Options struct {
 	CreateNamespace bool `mapstructure:"create_namespace"`
 	Repo            helm.Repo
 	Chart           helm.Chart
-	DeploymentList  []string `mapstructure:"deploymentList"`
 }
 
 func (opts *Options) GetHelmParam() *helm.HelmParam {
