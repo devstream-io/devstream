@@ -2,8 +2,6 @@ name: automated release
 on:
   release:
     types: [published]
-  push:
-    branches: [ main ]
 jobs:
   # release for linux
 #  build-and-release-on-linux:
