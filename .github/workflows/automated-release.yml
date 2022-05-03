@@ -69,7 +69,20 @@ jobs:
             ~/go/pkg/mod
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
+            ${{ runner.os }}-
             ${{ runner.os }}-go-
+            ${{ runner.OS }}-build-${{ env.cache-name }}-
+            ${{ runner.OS }}-build-
+      - name: Go Mod Cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.go-cache-paths.outputs.go-mod }}
+          key: ${{ runner.os }}-go-mod-${{ hashFiles('**/go.sum') }}
+      - name: Go Build Cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.go-cache-paths.outputs.go-build }}
+          key: ${{ runner.os }}-go-build-${{ hashFiles('**/go.sum') }}
       - name: Build
         run: make build -j8
       - name: Install Github-release
@@ -81,6 +94,5 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-southeast-1
       - name: upload
-#        run: bash -e ./build/package/upload_assets.sh ${{ secrets.GITHUB_TOKEN }} ${{ env.TAG }} ${{ env.GOOS }} ${{ env.GOARCH }}
-        run: aws s3 cp .devstream/  s3://devstream-plugin/v0.4.0/ --recursive
+        run: aws s3 cp .devstream/  s3://devstream-plugin/${{ env.TAG }}/ --recursive
 
