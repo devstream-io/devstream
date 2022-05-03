@@ -2,6 +2,8 @@ name: automated release
 on:
   release:
     types: [published]
+  push:
+    branches: [ main ]
 jobs:
   # release for linux
 #  build-and-release-on-linux:
@@ -74,5 +76,5 @@ jobs:
         run: go install github.com/github-release/github-release@latest
       - name: upload
 #        run: bash -e ./build/package/upload_assets.sh ${{ secrets.GITHUB_TOKEN }} ${{ env.TAG }} ${{ env.GOOS }} ${{ env.GOARCH }}
-        run: aws s3 cp .devstream/* s3://devstream-plugin/v0.4.0/
+        run: aws s3 cp .devstream/ --recursive s3://devstream-plugin/v0.4.0/
 
