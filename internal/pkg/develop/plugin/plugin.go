@@ -171,15 +171,15 @@ func (p *Plugin) ValidateFiles(files []pluginTpl.File) error {
 }
 
 // validateFile gets the *pluginTpl.File, then do the following:
-// 1. verify the existence of file.Dir
-// 2. verify the existence of File.Name file
-// 3. write the File.Content into the File.Name file
+// 1. if !MustExistFlag, continue
+// 2. verify the existence of file.Dir
+// 3. verify the existence of File.Name file
 func (p *Plugin) validateFile(file *pluginTpl.File) error {
-	// verify the existence of file.Dir
 	if !file.MustExistFlag {
-		log.Debugf("MustExistFlag is not true, no validation: %s/%s.", file.Dir, file.Name)
+		log.Debugf("MustExistFlag is not true, no validation: %s%s.", file.Dir, file.Name)
 		return nil
 	}
+	// verify the existence of file.Dir
 	if _, err := os.Stat(file.Dir); err != nil {
 		log.Debugf("Directory does not exist: %s.", file.Dir)
 		return err
