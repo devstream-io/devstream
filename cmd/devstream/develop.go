@@ -16,7 +16,8 @@ var developCMD = &cobra.Command{
 	Short: "Develop is used for develop a new plugin",
 	Long: `Develop is used for develop a new plugin.
 Examples:
-  dtm develop create-plugin --name=YOUR-PLUGIN-NAME`,
+  dtm develop create-plugin --name=YOUR-PLUGIN-NAME,
+  dtm develop validate-plugin --name=YOUR-PLUGIN-NAME`,
 	Run: developCMDFunc,
 }
 

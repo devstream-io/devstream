@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"strings"
 	"text/template"
 
 	pluginTpl "github.com/devstream-io/devstream/internal/pkg/develop/plugin/template"
@@ -56,11 +57,13 @@ func (p *Plugin) renderTplFile(tplFile *pluginTpl.TplFile) (*pluginTpl.File, err
 	if err != nil {
 		return nil, err
 	}
+	mustExistFlag := tplFile.MustExistFlag
 
 	return &pluginTpl.File{
-		Name:    name,
-		Dir:     dir,
-		Content: content,
+		Name:          name,
+		Dir:           dir,
+		Content:       content,
+		MustExistFlag: mustExistFlag,
 	}, nil
 }
 
@@ -143,4 +146,52 @@ Happy hacking, buddy!
 Please give us feedback through GitHub issues if you encounter any difficulties. We guarantee that you will receive unrivaled help from our passionate community!
 `
 	fmt.Println(help)
+}
+
+// Validate the []pluginTpl.File, for each File if File in needValidateFiles:
+// call the validateFile() method to deal with.
+func (p *Plugin) ValidateFiles(files []pluginTpl.File) error {
+	fileCount := len(files)
+	var errs []string
+	log.Debugf("There are %d files wait to validate.", fileCount)
+	for i, file := range files {
+		log.Debugf("Validate process: %d/%d.", i+1, fileCount)
+		if err := p.validateFile(&file); err != nil {
+			log.Errorf("Failed to validate: %s%s.", file.Dir, file.Name)
+			errs = append(errs, err.Error())
+		}
+	}
+
+	if errs != nil {
+		log.Debugf("Failed validation process: %d/%d.", len(errs), fileCount)
+		log.Errorf(strings.Join(errs, ";\n"))
+	}
+	log.Infof("Plugin %s passed validatio process: %d/%d.", p.Name, fileCount-len(errs), fileCount)
+	return nil
+}
+
+// validateFile gets the *pluginTpl.File, then do the following:
+// 1. verify the existence of file.Dir
+// 2. verify the existence of File.Name file
+// 3. write the File.Content into the File.Name file
+func (p *Plugin) validateFile(file *pluginTpl.File) error {
+	// verify the existence of file.Dir
+	if !file.MustExistFlag {
+		log.Debugf("MustExistFlag is not true, no validation: %s/%s.", file.Dir, file.Name)
+		return nil
+	}
+	if _, err := os.Stat(file.Dir); err != nil {
+		log.Debugf("Directory does not exist: %s.", file.Dir)
+		return err
+	}
+	log.Debugf("Directory existed: %s.", file.Dir)
+
+	// verify the existence of File.Name file
+	filePath := path.Join(file.Dir, file.Name)
+	if _, err := os.Stat(filePath); err != nil {
+		log.Debugf("File does not exist: %s.", filePath)
+		return err
+	}
+	log.Debugf("File existed: %s.", filePath)
+	return nil
 }
