@@ -16,7 +16,7 @@ import (
 
 const (
 	defaultRetryCount = 3
-	defaultReleaseUrl = "https://github.com/devstream-io/devstream/releases/download"
+	defaultReleaseUrl = "https://download.devstream.io"
 )
 
 type DownloadClient struct {
@@ -50,6 +50,8 @@ func (dc *DownloadClient) download(pluginDir, pluginFilename, version string) er
 		err = fmt.Errorf("downloading plugin %s from %s status code %d", pluginFilename, downloadURL, response.StatusCode())
 		log.Error(err)
 		return err
+	} else {
+		fmt.Printf("download from downloadURL : %v success", downloadURL)
 	}
 
 	// rename, tmp file to real file
