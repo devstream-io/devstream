@@ -11,7 +11,6 @@ import (
 // Validate a plugin.
 // 1. Render template files
 // 2. Validate need validate files
-// 3. Print help information
 func Validate() error {
 	name := viper.GetString("name")
 	if name == "" {
@@ -35,9 +34,6 @@ func Validate() error {
 		return err
 	}
 	log.Info("Validate all files finished.")
-
-	// // 3. Print help information
-	// p.PrintHelpInfo()
 
 	return nil
 }
