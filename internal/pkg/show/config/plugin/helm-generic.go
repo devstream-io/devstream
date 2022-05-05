@@ -32,6 +32,4 @@ var HelmGenericDefaultConfig = `tools:
       upgradeCRDs: true
       # custom configuration (Optional). e.g. You can refer to [ArgoCD values.yaml](https://github.com/argoproj/argo-helm/blob/master/charts/argo-cd/values.yaml)
       values_yaml: |
-        controller:
-          service: 
-            port: 8080`
+        FOO: BAR`
