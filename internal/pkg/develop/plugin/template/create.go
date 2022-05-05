@@ -30,11 +30,13 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
     return nil, nil
 }
 `
+var create_go_mustExistFlag = true
 
 func init() {
 	TplFiles = append(TplFiles, TplFile{
-		NameTpl:    create_go_nameTpl,
-		DirTpl:     create_go_dirTpl,
-		ContentTpl: create_go_contentTpl,
+		NameTpl:       create_go_nameTpl,
+		DirTpl:        create_go_dirTpl,
+		ContentTpl:    create_go_contentTpl,
+		MustExistFlag: create_go_mustExistFlag,
 	})
 }

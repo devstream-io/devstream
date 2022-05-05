@@ -43,10 +43,13 @@ func main() {
 }
 `
 
+var main_go_mustExistFlag = true
+
 func init() {
 	TplFiles = append(TplFiles, TplFile{
-		NameTpl:    main_go_nameTpl,
-		DirTpl:     main_go_dirTpl,
-		ContentTpl: main_go_contentTpl,
+		NameTpl:       main_go_nameTpl,
+		DirTpl:        main_go_dirTpl,
+		ContentTpl:    main_go_contentTpl,
+		MustExistFlag: main_go_mustExistFlag,
 	})
 }
