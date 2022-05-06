@@ -162,11 +162,11 @@ func (p *Plugin) ValidateFiles(files []pluginTpl.File) error {
 		}
 	}
 
-	if errs != nil {
-		log.Debugf("Failed validation process: %d/%d.", len(errs), fileCount)
-		log.Errorf(strings.Join(errs, ";\n"))
+	if len(errs) != 0 {
+		log.Debugf("Total number of validation failures: %d.", len(errs))
+		log.Errorf(strings.Join(errs, "\n"))
 	}
-	log.Infof("Plugin %s passed validatio process: %d/%d.", p.Name, fileCount-len(errs), fileCount)
+	log.Successf("Plugin <%s> passed validation.", p.Name)
 	return nil
 }
 
