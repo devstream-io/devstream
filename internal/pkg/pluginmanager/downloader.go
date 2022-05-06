@@ -16,7 +16,7 @@ import (
 
 const (
 	defaultRetryCount = 3
-	defaultReleaseUrl = "https://github.com/devstream-io/devstream/releases/download"
+	defaultReleaseUrl = "https://download.devstream.io"
 )
 
 type DownloadClient struct {
