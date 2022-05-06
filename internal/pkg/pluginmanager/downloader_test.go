@@ -23,5 +23,5 @@ func TestDownload(t *testing.T) {
 func TestDownloadNotFound(t *testing.T) {
 	c := NewDownloadClient()
 	err := c.download(".", "doesntexist", "0.0.1")
-	assert.Contains(t, err.Error(), "404")
+	assert.Contains(t, err.Error(), "403")
 }
