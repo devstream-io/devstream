@@ -3,6 +3,8 @@ package main
 import (
 	"os"
 
+	"github.com/devstream-io/devstream/internal/pkg/configloader"
+
 	"github.com/spf13/cobra"
 
 	"github.com/devstream-io/devstream/internal/pkg/pluginengine"
@@ -20,7 +22,14 @@ DevStream will delete everything defined in the config file, regardless of the s
 func deleteCMDFunc(cmd *cobra.Command, args []string) {
 	log.Info("Delete started.")
 
-	if err := pluginengine.Remove(configFile, varFile, continueDirectly, isForceDelete); err != nil {
+	gConfig, err := configloader.LoadGeneralConf(configFile)
+	if err != nil {
+		log.Errorf("Delete error: %s.", err)
+		os.Exit(1)
+	}
+	log.Debugf("config file content is %s.", gConfig)
+
+	if err := pluginengine.Remove(gConfig.ToolFile, gConfig.VarFile, continueDirectly, isForceDelete); err != nil {
 		log.Errorf("Delete error: %s.", err)
 		os.Exit(1)
 	}

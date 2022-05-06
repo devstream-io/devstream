@@ -3,6 +3,8 @@ package main
 import (
 	"os"
 
+	"github.com/devstream-io/devstream/internal/pkg/configloader"
+
 	"github.com/spf13/cobra"
 
 	"github.com/devstream-io/devstream/internal/pkg/pluginengine"
@@ -19,7 +21,15 @@ DevStream will generate and execute a new plan based on the config file and the 
 
 func applyCMDFunc(cmd *cobra.Command, args []string) {
 	log.Info("Apply started.")
-	if err := pluginengine.Apply(configFile, varFile, continueDirectly); err != nil {
+
+	gConfig, err := configloader.LoadGeneralConf(configFile)
+	if err != nil {
+		log.Errorf("Apply failed => %s.", err)
+		os.Exit(1)
+	}
+	log.Debugf("config file content is %s.", gConfig)
+
+	if err := pluginengine.Apply(gConfig.ToolFile, gConfig.VarFile, continueDirectly); err != nil {
 		log.Errorf("Apply failed => %s.", err)
 		os.Exit(1)
 	}
