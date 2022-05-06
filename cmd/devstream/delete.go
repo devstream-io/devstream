@@ -27,7 +27,6 @@ func deleteCMDFunc(cmd *cobra.Command, args []string) {
 		log.Errorf("Delete error: %s.", err)
 		os.Exit(1)
 	}
-	log.Debugf("config file content is %s.", gConfig)
 
 	if err := pluginengine.Remove(gConfig.ToolFile, gConfig.VarFile, continueDirectly, isForceDelete); err != nil {
 		log.Errorf("Delete error: %s.", err)

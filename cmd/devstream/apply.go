@@ -27,7 +27,6 @@ func applyCMDFunc(cmd *cobra.Command, args []string) {
 		log.Errorf("Apply failed => %s.", err)
 		os.Exit(1)
 	}
-	log.Debugf("config file content is %s.", gConfig)
 
 	if err := pluginengine.Apply(gConfig.ToolFile, gConfig.VarFile, continueDirectly); err != nil {
 		log.Errorf("Apply failed => %s.", err)

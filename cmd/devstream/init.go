@@ -21,7 +21,6 @@ func initCMDFunc(cmd *cobra.Command, args []string) {
 		log.Errorf("Error: %s.", err)
 		return
 	}
-	log.Debugf("config file content is %s.", gConfig)
 
 	cfg := configloader.LoadConf(gConfig.ToolFile, gConfig.VarFile)
 	if cfg == nil {

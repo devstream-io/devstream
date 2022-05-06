@@ -24,7 +24,6 @@ func verifyCMDFunc(cmd *cobra.Command, args []string) {
 		log.Errorf("Error: %s.", err)
 		return
 	}
-	log.Debugf("config file content is %s.", gConfig)
 
 	if pluginengine.Verify(gConfig.ToolFile, gConfig.VarFile) {
 		log.Success("Verify succeeded.")

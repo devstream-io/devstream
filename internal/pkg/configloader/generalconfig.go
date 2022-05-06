@@ -1,6 +1,7 @@
 package configloader
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -14,7 +15,7 @@ import (
 type GeneralConfig struct {
 	VarFile  string `yaml:"varFile"`
 	ToolFile string `yaml:"toolFile"`
-	State    State
+	State    *State
 }
 
 type State struct {
@@ -31,14 +32,22 @@ func LoadGeneralConf(configFileName string) (*GeneralConfig, error) {
 		log.Info("See \"dtm help\" for more information.")
 		return nil, err
 	}
-	log.Debugf("Original config: \n%s\n", string(configFileBytes))
+	log.Debugf("Original general config: \n%s\n", string(configFileBytes))
 
 	var gConfig GeneralConfig
 	err = yaml.Unmarshal(configFileBytes, &gConfig)
 	if err != nil {
-		log.Error("Please verify the format of your config file.")
-		log.Errorf("Reading config file failed. %s.", err)
+		log.Error("Please verify the format of your general config file.")
+		log.Errorf("Reading general config file failed. %s.", err)
 		return nil, err
+	}
+
+	errs := validateGeneralConfig(&gConfig)
+	if len(errs) != 0 {
+		for _, e := range errs {
+			log.Errorf("General config validation failed: %s.", e)
+		}
+		return nil, nil
 	}
 
 	absToolFilePath, err := parseCustomPath(configFileName, gConfig.ToolFile)
@@ -47,12 +56,16 @@ func LoadGeneralConf(configFileName string) (*GeneralConfig, error) {
 	}
 	gConfig.ToolFile = absToolFilePath
 
-	absVarFilePath, err := parseCustomPath(configFileName, gConfig.VarFile)
-	if err != nil {
-		return nil, err
+	if gConfig.VarFile != "" {
+		absVarFilePath, err := parseCustomPath(configFileName, gConfig.VarFile)
+		if err != nil {
+			return nil, err
+		}
+		gConfig.VarFile = absVarFilePath
+		return &gConfig, nil
 	}
-	gConfig.VarFile = absVarFilePath
 
+	gConfig.VarFile = "variables.yaml"
 	return &gConfig, nil
 }
 
@@ -84,4 +97,26 @@ func fileExists(path string) error {
 		return err
 	}
 	return nil
+}
+
+// validateGeneralConfig validate all the general config items
+func validateGeneralConfig(c *GeneralConfig) []error {
+	errors := make([]error, 0)
+
+	if c.ToolFile == "" {
+		errors = append(errors, fmt.Errorf("tool file is empty"))
+	}
+
+	if c.State == nil {
+		errors = append(errors, fmt.Errorf("state config is empty"))
+	}
+
+	if c.State.Options == nil {
+		errors = append(errors, fmt.Errorf("state options is empty"))
+	}
+
+	if c.State.Backend == "" {
+		errors = append(errors, fmt.Errorf("backend is empty"))
+	}
+	return errors
 }
