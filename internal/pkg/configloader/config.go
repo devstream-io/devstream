@@ -148,13 +148,14 @@ func genToolVarPath(configFileName string, gConfig GeneralConfig) (string, strin
 		return "", "", err
 	}
 
+	absVarFilePath = "variables.yaml"
 	if gConfig.VarFile != "" {
 		absVarFilePath, err = parseCustomPath(configFileName, gConfig.VarFile)
 		if err != nil {
 			return "", "", err
 		}
 	}
-	absVarFilePath = "variables.yaml"
+
 	return absToolFilePath, absVarFilePath, nil
 }
 
