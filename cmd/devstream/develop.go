@@ -9,7 +9,10 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-var name string
+var (
+	name string
+	all  bool
+)
 
 var developCMD = &cobra.Command{
 	Use:   "develop",
@@ -47,4 +50,5 @@ func validateDevelopArgs(args []string) error {
 
 func init() {
 	developCMD.PersistentFlags().StringVarP(&name, "name", "n", "", "specify name with the new plugin")
+	developCMD.PersistentFlags().BoolVarP(&all, "all", "a", false, "validate all plugins")
 }
