@@ -86,6 +86,6 @@ func StateKeyGenerateFunc(t *configloader.Tool) StateKey {
 	return StateKey(fmt.Sprintf("%s_%s", t.Name, t.InstanceID))
 }
 
-func GenerateStateKeyByToolNameAndPluginKind(toolName string, instalceID string) StateKey {
-	return StateKey(fmt.Sprintf("%s_%s", toolName, instalceID))
+func GenerateStateKeyByToolNameAndPluginKind(toolName string, instanceID string) StateKey {
+	return StateKey(fmt.Sprintf("%s_%s", toolName, instanceID))
 }
