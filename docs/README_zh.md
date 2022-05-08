@@ -46,15 +46,6 @@
 5. Monitoring - kube-prometheus
 6. ……
 
-## 下载
-
-### macOS
-
-通过 [Homebrew](https://brew.sh/) 下载 `dtm`:
-
-1. 添加 DevStream 的 tap: `brew tap devstream-io/devstream`
-2. 安装 `dtm`: `brew install devstream-io/devstream/dtm`
-
 ## 快速开始
 
 如果你想要快速上手体验，可以跳转到我们的[快速开始](./quickstart_zh.md)文档。
@@ -75,10 +66,8 @@
 
 如果你发现了 bug 或者有任何好的意见建议，我们希望你直接在 GitHub 上给我们提 issue。
 
-当然我们也有微信群，可以直接扫下方群二维码加入用户群。
+当然 <a href="https://join.slack.com/t/devstream-io/shared_invite/zt-16tb0iwzr-krcFGYRN7~Vv1suGZjdv4w" target="_blank">Slack</a> 也是有的。
 
-![](images/qr-group.jpg)
+另外我们也有微信群，可以直接扫下方群二维码加入用户群。
 
-如果上方二维码失效了，就扫下面管理员微信二维码添加好友，然后发送暗号【进群】吧！
-
-![](images/qr-ht.jpg)
+![](images/wechat-group-qr-code.jpg)
