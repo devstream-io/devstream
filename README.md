@@ -201,4 +201,6 @@ First of all, thanks for wanting to contribute to DevStream! For more details on
 We will regularly organize `DevStream Community Meeting`, please visit the [wiki](https://github.com/devstream-io/devstream/wiki) page for details.
 
 - Message us on <a href="https://join.slack.com/t/devstream-io/shared_invite/zt-16tb0iwzr-krcFGYRN7~Vv1suGZjdv4w" target="_blank">Slack.</a>
-- For Chinese users, the WeChat group QR code can be obtained from [here](docs/README_zh.md).
+- For Chinese users, the WeChat group QR code is as below:
+
+![](docs/images/wechat-group-qr-code.jpg)
