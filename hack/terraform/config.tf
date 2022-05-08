@@ -14,7 +14,16 @@ terraform {
     region = "ap-southeast-1"
   }
 }
-
 provider "aws" {
   region = "ap-southeast-1"
+}
+
+variable "s3_bucket_names" {
+  type = list(string)
+  default = ["download.devstream.io", "just-for-test"]
+}
+
+resource "aws_s3_bucket" "devstream_buckets" {
+  count         = length(var.s3_bucket_names)
+  bucket        = var.s3_bucket_names[count.index]
 }

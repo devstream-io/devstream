@@ -129,6 +129,62 @@ resource "aws_iam_group_policy" "devstream-eks" {
   })
 }
 
+resource "aws_iam_group_policy" "DevStream-Download-Bucket-RW-Policy" {
+  name  = "DevStream-Download-Bucket-RW-Policy"
+  group = aws_iam_group.devstream.name
+
+  policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Sid": "VisualEditor0",
+        "Effect": "Allow",
+        "Action": [
+          "s3:GetBucketTagging",
+          "s3:DeleteObjectVersion",
+          "s3:GetObjectVersionTagging",
+          "s3:ListBucketVersions",
+          "s3:GetBucketLogging",
+          "s3:RestoreObject",
+          "s3:ListBucket",
+          "s3:GetObjectVersionAttributes",
+          "s3:GetBucketPolicy",
+          "s3:ReplicateObject",
+          "s3:PutEncryptionConfiguration",
+          "s3:GetEncryptionConfiguration",
+          "s3:GetBucketObjectLockConfiguration",
+          "s3:GetBucketRequestPayment",
+          "s3:GetObjectTagging",
+          "s3:DeleteObject",
+          "s3:PutBucketVersioning",
+          "s3:GetBucketPublicAccessBlock",
+          "s3:GetBucketPolicyStatus",
+          "s3:GetBucketWebsite",
+          "s3:PutBucketOwnershipControls",
+          "s3:GetObjectAttributes",
+          "s3:GetBucketVersioning",
+          "s3:GetBucketAcl",
+          "s3:GetBucketNotification",
+          "s3:PutObject",
+          "s3:GetObject",
+          "s3:PutBucketNotification",
+          "s3:PutBucketWebsite",
+          "s3:PutBucketRequestPayment",
+          "s3:PutBucketLogging",
+          "s3:GetBucketCORS",
+          "s3:PutBucketObjectLockConfiguration",
+          "s3:GetBucketLocation",
+          "s3:GetObjectVersion"
+        ],
+        "Resource": [
+          "arn:aws:s3:::download.devstream.io",
+          "arn:aws:s3:::download.devstream.io/*"
+        ]
+      }
+    ]
+  })
+}
+
 locals {
   users = ["fangbao", "hutao"]
 }
