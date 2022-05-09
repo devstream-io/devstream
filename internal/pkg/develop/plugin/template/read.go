@@ -2,7 +2,7 @@ package template
 
 var read_go_nameTpl = "read.go"
 var read_go_dirTpl = "internal/pkg/plugin/{{ .Name }}/"
-var read_go_contentTpl = `package {{ .Name }}
+var read_go_contentTpl = `package {{ .Name | format }}
 
 import (
 	"fmt"

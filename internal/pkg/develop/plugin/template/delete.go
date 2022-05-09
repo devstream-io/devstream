@@ -2,7 +2,7 @@ package template
 
 var delete_go_nameTpl = "delete.go"
 var delete_go_dirTpl = "internal/pkg/plugin/{{ .Name }}/"
-var delete_go_contentTpl = `package {{ .Name }}
+var delete_go_contentTpl = `package {{ .Name | format }}
 
 import (
 	"fmt"
