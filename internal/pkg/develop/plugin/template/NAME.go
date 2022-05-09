@@ -3,7 +3,7 @@ package template
 var NAME_go_nameTpl = "{{ .Name }}.go"
 var NAME_go_dirTpl = "internal/pkg/plugin/{{ .Name }}/"
 var NAME_go_mustExistFlag = true
-var NAME_go_contentTpl = `package {{ .Name }}
+var NAME_go_contentTpl = `package {{ .Name | format }}
 
 // TODO(dtm): Add your logic here.
 `

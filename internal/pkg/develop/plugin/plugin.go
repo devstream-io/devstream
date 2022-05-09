@@ -74,7 +74,11 @@ func (p *Plugin) renderTplString(tplStr string) (string, error) {
 		return "", nil
 	}
 
-	t, err := template.New("default").Parse(tplStr)
+	var funcMap = template.FuncMap{
+		"format": pluginTpl.FormatPackageName,
+	}
+
+	t, err := template.New("default").Funcs(funcMap).Parse(tplStr)
 	if err != nil {
 		log.Debugf("Template parse failed: %s.", err)
 		log.Debugf("Template content: %s.", tplStr)

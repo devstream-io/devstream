@@ -2,7 +2,7 @@ package template
 
 var create_go_nameTpl = "create.go"
 var create_go_dirTpl = "internal/pkg/plugin/{{ .Name }}/"
-var create_go_contentTpl = `package {{ .Name }}
+var create_go_contentTpl = `package {{ .Name | format }}
 
 import (
 	"fmt"
