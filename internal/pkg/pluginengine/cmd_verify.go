@@ -8,15 +8,19 @@ import (
 )
 
 // Verify returns true if all the comments in this function are met
-func Verify(configFile, varFile string) bool {
+func Verify(configFile string) bool {
 	// 1. loading config file succeeded
-	cfg := configloader.LoadConf(configFile, varFile)
+	cfg, err := configloader.LoadConf(configFile)
+	if err != nil {
+		log.Errorf("verify failed, error: %s", err)
+	}
+
 	if cfg == nil {
 		return false
 	}
 
 	// 2. according to the config, all needed plugins exist
-	err := pluginmanager.CheckLocalPlugins(cfg)
+	err = pluginmanager.CheckLocalPlugins(cfg)
 	if err != nil {
 		log.Info(err)
 		log.Info("Maybe you forgot to run \"dtm init\" first?")

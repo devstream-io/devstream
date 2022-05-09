@@ -74,3 +74,25 @@ func validateDependency(tools []Tool) []error {
 
 	return errors
 }
+
+// validateConfigFile validate all the general config items
+func validateConfigFile(c *ConfigFile) []error {
+	errors := make([]error, 0)
+
+	if c.ToolFile == "" {
+		errors = append(errors, fmt.Errorf("tool file is empty"))
+	}
+
+	if c.State == nil {
+		errors = append(errors, fmt.Errorf("state config is empty"))
+	}
+
+	if c.State.Options == nil {
+		errors = append(errors, fmt.Errorf("state options is empty"))
+	}
+
+	if c.State.Backend == "" {
+		errors = append(errors, fmt.Errorf("backend is empty"))
+	}
+	return errors
+}

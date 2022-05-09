@@ -3,6 +3,8 @@ package configloader
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
+	"path/filepath"
 	"runtime"
 
 	"gopkg.in/yaml.v3"
@@ -19,6 +21,19 @@ var (
 // Config is the struct for loading DevStream configuration YAML files.
 type Config struct {
 	Tools []Tool `yaml:"tools"`
+	State *State
+}
+
+// ConfigFile is the struct for loading State and configuration YAML files.
+type ConfigFile struct {
+	VarFile  string `yaml:"varFile"`
+	ToolFile string `yaml:"toolFile"`
+	State    *State
+}
+
+type State struct {
+	Backend string                 `yaml:"backend"`
+	Options map[string]interface{} `yaml:"options"`
 }
 
 // Tool is the struct for one section of the DevStream configuration file.
@@ -47,9 +62,46 @@ func (t *Tool) DeepCopy() *Tool {
 	return &retTool
 }
 
-// LoadConf reads an input file as a Config struct.
-func LoadConf(configFileName, varFileName string) *Config {
+// LoadConf reads an input file as a general config.
+func LoadConf(configFileName string) (*Config, error) {
 	configFileBytes, err := ioutil.ReadFile(configFileName)
+	if err != nil {
+		log.Error(err)
+		log.Info("Maybe the default file doesn't exist or you forgot to pass your config file to the \"-f\" option?")
+		log.Info("See \"dtm help\" for more information.")
+		return nil, err
+	}
+	log.Debugf("Original general config: \n%s\n", string(configFileBytes))
+
+	var gConfig ConfigFile
+	err = yaml.Unmarshal(configFileBytes, &gConfig)
+	if err != nil {
+		log.Error("Please verify the format of your general config file.")
+		log.Errorf("Reading general config file failed. %s.", err)
+		return nil, err
+	}
+
+	errs := validateConfigFile(&gConfig)
+	if len(errs) != 0 {
+		for _, e := range errs {
+			log.Errorf("General config validation failed: %s.", e)
+		}
+		return nil, nil
+	}
+
+	toolFilePath, varFilePath, err := genToolVarPath(configFileName, gConfig)
+	if err != nil {
+		return nil, err
+	}
+
+	cfg := LoadToolConf(toolFilePath, varFilePath)
+	cfg.State = gConfig.State
+	return cfg, nil
+}
+
+// LoadToolConf reads tool file rendering by var file as a Config struct.
+func LoadToolConf(toolFileName, varFileName string) *Config {
+	configFileBytes, err := ioutil.ReadFile(toolFileName)
 	if err != nil {
 		log.Error(err)
 		log.Info("Maybe the default file doesn't exist or you forgot to pass your config file to the \"-f\" option?")
@@ -77,7 +129,6 @@ func LoadConf(configFileName, varFileName string) *Config {
 	}
 
 	errs := validateConfig(&config)
-
 	if len(errs) != 0 {
 		for _, e := range errs {
 			log.Errorf("Config validation failed: %s.", e)
@@ -86,6 +137,56 @@ func LoadConf(configFileName, varFileName string) *Config {
 	}
 
 	return &config
+}
+
+// genToolVarPath return the Abs path of tool file and var file, if var file is null, return variables.yaml
+func genToolVarPath(configFileName string, gConfig ConfigFile) (string, string, error) {
+	var absToolFilePath, absVarFilePath string
+	var err error
+	absToolFilePath, err = parseCustomPath(configFileName, gConfig.ToolFile)
+	if err != nil {
+		return "", "", err
+	}
+
+	absVarFilePath = "variables.yaml"
+	if gConfig.VarFile != "" {
+		absVarFilePath, err = parseCustomPath(configFileName, gConfig.VarFile)
+		if err != nil {
+			return "", "", err
+		}
+	}
+
+	return absToolFilePath, absVarFilePath, nil
+}
+
+// parseCustomPath  parse the path of tools.yaml or variable.yaml
+func parseCustomPath(configFileName, customPath string) (string, error) {
+	if filepath.IsAbs(customPath) {
+		log.Debugf("Abs path is %s.", customPath)
+		if err := fileExists(customPath); err != nil {
+			log.Errorf("file %s not exists.", customPath)
+			return "", err
+		}
+		return customPath, nil
+	}
+	configFilePath, err := filepath.Abs(configFileName)
+	if err != nil {
+		return "", err
+	}
+	absFilePath := filepath.Join(filepath.Dir(configFilePath), customPath)
+	log.Debugf("Abs path is %s.", absFilePath)
+	if err := fileExists(absFilePath); err != nil {
+		log.Errorf("file %s not exists.", absFilePath)
+		return "", err
+	}
+	return absFilePath, nil
+}
+
+func fileExists(path string) error {
+	if _, err := os.Stat(path); err != nil {
+		return err
+	}
+	return nil
 }
 
 // GetPluginFileName creates the file name based on the tool's name and version
