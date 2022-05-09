@@ -83,7 +83,7 @@ If you want to get a quick start, follow our [quick start](./docs/quickstart_en.
 
 ## Configuration
 
-This is an example of DevStream config: [examples/quickstart.yaml](./examples/quickstart.yaml).
+This is an example of DevStream config: [examples/tools-quickstart.yaml](./examples/tools-quickstart.yaml).
 
 Remember to open this configuration file, modify all FULL_UPPER_CASE_STRINGS (like YOUR_GITHUB_USERNAME, for example) in it to your own.
 
