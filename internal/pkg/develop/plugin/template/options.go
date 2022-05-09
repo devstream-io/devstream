@@ -1,8 +1,8 @@
 package template
 
 var options_go_nameTpl = "options.go"
-var options_go_dirTpl = "internal/pkg/plugin/{{ .Name }}/"
-var options_go_contentTpl = `package {{ .Name }}
+var options_go_dirTpl = "internal/pkg/plugin/{{ .Name | format }}/"
+var options_go_contentTpl = `package {{ .Name | format }}
 
 // Options is the struct for configurations of the {{ .Name }} plugin.
 type Options struct {
