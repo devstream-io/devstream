@@ -1,0 +1,10 @@
+# var file is the ...
+varFile: gitops-variables.yaml # defaults to ./variables.yaml
+# tool file is the ...
+toolFile: gitops.yaml
+
+# state ...
+state:
+  backend: local
+  options:
+    stateFile: devstream.state
