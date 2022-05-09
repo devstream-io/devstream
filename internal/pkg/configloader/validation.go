@@ -75,8 +75,8 @@ func validateDependency(tools []Tool) []error {
 	return errors
 }
 
-// validateGeneralConfig validate all the general config items
-func validateGeneralConfig(c *GeneralConfig) []error {
+// validateConfigFile validate all the general config items
+func validateConfigFile(c *ConfigFile) []error {
 	errors := make([]error, 0)
 
 	if c.ToolFile == "" {

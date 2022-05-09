@@ -24,8 +24,8 @@ type Config struct {
 	State *State
 }
 
-// GeneralConfig is the struct for loading State and configuration YAML files.
-type GeneralConfig struct {
+// ConfigFile is the struct for loading State and configuration YAML files.
+type ConfigFile struct {
 	VarFile  string `yaml:"varFile"`
 	ToolFile string `yaml:"toolFile"`
 	State    *State
@@ -73,7 +73,7 @@ func LoadConf(configFileName string) (*Config, error) {
 	}
 	log.Debugf("Original general config: \n%s\n", string(configFileBytes))
 
-	var gConfig GeneralConfig
+	var gConfig ConfigFile
 	err = yaml.Unmarshal(configFileBytes, &gConfig)
 	if err != nil {
 		log.Error("Please verify the format of your general config file.")
@@ -81,7 +81,7 @@ func LoadConf(configFileName string) (*Config, error) {
 		return nil, err
 	}
 
-	errs := validateGeneralConfig(&gConfig)
+	errs := validateConfigFile(&gConfig)
 	if len(errs) != 0 {
 		for _, e := range errs {
 			log.Errorf("General config validation failed: %s.", e)
@@ -140,7 +140,7 @@ func LoadToolConf(toolFileName, varFileName string) *Config {
 }
 
 // genToolVarPath return the Abs path of tool file and var file, if var file is null, return variables.yaml
-func genToolVarPath(configFileName string, gConfig GeneralConfig) (string, string, error) {
+func genToolVarPath(configFileName string, gConfig ConfigFile) (string, string, error) {
 	var absToolFilePath, absVarFilePath string
 	var err error
 	absToolFilePath, err = parseCustomPath(configFileName, gConfig.ToolFile)
