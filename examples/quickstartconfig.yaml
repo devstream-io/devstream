@@ -1,7 +1,0 @@
-# tool file is the ...
-toolFile: quickstart.yaml
-# state ...
-state:
-  backend: local
-  options:
-    stateFile: devstream.state

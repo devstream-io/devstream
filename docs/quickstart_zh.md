@@ -12,10 +12,11 @@
 
 ## 2 准备一个配置文件
 
-将 [examples/quickstart.yaml](../examples/quickstart.yaml) 文件拷贝到你到工作目录下，然后重命名成 `config.yaml`：
+将 [examples/quickstart.yaml](../examples/quickstart.yaml) 和 [examples/tools-quickstart.yaml](../examples/tools-quickstart.yaml) 文件拷贝到你到工作目录下，然后重命名成 `config.yaml`：
 
 ```shell
 cp examples/quickstart.yaml config.yaml
+cp examples/tools-quickstart.yaml tools-quickstart.yaml
 ```
 
 然后相应的修改配置文件中的内容。
