@@ -1,7 +1,7 @@
 # var file is the ...
-varFile: gitops-variables.yaml # defaults to ./variables.yaml
+varFile: variables-gitops.yaml # defaults to ./variables.yaml
 # tool file is the ...
-toolFile: gitops.yaml
+toolFile: tools-gitops.yaml
 
 # state ...
 state:
