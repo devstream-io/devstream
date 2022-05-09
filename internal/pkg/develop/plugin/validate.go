@@ -2,8 +2,6 @@ package plugin
 
 import (
 	"fmt"
-	"sort"
-	"strings"
 
 	"github.com/spf13/viper"
 
@@ -31,8 +29,7 @@ func Validate() error {
 // Validate all plugins
 // calling ValidatePlugin() via all plugins name
 func ValidatePlugins() error {
-	listPluginsName := strings.Fields(list.PluginsName)
-	sort.Strings(listPluginsName)
+	listPluginsName := list.PluginsNameSlice()
 
 	for _, pluginName := range listPluginsName {
 		log.Infof("===== start validating <%s> =====", pluginName)
