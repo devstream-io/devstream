@@ -7,15 +7,15 @@ import (
 
 	"github.com/spf13/viper"
 
-	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/cmd/devstream/list"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 func Validate() error {
 	validateAll := viper.GetBool("all")
 
 	if validateAll {
-		log.Info("Validate all plugins.")
+		log.Info("Start validating all plugins.\n")
 		return ValidatePlugins()
 	}
 
@@ -35,9 +35,11 @@ func ValidatePlugins() error {
 	sort.Strings(listPluginsName)
 
 	for _, pluginName := range listPluginsName {
+		log.Infof("===== start validating <%s> =====", pluginName)
 		if err := ValidatePlugin(pluginName); err != nil {
 			return err
 		}
+		log.Infof("===== Finished validate <%s> =====\n", pluginName)
 	}
 
 	return nil
@@ -55,14 +57,13 @@ func ValidatePlugin(pluginName string) error {
 		log.Debugf("Failed to render template files: %s.", err)
 		return err
 	}
-	log.Info("Render template files finished.")
+	log.Debug("Render template files finished.")
 
 	// 2. Validate need validate files
 	if err := p.ValidateFiles(files); err != nil {
 		log.Debugf("Failed to validate files: %s.", err)
 		return err
 	}
-	log.Info("Validate all files finished.")
 
 	return nil
 }
