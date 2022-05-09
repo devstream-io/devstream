@@ -16,7 +16,7 @@ import (
 
 const (
 	defaultRetryCount = 3
-	defaultReleaseUrl = "https://download.devstream.io"
+	defaultReleaseUrl = "https://d1fc2uruiinpfu.cloudfront.net"
 )
 
 type DownloadClient struct {
