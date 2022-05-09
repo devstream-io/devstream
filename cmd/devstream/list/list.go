@@ -21,3 +21,23 @@ func List() {
 		fmt.Println(pluginName)
 	}
 }
+
+// Get plugins name in slice
+func PluginsNameSlice() []string {
+	listPluginsName := strings.Fields(PluginsName)
+	sort.Strings(listPluginsName)
+	return listPluginsName
+}
+
+// Get plugins name in map
+func PluginNamesMap() map[string]struct{} {
+	mp := make(map[string]struct{})
+
+	listPluginsName := strings.Fields(PluginsName)
+
+	for _, pluginName := range listPluginsName {
+		mp[pluginName] = struct{}{}
+	}
+
+	return mp
+}
