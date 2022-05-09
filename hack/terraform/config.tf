@@ -19,11 +19,11 @@ provider "aws" {
 }
 
 variable "s3_bucket_names" {
-  type = list(string)
-  default = ["download.devstream.io", "just-for-test"]
+  type    = set(string)
+  default = ["download.devstream.io"]
 }
 
 resource "aws_s3_bucket" "devstream_buckets" {
-  count         = length(var.s3_bucket_names)
-  bucket        = var.s3_bucket_names[count.index]
+  for_each = var.s3_bucket_names
+  bucket = each.key
 }
