@@ -1,0 +1,45 @@
+site_name: DevStream Docs
+theme: material
+
+nav:
+  - 'quickstart_en.md'
+  - Tutorials:
+    - 'tutorials/autocomplete.md'
+    - Best Pratices:
+      - 'tutorials/best-practices/gitops.md'
+  - Commands:
+    - 'commands/apply.md'
+    - 'commands/verify.md'
+    - 'commands/delete.md'
+    - 'commands/destroy.md'
+  - Core Concepts:
+    - 'core-concepts/core-concepts.md'
+    - 'core-concepts/config.md'
+    - 'core-concepts/output.md'
+  - Plugins:
+    - 'plugins/plugins-list.md'
+    - 'plugins/argocd.md'
+    - 'plugins/argocdapp.md'
+    - 'plugins/devlake.md'
+    - 'plugins/github-repo-scaffolding-golang.md'
+    - 'plugins/githubactions-golang.md'
+    - 'plugins/githubactions-nodejs.md'
+    - 'plugins/githubactions-python.md'
+    - 'plugins/gitlab-repo-scaffolding-golang.md'
+    - 'plugins/gitlabci-generic.md'
+    - 'plugins/gitlabci-golang.md'
+    - 'plugins/hashicorp-vault.md'
+    - 'plugins/jenkins.md'
+    - 'plugins/jira-github-integ.md'
+    - 'plugins/kube-prometheus.md'
+    - 'plugins/openldap.md'
+    - 'plugins/trello.md'
+    - 'plugins/trello-github-integ.md'
+  - Contributing:
+    - 'contributing/development-workflow.md'
+    - 'contributing/contributor_ladder_growth_programs.md'
+    - 'contributing/project-layout.md'
+    - 'contributing/architecture.md'
+    - 'contributing/creating-a-plugin.md'
+    - 'contributing/branch-and-release.md'
+  - 'troubleshooting.md'

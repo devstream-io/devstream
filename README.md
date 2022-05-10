@@ -3,18 +3,20 @@
 
 ![](./docs/images/logo-120px.jpg)
 
+# DevStream
+
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat&logo=github&color=2370ff&labelColor=454545)](http://makeapullrequest.com)
 ![Test](https://github.com/devstream-io/devstream/actions/workflows/main.yml/badge.svg)
 [![Go Report Card](https://goreportcard.com/badge/github.com/devstream-io/devstream)](https://goreportcard.com/report/github.com/devstream-io/devstream)
 [![Downloads](https://img.shields.io/github/downloads/devstream-io/devstream/total.svg)](https://github.com/devstream-io/devstream/releases)
 [![Slack](https://img.shields.io/badge/slack-join_chat-success.svg?logo=slack)](https://join.slack.com/t/devstream-io/shared_invite/zt-16tb0iwzr-krcFGYRN7~Vv1suGZjdv4w)
 
-# DevStream
+| English | [中文](docs/README_zh.md) |
+| --- | --- |
+
 </div>
 
 ## DevStream, What Is It Anyway?
-
-> English | [中文](docs/README_zh.md)
 
 TL;DR: DevStream (CLI tool named `dtm`) is an open-source DevOps toolchain manager.
 
@@ -201,4 +203,6 @@ First of all, thanks for wanting to contribute to DevStream! For more details on
 We will regularly organize `DevStream Community Meeting`, please visit the [wiki](https://github.com/devstream-io/devstream/wiki) page for details.
 
 - Message us on <a href="https://join.slack.com/t/devstream-io/shared_invite/zt-16tb0iwzr-krcFGYRN7~Vv1suGZjdv4w" target="_blank">Slack.</a>
-- For Chinese users, the WeChat group QR code can be obtained from [here](docs/README_zh.md).
+- For Chinese users, the WeChat group QR code is as below:
+
+![](docs/images/wechat-group-qr-code.jpg)

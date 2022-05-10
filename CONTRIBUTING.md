@@ -20,7 +20,7 @@ We aim to reply to issues within 24 hours.
 
 ## Contributor Ladder Growth Programs
 
-See [contributor_ladder_growth_programs.md](./docs/contributor_ladder_growth_programs.md).
+See [contributor_ladder_growth_programs.md](docs/contributing/contributor_ladder_growth_programs.md).
 
 ## Style Guides
 

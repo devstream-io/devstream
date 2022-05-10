@@ -11,13 +11,17 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func Apply(configFile, varFile string, continueDirectly bool) error {
-	cfg := configloader.LoadConf(configFile, varFile)
+func Apply(configFile string, continueDirectly bool) error {
+	cfg, err := configloader.LoadConf(configFile)
+	if err != nil {
+		return err
+	}
+
 	if cfg == nil {
 		return fmt.Errorf("failed to load the config file")
 	}
 
-	err := pluginmanager.CheckLocalPlugins(cfg)
+	err = pluginmanager.CheckLocalPlugins(cfg)
 	if err != nil {
 		log.Errorf("Error checking required plugins. Maybe you forgot to run \"dtm init\" first?")
 		return err

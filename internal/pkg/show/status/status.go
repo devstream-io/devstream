@@ -68,7 +68,7 @@ func showAll(smgr statemanager.Manager) error {
 		return nil
 	}
 
-	return fmt.Errorf(strings.Join(retErrs, ";"))
+	return fmt.Errorf(strings.Join(retErrs, "; "))
 }
 
 // show one plugin status

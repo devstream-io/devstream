@@ -3,18 +3,20 @@
 
 ![](./images/logo-120px.jpg)
 
+# DevStream
+
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat&logo=github&color=2370ff&labelColor=454545)](http://makeapullrequest.com)
-[![Discord](https://img.shields.io/discord/844603288082186240.svg?style=flat?label=&logo=discord&logoColor=ffffff&color=747df7&labelColor=454545)](https://discord.gg/83rDG6ydVZ)
 ![Test](https://github.com/devstream-io/devstream/actions/workflows/main.yml/badge.svg)
 [![Go Report Card](https://goreportcard.com/badge/github.com/devstream-io/devstream)](https://goreportcard.com/report/github.com/devstream-io/devstream)
 [![Downloads](https://img.shields.io/github/downloads/devstream-io/devstream/total.svg)](https://github.com/devstream-io/devstream/releases)
+[![Slack](https://img.shields.io/badge/slack-join_chat-success.svg?logo=slack)](https://join.slack.com/t/devstream-io/shared_invite/zt-16tb0iwzr-krcFGYRN7~Vv1suGZjdv4w)
 
-# DevStream
+| [English](../README.md) | 中文 |
+| --- | --- |
+
 </div>
 
 ## DevStream 是什么？
-
-> [English](../README.md) | 中文
 
 **注意：我们会优先更新英文版 [README](../README.md) ，中文版有一定的滞后，强烈建议大家直接阅读英文版**
 
@@ -46,15 +48,6 @@
 5. Monitoring - kube-prometheus
 6. ……
 
-## 下载
-
-### macOS
-
-通过 [Homebrew](https://brew.sh/) 下载 `dtm`:
-
-1. 添加 DevStream 的 tap: `brew tap devstream-io/devstream`
-2. 安装 `dtm`: `brew install devstream-io/devstream/dtm`
-
 ## 快速开始
 
 如果你想要快速上手体验，可以跳转到我们的[快速开始](./quickstart_zh.md)文档。
@@ -75,10 +68,8 @@
 
 如果你发现了 bug 或者有任何好的意见建议，我们希望你直接在 GitHub 上给我们提 issue。
 
-当然我们也有微信群，可以直接扫下方群二维码加入用户群。
+当然 <a href="https://join.slack.com/t/devstream-io/shared_invite/zt-16tb0iwzr-krcFGYRN7~Vv1suGZjdv4w" target="_blank">Slack</a> 也是有的。
 
-![](images/qr-group.jpg)
+另外我们也有微信群，可以直接扫下方群二维码加入用户群。
 
-如果上方二维码失效了，就扫下面管理员微信二维码添加好友，然后发送暗号【进群】吧！
-
-![](images/qr-ht.jpg)
+![](images/wechat-group-qr-code.jpg)

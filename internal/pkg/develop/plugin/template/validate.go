@@ -1,8 +1,8 @@
 package template
 
 var validate_go_nameTpl = "validate.go"
-var validate_go_dirTpl = "internal/pkg/plugin/{{ .Name }}/"
-var validate_go_contentTpl = `package {{ .Name }}
+var validate_go_dirTpl = "internal/pkg/plugin/{{ .Name | format }}/"
+var validate_go_contentTpl = `package {{ .Name | format }}
 
 // validate validates the options provided by the core.
 func validate(options *Options) []error {
