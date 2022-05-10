@@ -42,7 +42,6 @@ func validateListCMDArgs(args []string) error {
 	return nil
 }
 
-// TODO Use `--filter=someone` (can support regex) to filter plugins on feature,
 // TODO Use `--group=somegroup` to filter the specified groups on feature
 func init() {
 	listCMD.PersistentFlags().StringVarP(&pluginFilter, "filter", "r", "", "filter plugin by regex")
