@@ -9,6 +9,10 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
+var (
+	pluginFilter string
+)
+
 var listCMD = &cobra.Command{
 	Use:   "list",
 	Short: "This command lists all of the plugins",
@@ -23,7 +27,7 @@ func listCMDFunc(cmd *cobra.Command, args []string) {
 		log.Fatal(err)
 	}
 
-	list.List()
+	list.List(pluginFilter)
 }
 
 func validateListCMDArgs(args []string) error {
@@ -40,3 +44,6 @@ func validateListCMDArgs(args []string) error {
 
 // TODO Use `--filter=someone` (can support regex) to filter plugins on feature,
 // TODO Use `--group=somegroup` to filter the specified groups on feature
+func init() {
+	listCMD.PersistentFlags().StringVarP(&pluginFilter, "filter", "r", "", "filter plugin by regex")
+}
