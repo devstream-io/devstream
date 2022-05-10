@@ -1,7 +1,7 @@
 #! /bin/bash -e
 set -o nounset
 
-tag=v0.4.0
+tag=v0.5.0
 
 user=devstream-io
 repo=devstream
