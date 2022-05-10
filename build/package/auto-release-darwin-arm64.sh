@@ -27,7 +27,7 @@ fi
 
 # call build core and plugins
 cd ../..
-make build -j8
+make build -j8 VERSION=0.5.0
 
 # install github-release for uploading
 go install github.com/github-release/github-release@latest
