@@ -32,6 +32,7 @@ jobs:
         go: [1.17.x]
     permissions: write-all
     # test
+    
     runs-on: ${{ matrix.os }}
     name: e2e-test-${{ matrix.os }}
     steps:
