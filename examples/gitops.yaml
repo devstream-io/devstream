@@ -1,9 +1,8 @@
-# var file is the ...
-varFile: variables-gitops.yaml # defaults to ./variables.yaml
-# tool file is the ...
-toolFile: tools-gitops.yaml
-
-# state ...
+# var file path, you can set it to absolute path or relative path.
+varFile: variables-gitops.yaml # here is a relative path. (defaults is ./variables.yaml)
+# tool file path, you can set it to absolute path or relative path.
+toolFile: tools-gitops.yaml # here is a relative path.
+# state config, backend can be local or s3
 state:
   backend: local
   options:

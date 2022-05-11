@@ -1,6 +1,6 @@
-# tool file is the ...
-toolFile: tools-quickstart.yaml
-# state ...
+# tool file path, you can set it to absolute path or relative path.
+toolFile: tools-quickstart.yaml # here is a relative path.
+# state config, backend can be local or s3
 state:
   backend: local
   options:
