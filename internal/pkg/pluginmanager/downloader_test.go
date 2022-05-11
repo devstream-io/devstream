@@ -23,5 +23,7 @@ func TestDownload(t *testing.T) {
 func TestDownloadNotFound(t *testing.T) {
 	c := NewDownloadClient()
 	err := c.download(".", "doesntexist", "0.0.1")
+	// Since the right granted to public users on aws does not include listing bucket
+	// AWS returns 403 instead of 404 when acquiring an object where bucket does not exist: there is no list right.
 	assert.Contains(t, err.Error(), "403")
 }

@@ -9,7 +9,7 @@ data "aws_iam_policy_document" "githubactions" {
       "eks:DescribeCluster",
       "eks:AccessKubernetesApi",
     ]
-    resources = ["${module.cluster.cluster_arn}"]
+    resources = [module.cluster.cluster_arn]
   }
 }
 

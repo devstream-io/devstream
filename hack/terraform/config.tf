@@ -6,6 +6,10 @@ terraform {
       source  = "hashicorp/aws"
       version = "4.3.0"
     }
+    cloudflare = {
+      source = "cloudflare/cloudflare"
+      version = "3.14.0"
+    }
   }
 
   backend "s3" {
@@ -16,14 +20,4 @@ terraform {
 }
 provider "aws" {
   region = "ap-southeast-1"
-}
-
-variable "s3_bucket_names" {
-  type    = set(string)
-  default = ["download.devstream.io"]
-}
-
-resource "aws_s3_bucket" "devstream_buckets" {
-  for_each = var.s3_bucket_names
-  bucket = each.key
 }

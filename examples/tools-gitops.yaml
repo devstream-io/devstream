@@ -1,0 +1,74 @@
+tools:
+- name: github-repo-scaffolding-golang
+  instanceID: default
+  options:
+    owner: [[ githubUsername ]]
+    org: ""
+    repo: [[ repoName ]]
+    branch: [[ defaultBranch ]]
+    image_repo: [[ dockerhubUsername ]]/[[ repoName ]]
+- name: jira-github-integ
+  instanceID: default
+  dependsOn: [ "github-repo-scaffolding-golang.default" ]
+  options:
+    owner: [[ githubUsername ]]
+    repo: [[ repoName ]]
+    jiraBaseUrl: https://[[ jiraID ]].atlassian.net
+    jiraUserEmail: [[ jiraUserEmail ]]
+    jiraProjectKey: [[ jiraProjectKey ]]
+    branch: main
+- name: githubactions-golang
+  instanceID: default
+  dependsOn: [ "github-repo-scaffolding-golang.default" ]
+  options:
+    owner: ${{github-repo-scaffolding-golang.default.outputs.owner}}
+    org: ""
+    repo: ${{github-repo-scaffolding-golang.default.outputs.repo}}
+    language:
+      name: go
+      version: "1.17"
+    branch: [[ defaultBranch ]]
+    build:
+      enable: True
+      command: "go build ./..."
+    test:
+      enable: True
+      command: "go test ./..."
+      coverage:
+        enable: True
+        profile: "-race -covermode=atomic"
+        output: "coverage.out"
+    docker:
+      enable: True
+      registry:
+        type: dockerhub
+        username: [[ dockerhubUsername ]]
+        repository: ${{github-repo-scaffolding-golang.default.outputs.repo}}
+- name: argocd
+  instanceID: default
+  options:
+    create_namespace: true
+    repo:
+      name: argo
+      url: https://argoproj.github.io/argo-helm
+    chart:
+      chart_name: argo/argo-cd
+      release_name: argocd
+      namespace: [[ argocdNameSpace ]]
+      wait: true
+      timeout: [[ argocdDeployTimeout ]]
+      upgradeCRDs: true
+- name: argocdapp
+  instanceID: default
+  dependsOn: ["argocd.default", "github-repo-scaffolding-golang.default"]
+  options:
+    app:
+      name: ${{github-repo-scaffolding-golang.default.outputs.repo}}
+      namespace: [[ argocdNameSpace ]]
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: default
+    source:
+      valuefile: values.yaml
+      path: helm/${{github-repo-scaffolding-golang.default.outputs.repo}}
+      repoURL: ${{github-repo-scaffolding-golang.default.outputs.repoURL}}
