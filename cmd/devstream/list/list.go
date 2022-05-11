@@ -2,6 +2,7 @@ package list
 
 import (
 	"fmt"
+	"regexp"
 	"sort"
 	"strings"
 )
@@ -14,11 +15,14 @@ import (
 var PluginsName string
 
 // List all of plugins name
-func List() {
+func List(pluginFilter string) {
 	listPluginsName := strings.Fields(PluginsName)
+	r, _ := regexp.Compile(pluginFilter)
 	sort.Strings(listPluginsName)
 	for _, pluginName := range listPluginsName {
-		fmt.Println(pluginName)
+		if r.Match([]byte(pluginName)) {
+			fmt.Println(pluginName)
+		}
 	}
 }
 
