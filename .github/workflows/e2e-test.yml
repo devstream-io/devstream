@@ -13,8 +13,6 @@ on:
       - 'test/**'
       - 'hack/e2e/**'
       - 'hack/terraform/**'
-
-
 env:
   # DO NOT use the GITHUB_TOKEN here
   # see https://github.com/devstream-io/devstream/pull/414 for more info
