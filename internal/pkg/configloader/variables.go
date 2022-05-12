@@ -11,8 +11,6 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-const defaultVarFileName = "variables.yaml"
-
 func renderVariables(varFileName string, configFileBytes []byte) ([]byte, error) {
 	// load variables file
 	variables, err := loadVariablesFilesIntoMap(varFileName)

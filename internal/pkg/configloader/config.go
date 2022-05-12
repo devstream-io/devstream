@@ -84,7 +84,7 @@ func LoadConf(configFileName string) (*Config, error) {
 	errs := validateConfigFile(&gConfig)
 	if len(errs) != 0 {
 		for _, e := range errs {
-			log.Errorf("config file validation failed: %s.", e)
+			log.Errorf("Config file validation failed: %s.", e)
 		}
 		return nil, nil
 	}
