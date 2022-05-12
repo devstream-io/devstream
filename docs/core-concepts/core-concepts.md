@@ -21,4 +21,4 @@ The dependency `dependsOn` is an array of strings, with each element being a dep
 
 Config-State-Resource workflow:
 
-![config state resource workflow](/img/docs/config-state-resource.png)
+![config state resource workflow](../images/config_state_resource.png)
