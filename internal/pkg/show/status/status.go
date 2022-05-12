@@ -49,7 +49,7 @@ func showAll(smgr statemanager.Manager) error {
 	stateList := smgr.GetStatesMap().ToList()
 
 	if len(stateList) == 0 {
-		fmt.Print("No resources found.")
+		log.Info("No resources found.")
 		return nil
 	}
 
@@ -57,7 +57,7 @@ func showAll(smgr statemanager.Manager) error {
 	for i, state := range stateList {
 		fmt.Printf("================= %d/%d =================\n\n", i+1, len(stateList))
 		if err := showOne(smgr, state.InstanceID, state.Name); err != nil {
-			fmt.Printf("Failed to show the status with %s.%s.", state.InstanceID, state.Name)
+			log.Errorf("Failed to show the status with <%s.%s>, error: %s.", state.InstanceID, state.Name, err)
 			retErrs = append(retErrs, err.Error())
 			// the "continue" here is used to tell you we don't need to return when ONE plugin show failed
 			continue
