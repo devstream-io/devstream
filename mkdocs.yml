@@ -2,7 +2,7 @@ site_name: DevStream Docs
 theme: material
 site_url: https://docs.devstream.io
 repo_name: devstream
-repo_url: https://github.com/devstream.io/devstream
+repo_url: https://github.com/devstream-io/devstream
 site_description: The DevStream Docs
 markdown_extensions:
   toc:
