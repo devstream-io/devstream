@@ -14,6 +14,7 @@ nav:
     - Best Pratices:
       - 'tutorials/best-practices/gitops.md'
   - Commands:
+    - 'commands/init.md'
     - 'commands/apply.md'
     - 'commands/verify.md'
     - 'commands/delete.md'
@@ -21,6 +22,9 @@ nav:
   - Core Concepts:
     - 'core-concepts/core-concepts.md'
     - 'core-concepts/config.md'
+    - 'core-concepts/variables.md'
+    - 'core-concepts/state.md'
+    - 'core-concepts/dependencies.md'
     - 'core-concepts/output.md'
   - Plugins:
     - 'plugins/plugins-list.md'
