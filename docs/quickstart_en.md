@@ -12,11 +12,11 @@ Download the appropriate `dtm` version for your platform from [DevStream Release
 
 ## 2 Prepare a Config File
 
-Copy the [examples/quickstart.yaml](../examples/quickstart.yaml) and [examples/tools-quickstart.yaml](../examples/tools-quickstart.yaml) to your working directory and rename `quickstart.yaml` to `config.yaml`:
+Download the [examples/quickstart.yaml](https://raw.githubusercontent.com/devstream-io/devstream/main/examples/quickstart.yaml) and [examples/tools-quickstart.yaml](https://raw.githubusercontent.com/devstream-io/devstream/main/examples/tools-quickstart.yaml) to your working directory and rename `quickstart.yaml` to `config.yaml`:
 
 ```shell
-cp examples/quickstart.yaml config.yaml
-cp examples/tools-quickstart.yaml tools-quickstart.yaml
+curl -o config.yaml https://raw.githubusercontent.com/devstream-io/devstream/main/examples/quickstart.yaml
+curl -o tools-quickstart.yaml https://raw.githubusercontent.com/devstream-io/devstream/main/examples/tools-quickstart.yaml
 ```
 
 Then modify the file accordingly.
@@ -31,7 +31,7 @@ sed -i.bak "s/YOUR_DOCKER_USERNAME/ironcore864/g" tools-quickstart.yaml
 
 > This config file uses two plugins, one will create a GitHub repository and bootstrap it into a Golang web app, and the other will create GitHub Actions workflow for it.
 
-The two plugins [require an environment variable](https://www.devstream.io/docs/plugins/github-repo-scaffolding-golang) to work, so let's set it:
+The two plugins [require an environment variable](../plugins/github-repo-scaffolding-golang) to work, so let's set it:
 
 ```shell
 export GITHUB_TOKEN="YOUR_GITHUB_TOKEN_HERE"
