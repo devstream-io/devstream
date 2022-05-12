@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/devstream-io/devstream/cmd/devstream/validator"
 
 	"github.com/spf13/cobra"
 
@@ -19,7 +20,7 @@ var listCMD = &cobra.Command{
 	Long: `This command lists all of the plugins.
 Examples:
   dtm list plugins`,
-	Run: listCMDFunc,
+	Run: validator.WithValidators(listCMDFunc, validator.ArgsCountEqual(1), validateListCMDArgs),
 }
 
 func listCMDFunc(cmd *cobra.Command, args []string) {
@@ -32,9 +33,6 @@ func listCMDFunc(cmd *cobra.Command, args []string) {
 
 func validateListCMDArgs(args []string) error {
 	// only support "plugins" now
-	if len(args) != 1 {
-		return fmt.Errorf("got illegal args count (expect 1, got %d)", len(args))
-	}
 
 	if args[0] != "plugins" {
 		return fmt.Errorf("arg should be \"plugins\" only")
