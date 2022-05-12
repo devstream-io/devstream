@@ -13,15 +13,3 @@ echo 'Uploading 'dtm-${GOOS}-${GOARCH}' ...'
 github-release upload --security-token $github_token --user $user --repo $repo --tag $tag --file dtm --name dtm-${GOOS}-${GOARCH}
 echo dtm-${GOOS}-${GOARCH}' uploaded.'
 
-# upload each plugin
-for file in `ls $plugin_dir`
-do
- if [ -d $plugin_dir"/"$file ]
- then
-   read_dir $plugin_dir"/"$file
- else
-   echo 'Uploading '$file' ...'
-   github-release upload --security-token $github_token --user $user --repo $repo --tag $tag --file  $plugin_dir"/"$file --name $file
-   echo $file' uploaded.'
- fi
-done
