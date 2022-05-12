@@ -85,14 +85,14 @@ func validateConfigFile(c *ConfigFile) []error {
 
 	if c.State == nil {
 		errors = append(errors, fmt.Errorf("state config is empty"))
+	} else {
+		if c.State.Options == nil {
+			errors = append(errors, fmt.Errorf("state options is empty"))
+		}
+		if c.State.Backend == "" {
+			errors = append(errors, fmt.Errorf("backend is empty"))
+		}
 	}
 
-	if c.State.Options == nil {
-		errors = append(errors, fmt.Errorf("state options is empty"))
-	}
-
-	if c.State.Backend == "" {
-		errors = append(errors, fmt.Errorf("backend is empty"))
-	}
 	return errors
 }
