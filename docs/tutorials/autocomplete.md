@@ -6,19 +6,15 @@ In order to give a better experience for terminal users, we [support the Fig Aut
 
 Unlike other auto-complete tools, [Fig](https://fig.io) is more intuitive. It brings an IDE-style experience to the terminal users. Detailed introduction see the [official website](https://fig.io/)
 
-![](/img/docs/fig/fig-intro.gif)
+![](fig/fig-intro.gif)
 
-```{admonition} Notice
-:class: warning
-
-Temporary only supports MacOS now!
-```
+**Notice: Temporary only supports MacOS now!**
 
 ### Setup
 
 See [https://fig.io](https://fig.io)
 
-![](/img/docs/fig/fig-terminal.png)
+![](fig/fig-terminal.png)
 
 Once the installation is complete, you need to integrate the terminal you are using.
 
@@ -26,15 +22,15 @@ Once the installation is complete, you need to integrate the terminal you are us
 
 #### Get Specified Plugin Information
 
-![](/img/docs/fig/cmd-show-plugins.gif)
+![](fig/cmd-show-plugins.gif)
 
 #### Get Subcommand Help Information
 
-![](/img/docs/fig/cmd-help.gif)
+![](fig/cmd-help.gif)
 
 #### Build a Specified Plugin
 
-![](/img/docs/fig/cmd-make.gif)
+![](fig/cmd-make.gif)
 
 ## Shell Autocomplete
 
@@ -42,11 +38,7 @@ Once the installation is complete, you need to integrate the terminal you are us
 
 #### On Linux
 
-```{admonition} Note
-:class: note
-
-Main reference [bash auto-completion on Linux](https://kubernetes.io/docs/tasks/tools/included/optional-kubectl-configs-bash-linux/)
-```
+**Note: Main reference [bash auto-completion on Linux](https://kubernetes.io/docs/tasks/tools/included/optional-kubectl-configs-bash-linux/)**
 
 The completion script depends on `bash-completion`, So you have to install it first.
 
