@@ -7,15 +7,11 @@
 - HashiCorp Vault
 - ArgoCD-GitHub SSO integration
 - Repository bootstrapping for Python/Nodejs for GitHub, Golang/Python/Nodejs for GitLab
-- generic GitLab CI plugin, GitLab CI workflows for Python/Nodejs
+- GitLab CI workflows for Python/Nodejs
 - FluxCD plugin
 - Trello-GitLab Integration
 
 ## 2 `dtm` Core
-
-### Variables
-
-Define variables and use it in the config file.
 
 ### `dtm show state`
 
@@ -28,10 +24,6 @@ This is already supported, but we will improve the features of it, for example:
 - show the default config of one plugin
 - show the default configs of multiple plugins that are used together
 - interactive: user select plugin then show the default config
-
-### Auto-Complete
-
-Auto-complete support for `dtm` commands.
 
 ### Plugin Storage
 
@@ -64,3 +56,8 @@ v0.3.0:
 - Plugin dependency management: a common way to handle plugin dependencies and execution order using graph/topology sort.
 - Automated e2e testing: AWS EKS cluster with Terraform.
 - Trello plugin that creates boards.
+
+v0.4.0-v0.5.0:
+- generic GitLab CI plugin
+- define variables and use it in the config file.
+- auto-complete support for `dtm` commands
