@@ -16,18 +16,14 @@ import (
 func Show() error {
 	plugin := viper.GetString("plugin")
 	name := viper.GetString("name")
-
-	// validation
-	if plugin == "" && name != "" {
-		return fmt.Errorf("empty plugin name. Maybe you forgot to add --plugin=PLUGIN_NAME")
-	}
-	if name == "" && plugin != "" {
-		return fmt.Errorf("empty instance name. Maybe you forgot to add --name=PLUGIN_INSTANCE_NAME")
+	if name == "" {
+		log.Warnf("Empty instance name. Maybe you forgot to add --name=PLUGIN_INSTANCE_NAME. The default value \"default\" will be used.")
+		name = "default"
 	}
 
 	// if --plugin="" and --name="", we set the allFlag to true, it means all plugins' status need to be printed
 	var allFlag = false
-	if name == "" && plugin == "" {
+	if plugin == "" {
 		allFlag = true
 	}
 
