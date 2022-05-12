@@ -16,18 +16,14 @@ import (
 func Show() error {
 	plugin := viper.GetString("plugin")
 	name := viper.GetString("name")
-
-	// validation
-	if plugin == "" && name != "" {
-		return fmt.Errorf("empty plugin name. Maybe you forgot to add --plugin=PLUGIN_NAME")
-	}
-	if name == "" && plugin != "" {
-		return fmt.Errorf("empty instance name. Maybe you forgot to add --name=PLUGIN_INSTANCE_NAME")
+	if name == "" {
+		log.Warnf("Empty instance name. Maybe you forgot to add --name=PLUGIN_INSTANCE_NAME. The default value \"default\" will be used.")
+		name = "default"
 	}
 
 	// if --plugin="" and --name="", we set the allFlag to true, it means all plugins' status need to be printed
 	var allFlag = false
-	if name == "" && plugin == "" {
+	if plugin == "" {
 		allFlag = true
 	}
 
@@ -49,7 +45,7 @@ func showAll(smgr statemanager.Manager) error {
 	stateList := smgr.GetStatesMap().ToList()
 
 	if len(stateList) == 0 {
-		fmt.Print("No resources found.")
+		log.Info("No resources found.")
 		return nil
 	}
 
@@ -57,7 +53,7 @@ func showAll(smgr statemanager.Manager) error {
 	for i, state := range stateList {
 		fmt.Printf("================= %d/%d =================\n\n", i+1, len(stateList))
 		if err := showOne(smgr, state.InstanceID, state.Name); err != nil {
-			fmt.Printf("Failed to show the status with %s.%s.", state.InstanceID, state.Name)
+			log.Errorf("Failed to show the status with <%s.%s>, error: %s.", state.InstanceID, state.Name, err)
 			retErrs = append(retErrs, err.Error())
 			// the "continue" here is used to tell you we don't need to return when ONE plugin show failed
 			continue
