@@ -1,6 +1,6 @@
-##  `dtm delete`
+#  dtm delete
 
-### 1 Normal (Non-Force) Delete
+## 1 Normal (Non-Force) Delete
 
 When _deleting_ using `dtm`, here's what happens:
 
@@ -9,7 +9,7 @@ When _deleting_ using `dtm`, here's what happens:
 
 _Note: the `Delete` change will be executed only if the _State_ exists._
 
-### 2 Force Delete
+## 2 Force Delete
 
 When _deleting_ using `dtm delete --force`, here's what happens:
 

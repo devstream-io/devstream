@@ -1,4 +1,4 @@
-##  `dtm destroy`
+#  dtm destroy
 
 `dtm destroy` acts like `dtm apply -f an_empty_config.yaml`.
 

@@ -1,10 +1,10 @@
-# Config, State, and Resource
+# Tool, State, and Resource
 
 The architecture documentation explains how in general DevStream works. If you haven't read it yet, make sure you do that before continuing with this document.
 
-## 1 Config
+## 1 Tool
 
-- The _Config_ is a list of tools, defined in [here](https://github.com/devstream-io/devstream/blob/main/internal/pkg/configloader/config.go#L19).
+- One of the major part of the _Config_ is a list of tools, defined in [here](https://github.com/devstream-io/devstream/blob/main/internal/pkg/configloader/config.go#L19).
 - Each _Tool_ has its Name, Plugin, and Options, as defined [here](https://github.com/devstream-io/devstream/blob/main/internal/pkg/configloader/config.go#L24).
 - Each _Tool_ can have its dependencies, which are specified by the `dependsOn` keyword.
 
@@ -21,4 +21,4 @@ The dependency `dependsOn` is an array of strings, with each element being a dep
 
 Config-State-Resource workflow:
 
-![config state resource workflow](/img/docs/config-state-resource.png)
+![config state resource workflow](../images/config_state_resource.png)
