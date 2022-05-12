@@ -1,4 +1,4 @@
-# `dtm init`
+# dtm init
 
 `dtm init` will download the required plugins according to the tool file in the config.
 

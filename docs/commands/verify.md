@@ -1,4 +1,4 @@
-# `dtm verify`
+# dtm verify
 
 The command `dtm verify` checks the following:
 

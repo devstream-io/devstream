@@ -1,4 +1,4 @@
-#  `dtm delete`
+#  dtm delete
 
 ## 1 Normal (Non-Force) Delete
 

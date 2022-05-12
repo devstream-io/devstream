@@ -1,4 +1,4 @@
-# `dtm apply`
+# dtm apply
 
 When _applying_ a config file using `dtm`, here's what happens:
 
