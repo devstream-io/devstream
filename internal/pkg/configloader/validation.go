@@ -79,6 +79,10 @@ func validateDependency(tools []Tool) []error {
 func validateConfigFile(c *ConfigFile) []error {
 	errors := make([]error, 0)
 
+	if c.VarFile == "" {
+		errors = append(errors, fmt.Errorf("variables file is empty"))
+	}
+
 	if c.ToolFile == "" {
 		errors = append(errors, fmt.Errorf("tool file is empty"))
 	}

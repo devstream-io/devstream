@@ -143,19 +143,15 @@ func LoadToolConf(toolFileName, varFileName string) *Config {
 func genToolVarPath(configFileName string, gConfig ConfigFile) (string, string, error) {
 	var absToolFilePath, absVarFilePath string
 	var err error
+
 	absToolFilePath, err = parseCustomPath(configFileName, gConfig.ToolFile)
 	if err != nil {
 		return "", "", err
 	}
-
-	absVarFilePath = "variables.yaml"
-	if gConfig.VarFile != "" {
-		absVarFilePath, err = parseCustomPath(configFileName, gConfig.VarFile)
-		if err != nil {
-			return "", "", err
-		}
+	absVarFilePath, err = parseCustomPath(configFileName, gConfig.VarFile)
+	if err != nil {
+		return "", "", err
 	}
-
 	return absToolFilePath, absVarFilePath, nil
 }
 
