@@ -58,12 +58,14 @@ These plugins require some environment variables to work, so let's set them:
 ```bash
 export GITHUB_TOKEN="YOUR_GITHUB_TOKEN_HERE"
 export JIRA_API_TOKEN="YOUR_JIRA_API_TOKEN_HERE"
+export DOCKERHUB_TOKEN="YOUR_DOCKERHUB_TOKEN_HERE"
 ```
 
-If you don't know how to create these two tokens, check out:
+If you don't know how to create these three tokens, check out:
 
-- [Manage API tokens for your Atlassian account](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/)
-- [Creating a personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+- GITHUB_TOKEN: [Manage API tokens for your Atlassian account](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/)
+- JIRA_API_TOKEN: [Creating a personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+- DOCKERHUB_TOKEN: [Manage access tokens](https://docs.docker.com/docker-hub/access-tokens/)
 
 ## 3. Initialize
 
