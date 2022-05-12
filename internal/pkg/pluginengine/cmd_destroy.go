@@ -25,6 +25,10 @@ func Destroy(continueDirectly bool) error {
 		return nil
 	}
 
+	for _, change := range changes {
+		log.Info(change.Description)
+	}
+
 	if !continueDirectly {
 		userInput := readUserInput()
 		if userInput == "n" {
