@@ -90,11 +90,9 @@ The `state` section has some options. For example, `stateFile` is mandatory for 
 
 ## Default Values
 
-If `varFile` isn't specified in the main config, `dtm` will try to load `variables.yaml` under the current directory. If it exists, it will be used as the variables file. If not, nothing should happen, no error, no panic.
+By default, `dtm` uses `config.yaml` as the main config file.
 
-Similarly, if `toolFile` isn't specified in the main config, `dtm` will try to load `tools.yaml` under the current directory.
-
-## Specifying a Config File Explicitly
+### Specifying a Main Config File Explicitly 
 
 You can override the default value with `-f` or `--config-file`. Examples:
 
@@ -102,3 +100,11 @@ You can override the default value with `-f` or `--config-file`. Examples:
 dtm apply -f path/to/your/config.yaml
 dtm apply --config-file path/to/your/config.yaml
 ```
+
+### No Defaults for varFile and toolFile
+
+For `varFile` and `toolFile`, no default values are provided.
+
+If `varFile` isn't specified in the main config, `dtm` will not use any var files, even if there is already a file named `variables.yaml` under the current directory.
+
+Similarly, if `toolFile` isn't specified in the main config, `dtm` will throw an error, even if there is a `tools.yaml` file under the current directory.

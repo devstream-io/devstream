@@ -4,9 +4,9 @@ To not repeat yourself (DRY,) we can define some variables in a var file and use
 
 You can specify the path/to/your/variablesFile.yaml in the main config. See the [config](./config.md) section for more details.
 
-## Default Variable File
+## Default Variables File
 
-If `varFile` isn't specified explicitly in the main config, `variables.yaml` under the current directory will be used. If this file doesn't exist, and no user-specified var file is provided, the config won't be rendered with any variables.
+No default variables file will be loaded. You _must_ specify which var file to use explicitly in the main config.
 
 ## Using a Variables File
 
