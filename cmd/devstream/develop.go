@@ -2,8 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/devstream-io/devstream/cmd/devstream/validator"
-
+	"github.com/devstream-io/devstream/cmd/devstream/options"
 	"github.com/spf13/cobra"
 
 	"github.com/devstream-io/devstream/internal/pkg/develop"
@@ -22,7 +21,7 @@ var developCMD = &cobra.Command{
 Examples:
   dtm develop create-plugin --name=YOUR-PLUGIN-NAME,
   dtm develop validate-plugin --name=YOUR-PLUGIN-NAME`,
-	Run: validator.WithValidators(developCMDFunc, validator.ArgsCountEqual(1), validateDevelopArgs),
+	Run: options.WithValidators(developCMDFunc, options.ArgsCountEqual(1), validateDevelopArgs),
 }
 
 func developCMDFunc(cmd *cobra.Command, args []string) {

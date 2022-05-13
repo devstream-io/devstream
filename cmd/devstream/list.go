@@ -2,12 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/devstream-io/devstream/cmd/devstream/validator"
-
+	"github.com/devstream-io/devstream/cmd/devstream/options"
 	"github.com/spf13/cobra"
 
 	"github.com/devstream-io/devstream/cmd/devstream/list"
-	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 var (
@@ -20,14 +18,10 @@ var listCMD = &cobra.Command{
 	Long: `This command lists all of the plugins.
 Examples:
   dtm list plugins`,
-	Run: validator.WithValidators(listCMDFunc, validator.ArgsCountEqual(1), validateListCMDArgs),
+	Run: options.WithValidators(listCMDFunc, options.ArgsCountEqual(1), validateListCMDArgs),
 }
 
 func listCMDFunc(cmd *cobra.Command, args []string) {
-	if err := validateListCMDArgs(args); err != nil {
-		log.Fatal(err)
-	}
-
 	list.List(pluginFilter)
 }
 

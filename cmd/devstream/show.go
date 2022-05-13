@@ -2,8 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/devstream-io/devstream/cmd/devstream/validator"
-
+	"github.com/devstream-io/devstream/cmd/devstream/options"
 	"github.com/spf13/cobra"
 
 	"github.com/devstream-io/devstream/internal/pkg/show"
@@ -21,7 +20,7 @@ Examples:
   dtm show config --plugin=A-PLUGIN-NAME
   dtm show status --plugin=A-PLUGIN-NAME --name=A-PLUGIN-INSTANCE-NAME
   dtm show status -p=A-PLUGIN-NAME -n=A-PLUGIN-INSTANCE-NAME`,
-	Run: validator.WithValidators(showCMDFunc, validator.ArgsCountEqual(1), validateShowArgs),
+	Run: options.WithValidators(showCMDFunc, options.ArgsCountEqual(1), validateShowArgs),
 }
 
 func showCMDFunc(cmd *cobra.Command, args []string) {

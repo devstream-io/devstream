@@ -1,4 +1,4 @@
-package validator
+package options
 
 import (
 	"fmt"
