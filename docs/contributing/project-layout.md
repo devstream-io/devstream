@@ -1,6 +1,6 @@
 # Project Layout
 
-See [`Go Project Layout`](https://medium.com/golang-learn/go-project-layout-e5213cdcfaa2) for additional background information.
+See [`Standard Go Project Layout`](https://github.com/golang-standards/project-layout) for additional background information.
 
 More about naming and organizing packages as well as other code structure recommendations:
 * [GopherCon EU 2018: Peter Bourgon - Best Practices for Industrial Programming](https://www.youtube.com/watch?v=PTE4VJIdHPg)
