@@ -32,7 +32,8 @@ var pluginDefaultConfigs = map[string]string{
 func Show() error {
 	plugin := viper.GetString("plugin")
 	if plugin == "" {
-		return fmt.Errorf("empty plugin name. Maybe you forgot to add --plugin=PLUGIN_NAME?")
+		fmt.Println(DefaultConfig)
+		return nil
 	}
 	if config, ok := pluginDefaultConfigs[plugin]; ok {
 		fmt.Println(config)
