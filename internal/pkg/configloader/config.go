@@ -84,7 +84,7 @@ func LoadConf(configFileName string) (*Config, error) {
 	errs := validateConfigFile(&gConfig)
 	if len(errs) != 0 {
 		for _, e := range errs {
-			log.Errorf("General config validation failed: %s.", e)
+			log.Errorf("Config file validation failed: %s.", e)
 		}
 		return nil, nil
 	}
@@ -143,19 +143,15 @@ func LoadToolConf(toolFileName, varFileName string) *Config {
 func genToolVarPath(configFileName string, gConfig ConfigFile) (string, string, error) {
 	var absToolFilePath, absVarFilePath string
 	var err error
+
 	absToolFilePath, err = parseCustomPath(configFileName, gConfig.ToolFile)
 	if err != nil {
 		return "", "", err
 	}
-
-	absVarFilePath = "variables.yaml"
-	if gConfig.VarFile != "" {
-		absVarFilePath, err = parseCustomPath(configFileName, gConfig.VarFile)
-		if err != nil {
-			return "", "", err
-		}
+	absVarFilePath, err = parseCustomPath(configFileName, gConfig.VarFile)
+	if err != nil {
+		return "", "", err
 	}
-
 	return absToolFilePath, absVarFilePath, nil
 }
 
