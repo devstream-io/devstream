@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-
+	"github.com/devstream-io/devstream/cmd/devstream/options"
 	"github.com/spf13/cobra"
 
 	"github.com/devstream-io/devstream/internal/pkg/show"
@@ -20,14 +20,10 @@ Examples:
   dtm show config --plugin=A-PLUGIN-NAME
   dtm show status --plugin=A-PLUGIN-NAME --name=A-PLUGIN-INSTANCE-NAME
   dtm show status -p=A-PLUGIN-NAME -n=A-PLUGIN-INSTANCE-NAME`,
-	Run: showCMDFunc,
+	Run: options.WithValidators(showCMDFunc, options.ArgsCountEqual(1), validateShowArgs),
 }
 
 func showCMDFunc(cmd *cobra.Command, args []string) {
-	if err := validateShowArgs(args); err != nil {
-		log.Fatal(err)
-	}
-
 	showInfo := show.Info(args[0])
 	log.Debugf("The show info is: %s.", showInfo)
 	if err := show.GenerateInfo(showInfo); err != nil {
@@ -37,9 +33,6 @@ func showCMDFunc(cmd *cobra.Command, args []string) {
 
 func validateShowArgs(args []string) error {
 	// arg is "config" or "status" here, maybe will have "output" in the future.
-	if len(args) != 1 {
-		return fmt.Errorf("got illegal args count (expect 1, got %d)", len(args))
-	}
 	showInfo := show.Info(args[0])
 	if !show.IsValideInfo(showInfo) {
 		return fmt.Errorf("invalide Show Info")

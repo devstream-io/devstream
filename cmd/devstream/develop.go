@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-
+	"github.com/devstream-io/devstream/cmd/devstream/options"
 	"github.com/spf13/cobra"
 
 	"github.com/devstream-io/devstream/internal/pkg/develop"
@@ -21,14 +21,10 @@ var developCMD = &cobra.Command{
 Examples:
   dtm develop create-plugin --name=YOUR-PLUGIN-NAME,
   dtm develop validate-plugin --name=YOUR-PLUGIN-NAME`,
-	Run: developCMDFunc,
+	Run: options.WithValidators(developCMDFunc, options.ArgsCountEqual(1), validateDevelopArgs),
 }
 
 func developCMDFunc(cmd *cobra.Command, args []string) {
-	if err := validateDevelopArgs(args); err != nil {
-		log.Fatal(err)
-	}
-
 	developAction := develop.Action(args[0])
 	log.Debugf("The develop action is: %s.", developAction)
 	if err := develop.ExecuteAction(developAction); err != nil {
@@ -38,9 +34,6 @@ func developCMDFunc(cmd *cobra.Command, args []string) {
 
 func validateDevelopArgs(args []string) error {
 	// "create-plugin" or "validate-plugin". Maybe it will be "delete-plugin"/"rename-plugin" in future.
-	if len(args) != 1 {
-		return fmt.Errorf("illegal args count (expect 1, got %d)", len(args))
-	}
 	developAction := develop.Action(args[0])
 	if !develop.IsValideAction(developAction) {
 		return fmt.Errorf("invalide Develop Action")
