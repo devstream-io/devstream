@@ -72,4 +72,4 @@
 
 另外我们也有微信群，可以直接扫下方群二维码加入用户群。
 
-![](images/wechat-group-qr-code.jpg)
+![](images/wechat-group-qr-code.png)
