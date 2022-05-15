@@ -9,7 +9,10 @@ import (
 
 type Type string
 
-const Local Type = "local"
+const (
+	Local Type = "local"
+	S3    Type = "s3"
+)
 
 // Backend is used to persist data, it can be local file/etcd/s3/...
 type Backend interface {
