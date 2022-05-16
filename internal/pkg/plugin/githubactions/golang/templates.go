@@ -4,6 +4,7 @@ var prPipeline = `name: Pull Requests Builder
 on:
   pull_request:
     branches: [ master, main ]
+permissions: write-all
 jobs:
   [[- if .Build.Enable]]
   build:
@@ -82,6 +83,7 @@ var mainPipeline = `name: Main Branch Builder
 on:
   push:
     branches: [ master, main ]
+permissions: write-all
 jobs:
   [[- if .Build.Enable]]
   build:
