@@ -1,23 +1,14 @@
 ---
 name: Documentation Issue
-about: Help improve our documentation
-title: ''
+description: Help to improve our documentation
 labels: docs
-assignees: ''
 ---
 
-## Scope
-
-Explain briefly which documentation needs to be updated (the main README, a specific plugin, etc.)
-
-## Describe the Change
-
-A clear and concise description of what needs to be updated in the documentation.
-
-## Screenshots
-
-If applicable, add screenshots to help explain the issue.
-
-## Additional Context
-
-Add any other helpful context about the issue here.
+body:
+- type: textarea
+  id: problem
+  attributes:
+  label: What should be changed?
+  description: Please provide as much info as possible.
+  validations:
+  required: true
