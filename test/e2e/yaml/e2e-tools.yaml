@@ -55,3 +55,25 @@ tools:
         valuefile: values.yaml
         path: helm/${{github-repo-scaffolding-golang.default.outputs.repo}}
         repoURL: ${{github-repo-scaffolding-golang.default.outputs.repoURL}}
+  - name: trello
+    instanceID: default
+    dependsOn: [ ]
+    options:
+      owner: [ [ Owner ] ]
+      repo: [ [ Repo ] ]
+      kanbanBoardName: [ [ kanbanBoardName ] ]
+  # name of the tool
+  - name: trello-github-integ
+    # id of the tool instance
+    instanceID: default
+    # format: name.instanceID; If specified, dtm will make sure the dependency is applied first before handling this tool.
+    dependsOn: [ "trello.default" ]
+    # options for the plugin
+    options:
+      owner: [ [ Owner ] ]
+      repo: [ [ Repo ] ]
+      boardId: ${{ trello.default.outputs.boardId }}
+      todoListId: ${{ trello.default.outputs.todoListId }}
+      doingListId: ${{ trello.default.outputs.doingListId }}
+      doneListId: ${{ trello.default.outputs.doneListId }}
+      branch: main
