@@ -175,7 +175,7 @@ make build -j8 # 多线程构建
 
 这将构建所有东西：`dtm` 和所有的插件。
 
-我们还支持以下构建模式。
+我们还支持以下构建模式：
 - 只构建 `dtm` ：`make build-core`。
 - 构建一个特定的插件: `make build-plugin.PLUGIN_NAME`。例如：`make build-plugin.argocd`。
 - 构建所有插件: `make build-plugins -j8` (多线程编译)
