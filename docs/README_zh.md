@@ -52,3 +52,12 @@ TL;DR: DevStream（CLI工具名为`dtm`）是一个开源的DevOps工具链管�
 **DevStream的目标是成为DevOps工具的软件包管理器。**
 
 **更具野心的是，DevStream想成为Linux内核，你可以用各种组件创建不同的发行版，为SDLC工作流的每个部分选择最适合的组件。**
+
+## 为什么是 `dtm` ？
+Q：CLI被命名为 `dtm`，而工具本身被称为 `DevStream`。这是怎么回事！？一致性在哪里？
+
+A：受 [`git`](https://github.com/git/git#readme)的启发，这个名字可以是（取决于你的心情）：
+
+- **d**evs**t**rea**m**的一个对称缩写。
+- "**D**evops **T**oolchain **M**anager"：你的心情很好，而且它确实对你有用。
+- "**d**ead **t**o **m**e"：当它崩溃的时候。
