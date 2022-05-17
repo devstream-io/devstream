@@ -1,6 +1,6 @@
 name: Documentation Issue
 description: Help to improve our documentation
-title: "[Docs]: "
+title: ":open_book: `Docs`: "
 labels: docs
 body:
 - type: textarea
