@@ -35,7 +35,7 @@ TL;DR: DevStream（CLI工具名为`dtm`）是一个开源的DevOps工具链管�
 
 在创建一个高效、定制化的工作流上，当前有许多挑战。
 
-- 我们很多选择。哪个是最好的？没有"放之四海而皆准"的答案，因为这完全取决于你的需求和喜好。
+- 我们有很多选择。哪个是最好的？没有"放之四海而皆准"的答案，因为这完全取决于你的需求和喜好。
 - 不同部分之间的整合是非常具有挑战性的，否则将导致项目孤岛化、碎片化。
 - 软件领域演进很快。今天最好的东西可能明天就毫无意义。如果你想换掉一些组件或工具，管理起来会很困难，也很耗费资源。
 
@@ -94,7 +94,7 @@ A：受 [`git`](https://github.com/git/git#readme) 的启发，这个名字可�
 
 ## 用法
 
-如果你需要应用配置，请运行。
+如果你需要应用配置，请运行：
 
 ```shell
 ./dtm apply -f YOUR_CONFIG_FILE.yaml
@@ -110,7 +110,7 @@ A：受 [`git`](https://github.com/git/git#readme) 的启发，这个名字可�
 ./dtm -y apply -f YOUR_CONFIG_FILE.yaml
 ```
 
-要删除 `Config` 中定义的所有内容，运行:
+要删除 `Config` 中定义的所有内容，请运行:
 
 ```shell
 ./dtm delete -f YOUR_CONFIG_FILE.yaml
