@@ -56,7 +56,7 @@ TL;DR: DevStream（CLI工具名为`dtm`）是一个开源的DevOps工具链管�
 ## 为什么是 `dtm` ？
 Q：CLI被命名为 `dtm`，而工具本身被称为 `DevStream`。这是怎么回事！？一致性在哪里？
 
-A：受 [`git`](https://github.com/git/git#readme)的启发，这个名字可以是（取决于你的心情）：
+A：受 [`git`](https://github.com/git/git#readme) 的启发，这个名字可以是（取决于你的心情）：
 
 - "**d**evs**t**rea**m**": 一个对称缩写。
 - "**D**evops **T**oolchain **M**anager"：你的心情很好，而且它确实对你有用。
@@ -73,3 +73,69 @@ A：受 [`git`](https://github.com/git/git#readme)的启发，这个名字可以
 想安装另一个不同的工具来试一试？没问题。
 
 想删除或重新安装工作流中的某个特定部分？DevStream已经帮你解决了!
+
+## 安装
+
+请访问GitHub [Release](https://github.com/devstream-io/devstream/releases) 页面，根据你的系统和架构下载相应的二进制文件。
+
+## 快速入门
+
+现在就跟随我们的[快速入门](./quickstart_zh.md)文档开始使用 DevStream
+
+## 配置
+
+这是一个DevStream配置的例子：[examples/tools-quickstart.yaml](../examples/tools-quickstart.yaml)。
+
+记得打开这个配置文件，把里面所有的 `FULL_UPPER_CASE_STRINGS`（比如说 `YOUR_GITHUB_USERNAME` ）修改成你自己的。
+
+注意每一项的含义，并确保它是你要的。
+
+对于其他插件，请查看我们的 [文档](https://www.devstream.io/docs/index) 中的"插件"部分，以了解详细用法。
+
+## 用法
+
+如果你需要应用配置，请运行。
+
+```shell
+./dtm apply -f YOUR_CONFIG_FILE.yaml
+```
+
+如果你没有用` -f `参数指定配置文件，它将尝试使用默认值，即当前目录下的 `config.yaml` 。
+
+`dtm`将对比 `Config`、`State` 和 `Resource`，决定是否需要 `Create`、`Update` 或 `Delete`。更多信息请阅读我们的 [核心概念](https://www.devstream.io/docs/core-concepts) 文档。
+
+上面的命令在实际执行改变之前会要求你确认。如果不需要确认就应用 `Config`（就像 `apt-get -y update` ），请运行：
+
+```shell
+./dtm -y apply -f YOUR_CONFIG_FILE.yaml
+```
+
+要删除 `Config` 中定义的所有内容，运行:
+
+```shell
+./dtm delete -f YOUR_CONFIG_FILE.yaml
+```
+
+注意，这将删除 `Config` 中定义的所有内容。如果某些 `Config` 在应用后被删除（`State` 有，但 `Config` 没有），`dtm delete`不会删除它，这与`dtm destroy`不同。
+
+同样的，如果不需要确认就删除内容，请运行：
+```shell
+./dtm -y delete -f YOUR_CONFIG_FILE.yaml
+```
+
+要删除 `Config` 中定义的所有内容，且无论 `State` 是什么：
+```shell
+./dtm delete --force -f YOUR_CONFIG_FILE.yaml
+```
+
+验证以上命令已正确执行，请运行：
+```shell
+./dtm verify -f YOUR_CONFIG_FILE.yaml
+```
+
+销毁所有内容，请运行：
+```shell
+./dtm destroy
+```
+
+`dtm`将读取 `State`，然后确定哪些 `Tool` 应被安装，然后删除这些 `Tool`。这与`dtm apply -f empty.yaml`相同（ `empty.yaml` 是一个空的配置文件）。
