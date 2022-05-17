@@ -59,12 +59,12 @@ Q：CLI被命名为 `dtm`，而工具本身被称为 `DevStream`。这是怎么�
 A：受 [`git`](https://github.com/git/git#readme) 的启发，这个名字可以是（取决于你的心情）：
 
 - "**d**evs**t**rea**m**": 一个对称缩写。
-- "**D**evops **T**oolchain **M**anager"：你的心情很好，而且它确实对你有用。
+- "**D**evops **T**oolchain **M**anager"：当它对你有用的时候。
 - "**d**ead **t**o **m**e"：当它崩溃的时候。
 
 ## 为什么使用DevStream？
 
-不再需要手动的 `curl/wget` 下载、`apt` 安装、`helm` 安装；不再需要预先的本地试验以保证组件正确安装。
+不再需要手动的 `curl/wget` 下载、`apt` 安装、`helm` 安装；不再需要预先的本地试验以保证组件能正确安装。
 
 在一个人类可读的 `YAML` 配置文件中定义你所需要的DevOps工具，只需按一个按钮（或一个命令），你就能建立起整个DevOps工具链和SDLC工作流。
 
