@@ -67,8 +67,8 @@ Both "body" and "footer" are optional; BREAKING CHANGE can be addressed both in 
 
 ### Creating a New Plugin
 
-See our [doc about creating a plugin here](https://www.devstream.io/docs/creating-a-plugin).
+See our [doc about creating a plugin here](https://docs.devstream.io/en/latest/contributing/architecture/).
 
 ## Development Workflow
 
-See [development workflow documentation here](https://www.devstream.io/docs/development-workflow).
+See [development workflow documentation here](https://docs.devstream.io/en/latest/contributing/development-workflow/).
