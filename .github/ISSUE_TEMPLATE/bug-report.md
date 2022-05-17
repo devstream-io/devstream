@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-description: Report a bug encountered while operating DevStream
+description: Report a bug of DevStream
 labels: bug
 ---
 
@@ -9,19 +9,19 @@ body:
   id: problem
   attributes:
   label: What happened?
-  description: Please provide as much info as possible.
+  description: Please provide as much information as possible.
   validations:
   required: true
 
 - type: textarea
   id: repro
   attributes:
-  label: How to reproduce it?
+  label: How to reproduce?
   validations:
   required: true
 
 - type: textarea
   id: dtmVersion
   attributes:
-  label: DevStream version (command: dtm version)
+  label: DevStream version (to find out the version run: dtm version)
   required: true
