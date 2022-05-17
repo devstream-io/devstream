@@ -21,6 +21,6 @@ body:
 - type: textarea
   id: dtmVersion
   attributes:
-    label: DevStream version (to find out the version run: dtm version)
+    label: 'DevStream version (to find out the version run: dtm version)'
   validations:
     required: true
