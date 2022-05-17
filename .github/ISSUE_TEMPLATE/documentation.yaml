@@ -1,14 +1,12 @@
----
 name: Documentation Issue
 description: Help to improve our documentation
+title: "[Docs]: "
 labels: docs
----
-
 body:
 - type: textarea
   id: problem
   attributes:
-  label: What should be changed?
-  description: Please provide as much info as possible.
+    label: What should be changed?
+    description: Please provide as much info as possible.
   validations:
-  required: true
+    required: true
