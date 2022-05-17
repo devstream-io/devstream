@@ -1,6 +1,6 @@
 name: Bug Report
 description: Report a bug of DevStream
-title: "[Bug]: "
+title: ":bomb: `Bug`: "
 labels: bug
 body:
 - type: textarea
