@@ -16,7 +16,7 @@ Describe what this PR does and what problems it tries to solve in a few sentence
 Will this PR close any open issues? If yes, would you please mention the issue(s) here?
 -->
 
-### New Behavior (screenshots if needed)
+## New Behavior (screenshots if needed)
 <!--
 Describe the newly updated behavior, if relevant.
 -->
