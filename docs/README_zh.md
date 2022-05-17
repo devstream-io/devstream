@@ -139,3 +139,70 @@ A：受 [`git`](https://github.com/git/git#readme) 的启发，这个名字可�
 ```
 
 `dtm`将读取 `State`，然后确定哪些 `Tool` 应被安装，然后删除这些 `Tool`。这与`dtm apply -f empty.yaml`相同（ `empty.yaml` 是一个空的配置文件）。
+
+## 最佳实践
+
+DevStream支持许多工具的管理。你可以灵活地结合一些工具来满足你所需要的DevOps工具链。
+
+是的，如果你问我是否有可以开箱即用的推荐实践。
+
+我很高兴地告诉你，我们有，而且我们正在不断增加更多可能的组合。
+
+我们非常欢迎你告诉我们你期望的组合。
+
+- [GitOps工具链](https://www.devstream.io/docs/best-practices/gitops)
+
+## 支持的DevOps工具
+
+DevStream已经支持许多工具，而且还在不断增加。关于支持的工具的完整列表，请查看我们的 [插件列表](https://www.devstream.io/docs/plugins/plugins-list) 文档。
+
+或者，运行 `dtm list plugins`，它将显示所有可用的插件。
+
+## 开发环境
+
+### 前提条件
+
+- Git
+- Go (1.17版本以上)
+
+### 构建
+
+```shell
+cd path/to/devstream
+make clean
+make build -j8 # 多线程构建
+```
+
+这将构建所有东西：`dtm` 和所有的插件。
+
+我们还支持以下构建模式。
+- 只构建 `dtm` ：`make build-core`。
+- 构建一个特定的插件: `make build-plugin.PLUGIN_NAME`。例如：`make build-plugin.argocd`。
+- 构建所有插件: `make build-plugins -j8` (多线程编译)
+
+更多信息请参见`make help`。
+
+### 测试
+
+运行所有单元测试。
+
+```shell
+go test ./...
+```
+
+`e2e` 测试将 `GitHub Actions` 上运行。
+
+## 贡献
+
+首先，感谢你愿意为DevStream做贡献 
+
+关于如何贡献、贡献者成长计划、风格指南等更多细节，请查看我们的 [CONTRIBUTING](../CONTRIBUTING.md) 文档。
+
+## 社区
+
+我们将定期组织 "DevStream Community Meeting"，请访问 [WIKI](https://github.com/devstream-io/devstream/wiki) 页面了解详情。
+
+- 在 <a href="https://join.slack.com/t/devstream-io/shared_invite/zt-16tb0iwzr-krcFGYRN7~Vv1suGZjdv4w" target="_blank">Slack</a> 给我们留言。
+- 对于中国用户，微信群的二维码如下：
+
+![](images/wechat-group-qr-code.png)
