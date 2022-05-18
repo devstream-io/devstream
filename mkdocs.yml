@@ -19,6 +19,7 @@ nav:
     - 'commands/verify.md'
     - 'commands/delete.md'
     - 'commands/destroy.md'
+    - 'commands/develop.md'
   - Core Concepts:
     - 'core-concepts/core-concepts.md'
     - 'core-concepts/config.md'
