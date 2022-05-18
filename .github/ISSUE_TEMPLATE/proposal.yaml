@@ -6,7 +6,7 @@ body:
 - type: textarea
   id: proposal
   attributes:
-    label: What would you like to added? Why is this needed?
+    label: What would you like to add? Why is this needed?
     description: For feature requests, please also engage with the PMC on Slack or WeChat.
   validations:
     required: true
