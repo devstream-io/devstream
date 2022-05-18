@@ -2,7 +2,6 @@ package pluginengine
 
 import (
 	"errors"
-	"fmt"
 	"os"
 
 	"github.com/devstream-io/devstream/internal/pkg/configloader"
@@ -18,12 +17,12 @@ func Apply(configFile string, continueDirectly bool) error {
 	}
 
 	if cfg == nil {
-		return fmt.Errorf("failed to load the config file")
+		return log.Error("failed to load the config file")
 	}
 
 	err = pluginmanager.CheckLocalPlugins(cfg)
 	if err != nil {
-		log.Errorf("Error checking required plugins. Maybe you forgot to run \"dtm init\" first?")
+		log.Error("Error checking required plugins. Maybe you forgot to run \"dtm init\" first?")
 		return err
 	}
 
