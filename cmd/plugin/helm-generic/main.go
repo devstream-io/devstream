@@ -35,5 +35,5 @@ func (p Plugin) Read(options map[string]interface{}) (map[string]interface{}, er
 var DevStreamPlugin Plugin
 
 func main() {
-	log.Infof("%T: %s is a plugin for DevStream. Use it with DevStream.\n", NAME, DevStreamPlugin)
+	log.Infof("%T: %s is a plugin for DevStream. Use it with DevStream.\n", DevStreamPlugin, NAME)
 }
