@@ -6,8 +6,8 @@ const (
 )
 
 type Options struct {
-	PathWithNamespace string
-	Branch            string
+	PathWithNamespace string `validate:"required"`
+	Branch            string `validate:"required"`
 }
 
 func buildState(opts *Options) map[string]interface{} {
