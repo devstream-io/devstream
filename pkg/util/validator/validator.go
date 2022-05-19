@@ -2,9 +2,10 @@ package validator
 
 import (
 	"errors"
+	"log"
+
 	"github.com/go-playground/validator/v10"
 	"k8s.io/apimachinery/pkg/util/validation"
-	"log"
 )
 
 var v *validator.Validate
