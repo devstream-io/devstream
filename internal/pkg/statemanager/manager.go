@@ -47,7 +47,7 @@ func NewManager(backendType string) (Manager, error) {
 	log.Debugf("The global manager m is not initialized.")
 
 	// use default local backend for now.
-	b, err := backend.GetBackend(backendType)
+	b, err := backend.GetBackend(backend.Type(backendType))
 	if err != nil {
 		log.Errorf("Failed to get the Backend: %s.", err)
 		return nil, err

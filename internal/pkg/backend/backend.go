@@ -7,9 +7,11 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
+type Type string
+
 const (
-	Local = "local"
-	S3    = "s3"
+	Local Type = "local"
+	S3    Type = "s3"
 )
 
 // Backend is used to persist data, it can be local file/etcd/s3/...
@@ -21,7 +23,7 @@ type Backend interface {
 }
 
 // GetBackend will return a Backend by the given name.
-func GetBackend(typeName string) (Backend, error) {
+func GetBackend(typeName Type) (Backend, error) {
 	switch typeName {
 	case Local:
 		log.Debugf("Used the Backend: %s.", typeName)
