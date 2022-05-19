@@ -148,7 +148,7 @@ func LoadToolConf(toolFileName, varFileName string) (*Config, error) {
 			log.Errorf("Config validation failed: %s.", e)
 			errStrings = append(errStrings, e.Error())
 		}
-		return nil, fmt.Errorf(strings.Join(errStrings, "\n"))
+		return nil, fmt.Errorf(strings.Join(errStrings, "; "))
 	}
 
 	return &config, nil
