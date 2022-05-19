@@ -49,7 +49,7 @@ func loadVariablesFilesIntoMap(varFileName string) (map[string]interface{}, erro
 	return variables, nil
 }
 
-// this is because our variables syntax is [[ varName ]]
+// this is because our variables' syntax is [[ varName ]]
 // while Go's template is [[ .varName ]]
 func addDotForVariablesInConfig(s string) string {
 	// regex := `\[\[\s*(.*)\s*\]\]`

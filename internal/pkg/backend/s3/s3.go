@@ -4,13 +4,8 @@ import (
 	"context"
 
 	"github.com/devstream-io/devstream/internal/pkg/aws/s3"
-	"github.com/devstream-io/devstream/internal/pkg/backend"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
-
-var _ backend.Backend = (*S3Backend)(nil)
-
-const DefaultKey = "devstream.state"
 
 type S3Backend struct {
 	file *s3.S3File

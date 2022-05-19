@@ -90,11 +90,20 @@ func validateConfigFile(c *ConfigFile) []error {
 	if c.State == nil {
 		errors = append(errors, fmt.Errorf("state config is empty"))
 	} else {
-		if c.State.Options == nil {
-			errors = append(errors, fmt.Errorf("state options is empty"))
-		}
-		if c.State.Backend == "" {
-			errors = append(errors, fmt.Errorf("backend is empty"))
+		if c.State.Backend == "local" {
+			if c.State.Options.StateFile == "" {
+				errors = append(errors, fmt.Errorf("stateFile is empty"))
+			}
+		} else if c.State.Backend == "s3" {
+			if c.State.Options.Bucket == "" {
+				errors = append(errors, fmt.Errorf("state s3 Bucket is empty"))
+			}
+			if c.State.Options.Region == "" {
+				errors = append(errors, fmt.Errorf("state s3 Region is empty"))
+			}
+			if c.State.Options.Key == "" {
+				errors = append(errors, fmt.Errorf("state s3 Key is empty"))
+			}
 		}
 	}
 

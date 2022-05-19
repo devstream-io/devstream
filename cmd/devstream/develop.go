@@ -22,7 +22,7 @@ var developCreatePluginCMD = &cobra.Command{
 	Short: "Create a new plugin",
 	Long: `Create-plugin is used for creating a new plugin.
 Exampls:
-	dtm develop create-plugin --name=YOUR-PLUGIN-NAME`,
+  dtm develop create-plugin --name=YOUR-PLUGIN-NAME`,
 	Run: developCreateCMDFunc,
 }
 
@@ -31,8 +31,8 @@ var developValidatePluginCMD = &cobra.Command{
 	Short: "Validate a plugin",
 	Long: `Validate-plugin is used for validating an existing plugin or all plugins.
 Examples:
-	dtm develop validate-plugin --name=YOUR-PLUGIN-NAME,
-	dtm develop validate-plugin --all`,
+  dtm develop validate-plugin --name=YOUR-PLUGIN-NAME,
+  dtm develop validate-plugin --all`,
 	Run: developValidateCMDFunc,
 }
 
