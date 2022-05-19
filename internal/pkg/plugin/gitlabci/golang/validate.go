@@ -1,17 +1,9 @@
 package golang
 
-import "fmt"
+import (
+	"github.com/devstream-io/devstream/pkg/util/validator"
+)
 
 func validate(opts *Options) []error {
-	retErrors := make([]error, 0)
-
-	if opts.PathWithNamespace == "" {
-		retErrors = append(retErrors, fmt.Errorf("pathWithNamespace is empty"))
-	}
-
-	if opts.Branch == "" {
-		retErrors = append(retErrors, fmt.Errorf("branch is empty"))
-	}
-
-	return retErrors
+	return validator.Struct(opts)
 }

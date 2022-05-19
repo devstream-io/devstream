@@ -50,22 +50,6 @@ type Tag struct {
 type Image struct {
 }
 
-func (b *Build) Validate() []error {
-	retErrors := make([]error, 0)
-
-	// TODO(daniel-hutao): what should we validate here?
-
-	return retErrors
-}
-
-func (t *Test) Validate() []error {
-	retErrors := make([]error, 0)
-
-	// TODO(daniel-hutao): what should we validate here?
-
-	return retErrors
-}
-
 func (d *Docker) Validate() []error {
 	retErrors := make([]error, 0)
 
