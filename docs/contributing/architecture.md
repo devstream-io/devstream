@@ -6,7 +6,7 @@ This document summarizes the main components of DevStream and how data flows bet
 
 The following diagram shows an approximation of how DevStream executes a user command:
 
-![DevStream Architecture Diagram](/img/docs/architecture-overview.png)
+![DevStream Architecture Diagram](../images/architecture-overview.png)
 
 There are three major parts:
 

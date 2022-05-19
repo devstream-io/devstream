@@ -17,59 +17,192 @@
 </div>
 
 ## DevStream 是什么？
+TL;DR: DevStream（CLI工具名为`dtm`）是一个开源的DevOps工具链管理器。
 
-**注意：我们会优先更新英文版 [README](../README.md) ，中文版有一定的滞后，强烈建议大家直接阅读英文版**
+想象你正在开始一个新的项目或组建一个新的团队。在写第一行代码之前，你需要一个能够高效运转SDLC(软件开发生命周期)和承载开发至部署全过程的工具。
 
-如果你懒得看下面的一大串文字：一个开源 DevOps 工具链管理工具。
+通常情况下，你需要以下几个部分来高效地工作。
 
-不过我还是建议你看下下面的一大串文字：
+- 项目管理软件或 `issue` 追溯工具（JIRA等）
+- 源代码管理（GitHub、Bitbucket等）
+- 持续集成（Jenkins、CircleCI、Travis CI等）
+- 持续交付/部署（Flux CD/Flux2、Argo CD等)
+- 密钥和证书的单一事实来源(A single source of truth)（密钥管理器，如HashiCorp的Vault）
+- 集成化的日志和监控工具（例如，ELK、Prometheus/Grafana）
+- ......
 
-假如你现在成立一家公司，或者具体一点，你要组建一个研发团队，在开始写代码前你需要做哪些事情？有些事情是绕不开的，比如：
+具体内容远远不止这些，不过你应该已经明白意思了。
 
-1. 你需要选择一个地方来存放代码，也许是 GitHub，也许是 GitLab；
-2. 你需要一个工具来完成项目管理或者说需求管理、Issue 管理等等工作，也许你会选择 Jira 或者禅道或者 Trello；
-3. 你需要选择一种开发语言，选择一个开发框架，比如你决定用 Golang 来开发，假如这是一个 web 项目，你需要考虑 web 框架用什么？“第一行”代码怎么写，也就是第一个脚手架怎么组装；
-4. 然后你需要配置一些 ci 自动化，比如 GitHub 上添加 actions 来完成代码的扫描、测试等等；
-5. 当然 cd 工具也不能少，不管你选择 Jenkins 还是 ArgoCD；
-6. 如果 cd 完成了，接下来可能你马上要开始纠结日志、监控、告警等等方案应该怎么定了
-7. 如果想得更多，或许你希望 GitHub 上别人给你提的 issue 能够自动同步到你的 Jira 或者 Trello……
-8. ……
+在创建一个高效、定制化的工作流上，当前有许多挑战。
 
-也许我上面说到的例子并不完整或者绝对准确，但是有一个结论是我们必须接受的：“在一个软件的开发生命周期中，除了业务代码编码本身，在 DevOps 工具链上我们将花费大量精力去选型、打通、落地、维护……”
+- 我们有很多选择。哪个是最好的？没有"放之四海而皆准"的答案，因为这完全取决于你的需求和喜好。
+- 不同部分之间的整合是非常具有挑战性的，否则将导致项目孤岛化、碎片化。
+- 软件领域演进很快。今天最好的东西可能明天就毫无意义。如果你想换掉一些组件或工具，管理起来会很困难，也很耗费资源。
 
-所以 DevStream 要解决什么问题呢？我们要做的就是将主流的涵盖 DevOps 全生命周期的开源工具管理起来，包括这些工具的安装部署、最佳实践配置、工具间的打通等等。
+说实话，有一些产品可能包含你需要的一切，但它们可能并不完全适合你的具体要求。因此，你仍然需要自己去搜寻，找到最好的组件，并自己将它们整合起来。也就是说，选择、启动、连接和管理所有这些组件需要大量的时间和精力。
 
-## DevStream 目前能干什么？
+你可能已经看到了我们想要做的事情......
 
-1. 缺陷、需求管理 - Trello (集成 GitHub)
-2. 源码管理 - Golang 脚手架生成
-3. CI 流程 - Golang、Python、Nodejs
-4. CD/GitOps - ArgoCD / ArgoCD App
-5. Monitoring - kube-prometheus
-6. ……
+我们想简化整合组件的过程，所以我们建立了DevStream，一个开源的DevOps工具链管理器。
 
-## 快速开始
+想一想Linux内核与不同发行版的关系。不同的发行版提供不同的软件包，这样你就可以随时选择你最需要的。
 
-如果你想要快速上手体验，可以跳转到我们的[快速开始](./quickstart_zh.md)文档。
+或者，想想`yum`、`apt`或`apk`。你可以使用这些包管理器为任何新环境轻松设置你最喜欢的软件包。
 
-## 你想问 DevStream 的将来？
+**DevStream的目标是成为DevOps工具的软件包管理器。**
 
-或许用不了多久，我们就能完整实现 “DevOps toolchain as code”，那时候你的整个 DevOps 工具链都能以 DevStream 作为唯一入口来运维，dtm(DevStream 命令行工具)将成为你的整条 DevOps 工具链的 “single source of truth”。当然那时你需要替换整个 DevOps 工具链中的某一个环节，也会变得很简单。
+**更具野心的是，DevStream想成为Linux内核，你可以用各种组件创建不同的发行版，为SDLC工作流的每个部分选择最适合的组件。**
 
-其实目前我们已经部分实现 “single source of truth”，部署好的工具发生的部分变更已经能够被 dtm 感知到，并且 dtm 会判断这种变更是否合理，是否需要修复，进而采取相应的动作让整个 DevOps 工具链变得更可靠。
+## 为什么是 `dtm` ？
+Q：CLI被命名为 `dtm`，而工具本身被称为 `DevStream`。这是怎么回事！？一致性在哪里？
 
-## 怎么参与 DevStream 社区？
+A：受 [`git`](https://github.com/git/git#readme) 的启发，这个名字可以是（取决于你的心情）：
 
-当然，DevStream 的发展离不开社区用户的支持，DevStream 欢迎所有人参与社区建设，一起完善 dtm 的功能，让 dtm 越来越强大！
+- "**d**evs**t**rea**m**": 一个对称缩写。
+- "**D**evops **T**oolchain **M**anager"：当它对你有用的时候。
+- "**d**ead **t**o **m**e"：当它崩溃的时候。
 
-不要有任何心理负担，我们非常欢迎大家下载、体验、捉虫、提 Issue、挑刺、bugifx 等等等等。
+## 为什么使用DevStream？
 
-## 交流、支持
+不再需要手动的 `curl/wget` 下载、`apt` 安装、`helm` 安装；不再需要预先的本地试验以保证组件能正确安装。
 
-如果你发现了 bug 或者有任何好的意见建议，我们希望你直接在 GitHub 上给我们提 issue。
+在一个人类可读的 `YAML` 配置文件中定义你所需要的DevOps工具，只需按一个按钮（或一个命令），你就能建立起整个DevOps工具链和SDLC工作流。
 
-当然 <a href="https://join.slack.com/t/devstream-io/shared_invite/zt-16tb0iwzr-krcFGYRN7~Vv1suGZjdv4w" target="_blank">Slack</a> 也是有的。
+五分钟，一个命令。
 
-另外我们也有微信群，可以直接扫下方群二维码加入用户群。
+想安装另一个不同的工具来试一试？没问题。
+
+想删除或重新安装工作流中的某个特定部分？DevStream已经帮你解决了!
+
+## 安装
+
+请访问GitHub [Release](https://github.com/devstream-io/devstream/releases) 页面，根据你的系统和架构下载相应的二进制文件。
+
+## 快速入门
+
+现在就跟随我们的[快速入门](./quickstart_zh.md)文档开始使用 DevStream
+
+## 配置
+
+这是一个DevStream配置的例子：[examples/tools-quickstart.yaml](../examples/tools-quickstart.yaml)。
+
+记得打开这个配置文件，把里面所有的 `FULL_UPPER_CASE_STRINGS`（比如说 `YOUR_GITHUB_USERNAME` ）修改成你自己的。
+
+注意每一项的含义，并确保它是你要的。
+
+对于其他插件，请查看我们的 [文档](https://docs.devstream.io) 中的"插件"部分，以了解详细用法。
+
+## 用法
+
+如果你需要应用配置，请运行：
+
+```shell
+./dtm apply -f YOUR_CONFIG_FILE.yaml
+```
+
+如果你没有用` -f `参数指定配置文件，它将尝试使用默认值，即当前目录下的 `config.yaml` 。
+
+`dtm`将对比 `Config`、`State` 和 `Resource`，决定是否需要 `Create`、`Update` 或 `Delete`。更多信息请阅读我们的 [核心概念](https://docs.devstream.io/en/latest/core-concepts/core-concepts/) 文档。
+
+上面的命令在实际执行改变之前会要求你确认。如果不需要确认就应用 `Config`（就像 `apt-get -y update` ），请运行：
+
+```shell
+./dtm -y apply -f YOUR_CONFIG_FILE.yaml
+```
+
+要删除 `Config` 中定义的所有内容，请运行:
+
+```shell
+./dtm delete -f YOUR_CONFIG_FILE.yaml
+```
+
+注意，这将删除 `Config` 中定义的所有内容。如果某些 `Config` 在应用后被删除（`State` 有，但 `Config` 没有），`dtm delete`不会删除它，这与`dtm destroy`不同。
+
+同样的，如果不需要确认就删除内容，请运行：
+```shell
+./dtm -y delete -f YOUR_CONFIG_FILE.yaml
+```
+
+要删除 `Config` 中定义的所有内容，且无论 `State` 是什么：
+```shell
+./dtm delete --force -f YOUR_CONFIG_FILE.yaml
+```
+
+验证以上命令已正确执行，请运行：
+```shell
+./dtm verify -f YOUR_CONFIG_FILE.yaml
+```
+
+销毁所有内容，请运行：
+```shell
+./dtm destroy
+```
+
+`dtm`将读取 `State`，然后确定哪些 `Tool` 应被安装，然后删除这些 `Tool`。这与`dtm apply -f empty.yaml`相同（ `empty.yaml` 是一个空的配置文件）。
+
+## 最佳实践
+
+DevStream支持许多工具的管理。你可以灵活地结合一些工具来满足你所需要的DevOps工具链。
+
+是的，如果你问我是否有可以开箱即用的推荐实践。
+
+我很高兴地告诉你，我们有，而且我们正在不断增加更多可能的组合。
+
+我们非常欢迎你告诉我们你期望的组合。
+
+- [GitOps工具链](https://docs.devstream.io/en/latest/tutorials/best-practices/gitops/)
+
+## 支持的DevOps工具
+
+DevStream已经支持许多工具，而且还在不断增加。关于支持的工具的完整列表，请查看我们的 [插件列表](https://docs.devstream.io/en/latest/plugins/plugins-list) 文档。
+
+或者，运行 `dtm list plugins`，它将显示所有可用的插件。
+
+## 开发环境
+
+### 前提条件
+
+- Git
+- Go (1.17版本以上)
+
+### 构建
+
+```shell
+cd path/to/devstream
+make clean
+make build -j8 # 多线程构建
+```
+
+这将构建所有东西：`dtm` 和所有的插件。
+
+我们还支持以下构建模式：
+- 只构建 `dtm` ：`make build-core`。
+- 构建一个特定的插件: `make build-plugin.PLUGIN_NAME`。例如：`make build-plugin.argocd`。
+- 构建所有插件: `make build-plugins -j8` (多线程编译)
+
+更多信息请参见`make help`。
+
+### 测试
+
+运行所有单元测试。
+
+```shell
+go test ./...
+```
+
+`e2e` 测试将 `GitHub Actions` 上运行。
+
+## 贡献
+
+首先，感谢你愿意为DevStream做贡献 
+
+关于如何贡献、贡献者成长计划、风格指南等更多细节，请查看我们的 [CONTRIBUTING](../CONTRIBUTING.md) 文档。
+
+## 社区
+
+我们将定期组织 "DevStream Community Meeting"，请访问 [WIKI](https://github.com/devstream-io/devstream/wiki) 页面了解详情。
+
+- 在 <a href="https://join.slack.com/t/devstream-io/shared_invite/zt-16tb0iwzr-krcFGYRN7~Vv1suGZjdv4w" target="_blank">Slack</a> 给我们留言。
+- 对于中国用户，微信群的二维码如下：
 
 ![](images/wechat-group-qr-code.png)
