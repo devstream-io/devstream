@@ -28,7 +28,7 @@ var _ = Describe("Pluginengine", func() {
 	BeforeEach(func() {
 		defer GinkgoRecover()
 
-		smgr, err = statemanager.NewManager()
+		smgr, err = statemanager.NewManager("local")
 		Expect(err).ToNot(HaveOccurred())
 		Expect(smgr).NotTo(BeNil())
 		_, _ = GinkgoWriter.Write([]byte("new a statemanager"))
