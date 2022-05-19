@@ -1,7 +1,7 @@
 package template
 
 var NAME_go_nameTpl = "{{ .Name | format  }}.go"
-var NAME_go_dirTpl = "internal/pkg/plugin/{{ .Name | format }}/"
+var NAME_go_dirTpl = "internal/pkg/plugin/{{ .Name | dirFormat }}/"
 var NAME_go_mustExistFlag = true
 var NAME_go_contentTpl = `package {{ .Name | format }}
 
