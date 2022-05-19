@@ -39,7 +39,7 @@ type manager struct {
 
 var m *manager
 
-func NewManager() (Manager, error) {
+func NewManager(backendType string) (Manager, error) {
 	if m != nil {
 		return m, nil
 	}
@@ -47,7 +47,7 @@ func NewManager() (Manager, error) {
 	log.Debugf("The global manager m is not initialized.")
 
 	// use default local backend for now.
-	b, err := backend.GetBackend(backend.Local)
+	b, err := backend.GetBackend(backend.Type(backendType))
 	if err != nil {
 		log.Errorf("Failed to get the Backend: %s.", err)
 		return nil, err
