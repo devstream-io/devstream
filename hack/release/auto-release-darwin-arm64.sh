@@ -3,6 +3,12 @@ set -o nounset
 
 tag=v0.5.0
 
+if [ $# -eq 1 ]
+then
+  info=$1
+  tag=${info:4}
+fi
+
 user=devstream-io
 repo=devstream
 github_token=$GITHUB_TOKEN
