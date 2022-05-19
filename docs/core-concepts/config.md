@@ -84,9 +84,11 @@ tools:
 
 ### State
 
-The `state` section specifies where to store DevStream state. As of now (v0.5.0,) we only support local "backend" to store the DevStream state. AWS S3 backend is being supported and will be released soon.
+The `state` section specifies where to store DevStream state. As of now (v0.5.0), we only support local backend.
 
-The `state` section has some options. For example, `stateFile` is mandatory for local backend.
+From v0.6.0 on, we will support both "local" and "s3" backend store the DevStream state.
+
+Read the section [The State Section in the Main Config](./stateconfig.md) for more details.
 
 ## Default Values
 
