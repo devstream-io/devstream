@@ -12,6 +12,6 @@ type Options struct {
 	Branch   string       `validate:"required"`
 	Language *ga.Language `validate:"required"`
 	Build    *Build
-	Test     *Test   `validate:"required"`
-	Docker   *Docker `validate:"required"`
+	Test     *Test `validate:"required"`
+	Docker   *Docker
 }

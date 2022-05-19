@@ -13,6 +13,10 @@ func validate(opts *Options) []error {
 		retErrors = append(retErrors, errs...)
 	}
 	// too complex to validate automatically
+	if opts.Docker == nil {
+		return retErrors
+	}
+
 	if errs := opts.Docker.Validate(); len(errs) != 0 {
 		for _, e := range errs {
 			retErrors = append(retErrors, fmt.Errorf("docker is invalid: %s", e))
