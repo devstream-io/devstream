@@ -3,11 +3,18 @@ set -o nounset
 
 tag=v0.5.0
 
-if [ $# -eq 1 ]
-then
-  info=$1
-  tag=${info:4}
-fi
+while getopts "t:" opt; do
+  case $opt in
+  t)
+    tag=$OPTARG
+    ;;
+
+  ?)
+    echo "Options not used"
+    exit 1
+    ;;
+  esac
+done
 
 user=devstream-io
 repo=devstream
@@ -38,8 +45,6 @@ make build -j8
 # install github-release for uploading
 go install github.com/github-release/github-release@latest
 
-
-
 # upload dtm
 echo 'Uploading 'dtm-${GOOS}-${GOARCH}' ...'
 github-release upload --security-token $github_token --user $user --repo $repo --tag $tag --file dtm --name dtm-${GOOS}-${GOARCH}
@@ -48,4 +53,4 @@ echo dtm-${GOOS}-${GOARCH}' uploaded.'
 # upload plugins and .md5 files
 # In order to upload plug-ins to s3, you need to download awscli. After downloading awscli, you need to configure aws credentials.
 pip3 install awscli
-aws s3 cp $plugin_dir  s3://download.devstream.io/${tag} --recursive --acl public-read
+aws s3 cp $plugin_dir s3://download.devstream.io/${tag} --recursive --acl public-read
