@@ -28,7 +28,13 @@ var _ = Describe("Pluginengine", func() {
 	BeforeEach(func() {
 		defer GinkgoRecover()
 
-		smgr, err = statemanager.NewManager()
+		stateCfg := configloader.State{
+			Backend: "local",
+			Options: configloader.StateConfigOptions{
+				StateFile: "devstream.state",
+			},
+		}
+		smgr, err = statemanager.NewManager(stateCfg)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(smgr).NotTo(BeNil())
 		_, _ = GinkgoWriter.Write([]byte("new a statemanager"))

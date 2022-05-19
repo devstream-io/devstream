@@ -22,15 +22,12 @@ func IsValideAction(action Action) bool {
 	return ok
 }
 
-func ExecuteAction(action Action) error {
-	switch action {
-	case ActionCreatePlugin:
-		log.Debugf("Action: %s.", ActionCreatePlugin)
-		return plugin.Create()
-	case ActionValidatePlugin:
-		log.Debugf("Action: %s.", ActionValidatePlugin)
-		return plugin.Validate()
-	default:
-		panic("This should be never happen!")
-	}
+func CreatePlugin() error {
+	log.Debugf("Start create plugin")
+	return plugin.Create()
+}
+
+func ValidatePlugin() error {
+	log.Debugf("Start validate plugin")
+	return plugin.Validate()
 }

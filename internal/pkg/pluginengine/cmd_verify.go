@@ -27,7 +27,7 @@ func Verify(configFile string) bool {
 		return false
 	}
 	// 3. can successfully create the state
-	smgr, err := statemanager.NewManager()
+	smgr, err := statemanager.NewManager(*cfg.State)
 	if err != nil {
 		log.Errorf("Something is wrong with the state: %s.", err)
 		return false

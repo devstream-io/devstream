@@ -77,6 +77,13 @@ Want to remove or reinstall a specific piece in the workflow? DevStream has got 
 
 Please visit GitHub [Releases](https://github.com/devstream-io/devstream/releases) page and download the appropriate binary according to your operating system and architecture.
 
+Note : `dtm` currently doesn't support Windows yet.
+
+For Linux/Macos users:
+
+- rename the downloaded binary to `dtm` and move it to your PATH (e.g.: `mv dtm /usr/local/bin/`)
+- grant `dtm` executable permission (e.g.: `chmod a+x dtm`)
+
 ## Quick Start
 
 If you want to get a quick start, follow our [quick start](./docs/quickstart_en.md) doc now.
@@ -89,7 +96,7 @@ Remember to open this configuration file, modify all FULL_UPPER_CASE_STRINGS (li
 
 Pay attention to the meaning of each item to ensure that it is what you want.
 
-For other plugins, checkout the "Plugins" section in our [doc](https://www.devstream.io/docs/index) for detailed usage.
+For other plugins, checkout the "Plugins" section in our [doc](https://docs.devstream.io) for detailed usage.
 
 ## Usage
 
@@ -152,7 +159,7 @@ I am happy to tell you that we have, and we are constantly adding more possible 
 
 so you are more than welcome to tell us what combinations you expect.
 
-- [GitOps Toolchain](https://www.devstream.io/docs/best-practices/gitops)
+- [GitOps Toolchain](https://docs.devstream.io/en/latest/tutorials/best-practices/gitops/)
 
 ## Supported DevOps Tools
 

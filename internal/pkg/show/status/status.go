@@ -13,7 +13,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func Show() error {
+func Show(configFile string) error {
 	plugin := viper.GetString("plugin")
 	name := viper.GetString("name")
 	if name == "" {
@@ -27,7 +27,15 @@ func Show() error {
 		allFlag = true
 	}
 
-	smgr, err := statemanager.NewManager()
+	cfg, err := configloader.LoadConf(configFile)
+	if err != nil {
+		return err
+	}
+	if cfg == nil {
+		return fmt.Errorf("failed to load the config file")
+	}
+
+	smgr, err := statemanager.NewManager(*cfg.State)
 	if err != nil {
 		log.Debugf("Failed to get State Manager: %s.", err)
 		return err

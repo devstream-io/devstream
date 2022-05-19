@@ -78,10 +78,16 @@ func initConfig() {
 	if err := viper.BindPFlags(rootCMD.Flags()); err != nil {
 		log.Fatal(err)
 	}
-	if err := viper.BindPFlags(developCMD.Flags()); err != nil {
+	if err := viper.BindPFlags(developCreatePluginCMD.Flags()); err != nil {
 		log.Fatal(err)
 	}
-	if err := viper.BindPFlags(showCMD.Flags()); err != nil {
+	if err := viper.BindPFlags(developValidatePluginCMD.Flags()); err != nil {
+		log.Fatal(err)
+	}
+	if err := viper.BindPFlags(showConfigCMD.Flags()); err != nil {
+		log.Fatal(err)
+	}
+	if err := viper.BindPFlags(showStatusCMD.Flags()); err != nil {
 		log.Fatal(err)
 	}
 }

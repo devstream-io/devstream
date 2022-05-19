@@ -1,7 +1,7 @@
 package template
 
 var create_go_nameTpl = "create.go"
-var create_go_dirTpl = "internal/pkg/plugin/{{ .Name | format }}/"
+var create_go_dirTpl = "internal/pkg/plugin/{{ .Name | dirFormat }}/"
 var create_go_contentTpl = `package {{ .Name | format }}
 
 import (

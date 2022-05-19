@@ -18,7 +18,7 @@ var destroyCMD = &cobra.Command{
 
 func destroyCMDFunc(cmd *cobra.Command, args []string) {
 	log.Info("Destroy started.")
-	if err := pluginengine.Destroy(continueDirectly); err != nil {
+	if err := pluginengine.Destroy(configFile, continueDirectly); err != nil {
 		log.Errorf("Destroy failed => %s.", err)
 		os.Exit(1)
 	}

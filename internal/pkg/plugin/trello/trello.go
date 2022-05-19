@@ -9,9 +9,9 @@ import (
 
 // Options is the struct for configurations of the trellogithub plugin.
 type Options struct {
-	Owner           string
-	Org             string
-	Repo            string
+	Owner           string `validate:"required_without=Org"`
+	Org             string `validate:"required_without=Owner"`
+	Repo            string `validate:"required"`
 	KanbanBoardName string
 }
 

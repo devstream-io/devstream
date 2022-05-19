@@ -9,7 +9,7 @@ type Options struct {
 
 // App is the struct for an ArgoCD app.
 type App struct {
-	Name      string
+	Name      string `validate:"required,dns1123subdomain"`
 	Namespace string
 }
 
@@ -22,6 +22,6 @@ type Destination struct {
 // Source is the struct for the source of an ArgoCD app.
 type Source struct {
 	Valuefile string
-	Path      string
-	RepoURL   string
+	Path      string `validate:"required"`
+	RepoURL   string `validate:"required"`
 }
