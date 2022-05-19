@@ -23,7 +23,7 @@ func Apply(configFile string, continueDirectly bool) error {
 
 	err = pluginmanager.CheckLocalPlugins(cfg)
 	if err != nil {
-		log.Errorf("Error checking required plugins. Maybe you forgot to run \"dtm init\" first?")
+		log.Error("Error checking required plugins. Maybe you forgot to run \"dtm init\" first?")
 		return err
 	}
 
