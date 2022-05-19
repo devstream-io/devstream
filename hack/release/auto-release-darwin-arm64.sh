@@ -1,7 +1,8 @@
 #! /bin/bash -e
+# usage: `sh auto-release-darwin-arm64.sh -t v0.6.0`
 set -o nounset
 
-tag=v0.5.0
+tag="invalid"
 
 while getopts "t:" opt; do
   case $opt in
@@ -15,6 +16,12 @@ while getopts "t:" opt; do
     ;;
   esac
 done
+
+if [ "${tag}" == "invalid" ]; then
+  echo "Maybe you forgot to use -t flag. E.g. sh auto-release-darwin-arm64.sh -t v0.6.0"
+  exit 1
+fi
+echo "tag: ${tag}"
 
 user=devstream-io
 repo=devstream
