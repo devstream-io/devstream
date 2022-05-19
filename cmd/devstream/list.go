@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/devstream-io/devstream/cmd/devstream/options"
+
 	"github.com/spf13/cobra"
+
+	"github.com/devstream-io/devstream/cmd/devstream/options"
 
 	"github.com/devstream-io/devstream/cmd/devstream/list"
 )
