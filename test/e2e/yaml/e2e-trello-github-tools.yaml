@@ -1,0 +1,19 @@
+tools:
+  - name: trello
+    instanceID: default
+    dependsOn: [ ]
+    options:
+      org: [[ githubOrganization ]]
+      repo: [[ RepoName ]]
+      kanbanBoardName: [[ kanbanBoardName ]]
+  - name: trello-github-integ
+    instanceID: default
+    dependsOn: [ "trello.default" ]
+    options:
+      org: [[ githubOrganization ]]
+      repo: [[ RepoName ]]
+      boardId: ${{ trello.default.outputs.boardId }}
+      todoListId: ${{ trello.default.outputs.todoListId }}
+      doingListId: ${{ trello.default.outputs.doingListId }}
+      doneListId: ${{ trello.default.outputs.doneListId }}
+      branch: main

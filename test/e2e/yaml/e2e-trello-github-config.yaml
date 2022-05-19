@@ -1,0 +1,6 @@
+varFile: e2e-variables.yaml
+toolFile: e2e-trello-github-tools.yaml
+state:
+  backend: local
+  options:
+    stateFile: devstream.state
