@@ -4,6 +4,8 @@ import (
 	"fmt"
 
 	"github.com/devstream-io/devstream/internal/pkg/backend/local"
+	"github.com/devstream-io/devstream/internal/pkg/backend/s3"
+	"github.com/devstream-io/devstream/internal/pkg/configloader"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -23,11 +25,19 @@ type Backend interface {
 }
 
 // GetBackend will return a Backend by the given name.
-func GetBackend(typeName Type) (Backend, error) {
+func GetBackend(stateConfig configloader.State) (Backend, error) {
+	typeName := Type(stateConfig.Backend)
 	switch typeName {
 	case Local:
 		log.Debugf("Used the Backend: %s.", typeName)
-		return local.NewLocal(local.DefaultStateFile), nil
+		return local.NewLocal(stateConfig.Options.StateFile), nil
+	case S3:
+		log.Debugf("Used the Backend: %s.", typeName)
+		return s3.NewS3Backend(
+			stateConfig.Options.Bucket,
+			stateConfig.Options.Region,
+			stateConfig.Options.Key,
+		), nil
 	default:
 		return nil, fmt.Errorf("the backend type < %s > is illegal", typeName)
 	}
