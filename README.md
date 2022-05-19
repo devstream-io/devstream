@@ -77,13 +77,12 @@ Want to remove or reinstall a specific piece in the workflow? DevStream has got 
 
 Please visit GitHub [Releases](https://github.com/devstream-io/devstream/releases) page and download the appropriate binary according to your operating system and architecture.
 
-Note : dtm currently don't have a support to windows.
+Note : `dtm` currently doesn't support Windows yet.
 
-Linux/Macos users
+For Linux/Macos users:
 
-- rename the dtm-linux-amd64 to dtm
-- add dtm to the path : mv dtm /usr/local/bin
-- add executable permission to dtm : chmod a+x dtm
+- rename the downloaded binary to `dtm` and move it to your PATH (e.g.: `mv dtm /usr/local/bin/`)
+- grant `dtm` executable permission (e.g.: `chmod a+x dtm`)
 
 ## Quick Start
 
