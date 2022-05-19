@@ -32,8 +32,17 @@ type ConfigFile struct {
 }
 
 type State struct {
-	Backend string                 `yaml:"backend"`
-	Options map[string]interface{} `yaml:"options"`
+	Backend string             `yaml:"backend"`
+	Options StateConfigOptions `yaml:"options"`
+}
+
+type StateConfigOptions struct {
+	// for s3 backend
+	Bucket string
+	Region string
+	Key    string
+	// for local backend
+	StateFile string
 }
 
 // Tool is the struct for one section of the DevStream configuration file.
