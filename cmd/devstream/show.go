@@ -1,13 +1,10 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 
-	"github.com/devstream-io/devstream/cmd/devstream/options"
-
-	"github.com/devstream-io/devstream/internal/pkg/show"
+	"github.com/devstream-io/devstream/internal/pkg/show/config"
+	"github.com/devstream-io/devstream/internal/pkg/show/status"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -15,34 +12,48 @@ var plugin string
 var instanceName string
 
 var showCMD = &cobra.Command{
-	Use:   "show [config | status]",
+	Use:   "show",
 	Short: "Show is used to print some useful information",
-	Long: `Show is used to print some useful information. 
-Examples:
-  dtm show config --plugin=A-PLUGIN-NAME
-  dtm show status --plugin=A-PLUGIN-NAME --name=A-PLUGIN-INSTANCE-NAME
-  dtm show status -p=A-PLUGIN-NAME -n=A-PLUGIN-INSTANCE-NAME`,
-	Run: options.WithValidators(showCMDFunc, options.ArgsCountEqual(1), validateShowArgs),
 }
 
-func showCMDFunc(cmd *cobra.Command, args []string) {
-	showInfo := show.Info(args[0])
-	log.Debugf("The show info is: %s.", showInfo)
-	if err := show.GenerateInfo(configFile, showInfo); err != nil {
+var showConfigCMD = &cobra.Command{
+	Use:   "config",
+	Short: "Show configuration information",
+	Long: `Show config is used for showing plugins' template configuration information.
+Examples:
+  dtm show config --plugin=A-PLUGIN-NAME`,
+	Run: showConfigCMDFunc,
+}
+
+var showStatusCMD = &cobra.Command{
+	Use:   "status",
+	Short: "Show status information",
+	Long: `Show status is used for showing plugins' status information.
+Examples:
+  dtm show status --plugin=A-PLUGIN-NAME --name=A-PLUGIN-INSTANCE-NAME
+  dtm show status -p=A-PLUGIN-NAME -n=A-PLUGIN-INSTANCE-NAME`,
+	Run: showStatusCMDFunc,
+}
+
+func showConfigCMDFunc(cmd *cobra.Command, args []string) {
+	log.Debug("Show configuration information.")
+	if err := config.Show(); err != nil {
 		log.Fatal(err)
 	}
 }
 
-func validateShowArgs(args []string) error {
-	// arg is "config" or "status" here, maybe will have "output" in the future.
-	showInfo := show.Info(args[0])
-	if !show.IsValideInfo(showInfo) {
-		return fmt.Errorf("invalide Show Info")
+func showStatusCMDFunc(cmd *cobra.Command, args []string) {
+	log.Debug("Show status information.")
+	if err := status.Show(configFile); err != nil {
+		log.Fatal(err)
 	}
-	return nil
 }
 
 func init() {
-	showCMD.PersistentFlags().StringVarP(&plugin, "plugin", "p", "", "specify name with the plugin")
-	showCMD.PersistentFlags().StringVarP(&instanceName, "name", "n", "", "specify name with the plugin instance")
+	showCMD.AddCommand(showConfigCMD)
+	showCMD.AddCommand(showStatusCMD)
+
+	showConfigCMD.PersistentFlags().StringVarP(&plugin, "plugin", "p", "", "specify name with the plugin")
+	showStatusCMD.PersistentFlags().StringVarP(&plugin, "plugin", "p", "", "specify name with the plugin")
+	showStatusCMD.PersistentFlags().StringVarP(&instanceName, "name", "n", "", "specify name with the plugin instance")
 }
