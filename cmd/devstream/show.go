@@ -28,7 +28,7 @@ Examples:
 func showCMDFunc(cmd *cobra.Command, args []string) {
 	showInfo := show.Info(args[0])
 	log.Debugf("The show info is: %s.", showInfo)
-	if err := show.GenerateInfo(showInfo); err != nil {
+	if err := show.GenerateInfo(configFile, showInfo); err != nil {
 		log.Fatal(err)
 	}
 }

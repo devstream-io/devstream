@@ -16,7 +16,7 @@ var _ = Describe("Statemanager", func() {
 
 	Context("States", func() {
 		BeforeEach(func() {
-			smgr, err = statemanager.NewManager()
+			smgr, err = statemanager.NewManager("local")
 			Expect(err).NotTo(HaveOccurred())
 			Expect(smgr).NotTo(BeNil())
 		})

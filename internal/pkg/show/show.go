@@ -23,14 +23,14 @@ func IsValideInfo(info Info) bool {
 	return ok
 }
 
-func GenerateInfo(info Info) error {
+func GenerateInfo(configFile string, info Info) error {
 	switch info {
 	case ConfigInfo:
 		log.Debugf("Info: %s.", info)
 		return config.Show()
 	case StatusInfo:
 		log.Debugf("Info: %s.", info)
-		return status.Show()
+		return status.Show(configFile)
 	default:
 		panic("This should be never happen!")
 	}

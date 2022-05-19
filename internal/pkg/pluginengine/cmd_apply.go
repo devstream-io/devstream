@@ -27,7 +27,7 @@ func Apply(configFile string, continueDirectly bool) error {
 		return err
 	}
 
-	smgr, err := statemanager.NewManager()
+	smgr, err := statemanager.NewManager(cfg.State.Backend)
 	if err != nil {
 		log.Debugf("Failed to get the manager: %s.", err)
 		return err
