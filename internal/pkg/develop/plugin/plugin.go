@@ -75,7 +75,8 @@ func (p *Plugin) renderTplString(tplStr string) (string, error) {
 	}
 
 	var funcMap = template.FuncMap{
-		"format": pluginTpl.FormatPackageName,
+		"format":    pluginTpl.FormatPackageName,
+		"dirFormat": pluginTpl.FormatPackageDirName,
 	}
 
 	t, err := template.New("default").Funcs(funcMap).Parse(tplStr)
