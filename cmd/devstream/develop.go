@@ -1,11 +1,7 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
-
-	"github.com/devstream-io/devstream/cmd/devstream/options"
 
 	"github.com/devstream-io/devstream/internal/pkg/develop"
 	"github.com/devstream-io/devstream/pkg/util/log"
