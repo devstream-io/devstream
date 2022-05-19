@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 
 	"gopkg.in/yaml.v3"
 
@@ -94,19 +95,22 @@ func LoadConf(configFileName string) (*Config, error) {
 		return nil, err
 	}
 
-	cfg := LoadToolConf(toolFilePath, varFilePath)
+	cfg, err := LoadToolConf(toolFilePath, varFilePath)
+	if err != nil {
+		return nil, err
+	}
 	cfg.State = gConfig.State
 	return cfg, nil
 }
 
 // LoadToolConf reads tool file rendering by var file as a Config struct.
-func LoadToolConf(toolFileName, varFileName string) *Config {
+func LoadToolConf(toolFileName, varFileName string) (*Config, error) {
 	configFileBytes, err := ioutil.ReadFile(toolFileName)
 	if err != nil {
 		log.Error(err)
 		log.Info("Maybe the default file doesn't exist or you forgot to pass your config file to the \"-f\" option?")
 		log.Info("See \"dtm help\" for more information.")
-		return nil
+		return nil, err
 	}
 
 	log.Debugf("Original config: \n%s\n", string(configFileBytes))
@@ -115,7 +119,7 @@ func LoadToolConf(toolFileName, varFileName string) *Config {
 	configFileBytesWithVarsRendered, err := renderVariables(varFileName, configFileBytes)
 	if err != nil {
 		log.Error(err)
-		return nil
+		return nil, err
 	}
 
 	log.Debugf("Config file after rendering with variables: \n%s\n", string(configFileBytesWithVarsRendered))
@@ -125,18 +129,20 @@ func LoadToolConf(toolFileName, varFileName string) *Config {
 	if err != nil {
 		log.Error("Please verify the format of your config file.")
 		log.Errorf("Reading config file failed. %s.", err)
-		return nil
+		return nil, err
 	}
 
 	errs := validateConfig(&config)
 	if len(errs) != 0 {
+		var errStrings []string
 		for _, e := range errs {
 			log.Errorf("Config validation failed: %s.", e)
+			errStrings = append(errStrings, e.Error())
 		}
-		return nil
+		return nil, fmt.Errorf(strings.Join(errStrings, "\n"))
 	}
 
-	return &config
+	return &config, nil
 }
 
 // genToolVarPath return the Abs path of tool file and var file, if var file is null, return variables.yaml
