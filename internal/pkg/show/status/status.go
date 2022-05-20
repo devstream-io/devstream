@@ -15,16 +15,16 @@ import (
 
 func Show(configFile string) error {
 	plugin := viper.GetString("plugin")
-	name := viper.GetString("name")
-	if name == "" {
-		log.Warnf("Empty instance name. Maybe you forgot to add --name=PLUGIN_INSTANCE_NAME. The default value \"default\" will be used.")
-		name = "default"
+	id := viper.GetString("id")
+	allFlag := viper.GetBool("all")
+
+	if plugin == "" && id == "" {
+		allFlag = true
 	}
 
-	// if --plugin="" and --name="", we set the allFlag to true, it means all plugins' status need to be printed
-	var allFlag = false
-	if plugin == "" {
-		allFlag = true
+	if id == "" && !allFlag {
+		log.Warnf("Empty instance name. Maybe you forgot to add --id=INSTANCE_ID. The default value \"default\" will be used.")
+		id = "default"
 	}
 
 	cfg, err := configloader.LoadConf(configFile)
@@ -44,7 +44,7 @@ func Show(configFile string) error {
 	if allFlag {
 		return showAll(smgr)
 	}
-	return showOne(smgr, name, plugin)
+	return showOne(smgr, id, plugin)
 }
 
 // show all plugins' status
@@ -76,23 +76,23 @@ func showAll(smgr statemanager.Manager) error {
 }
 
 // show one plugin status
-func showOne(smgr statemanager.Manager, name, plugin string) error {
+func showOne(smgr statemanager.Manager, id, plugin string) error {
 	// get state from statemanager
-	state := smgr.GetState(statemanager.GenerateStateKeyByToolNameAndPluginKind(name, plugin))
+	state := smgr.GetState(statemanager.GenerateStateKeyByToolNameAndPluginKind(id, plugin))
 	if state == nil {
-		return fmt.Errorf("state with (name: %s, plugin: %s) not found", name, plugin)
+		return fmt.Errorf("state with (id: %s, plugin: %s) not found", id, plugin)
 	}
 
 	// get state from read
 	tool := &configloader.Tool{
-		InstanceID: name,
+		InstanceID: id,
 		Name:       plugin,
 		DependsOn:  state.DependsOn,
 		Options:    state.Options,
 	}
 	stateFromRead, err := pluginengine.Read(tool)
 	if err != nil {
-		log.Debugf("Failed to get the resource state with %s.%s. Error: %s.", name, plugin, err)
+		log.Debugf("Failed to get the resource state with %s.%s. Error: %s.", id, plugin, err)
 		return err
 	}
 
@@ -110,7 +110,7 @@ func showOne(smgr statemanager.Manager, name, plugin string) error {
 	}
 
 	// get the output
-	output, err := NewOutput(name, plugin, state.Options, status)
+	output, err := NewOutput(id, plugin, state.Options, status)
 	if err != nil {
 		log.Debugf("Failed to get the output: %s.", err)
 	}

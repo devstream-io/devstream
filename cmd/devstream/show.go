@@ -9,7 +9,8 @@ import (
 )
 
 var plugin string
-var instanceName string
+var instanceID string
+var statusAllFlag bool
 
 var showCMD = &cobra.Command{
 	Use:   "show",
@@ -30,8 +31,10 @@ var showStatusCMD = &cobra.Command{
 	Short: "Show status information",
 	Long: `Show status is used for showing plugins' status information.
 Examples:
-  dtm show status --plugin=A-PLUGIN-NAME --name=A-PLUGIN-INSTANCE-NAME
-  dtm show status -p=A-PLUGIN-NAME -n=A-PLUGIN-INSTANCE-NAME`,
+  dtm show status --plugin=A-PLUGIN-NAME --id=A-PLUGIN-INSTANCE-ID
+  dtm show status -p=A-PLUGIN-NAME -i=INSTANCE-ID
+  dtm show status --all
+  dtm show status -a`,
 	Run: showStatusCMDFunc,
 }
 
@@ -55,5 +58,6 @@ func init() {
 
 	showConfigCMD.PersistentFlags().StringVarP(&plugin, "plugin", "p", "", "specify name with the plugin")
 	showStatusCMD.PersistentFlags().StringVarP(&plugin, "plugin", "p", "", "specify name with the plugin")
-	showStatusCMD.PersistentFlags().StringVarP(&instanceName, "name", "n", "", "specify name with the plugin instance")
+	showStatusCMD.PersistentFlags().StringVarP(&instanceID, "id", "i", "", "specify id with the plugin instance")
+	showStatusCMD.PersistentFlags().BoolVarP(&statusAllFlag, "all", "a", false, "show all instances of all plugins status")
 }
