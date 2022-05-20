@@ -6,21 +6,30 @@ body:
 - type: textarea
   id: problem
   attributes:
-    label: What happened?
+    label: What Happened?
     description: Please provide as much information as possible.
   validations:
     required: true
-
 - type: textarea
   id: repro
   attributes:
-    label: How to reproduce?
+    label: How to Reproduce?
   validations:
-    required: true
-
+    required: false
 - type: textarea
-  id: dtmVersion
+  id: else
   attributes:
-    label: 'DevStream version (to find out the version run: dtm version)'
+    label: Anything else
+  validations:
+    required: false
+- type: dropdown
+  id: version
+  attributes:
+    label: 'DevStream Version'
+    description: "To find out the version run: `dtm version`"
+    options:
+      - < v0.6.0
+      - v0.6.0
+      - latest
   validations:
     required: true
