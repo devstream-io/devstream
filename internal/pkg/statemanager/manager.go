@@ -48,7 +48,7 @@ func NewManager(stateConfig configloader.State) (Manager, error) {
 	log.Debugf("The global manager m is not initialized.")
 
 	if stateConfig.Backend == "local" {
-		log.Infof("Using local backend: %s.", stateConfig.Options.StateFile)
+		log.Infof("Using local backend. State file: %s.", stateConfig.Options.StateFile)
 	} else if stateConfig.Backend == "s3" {
 		log.Infof("Using s3 backend. Bucket: %s, region: %s, key: %s.", stateConfig.Options.Bucket, stateConfig.Options.Region, stateConfig.Options.Key)
 	}
