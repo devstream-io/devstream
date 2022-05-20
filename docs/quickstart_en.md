@@ -4,13 +4,18 @@
 
 ## 1 Download DevStream (`dtm`)
 
-Download the appropriate `dtm` version for your platform from [DevStream Releases](https://github.com/devstream-io/devstream/releases).
+Please visit GitHub [Releases](https://github.com/devstream-io/devstream/releases) page and download the appropriate binary according to your operating system and architecture.
 
-> Remember to rename the binary file to `dtm` so that it's easier to use. For example: `mv dtm-darwin-arm64 dtm`.
+Note : `dtm` currently doesn't support Windows yet.
 
-> Once downloaded, you can run the binary from anywhere. Ideally, you want to put it in a place that is in your PATH (e.g., `/usr/local/bin`).
+For Linux/Macos users:
+
+- rename the downloaded binary to `dtm` and move it to your PATH (e.g.: `mv dtm /usr/local/bin/`)
+- grant `dtm` executable permission (e.g.: `chmod a+x dtm`)
 
 ## 2 Prepare a Config File
+
+Before you start: for an example of DevStream config, see [examples/tools-quickstart.yaml](./examples/tools-quickstart.yaml). Remember to open this configuration file, modify all FULL_UPPER_CASE_STRINGS (like YOUR_GITHUB_USERNAME, for example) in it to your own. Pay attention to the meaning of each item to ensure that it is what you want. For other plugins, checkout the "Plugins" section in our [doc](https://docs.devstream.io) for detailed usage.
 
 Download the [examples/quickstart.yaml](https://raw.githubusercontent.com/devstream-io/devstream/main/examples/quickstart.yaml) and [examples/tools-quickstart.yaml](https://raw.githubusercontent.com/devstream-io/devstream/main/examples/tools-quickstart.yaml) to your working directory and rename `quickstart.yaml` to `config.yaml`:
 
@@ -65,7 +70,58 @@ This step verifies the MD5 sum of your dtm binary, downloads the required plugin
 
 Note: if your dtm binary's MD5 sum doesn't match the MD5 sum from our release page, dtm init will stop. If your local dtm MD5 differs, it indicates that you built the binary yourself (for developing purposes, for example). Due to the nature of the Go plugin, dtm must be built together with the corresponding plugins. So, if you are building dtm, you should also build the plugins as well, in which case, you do not need to run dtm init to download the plugins.
 
-## 4 Apply
+## 4 Usage Overview
+
+To apply the config, run:
+
+```shell
+./dtm apply -f YOUR_CONFIG_FILE.yaml
+```
+
+If you don't specify the config file with the "-f" parameter, it will try to use the default value which is "config.yaml" from the current directory.
+
+_`dtm` will compare the config, the state, and the resources to decide whether a "create", "update", or "delete" is needed. For more information, read our [Core Concepts documentation here](https://www.devstream.io/docs/core-concepts)._
+
+The command above will ask you for confirmation before actually executing the changes. To apply without confirmation (like `apt-get -y update`), run:
+
+```shell
+./dtm -y apply -f YOUR_CONFIG_FILE.yaml
+```
+
+To delete everything defined in the config, run:
+
+```shell
+./dtm delete -f YOUR_CONFIG_FILE.yaml
+```
+
+_Note that this deletes everything defined in the config. If some config is deleted after apply (state has it but config not), `dtm delete` won't delete it. It differs from `dtm destroy`._
+
+Similarly, to delete without confirmation:
+
+```shell
+./dtm -y delete -f YOUR_CONFIG_FILE.yaml
+```
+To delete everything defined in the config, regardless of the state:
+
+```shell
+./dtm delete --force -f YOUR_CONFIG_FILE.yaml
+```
+
+To verify, run:
+
+```shell
+./dtm verify -f YOUR_CONFIG_FILE.yaml
+```
+
+To destroy everything, run:
+
+```shell
+./dtm destroy
+```
+
+_`dtm` will read the state, then determine which tools are installed, and then remove those tools. It's same as `dtm apply -f empty.yaml` (empty.yaml is an empty config file)._
+
+## 5 Apply
 
 Run:
 
@@ -100,11 +156,11 @@ Enter a value (Default is n): y
 2022-03-04 12:09:26 ✔ [SUCCESS]  All plugins applied successfully.
 2022-03-04 12:09:26 ✔ [SUCCESS]  Apply finished.
 ```
-## 5 Check the Results
+## 6 Check the Results
 
 Go to your GitHub account, and we can see a new repo named "go-webapp-devstream-demo" has been created; there are some Golang web app scaffolding lying around already, and the GitHub Actions for building the app is also ready. Hooray!
 
-## 6 Clean Up
+## 7 Clean Up
 
 Run:
 

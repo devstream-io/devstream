@@ -74,71 +74,9 @@ A：受 [`git`](https://github.com/git/git#readme) 的启发，这个名字可�
 
 想删除或重新安装工作流中的某个特定部分？DevStream已经帮你解决了!
 
-## 安装
-
-请访问GitHub [Release](https://github.com/devstream-io/devstream/releases) 页面，根据你的系统和架构下载相应的二进制文件。
-
 ## 快速入门
 
 现在就跟随我们的[快速入门](./quickstart_zh.md)文档开始使用 DevStream
-
-## 配置
-
-这是一个DevStream配置的例子：[examples/tools-quickstart.yaml](../examples/tools-quickstart.yaml)。
-
-记得打开这个配置文件，把里面所有的 `FULL_UPPER_CASE_STRINGS`（比如说 `YOUR_GITHUB_USERNAME` ）修改成你自己的。
-
-注意每一项的含义，并确保它是你要的。
-
-对于其他插件，请查看我们的 [文档](https://docs.devstream.io) 中的"插件"部分，以了解详细用法。
-
-## 用法
-
-如果你需要应用配置，请运行：
-
-```shell
-./dtm apply -f YOUR_CONFIG_FILE.yaml
-```
-
-如果你没有用` -f `参数指定配置文件，它将尝试使用默认值，即当前目录下的 `config.yaml` 。
-
-`dtm`将对比 `Config`、`State` 和 `Resource`，决定是否需要 `Create`、`Update` 或 `Delete`。更多信息请阅读我们的 [核心概念](https://docs.devstream.io/en/latest/core-concepts/core-concepts/) 文档。
-
-上面的命令在实际执行改变之前会要求你确认。如果不需要确认就应用 `Config`（就像 `apt-get -y update` ），请运行：
-
-```shell
-./dtm -y apply -f YOUR_CONFIG_FILE.yaml
-```
-
-要删除 `Config` 中定义的所有内容，请运行:
-
-```shell
-./dtm delete -f YOUR_CONFIG_FILE.yaml
-```
-
-注意，这将删除 `Config` 中定义的所有内容。如果某些 `Config` 在应用后被删除（`State` 有，但 `Config` 没有），`dtm delete`不会删除它，这与`dtm destroy`不同。
-
-同样的，如果不需要确认就删除内容，请运行：
-```shell
-./dtm -y delete -f YOUR_CONFIG_FILE.yaml
-```
-
-要删除 `Config` 中定义的所有内容，且无论 `State` 是什么：
-```shell
-./dtm delete --force -f YOUR_CONFIG_FILE.yaml
-```
-
-验证以上命令已正确执行，请运行：
-```shell
-./dtm verify -f YOUR_CONFIG_FILE.yaml
-```
-
-销毁所有内容，请运行：
-```shell
-./dtm destroy
-```
-
-`dtm`将读取 `State`，然后确定哪些 `Tool` 应被安装，然后删除这些 `Tool`。这与`dtm apply -f empty.yaml`相同（ `empty.yaml` 是一个空的配置文件）。
 
 ## 最佳实践
 
@@ -167,30 +105,11 @@ DevStream已经支持许多工具，而且还在不断增加。关于支持的�
 
 ### 构建
 
-```shell
-cd path/to/devstream
-make clean
-make build -j8 # 多线程构建
-```
-
-这将构建所有东西：`dtm` 和所有的插件。
-
-我们还支持以下构建模式：
-- 只构建 `dtm` ：`make build-core`。
-- 构建一个特定的插件: `make build-plugin.PLUGIN_NAME`。例如：`make build-plugin.argocd`。
-- 构建所有插件: `make build-plugins -j8` (多线程编译)
-
-更多信息请参见`make help`。
+参见文档官网development章节下的[build](https://docs.devstream.io/en/latest/development/build/)文档。
 
 ### 测试
 
-运行所有单元测试。
-
-```shell
-go test ./...
-```
-
-`e2e` 测试将 `GitHub Actions` 上运行。
+参见文档官网development章节下的[test](https://docs.devstream.io/en/latest/development/test/)文档。
 
 ## 贡献
 
