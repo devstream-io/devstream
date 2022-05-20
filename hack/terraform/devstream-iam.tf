@@ -141,7 +141,9 @@ resource "aws_iam_group_policy" "DevStream-Download-Bucket-RW-Policy" {
         "Effect": "Allow",
         "Action": [
           "s3:GetObject",
+          "s3:GetObjectAcl",
           "s3:PutObject",
+          "s3:PutObjectAcl",
           "s3:DeleteObject",
           "s3:RestoreObject",
           "s3:ListBucket",
