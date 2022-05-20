@@ -78,3 +78,4 @@ jobs:
         run: ./dtm verify -f e2e-config.yaml
       - name: clean
         run: ./dtm delete -f e2e-config.yaml -y
+        
