@@ -79,4 +79,3 @@ jobs:
       - name: clean
         run: ./dtm delete -f e2e-config.yaml -y
 
-        
