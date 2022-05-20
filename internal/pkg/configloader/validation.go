@@ -5,6 +5,9 @@ import (
 	"strings"
 
 	"k8s.io/apimachinery/pkg/util/validation"
+
+	"github.com/devstream-io/devstream/internal/pkg/backend/local"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 func validateConfig(config *Config) []error {
@@ -90,9 +93,11 @@ func validateConfigFile(c *ConfigFile) []error {
 	if c.State == nil {
 		errors = append(errors, fmt.Errorf("state config is empty"))
 	} else {
+		log.Debugf("Got Backend from config: %s", c.State.Backend)
 		if c.State.Backend == "local" {
 			if c.State.Options.StateFile == "" {
-				errors = append(errors, fmt.Errorf("stateFile is empty"))
+				log.Debugf("The stateFile has not been set, default value %s will be used.", local.DefaultStateFile)
+				c.State.Options.StateFile = local.DefaultStateFile
 			}
 		} else if c.State.Backend == "s3" {
 			if c.State.Options.Bucket == "" {
@@ -104,6 +109,8 @@ func validateConfigFile(c *ConfigFile) []error {
 			if c.State.Options.Key == "" {
 				errors = append(errors, fmt.Errorf("state s3 Key is empty"))
 			}
+		} else {
+			errors = append(errors, fmt.Errorf("backend type error"))
 		}
 	}
 
