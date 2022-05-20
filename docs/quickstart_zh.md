@@ -12,6 +12,8 @@
 
 ## 2 准备一个配置文件
 
+开始之前：这是一个DevStream配置的例子：[examples/tools-quickstart.yaml](../examples/tools-quickstart.yaml)。记得打开这个配置文件，把里面所有的 `FULL_UPPER_CASE_STRINGS`（比如说 `YOUR_GITHUB_USERNAME` ）修改成你自己的。注意每一项的含义，并确保它是你要的。对于其他插件，请查看我们的 [文档](https://docs.devstream.io) 中的"插件"部分，以了解详细用法。
+
 将 [examples/quickstart.yaml](https://raw.githubusercontent.com/devstream-io/devstream/main/examples/quickstart.yaml) 和 [examples/tools-quickstart.yaml](https://raw.githubusercontent.com/devstream-io/devstream/main/examples/tools-quickstart.yaml) 文件下载到你到工作目录下，然后重命名`quickstart.yaml` 成 `config.yaml`：
 
 ```shell
@@ -65,7 +67,55 @@ dtm init -f config.yaml
 
 注意：如果您的 dtm 二进制文件的 MD5 sum 与我们发布页面中的 MD5 sum 不匹配，dtm init 将停止。 如果您的本地 dtm MD5 不同，则表明您自己构建了二进制文件（例如，出于开发目的）。 由于 Go 插件的性质，dtm 必须与相应的插件一起构建。 所以，如果你正在构建 dtm，你也应该构建插件，在这种情况下，你不需要运行 dtm init 来下载插件。
 
-## 4 开始执行
+## 4 命令用法总览
+
+如果你需要应用配置，请运行：
+
+```shell
+./dtm apply -f YOUR_CONFIG_FILE.yaml
+```
+
+如果你没有用` -f `参数指定配置文件，它将尝试使用默认值，即当前目录下的 `config.yaml` 。
+
+`dtm`将对比 `Config`、`State` 和 `Resource`，决定是否需要 `Create`、`Update` 或 `Delete`。更多信息请阅读我们的 [核心概念](https://docs.devstream.io/en/latest/core-concepts/core-concepts/) 文档。
+
+上面的命令在实际执行改变之前会要求你确认。如果不需要确认就应用 `Config`（就像 `apt-get -y update` ），请运行：
+
+```shell
+./dtm -y apply -f YOUR_CONFIG_FILE.yaml
+```
+
+要删除 `Config` 中定义的所有内容，请运行:
+
+```shell
+./dtm delete -f YOUR_CONFIG_FILE.yaml
+```
+
+注意，这将删除 `Config` 中定义的所有内容。如果某些 `Config` 在应用后被删除（`State` 有，但 `Config` 没有），`dtm delete`不会删除它，这与`dtm destroy`不同。
+
+同样的，如果不需要确认就删除内容，请运行：
+```shell
+./dtm -y delete -f YOUR_CONFIG_FILE.yaml
+```
+
+要删除 `Config` 中定义的所有内容，且无论 `State` 是什么：
+```shell
+./dtm delete --force -f YOUR_CONFIG_FILE.yaml
+```
+
+验证以上命令已正确执行，请运行：
+```shell
+./dtm verify -f YOUR_CONFIG_FILE.yaml
+```
+
+销毁所有内容，请运行：
+```shell
+./dtm destroy
+```
+
+`dtm`将读取 `State`，然后确定哪些 `Tool` 应被安装，然后删除这些 `Tool`。这与`dtm apply -f empty.yaml`相同（ `empty.yaml` 是一个空的配置文件）。
+
+## 5 开始执行
 
 运行：
 
@@ -100,12 +150,12 @@ Enter a value (Default is n): y
 2022-03-04 12:09:26 ✔ [SUCCESS]  All plugins applied successfully.
 2022-03-04 12:09:26 ✔ [SUCCESS]  Apply finished.
 ```
-## 5 检查结果
+## 6 检查结果
 
 登录你自己的 GitHub 账户，然后你可以看到一个新的名字叫做 "go-webapp-devstream-demo" 的项目已经被创建出来了，
 而且里面已经有了一些 Golang 的 web 应用脚手架代码。另外你还可以看到用于构建这个应用的一些 GitHub Actions 也已经被配置好了。酷吧？
 
-## 6 清理
+## 7 清理
 
 运行：
 
