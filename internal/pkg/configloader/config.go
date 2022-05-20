@@ -29,7 +29,7 @@ type Config struct {
 type ConfigFile struct {
 	VarFile  string `yaml:"varFile"`
 	ToolFile string `yaml:"toolFile"`
-	State    *State
+	State    *State `yaml:"state"`
 }
 
 type State struct {
@@ -39,11 +39,11 @@ type State struct {
 
 type StateConfigOptions struct {
 	// for s3 backend
-	Bucket string
-	Region string
-	Key    string
+	Bucket string `yaml:"bucket"`
+	Region string `yaml:"region"`
+	Key    string `yaml:"key"`
 	// for local backend
-	StateFile string
+	StateFile string `yaml:"stateFile"`
 }
 
 // Tool is the struct for one section of the DevStream configuration file.
