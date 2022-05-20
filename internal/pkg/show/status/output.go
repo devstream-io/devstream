@@ -8,11 +8,11 @@ import (
 )
 
 type Output struct {
-	Name    string                 `yaml:"Name"`
-	Plugin  string                 `yaml:"Plugin"`
-	Drifted bool                   `yaml:"Drifted"`
-	Options map[string]interface{} `yaml:"Options"`
-	Status  *Status                `yaml:"Status"`
+	InstanceID string                 `yaml:"InstanceID"`
+	Plugin     string                 `yaml:"Plugin"`
+	Drifted    bool                   `yaml:"Drifted"`
+	Options    map[string]interface{} `yaml:"Options"`
+	Status     *Status                `yaml:"Status"`
 }
 
 type Status struct {
@@ -23,17 +23,17 @@ type Status struct {
 
 // If the resource has drifted, status.State & status.Resource must NOT be nil and status.InlineStatus should be nil.
 // If the resource hasn't drifted, status.State & status.Resource should be nil and status.InlineStatus must NOT be nil.
-func NewOutput(name, plugin string, options map[string]interface{}, status *Status) (*Output, error) {
-	if ok, err := validateParams(name, plugin, options, status); !ok {
+func NewOutput(instanceID, plugin string, options map[string]interface{}, status *Status) (*Output, error) {
+	if ok, err := validateParams(instanceID, plugin, options, status); !ok {
 		return nil, err
 	}
 
 	output := &Output{
-		Name:    name,
-		Plugin:  plugin,
-		Drifted: false,
-		Options: options,
-		Status:  status,
+		InstanceID: instanceID,
+		Plugin:     plugin,
+		Drifted:    false,
+		Options:    options,
+		Status:     status,
 	}
 
 	if status.InlineStatus == nil {
@@ -57,9 +57,9 @@ func (o *Output) Print() error {
 	return nil
 }
 
-func validateParams(name, plugin string, options map[string]interface{}, status *Status) (bool, error) {
-	if name == "" || plugin == "" {
-		return false, fmt.Errorf("name or plugin cannot be nil")
+func validateParams(instanceID, plugin string, options map[string]interface{}, status *Status) (bool, error) {
+	if instanceID == "" || plugin == "" {
+		return false, fmt.Errorf("instanceID or plugin cannot be nil")
 	}
 	if options == nil {
 		return false, fmt.Errorf("options cannot be nil")
