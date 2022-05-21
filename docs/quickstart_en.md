@@ -15,7 +15,7 @@ For Linux/Macos users:
 
 ## 2 Prepare a Config File
 
-Before you start: for an example of DevStream config, see [examples/tools-quickstart.yaml](./examples/tools-quickstart.yaml). Remember to open this configuration file, modify all FULL_UPPER_CASE_STRINGS (like YOUR_GITHUB_USERNAME, for example) in it to your own. Pay attention to the meaning of each item to ensure that it is what you want. For other plugins, checkout the "Plugins" section in our [doc](https://docs.devstream.io) for detailed usage.
+Before you start: for an example of DevStream config, see [examples/tools-quickstart.yaml](https://github.com/devstream-io/devstream/blob/main/examples/tools-quickstart.yaml). Remember to open this configuration file, modify all FULL_UPPER_CASE_STRINGS (like YOUR_GITHUB_USERNAME, for example) in it to your own. Pay attention to the meaning of each item to ensure that it is what you want. For other plugins, checkout the "Plugins" section in our [doc](https://docs.devstream.io) for detailed usage.
 
 Download the [examples/quickstart.yaml](https://raw.githubusercontent.com/devstream-io/devstream/main/examples/quickstart.yaml) and [examples/tools-quickstart.yaml](https://raw.githubusercontent.com/devstream-io/devstream/main/examples/tools-quickstart.yaml) to your working directory and rename `quickstart.yaml` to `config.yaml`:
 

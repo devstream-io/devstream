@@ -12,7 +12,7 @@
 
 ## 2 准备一个配置文件
 
-开始之前：这是一个DevStream配置的例子：[examples/tools-quickstart.yaml](../examples/tools-quickstart.yaml)。记得打开这个配置文件，把里面所有的 `FULL_UPPER_CASE_STRINGS`（比如说 `YOUR_GITHUB_USERNAME` ）修改成你自己的。注意每一项的含义，并确保它是你要的。对于其他插件，请查看我们的 [文档](https://docs.devstream.io) 中的"插件"部分，以了解详细用法。
+开始之前：这是一个DevStream配置的例子：[examples/tools-quickstart.yaml](https://github.com/devstream-io/devstream/blob/main/examples/tools-quickstart.yaml) 。记得打开这个配置文件，把里面所有的 `FULL_UPPER_CASE_STRINGS`（比如说 `YOUR_GITHUB_USERNAME` ）修改成你自己的。注意每一项的含义，并确保它是你要的。对于其他插件，请查看我们的 [文档](https://docs.devstream.io) 中的"插件"部分，以了解详细用法。
 
 将 [examples/quickstart.yaml](https://raw.githubusercontent.com/devstream-io/devstream/main/examples/quickstart.yaml) 和 [examples/tools-quickstart.yaml](https://raw.githubusercontent.com/devstream-io/devstream/main/examples/tools-quickstart.yaml) 文件下载到你到工作目录下，然后重命名`quickstart.yaml` 成 `config.yaml`：
 
