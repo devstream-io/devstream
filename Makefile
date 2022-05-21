@@ -24,7 +24,9 @@ ROOT_DIR := $(abspath $(shell cd $(SELF_DIR) && pwd -P))
 endif
 
 ifeq ($(origin VERSION), undefined)
-VERSION := $(shell git describe --tags --always --match='v*')
+# the VERSION is a number, like 0.6.0
+# it doesn't contain the prefix v, not v0.6.0, but 0.6.0
+VERSION := $(shell git describe --tags --always --match='v*' | cut -c 2-)
 endif
 
 ifeq ($(origin PLUGINS_DIR),undefined)
