@@ -163,9 +163,12 @@ func genToolVarPath(configFileName string, gConfig ConfigFile) (string, string, 
 	if err != nil {
 		return "", "", err
 	}
-	absVarFilePath, err = parseCustomPath(configFileName, gConfig.VarFile)
-	if err != nil {
-		return "", "", err
+	// if var file is empty, just return ""
+	if gConfig.VarFile != "" {
+		absVarFilePath, err = parseCustomPath(configFileName, gConfig.VarFile)
+		if err != nil {
+			return "", "", err
+		}
 	}
 	return absToolFilePath, absVarFilePath, nil
 }
