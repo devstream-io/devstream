@@ -12,7 +12,6 @@ import (
 )
 
 var (
-	configFile       string
 	pluginDir        string
 	continueDirectly bool
 	isDebug          bool
@@ -40,7 +39,6 @@ var (
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	rootCMD.PersistentFlags().StringVarP(&configFile, "config-file", "f", "config.yaml", "config file")
 	rootCMD.PersistentFlags().StringVarP(&pluginDir, "plugin-dir", "d", pluginengine.DefaultPluginDir, "plugins directory")
 	rootCMD.PersistentFlags().BoolVarP(&continueDirectly, "yes", "y", false, "apply/delete directly without confirmation")
 	rootCMD.PersistentFlags().BoolVarP(&isDebug, "debug", "", false, "debug level log")
