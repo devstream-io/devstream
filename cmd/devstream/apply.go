@@ -51,6 +51,7 @@ func applyconfigCMDfunc(cmd *cobra.Command, args []string){
 
 func init() {
 	
+	cobra.OnInitialize(initconfig)
 	applyCMD.AddCommand(applyCMD)
 	applyCMD.PersistentFlags().StringVarP(&configFile, "config-file", "f", "config.yaml", "config file")
 
