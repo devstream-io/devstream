@@ -18,9 +18,9 @@ const (
 
 // Backend is used to persist data, it can be local file/etcd/s3/...
 type Backend interface {
-	// Read is used to reads data from persistent storage.
+	// Read is used to read data from persistent storage.
 	Read() ([]byte, error)
-	// Write is used to writes data to persistent storage.
+	// Write is used to write data to persistent storage.
 	Write(data []byte) error
 }
 

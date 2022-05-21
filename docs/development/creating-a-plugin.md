@@ -53,4 +53,4 @@ DevStream uses [go plugin](https://pkg.go.dev/plugin) to implement custom DevOps
 
 When you execute a command which calls any of the interfaces(`Create`, `Read`, `Update`, `Delete`), devstream's pluginengine will call the [`plugin.Lookup("DevStreamPlugin")` function](https://github.com/devstream-io/devstream/blob/38307894bbc08f691b2c5015366d9e45cc87970c/internal/pkg/pluginengine/plugin_helper.go#L28) to load the plugin, get the variable `DevStreamPlugin` that implements the ` DevStreamPlugin` interface, and then you can call the corresponding plugin logic functions.  This is why it is not recommended to modify the `/cmd/plugin/YOUR-PLUGIN-NAME/main.go` file directly.
 
-Note: The `main()` in `/cmd/plugin/YOUR-PLUGIN-NAME/main.go` file will not executed, it is only used to avoid the goclangci-lint error.
+Note: The `main()` in `/cmd/plugin/YOUR-PLUGIN-NAME/main.go` file will not be executed, it is only used to avoid the goclangci-lint error.
