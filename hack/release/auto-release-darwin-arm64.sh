@@ -18,7 +18,7 @@ while getopts "t:" opt; do
 done
 
 if [ "${tag}" == "invalid" ]; then
-  echo "Maybe you forgot to use -t flag. E.g. sh auto-release-darwin-arm64.sh -t 0.6.0"
+  echo "Maybe you forgot to use -t flag. E.g. sh auto-release-darwin-arm64.sh -t v0.6.0"
   exit 1
 fi
 echo "tag: ${tag}"
