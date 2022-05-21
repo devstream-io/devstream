@@ -63,10 +63,14 @@ jobs:
           aws eks update-kubeconfig --region ap-southeast-1 --name dtm-test
       - name: copy config files
         run: cp ./test/e2e/yaml/e2e-*.yaml ./
-      - name: apply
+      - name: apply git-ops
         run: ./dtm apply -f e2e-config.yaml -y
-      - name: apply twice
+      - name: apply twice git-ops
         run: ./dtm apply -f e2e-config.yaml -y
+      - name: apply trello-github
+        run: ./dtm apply -f e2e-trello-github-config.yaml -y
+      - name: apply twice trello-github
+        run: ./dtm apply -f e2e-trello-github-config.yaml -y
       - name: check if pod is ready
         run: while [[ $(kubectl get pods -l app=dtm-e2e-go -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "pod not ready yet..."; sleep 3; done
         timeout-minutes: 10
@@ -74,3 +78,4 @@ jobs:
         run: ./dtm verify -f e2e-config.yaml
       - name: clean
         run: ./dtm delete -f e2e-config.yaml -y
+

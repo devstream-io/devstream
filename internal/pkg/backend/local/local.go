@@ -52,7 +52,7 @@ func (l *Local) Read() ([]byte, error) {
 	return data, nil
 }
 
-// Write is used to writes the data to local file.
+// Write is used to write the data to local file.
 func (l *Local) Write(data []byte) error {
 	l.mu.Lock()
 	defer l.mu.Unlock()
