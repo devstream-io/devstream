@@ -12,6 +12,9 @@ import (
 )
 
 func renderVariables(varFileName string, configFileBytes []byte) ([]byte, error) {
+	if varFileName == "" {
+		return configFileBytes, nil
+	}
 	// load variables file
 	variables, err := loadVariablesFilesIntoMap(varFileName)
 	if err != nil {

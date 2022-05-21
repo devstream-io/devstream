@@ -14,7 +14,7 @@ import (
 
 var PluginsName string
 
-// List all of plugins name
+// List all plugins name
 func List(pluginFilter string) {
 	listPluginsName := strings.Fields(PluginsName)
 	r, _ := regexp.Compile(pluginFilter)

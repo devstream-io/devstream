@@ -43,7 +43,7 @@ func HandleOutputsReferences(smgr statemanager.Manager, options map[string]inter
 }
 
 // getToolNamePluginKindAndOutputReferenceKey returns (false, "", "", "") if regex doesn't match
-// if match, returns (true, name, instanceID, key)
+// if matched, returns (true, name, instanceID, key)
 func getToolNamePluginOutputKey(s string) (bool, string, string, string) {
 	regex := `.*\${{\s*([^.]*)\.([^.]*)\.outputs\.([^.\s]*)\s*}}.*`
 	r := regexp.MustCompile(regex)
