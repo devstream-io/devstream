@@ -54,7 +54,7 @@ func init() {
 	
 	applyCMD.AddCommand(applyCMD)
 	applyCMD.PersistentFlags().StringVarP(&configFile, "config-file", "f", "config.yaml", "config file")
-	viper.BindPFlag("confgFile", applyCmd.PersistentFlags().Lookup("configFile"))
+
 
 	
 }
