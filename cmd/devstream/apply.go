@@ -21,14 +21,6 @@ DevStream will generate and execute a new plan based on the config file and the 
 	Run: applyCMDFunc,
 }
 
-var applyConfigCMD = &cobra.Command{
-	Use:   "config",
-	Short: "Create or update DevOps tools according to DevStream configuration file",
-	Long: "Create or update DevOps tools according to DevStream configuration file" ,
-	Run: applyConfigCMDFunc,
-}
-
-
 
 func applyCMDFunc(cmd *cobra.Command, args []string) {
 	log.Info("Apply started.")
@@ -40,22 +32,11 @@ func applyCMDFunc(cmd *cobra.Command, args []string) {
 }
 
 
-func applyconfigCMDfunc(cmd *cobra.Command, args []string){
-	
-//	log.Debug("Show configuration information.")
-	if err := config.Apply(); err != nil {
-		log.Fatal(err)
-	}
-}
-
-
 func init() {
 	
 	cobra.OnInitialize(initconfig)
 	applyCMD.AddCommand(applyCMD)
 	applyCMD.PersistentFlags().StringVarP(&configFile, "config-file", "f", "config.yaml", "config file")
-
-
 	
 }
 
