@@ -23,10 +23,8 @@ DevStream will generate and execute a new plan based on the config file and the 
 
 var applyConfigCMD = &cobra.Command{
 	Use:   "config",
-	Short: "Show configuration information",
-	Long: `Show config is used for showing plugins' template configuration information.
-Examples:
-  dtm show config --plugin=A-PLUGIN-NAME`,
+	Short: "Create or update DevOps tools according to DevStream configuration file",
+	Long: "Create or update DevOps tools according to DevStream configuration file" ,
 	Run: applyConfigCMDFunc,
 }
 
