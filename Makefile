@@ -76,7 +76,7 @@ md5-plugin.%:
 .PHONY: fmt
 fmt:  ## Run 'go fmt' & goimports against code.
 	@echo ">>>>>>>>>>>> Formating codes"
-	@go install golang.org/x/tools/cmd/goimports@latest
+	@[[ -e ${GOPATH}/bin/goimports ]] || (echo "installing goimports ..." && go install golang.org/x/tools/cmd/goimports@latest)
 	@$(FIND) -type f | xargs gofmt -s -w
 	@$(FIND) -type f | xargs goimports -w -local $(DTM_ROOT)
 
