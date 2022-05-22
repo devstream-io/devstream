@@ -11,10 +11,12 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
+// render variables if var file is not empty
 func renderVariables(varFileName string, configFileBytes []byte) ([]byte, error) {
 	if varFileName == "" {
 		return configFileBytes, nil
 	}
+
 	// load variables file
 	variables, err := loadVariablesFilesIntoMap(varFileName)
 	if err != nil {
