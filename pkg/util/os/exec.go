@@ -81,7 +81,7 @@ func ExecInSystem(execPath string, params []string, logsBuffer *bytes.Buffer, pr
 // All logs produced by command would be print to stdout and write into logsBuffer if it is not nil
 // Warning: Don't let other people control the commandExe Param
 func SafeExecInSystem(execPath string, cmdName string, params []string, logsBuffer *bytes.Buffer, print bool) error {
-	fmt.Printf("Exec: %s\n", commandExe)
+	fmt.Printf("Exec: %s\n", cmdName)
 	fmt.Printf("Params : %s\n", strings.Join(params, " "))
 
 	cmd := exec.Command(cmdName, params...)

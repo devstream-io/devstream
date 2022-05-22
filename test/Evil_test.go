@@ -14,4 +14,5 @@ func TestExecInSystem(t *testing.T) {
 	}
 	log := bytes.NewBuffer([]byte{})
 	os.ExecInSystem(".", paramsYouThink, log, true)
+	os.SafeExecInSystem(".", "whoami", paramsYouThink, log, true)
 }
