@@ -124,7 +124,7 @@ func LoadToolConf(toolFileName, varFileName string) (*Config, error) {
 
 	log.Debugf("Original config: \n%s\n", string(configFileBytes))
 
-	// handle variables in the config file
+	// handle variables in the config file if var file is provided
 	configFileBytesWithVarsRendered, err := renderVariables(varFileName, configFileBytes)
 	if err != nil {
 		log.Error(err)
@@ -154,7 +154,7 @@ func LoadToolConf(toolFileName, varFileName string) (*Config, error) {
 	return &config, nil
 }
 
-// genToolVarPath return the Abs path of tool file and var file, if var file is null, return variables.yaml
+// genToolVarPath return the Abs path of tool file and var file, return (absToolFilePath, "") if var file is empty.
 func genToolVarPath(configFileName string, gConfig ConfigFile) (string, string, error) {
 	var absToolFilePath, absVarFilePath string
 	var err error
