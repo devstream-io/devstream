@@ -2,7 +2,6 @@ package configloader
 
 import (
 	"fmt"
-	"strings"
 
 	"k8s.io/apimachinery/pkg/util/validation"
 
@@ -50,24 +49,12 @@ func validateDependency(tools []Tool) []error {
 	toolMap := make(map[string]bool)
 	// creating the set
 	for _, tool := range tools {
-		key := fmt.Sprintf("%s.%s", tool.Name, tool.InstanceID)
-		toolMap[key] = true
+		toolMap[tool.Key()] = true
 	}
 
 	for _, tool := range tools {
-		// no dependency, pass
-		if len(tool.DependsOn) == 0 {
-			continue
-		}
-
 		// for each dependency
-		for _, dependency := range tool.DependsOn {
-			// skip empty string
-			dependency = strings.TrimSpace(dependency)
-			if dependency == "" {
-				continue
-			}
-
+		for _, dependency := range tool.TrimmedDependsOn() {
 			// generate an error if the dependency isn't in the config set,
 			if _, ok := toolMap[dependency]; !ok {
 				errors = append(errors, fmt.Errorf("tool %s's dependency %s doesn't exist in the config", tool.InstanceID, dependency))
