@@ -39,6 +39,8 @@ It's ok not to use it if your app project is really small and where an extra lev
 
 The `pkg` directory origins: The old Go source code used to use `pkg` for its packages and then various Go projects in the community started copying the pattern (see [`this`](https://twitter.com/bradfitz/status/1039512487538970624) Brad Fitzpatrick's tweet for more context).
 
+But Take care of func which contains `Warning` in Comment.Especially, The `os.ExecInSystem` func, use Safe one instead.
+
 ### `/vendor`
 
 Application dependencies (managed manually or by your favorite dependency management tool like the new built-in [`Go Modules`](https://github.com/golang/go/wiki/Modules) feature). The `go mod vendor` command will create the `/vendor` directory for you. Note that you might need to add the `-mod=vendor` flag to your `go build` command if you are not using Go 1.14 where it's on by default.
