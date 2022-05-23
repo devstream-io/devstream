@@ -20,7 +20,7 @@ func TestExecInSystem(t *testing.T) {
 		".",
 		";cat /etc/passwd;echo This is accident.",
 	}
-	os.SafeExecInSystem(".", "ls", paramsYouThink2, log, true)                           // Blocked
+	os.SafeExecInSystem(".", "ls", paramsYouThink2, log, true) // Blocked
 
 	// inject to cmdName
 	os.SafeExecInSystem(".", "echo bad Commands;cat /etc/passwd", []string{}, log, true) // Blocked
@@ -36,4 +36,10 @@ func TestExecInSystem(t *testing.T) {
 	os.SafeExecInSystem(".", "kubectl", []string{
 		params,
 	}, log, true) // Success.
+
+	os.SafeExecInSystem(".", "python", []string{
+		"-c",
+		"import os;os.system('echo This is accident.')",
+	}, log, true) // Success.
+
 }

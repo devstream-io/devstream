@@ -77,9 +77,11 @@ func ExecInSystem(execPath string, shellCommand string, logsBuffer *bytes.Buffer
 
 // SafeExecInSystem can exec a command with some params in system.
 // All logs produced by command would be print to stdout and write into logsBuffer if it is not nil
-// Warning: The SafeExecInSystem func is secure to break the command injection but blocked any strings contains "sh" or "cmd" in params@cmdName to avoid the injection
-// when provide as pkg/utils in Framework.
-// That will Cause Command injection.
+// Warning: The SafeExecInSystem func is not enough secure to defeat the command injection.
+// This Func provide a way to avoid params to pollute the whole command.
+// Warning: you still can use like command `python -c "{python shell}"` to introduce the code injection.
+// even the `kubectl exec` to execute in your k8s.
+// when using this func in Plugin, you should take care of parameters for the cmd has no such dangerous functions.
 func SafeExecInSystem(execPath string, cmdName string, params []string, logsBuffer *bytes.Buffer, print bool) error {
 	fmt.Printf("Exec: %s\n", cmdName)
 	fmt.Printf("Params : %s\n", strings.Join(params, " "))
