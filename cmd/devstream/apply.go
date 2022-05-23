@@ -25,3 +25,6 @@ func applyCMDFunc(cmd *cobra.Command, args []string) {
 	}
 	log.Success("Apply finished.")
 }
+func init() {
+	applyCMD.Flags().StringVarP(&configFile, "config-file", "f", "config.yaml", "config file")
+}

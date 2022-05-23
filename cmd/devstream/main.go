@@ -7,7 +7,6 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/devstream-io/devstream/internal/pkg/pluginengine"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -39,10 +38,6 @@ var (
 
 func init() {
 	cobra.OnInitialize(initConfig)
-
-	rootCMD.PersistentFlags().StringVarP(&configFile, "config-file", "f", "config.yaml", "config file")
-	rootCMD.PersistentFlags().StringVarP(&pluginDir, "plugin-dir", "d", pluginengine.DefaultPluginDir, "plugins directory")
-	rootCMD.PersistentFlags().BoolVarP(&continueDirectly, "yes", "y", false, "apply/delete directly without confirmation")
 	rootCMD.PersistentFlags().BoolVarP(&isDebug, "debug", "", false, "debug level log")
 	rootCMD.AddCommand(versionCMD)
 	rootCMD.AddCommand(initCMD)
@@ -88,6 +83,9 @@ func initConfig() {
 		log.Fatal(err)
 	}
 	if err := viper.BindPFlags(showStatusCMD.Flags()); err != nil {
+		log.Fatal(err)
+	}
+	if err := viper.BindPFlags(initCMD.Flags()); err != nil {
 		log.Fatal(err)
 	}
 }
