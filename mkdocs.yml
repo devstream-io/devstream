@@ -7,13 +7,17 @@ site_description: The DevStream Docs
 markdown_extensions:
   toc:
     permalink: true
+extra:
+  version:
+    provider: json
+    index: "https://docs.devstream.io/en/latest/"
+    current: latest
 nav:
   - 'quickstart_en.md'
-  - Tutorials:
-    - 'tutorials/autocomplete.md'
-    - Best Pratices:
-      - 'tutorials/best-practices/gitops.md'
+  - Best Practices:
+    - 'best-practices/gitops.md'
   - Commands:
+    - 'commands/autocomplete.md'
     - 'commands/init.md'
     - 'commands/apply.md'
     - 'commands/verify.md'
