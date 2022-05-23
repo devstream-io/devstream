@@ -36,7 +36,7 @@ sed -i.bak "s/YOUR_DOCKER_USERNAME/ironcore864/g" tools-quickstart.yaml
 
 > This config file uses two plugins, one will create a GitHub repository and bootstrap it into a Golang web app, and the other will create GitHub Actions workflow for it.
 
-The two plugins [require an environment variable](../plugins/github-repo-scaffolding-golang) to work, so let's set it:
+The two plugins, [githubactions-golang](plugins/githubactions-golang.md) & [github-repo-scaffolding-golang](plugins/github-repo-scaffolding-golang.md), require an environment variable to work, so let's set it:
 
 ```shell
 export GITHUB_TOKEN="YOUR_GITHUB_TOKEN_HERE"
