@@ -183,11 +183,8 @@ func (t *traverser) CheckAllVisited() bool {
 			traverseCount++
 		}
 	}
-	if traverseCount != len(t.tools) {
-		return false
-	}
 
-	return true
+	return traverseCount == len(t.tools)
 }
 
 // GetTools returns all the tools set by the traverser
