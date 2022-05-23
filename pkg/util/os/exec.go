@@ -3,6 +3,7 @@ package os
 import (
 	"bufio"
 	"bytes"
+	"errors"
 	"fmt"
 	"io"
 	"os/exec"
@@ -11,17 +12,14 @@ import (
 )
 
 // ExecInSystem can exec a command with some params in system.
-// All logs produced by command would be print to stdout and write into logsBuffer if it is not nil
+// All logs produced by command would be print to stdout and write into logsBuffer if it is not nil.
+// Warning: Don't let other people control the shellCommand Param
 // Warning: The ExecInSystem func is insecure when provide as pkg/utils in Framework.
 // That will Cause Command injection.
-func ExecInSystem(execPath string, params []string, logsBuffer *bytes.Buffer, print bool) error {
-	paramStr := strings.Join(params, " ")
-	fmt.Printf("Params : %s\n", paramStr)
+func ExecInSystem(execPath string, shellCommand string, logsBuffer *bytes.Buffer, print bool) error {
+	fmt.Printf("Shell Command: %s\n", shellCommand)
 
-	c := "-c"
-	cmdName := "sh"
-
-	cmd := exec.Command(cmdName, c, paramStr)
+	cmd := exec.Command("sh", "-c", shellCommand)
 	cmd.Dir = execPath
 
 	stdout, err := cmd.StdoutPipe()
@@ -79,11 +77,15 @@ func ExecInSystem(execPath string, params []string, logsBuffer *bytes.Buffer, pr
 
 // SafeExecInSystem can exec a command with some params in system.
 // All logs produced by command would be print to stdout and write into logsBuffer if it is not nil
-// Warning: Don't let other people control the commandExe Param
+// Warning: The SafeExecInSystem func is secure to break the command injection but blocked any strings contains "sh" or "cmd" in params@cmdName to avoid the injection
+// when provide as pkg/utils in Framework.
+// That will Cause Command injection.
 func SafeExecInSystem(execPath string, cmdName string, params []string, logsBuffer *bytes.Buffer, print bool) error {
 	fmt.Printf("Exec: %s\n", cmdName)
 	fmt.Printf("Params : %s\n", strings.Join(params, " "))
-
+	if IsShell(cmdName) {
+		return errors.New("Shell command detected.")
+	}
 	cmd := exec.Command(cmdName, params...)
 	cmd.Dir = execPath
 
@@ -138,4 +140,12 @@ func SafeExecInSystem(execPath string, cmdName string, params []string, logsBuff
 
 	wg.Wait()
 	return cmd.Wait()
+}
+
+func IsShell(cmdName string) bool {
+	if strings.Contains(cmdName, "sh") || strings.Contains(cmdName, "cmd") {
+		return true
+	} else {
+		return false
+	}
 }
