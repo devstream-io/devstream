@@ -232,16 +232,18 @@ func topologicalSortChangesInBatch(changes []*Change) ([][]*Change, error) {
 }
 
 func getToolsFromChanges(changes []*Change) []configloader.Tool {
-	// use map to avoid duplicated tools
-	toolsSet := make(map[string]*configloader.Tool)
+	// use slice instead of map to keep the order of tools
+	tools := make([]configloader.Tool, 0)
+	// use map to record the tool that has been added to the slice
+	toolsKeyMap := make(map[string]struct{})
+
+	// get tools from changes avoiding duplicated tools
 	for _, change := range changes {
-		toolsSet[change.Tool.Key()] = change.Tool
+		if _, ok := toolsKeyMap[change.Tool.Key()]; !ok {
+			tools = append(tools, *change.Tool)
+			toolsKeyMap[change.Tool.Key()] = struct{}{}
+		}
 	}
 
-	// convert map to slice
-	tools := make([]configloader.Tool, 0, len(toolsSet))
-	for _, tool := range toolsSet {
-		tools = append(tools, *tool)
-	}
 	return tools
 }
