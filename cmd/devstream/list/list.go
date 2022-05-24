@@ -2,6 +2,7 @@ package list
 
 import (
 	"fmt"
+	"regexp"
 	"sort"
 	"strings"
 )
@@ -13,11 +14,34 @@ import (
 
 var PluginsName string
 
-// List all of plugins name
-func List() {
+// List all plugins name
+func List(pluginFilter string) {
 	listPluginsName := strings.Fields(PluginsName)
+	r, _ := regexp.Compile(pluginFilter)
 	sort.Strings(listPluginsName)
 	for _, pluginName := range listPluginsName {
-		fmt.Println(pluginName)
+		if r.Match([]byte(pluginName)) {
+			fmt.Println(pluginName)
+		}
 	}
+}
+
+// Get plugins name in slice
+func PluginsNameSlice() []string {
+	listPluginsName := strings.Fields(PluginsName)
+	sort.Strings(listPluginsName)
+	return listPluginsName
+}
+
+// Get plugins name in map
+func PluginNamesMap() map[string]struct{} {
+	mp := make(map[string]struct{})
+
+	listPluginsName := strings.Fields(PluginsName)
+
+	for _, pluginName := range listPluginsName {
+		mp[pluginName] = struct{}{}
+	}
+
+	return mp
 }

@@ -9,14 +9,14 @@ type HelmParam struct {
 // Repo is the struct containing details of a git repository.
 // TODO(daniel-hutao): make the Repo equals to repo.Entry
 type Repo struct {
-	Name string
-	URL  string
+	Name string `validate:"required"`
+	URL  string `validate:"required"`
 }
 
 // Chart is the struct containing details of a helm chart.
 // TODO(daniel-hutao): make the Chart equals to helmclient.ChartSpec
 type Chart struct {
-	ChartName       string `mapstructure:"chart_name"`
+	ChartName       string `validate:"required" mapstructure:"chart_name"`
 	Version         string
 	ReleaseName     string `mapstructure:"release_name"`
 	Namespace       string

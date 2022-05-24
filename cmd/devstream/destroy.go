@@ -18,9 +18,14 @@ var destroyCMD = &cobra.Command{
 
 func destroyCMDFunc(cmd *cobra.Command, args []string) {
 	log.Info("Destroy started.")
-	if err := pluginengine.Destroy(continueDirectly); err != nil {
+	if err := pluginengine.Destroy(configFile, continueDirectly); err != nil {
 		log.Errorf("Destroy failed => %s.", err)
 		os.Exit(1)
 	}
 	log.Success("Destroy finished.")
+}
+
+func init() {
+	destroyCMD.Flags().StringVarP(&configFile, "config-file", "f", "config.yaml", "config file")
+	destroyCMD.Flags().BoolVarP(&continueDirectly, "yes", "y", false, "destroy directly without confirmation")
 }

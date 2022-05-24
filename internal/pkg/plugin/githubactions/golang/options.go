@@ -6,12 +6,12 @@ import (
 
 // Options is the struct for configurations of the githubactions plugin.
 type Options struct {
-	Owner    string
-	Org      string
-	Repo     string
-	Branch   string
-	Language *ga.Language
+	Owner    string       `validate:"required_without=Org"`
+	Org      string       `validate:"required_without=Owner"`
+	Repo     string       `validate:"required"`
+	Branch   string       `validate:"required"`
+	Language *ga.Language `validate:"required"`
 	Build    *Build
-	Test     *Test
+	Test     *Test `validate:"required"`
 	Docker   *Docker
 }

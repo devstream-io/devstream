@@ -38,13 +38,13 @@ const (
 )
 
 // GetChangesForApply takes "State Manager" & "Config" then do some calculate and return a Plan.
-// All actions should be execute is included in this Plan.changes.
+// All actions should be executed is included in this Plan.changes.
 func GetChangesForApply(smgr statemanager.Manager, cfg *configloader.Config) ([]*Change, error) {
 	return getChanges(smgr, cfg, CommandApply, false)
 }
 
 // GetChangesForDelete takes "State Manager" & "Config" then do some calculation and return a Plan to delete all plugins in the Config.
-// All actions should be execute is included in this Plan.changes.
+// All actions should be executed is included in this Plan.changes.
 func GetChangesForDelete(smgr statemanager.Manager, cfg *configloader.Config, isForceDelete bool) ([]*Change, error) {
 	return getChanges(smgr, cfg, CommandDelete, isForceDelete)
 }

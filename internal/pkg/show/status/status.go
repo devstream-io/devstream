@@ -13,25 +13,29 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func Show() error {
+func Show(configFile string) error {
 	plugin := viper.GetString("plugin")
-	name := viper.GetString("name")
+	id := viper.GetString("id")
+	allFlag := viper.GetBool("all")
 
-	// validation
-	if plugin == "" && name != "" {
-		return fmt.Errorf("empty plugin name. Maybe you forgot to add --plugin=PLUGIN_NAME")
-	}
-	if name == "" && plugin != "" {
-		return fmt.Errorf("empty instance name. Maybe you forgot to add --name=PLUGIN_INSTANCE_NAME")
-	}
-
-	// if --plugin="" and --name="", we set the allFlag to true, it means all plugins' status need to be printed
-	var allFlag = false
-	if name == "" && plugin == "" {
+	if plugin == "" && id == "" {
 		allFlag = true
 	}
 
-	smgr, err := statemanager.NewManager()
+	if id == "" && !allFlag {
+		log.Warnf("Empty instance name. Maybe you forgot to add --id=INSTANCE_ID. The default value \"default\" will be used.")
+		id = "default"
+	}
+
+	cfg, err := configloader.LoadConf(configFile)
+	if err != nil {
+		return err
+	}
+	if cfg == nil {
+		return fmt.Errorf("failed to load the config file")
+	}
+
+	smgr, err := statemanager.NewManager(*cfg.State)
 	if err != nil {
 		log.Debugf("Failed to get State Manager: %s.", err)
 		return err
@@ -40,7 +44,7 @@ func Show() error {
 	if allFlag {
 		return showAll(smgr)
 	}
-	return showOne(smgr, name, plugin)
+	return showOne(smgr, id, plugin)
 }
 
 // show all plugins' status
@@ -49,7 +53,7 @@ func showAll(smgr statemanager.Manager) error {
 	stateList := smgr.GetStatesMap().ToList()
 
 	if len(stateList) == 0 {
-		fmt.Print("No resources found.")
+		log.Info("No resources found.")
 		return nil
 	}
 
@@ -57,7 +61,7 @@ func showAll(smgr statemanager.Manager) error {
 	for i, state := range stateList {
 		fmt.Printf("================= %d/%d =================\n\n", i+1, len(stateList))
 		if err := showOne(smgr, state.InstanceID, state.Name); err != nil {
-			fmt.Printf("Failed to show the status with %s.%s.", state.InstanceID, state.Name)
+			log.Errorf("Failed to show the status with <%s.%s>, error: %s.", state.InstanceID, state.Name, err)
 			retErrs = append(retErrs, err.Error())
 			// the "continue" here is used to tell you we don't need to return when ONE plugin show failed
 			continue
@@ -68,27 +72,27 @@ func showAll(smgr statemanager.Manager) error {
 		return nil
 	}
 
-	return fmt.Errorf(strings.Join(retErrs, ";"))
+	return fmt.Errorf(strings.Join(retErrs, "; "))
 }
 
 // show one plugin status
-func showOne(smgr statemanager.Manager, name, plugin string) error {
+func showOne(smgr statemanager.Manager, id, plugin string) error {
 	// get state from statemanager
-	state := smgr.GetState(statemanager.GenerateStateKeyByToolNameAndPluginKind(name, plugin))
+	state := smgr.GetState(statemanager.GenerateStateKeyByToolNameAndPluginKind(id, plugin))
 	if state == nil {
-		return fmt.Errorf("state with (name: %s, plugin: %s) not found", name, plugin)
+		return fmt.Errorf("state with (id: %s, plugin: %s) not found", id, plugin)
 	}
 
 	// get state from read
 	tool := &configloader.Tool{
-		InstanceID: name,
+		InstanceID: id,
 		Name:       plugin,
 		DependsOn:  state.DependsOn,
 		Options:    state.Options,
 	}
 	stateFromRead, err := pluginengine.Read(tool)
 	if err != nil {
-		log.Debugf("Failed to get the resource state with %s.%s. Error: %s.", name, plugin, err)
+		log.Debugf("Failed to get the resource state with %s.%s. Error: %s.", id, plugin, err)
 		return err
 	}
 
@@ -106,7 +110,7 @@ func showOne(smgr statemanager.Manager, name, plugin string) error {
 	}
 
 	// get the output
-	output, err := NewOutput(name, plugin, state.Options, status)
+	output, err := NewOutput(id, plugin, state.Options, status)
 	if err != nil {
 		log.Debugf("Failed to get the output: %s.", err)
 	}

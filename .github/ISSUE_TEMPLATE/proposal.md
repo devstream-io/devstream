@@ -1,29 +1,23 @@
 ---
 name: Proposal
-about: Make a proposal, create a feature request, or suggest an idea about this project
-title: ''
+about: File a Proposal
+title: ":four_leaf_clover: `Proposal`: "
 labels: proposal
-assignees: ''
 ---
 
-## Description
+## What Would You Like to Add? Why is This Needed?
+<!--
+Note: For feature requests, please also engage with the PMC on Slack or WeChat.
+-->
 
-What are you trying to do, , how do you want to do it, how would you do it differently?
 
-Is it something you currently cannot do? Is this related to an issue?
 
-## Describe the Proposal
+## Design
 
-A clear and concise description of what you would like.
 
-## Has the Feature been Requested Before?
 
-Please link related issues here, if any.
+## Anything else
+<!--
+Links? References? Anything that will give us more context about this proposal.
+-->
 
-## Describe the Alternatives You Have Considered
-
-A clear and concise description of any alternative solution or feature you've considered.
-
-## Additional Context
-
-Add any other helpful context or screenshots about the feature request here.

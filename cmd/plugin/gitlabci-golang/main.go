@@ -35,5 +35,5 @@ func (p Plugin) Delete(options map[string]interface{}) (bool, error) {
 var DevStreamPlugin Plugin
 
 func main() {
-	log.Infof("%T: %s is a plugin for DevStream. Use it with DevStream.\n", NAME, DevStreamPlugin)
+	log.Infof("%T: %s is a plugin for DevStream. Use it with DevStream.\n", DevStreamPlugin, NAME)
 }

@@ -2,14 +2,24 @@ package pluginengine
 
 import (
 	"errors"
+	"fmt"
 	"os"
 
+	"github.com/devstream-io/devstream/internal/pkg/configloader"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func Destroy(continueDirectly bool) error {
-	smgr, err := statemanager.NewManager()
+func Destroy(configFile string, continueDirectly bool) error {
+	cfg, err := configloader.LoadConf(configFile)
+	if err != nil {
+		return err
+	}
+	if cfg == nil {
+		return fmt.Errorf("failed to load the config file")
+	}
+
+	smgr, err := statemanager.NewManager(*cfg.State)
 	if err != nil {
 		log.Debugf("Failed to get the manager: %s.", err)
 		return err
@@ -23,6 +33,10 @@ func Destroy(continueDirectly bool) error {
 	if len(changes) == 0 {
 		log.Info("No tools have been deployed now. There is nothing to do.")
 		return nil
+	}
+
+	for _, change := range changes {
+		log.Info(change.Description)
 	}
 
 	if !continueDirectly {

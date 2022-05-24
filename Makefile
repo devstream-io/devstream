@@ -1,24 +1,36 @@
-VERSION=0.4.0
-
-MKFILE_PATH=$(abspath $(lastword $(MAKEFILE_LIST)))
-BUILD_PATH=$(patsubst %/,%,$(dir $(MKFILE_PATH)))/build/working_dir
-
+SELF_DIR=$(dir $(lastword $(MAKEFILE_LIST)))
 GOOS=$(shell go env GOOS)
+GOPATH=$(shell go env GOPATH)
 GOARCH=$(shell go env GOARCH)
-GO_BUILD=go build -buildmode=plugin -trimpath -gcflags="all=-N -l"
-PLUGINS_CMD_ROOT=./cmd/plugin
-PLUGINS_DIR=$(shell find ${PLUGINS_CMD_ROOT} -name "main.go" -exec dirname {} \;)
-PLUGINS_NAME=$(notdir ${PLUGINS_DIR})
+GO_PLUGIN_BUILD=go build -buildmode=plugin -trimpath -gcflags="all=-N -l"
+PLUGINS=$(notdir $(wildcard $(ROOT_DIR)/cmd/plugin/*))
 PLUGIN_SUFFIX=${GOOS}-${GOARCH}_${VERSION}
 
 DTM_ROOT=github.com/devstream-io/devstream
 GO_LDFLAGS += -X '$(DTM_ROOT)/internal/pkg/version.Version=$(VERSION)' \
-		-X '$(DTM_ROOT)/cmd/devstream/list.PluginsName=$(PLUGINS_NAME)'
+		-X '$(DTM_ROOT)/cmd/devstream/list.PluginsName=$(PLUGINS)'
+
+FIND := find . -path './cmd/**/*.go' -o -path './test/**/*.go' -o -path './pkg/**/*.go' -o -path './internal/**/*.go'
 
 ifeq ($(GOOS),linux)
 	MD5SUM=md5sum
 else
 	MD5SUM=md5 -q
+endif
+
+ifeq ($(origin ROOT_DIR),undefined)
+ROOT_DIR := $(abspath $(shell cd $(SELF_DIR) && pwd -P))
+endif
+
+ifeq ($(origin VERSION), undefined)
+# the VERSION is a number, like 0.6.0
+# it doesn't contain the prefix v, not v0.6.0, but 0.6.0
+VERSION := $(shell git describe --tags --always --match='v*' | cut -c 2-)
+endif
+
+ifeq ($(origin PLUGINS_DIR),undefined)
+PLUGINS_DIR := $(ROOT_DIR)/.devstream
+$(shell mkdir -p $(PLUGINS_DIR))
 endif
 
 .PHONY: help
@@ -27,34 +39,33 @@ help: ## Display this help.
 
 .PHONY: clean
 clean: ## Remove dtm and plugins. It's best to run a "clean" before "build".
-	rm -rf .devstream
-	rm -f dtm*
-	rm -f *.md5
-	rm -rf build/working_dir
+	-rm -rf .devstream
+	-rm -f dtm*
 
 .PHONY: build-core
 build-core: fmt vet mod-tidy ## Build dtm core only, without plugins, locally.
 	go build -trimpath -gcflags="all=-N -l" -ldflags "$(GO_LDFLAGS)" -o dtm-${GOOS}-${GOARCH} ./cmd/devstream/
-	rm -f dtm
-	cp dtm-${GOOS}-${GOARCH} dtm
+	@-rm -f dtm
+	@mv dtm-${GOOS}-${GOARCH} dtm
+	@echo ">>>>>>>>>>>> 'dtm' has been generated in the current directory"
 
 .PHONY: build-plugin.%
-build-plugin.%: fmt vet mod-tidy mkdir.devstream ## Build one dtm plugin, like "make build-plugin.argocd"
+build-plugin.%: fmt vet mod-tidy ## Build one dtm plugin, like "make build-plugin.argocd".
 	$(eval plugin_name := $(strip $*))
-	${GO_BUILD} -o .devstream/${plugin_name}-${PLUGIN_SUFFIX}.so ${PLUGINS_CMD_ROOT}/${plugin_name}
-	$(MAKE) md5-plugin.$(plugin_name)
+	${GO_PLUGIN_BUILD} -o .devstream/${plugin_name}-${PLUGIN_SUFFIX}.so ${ROOT_DIR}/cmd/plugin/${plugin_name}
+	@$(MAKE) md5-plugin.$(plugin_name)
 
 .PHONY: build-plugins
-build-plugins: fmt vet mod-tidy $(addprefix build-plugin.,$(PLUGINS_NAME)) ## Build dtm plugins only. Use multi-threaded like "make build-plugins -j8" to speed up.
+build-plugins: fmt vet mod-tidy $(addprefix build-plugin.,$(PLUGINS)) ## Build dtm plugins only. Use multi-threaded like "make build-plugins -j8" to speed up.
 
 .PHONY: build
 build: build-core build-plugins ## Build everything. Use multi-threaded like "make build -j8" to speed up.
 
 .PHONY: md5
-md5: md5-plugins ## Create md5 sums for all plugins and dtm
+md5: md5-plugins ## Create md5 sums for all plugins.
 
 .PHONY: md5-plugins
-md5-plugins: $(addprefix md5-plugin.,$(PLUGINS_NAME))
+md5-plugins: $(addprefix md5-plugin.,$(PLUGINS))
 
 .PHONY: md5-plugin.%
 md5-plugin.%:
@@ -62,13 +73,11 @@ md5-plugin.%:
 	${MD5SUM} .devstream/${plugin_name}-${PLUGIN_SUFFIX}.so > .devstream/${plugin_name}-${PLUGIN_SUFFIX}.md5
 
 .PHONY: fmt
-fmt: ## Run 'go fmt' & goimports against code.
-	go install golang.org/x/tools/cmd/goimports@latest
-	goimports -local="github.com/devstream-io/devstream" -d -w cmd
-	goimports -local="github.com/devstream-io/devstream" -d -w pkg
-	goimports -local="github.com/devstream-io/devstream" -d -w internal
-	goimports -local="github.com/devstream-io/devstream" -d -w test
-	go fmt ./...
+fmt:  ## Run 'go fmt' & goimports against code.
+	@echo ">>>>>>>>>>>> Formating codes"
+	@[[ -e ${GOPATH}/bin/goimports ]] || (echo "installing goimports ..." && go install golang.org/x/tools/cmd/goimports@latest)
+	@$(FIND) -type f | xargs gofmt -s -w
+	@$(FIND) -type f | xargs ${GOPATH}/bin/goimports -w -local $(DTM_ROOT)
 
 .PHONY: vet
 vet: ## Run "go vet ./...".
@@ -77,10 +86,6 @@ vet: ## Run "go vet ./...".
 .PHONY: mod-tidy
 mod-tidy: ## Run "go mod tidy".
 	go mod tidy
-
-.PHONY: mkdir.devstream
-mkdir.devstream:  ## Create ".devstream" (default directory for plugins) directory.
-	mkdir -p .devstream
 
 .PHONY: e2e
 e2e: build ## Run e2e tests.

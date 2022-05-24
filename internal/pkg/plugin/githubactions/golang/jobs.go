@@ -9,20 +9,20 @@ const (
 	RegistryHarbor    RegistryType = "harbor"
 )
 
-// Build is the struct for githubacions job.
+// Build is the struct for githubactions job.
 type Build struct {
 	Enable  bool
 	Command string
 }
 
-// Test is the struct for githubacions job.
+// Test is the struct for githubactions job.
 type Test struct {
 	Enable   bool
 	Command  string
 	Coverage Coverage
 }
 
-// Docker is the struct for githubacions job.
+// Docker is the struct for githubactions job.
 type Docker struct {
 	Enable   bool
 	Registry Registry
@@ -35,35 +35,19 @@ type Registry struct {
 	Repository string
 }
 
-// Coverage is the struct for githubacions job.
+// Coverage is the struct for githubactions job.
 type Coverage struct {
 	Enable  bool
 	Profile string
 	Output  string
 }
 
-// Tag is the struct for githubacions job.
+// Tag is the struct for githubactions job.
 type Tag struct {
 }
 
-// Image is the struct for githubacions job.
+// Image is the struct for githubactions job.
 type Image struct {
-}
-
-func (b *Build) Validate() []error {
-	retErrors := make([]error, 0)
-
-	// TODO(daniel-hutao): what should we validate here?
-
-	return retErrors
-}
-
-func (t *Test) Validate() []error {
-	retErrors := make([]error, 0)
-
-	// TODO(daniel-hutao): what should we validate here?
-
-	return retErrors
 }
 
 func (d *Docker) Validate() []error {

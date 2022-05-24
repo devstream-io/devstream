@@ -7,6 +7,7 @@ import (
 
 	"github.com/devstream-io/devstream/internal/pkg/backend"
 	"github.com/devstream-io/devstream/internal/pkg/backend/local"
+	"github.com/devstream-io/devstream/internal/pkg/configloader"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -39,15 +40,20 @@ type manager struct {
 
 var m *manager
 
-func NewManager() (Manager, error) {
+func NewManager(stateConfig configloader.State) (Manager, error) {
 	if m != nil {
 		return m, nil
 	}
 
 	log.Debugf("The global manager m is not initialized.")
 
-	// use default local backend for now.
-	b, err := backend.GetBackend(backend.Local)
+	if stateConfig.Backend == "local" {
+		log.Infof("Using local backend. State file: %s.", stateConfig.Options.StateFile)
+	} else if stateConfig.Backend == "s3" {
+		log.Infof("Using s3 backend. Bucket: %s, region: %s, key: %s.", stateConfig.Options.Bucket, stateConfig.Options.Region, stateConfig.Options.Key)
+	}
+
+	b, err := backend.GetBackend(stateConfig)
 	if err != nil {
 		log.Errorf("Failed to get the Backend: %s.", err)
 		return nil, err

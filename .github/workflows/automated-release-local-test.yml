@@ -1,0 +1,83 @@
+name: automated release
+on:
+  push:
+    branches:
+      - main
+jobs:
+  # release for linux
+  #  build-and-release-on-linux:
+  #    env:
+  #      TAG: ${{ github.ref_name }}
+  #      USER: devstream-io
+  #      REPO: devstream
+  #      PLUGINDIR: .devstream
+  #      GOOS: linux
+  #      GOARCH: amd64
+  #    runs-on: ubuntu-latest
+  #    steps:
+  #      - run: echo "🐧 This job is now running on a ${{ runner.os }}-${{ runner.arch }} server hosted by GitHub!"
+  #      - name: Checkout
+  #        uses: actions/checkout@v2
+  #        with:
+  #          ref: ${{ env.TAG }}
+  #      - name: Setup Golang env
+  #        uses: actions/setup-go@v2
+  #        with:
+  #          go-version: 1.17
+  #      - name: Cache
+  #        uses: actions/cache@v2
+  #        with:
+  #          path: |
+  #            ~/.cache/go-build
+  #            ~/go/pkg/mod
+  #          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+  #          restore-keys: |
+  #            ${{ runner.os }}-go-
+  #      - name: Build
+  #        run: make build -j8
+  #      - name: Install Github-release
+  #        run: go install github.com/github-release/github-release@latest
+  #      - name: upload
+  #        run: bash -e ./build/package/upload_assets.sh ${{ secrets.GITHUB_TOKEN }} ${{ env.TAG }} ${{ env.GOOS }} ${{ env.GOARCH }}
+
+  # release for darwin-amd64
+  build-and-release-on-darwin-amd64:
+    env:
+      TAG: v0.4.0
+      USER: devstream-io
+      REPO: devstream
+      PLUGINDIR: .devstream
+      GOOS: darwin
+      GOARCH: amd64
+    runs-on: macos-latest
+    steps:
+      - run: echo "🐧 This job is now running on a ${{ runner.os }}-${{ runner.arch }} server hosted by GitHub!"
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: v0.4.0
+      - name: Setup Golang env
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.17
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+      - name: Build
+        run: make build -j8
+      - name: Install Github-release
+        run: go install github.com/github-release/github-release@latest
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-southeast-1
+      - name: upload
+        run: aws s3 cp .devstream/  s3://download.devstream.io/${{ env.TAG }}/ --recursive --acl public-read

@@ -5,6 +5,7 @@ import (
 
 	"github.com/spf13/viper"
 
+	"github.com/devstream-io/devstream/cmd/devstream/list"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -16,6 +17,11 @@ func Create() error {
 	name := viper.GetString("name")
 	if name == "" {
 		return fmt.Errorf("the name must be not \"\", you can specify it by --name flag")
+	}
+	log.Debugf("Got the name: %s.", name)
+
+	if pluginExists(name) {
+		return fmt.Errorf("Plugin name: %s is already exists", name)
 	}
 	log.Debugf("Got the name: %s.", name)
 
@@ -39,4 +45,15 @@ func Create() error {
 	p.PrintHelpInfo()
 
 	return nil
+}
+
+// Check whether the new name exists.
+func pluginExists(name string) bool {
+	pluginMp := list.PluginNamesMap()
+
+	if _, ok := (pluginMp)[name]; ok {
+		return true
+	}
+
+	return false
 }

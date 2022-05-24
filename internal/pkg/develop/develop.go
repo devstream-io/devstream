@@ -8,11 +8,13 @@ import (
 type Action string
 
 const (
-	ActionCreatePlugin Action = "create-plugin"
+	ActionCreatePlugin   Action = "create-plugin"
+	ActionValidatePlugin Action = "validate-plugin"
 )
 
 var ActionSet = map[Action]struct{}{
-	ActionCreatePlugin: {},
+	ActionCreatePlugin:   {},
+	ActionValidatePlugin: {},
 }
 
 func IsValideAction(action Action) bool {
@@ -20,12 +22,12 @@ func IsValideAction(action Action) bool {
 	return ok
 }
 
-func ExecuteAction(action Action) error {
-	switch action {
-	case ActionCreatePlugin:
-		log.Debugf("Action: %s.", ActionCreatePlugin)
-		return plugin.Create()
-	default:
-		panic("This should be never happen!")
-	}
+func CreatePlugin() error {
+	log.Debugf("Start create plugin")
+	return plugin.Create()
+}
+
+func ValidatePlugin() error {
+	log.Debugf("Start validate plugin")
+	return plugin.Validate()
 }

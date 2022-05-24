@@ -24,6 +24,7 @@ var pluginDefaultConfigs = map[string]string{
 	"openldap":                       plugin.OpenldapDefaultConfig,
 	"trello-github-integ":            plugin.TrelloGithubDefaultConfig,
 	"trello":                         plugin.TrelloDefaultConfig,
+	"helm-generic":                   plugin.HelmGenericDefaultConfig,
 	"gitlab-repo-scaffolding-golang": plugin.GitLabRepoScaffoldingGolangDefaultConfig,
 	"hashicorp-vault":                plugin.VaultDefaultConfig,
 }
@@ -31,7 +32,8 @@ var pluginDefaultConfigs = map[string]string{
 func Show() error {
 	plugin := viper.GetString("plugin")
 	if plugin == "" {
-		return fmt.Errorf("empty plugin name. Maybe you forgot to add --plugin=PLUGIN_NAME?")
+		fmt.Println(DefaultConfig)
+		return nil
 	}
 	if config, ok := pluginDefaultConfigs[plugin]; ok {
 		fmt.Println(config)

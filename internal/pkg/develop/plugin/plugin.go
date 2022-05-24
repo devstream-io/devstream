@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"strings"
 	"text/template"
 
 	pluginTpl "github.com/devstream-io/devstream/internal/pkg/develop/plugin/template"
@@ -56,11 +57,13 @@ func (p *Plugin) renderTplFile(tplFile *pluginTpl.TplFile) (*pluginTpl.File, err
 	if err != nil {
 		return nil, err
 	}
+	mustExistFlag := tplFile.MustExistFlag
 
 	return &pluginTpl.File{
-		Name:    name,
-		Dir:     dir,
-		Content: content,
+		Name:          name,
+		Dir:           dir,
+		Content:       content,
+		MustExistFlag: mustExistFlag,
 	}, nil
 }
 
@@ -71,7 +74,12 @@ func (p *Plugin) renderTplString(tplStr string) (string, error) {
 		return "", nil
 	}
 
-	t, err := template.New("default").Parse(tplStr)
+	var funcMap = template.FuncMap{
+		"format":    pluginTpl.FormatPackageName,
+		"dirFormat": pluginTpl.FormatPackageDirName,
+	}
+
+	t, err := template.New("default").Funcs(funcMap).Parse(tplStr)
 	if err != nil {
 		log.Debugf("Template parse failed: %s.", err)
 		log.Debugf("Template content: %s.", tplStr)
@@ -143,4 +151,55 @@ Happy hacking, buddy!
 Please give us feedback through GitHub issues if you encounter any difficulties. We guarantee that you will receive unrivaled help from our passionate community!
 `
 	fmt.Println(help)
+}
+
+// Validate the []pluginTpl.File, for each File if File in needValidateFiles:
+// call the validateFile() method to deal with.
+func (p *Plugin) ValidateFiles(files []pluginTpl.File) error {
+	fileCount := len(files)
+	var errs []string
+	log.Debugf("There are %d files wait to validate.", fileCount)
+	for i, file := range files {
+		log.Debugf("Validate process: %d/%d.", i+1, fileCount)
+		if err := p.validateFile(&file); err != nil {
+			log.Errorf("Failed to validate: %s%s.", file.Dir, file.Name)
+			errs = append(errs, err.Error())
+		}
+	}
+
+	if len(errs) != 0 {
+		log.Debugf("Total number of validation failures: %d.", len(errs))
+		log.Errorf(strings.Join(errs, "\n"))
+		log.Errorf("Plugin <%s> does NOT passed validation.", p.Name)
+		return nil
+	}
+
+	log.Successf("Plugin <%s> passed validation.", p.Name)
+	return nil
+}
+
+// validateFile gets the *pluginTpl.File, then do the following:
+// 1. if !MustExistFlag, continue
+// 2. verify the existence of file.Dir
+// 3. verify the existence of File.Name file
+func (p *Plugin) validateFile(file *pluginTpl.File) error {
+	if !file.MustExistFlag {
+		log.Debugf("MustExistFlag is not true, no validation: %s%s.", file.Dir, file.Name)
+		return nil
+	}
+	// verify the existence of file.Dir
+	if _, err := os.Stat(file.Dir); err != nil {
+		log.Debugf("Directory does not exist: %s.", file.Dir)
+		return err
+	}
+	log.Debugf("Directory existed: %s.", file.Dir)
+
+	// verify the existence of File.Name file
+	filePath := path.Join(file.Dir, file.Name)
+	if _, err := os.Stat(filePath); err != nil {
+		log.Debugf("File does not exist: %s.", filePath)
+		return err
+	}
+	log.Debugf("File existed: %s.", filePath)
+	return nil
 }

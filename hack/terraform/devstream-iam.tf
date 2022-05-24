@@ -129,6 +129,39 @@ resource "aws_iam_group_policy" "devstream-eks" {
   })
 }
 
+resource "aws_iam_group_policy" "DevStream-Download-Bucket-RW-Policy" {
+  name  = "DevStream-Download-Bucket-RW-Policy"
+  group = aws_iam_group.devstream.name
+
+  policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Sid": "PermissionForDownloadUploadForTheBucket",
+        "Effect": "Allow",
+        "Action": [
+          "s3:GetObject",
+          "s3:GetObjectAcl",
+          "s3:PutObject",
+          "s3:PutObjectAcl",
+          "s3:DeleteObject",
+          "s3:RestoreObject",
+          "s3:ListBucket",
+          "s3:GetBucketPolicy",
+          "s3:ReplicateObject",
+          "s3:GetBucketWebsite",
+          "s3:PutBucketWebsite",
+          "s3:GetBucketCORS",
+        ],
+        "Resource": [
+          "arn:aws:s3:::download.devstream.io",
+          "arn:aws:s3:::download.devstream.io/*"
+        ]
+      }
+    ]
+  })
+}
+
 locals {
   users = ["fangbao", "hutao"]
 }

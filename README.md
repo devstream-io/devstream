@@ -3,18 +3,20 @@
 
 ![](./docs/images/logo-120px.jpg)
 
+# DevStream
+
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat&logo=github&color=2370ff&labelColor=454545)](http://makeapullrequest.com)
 ![Test](https://github.com/devstream-io/devstream/actions/workflows/main.yml/badge.svg)
 [![Go Report Card](https://goreportcard.com/badge/github.com/devstream-io/devstream)](https://goreportcard.com/report/github.com/devstream-io/devstream)
 [![Downloads](https://img.shields.io/github/downloads/devstream-io/devstream/total.svg)](https://github.com/devstream-io/devstream/releases)
 [![Slack](https://img.shields.io/badge/slack-join_chat-success.svg?logo=slack)](https://join.slack.com/t/devstream-io/shared_invite/zt-16tb0iwzr-krcFGYRN7~Vv1suGZjdv4w)
 
-# DevStream
+| English | [中文](docs/README_zh.md) |
+| --- | --- |
+
 </div>
 
 ## DevStream, What Is It Anyway?
-
-> English | [中文](docs/README_zh.md)
 
 TL;DR: DevStream (CLI tool named `dtm`) is an open-source DevOps toolchain manager.
 
@@ -71,74 +73,9 @@ Want to install another different tool for a try? No problem.
 
 Want to remove or reinstall a specific piece in the workflow? DevStream has got your back!
 
-## Installation
-
-Please visit GitHub [Releases](https://github.com/devstream-io/devstream/releases) page and download the appropriate binary according to your operating system and architecture.
-
 ## Quick Start
 
 If you want to get a quick start, follow our [quick start](./docs/quickstart_en.md) doc now.
-
-## Configuration
-
-This is an example of DevStream config: [examples/quickstart.yaml](./examples/quickstart.yaml).
-
-Remember to open this configuration file, modify all FULL_UPPER_CASE_STRINGS (like YOUR_GITHUB_USERNAME, for example) in it to your own.
-
-Pay attention to the meaning of each item to ensure that it is what you want.
-
-For other plugins, checkout the "Plugins" section in our [doc](https://www.devstream.io/docs/index) for detailed usage.
-
-## Usage
-
-To apply the config, run:
-
-```shell
-./dtm apply -f YOUR_CONFIG_FILE.yaml
-```
-
-If you don't specify the config file with the "-f" parameter, it will try to use the default value which is "config.yaml" from the current directory.
-
-_`dtm` will compare the config, the state, and the resources to decide whether a "create", "update", or "delete" is needed. For more information, read our [Core Concepts documentation here](https://www.devstream.io/docs/core-concepts)._
-
-The command above will ask you for confirmation before actually executing the changes. To apply without confirmation (like `apt-get -y update`), run:
-
-```shell
-./dtm -y apply -f YOUR_CONFIG_FILE.yaml
-```
-
-To delete everything defined in the config, run:
-
-```shell
-./dtm delete -f YOUR_CONFIG_FILE.yaml
-```
-
-_Note that this deletes everything defined in the config. If some config is deleted after apply (state has it but config not), `dtm delete` won't delete it. It differs from `dtm destroy`._
-
-Similarly, to delete without confirmation:
-
-```shell
-./dtm -y delete -f YOUR_CONFIG_FILE.yaml
-```
-To delete everything defined in the config, regardless of the state:
-
-```shell
-./dtm delete --force -f YOUR_CONFIG_FILE.yaml
-```
-
-To verify, run:
-
-```shell
-./dtm verify -f YOUR_CONFIG_FILE.yaml
-```
-
-To destroy everything, run:
-
-```shell
-./dtm destroy
-```
-
-_`dtm` will read the state, then determine which tools are installed, and then remove those tools. It's same as `dtm apply -f empty.yaml` (empty.yaml is an empty config file)._
 
 ## Best Practices Toolchain Integration
 
@@ -150,7 +87,7 @@ I am happy to tell you that we have, and we are constantly adding more possible 
 
 so you are more than welcome to tell us what combinations you expect.
 
-- [GitOps Toolchain](https://www.devstream.io/docs/best-practices/gitops)
+- [GitOps Toolchain](https://docs.devstream.io/en/latest/tutorials/best-practices/gitops/)
 
 ## Supported DevOps Tools
 
@@ -167,30 +104,11 @@ Alternatively, run `dtm list plugins` and it will show you all the available plu
 
 ### Build
 
-```shell
-cd path/to/devstream
-make clean
-make build -j8 # multi-threaded build
-```
-
-This builds everything: `dtm` and all the plugins.
-
-We also support the following build modes:
-- Build `dtm` only: `make build-core`.
-- Build a specific plugin: `make build-plugin.PLUGIN_NAME`. Example: `make build-plugin.argocd`.
-- Build all plugins: `make build-plugins -j8` (multi-threaded build.)
-
-See `make help` for more information.
+See the [build](https://docs.devstream.io/en/latest/development/build/) doc under the "development" section of the documentation website.
 
 ### Test
 
-Run all unit tests:
-
-```shell
-go test ./...
-```
-
-e2e test runs on GitHub actions.
+See the [test](https://docs.devstream.io/en/latest/development/test/) doc under the "development" section of the documentation website.
 
 ## Contribute
 
@@ -201,4 +119,6 @@ First of all, thanks for wanting to contribute to DevStream! For more details on
 We will regularly organize `DevStream Community Meeting`, please visit the [wiki](https://github.com/devstream-io/devstream/wiki) page for details.
 
 - Message us on <a href="https://join.slack.com/t/devstream-io/shared_invite/zt-16tb0iwzr-krcFGYRN7~Vv1suGZjdv4w" target="_blank">Slack.</a>
-- For Chinese users, the WeChat group QR code can be obtained from [here](docs/README_zh.md).
+- For Chinese users, the WeChat group QR code is as below:
+
+![](docs/images/wechat-group-qr-code.png)

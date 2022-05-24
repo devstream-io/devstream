@@ -1,8 +1,8 @@
 package template
 
 var delete_go_nameTpl = "delete.go"
-var delete_go_dirTpl = "internal/pkg/plugin/{{ .Name }}/"
-var delete_go_contentTpl = `package {{ .Name }}
+var delete_go_dirTpl = "internal/pkg/plugin/{{ .Name | dirFormat }}/"
+var delete_go_contentTpl = `package {{ .Name | format }}
 
 import (
 	"fmt"
@@ -31,10 +31,13 @@ func Delete(options map[string]interface{}) (bool, error) {
 }
 `
 
+var delete_go_mustExistFlag = true
+
 func init() {
 	TplFiles = append(TplFiles, TplFile{
-		NameTpl:    delete_go_nameTpl,
-		DirTpl:     delete_go_dirTpl,
-		ContentTpl: delete_go_contentTpl,
+		NameTpl:       delete_go_nameTpl,
+		DirTpl:        delete_go_dirTpl,
+		ContentTpl:    delete_go_contentTpl,
+		MustExistFlag: delete_go_mustExistFlag,
 	})
 }

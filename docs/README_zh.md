@@ -3,82 +3,125 @@
 
 ![](./images/logo-120px.jpg)
 
+# DevStream
+
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat&logo=github&color=2370ff&labelColor=454545)](http://makeapullrequest.com)
-[![Discord](https://img.shields.io/discord/844603288082186240.svg?style=flat?label=&logo=discord&logoColor=ffffff&color=747df7&labelColor=454545)](https://discord.gg/83rDG6ydVZ)
 ![Test](https://github.com/devstream-io/devstream/actions/workflows/main.yml/badge.svg)
 [![Go Report Card](https://goreportcard.com/badge/github.com/devstream-io/devstream)](https://goreportcard.com/report/github.com/devstream-io/devstream)
 [![Downloads](https://img.shields.io/github/downloads/devstream-io/devstream/total.svg)](https://github.com/devstream-io/devstream/releases)
+[![Slack](https://img.shields.io/badge/slack-join_chat-success.svg?logo=slack)](https://join.slack.com/t/devstream-io/shared_invite/zt-16tb0iwzr-krcFGYRN7~Vv1suGZjdv4w)
 
-# DevStream
+| [English](../README.md) | 中文 |
+| --- | --- |
+
 </div>
 
 ## DevStream 是什么？
+TL;DR: DevStream（CLI工具名为`dtm`）是一个开源的DevOps工具链管理器。
 
-> [English](../README.md) | 中文
+想象你正在开始一个新的项目或组建一个新的团队。在写第一行代码之前，你需要一个能够高效运转SDLC(软件开发生命周期)和承载开发至部署全过程的工具。
 
-**注意：我们会优先更新英文版 [README](../README.md) ，中文版有一定的滞后，强烈建议大家直接阅读英文版**
+通常情况下，你需要以下几个部分来高效地工作。
 
-如果你懒得看下面的一大串文字：一个开源 DevOps 工具链管理工具。
+- 项目管理软件或 `issue` 追溯工具（JIRA等）
+- 源代码管理（GitHub、Bitbucket等）
+- 持续集成（Jenkins、CircleCI、Travis CI等）
+- 持续交付/部署（Flux CD/Flux2、Argo CD等)
+- 密钥和证书的单一事实来源(A single source of truth)（密钥管理器，如HashiCorp的Vault）
+- 集成化的日志和监控工具（例如，ELK、Prometheus/Grafana）
+- ......
 
-不过我还是建议你看下下面的一大串文字：
+具体内容远远不止这些，不过你应该已经明白意思了。
 
-假如你现在成立一家公司，或者具体一点，你要组建一个研发团队，在开始写代码前你需要做哪些事情？有些事情是绕不开的，比如：
+在创建一个高效、定制化的工作流上，当前有许多挑战。
 
-1. 你需要选择一个地方来存放代码，也许是 GitHub，也许是 GitLab；
-2. 你需要一个工具来完成项目管理或者说需求管理、Issue 管理等等工作，也许你会选择 Jira 或者禅道或者 Trello；
-3. 你需要选择一种开发语言，选择一个开发框架，比如你决定用 Golang 来开发，假如这是一个 web 项目，你需要考虑 web 框架用什么？“第一行”代码怎么写，也就是第一个脚手架怎么组装；
-4. 然后你需要配置一些 ci 自动化，比如 GitHub 上添加 actions 来完成代码的扫描、测试等等；
-5. 当然 cd 工具也不能少，不管你选择 Jenkins 还是 ArgoCD；
-6. 如果 cd 完成了，接下来可能你马上要开始纠结日志、监控、告警等等方案应该怎么定了
-7. 如果想得更多，或许你希望 GitHub 上别人给你提的 issue 能够自动同步到你的 Jira 或者 Trello……
-8. ……
+- 我们有很多选择。哪个是最好的？没有"放之四海而皆准"的答案，因为这完全取决于你的需求和喜好。
+- 不同部分之间的整合是非常具有挑战性的，否则将导致项目孤岛化、碎片化。
+- 软件领域演进很快。今天最好的东西可能明天就毫无意义。如果你想换掉一些组件或工具，管理起来会很困难，也很耗费资源。
 
-也许我上面说到的例子并不完整或者绝对准确，但是有一个结论是我们必须接受的：“在一个软件的开发生命周期中，除了业务代码编码本身，在 DevOps 工具链上我们将花费大量精力去选型、打通、落地、维护……”
+说实话，有一些产品可能包含你需要的一切，但它们可能并不完全适合你的具体要求。因此，你仍然需要自己去搜寻，找到最好的组件，并自己将它们整合起来。也就是说，选择、启动、连接和管理所有这些组件需要大量的时间和精力。
 
-所以 DevStream 要解决什么问题呢？我们要做的就是将主流的涵盖 DevOps 全生命周期的开源工具管理起来，包括这些工具的安装部署、最佳实践配置、工具间的打通等等。
+你可能已经看到了我们想要做的事情......
 
-## DevStream 目前能干什么？
+我们想简化整合组件的过程，所以我们建立了DevStream，一个开源的DevOps工具链管理器。
 
-1. 缺陷、需求管理 - Trello (集成 GitHub)
-2. 源码管理 - Golang 脚手架生成
-3. CI 流程 - Golang、Python、Nodejs
-4. CD/GitOps - ArgoCD / ArgoCD App
-5. Monitoring - kube-prometheus
-6. ……
+想一想Linux内核与不同发行版的关系。不同的发行版提供不同的软件包，这样你就可以随时选择你最需要的。
 
-## 下载
+或者，想想`yum`、`apt`或`apk`。你可以使用这些包管理器为任何新环境轻松设置你最喜欢的软件包。
 
-### macOS
+**DevStream的目标是成为DevOps工具的软件包管理器。**
 
-通过 [Homebrew](https://brew.sh/) 下载 `dtm`:
+**更具野心的是，DevStream想成为Linux内核，你可以用各种组件创建不同的发行版，为SDLC工作流的每个部分选择最适合的组件。**
 
-1. 添加 DevStream 的 tap: `brew tap devstream-io/devstream`
-2. 安装 `dtm`: `brew install devstream-io/devstream/dtm`
+## 为什么是 `dtm` ？
+Q：CLI被命名为 `dtm`，而工具本身被称为 `DevStream`。这是怎么回事！？一致性在哪里？
 
-## 快速开始
+A：受 [`git`](https://github.com/git/git#readme) 的启发，这个名字可以是（取决于你的心情）：
 
-如果你想要快速上手体验，可以跳转到我们的[快速开始](./quickstart_zh.md)文档。
+- "**d**evs**t**rea**m**": 一个对称缩写。
+- "**D**evops **T**oolchain **M**anager"：当它对你有用的时候。
+- "**d**ead **t**o **m**e"：当它崩溃的时候。
 
-## 你想问 DevStream 的将来？
+## 为什么使用DevStream？
 
-或许用不了多久，我们就能完整实现 “DevOps toolchain as code”，那时候你的整个 DevOps 工具链都能以 DevStream 作为唯一入口来运维，dtm(DevStream 命令行工具)将成为你的整条 DevOps 工具链的 “single source of truth”。当然那时你需要替换整个 DevOps 工具链中的某一个环节，也会变得很简单。
+不再需要手动的 `curl/wget` 下载、`apt` 安装、`helm` 安装；不再需要预先的本地试验以保证组件能正确安装。
 
-其实目前我们已经部分实现 “single source of truth”，部署好的工具发生的部分变更已经能够被 dtm 感知到，并且 dtm 会判断这种变更是否合理，是否需要修复，进而采取相应的动作让整个 DevOps 工具链变得更可靠。
+在一个人类可读的 `YAML` 配置文件中定义你所需要的DevOps工具，只需按一个按钮（或一个命令），你就能建立起整个DevOps工具链和SDLC工作流。
 
-## 怎么参与 DevStream 社区？
+五分钟，一个命令。
 
-当然，DevStream 的发展离不开社区用户的支持，DevStream 欢迎所有人参与社区建设，一起完善 dtm 的功能，让 dtm 越来越强大！
+想安装另一个不同的工具来试一试？没问题。
 
-不要有任何心理负担，我们非常欢迎大家下载、体验、捉虫、提 Issue、挑刺、bugifx 等等等等。
+想删除或重新安装工作流中的某个特定部分？DevStream已经帮你解决了!
 
-## 交流、支持
+## 快速入门
 
-如果你发现了 bug 或者有任何好的意见建议，我们希望你直接在 GitHub 上给我们提 issue。
+现在就跟随我们的[快速入门](./quickstart_zh.md)文档开始使用 DevStream
 
-当然我们也有微信群，可以直接扫下方群二维码加入用户群。
+## 最佳实践
 
-![](images/qr-group.jpg)
+DevStream支持许多工具的管理。你可以灵活地结合一些工具来满足你所需要的DevOps工具链。
 
-如果上方二维码失效了，就扫下面管理员微信二维码添加好友，然后发送暗号【进群】吧！
+是的，如果你问我是否有可以开箱即用的推荐实践。
 
-![](images/qr-ht.jpg)
+我很高兴地告诉你，我们有，而且我们正在不断增加更多可能的组合。
+
+我们非常欢迎你告诉我们你期望的组合。
+
+- [GitOps工具链](https://docs.devstream.io/en/latest/tutorials/best-practices/gitops/)
+
+## 支持的DevOps工具
+
+DevStream已经支持许多工具，而且还在不断增加。关于支持的工具的完整列表，请查看我们的 [插件列表](https://docs.devstream.io/en/latest/plugins/plugins-list) 文档。
+
+或者，运行 `dtm list plugins`，它将显示所有可用的插件。
+
+## 开发环境
+
+### 前提条件
+
+- Git
+- Go (1.17版本以上)
+
+### 构建
+
+参见文档官网development章节下的[build](https://docs.devstream.io/en/latest/development/build/)文档。
+
+### 测试
+
+参见文档官网development章节下的[test](https://docs.devstream.io/en/latest/development/test/)文档。
+
+## 贡献
+
+首先，感谢你愿意为DevStream做贡献 
+
+关于如何贡献、贡献者成长计划、风格指南等更多细节，请查看我们的 [CONTRIBUTING](../CONTRIBUTING.md) 文档。
+
+## 社区
+
+我们将定期组织 "DevStream Community Meeting"，请访问 [WIKI](https://github.com/devstream-io/devstream/wiki) 页面了解详情。
+
+- 在 <a href="https://join.slack.com/t/devstream-io/shared_invite/zt-16tb0iwzr-krcFGYRN7~Vv1suGZjdv4w" target="_blank">Slack</a> 给我们留言。
+- 对于中国用户，微信群的二维码如下：
+
+![](images/wechat-group-qr-code.png)

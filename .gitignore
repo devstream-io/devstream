@@ -28,6 +28,8 @@ config*.yaml*
 app*.yaml
 variables*.yaml
 variables*.yaml.bak
+tools*.yaml
+tools*.yaml.bak
 
 # IDE
 .idea/

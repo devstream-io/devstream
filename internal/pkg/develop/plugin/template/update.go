@@ -1,8 +1,8 @@
 package template
 
 var update_go_nameTpl = "update.go"
-var update_go_dirTpl = "internal/pkg/plugin/{{ .Name }}/"
-var update_go_contentTpl = `package {{ .Name }}
+var update_go_dirTpl = "internal/pkg/plugin/{{ .Name | dirFormat }}/"
+var update_go_contentTpl = `package {{ .Name | format }}
 
 import (
 	"fmt"

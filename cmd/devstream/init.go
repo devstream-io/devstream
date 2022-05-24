@@ -4,6 +4,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/devstream-io/devstream/internal/pkg/configloader"
+	"github.com/devstream-io/devstream/internal/pkg/pluginengine"
 	"github.com/devstream-io/devstream/internal/pkg/pluginmanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
@@ -16,16 +17,22 @@ var initCMD = &cobra.Command{
 }
 
 func initCMDFunc(cmd *cobra.Command, args []string) {
-	cfg := configloader.LoadConf(configFile, varFile)
-	if cfg == nil {
-		log.Fatal("Failed to load the config file.")
+	cfg, err := configloader.LoadConf(configFile)
+	if err != nil {
+		log.Errorf("Error: %s.", err)
+		return
 	}
 
-	err := pluginmanager.DownloadPlugins(cfg)
+	err = pluginmanager.DownloadPlugins(cfg)
 	if err != nil {
 		log.Errorf("Error: %s.", err)
 		return
 	}
 
 	log.Success("Initialize finished.")
+}
+
+func init() {
+	initCMD.Flags().StringVarP(&configFile, "config-file", "f", "config.yaml", "config file")
+	initCMD.Flags().StringVarP(&pluginDir, "plugin-dir", "d", pluginengine.DefaultPluginDir, "plugins directory")
 }

@@ -2,43 +2,18 @@ package golang
 
 import (
 	"fmt"
+
+	"github.com/devstream-io/devstream/pkg/util/validator"
 )
 
 // validate validates the options provided by the core.
 func validate(opts *Options) []error {
 	retErrors := make([]error, 0)
 
-	// owner/org/repo/branch
-	if opts.Owner == "" && opts.Org == "" {
-		retErrors = append(retErrors, fmt.Errorf("owner and org are empty"))
+	if errs := validator.Struct(opts); len(errs) != 0 {
+		retErrors = append(retErrors, errs...)
 	}
-	if opts.Repo == "" {
-		retErrors = append(retErrors, fmt.Errorf("repo is empty"))
-	}
-	if opts.Branch == "" {
-		retErrors = append(retErrors, fmt.Errorf("branch is empty"))
-	}
-
-	// language
-	if opts.Language == nil {
-		retErrors = append(retErrors, fmt.Errorf("language is empty"))
-	}
-	if errs := opts.Language.Validate(); len(errs) != 0 {
-		for _, e := range errs {
-			retErrors = append(retErrors, fmt.Errorf("language is invalid: %s", e))
-		}
-	}
-
-	// jobs
-	if opts.Test == nil {
-		retErrors = append(retErrors, fmt.Errorf("test is empty"))
-	}
-	if errs := opts.Test.Validate(); len(errs) != 0 {
-		for _, e := range errs {
-			retErrors = append(retErrors, fmt.Errorf("test is invalid: %s", e))
-		}
-	}
-
+	// too complex to validate automatically
 	if opts.Docker == nil {
 		return retErrors
 	}

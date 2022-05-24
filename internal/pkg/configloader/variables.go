@@ -2,10 +2,8 @@ package configloader
 
 import (
 	"bytes"
-	"errors"
 	"html/template"
 	"io/ioutil"
-	"os"
 	"regexp"
 
 	"gopkg.in/yaml.v3"
@@ -13,16 +11,10 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-const defaultVarFileName = "variables.yaml"
-
+// render variables if var file is not empty
 func renderVariables(varFileName string, configFileBytes []byte) ([]byte, error) {
-	// if the var file is default (user didn't overwrite the value with --var-file option)
-	// and the default var file doesn't exist, do nothing
-	// it's OK to not use a var file
-	if defaultVarFileName == varFileName {
-		if _, err := os.Stat(defaultVarFileName); errors.Is(err, os.ErrNotExist) {
-			return configFileBytes, nil
-		}
+	if varFileName == "" {
+		return configFileBytes, nil
 	}
 
 	// load variables file
@@ -62,7 +54,7 @@ func loadVariablesFilesIntoMap(varFileName string) (map[string]interface{}, erro
 	return variables, nil
 }
 
-// this is because our variables syntax is [[ varName ]]
+// this is because our variables' syntax is [[ varName ]]
 // while Go's template is [[ .varName ]]
 func addDotForVariablesInConfig(s string) string {
 	// regex := `\[\[\s*(.*)\s*\]\]`

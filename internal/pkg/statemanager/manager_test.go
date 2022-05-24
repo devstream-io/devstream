@@ -7,6 +7,7 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.com/devstream-io/devstream/internal/pkg/backend/local"
+	"github.com/devstream-io/devstream/internal/pkg/configloader"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 )
 
@@ -16,7 +17,13 @@ var _ = Describe("Statemanager", func() {
 
 	Context("States", func() {
 		BeforeEach(func() {
-			smgr, err = statemanager.NewManager()
+			stateCfg := configloader.State{
+				Backend: "local",
+				Options: configloader.StateConfigOptions{
+					StateFile: "devstream.state",
+				},
+			}
+			smgr, err = statemanager.NewManager(stateCfg)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(smgr).NotTo(BeNil())
 		})
