@@ -95,6 +95,10 @@ func (t *Tool) DeepCopy() *Tool {
 	return &retTool
 }
 
+func (t *Tool) Key() string {
+	return fmt.Sprintf("%s.%s", t.Name, t.InstanceID)
+}
+
 // renderToolConfigWithVarsToConfig reads tool file rendering by var file as a Config struct.
 func renderToolConfigWithVarsToConfig(toolFileName, varFileName string) (*Config, error) {
 	toolFileBytes, err := ioutil.ReadFile(toolFileName)
