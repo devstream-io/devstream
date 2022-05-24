@@ -1,5 +1,13 @@
 # GitOps Toolchain
 
+If you are interested in watching a video demo, see the youtube video below:
+
+[https://www.youtube.com/watch?v=q7TK3vFr1kg](https://www.youtube.com/watch?v=q7TK3vFr1kg)
+
+For Chinese readers, watch this one instead:
+
+[https://www.bilibili.com/video/BV1W3411P7oW/](https://www.bilibili.com/video/BV1W3411P7oW/)
+
 ## Plugins needed
 
 1. [github-repo-scaffolding-golang](../plugins/github-repo-scaffolding-golang)
