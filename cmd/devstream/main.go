@@ -11,12 +11,7 @@ import (
 )
 
 var (
-	configFile       string
-	pluginDir        string
-	continueDirectly bool
-	isDebug          bool
-	isForceDelete    bool
-
+	isDebug bool
 	rootCMD = &cobra.Command{
 		Use:   "dtm",
 		Short: `DevStream is an open-source DevOps toolchain manager`,
