@@ -48,8 +48,8 @@ func TestTopologicalSortChangesInBatch(t *testing.T) {
 				ActionName: statemanager.ActionCreate,
 			},
 			// although D depends on B
-			// but B is not in the changes
-			// so D is not in the first batch
+			// but B is not in the changes list
+			// so D is in the first batch
 			{
 				Tool:       toolD,
 				ActionName: statemanager.ActionCreate,
