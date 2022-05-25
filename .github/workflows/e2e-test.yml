@@ -30,7 +30,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         go: [1.17.x]
-    permissions: write-all
+#     permissions: write-all
     runs-on: ${{ matrix.os }}
     name: e2e-test-${{ matrix.os }}
     steps:
@@ -50,32 +50,35 @@ jobs:
           key: ${{ runner.os }}-go-${{ matrix.go }}-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-${{ matrix.go }}-
-      - name: Build
-        run: make build -j8
+#       - name: Build
+#         run: make build -j8
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-southeast-1
-      - name: Configure EKS credentials
+      - name: aws s3 ls
         run: |
-          aws eks update-kubeconfig --region ap-southeast-1 --name dtm-test
-      - name: copy config files
-        run: cp ./test/e2e/yaml/e2e-*.yaml ./
-      - name: apply git-ops
-        run: ./dtm apply -f e2e-config.yaml -y
-      - name: apply twice git-ops
-        run: ./dtm apply -f e2e-config.yaml -y
-      - name: apply trello-github
-        run: ./dtm apply -f e2e-trello-github-config.yaml -y
-      - name: apply twice trello-github
-        run: ./dtm apply -f e2e-trello-github-config.yaml -y
-      - name: check if pod is ready
-        run: while [[ $(kubectl get pods -l app=dtm-e2e-go -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "pod not ready yet..."; sleep 3; done
-        timeout-minutes: 10
-      - name: verify
-        run: ./dtm verify -f e2e-config.yaml
-      - name: clean
-        run: ./dtm delete -f e2e-config.yaml -y
+          aws s3 ls s3://download.devstream.io/
+#       - name: Configure EKS credentials
+#         run: |
+#           aws eks update-kubeconfig --region ap-southeast-1 --name dtm-test
+#       - name: copy config files
+#         run: cp ./test/e2e/yaml/e2e-*.yaml ./
+#       - name: apply git-ops
+#         run: ./dtm apply -f e2e-config.yaml -y
+#       - name: apply twice git-ops
+#         run: ./dtm apply -f e2e-config.yaml -y
+#       - name: apply trello-github
+#         run: ./dtm apply -f e2e-trello-github-config.yaml -y
+#       - name: apply twice trello-github
+#         run: ./dtm apply -f e2e-trello-github-config.yaml -y
+#       - name: check if pod is ready
+#         run: while [[ $(kubectl get pods -l app=dtm-e2e-go -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "pod not ready yet..."; sleep 3; done
+#         timeout-minutes: 10
+#       - name: verify
+#         run: ./dtm verify -f e2e-config.yaml
+#       - name: clean
+#         run: ./dtm delete -f e2e-config.yaml -y
 
