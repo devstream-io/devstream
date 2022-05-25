@@ -154,7 +154,12 @@ func execute(smgr statemanager.Manager, changes []*Change) map[string]error {
 			break
 		}
 	}
-	log.Separatorf("Processing done.")
+
+	if len(errorsMap) != 0 {
+		log.Separatorf("Processing aborted.")
+	} else {
+		log.Separatorf("Processing done.")
+	}
 
 	return errorsMap
 }
