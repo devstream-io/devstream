@@ -3,7 +3,7 @@ name: e2e test
 on:
   pull_request_target:
     types: [ opened, synchronize ]
-    branches: [ main, merico-dev/e2e-test-fix ]
+    branches: [ main, merico-dev:e2e-test-fix ]
     paths:
       - '**.go'
       - 'Makefile'
