@@ -22,8 +22,6 @@ env:
   TRELLO_API_KEY: ${{ secrets.E2E_TRELLO_API_KEY }}
   TRELLO_TOKEN: ${{ secrets.E2E_TRELLO_TOKEN }}
 
-permissions: write-all
-
 jobs:
   e2e-test:
     if: github.repository == 'devstream-io/devstream'
