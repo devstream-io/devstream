@@ -25,7 +25,7 @@ env:
 
 jobs:
   e2e-test:
-    if: github.repository == 'devstream-io/devstream'
+    if: github.repository == 'KeHaohaoke/devstream'
     strategy:
       matrix:
         os: [ubuntu-latest]
