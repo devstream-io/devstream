@@ -13,9 +13,11 @@ func Verify(configFile string) bool {
 	cfg, err := configloader.LoadConf(configFile)
 	if err != nil {
 		log.Errorf("verify failed, error: %s", err)
+		return false
 	}
 
 	if cfg == nil {
+		log.Errorf("failed to load the config file")
 		return false
 	}
 

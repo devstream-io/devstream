@@ -13,7 +13,7 @@ import (
 func Destroy(configFile string, continueDirectly bool) error {
 	cfg, err := configloader.LoadConf(configFile)
 	if err != nil {
-		return err
+		return fmt.Errorf("destroy failed, error:%s", err)
 	}
 	if cfg == nil {
 		return fmt.Errorf("failed to load the config file")

@@ -22,6 +22,10 @@ func initCMDFunc(cmd *cobra.Command, args []string) {
 		log.Errorf("Error: %s.", err)
 		return
 	}
+	if cfg == nil {
+		log.Error("failed to load the config file")
+		return
+	}
 
 	err = pluginmanager.DownloadPlugins(cfg)
 	if err != nil {

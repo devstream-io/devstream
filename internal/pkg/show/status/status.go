@@ -29,7 +29,7 @@ func Show(configFile string) error {
 
 	cfg, err := configloader.LoadConf(configFile)
 	if err != nil {
-		return err
+		return fmt.Errorf("show fail ,error:%s", err)
 	}
 	if cfg == nil {
 		return fmt.Errorf("failed to load the config file")
