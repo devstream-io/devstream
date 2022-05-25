@@ -1,9 +1,8 @@
-name: e2e test
+name: pull request builder
 
 on:
-  push:
-    branches:
-      - main
+  pull_request:
+    branches: [ main ]
     paths:
       - '**.go'
       - 'Makefile'
