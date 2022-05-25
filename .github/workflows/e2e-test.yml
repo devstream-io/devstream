@@ -4,7 +4,7 @@ on:
   pull_request_target:
     types:
       - opened
-    branches: [ main ]
+    branches: [ main, merico-dev/e2e-test-fix ]
     paths:
       - '**.go'
       - 'Makefile'
