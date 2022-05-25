@@ -1,3 +1,5 @@
+# var file path, you can set it to absolute path or relative path.
+varFile: variables-quickstart.yaml # here is a relative path. (defaults is ./variables.yaml)
 # tool file path, you can set it to absolute path or relative path.
 toolFile: tools-quickstart.yaml # here is a relative path.
 # state config, backend can be local or s3
