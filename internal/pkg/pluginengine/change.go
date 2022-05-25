@@ -84,60 +84,82 @@ func execute(smgr statemanager.Manager, changes []*Change) map[string]error {
 	numOfChanges := len(changes)
 	log.Infof("Changes count: %d.", numOfChanges)
 
-	for i, c := range changes {
-		log.Separatorf("Processing progress: %d/%d.", i+1, numOfChanges)
-		log.Infof("Processing: (%s/%s) -> %s ...", c.Tool.Name, c.Tool.InstanceID, c.ActionName)
+	// get changes in batch
+	// the changes in each batch do not have dependency on each other
+	// but the changes from next batch have dependency on the changes from previous batch
+	batchesOfChanges, err := topologicalSortChangesInBatch(changes)
+	if err != nil {
+		log.Errorf("Failed to sort changes in batch: %s", err)
+		errorsMap["dependency-analysis"] = err
+		return errorsMap
+	}
 
-		var succeeded bool
-		var err error
-		var returnValue map[string]interface{}
+	for _, batch := range batchesOfChanges {
+		for i, c := range batch {
+			log.Separatorf("Processing progress: %d/%d.", i+1, numOfChanges)
+			log.Infof("Processing: (%s/%s) -> %s ...", c.Tool.Name, c.Tool.InstanceID, c.ActionName)
 
-		log.Debugf("Tool's raw changes are: %v.", c.Tool.Options)
+			var succeeded bool
+			var err error
+			var returnValue map[string]interface{}
 
-		errs := HandleOutputsReferences(smgr, c.Tool.Options)
-		if len(errs) != 0 {
-			succeeded = false
+			log.Debugf("Tool's raw changes are: %v.", c.Tool.Options)
 
-			for _, e := range errs {
-				log.Errorf("Error: %s.", e)
+			errs := HandleOutputsReferences(smgr, c.Tool.Options)
+			if len(errs) != 0 {
+				succeeded = false
+
+				for _, e := range errs {
+					log.Errorf("Error: %s.", e)
+				}
+				log.Errorf("The outputs reference in tool (%s/%s) can't be resolved. Please double check your config.", c.Tool.Name, c.Tool.InstanceID)
+
+				// not executing this change since its input isn't valid
+				continue
 			}
-			log.Errorf("The outputs reference in tool (%s/%s) can't be resolved. Please double check your config.", c.Tool.Name, c.Tool.InstanceID)
 
-			// not executing this change since its input isn't valid
-			continue
-		}
-
-		switch c.ActionName {
-		case statemanager.ActionCreate:
-			if returnValue, err = Create(c.Tool); err == nil {
-				succeeded = true
+			switch c.ActionName {
+			case statemanager.ActionCreate:
+				if returnValue, err = Create(c.Tool); err == nil {
+					succeeded = true
+				}
+			case statemanager.ActionUpdate:
+				if returnValue, err = Update(c.Tool); err == nil {
+					succeeded = true
+				}
+			case statemanager.ActionDelete:
+				succeeded, err = Delete(c.Tool)
 			}
-		case statemanager.ActionUpdate:
-			if returnValue, err = Update(c.Tool); err == nil {
-				succeeded = true
+
+			if err != nil {
+				key := fmt.Sprintf("%s/%s-%s", c.Tool.Name, c.Tool.InstanceID, c.ActionName)
+				errorsMap[key] = err
 			}
-		case statemanager.ActionDelete:
-			succeeded, err = Delete(c.Tool)
+
+			c.Result = &ChangeResult{
+				Succeeded:   succeeded,
+				Error:       err,
+				Time:        time.Now().Format(time.RFC3339),
+				ReturnValue: returnValue,
+			}
+
+			err = handleResult(smgr, c)
+			if err != nil {
+				errorsMap["handle-result"] = err
+			}
 		}
 
-		if err != nil {
-			key := fmt.Sprintf("%s/%s-%s", c.Tool.Name, c.Tool.InstanceID, c.ActionName)
-			errorsMap[key] = err
-		}
-
-		c.Result = &ChangeResult{
-			Succeeded:   succeeded,
-			Error:       err,
-			Time:        time.Now().Format(time.RFC3339),
-			ReturnValue: returnValue,
-		}
-
-		err = handleResult(smgr, c)
-		if err != nil {
-			errorsMap["handle-result"] = err
+		// abort next batches if any error occurred in this batch
+		if len(errorsMap) != 0 {
+			break
 		}
 	}
-	log.Separatorf("Processing done.")
+
+	if len(errorsMap) != 0 {
+		log.Separatorf("Processing aborted.")
+	} else {
+		log.Separatorf("Processing done.")
+	}
 
 	return errorsMap
 }

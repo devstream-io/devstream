@@ -192,3 +192,58 @@ func GetChangesForDestroy(smgr statemanager.Manager) ([]*Change, error) {
 
 	return changes, nil
 }
+
+// topologicalSortChangesInBatch returns a list of batches of changes, sorted by dependency defined in the config.
+func topologicalSortChangesInBatch(changes []*Change) ([][]*Change, error) {
+
+	// get tools from changes
+	tools := getToolsFromChanges(changes)
+
+	batchesOfChanges := make([][]*Change, 0)
+
+	// topological sort the tools based on dependency
+	// tool in each batch does not have dependency on each other
+	// note: maybe tools gotten from changes do not contain all the tools in the config.Tools
+	// but it's still ok to call topologicalSort
+	batchesOfTools, err := topologicalSort(tools)
+	if err != nil {
+		return batchesOfChanges, err
+	}
+
+	// group changes into batches based on the batches of tools
+	// so that the changes in each batch do not have dependency on each other
+	for _, batch := range batchesOfTools {
+		changesOneBatch := make([]*Change, 0)
+		// for each tool in the batch, find the change that matches it
+		for _, tool := range batch {
+			for _, change := range changes {
+				if change.Tool.Key() == tool.Key() {
+					changesOneBatch = append(changesOneBatch, change)
+				}
+			}
+		}
+
+		if len(changesOneBatch) > 0 {
+			batchesOfChanges = append(batchesOfChanges, changesOneBatch)
+		}
+	}
+
+	return batchesOfChanges, nil
+}
+
+func getToolsFromChanges(changes []*Change) []configloader.Tool {
+	// use slice instead of map to keep the order of tools
+	tools := make([]configloader.Tool, 0)
+	// use map to record the tool that has been added to the slice
+	toolsKeyMap := make(map[string]struct{})
+
+	// get tools from changes avoiding duplicated tools
+	for _, change := range changes {
+		if _, ok := toolsKeyMap[change.Tool.Key()]; !ok {
+			tools = append(tools, *change.Tool)
+			toolsKeyMap[change.Tool.Key()] = struct{}{}
+		}
+	}
+
+	return tools
+}

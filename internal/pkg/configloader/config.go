@@ -72,6 +72,10 @@ func (t *Tool) DeepCopy() *Tool {
 	return &retTool
 }
 
+func (t *Tool) Key() string {
+	return fmt.Sprintf("%s.%s", t.Name, t.InstanceID)
+}
+
 // LoadConf reads an input file as a general config.
 func LoadConf(configFileName string) (*Config, error) {
 	configFileBytes, err := ioutil.ReadFile(configFileName)
