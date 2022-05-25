@@ -13,6 +13,7 @@ on:
       - 'hack/e2e/**'
       - 'hack/terraform/**'
 
+permissions: write-all
 env:
   # DO NOT use the GITHUB_TOKEN here
   # see https://github.com/devstream-io/devstream/pull/414 for more info
@@ -29,7 +30,6 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         go: [1.17.x]
-    permissions: write-all
     runs-on: ${{ matrix.os }}
     name: e2e-test-${{ matrix.os }}
     steps:
