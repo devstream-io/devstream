@@ -2,6 +2,8 @@ name: e2e test
 
 on:
   pull_request:
+    types:
+      - opened
     branches: [ main ]
     paths:
       - '**.go'
