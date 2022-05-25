@@ -22,3 +22,8 @@ func verifyCMDFunc(cmd *cobra.Command, args []string) {
 		log.Info("Verify finished.")
 	}
 }
+
+func init() {
+	verifyCMD.Flags().StringVarP(&configFile, "config-file", "f", "config.yaml", "config file")
+	verifyCMD.Flags().StringVarP(&pluginDir, "plugin-dir", "d", pluginengine.DefaultPluginDir, "plugins directory")
+}

@@ -1,12 +1,20 @@
 # GitOps Toolchain
 
+If you are interested in watching a video demo, see the youtube video below:
+
+[https://www.youtube.com/watch?v=q7TK3vFr1kg](https://www.youtube.com/watch?v=q7TK3vFr1kg)
+
+For Chinese readers, watch this one instead:
+
+[https://www.bilibili.com/video/BV1W3411P7oW/](https://www.bilibili.com/video/BV1W3411P7oW/)
+
 ## Plugins needed
 
-1. [github-repo-scaffolding-golang](/docs/plugins/github-repo-scaffolding-golang)
-2. [jira-github](/docs/plugins/jira-github-integ)
-3. [githubactions-golang](/docs/plugins/githubactions-golang)
-4. [argocd](/docs/plugins/argocd)
-5. [argocdapp](/docs/plugins/argocdapp)
+1. [github-repo-scaffolding-golang](../plugins/github-repo-scaffolding-golang)
+2. [jira-github](../plugins/jira-github-integ)
+3. [githubactions-golang](../plugins/githubactions-golang)
+4. [argocd](../plugins/argocd)
+5. [argocdapp](../plugins/argocdapp)
 
 The dependencies of these plugins are(`a -> b` means for `a depends on b`):
 
@@ -28,7 +36,7 @@ Download the appropriate `dtm` version for your platform from [DevStream Release
 
 ## Prepare the Config File
 
-Copy the [gitops.yaml](../../../examples/gitops.yaml), [tools-gitops.yaml](../../../examples/tools-gitops.yaml) and [variables-gitops.yaml](../../../examples/variables-gitops.yaml) to your working directory:
+Download the `gitops.yaml`, `tools-gitops.yaml` and `variables-gitops.yaml` to your working directory:
 
 ```bash
 curl -o config-gitops.yaml https://raw.githubusercontent.com/devstream-io/devstream/main/examples/gitops.yaml

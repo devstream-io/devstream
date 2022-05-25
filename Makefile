@@ -1,7 +1,6 @@
-
 SELF_DIR=$(dir $(lastword $(MAKEFILE_LIST)))
-
 GOOS=$(shell go env GOOS)
+GOPATH=$(shell go env GOPATH)
 GOARCH=$(shell go env GOARCH)
 GO_PLUGIN_BUILD=go build -buildmode=plugin -trimpath -gcflags="all=-N -l"
 PLUGINS=$(notdir $(wildcard $(ROOT_DIR)/cmd/plugin/*))
@@ -76,9 +75,9 @@ md5-plugin.%:
 .PHONY: fmt
 fmt:  ## Run 'go fmt' & goimports against code.
 	@echo ">>>>>>>>>>>> Formating codes"
-	@go install golang.org/x/tools/cmd/goimports@latest
+	@[[ -e ${GOPATH}/bin/goimports ]] || (echo "installing goimports ..." && go install golang.org/x/tools/cmd/goimports@latest)
 	@$(FIND) -type f | xargs gofmt -s -w
-	@$(FIND) -type f | xargs goimports -w -local $(DTM_ROOT)
+	@$(FIND) -type f | xargs ${GOPATH}/bin/goimports -w -local $(DTM_ROOT)
 
 .PHONY: vet
 vet: ## Run "go vet ./...".
