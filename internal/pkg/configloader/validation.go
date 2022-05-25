@@ -78,8 +78,8 @@ func validateDependency(tools []Tool) []error {
 	return errors
 }
 
-// validateConfigFile validate all the general config items
-func validateConfigFile(c *ConfigFile) []error {
+// validateOriginalConfigFile validate all the general config items
+func validateOriginalConfigFile(c *OriginalConfig) []error {
 	errors := make([]error, 0)
 
 	if c.ToolFile == "" {

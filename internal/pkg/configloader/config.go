@@ -6,11 +6,11 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
-	"strings"
+
+	"github.com/devstream-io/devstream/internal/pkg/version"
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/devstream-io/devstream/internal/pkg/version"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -25,73 +25,29 @@ type Config struct {
 	State *State
 }
 
-// ConfigFile is the struct for loading State and configuration YAML files.
-type ConfigFile struct {
-	VarFile  string `yaml:"varFile"`
-	ToolFile string `yaml:"toolFile"`
-	State    *State `yaml:"state"`
-}
-
-type State struct {
-	Backend string             `yaml:"backend"`
-	Options StateConfigOptions `yaml:"options"`
-}
-
-type StateConfigOptions struct {
-	// for s3 backend
-	Bucket string `yaml:"bucket"`
-	Region string `yaml:"region"`
-	Key    string `yaml:"key"`
-	// for local backend
-	StateFile string `yaml:"stateFile"`
-}
-
-// Tool is the struct for one section of the DevStream configuration file.
-type Tool struct {
-	Name string `yaml:"name"`
-	// RFC 1123 - DNS Subdomain Names style
-	// contain no more than 253 characters
-	// contain only lowercase alphanumeric characters, '-' or '.'
-	// start with an alphanumeric character
-	// end with an alphanumeric character
-	InstanceID string                 `yaml:"instanceID"`
-	DependsOn  []string               `yaml:"dependsOn"`
-	Options    map[string]interface{} `yaml:"options"`
-}
-
-func (t *Tool) DeepCopy() *Tool {
-	var retTool = Tool{
-		Name:       t.Name,
-		InstanceID: t.InstanceID,
-		DependsOn:  t.DependsOn,
-		Options:    map[string]interface{}{},
-	}
-	for k, v := range t.Options {
-		retTool.Options[k] = v
-	}
-	return &retTool
-}
-
-// LoadConf reads an input file as a general config.
-func LoadConf(configFileName string) (*Config, error) {
-	configFileBytes, err := ioutil.ReadFile(configFileName)
+// LoadConfig reads an input file as a general config.
+func LoadConfig(configFileName string) (*Config, error) {
+	// 1. read the original config file
+	originalConfigFileBytes, err := ioutil.ReadFile(configFileName)
 	if err != nil {
-		log.Error(err)
-		log.Info("Maybe the default file doesn't exist or you forgot to pass your config file to the \"-f\" option?")
+		log.Errorf("Failed to read the config file. Error: %s", err)
+		log.Info("Maybe the default file (config.yaml) doesn't exist or you forgot to pass your config file to the \"-f\" option?")
 		log.Info("See \"dtm help\" for more information.")
 		return nil, err
 	}
-	log.Debugf("Original general config: \n%s\n", string(configFileBytes))
+	log.Debugf("Original general config: \n%s\n", string(originalConfigFileBytes))
 
-	var gConfig ConfigFile
-	err = yaml.Unmarshal(configFileBytes, &gConfig)
+	// 2. unmarshal original config file
+	var originalConfig OriginalConfig
+	err = yaml.Unmarshal(originalConfigFileBytes, &originalConfig)
 	if err != nil {
-		log.Error("Please verify the format of your general config file.")
-		log.Errorf("Reading general config file failed. %s.", err)
+		log.Error("Please verify the format of your config file.")
+		log.Errorf("Reading original config file failed. Error: %s.", err)
 		return nil, err
 	}
 
-	errs := validateConfigFile(&gConfig)
+	// 3. validation
+	errs := validateOriginalConfigFile(&originalConfig)
 	if len(errs) != 0 {
 		for _, e := range errs {
 			log.Errorf("Config file validation failed: %s.", e)
@@ -99,73 +55,34 @@ func LoadConf(configFileName string) (*Config, error) {
 		return nil, nil
 	}
 
-	toolFilePath, varFilePath, err := genToolVarPath(configFileName, gConfig)
+	// 4. get the toolFilePath and varFilePath
+	toolFilePath, varFilePath, err := genToolVarPath(configFileName, originalConfig)
 	if err != nil {
 		return nil, err
 	}
 
-	cfg, err := LoadToolConf(toolFilePath, varFilePath)
+	// 5. render the tool config & state
+	cfg, err := renderToolConfigWithVarsToConfig(toolFilePath, varFilePath)
 	if err != nil {
 		return nil, err
 	}
-	cfg.State = gConfig.State
+
+	cfg.State = originalConfig.State
 	return cfg, nil
 }
 
-// LoadToolConf reads tool file rendering by var file as a Config struct.
-func LoadToolConf(toolFileName, varFileName string) (*Config, error) {
-	configFileBytes, err := ioutil.ReadFile(toolFileName)
-	if err != nil {
-		log.Error(err)
-		log.Info("Maybe the default file doesn't exist or you forgot to pass your config file to the \"-f\" option?")
-		log.Info("See \"dtm help\" for more information.")
-		return nil, err
-	}
-
-	log.Debugf("Original config: \n%s\n", string(configFileBytes))
-
-	// handle variables in the config file if var file is provided
-	configFileBytesWithVarsRendered, err := renderVariables(varFileName, configFileBytes)
-	if err != nil {
-		log.Error(err)
-		return nil, err
-	}
-
-	log.Debugf("Config file after rendering with variables: \n%s\n", string(configFileBytesWithVarsRendered))
-
-	var config Config
-	err = yaml.Unmarshal(configFileBytesWithVarsRendered, &config)
-	if err != nil {
-		log.Error("Please verify the format of your config file.")
-		log.Errorf("Reading config file failed. %s.", err)
-		return nil, err
-	}
-
-	errs := validateConfig(&config)
-	if len(errs) != 0 {
-		var errStrings []string
-		for _, e := range errs {
-			log.Errorf("Config validation failed: %s.", e)
-			errStrings = append(errStrings, e.Error())
-		}
-		return nil, fmt.Errorf(strings.Join(errStrings, "; "))
-	}
-
-	return &config, nil
-}
-
 // genToolVarPath return the Abs path of tool file and var file, return (absToolFilePath, "") if var file is empty.
-func genToolVarPath(configFileName string, gConfig ConfigFile) (string, string, error) {
+func genToolVarPath(configFileName string, originalConfig OriginalConfig) (string, string, error) {
 	var absToolFilePath, absVarFilePath string
 	var err error
 
-	absToolFilePath, err = parseCustomPath(configFileName, gConfig.ToolFile)
+	absToolFilePath, err = parseCustomPath(configFileName, originalConfig.ToolFile)
 	if err != nil {
 		return "", "", err
 	}
 	// if var file is empty, just return ""
-	if gConfig.VarFile != "" {
-		absVarFilePath, err = parseCustomPath(configFileName, gConfig.VarFile)
+	if originalConfig.VarFile != "" {
+		absVarFilePath, err = parseCustomPath(configFileName, originalConfig.VarFile)
 		if err != nil {
 			return "", "", err
 		}
@@ -212,9 +129,4 @@ func GetPluginFileName(t *Tool) string {
 // GetPluginMD5FileName  If the plugin {githubactions 0.0.1}, the generated name will be "githubactions_0.0.1.md5"
 func GetPluginMD5FileName(t *Tool) string {
 	return fmt.Sprintf("%s-%s-%s_%s.md5", t.Name, GOOS, GOARCH, version.Version)
-}
-
-// GetDtmMD5FileName format likes dtm-linux-amd64
-func GetDtmMD5FileName() string {
-	return fmt.Sprintf("%s-%s-%s.md5", "dtm", GOOS, GOARCH)
 }
