@@ -96,7 +96,7 @@ func LoadConf(configFileName string) (*Config, error) {
 		for _, e := range errs {
 			log.Errorf("Config file validation failed: %s.", e)
 		}
-		return nil, nil
+		return nil, errs[0]
 	}
 
 	toolFilePath, varFilePath, err := genToolVarPath(configFileName, gConfig)
