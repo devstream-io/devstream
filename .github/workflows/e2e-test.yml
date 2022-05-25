@@ -13,7 +13,6 @@ on:
       - 'hack/e2e/**'
       - 'hack/terraform/**'
 
-permissions: write-all
 env:
   # DO NOT use the GITHUB_TOKEN here
   # see https://github.com/devstream-io/devstream/pull/414 for more info
@@ -22,6 +21,8 @@ env:
   DOCKERHUB_TOKEN: ${{ secrets.E2E_DOCKERHUB_TOKEN }}
   TRELLO_API_KEY: ${{ secrets.E2E_TRELLO_API_KEY }}
   TRELLO_TOKEN: ${{ secrets.E2E_TRELLO_TOKEN }}
+
+permissions: write-all
 
 jobs:
   e2e-test:
@@ -81,4 +82,3 @@ jobs:
         run: ./dtm verify -f e2e-config.yaml
       - name: clean
         run: ./dtm delete -f e2e-config.yaml -y
-
