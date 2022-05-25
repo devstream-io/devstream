@@ -42,7 +42,7 @@ div[data-md-component=announce] {
   z-index: 2;
 }
 div[data-md-component=announce]>div#announce-msg{
-  color: var(--md-code-hl-number-color);
+  color:green;
   font-size: .8rem;
   text-align: center;
   margin: 15px;
