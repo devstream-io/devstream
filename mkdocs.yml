@@ -7,11 +7,10 @@ site_description: The DevStream Docs
 markdown_extensions:
   toc:
     permalink: true
-extra:
-  version:
-    provider: json
-    index: "https://docs.devstream.io/en/latest/"
-    current: latest
+extra_css:
+- assets/versions.css
+extra_javascript:
+- assets/versions.js
 nav:
   - 'quickstart_en.md'
   - Best Practices:
