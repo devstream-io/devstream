@@ -15,24 +15,17 @@ For Linux/Macos users:
 
 ## 2 Prepare a Config File
 
-Before you start: for an example of DevStream config, see [examples/tools-quickstart.yaml](https://github.com/devstream-io/devstream/blob/main/examples/tools-quickstart.yaml). Remember to open this configuration file, modify all FULL_UPPER_CASE_STRINGS (like YOUR_GITHUB_USERNAME, for example) in it to your own. Pay attention to the meaning of each item to ensure that it is what you want. For other plugins, checkout the "Plugins" section in our [doc](https://docs.devstream.io) for detailed usage.
+> Before you start: for an example of DevStream config, see [examples/tools-quickstart.yaml](https://github.com/devstream-io/devstream/blob/main/examples/tools-quickstart.yaml).
 
-Download the [examples/quickstart.yaml](https://raw.githubusercontent.com/devstream-io/devstream/main/examples/quickstart.yaml) and [examples/tools-quickstart.yaml](https://raw.githubusercontent.com/devstream-io/devstream/main/examples/tools-quickstart.yaml) to your working directory and rename `quickstart.yaml` to `config.yaml`:
-
-```shell
-curl -o config.yaml https://raw.githubusercontent.com/devstream-io/devstream/main/examples/quickstart.yaml
-curl -o tools-quickstart.yaml https://raw.githubusercontent.com/devstream-io/devstream/main/examples/tools-quickstart.yaml
-```
-
-Then modify the file accordingly.
-
-For example, my GitHub username is "IronCore864", and my Dockerhub username is "ironcore864", then I can run:
+Download the [examples/quickstart.yaml](https://raw.githubusercontent.com/devstream-io/devstream/release-0.6/examples/quickstart.yaml), [examples/tools-quickstart.yaml](https://raw.githubusercontent.com/devstream-io/devstream/release-0.6/examples/tools-quickstart.yaml) and [examples/variables-quickstart.yaml](https://raw.githubusercontent.com/devstream-io/devstream/release-0.6/examples/variables-quickstart.yaml) to your working directory and rename `quickstart.yaml` to `config.yaml`:
 
 ```shell
-sed -i.bak "s/YOUR_GITHUB_USERNAME_CASE_SENSITIVE/IronCore864/g" tools-quickstart.yaml
-
-sed -i.bak "s/YOUR_DOCKER_USERNAME/ironcore864/g" tools-quickstart.yaml
+curl -o config.yaml https://raw.githubusercontent.com/devstream-io/devstream/release-0.6/examples/quickstart.yaml
+curl -o tools-quickstart.yaml https://raw.githubusercontent.com/devstream-io/devstream/release-0.6/examples/tools-quickstart.yaml
+curl -o variables-quickstart.yaml https://raw.githubusercontent.com/devstream-io/devstream/release-0.6/examples/variables-quickstart.yaml
 ```
+
+Remember to open the varFile and modify all values to your own. Pay attention to the meaning of each item to ensure that it is what you want. For other plugins, checkout the "Plugins" section in our [doc](https://docs.devstream.io) for detailed usage.
 
 > This config file uses two plugins, one will create a GitHub repository and bootstrap it into a Golang web app, and the other will create GitHub Actions workflow for it.
 

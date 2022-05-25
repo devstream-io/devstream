@@ -3,15 +3,15 @@ tools:
 - name: github-repo-scaffolding-golang
   instanceID: default
   options:
-    owner: YOUR_GITHUB_USERNAME_CASE_SENSITIVE
+    owner: [[ githubUsername ]]
     repo: go-webapp-devstream-demo
     branch: main
-    image_repo: YOUR_DOCKER_USERNAME/go-webapp-devstream-demo
+    image_repo: [[ dockerhubUsername ]]/go-webapp-devstream-demo
 - name: githubactions-golang
   instanceID: default
   dependsOn: ["github-repo-scaffolding-golang.default"]
   options:
-    owner: YOUR_GITHUB_USERNAME_CASE_SENSITIVE
+    owner: [[ githubUsername ]]
     repo: go-webapp-devstream-demo
     language:
       name: go
