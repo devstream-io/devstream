@@ -51,8 +51,8 @@ jobs:
           key: ${{ runner.os }}-go-${{ matrix.go }}-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-${{ matrix.go }}-
-#      - name: Build
-#        run: make build -j8
+      - name: Build
+        run: make build -j8
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@master
         with:
