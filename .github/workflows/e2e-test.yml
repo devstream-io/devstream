@@ -24,6 +24,10 @@ env:
 
 jobs:
   e2e-test:
+    # permissions for id and other
+    permissions:
+      id-token: write
+      contents: write
     if: github.repository == 'devstream-io/devstream'
     strategy:
       matrix:
@@ -68,14 +72,6 @@ jobs:
       - name: check if pod is ready
         run: while [[ $(kubectl get pods -l app=dtm-e2e-go -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "pod not ready yet..."; sleep 3; done
         timeout-minutes: 10
-      - name: verify
-        run: ./dtm verify -f e2e-config.yaml
-      - name: clean
-        run: ./dtm delete -f e2e-config.yaml -y
-      - name: apply trello-github
-        run: ./dtm apply -f e2e-trello-github-config.yaml -y
-      - name: apply twice trello-github
-        run: ./dtm apply -f e2e-trello-github-config.yaml -y
       - name: verify
         run: ./dtm verify -f e2e-config.yaml
       - name: clean
