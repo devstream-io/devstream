@@ -53,14 +53,12 @@ build-core: fmt vet mod-tidy ## Build dtm core only, without plugins, locally.
 .PHONY: build-plugin.%
 build-plugin.%: fmt vet mod-tidy ## Build one dtm plugin, like "make build-plugin.argocd".
 	$(eval plugin_name := $(strip $*))
-ifeq ($(plugin_name),)
-	@echo "Plugin name is empty,Usage: make build-plugin.argocd"
-	@exit 1
-else
+	@if [ "$(plugin_name)" == "o" ]; then  \
+		echo "Plugin name is empty,Usage: make build-plugin.argocd";\
+		exit 1;\
+	fi
 	${GO_PLUGIN_BUILD} -o .devstream/${plugin_name}-${PLUGIN_SUFFIX}.so ${ROOT_DIR}/cmd/plugin/${plugin_name}
 	@$(MAKE) md5-plugin.$(plugin_name)
-endif
-	
 
 .PHONY: build-plugins
 build-plugins: fmt vet mod-tidy $(addprefix build-plugin.,$(PLUGINS)) ## Build dtm plugins only. Use multi-threaded like "make build-plugins -j8" to speed up.
