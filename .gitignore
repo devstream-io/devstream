@@ -8,6 +8,9 @@
 *.dylib
 
 # build
+dtm
+dtm-darwin*
+dtm-linux*
 smoke
 build/output
 build/working_dir
