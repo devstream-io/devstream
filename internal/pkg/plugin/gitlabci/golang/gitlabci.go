@@ -8,6 +8,7 @@ const (
 type Options struct {
 	PathWithNamespace string `validate:"required"`
 	Branch            string `validate:"required"`
+	BaseURL           string `validate:"omitempty,url"`
 }
 
 func buildState(opts *Options) map[string]interface{} {

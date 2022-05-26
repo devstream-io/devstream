@@ -42,7 +42,7 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	}
 
 	// update file
-	client, err := gitlab.NewClient()
+	client, err := gitlab.NewClient(gitlab.WithBaseURL(opts.BaseURL))
 	if err != nil {
 		return nil, err
 	}

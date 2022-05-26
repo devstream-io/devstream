@@ -22,7 +22,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, fmt.Errorf("opts are illegal")
 	}
 
-	client, err := gitlab.NewClient()
+	client, err := gitlab.NewClient(gitlab.WithBaseURL(opts.BaseURL))
 	if err != nil {
 		return nil, err
 	}
