@@ -4,14 +4,14 @@ tools:
     dependsOn: [ ]
     options:
       org: [[ githubOrganization ]]
-      repo: [[ RepoName ]]
+      repo: [[ repoName ]]
       kanbanBoardName: [[ kanbanBoardName ]]
   - name: trello-github-integ
     instanceID: default
     dependsOn: [ "trello.default" ]
     options:
       org: [[ githubOrganization ]]
-      repo: [[ RepoName ]]
+      repo: [[ repoName ]]
       boardId: ${{ trello.default.outputs.boardId }}
       todoListId: ${{ trello.default.outputs.todoListId }}
       doingListId: ${{ trello.default.outputs.doingListId }}
