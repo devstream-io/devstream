@@ -1,3 +1,4 @@
+
 SELF_DIR=$(dir $(lastword $(MAKEFILE_LIST)))
 GOOS=$(shell go env GOOS)
 GOPATH=$(shell go env GOPATH)
@@ -52,6 +53,10 @@ build-core: fmt vet mod-tidy ## Build dtm core only, without plugins, locally.
 .PHONY: build-plugin.%
 build-plugin.%: fmt vet mod-tidy ## Build one dtm plugin, like "make build-plugin.argocd".
 	$(eval plugin_name := $(strip $*))
+	@if [ "$(plugin_name)" == "o" ]; then  \
+		echo "Plugin name is empty,Usage: make build-plugin.argocd";\
+		exit 1;\
+	fi
 	${GO_PLUGIN_BUILD} -o .devstream/${plugin_name}-${PLUGIN_SUFFIX}.so ${ROOT_DIR}/cmd/plugin/${plugin_name}
 	@$(MAKE) md5-plugin.$(plugin_name)
 
