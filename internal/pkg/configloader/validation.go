@@ -5,9 +5,6 @@ import (
 	"strings"
 
 	"k8s.io/apimachinery/pkg/util/validation"
-
-	"github.com/devstream-io/devstream/internal/pkg/backend/local"
-	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 func validateConfig(config *Config) []error {
@@ -72,41 +69,6 @@ func validateDependency(tools []Tool) []error {
 			if _, ok := toolMap[dependency]; !ok {
 				errors = append(errors, fmt.Errorf("tool %s's dependency %s doesn't exist in the config", tool.InstanceID, dependency))
 			}
-		}
-	}
-
-	return errors
-}
-
-// validateOriginalConfigFile validate all the general config items
-func validateOriginalConfigFile(c *OriginalConfig) []error {
-	errors := make([]error, 0)
-
-	if c.ToolFile == "" {
-		errors = append(errors, fmt.Errorf("tool file is empty"))
-	}
-
-	if c.State == nil {
-		errors = append(errors, fmt.Errorf("state config is empty"))
-	} else {
-		log.Debugf("Got Backend from config: %s", c.State.Backend)
-		if c.State.Backend == "local" {
-			if c.State.Options.StateFile == "" {
-				log.Debugf("The stateFile has not been set, default value %s will be used.", local.DefaultStateFile)
-				c.State.Options.StateFile = local.DefaultStateFile
-			}
-		} else if c.State.Backend == "s3" {
-			if c.State.Options.Bucket == "" {
-				errors = append(errors, fmt.Errorf("state s3 Bucket is empty"))
-			}
-			if c.State.Options.Region == "" {
-				errors = append(errors, fmt.Errorf("state s3 Region is empty"))
-			}
-			if c.State.Options.Key == "" {
-				errors = append(errors, fmt.Errorf("state s3 Key is empty"))
-			}
-		} else {
-			errors = append(errors, fmt.Errorf("backend type error"))
 		}
 	}
 
