@@ -53,7 +53,7 @@ func Remove(configFile string, continueDirectly bool, isForceDelete bool) error 
 		}
 	}
 
-	errsMap := execute(smgr, changes)
+	errsMap := execute(smgr, changes, true)
 	if len(errsMap) != 0 {
 		err := errors.New("some error(s) occurred during plugins delete process")
 		for k, e := range errsMap {
