@@ -94,7 +94,6 @@ func pushToRemote(repoPath string, opts *rs.Options) error {
 }
 
 func walkLocalRepoPath(repoPath string, opts *rs.Options, ghClient *github.Client) error {
-	// mainBranch := getMainBranchName(opts)
 	if err := filepath.Walk(repoPath, func(path string, info fs.FileInfo, err error) error {
 		if err != nil {
 			log.Debugf("Walk error: %s.", err)
@@ -114,16 +113,6 @@ func walkLocalRepoPath(repoPath string, opts *rs.Options, ghClient *github.Clien
 		}
 
 		githubPath := strings.Join(strings.Split(path, "/")[2:], "/")
-		// the main branch needs a initial commit
-		// if strings.Contains(path, "gitignore") {
-		// 	err := ghClient.CreateFile(content, githubPath, mainBranch)
-		// 	if err != nil {
-		// 		log.Debugf("Failed to add the .gitignore file: %s.", err)
-		// 		return err
-		// 	}
-		// 	log.Debugf("Added the .gitignore file.")
-		// 	return ghClient.NewBranch(mainBranch, TransitBranch)
-		// }
 		return ghClient.CreateFile(content, githubPath, TransitBranch)
 	}); err != nil {
 		return err
