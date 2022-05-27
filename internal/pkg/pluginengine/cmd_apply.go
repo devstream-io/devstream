@@ -54,7 +54,7 @@ func Apply(configFile string, continueDirectly bool) error {
 		}
 	}
 
-	errsMap := execute(smgr, changes)
+	errsMap := execute(smgr, changes, false)
 	if len(errsMap) != 0 {
 		for k, e := range errsMap {
 			log.Errorf("Errors Map: key(%s) -> value(%s)", k, e)

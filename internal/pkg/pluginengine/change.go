@@ -77,7 +77,7 @@ func getChanges(smgr statemanager.Manager, cfg *configloader.Config, commandType
 	return changes, nil
 }
 
-func execute(smgr statemanager.Manager, changes []*Change) map[string]error {
+func execute(smgr statemanager.Manager, changes []*Change, reverse bool) map[string]error {
 	errorsMap := make(map[string]error)
 
 	log.Info("Start executing the plan.")
@@ -88,15 +88,26 @@ func execute(smgr statemanager.Manager, changes []*Change) map[string]error {
 	// the changes in each batch do not have dependency on each other
 	// but the changes from next batch have dependency on the changes from previous batch
 	batchesOfChanges, err := topologicalSortChangesInBatch(changes)
+
+	// for delete/destroy, the orders need to be reversed
+	// so that the dependencies are deleted at last
+	if reverse {
+		for i, j := 0, len(batchesOfChanges)-1; i < j; i, j = i+1, j-1 {
+			batchesOfChanges[i], batchesOfChanges[j] = batchesOfChanges[j], batchesOfChanges[i]
+		}
+	}
+
 	if err != nil {
 		log.Errorf("Failed to sort changes in batch: %s", err)
 		errorsMap["dependency-analysis"] = err
 		return errorsMap
 	}
 
+	currentChangeNum := 0
 	for _, batch := range batchesOfChanges {
-		for i, c := range batch {
-			log.Separatorf("Processing progress: %d/%d.", i+1, numOfChanges)
+		for _, c := range batch {
+			currentChangeNum += 1
+			log.Separatorf("Processing progress: %d/%d.", currentChangeNum, numOfChanges)
 			log.Infof("Processing: (%s/%s) -> %s ...", c.Tool.Name, c.Tool.InstanceID, c.ActionName)
 
 			var succeeded bool

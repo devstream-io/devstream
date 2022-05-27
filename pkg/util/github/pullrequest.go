@@ -22,7 +22,7 @@ func (c *Client) NewPullRequest(fromBranch, toBranch string) (int, error) {
 		owner = c.Org
 	}
 
-	title := "Scaffolding with DevStream"
+	title := "feat: initialized by DevStream"
 	head := fromBranch
 	base := toBranch
 	body := title
@@ -38,11 +38,13 @@ func (c *Client) NewPullRequest(fromBranch, toBranch string) (int, error) {
 		MaintainerCanModify: &mcm,
 		Draft:               &draft,
 	})
+
 	if err != nil {
 		log.Debugf("Failed to create the pr: %s.", err)
 		return 0, err
 	}
-	log.Debugf("The pr has created: #%d.", pr.GetNumber())
+
+	log.Debugf("The pr has been created: #%d.", pr.GetNumber())
 
 	return pr.GetNumber(), nil
 }
@@ -53,7 +55,7 @@ func (c *Client) MergePullRequest(number int, mergeMethod MergeMethod) error {
 		owner = c.Org
 	}
 
-	commitMsg := "Scaffolding with DevStream"
+	commitMsg := "Initialized by DevStream"
 	ret, _, err := c.PullRequests.Merge(c.Context, owner, c.Repo, number, commitMsg, &github.PullRequestOptions{
 		CommitTitle: commitMsg,
 		SHA:         "",

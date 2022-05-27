@@ -46,7 +46,7 @@ func Destroy(configFile string, continueDirectly bool) error {
 		}
 	}
 
-	errsMap := execute(smgr, changes)
+	errsMap := execute(smgr, changes, true)
 	if len(errsMap) != 0 {
 		for k, e := range errsMap {
 			log.Infof("%s -> %s", k, e)

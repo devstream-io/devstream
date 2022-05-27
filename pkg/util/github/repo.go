@@ -9,9 +9,10 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func (c *Client) CreateRepo(org string) error {
+func (c *Client) CreateRepo(org, defaultBranch string) error {
 	repo := &github.Repository{
-		Name: &c.Repo,
+		Name:          &c.Repo,
+		DefaultBranch: github.String(defaultBranch),
 	}
 
 	if org != "" {
