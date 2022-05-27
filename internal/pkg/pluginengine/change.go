@@ -89,6 +89,8 @@ func execute(smgr statemanager.Manager, changes []*Change, reverse bool) map[str
 	// but the changes from next batch have dependency on the changes from previous batch
 	batchesOfChanges, err := topologicalSortChangesInBatch(changes)
 
+	// for delete/destroy, the orders need to be reversed
+	// so that the dependencies are deleted at last
 	if reverse {
 		for i, j := 0, len(batchesOfChanges)-1; i < j; i, j = i+1, j-1 {
 			batchesOfChanges[i], batchesOfChanges[j] = batchesOfChanges[j], batchesOfChanges[i]
