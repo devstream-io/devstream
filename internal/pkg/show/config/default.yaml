@@ -1,6 +1,4 @@
-package config
-
-var DefaultConfig = `# config.yaml sample:
+# defaultconfig.yaml sample:
 # var file path, you can set it to absolute path or relative path.
 varFile: variables.yaml # here is a relative path. (defaults is ./variables.yaml)
 # tool file path, you can set it to absolute path or relative path.
@@ -13,13 +11,13 @@ state:
 
 # tools.yaml sample:
 tools:
-- name: github-repo-scaffolding-golang
-  instanceID: default
-  options:
-    owner: [[ githubUsername ]]
-    org: ""
-    repo: [[ repoName ]]
+  - name: github-repo-scaffolding-golang
+    instanceID: default
+    options:
+      owner: [ [ githubUsername ] ]
+      org: ""
+      repo: [ [ repoName ] ]
 
 # variables.yaml sample:
 githubUsername: daniel-hutao
-repo: go-webapp-demo`
+repo: go-webapp-demo
