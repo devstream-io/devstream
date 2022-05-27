@@ -34,3 +34,16 @@ func (c *Client) NewBranch(baseBranch, newBranch string) error {
 	})
 	return err
 }
+
+func (c *Client) DeleteBranch(branch string) error {
+	var owner = c.Owner
+	if c.Org != "" {
+		owner = c.Org
+	}
+
+	refStr := fmt.Sprintf("heads/%s", branch)
+	log.Debugf("Deleting ref: %s.", refStr)
+
+	_, err := c.Git.DeleteRef(c.Context, owner, c.Repo, refStr)
+	return err
+}
