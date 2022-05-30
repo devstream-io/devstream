@@ -1,3 +1,4 @@
+
 SELF_DIR=$(dir $(lastword $(MAKEFILE_LIST)))
 GOOS=$(shell go env GOOS)
 GOPATH=$(shell go env GOPATH)
@@ -5,12 +6,21 @@ GOARCH=$(shell go env GOARCH)
 GO_PLUGIN_BUILD=go build -buildmode=plugin -trimpath -gcflags="all=-N -l"
 PLUGINS=$(notdir $(wildcard $(ROOT_DIR)/cmd/plugin/*))
 PLUGIN_SUFFIX=${GOOS}-${GOARCH}_${VERSION}
-
+SHELL := /bin/bash
 DTM_ROOT=github.com/devstream-io/devstream
 GO_LDFLAGS += -X '$(DTM_ROOT)/internal/pkg/version.Version=$(VERSION)' \
 		-X '$(DTM_ROOT)/cmd/devstream/list.PluginsName=$(PLUGINS)'
 
 FIND := find . -path './cmd/**/*.go' -o -path './test/**/*.go' -o -path './pkg/**/*.go' -o -path './internal/**/*.go'
+
+
+# COLORS
+RED    = $(shell printf "\33[31m")
+GREEN  = $(shell printf "\33[32m")
+WHITE  = $(shell printf "\33[37m")
+YELLOW = $(shell printf "\33[33m")
+RESET  = $(shell printf "\33[0m")
+
 
 ifeq ($(GOOS),linux)
 	MD5SUM=md5sum
@@ -47,11 +57,13 @@ build-core: fmt vet mod-tidy ## Build dtm core only, without plugins, locally.
 	go build -trimpath -gcflags="all=-N -l" -ldflags "$(GO_LDFLAGS)" -o dtm-${GOOS}-${GOARCH} ./cmd/devstream/
 	@-rm -f dtm
 	@mv dtm-${GOOS}-${GOARCH} dtm
-	@echo ">>>>>>>>>>>> 'dtm' has been generated in the current directory"
+	@echo "${GREEN}✔'dtm' has been generated in the current directory($(PWD))!${RESET}"
 
 .PHONY: build-plugin.%
 build-plugin.%: fmt vet mod-tidy ## Build one dtm plugin, like "make build-plugin.argocd".
 	$(eval plugin_name := $(strip $*))
+	@[ -d  $(ROOT_DIR)/cmd/plugin/$(plugin_name) ] || { echo -e "\n${RED}✘ Plugin '$(plugin_name)' not found!${RESET} The valid plugin name is as follows (Eg. You can use  ${YELLOW}make build-plugin.argocd${RESET} to build argocd plugin): \n\n$(shell ls ./cmd/plugin/)\n"; exit 1; }
+	@echo "$(YELLOW)Building plugin '$(plugin_name)'$(RESET)"
 	${GO_PLUGIN_BUILD} -o .devstream/${plugin_name}-${PLUGIN_SUFFIX}.so ${ROOT_DIR}/cmd/plugin/${plugin_name}
 	@$(MAKE) md5-plugin.$(plugin_name)
 
@@ -74,7 +86,7 @@ md5-plugin.%:
 
 .PHONY: fmt
 fmt:  ## Run 'go fmt' & goimports against code.
-	@echo ">>>>>>>>>>>> Formating codes"
+	@echo "$(YELLOW)Formating codes$(RESET)"
 	@[[ -e ${GOPATH}/bin/goimports ]] || (echo "installing goimports ..." && go install golang.org/x/tools/cmd/goimports@latest)
 	@$(FIND) -type f | xargs gofmt -s -w
 	@$(FIND) -type f | xargs ${GOPATH}/bin/goimports -w -local $(DTM_ROOT)
@@ -100,3 +112,4 @@ e2e-up: ## Start kind cluster for e2e tests.
 .PHONY: e2e-down
 e2e-down: ## Stop kind cluster for e2e tests.
 	sh hack/e2e/e2e-down.sh
+

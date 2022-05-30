@@ -4,29 +4,27 @@ import (
 	"fmt"
 
 	"github.com/spf13/viper"
-
-	"github.com/devstream-io/devstream/internal/pkg/show/config/plugin"
 )
 
 var pluginDefaultConfigs = map[string]string{
-	"argocd":                         plugin.ArgocdDefaultConfig,
-	"argocdapp":                      plugin.ArgocdappDefaultConfig,
-	"devlake":                        plugin.DevlakeDefaultConfig,
-	"github-repo-scaffolding-golang": plugin.GithubRepoScaffoldingGolangDefaultConfig,
-	"githubactions-golang":           plugin.GithubActionsGolangDefaultConfig,
-	"githubactions-nodejs":           plugin.GithubActionsNodejsDefaultConfig,
-	"githubactions-python":           plugin.GithubActionsPythonDefaultConfig,
-	"gitlabci-generic":               plugin.GitlabCIGenericDefaultConfig,
-	"gitlabci-golang":                plugin.GitlabCIGolangDefaultConfig,
-	"jenkins":                        plugin.JenkinsDefaultConfig,
-	"jira-github-integ":              plugin.JiraGithubDefaultConfig,
-	"kube-prometheus":                plugin.KubePrometheusDefaultConfig,
-	"openldap":                       plugin.OpenldapDefaultConfig,
-	"trello-github-integ":            plugin.TrelloGithubDefaultConfig,
-	"trello":                         plugin.TrelloDefaultConfig,
-	"helm-generic":                   plugin.HelmGenericDefaultConfig,
-	"gitlab-repo-scaffolding-golang": plugin.GitLabRepoScaffoldingGolangDefaultConfig,
-	"hashicorp-vault":                plugin.VaultDefaultConfig,
+	"argocd":                         ArgocdDefaultConfig,
+	"argocdapp":                      ArgocdappDefaultConfig,
+	"devlake":                        DevlakeDefaultConfig,
+	"github-repo-scaffolding-golang": GithubRepoScaffoldingGolangDefaultConfig,
+	"githubactions-golang":           GithubActionsGolangDefaultConfig,
+	"githubactions-nodejs":           GithubActionsNodejsDefaultConfig,
+	"githubactions-python":           GithubActionsPythonDefaultConfig,
+	"gitlabci-generic":               GitlabCIGenericDefaultConfig,
+	"gitlabci-golang":                GitlabCIGolangDefaultConfig,
+	"jenkins":                        JenkinsDefaultConfig,
+	"jira-github-integ":              JiraGithubDefaultConfig,
+	"kube-prometheus":                KubePrometheusDefaultConfig,
+	"openldap":                       OpenldapDefaultConfig,
+	"trello-github-integ":            TrelloGithubDefaultConfig,
+	"trello":                         TrelloDefaultConfig,
+	"helm-generic":                   HelmGenericDefaultConfig,
+	"gitlab-repo-scaffolding-golang": GitLabRepoScaffoldingGolangDefaultConfig,
+	"hashicorp-vault":                VaultDefaultConfig,
 }
 
 func Show() error {

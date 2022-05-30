@@ -41,13 +41,22 @@ func pushToRemote(repoPath string, opts *rs.Options) error {
 		return err
 	}
 
+	mainBranch := getMainBranchName(opts)
+
 	var retErr error
 	// It's ok to give the opts.Org to CreateRepo() when create a repository for a authenticated user.
-	if err := ghClient.CreateRepo(opts.Org); err != nil {
+	if err := ghClient.CreateRepo(opts.Org, mainBranch); err != nil {
 		log.Errorf("Failed to create repo: %s.", err)
 		return err
 	}
 	log.Infof("The repo %s has been created.", opts.Repo)
+
+	err = ghClient.CreateFile([]byte(" "), ".gitignore", mainBranch)
+	if err != nil {
+		log.Debugf("Failed to add the first file: %s.", err)
+		return err
+	}
+	log.Debugf("Added the .gitignore file.")
 
 	defer func() {
 		if retErr == nil {
@@ -59,23 +68,32 @@ func pushToRemote(repoPath string, opts *rs.Options) error {
 		}
 	}()
 
+	err = ghClient.NewBranch(mainBranch, TransitBranch)
+	if err != nil {
+		log.Debugf("Failed to create transit branch: %s", err)
+		return err
+	}
+
 	if retErr = walkLocalRepoPath(repoPath, opts, ghClient); retErr != nil {
 		log.Debugf("Failed to walk local repo-path: %s.", retErr)
 		return retErr
 	}
 
-	mainBranch := getMainBranchName(opts)
 	if retErr = mergeCommits(ghClient, mainBranch); retErr != nil {
 		log.Debugf("Failed to merge commits: %s.", retErr)
 		return retErr
+	}
+
+	err = ghClient.DeleteBranch(TransitBranch)
+	if err != nil {
+		log.Debugf("Failed to delete transit branch: %s", err)
+		return err
 	}
 
 	return nil
 }
 
 func walkLocalRepoPath(repoPath string, opts *rs.Options, ghClient *github.Client) error {
-	mainBranch := getMainBranchName(opts)
-
 	if err := filepath.Walk(repoPath, func(path string, info fs.FileInfo, err error) error {
 		if err != nil {
 			log.Debugf("Walk error: %s.", err)
@@ -95,16 +113,6 @@ func walkLocalRepoPath(repoPath string, opts *rs.Options, ghClient *github.Clien
 		}
 
 		githubPath := strings.Join(strings.Split(path, "/")[2:], "/")
-		// the main branch needs a initial commit
-		if strings.Contains(path, "gitignore") {
-			err := ghClient.CreateFile(content, githubPath, mainBranch)
-			if err != nil {
-				log.Debugf("Failed to add the .gitignore file: %s.", err)
-				return err
-			}
-			log.Debugf("Added the .gitignore file.")
-			return ghClient.NewBranch(mainBranch, TransitBranch)
-		}
 		return ghClient.CreateFile(content, githubPath, TransitBranch)
 	}); err != nil {
 		return err

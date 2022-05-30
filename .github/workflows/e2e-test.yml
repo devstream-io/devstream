@@ -2,8 +2,7 @@ name: e2e test
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
     paths:
       - '**.go'
       - 'Makefile'
@@ -25,12 +24,15 @@ env:
 
 jobs:
   e2e-test:
+    # permissions for id and other
+    permissions:
+      id-token: write
+      contents: write
     if: github.repository == 'devstream-io/devstream'
     strategy:
       matrix:
         os: [ubuntu-latest]
         go: [1.17.x]
-    permissions: write-all
     runs-on: ${{ matrix.os }}
     name: e2e-test-${{ matrix.os }}
     steps:
@@ -53,7 +55,7 @@ jobs:
       - name: Build
         run: make build -j8
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@master
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -67,10 +69,6 @@ jobs:
         run: ./dtm apply -f e2e-config.yaml -y
       - name: apply twice git-ops
         run: ./dtm apply -f e2e-config.yaml -y
-      - name: apply trello-github
-        run: ./dtm apply -f e2e-trello-github-config.yaml -y
-      - name: apply twice trello-github
-        run: ./dtm apply -f e2e-trello-github-config.yaml -y
       - name: check if pod is ready
         run: while [[ $(kubectl get pods -l app=dtm-e2e-go -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "pod not ready yet..."; sleep 3; done
         timeout-minutes: 10
@@ -78,4 +76,3 @@ jobs:
         run: ./dtm verify -f e2e-config.yaml
       - name: clean
         run: ./dtm delete -f e2e-config.yaml -y
-

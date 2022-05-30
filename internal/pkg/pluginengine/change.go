@@ -77,67 +77,100 @@ func getChanges(smgr statemanager.Manager, cfg *configloader.Config, commandType
 	return changes, nil
 }
 
-func execute(smgr statemanager.Manager, changes []*Change) map[string]error {
+func execute(smgr statemanager.Manager, changes []*Change, reverse bool) map[string]error {
 	errorsMap := make(map[string]error)
 
 	log.Info("Start executing the plan.")
 	numOfChanges := len(changes)
 	log.Infof("Changes count: %d.", numOfChanges)
 
-	for i, c := range changes {
-		log.Separatorf("Processing progress: %d/%d.", i+1, numOfChanges)
-		log.Infof("Processing: (%s/%s) -> %s ...", c.Tool.Name, c.Tool.InstanceID, c.ActionName)
+	// get changes in batch
+	// the changes in each batch do not have dependency on each other
+	// but the changes from next batch have dependency on the changes from previous batch
+	batchesOfChanges, err := topologicalSortChangesInBatch(changes)
 
-		var succeeded bool
-		var err error
-		var returnValue map[string]interface{}
-
-		log.Debugf("Tool's raw changes are: %v.", c.Tool.Options)
-
-		errs := HandleOutputsReferences(smgr, c.Tool.Options)
-		if len(errs) != 0 {
-			succeeded = false
-
-			for _, e := range errs {
-				log.Errorf("Error: %s.", e)
-			}
-			log.Errorf("The outputs reference in tool (%s/%s) can't be resolved. Please double check your config.", c.Tool.Name, c.Tool.InstanceID)
-
-			// not executing this change since its input isn't valid
-			continue
-		}
-
-		switch c.ActionName {
-		case statemanager.ActionCreate:
-			if returnValue, err = Create(c.Tool); err == nil {
-				succeeded = true
-			}
-		case statemanager.ActionUpdate:
-			if returnValue, err = Update(c.Tool); err == nil {
-				succeeded = true
-			}
-		case statemanager.ActionDelete:
-			succeeded, err = Delete(c.Tool)
-		}
-
-		if err != nil {
-			key := fmt.Sprintf("%s/%s-%s", c.Tool.Name, c.Tool.InstanceID, c.ActionName)
-			errorsMap[key] = err
-		}
-
-		c.Result = &ChangeResult{
-			Succeeded:   succeeded,
-			Error:       err,
-			Time:        time.Now().Format(time.RFC3339),
-			ReturnValue: returnValue,
-		}
-
-		err = handleResult(smgr, c)
-		if err != nil {
-			errorsMap["handle-result"] = err
+	// for delete/destroy, the orders need to be reversed
+	// so that the dependencies are deleted at last
+	if reverse {
+		for i, j := 0, len(batchesOfChanges)-1; i < j; i, j = i+1, j-1 {
+			batchesOfChanges[i], batchesOfChanges[j] = batchesOfChanges[j], batchesOfChanges[i]
 		}
 	}
-	log.Separatorf("Processing done.")
+
+	if err != nil {
+		log.Errorf("Failed to sort changes in batch: %s", err)
+		errorsMap["dependency-analysis"] = err
+		return errorsMap
+	}
+
+	currentChangeNum := 0
+	for _, batch := range batchesOfChanges {
+		for _, c := range batch {
+			currentChangeNum += 1
+			log.Separatorf("Processing progress: %d/%d.", currentChangeNum, numOfChanges)
+			log.Infof("Processing: (%s/%s) -> %s ...", c.Tool.Name, c.Tool.InstanceID, c.ActionName)
+
+			var succeeded bool
+			var err error
+			var returnValue map[string]interface{}
+
+			log.Debugf("Tool's raw changes are: %v.", c.Tool.Options)
+
+			errs := HandleOutputsReferences(smgr, c.Tool.Options)
+			if len(errs) != 0 {
+				succeeded = false
+
+				for _, e := range errs {
+					log.Errorf("Error: %s.", e)
+				}
+				log.Errorf("The outputs reference in tool (%s/%s) can't be resolved. Please double check your config.", c.Tool.Name, c.Tool.InstanceID)
+
+				// not executing this change since its input isn't valid
+				continue
+			}
+
+			switch c.ActionName {
+			case statemanager.ActionCreate:
+				if returnValue, err = Create(c.Tool); err == nil {
+					succeeded = true
+				}
+			case statemanager.ActionUpdate:
+				if returnValue, err = Update(c.Tool); err == nil {
+					succeeded = true
+				}
+			case statemanager.ActionDelete:
+				succeeded, err = Delete(c.Tool)
+			}
+
+			if err != nil {
+				key := fmt.Sprintf("%s/%s-%s", c.Tool.Name, c.Tool.InstanceID, c.ActionName)
+				errorsMap[key] = err
+			}
+
+			c.Result = &ChangeResult{
+				Succeeded:   succeeded,
+				Error:       err,
+				Time:        time.Now().Format(time.RFC3339),
+				ReturnValue: returnValue,
+			}
+
+			err = handleResult(smgr, c)
+			if err != nil {
+				errorsMap["handle-result"] = err
+			}
+		}
+
+		// abort next batches if any error occurred in this batch
+		if len(errorsMap) != 0 {
+			break
+		}
+	}
+
+	if len(errorsMap) != 0 {
+		log.Separatorf("Processing aborted.")
+	} else {
+		log.Separatorf("Processing done.")
+	}
 
 	return errorsMap
 }
