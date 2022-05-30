@@ -45,12 +45,6 @@ func buildReadState(opts *rs.Options) (map[string]interface{}, error) {
 
 	log.Debugf("GitLab Project is: %#v\n", project)
 
-	// if opts.BaseURL != "" {
-	// 	res["baseURL"] = opts.BaseURL
-	// } else {
-	// 	res["baseURL"] = strings.TrimSuffix(strings.ReplaceAll(project.WebURL, opts.PathWithNamespace, ""), "/")
-	// }
-
 	if project.Owner != nil {
 		log.Debugf("GitLab Project Owner is: %#v\n", project.Owner)
 		res["owner"] = project.Owner.Username
