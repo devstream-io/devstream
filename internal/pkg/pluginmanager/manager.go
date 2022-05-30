@@ -40,7 +40,7 @@ func DownloadPlugins(conf *configloader.Config) error {
 				return err
 			}
 			if !versionRegex.MatchString(version.Version) {
-				return fmt.Errorf("%s (dev version) not exist in the local plugins dir "%s". Dev version plugins can't be downloaded from the remote plugin repo; please run `make build-plugin.%s` to build it locally", pluginFileName, pluginDir, tool.Name)
+				return fmt.Errorf("%s (dev version) not exist in the local plugins dir \"%s\". Dev version plugins can't be downloaded from the remote plugin repo; please run `make build-plugin.%s` to build it locally", pluginFileName, pluginDir, tool.Name)
 			}
 			// download .so file
 			if err := dc.download(pluginDir, pluginFileName, version.Version); err != nil {
