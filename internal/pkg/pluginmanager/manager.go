@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 
 	"github.com/spf13/viper"
 
@@ -30,10 +31,16 @@ func DownloadPlugins(conf *configloader.Config) error {
 	for _, tool := range conf.Tools {
 		pluginFileName := configloader.GetPluginFileName(&tool)
 		pluginMD5FileName := configloader.GetPluginMD5FileName(&tool)
+		// version regex
+		versionRegex := regexp.MustCompile(`^\d+\.\d+\.\d+$`)
+
 		// plugin does not exist
 		if _, err := os.Stat(filepath.Join(pluginDir, pluginFileName)); err != nil {
 			if !errors.Is(err, os.ErrNotExist) {
 				return err
+			}
+			if !versionRegex.MatchString(version.Version) {
+				return fmt.Errorf("%s (dev version) not exist in the local plugins dir "%s". Dev version plugins can't be downloaded from the remote plugin repo; please run `make build-plugin.%s` to build it locally", pluginFileName, pluginDir, tool.Name)
 			}
 			// download .so file
 			if err := dc.download(pluginDir, pluginFileName, version.Version); err != nil {
