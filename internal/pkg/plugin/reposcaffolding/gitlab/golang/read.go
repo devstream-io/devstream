@@ -46,7 +46,7 @@ func buildReadState(opts *rs.Options) (map[string]interface{}, error) {
 	log.Debugf("GitLab Project is: %#v\n", project)
 
 	if project.Owner != nil {
-		log.Debugf("GitLab Project Owner is: %#v\n", project.Owner)
+		log.Debugf("GitLab project owner is: %#v.\n", project.Owner)
 		res["owner"] = project.Owner.Username
 		res["org"] = project.Owner.Organization
 		outputs["owner"] = project.Owner.Username
