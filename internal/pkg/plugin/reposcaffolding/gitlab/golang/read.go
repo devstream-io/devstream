@@ -27,7 +27,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 }
 
 func buildReadState(opts *rs.Options) (map[string]interface{}, error) {
-	c, err := gitlab.NewClient()
+	c, err := gitlab.NewClient(gitlab.WithBaseURL(opts.BaseURL))
 	if err != nil {
 		return nil, err
 	}
@@ -41,21 +41,23 @@ func buildReadState(opts *rs.Options) (map[string]interface{}, error) {
 	}
 
 	res := make(map[string]interface{})
-	res["owner"] = project.Owner.Username
-	res["org"] = project.Owner.Organization
-	res["repoName"] = project.Name
-
 	outputs := make(map[string]interface{})
-	if opts.Owner == "" {
-		outputs["owner"] = opts.Owner
-	} else {
+
+	log.Debugf("GitLab Project is: %#v\n", project)
+
+	if project.Owner != nil {
+		log.Debugf("GitLab project owner is: %#v.\n", project.Owner)
+		res["owner"] = project.Owner.Username
+		res["org"] = project.Owner.Organization
 		outputs["owner"] = project.Owner.Username
-	}
-	if opts.Org == "" {
-		outputs["org"] = opts.Org
-	} else {
 		outputs["org"] = project.Owner.Organization
+	} else {
+		res["owner"] = opts.Owner
+		res["org"] = opts.Org
+		outputs["owner"] = opts.Owner
+		outputs["org"] = opts.Org
 	}
+	res["repoName"] = project.Name
 	outputs["repo"] = project.Name
 	outputs["repoURL"] = project.HTTPURLToRepo
 	res["outputs"] = outputs

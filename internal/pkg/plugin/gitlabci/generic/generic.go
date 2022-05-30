@@ -1,6 +1,7 @@
 package generic
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 )
@@ -25,6 +26,10 @@ func download(url string) (string, error) {
 		return "", err
 	}
 	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("failed to download template: %s %s", url, resp.Status)
+	}
 
 	resBytes, err := io.ReadAll(resp.Body)
 	if err != nil {

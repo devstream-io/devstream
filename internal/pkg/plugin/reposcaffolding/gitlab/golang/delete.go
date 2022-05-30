@@ -27,7 +27,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 }
 
 func uninstall(opts *rs.Options) (bool, error) {
-	c, err := gitlab.NewClient()
+	c, err := gitlab.NewClient(gitlab.WithBaseURL(opts.BaseURL))
 	if err != nil {
 		return false, err
 	}

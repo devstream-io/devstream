@@ -24,7 +24,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 		}
 		return false, fmt.Errorf("opts are illegal")
 	}
-	client, err := gitlab.NewClient()
+	client, err := gitlab.NewClient(gitlab.WithBaseURL(opts.BaseURL))
 	if err != nil {
 		return false, err
 	}

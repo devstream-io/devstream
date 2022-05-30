@@ -32,15 +32,21 @@ type Repo struct {
 
 func pushToRemote(repoPath string, opts *rs.Options) error {
 	// create a GitLab client
-	c, err := gitlab.NewClient()
+	c, err := gitlab.NewClient(gitlab.WithBaseURL(opts.BaseURL))
 	if err != nil {
 		return err
 	}
 
 	var retErr error
+	createProjOpts := &gitlab.CreateProjectOptions{
+		Name:       opts.Repo,
+		Branch:     opts.Branch,
+		Namespace:  opts.Org,
+		Visibility: opts.Visibility,
+	}
 
 	// create the project
-	if err := c.CreateProject(opts.Repo, opts.Branch); err != nil {
+	if err := c.CreateProject(createProjOpts); err != nil {
 		log.Errorf("Failed to create repo: %s.", err)
 		return err
 	}
@@ -51,9 +57,10 @@ func pushToRemote(repoPath string, opts *rs.Options) error {
 		if retErr == nil {
 			return
 		}
+		log.Errorf("Failed to push to remote: %s.", retErr)
 		// need to clean the repo created when retErr != nil
-		if err := c.DeleteProject(opts.Repo); err != nil {
-			log.Errorf("Failed to delete the repo %s: %s.", opts.Repo, err)
+		if err := c.DeleteProject(opts.PathWithNamespace); err != nil {
+			log.Errorf("Failed to delete the repo %s: %s.", opts.PathWithNamespace, err)
 		}
 	}()
 
@@ -87,7 +94,6 @@ func walkLocalRepoPath(repoPath string, opts *rs.Options, c *gitlab.Client) erro
 		if err != nil {
 			return err
 		}
-
 		gitlabPath := strings.Join(strings.Split(path, "/")[2:], "/")
 		files[gitlabPath] = content
 		return nil
@@ -115,10 +121,18 @@ func buildState(opts *rs.Options) map[string]interface{} {
 	outputs["owner"] = opts.Owner
 	outputs["org"] = opts.Org
 	outputs["repo"] = opts.Repo
-	if opts.Owner != "" {
-		outputs["repoURL"] = fmt.Sprintf("https://gitlab.com/%s/%s.git", opts.Owner, opts.Repo)
+
+	var gitlabURL string
+	if opts.BaseURL != "" {
+		gitlabURL = opts.BaseURL
 	} else {
-		outputs["repoURL"] = fmt.Sprintf("https://gitlab.com/%s/%s.git", opts.Org, opts.Repo)
+		gitlabURL = gitlab.DefaultGitlabHost
+	}
+
+	if opts.Org != "" {
+		outputs["repoURL"] = fmt.Sprintf("%s/%s/%s.git", gitlabURL, opts.Org, opts.Repo)
+	} else {
+		outputs["repoURL"] = fmt.Sprintf("%s/%s/%s.git", gitlabURL, opts.Owner, opts.Repo)
 	}
 	res["outputs"] = outputs
 
