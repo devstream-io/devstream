@@ -5,7 +5,7 @@ title: ":four_leaf_clover: `Proposal`: "
 labels: proposal
 ---
 
-## What Would You Like to Add? Why is This Needed?
+## What Would You Like to Add? Why Is This Needed?
 <!--
 Note: For feature requests, please also engage with the PMC on Slack or WeChat.
 -->
