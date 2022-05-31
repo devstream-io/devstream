@@ -53,14 +53,14 @@ clean: ## Remove dtm and plugins. It's best to run a "clean" before "build".
 	-rm -f dtm*
 
 .PHONY: build-core
-build-core: fmt vet mod-tidy ## Build dtm core only, without plugins, locally.
+build-core: fmt lint vet mod-tidy ## Build dtm core only, without plugins, locally.
 	go build -trimpath -gcflags="all=-N -l" -ldflags "$(GO_LDFLAGS)" -o dtm-${GOOS}-${GOARCH} ./cmd/devstream/
 	@-rm -f dtm
 	@mv dtm-${GOOS}-${GOARCH} dtm
 	@echo "${GREEN}✔'dtm' has been generated in the current directory($(PWD))!${RESET}"
 
 .PHONY: build-plugin.%
-build-plugin.%: fmt vet mod-tidy ## Build one dtm plugin, like "make build-plugin.argocd".
+build-plugin.%: fmt lint vet mod-tidy ## Build one dtm plugin, like "make build-plugin.argocd".
 	$(eval plugin_name := $(strip $*))
 	@[ -d  $(ROOT_DIR)/cmd/plugin/$(plugin_name) ] || { echo -e "\n${RED}✘ Plugin '$(plugin_name)' not found!${RESET} The valid plugin name is as follows (Eg. You can use  ${YELLOW}make build-plugin.argocd${RESET} to build argocd plugin): \n\n$(shell ls ./cmd/plugin/)\n"; exit 1; }
 	@echo "$(YELLOW)Building plugin '$(plugin_name)'$(RESET)"
@@ -85,11 +85,17 @@ md5-plugin.%:
 	${MD5SUM} .devstream/${plugin_name}-${PLUGIN_SUFFIX}.so > .devstream/${plugin_name}-${PLUGIN_SUFFIX}.md5
 
 .PHONY: fmt
-fmt:  ## Run 'go fmt' & goimports against code.
+fmt: verify.goimports ## Run 'go fmt' & goimports against code.
 	@echo "$(YELLOW)Formating codes$(RESET)"
-	@[[ -e ${GOPATH}/bin/goimports ]] || (echo "installing goimports ..." && go install golang.org/x/tools/cmd/goimports@latest)
 	@$(FIND) -type f | xargs gofmt -s -w
 	@$(FIND) -type f | xargs ${GOPATH}/bin/goimports -w -local $(DTM_ROOT)
+	@go mod edit -fmt
+
+
+.PHONY: lint
+lint: verify.golangci-lint ## Run 'golangci-lint' against code.
+	@echo "$(YELLOW)Run golangci to lint source codes$(RESET)"
+	@golangci-lint -c $(ROOT_DIR)/.golangci.yml run $(ROOT_DIR)/...
 
 .PHONY: vet
 vet: ## Run "go vet ./...".
@@ -113,3 +119,14 @@ e2e-up: ## Start kind cluster for e2e tests.
 e2e-down: ## Stop kind cluster for e2e tests.
 	sh hack/e2e/e2e-down.sh
 
+.PHONY: verify.%
+verify.%:
+	@if ! command -v $* >/dev/null 2>&1; then $(MAKE) install.$*; fi
+
+.PHONY: install.goimports
+install.goimports:
+	@go install golang.org/x/tools/cmd/goimports@latest
+
+.PHONY: install.golangci-lint
+install.golangci-lint:
+	@go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
