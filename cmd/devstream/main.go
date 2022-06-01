@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"strings"
 
 	"github.com/sirupsen/logrus"
@@ -17,13 +18,13 @@ var (
 		Short: `DevStream is an open-source DevOps toolchain manager`,
 		Long: `DevStream is an open-source DevOps toolchain manager
 
-######                 #####                                    
-#     # ###### #    # #     # ##### #####  ######   ##   #    # 
-#     # #      #    # #         #   #    # #       #  #  ##  ## 
-#     # #####  #    #  #####    #   #    # #####  #    # # ## # 
-#     # #      #    #       #   #   #####  #      ###### #    # 
-#     # #       #  #  #     #   #   #   #  #      #    # #    # 
-######  ######   ##    #####    #   #    # ###### #    # #    # 
+######                 #####
+#     # ###### #    # #     # ##### #####  ######   ##   #    #
+#     # #      #    # #         #   #    # #       #  #  ##  ##
+#     # #####  #    #  #####    #   #    # #####  #    # # ## #
+#     # #      #    #       #   #   #####  #      ###### #    #
+#     # #       #  #  #     #   #   #   #  #      #    # #    #
+######  ######   ##    #####    #   #    # ###### #    # #    #
 `,
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
 			initLog()
@@ -34,6 +35,7 @@ var (
 func init() {
 	cobra.OnInitialize(initConfig)
 	rootCMD.PersistentFlags().BoolVarP(&isDebug, "debug", "", false, "debug level log")
+	rootCMD.AddCommand(completionCMD(os.Stdout))
 	rootCMD.AddCommand(versionCMD)
 	rootCMD.AddCommand(initCMD)
 	rootCMD.AddCommand(applyCMD)

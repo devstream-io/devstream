@@ -5,6 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/devstream-io/devstream/internal/pkg/completion"
 	"github.com/devstream-io/devstream/internal/pkg/pluginengine"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
@@ -28,4 +29,6 @@ func destroyCMDFunc(cmd *cobra.Command, args []string) {
 func init() {
 	destroyCMD.Flags().StringVarP(&configFile, "config-file", "f", "config.yaml", "config file")
 	destroyCMD.Flags().BoolVarP(&continueDirectly, "yes", "y", false, "destroy directly without confirmation")
+
+	completion.FlagConfigFileCompletion(destroyCMD)
 }

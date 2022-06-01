@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/devstream-io/devstream/internal/pkg/completion"
 	"github.com/devstream-io/devstream/internal/pkg/configloader"
 	"github.com/devstream-io/devstream/internal/pkg/pluginengine"
 	"github.com/devstream-io/devstream/internal/pkg/pluginmanager"
@@ -35,4 +36,6 @@ func initCMDFunc(cmd *cobra.Command, args []string) {
 func init() {
 	initCMD.Flags().StringVarP(&configFile, "config-file", "f", "config.yaml", "config file")
 	initCMD.Flags().StringVarP(&pluginDir, "plugin-dir", "d", pluginengine.DefaultPluginDir, "plugins directory")
+
+	completion.FlagConfigFileCompletion(initCMD)
 }

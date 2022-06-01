@@ -5,6 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/devstream-io/devstream/internal/pkg/completion"
 	"github.com/devstream-io/devstream/internal/pkg/pluginengine"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
@@ -14,7 +15,7 @@ var isForceDelete bool
 var deleteCMD = &cobra.Command{
 	Use:   "delete",
 	Short: "Delete DevOps tools according to DevStream configuration file",
-	Long: `Delete DevOps tools according to DevStream configuration file. 
+	Long: `Delete DevOps tools according to DevStream configuration file.
 DevStream will delete everything defined in the config file, regardless of the state.`,
 	Run: deleteCMDFunc,
 }
@@ -34,4 +35,6 @@ func init() {
 	deleteCMD.Flags().StringVarP(&configFile, "config-file", "f", "config.yaml", "config file")
 	deleteCMD.Flags().StringVarP(&pluginDir, "plugin-dir", "d", pluginengine.DefaultPluginDir, "plugins directory")
 	deleteCMD.Flags().BoolVarP(&continueDirectly, "yes", "y", false, "delete directly without confirmation")
+
+	completion.FlagConfigFileCompletion(applyCMD)
 }
