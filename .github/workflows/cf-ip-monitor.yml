@@ -1,16 +1,16 @@
-name: 'Cloudflare IP Monitor'
+name: Cloudflare IP Monitor
 
 on:
   schedule:
-    - cron: '0 12 * * *' # every day at 12:00
+    - cron: 0 12 * * * # every day at 12:00
 
 jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - name: 'Checkout'
+      - name: Checkout
         uses: actions/checkout@v2
-      - name: 'Check IPs'
+      - name: Check IPs
         run: |
           cd hack/cf-ip-monitor || exit
           curl -sL https://www.cloudflare.com/ips-v4 | grep -v '^$' >ips-v4
@@ -26,7 +26,7 @@ jobs:
           else
             echo "ips-v4 not changed"
           fi
-      - name: 'Create Issue'
+      - name: Create Issue
         uses: JasonEtco/create-an-issue@v2
         if: env.CHANGED == 1
         env:
