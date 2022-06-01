@@ -7,6 +7,8 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 )
 
+// HandleOutputsReferences renders outputs references in config file recursively.
+// The parameter options will be changed.
 func HandleOutputsReferences(smgr statemanager.Manager, options map[string]interface{}) []error {
 	errorsList := make([]error, 0)
 

@@ -21,7 +21,7 @@ func Create() error {
 	log.Debugf("Got the name: %s.", name)
 
 	if pluginExists(name) {
-		return fmt.Errorf("Plugin name: %s is already exists", name)
+		return fmt.Errorf("plugin name: %s is already exists", name)
 	}
 	log.Debugf("Got the name: %s.", name)
 
@@ -50,10 +50,7 @@ func Create() error {
 // Check whether the new name exists.
 func pluginExists(name string) bool {
 	pluginMp := list.PluginNamesMap()
+	_, ok := (pluginMp)[name]
 
-	if _, ok := (pluginMp)[name]; ok {
-		return true
-	}
-
-	return false
+	return ok
 }

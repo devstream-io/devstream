@@ -9,7 +9,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-// Change is a wrapper with a single Tool and its Action should be execute.
+// Change is a wrapper with a single Tool and its Action should be executed.
 type Change struct {
 	Tool        *configloader.Tool
 	ActionName  statemanager.ComponentAction
@@ -77,6 +77,8 @@ func getChanges(smgr statemanager.Manager, cfg *configloader.Config, commandType
 	return changes, nil
 }
 
+// execute changes in the plan in batch.
+// If any error occurs, it will stop executing the next batches and return the error.
 func execute(smgr statemanager.Manager, changes []*Change, reverse bool) map[string]error {
 	errorsMap := make(map[string]error)
 

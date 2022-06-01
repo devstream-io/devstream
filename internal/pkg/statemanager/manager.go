@@ -40,6 +40,7 @@ type manager struct {
 
 var m *manager
 
+// NewManager returns a new Manager and reads states through backend defined in config.
 func NewManager(stateConfig configloader.State) (Manager, error) {
 	if m != nil {
 		return m, nil
@@ -47,6 +48,7 @@ func NewManager(stateConfig configloader.State) (Manager, error) {
 
 	log.Debugf("The global manager m is not initialized.")
 
+	// Get the backend from config
 	if stateConfig.Backend == "local" {
 		log.Infof("Using local backend. State file: %s.", stateConfig.Options.StateFile)
 	} else if stateConfig.Backend == "s3" {
@@ -64,7 +66,7 @@ func NewManager(stateConfig configloader.State) (Manager, error) {
 		statesMap: NewStatesMap(),
 	}
 
-	// Read the initial states data
+	// Read the initial states data from backend
 	data, err := b.Read()
 	if err != nil {
 		log.Debugf("Failed to read data from backend: %s.", err)
@@ -91,7 +93,6 @@ func (m *manager) GetStatesMap() StatesMap {
 }
 
 func (m *manager) GetState(key StateKey) *State {
-	m.statesMap.Load(key)
 	if s, exist := m.statesMap.Load(key); exist {
 		state, _ := s.(State)
 		return &state
@@ -99,21 +100,29 @@ func (m *manager) GetState(key StateKey) *State {
 	return nil
 }
 
+// AddState adds a new state to the manager.
+// If the state already exists, update it.
 func (m *manager) AddState(key StateKey, state State) error {
 	m.statesMap.Store(key, state)
 	return m.Write(m.GetStatesMap().Format())
 }
 
+// UpdateState adds a new state to the manager.
+// If the state already exists, update it.
+// note: maybe it is duplicated with AddState
 func (m *manager) UpdateState(key StateKey, state State) error {
 	m.statesMap.Store(key, state)
 	return m.Write(m.GetStatesMap().Format())
 }
 
+// DeleteState deletes a state from the manager.
+// If the state does not exist, do nothing.
 func (m *manager) DeleteState(key StateKey) error {
 	m.statesMap.Delete(key)
 	return m.Write(m.GetStatesMap().Format())
 }
 
+// GetOutputs is used to get the origin outputs of a toolName_InstanceID
 func (m *manager) GetOutputs(key StateKey) (interface{}, error) {
 	state := m.GetState(key)
 	if state == nil {

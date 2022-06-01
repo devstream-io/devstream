@@ -153,7 +153,7 @@ Please give us feedback through GitHub issues if you encounter any difficulties.
 	fmt.Println(help)
 }
 
-// Validate the []pluginTpl.File, for each File if File in needValidateFiles:
+// ValidateFiles Validates the []pluginTpl.File, for each File if File in needValidateFiles:
 // call the validateFile() method to deal with.
 func (p *Plugin) ValidateFiles(files []pluginTpl.File) error {
 	fileCount := len(files)

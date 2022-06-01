@@ -20,23 +20,27 @@ var (
 )
 
 // Config is the struct for loading DevStream configuration YAML files.
+// It records rendered config values and is used as a general config in devstream.
 type Config struct {
 	Tools []Tool `yaml:"tools"`
 	State *State
 }
 
-// ConfigFile is the struct for loading State and configuration YAML files.
+// ConfigFile is the struct represents the complete original configuration YAML files.
 type ConfigFile struct {
 	VarFile  string `yaml:"varFile"`
 	ToolFile string `yaml:"toolFile"`
 	State    *State `yaml:"state"`
 }
 
+// State is the struct for reading how the state is stored from the configuration file
+// It specifies the type of backend and related options.
 type State struct {
 	Backend string             `yaml:"backend"`
 	Options StateConfigOptions `yaml:"options"`
 }
 
+// StateConfigOptions is the struct for reading the options for the state backend
 type StateConfigOptions struct {
 	// for s3 backend
 	Bucket string `yaml:"bucket"`
@@ -202,6 +206,9 @@ func parseCustomPath(configFileName, customPath string) (string, error) {
 
 func fileExists(path string) error {
 	if _, err := os.Stat(path); err != nil {
+		if os.IsNotExist(err) {
+			return fmt.Errorf("file %s not exists", path)
+		}
 		return err
 	}
 	return nil

@@ -21,7 +21,7 @@ var developCreatePluginCMD = &cobra.Command{
 	Use:   "create-plugin",
 	Short: "Create a new plugin",
 	Long: `Create-plugin is used for creating a new plugin.
-Exampls:
+Examples:
   dtm develop create-plugin --name=YOUR-PLUGIN-NAME`,
 	Run: developCreateCMDFunc,
 }
