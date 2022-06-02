@@ -14,7 +14,7 @@ theme:
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
-edit_uri:
+edit_uri: edit/main/docs
 site_url: https://docs.devstream.io
 repo_name: devstream
 repo_url: https://github.com/devstream-io/devstream
