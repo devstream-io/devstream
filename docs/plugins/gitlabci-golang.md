@@ -15,21 +15,7 @@ _Note: when creating the token, make sure you select "API" in the "scopes" secti
 Plugin config example:
 
 ```yaml
-tools:
-# name of the tool
-- name: gitlabci-golang
-  # id of the tool instance
-  instanceID: default
-  # format: name.instanceID; If specified, dtm will make sure the dependency is applied first before handling this tool.
-  dependsOn: []
-  # options for the plugin
-  options:
-    # owner/repo or group/repo or group/subgroup/repo; "path with namespace" is only GitLab API's way of saying the same thing; please change the values below.
-    pathWithNamespace: YOUR_GITLAB_USERNAME_OR_GROUP/YOUR_GITLAB_REPO_NAME
-    # main branch of the repo (to which branch the plugin will submit the workflows)
-    branch: main
-    # if you are using self-hosted gitlab, set this value to your site address, otherwise set it to null
-    baseURL: https://yourselfhost.com
+--8<-- "gitlabci-golang.yaml"
 ```
 
 All parameters are mandatory.

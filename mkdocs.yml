@@ -1,12 +1,35 @@
 site_name: DevStream Docs
-theme: material
+theme: 
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+edit_uri: edit/main/docs
 site_url: https://docs.devstream.io
 repo_name: devstream
 repo_url: https://github.com/devstream-io/devstream
 site_description: The DevStream Docs
 markdown_extensions:
-  toc:
-    permalink: true
+  - toc:
+      permalink: true
+  - pymdownx.snippets:
+      base_path:
+        - "docs"
+        - "docs/../internal/pkg/show/config/plugins/"
+  - pymdownx.highlight:
+      anchor_linenums: true
+      auto_title: true
+  - pymdownx.superfences
 extra_css:
 - assets/versions.css
 extra_javascript:
