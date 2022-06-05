@@ -206,9 +206,6 @@ func parseCustomPath(configFileName, customPath string) (string, error) {
 
 func fileExists(path string) error {
 	if _, err := os.Stat(path); err != nil {
-		if os.IsNotExist(err) {
-			return fmt.Errorf("file %s not exists", path)
-		}
 		return err
 	}
 	return nil
