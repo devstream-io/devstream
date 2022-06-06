@@ -1,10 +1,9 @@
 package configloader
 
 import (
+	"bytes"
 	"fmt"
 	"io/ioutil"
-	"os"
-	"path/filepath"
 	"runtime"
 
 	"gopkg.in/yaml.v3"
@@ -27,6 +26,7 @@ type Config struct {
 
 // LoadConfig reads an input file as a general config.
 func LoadConfig(configFileName string) (*Config, error) {
+	var config Config
 	// 1. read the original config file
 	originalConfigFileBytes, err := ioutil.ReadFile(configFileName)
 	if err != nil {
@@ -35,89 +35,101 @@ func LoadConfig(configFileName string) (*Config, error) {
 		log.Info("See \"dtm help\" for more information.")
 		return nil, err
 	}
-	log.Debugf("Original general config: \n%s\n", string(originalConfigFileBytes))
+	log.Debugf("Original config: \n%s\n", string(originalConfigFileBytes))
 
-	// 2. unmarshal original config file
-	var originalConfig OriginalConfig
-	err = yaml.Unmarshal(originalConfigFileBytes, &originalConfig)
+	// 2. split original config
+	coreConfigBytes, variablesConfigBytes, toolsConfigBytes, err := SplitConfigFileBytes(originalConfigFileBytes)
 	if err != nil {
-		log.Error("Please verify the format of your config file.")
-		log.Errorf("Reading original config file failed. Error: %s.", err)
 		return nil, err
 	}
+
+	if len(coreConfigBytes) == 0 {
+		return nil, fmt.Errorf("core config is empty")
+	}
+
+	// 2. unmarshal core config file
+	var coreConfig CoreConfig
+	err = yaml.Unmarshal(coreConfigBytes, &coreConfig)
+	if err != nil {
+		log.Errorf("Please verify the format of your core config. Error: %s", err)
+		return nil, err
+	}
+	config.State = coreConfig.State
 
 	// 3. validation
-	errs := validateOriginalConfigFile(&originalConfig)
-	if len(errs) != 0 {
-		for _, e := range errs {
-			log.Errorf("Config file validation failed: %s.", e)
+	if ok, err := coreConfig.Validate(); !ok {
+		return nil, err
+	}
+
+	if coreConfig.VarFile != "" && coreConfig.ToolFile != "" {
+		if err := coreConfig.ParseVarFilePath(); err != nil {
+			return nil, err
 		}
-		return nil, nil
-	}
-
-	// 4. get the toolFilePath and varFilePath
-	toolFilePath, varFilePath, err := genToolVarPath(configFileName, originalConfig)
-	if err != nil {
-		return nil, err
-	}
-
-	// 5. render the tool config & state
-	cfg, err := renderToolConfigWithVarsToConfig(toolFilePath, varFilePath)
-	if err != nil {
-		return nil, err
-	}
-
-	cfg.State = originalConfig.State
-	return cfg, nil
-}
-
-// genToolVarPath return the Abs path of tool file and var file, return (absToolFilePath, "") if var file is empty.
-func genToolVarPath(configFileName string, originalConfig OriginalConfig) (string, string, error) {
-	var absToolFilePath, absVarFilePath string
-	var err error
-
-	absToolFilePath, err = parseCustomPath(configFileName, originalConfig.ToolFile)
-	if err != nil {
-		return "", "", err
-	}
-	// if var file is empty, just return ""
-	if originalConfig.VarFile != "" {
-		absVarFilePath, err = parseCustomPath(configFileName, originalConfig.VarFile)
+		if err := coreConfig.ParseToolFilePath(); err != nil {
+			return nil, err
+		}
+		tools, err := NewToolWithToolConfigFileAndVarsConfigFile(coreConfig.ToolFile, coreConfig.VarFile)
 		if err != nil {
-			return "", "", err
+			return nil, err
 		}
+		config.Tools = tools
+	} else if coreConfig.ToolFile != "" {
+		if err = coreConfig.ParseToolFilePath(); err != nil {
+			return nil, err
+		}
+	} else {
+		tools, err := newToolWithToolConfigAndVarsConfig(toolsConfigBytes, variablesConfigBytes)
+		if err != nil {
+			return nil, err
+		}
+		config.Tools = tools
 	}
-	return absToolFilePath, absVarFilePath, nil
+
+	return &config, nil
 }
 
-// parseCustomPath  parse the path of tools.yaml or variable.yaml
-func parseCustomPath(configFileName, customPath string) (string, error) {
-	if filepath.IsAbs(customPath) {
-		log.Debugf("Abs path is %s.", customPath)
-		if err := fileExists(customPath); err != nil {
-			log.Errorf("file %s not exists.", customPath)
-			return "", err
-		}
-		return customPath, nil
+// SplitConfigFileBytes take the original config file and split it to:
+// 1. core config
+// 2. variables config
+// 3. tools config
+// Original config should be like below:
+// ---
+// # core config (please don't change this comment)
+// varFile: "" # If not empty, use the specified external variables config file
+// toolFile: "" # If not empty, use the specified external tools config file
+// state:
+//   backend: local
+//   options:
+//     stateFile: devstream.state
+//
+// ---
+// # variables config (please don't change this comment)
+// foo: bar
+//
+// ---
+// # plugins config (please don't change this comment)
+// tools:
+// - name: A-PLUGIN-NAME
+//   instanceID: default
+//   options:
+//     foo: bar
+//
+// See https://github.com/devstream-io/devstream/issues/596 for more details.
+func SplitConfigFileBytes(fileBytes []byte) ([]byte, []byte, []byte, error) {
+	splitedBytes := bytes.Split(bytes.TrimPrefix(fileBytes, []byte("---")), []byte("---"))
+	switch len(splitedBytes) {
+	// core config only
+	case 1:
+		return splitedBytes[0], nil, nil, nil
+		// core config + tools config
+	case 2:
+		return splitedBytes[0], nil, splitedBytes[2], nil
+		// core config + variables config + tools config
+	case 3:
+		return splitedBytes[0], splitedBytes[1], splitedBytes[2], nil
+	default:
+		return nil, nil, nil, fmt.Errorf("invalid config format")
 	}
-	configFilePath, err := filepath.Abs(configFileName)
-	if err != nil {
-		return "", err
-	}
-	absFilePath := filepath.Join(filepath.Dir(configFilePath), customPath)
-	log.Debugf("Abs path is %s.", absFilePath)
-	if err := fileExists(absFilePath); err != nil {
-		log.Errorf("file %s not exists.", absFilePath)
-		return "", err
-	}
-	return absFilePath, nil
-}
-
-func fileExists(path string) error {
-	if _, err := os.Stat(path); err != nil {
-		return err
-	}
-	return nil
 }
 
 // GetPluginFileName creates the file name based on the tool's name and version
