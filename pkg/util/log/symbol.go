@@ -29,5 +29,5 @@ var normal = Symbols{
 
 // String returns a printable representation of Symbols struct
 func (s Symbols) String() string {
-	return fmt.Sprintf("Debug: %s Info: %s Success: %s Warning: %s Error: %s Fatal: %s",s.Debug s.Info, s.Success, s.Warning, s.Error, s.Fatal)
+	return fmt.Sprintf("Debug: %s Info: %s Success: %s Warning: %s Error: %s Fatal: %s", s.Debug, s.Info, s.Success, s.Warning, s.Error, s.Fatal)
 }
