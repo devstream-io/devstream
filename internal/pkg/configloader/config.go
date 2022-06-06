@@ -26,21 +26,21 @@ type Config struct {
 	State *State
 }
 
-// ConfigFile is the struct represents the complete original configuration YAML files.
+// ConfigFile is the struct representing the complete original configuration YAML files.
 type ConfigFile struct {
 	VarFile  string `yaml:"varFile"`
 	ToolFile string `yaml:"toolFile"`
 	State    *State `yaml:"state"`
 }
 
-// State is the struct for reading how the state is stored from the configuration file
-// It specifies the type of backend and related options.
+// State is the struct for reading the state configuration in the config file.
+// It defines how the state is stored, specifies the type of backend and related options.
 type State struct {
 	Backend string             `yaml:"backend"`
 	Options StateConfigOptions `yaml:"options"`
 }
 
-// StateConfigOptions is the struct for reading the options for the state backend
+// StateConfigOptions is the struct for reading the options of the state backend.
 type StateConfigOptions struct {
 	// for s3 backend
 	Bucket string `yaml:"bucket"`
@@ -50,7 +50,7 @@ type StateConfigOptions struct {
 	StateFile string `yaml:"stateFile"`
 }
 
-// Tool is the struct for one section of the DevStream configuration file.
+// Tool is the struct for one section of the DevStream tool file (part of the config.)
 type Tool struct {
 	Name string `yaml:"name"`
 	// RFC 1123 - DNS Subdomain Names style
