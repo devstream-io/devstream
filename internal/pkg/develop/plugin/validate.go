@@ -26,7 +26,7 @@ func Validate() error {
 	return ValidatePlugin(name)
 }
 
-// ValidatePlugins Validate all plugins
+// ValidatePlugins validate all plugins
 // calling ValidatePlugin() via all plugins name
 func ValidatePlugins() error {
 	listPluginsName := list.PluginsNameSlice()
@@ -42,7 +42,7 @@ func ValidatePlugins() error {
 	return nil
 }
 
-// ValidatePlugin Validate a plugin.
+// ValidatePlugin validate a plugin.
 // 1. Render template files
 // 2. Validate need validate files
 func ValidatePlugin(pluginName string) error {
