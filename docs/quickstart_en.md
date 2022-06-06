@@ -15,13 +15,13 @@ For Linux/Macos users:
 
 ## 2 Prepare a Config File
 
-Before you start: for an example of DevStream config, see [examples/tools-quickstart.yaml](https://github.com/devstream-io/devstream/blob/main/examples/tools-quickstart.yaml). Remember to open this configuration file, modify all FULL_UPPER_CASE_STRINGS (like YOUR_GITHUB_USERNAME, for example) in it to your own. Pay attention to the meaning of each item to ensure that it is what you want. For other plugins, checkout the "Plugins" section in our [doc](https://docs.devstream.io) for detailed usage.
+Before you start: for an example of DevStream config, see [examples/quickstart.yaml](https://github.com/devstream-io/devstream/blob/main/examples/quickstart.yaml). 
+Remember to open this configuration file, modify all FULL_UPPER_CASE_STRINGS (like YOUR_GITHUB_USERNAME, for example) in it to your own. Pay attention to the meaning of each item to ensure that it is what you want. For other plugins, checkout the "Plugins" section in our [doc](https://docs.devstream.io) for detailed usage.
 
-Download the [examples/quickstart.yaml](https://raw.githubusercontent.com/devstream-io/devstream/main/examples/quickstart.yaml) and [examples/tools-quickstart.yaml](https://raw.githubusercontent.com/devstream-io/devstream/main/examples/tools-quickstart.yaml) to your working directory and rename `quickstart.yaml` to `config.yaml`:
+Download the [examples/quickstart.yaml](https://raw.githubusercontent.com/devstream-io/devstream/main/examples/quickstart.yaml) to your working directory:
 
 ```shell
-curl -o config.yaml https://raw.githubusercontent.com/devstream-io/devstream/main/examples/quickstart.yaml
-curl -o tools-quickstart.yaml https://raw.githubusercontent.com/devstream-io/devstream/main/examples/tools-quickstart.yaml
+curl -o quickstart.yaml https://raw.githubusercontent.com/devstream-io/devstream/main/examples/quickstart.yaml
 ```
 
 Then modify the file accordingly.
@@ -29,9 +29,9 @@ Then modify the file accordingly.
 For example, my GitHub username is "IronCore864", and my Dockerhub username is "ironcore864", then I can run:
 
 ```shell
-sed -i.bak "s/YOUR_GITHUB_USERNAME_CASE_SENSITIVE/IronCore864/g" tools-quickstart.yaml
+sed -i.bak "s/YOUR_GITHUB_USERNAME_CASE_SENSITIVE/IronCore864/g" quickstart.yaml
 
-sed -i.bak "s/YOUR_DOCKER_USERNAME/ironcore864/g" tools-quickstart.yaml
+sed -i.bak "s/YOUR_DOCKER_USERNAME/ironcore864/g" quickstart.yaml
 ```
 
 > This config file uses two plugins, one will create a GitHub repository and bootstrap it into a Golang web app, and the other will create GitHub Actions workflow for it.
@@ -49,7 +49,7 @@ If you don't know how to create a GitHub token, check out [the official document
 Run:
 
 ```shell
-dtm init -f config.yaml
+dtm init -f quickstart.yaml
 ```
 
 and you should see similar output to:
@@ -116,7 +116,7 @@ To verify, run:
 To destroy everything, run:
 
 ```shell
-./dtm destroy
+./dtm destroy -f YOUR_CONFIG_FILE.yaml
 ```
 
 _`dtm` will read the state, then determine which tools are installed, and then remove those tools. It's same as `dtm apply -f empty.yaml` (empty.yaml is an empty config file)._
@@ -126,7 +126,7 @@ _`dtm` will read the state, then determine which tools are installed, and then r
 Run:
 
 ```shell
-dtm apply -f config.yaml
+dtm apply -f quickstart.yaml
 ```
 
 and confirm to continue, then you should see similar output to:
@@ -165,7 +165,7 @@ Go to your GitHub account, and we can see a new repo named "go-webapp-devstream-
 Run:
 
 ```shell
-dtm destroy
+dtm destroy -f quickstart.yaml
 ```
 
 and you should see similar output:

@@ -42,15 +42,13 @@ Download the appropriate `dtm` version for your platform from [DevStream Release
 
 ## Prepare the Config File
 
-Download the `gitops.yaml`, `tools-gitops.yaml` and `variables-gitops.yaml` to your working directory:
+Download the `gitops.yaml` to your working directory:
 
 ```bash
-curl -o config-gitops.yaml https://raw.githubusercontent.com/devstream-io/devstream/main/examples/gitops.yaml
-curl -o variables-gitops.yaml https://raw.githubusercontent.com/devstream-io/devstream/main/examples/variables-gitops.yaml
-curl -o tools-gitops.yaml https://raw.githubusercontent.com/devstream-io/devstream/main/examples/tools-gitops.yaml
+curl -o gitops.yaml https://raw.githubusercontent.com/devstream-io/devstream/main/examples/gitops.yaml
 ```
 
-Then modify the `variables-gitops.yaml` file accordingly.
+Then modify the `gitops.yaml` file accordingly.
 
 For me I can set these variables like:
 
@@ -86,7 +84,7 @@ If you don't know how to create these three tokens, check out:
 Run:
 
 ```bash
-dtm init -f config-gitops.yaml
+dtm init -f gitops.yaml
 ```
 
 ## 4. Apply
@@ -94,7 +92,7 @@ dtm init -f config-gitops.yaml
 Run:
 
 ```bash
-dtm apply -f config-gitops.yaml
+dtm apply -f gitops.yaml
 ```
 
 and confirm to continue, then you should see similar output to:
@@ -164,7 +162,7 @@ Let's continue to look at the results of the `apply` command.
 Run:
 
 ```bash
-dtm destroy
+dtm destroy -f gitops.yaml
 ```
 
 and you should see similar output:
