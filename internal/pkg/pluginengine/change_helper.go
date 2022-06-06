@@ -84,7 +84,7 @@ func changesForApply(smgr statemanager.Manager, cfg *configloader.Config) ([]*Ch
 			} else {
 				// tool found in the state
 
-				// first, handle possible "outputs" referneces in the tool's config
+				// first, handle possible "outputs" references in the tool's config
 				// ignoring errors, since at this stage we are calculating changes, and the dependency might not have its output in the state yet
 				_ = HandleOutputsReferences(smgr, tool.Options)
 

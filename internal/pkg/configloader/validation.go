@@ -22,27 +22,28 @@ func validateConfig(config *Config) []error {
 	return errors
 }
 
+// validateTool validates if tool name and instance id are legal
 func validateTool(t *Tool) []error {
 	errors := make([]error, 0)
 
-	// InstanceID
 	if t.InstanceID == "" {
-		errors = append(errors, fmt.Errorf("name is empty"))
+		errors = append(errors, fmt.Errorf("instance id is empty"))
 	}
 
 	errs := validation.IsDNS1123Subdomain(t.InstanceID)
 	for _, e := range errs {
-		errors = append(errors, fmt.Errorf("name %s is invalid: %s", t.InstanceID, e))
+		errors = append(errors, fmt.Errorf("instance id %s is invalid: %s", t.InstanceID, e))
 	}
 
-	// InstanceID
 	if t.Name == "" {
-		errors = append(errors, fmt.Errorf("plugin is empty"))
+		errors = append(errors, fmt.Errorf("plugin name is empty"))
 	}
 
 	return errors
 }
 
+// validateDependency validates if dependency of tools are legal
+// mainly used to check if all the tools defined in `dependsOn` exist
 func validateDependency(tools []Tool) []error {
 	errors := make([]error, 0)
 
@@ -50,8 +51,7 @@ func validateDependency(tools []Tool) []error {
 	toolMap := make(map[string]bool)
 	// creating the set
 	for _, tool := range tools {
-		key := fmt.Sprintf("%s.%s", tool.Name, tool.InstanceID)
-		toolMap[key] = true
+		toolMap[tool.Key()] = true
 	}
 
 	for _, tool := range tools {

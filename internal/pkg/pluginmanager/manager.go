@@ -83,7 +83,7 @@ func DownloadPlugins(conf *configloader.Config) error {
 	return nil
 }
 
-// CheckLocalPlugins checks if the local plugins match with .md5
+// CheckLocalPlugins checks if the local plugins exists, and matches with md5 value.
 func CheckLocalPlugins(conf *configloader.Config) error {
 	pluginDir := viper.GetString("plugin-dir")
 	if pluginDir == "" {

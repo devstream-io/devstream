@@ -7,10 +7,6 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func generateKeyFromTool(tool configloader.Tool) string {
-	return fmt.Sprintf("%s.%s", tool.Name, tool.InstanceID)
-}
-
 func dependencyResolved(tool configloader.Tool, unprocessedNodeSet map[string]bool) bool {
 	res := true
 
@@ -36,8 +32,7 @@ func topologicalSort(tools []configloader.Tool) ([][]configloader.Tool, error) {
 	// a "graph", which contains "nodes" that haven't been processed yet
 	unprocessedNodeSet := make(map[string]bool)
 	for _, tool := range tools {
-		key := generateKeyFromTool(tool)
-		unprocessedNodeSet[key] = true
+		unprocessedNodeSet[tool.Key()] = true
 	}
 
 	// while there is still a node in the graph left to be processed:
@@ -47,8 +42,7 @@ func topologicalSort(tools []configloader.Tool) ([][]configloader.Tool, error) {
 
 		for _, tool := range tools {
 			// if the tool has already been processed (not in the unprocessedNodeSet anymore), pass
-			key := generateKeyFromTool(tool)
-			if _, ok := unprocessedNodeSet[key]; !ok {
+			if _, ok := unprocessedNodeSet[tool.Key()]; !ok {
 				continue
 			}
 
@@ -74,8 +68,7 @@ func topologicalSort(tools []configloader.Tool) ([][]configloader.Tool, error) {
 
 		// remove tools from the unprocessedNodeSet because they have been added to the batch
 		for _, tool := range batch {
-			key := generateKeyFromTool(tool)
-			delete(unprocessedNodeSet, key)
+			delete(unprocessedNodeSet, tool.Key())
 		}
 
 		// add the batch to the final result

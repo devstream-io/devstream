@@ -26,14 +26,14 @@ func List(pluginFilter string) {
 	}
 }
 
-// Get plugins name in slice
+// PluginsNameSlice Gets plugins name in slice
 func PluginsNameSlice() []string {
 	listPluginsName := strings.Fields(PluginsName)
 	sort.Strings(listPluginsName)
 	return listPluginsName
 }
 
-// Get plugins name in map
+// PluginNamesMap Gets plugins name in map
 func PluginNamesMap() map[string]struct{} {
 	mp := make(map[string]struct{})
 
