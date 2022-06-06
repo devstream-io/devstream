@@ -23,7 +23,7 @@ If not, it tries to give you a hint that maybe you forgot to run `dtm init` firs
 
 ## 4 Config / State / Resource
 
-For definitions of _Config_, _State_, and _Resource_, see [Core Concepts](../core-concepts/core-concepts).
+For definitions of _Config_, _State_, and _Resource_, see [Core Concepts](../core-concepts/core-concepts.md).
 
 `dtm verify` tries to see if the _Config_ matches the _State_ and the _Resource_ or not. If not, it tells you what exactly is not the same, and what would happen if you run `dtm apply`.
 

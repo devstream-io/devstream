@@ -80,7 +80,7 @@ To apply the config, run:
 
 If you don't specify the config file with the "-f" parameter, it will try to use the default value which is "config.yaml" from the current directory.
 
-_`dtm` will compare the config, the state, and the resources to decide whether a "create", "update", or "delete" is needed. For more information, read our [Core Concepts documentation here](https://www.devstream.io/docs/core-concepts)._
+_`dtm` will compare the config, the state, and the resources to decide whether a "create", "update", or "delete" is needed. For more information, read our [Core Concepts documentation here](./core-concepts/core-concepts.md)._
 
 The command above will ask you for confirmation before actually executing the changes. To apply without confirmation (like `apt-get -y update`), run:
 

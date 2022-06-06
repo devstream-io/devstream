@@ -10,5 +10,5 @@
 
 ## Full Process Guide
 
-A detailed guide to the plugin development process can be found in [creating-a-plugin](https://docs.devstream.io/en/latest/contributing/creating-a-plugin/).
+A detailed guide to the plugin development process can be found in [creating a plugin](https://docs.devstream.io/en/latest/development/creating-a-plugin/).
 
