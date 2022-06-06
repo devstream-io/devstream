@@ -88,7 +88,7 @@ func (c *CoreConfig) ParseVarFilePath() error {
 	if err != nil {
 		return err
 	}
-	log.Debugf("New varFile path: '%s'.", c.VarFile)
+	log.Debugf("Absolute varFile path: '%s'.", c.VarFile)
 
 	return nil
 }
@@ -104,7 +104,7 @@ func (c *CoreConfig) ParseToolFilePath() error {
 	if err != nil {
 		return err
 	}
-	log.Debugf("Original toolFile path: '%s'.", c.ToolFile)
+	log.Debugf("Absolute toolFile path: '%s'.", c.ToolFile)
 
 	return nil
 }

@@ -27,16 +27,11 @@ type Config struct {
 
 // LoadConfig reads an input file as a general config.
 func LoadConfig(configFileName string) (*Config, error) {
-	var config Config
 	// 1. read the original config file
-	originalConfigFileBytes, err := ioutil.ReadFile(configFileName)
+	originalConfigFileBytes, err := loadOriginalConfigFile(configFileName)
 	if err != nil {
-		log.Errorf("Failed to read the config file. Error: %s", err)
-		log.Info("Maybe the default file (config.yaml) doesn't exist or you forgot to pass your config file to the \"-f\" option?")
-		log.Info("See \"dtm help\" for more information.")
 		return nil, err
 	}
-	log.Debugf("Original config: \n%s\n", string(originalConfigFileBytes))
 
 	// 2. split original config
 	coreConfigBytes, variablesConfigBytes, toolsConfigBytes, err := SplitConfigFileBytes(originalConfigFileBytes)
@@ -44,53 +39,74 @@ func LoadConfig(configFileName string) (*Config, error) {
 		return nil, err
 	}
 
-	if len(coreConfigBytes) == 0 {
-		return nil, fmt.Errorf("core config is empty")
-	}
+	return renderConfigs(coreConfigBytes, variablesConfigBytes, toolsConfigBytes)
+}
 
-	// 3. unmarshal core config file
+func renderConfigs(coreConfigBytes, variablesConfigBytes, toolsConfigBytes []byte) (*Config, error) {
+	// 1. unmarshal core config file
 	var coreConfig CoreConfig
-	err = yaml.Unmarshal(coreConfigBytes, &coreConfig)
-	if err != nil {
-		log.Errorf("Please verify the format of your core config. Error: %s", err)
+	if err := yaml.Unmarshal(coreConfigBytes, &coreConfig); err != nil {
+		log.Errorf("Please verify the format of your core config. Error: %s.", err)
 		return nil, err
 	}
-	config.State = coreConfig.State
-
 	if ok, err := coreConfig.Validate(); !ok {
 		return nil, err
 	}
+	state := coreConfig.State
 
-	// 4. unmarshal tool config with variables(if needed).
-	if coreConfig.ToolFile == "" {
-		if len(toolsConfigBytes) == 0 {
-			return nil, fmt.Errorf("tools config is empty")
-		}
-
-		tools, err := NewToolWithToolConfigBytesAndVarsConfigBytes(toolsConfigBytes, variablesConfigBytes)
-		if err != nil {
-			return nil, err
-		}
-		config.Tools = tools
-		return &config, nil
-	}
-
-	if err := coreConfig.ParseVarFilePath(); err != nil {
-		return nil, err
-	}
-	if coreConfig.VarFile != "" {
-		if err := coreConfig.ParseToolFilePath(); err != nil {
-			return nil, err
-		}
-	}
-
-	tools, err := NewToolWithToolConfigFileAndVarsConfigFile(coreConfig.ToolFile, coreConfig.VarFile)
+	// 2. unmarshal tool config with variables(if needed).
+	tools, err := renderToolsFromCoreConfigAndConfigBytes(&coreConfig, toolsConfigBytes, variablesConfigBytes)
 	if err != nil {
 		return nil, err
 	}
-	config.Tools = tools
 
-	return &config, nil
+	return &Config{
+		Tools: tools,
+		State: state,
+	}, nil
+}
+
+func renderToolsFromCoreConfigAndConfigBytes(coreConfig *CoreConfig, toolsConfigBytes, variablesConfigBytes []byte) ([]Tool, error) {
+	if coreConfig.ToolFile == "" && len(toolsConfigBytes) == 0 {
+		return nil, fmt.Errorf("tools config is empty")
+	}
+
+	var tools []Tool
+	var err error
+	if coreConfig.ToolFile == "" {
+		tools, err = NewToolWithToolConfigBytesAndVarsConfigBytes(toolsConfigBytes, variablesConfigBytes)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		if err = coreConfig.ParseToolFilePath(); err != nil {
+			return nil, err
+		}
+		if coreConfig.VarFile != "" {
+			if err = coreConfig.ParseVarFilePath(); err != nil {
+				return nil, err
+			}
+		}
+
+		tools, err = NewToolWithToolConfigFileAndVarsConfigFile(coreConfig.ToolFile, coreConfig.VarFile)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return tools, nil
+}
+
+func loadOriginalConfigFile(configFile string) ([]byte, error) {
+	originalConfigFileBytes, err := ioutil.ReadFile(configFile)
+	if err != nil {
+		log.Errorf("Failed to read the config file. Error: %s", err)
+		log.Info("Maybe the default file (config.yaml) doesn't exist or you forgot to pass your config file to the \"-f\" option?")
+		log.Info("See \"dtm help\" for more information.")
+		return nil, err
+	}
+	log.Debugf("Original config: \n%s\n", string(originalConfigFileBytes))
+	return originalConfigFileBytes, err
 }
 
 func (c *Config) Validate() []error {
@@ -145,7 +161,7 @@ func (c *Config) ValidateDependency() []error {
 // 3. tools config
 // Original config should be like below:
 // ---
-// # core config (please don't change this comment)
+// # core config
 // varFile: "" # If not empty, use the specified external variables config file
 // toolFile: "" # If not empty, use the specified external tools config file
 // state:
@@ -154,11 +170,11 @@ func (c *Config) ValidateDependency() []error {
 //     stateFile: devstream.state
 //
 // ---
-// # variables config (please don't change this comment)
+// # variables config
 // foo: bar
 //
 // ---
-// # plugins config (please don't change this comment)
+// # plugins config
 // tools:
 // - name: A-PLUGIN-NAME
 //   instanceID: default
@@ -166,21 +182,28 @@ func (c *Config) ValidateDependency() []error {
 //     foo: bar
 //
 // See https://github.com/devstream-io/devstream/issues/596 for more details.
-func SplitConfigFileBytes(fileBytes []byte) ([]byte, []byte, []byte, error) {
-	splitedBytes := bytes.Split(bytes.TrimPrefix(fileBytes, []byte("---")), []byte("---"))
-	switch len(splitedBytes) {
-	// core config only
+func SplitConfigFileBytes(fileBytes []byte) (coreConfig []byte, varConfig []byte, toolConfig []byte, err error) {
+	splitBytes := bytes.Split(bytes.TrimPrefix(fileBytes, []byte("---")), []byte("---"))
+
+	switch len(splitBytes) {
 	case 1:
-		return splitedBytes[0], nil, nil, nil
-		// core config + tools config
+		coreConfig = splitBytes[0]
 	case 2:
-		return splitedBytes[0], nil, splitedBytes[1], nil
-		// core config + variables config + tools config
+		coreConfig = splitBytes[0]
+		toolConfig = splitBytes[1]
 	case 3:
-		return splitedBytes[0], splitedBytes[1], splitedBytes[2], nil
+		coreConfig = splitBytes[0]
+		varConfig = splitBytes[1]
+		toolConfig = splitBytes[2]
 	default:
-		return nil, nil, nil, fmt.Errorf("invalid config format")
+		err = fmt.Errorf("invalid config format")
 	}
+
+	if len(coreConfig) == 0 {
+		err = fmt.Errorf("core config is empty")
+	}
+
+	return
 }
 
 // GetPluginFileName creates the file name based on the tool's name and version

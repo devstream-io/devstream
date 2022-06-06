@@ -127,6 +127,6 @@ func readFile(filePath string) ([]byte, error) {
 		return nil, err
 	}
 
-	log.Debugf("Variables file: \n%s\n", string(filePath))
+	log.Debugf("Variables file: \n%s\n", string(fileBytes))
 	return fileBytes, nil
 }
