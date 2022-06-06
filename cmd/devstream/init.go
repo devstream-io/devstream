@@ -17,7 +17,7 @@ var initCMD = &cobra.Command{
 }
 
 func initCMDFunc(cmd *cobra.Command, args []string) {
-	cfg, err := configloader.LoadConf(configFile)
+	cfg, err := configloader.LoadConfig(configFile)
 	if err != nil {
 		log.Errorf("Error: %s.", err)
 		return
