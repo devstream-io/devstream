@@ -80,10 +80,15 @@ func (c *CoreConfig) Validate() (bool, error) {
 func (c *CoreConfig) ParseVarFilePath() error {
 	var err error
 
+	log.Debugf("Original varFile path: '%s'.", c.VarFile)
+	if c.VarFile == "" {
+		return nil
+	}
 	c.VarFile, err = c.genAbsFilePath(c.VarFile)
 	if err != nil {
 		return err
 	}
+	log.Debugf("New varFile path: '%s'.", c.VarFile)
 
 	return nil
 }
@@ -91,10 +96,15 @@ func (c *CoreConfig) ParseVarFilePath() error {
 func (c *CoreConfig) ParseToolFilePath() error {
 	var err error
 
+	log.Debugf("Original toolFile path: '%s'.", c.ToolFile)
+	if c.VarFile == "" {
+		return nil
+	}
 	c.ToolFile, err = c.genAbsFilePath(c.ToolFile)
 	if err != nil {
 		return err
 	}
+	log.Debugf("Original toolFile path: '%s'.", c.ToolFile)
 
 	return nil
 }

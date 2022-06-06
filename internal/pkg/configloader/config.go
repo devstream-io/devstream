@@ -174,7 +174,7 @@ func SplitConfigFileBytes(fileBytes []byte) ([]byte, []byte, []byte, error) {
 		return splitedBytes[0], nil, nil, nil
 		// core config + tools config
 	case 2:
-		return splitedBytes[0], nil, splitedBytes[2], nil
+		return splitedBytes[0], nil, splitedBytes[1], nil
 		// core config + variables config + tools config
 	case 3:
 		return splitedBytes[0], splitedBytes[1], splitedBytes[2], nil

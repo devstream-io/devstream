@@ -102,12 +102,12 @@ func NewToolWithToolConfigBytesAndVarsConfigBytes(toolConfigBytes, varConfigByte
 }
 
 func newToolWithToolConfig(toolConfigBytes []byte) ([]Tool, error) {
-	var tools = make([]Tool, 0)
-	if err := yaml.Unmarshal(toolConfigBytes, &tools); err != nil {
+	var config = Config{Tools: make([]Tool, 0)}
+	if err := yaml.Unmarshal(toolConfigBytes, &config); err != nil {
 		return nil, err
 	}
 
-	return tools, nil
+	return config.Tools, nil
 }
 
 func loadVarsIntoMap(varConfigBytes []byte) (map[string]interface{}, error) {
