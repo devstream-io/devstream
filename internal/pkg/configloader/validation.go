@@ -26,7 +26,6 @@ func validateConfig(config *Config) []error {
 func validateTool(t *Tool) []error {
 	errors := make([]error, 0)
 
-	// InstanceID validation
 	if t.InstanceID == "" {
 		errors = append(errors, fmt.Errorf("instance id is empty"))
 	}
@@ -36,7 +35,6 @@ func validateTool(t *Tool) []error {
 		errors = append(errors, fmt.Errorf("instance id %s is invalid: %s", t.InstanceID, e))
 	}
 
-	// Name validation
 	if t.Name == "" {
 		errors = append(errors, fmt.Errorf("plugin name is empty"))
 	}
