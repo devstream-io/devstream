@@ -21,7 +21,7 @@ func Create() error {
 	log.Debugf("Got the name: %s.", name)
 
 	if pluginExists(name) {
-		return fmt.Errorf("plugin name: %s is already exists", name)
+		return fmt.Errorf("plugin %s already exists", name)
 	}
 	log.Debugf("Got the name: %s.", name)
 
