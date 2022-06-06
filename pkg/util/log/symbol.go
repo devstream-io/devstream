@@ -18,16 +18,16 @@ type Symbols struct {
 }
 
 var normal = Symbols{
-	Debug:   Symbol("ℹ"),
+	Debug:   Symbol("λ"),
 	Info:    Symbol("ℹ"),
 	Success: Symbol("✔"),
 	Warning: Symbol("⚠"),
 	Warn:    Symbol("⚠"),
-	Error:   Symbol("✖"),
+	Error:   Symbol("!!"),
 	Fatal:   Symbol("✖"),
 }
 
 // String returns a printable representation of Symbols struct
 func (s Symbols) String() string {
-	return fmt.Sprintf("Info: %s Success: %s Warning: %s Error: %s", s.Info, s.Success, s.Warning, s.Error)
+	return fmt.Sprintf("Debug: %s Info: %s Success: %s Warning: %s Error: %s Fatal: %s",s.Debug s.Info, s.Success, s.Warning, s.Error, s.Fatal)
 }
