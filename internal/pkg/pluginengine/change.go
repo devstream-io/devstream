@@ -9,7 +9,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-// Change is a wrapper with a single Tool and its Action should be executed.
+// Change is a wrapper for a single Tool and its Action to be executed.
 type Change struct {
 	Tool        *configloader.Tool
 	ActionName  statemanager.ComponentAction
@@ -17,7 +17,7 @@ type Change struct {
 	Description string
 }
 
-// ChangeResult holds the result with a change action.
+// ChangeResult holds the result of a change action.
 type ChangeResult struct {
 	Succeeded   bool
 	Error       error
