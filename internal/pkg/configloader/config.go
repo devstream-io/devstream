@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"runtime"
+	"strings"
 
 	"gopkg.in/yaml.v3"
 
@@ -18,7 +19,7 @@ var (
 )
 
 // Config is the struct for loading DevStream configuration YAML files.
-// It records rendered config values and is used as a general config in devstream.
+// It records rendered config values and is used as a general config in DevStream.
 type Config struct {
 	Tools []Tool `yaml:"tools"`
 	State *State
@@ -47,7 +48,7 @@ func LoadConfig(configFileName string) (*Config, error) {
 		return nil, fmt.Errorf("core config is empty")
 	}
 
-	// 2. unmarshal core config file
+	// 3. unmarshal core config file
 	var coreConfig CoreConfig
 	err = yaml.Unmarshal(coreConfigBytes, &coreConfig)
 	if err != nil {
@@ -56,36 +57,86 @@ func LoadConfig(configFileName string) (*Config, error) {
 	}
 	config.State = coreConfig.State
 
-	// 3. validation
 	if ok, err := coreConfig.Validate(); !ok {
 		return nil, err
 	}
 
-	if coreConfig.VarFile != "" && coreConfig.ToolFile != "" {
-		if err := coreConfig.ParseVarFilePath(); err != nil {
+	// 4. unmarshal tool config with variables(if needed).
+	if coreConfig.ToolFile == "" {
+		if len(toolsConfigBytes) == 0 {
+			return nil, fmt.Errorf("tools config is empty")
+		}
+
+		tools, err := NewToolWithToolConfigBytesAndVarsConfigBytes(toolsConfigBytes, variablesConfigBytes)
+		if err != nil {
 			return nil, err
 		}
+		config.Tools = tools
+		return &config, nil
+	}
+
+	if err := coreConfig.ParseVarFilePath(); err != nil {
+		return nil, err
+	}
+	if coreConfig.VarFile != "" {
 		if err := coreConfig.ParseToolFilePath(); err != nil {
 			return nil, err
 		}
-		tools, err := NewToolWithToolConfigFileAndVarsConfigFile(coreConfig.ToolFile, coreConfig.VarFile)
-		if err != nil {
-			return nil, err
-		}
-		config.Tools = tools
-	} else if coreConfig.ToolFile != "" {
-		if err = coreConfig.ParseToolFilePath(); err != nil {
-			return nil, err
-		}
-	} else {
-		tools, err := newToolWithToolConfigAndVarsConfig(toolsConfigBytes, variablesConfigBytes)
-		if err != nil {
-			return nil, err
-		}
-		config.Tools = tools
 	}
 
+	tools, err := NewToolWithToolConfigFileAndVarsConfigFile(coreConfig.ToolFile, coreConfig.VarFile)
+	if err != nil {
+		return nil, err
+	}
+	config.Tools = tools
+
 	return &config, nil
+}
+
+func (c *Config) Validate() []error {
+	errors := make([]error, 0)
+
+	for _, t := range c.Tools {
+		errors = append(errors, t.Validate()...)
+	}
+
+	errors = append(errors, c.ValidateDependency()...)
+
+	return errors
+}
+
+func (c *Config) ValidateDependency() []error {
+	errors := make([]error, 0)
+
+	// config "set" (map)
+	toolMap := make(map[string]bool)
+	// creating the set
+	for _, tool := range c.Tools {
+		toolMap[tool.Key()] = true
+	}
+
+	for _, tool := range c.Tools {
+		// no dependency, pass
+		if len(tool.DependsOn) == 0 {
+			continue
+		}
+
+		// for each dependency
+		for _, dependency := range tool.DependsOn {
+			// skip empty string
+			dependency = strings.TrimSpace(dependency)
+			if dependency == "" {
+				continue
+			}
+
+			// generate an error if the dependency isn't in the config set,
+			if _, ok := toolMap[dependency]; !ok {
+				errors = append(errors, fmt.Errorf("tool %s's dependency %s doesn't exist in the config", tool.InstanceID, dependency))
+			}
+		}
+	}
+
+	return errors
 }
 
 // SplitConfigFileBytes take the original config file and split it to:

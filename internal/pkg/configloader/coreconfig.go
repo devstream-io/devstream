@@ -10,7 +10,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-// CoreConfig is the config YAML user writes
+// CoreConfig is the struct representing the complete original configuration YAML files.
 type CoreConfig struct {
 	// TODO(daniel-hutao): Relative path support
 	VarFile string `yaml:"varFile"`

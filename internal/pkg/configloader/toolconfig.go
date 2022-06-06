@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 
 	"gopkg.in/yaml.v3"
+	"k8s.io/apimachinery/pkg/util/validation"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
@@ -22,20 +23,65 @@ type Tool struct {
 	Options    map[string]interface{} `yaml:"options"`
 }
 
+func (t *Tool) Validate() []error {
+	errors := make([]error, 0)
+
+	if t.InstanceID == "" {
+		errors = append(errors, fmt.Errorf("instance id is empty"))
+	}
+
+	errs := validation.IsDNS1123Subdomain(t.InstanceID)
+	for _, e := range errs {
+		errors = append(errors, fmt.Errorf("instance id %s is invalid: %s", t.InstanceID, e))
+	}
+
+	if t.Name == "" {
+		errors = append(errors, fmt.Errorf("plugin name is empty"))
+	}
+
+	return errors
+}
+
+func (t *Tool) DeepCopy() *Tool {
+	var retTool = Tool{
+		Name:       t.Name,
+		InstanceID: t.InstanceID,
+		DependsOn:  t.DependsOn,
+		Options:    map[string]interface{}{},
+	}
+	for k, v := range t.Options {
+		retTool.Options[k] = v
+	}
+	return &retTool
+}
+
+func (t *Tool) Key() string {
+	return fmt.Sprintf("%s.%s", t.Name, t.InstanceID)
+}
+
 func NewToolWithToolConfigFileAndVarsConfigFile(toolFilePath, varFilePath string) ([]Tool, error) {
 	toolConfigBytes, err := readFile(toolFilePath)
 	if err != nil {
 		return nil, err
 	}
+
+	if varFilePath == "" {
+		return NewToolWithToolConfigBytesAndVarsConfigBytes(toolConfigBytes, nil)
+	}
+
 	varConfigBytes, err := readFile(varFilePath)
 	if err != nil {
 		return nil, err
 	}
 
-	return newToolWithToolConfigAndVarsConfig(toolConfigBytes, varConfigBytes)
+	return NewToolWithToolConfigBytesAndVarsConfigBytes(toolConfigBytes, varConfigBytes)
 }
 
-func newToolWithToolConfigAndVarsConfig(toolConfigBytes, varConfigBytes []byte) ([]Tool, error) {
+func NewToolWithToolConfigBytesAndVarsConfigBytes(toolConfigBytes, varConfigBytes []byte) ([]Tool, error) {
+	if len(varConfigBytes) == 0 {
+		return newToolWithToolConfig(toolConfigBytes)
+	}
+
 	variables, err := loadVarsIntoMap(varConfigBytes)
 	if err != nil {
 		log.Errorf("Failed to load vars into map: %s", err)
@@ -52,8 +98,12 @@ func newToolWithToolConfigAndVarsConfig(toolConfigBytes, varConfigBytes []byte) 
 		return nil, err
 	}
 
+	return newToolWithToolConfig(toolConfigBytesWithVars)
+}
+
+func newToolWithToolConfig(toolConfigBytes []byte) ([]Tool, error) {
 	var tools = make([]Tool, 0)
-	if err := yaml.Unmarshal(toolConfigBytesWithVars, &tools); err != nil {
+	if err := yaml.Unmarshal(toolConfigBytes, &tools); err != nil {
 		return nil, err
 	}
 
@@ -79,21 +129,4 @@ func readFile(filePath string) ([]byte, error) {
 
 	log.Debugf("Variables file: \n%s\n", string(filePath))
 	return fileBytes, nil
-}
-
-func (t *Tool) DeepCopy() *Tool {
-	var retTool = Tool{
-		Name:       t.Name,
-		InstanceID: t.InstanceID,
-		DependsOn:  t.DependsOn,
-		Options:    map[string]interface{}{},
-	}
-	for k, v := range t.Options {
-		retTool.Options[k] = v
-	}
-	return &retTool
-}
-
-func (t *Tool) Key() string {
-	return fmt.Sprintf("%s.%s", t.Name, t.InstanceID)
 }
