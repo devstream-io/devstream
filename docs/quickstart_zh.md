@@ -1,6 +1,6 @@
 # 快速开始
 
-> 中文 | [English](./quickstart_en.md)
+> 中文 | [English](/quickstart_en)
 
 ## 1 下载 DevStream (`dtm`)
 
@@ -33,7 +33,7 @@ sed -i.bak "s/YOUR_DOCKER_USERNAME/ironcore864/g" tools-quickstart.yaml
 
 > 这个配置文件会使用两个插件，一个用来创建 GitHub 项目，而且初始化成一个 Golang 的 web 应用结构。接着另外一个插件会给这个项目创建对应的 GitHub Actions 工作流。
 
-这两个插件, [githubactions-golang](plugins/githubactions-golang.md)&[github-repo-scaffolding-golang](plugins/github-repo-scaffolding-golang.md), 需要配置一个环境变量 才能工作，我们看下怎么配置：
+这两个插件, [githubactions-golang](/plugins/githubactions-golang)&[github-repo-scaffolding-golang](/plugins/github-repo-scaffolding-golang), 需要配置一个环境变量 才能工作，我们看下怎么配置：
 
 
 ```shell

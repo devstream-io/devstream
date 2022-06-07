@@ -18,4 +18,4 @@ We aim to reply to issues within 24 hours.
 
 ## Want to Know More?
 
-Read on to the next [development](./development/development-workflow.md) section of this document.
+Read on to the next [development](/development/development-workflow) section of this document.
