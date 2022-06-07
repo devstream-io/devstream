@@ -12,7 +12,7 @@ import (
 )
 
 func Remove(configFile string, continueDirectly bool, isForceDelete bool) error {
-	cfg, err := configloader.LoadConf(configFile)
+	cfg, err := configloader.LoadConfig(configFile)
 	if err != nil {
 		return err
 	}

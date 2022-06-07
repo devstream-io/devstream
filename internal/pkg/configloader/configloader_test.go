@@ -1,45 +1,58 @@
-package configloader
+package configloader_test
 
 import (
-	"testing"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/devstream-io/devstream/internal/pkg/configloader"
 )
 
-func TestDependencyPass(t *testing.T) {
-	tools := []Tool{
-		{InstanceID: "argocd", Name: "argocd"},
-		{InstanceID: "argocdapp", Name: "argocdapp", DependsOn: []string{"argocd.argocd"}},
-	}
-	errors := validateDependency(tools)
-	assert.Equal(t, len(errors), 0, "Dependency check passed.")
+var _ = Describe("Dependency", func() {
+	Context("singe dep", func() {
+		tools := []configloader.Tool{
+			{InstanceID: "argocd", Name: "argocd"},
+			{InstanceID: "argocdapp", Name: "argocdapp", DependsOn: []string{"argocd.argocd"}},
+		}
+		config := configloader.Config{
+			Tools: tools,
+		}
+		errors := config.ValidateDependency()
+		Expect(len(errors)).To(Equal(0))
+	})
 
-}
+	Context("dep not exist", func() {
+		tools := []configloader.Tool{
+			{InstanceID: "argocdapp", Name: "argocdapp", DependsOn: []string{"argocd.argocd"}},
+		}
+		config := configloader.Config{
+			Tools: tools,
+		}
+		errors := config.ValidateDependency()
+		Expect(len(errors)).To(Equal(1))
+	})
 
-func TestDependencyNotExist(t *testing.T) {
-	tools := []Tool{
-		{InstanceID: "argocdapp", Name: "argocdapp", DependsOn: []string{"argocd.argocd"}},
-	}
-	errors := validateDependency(tools)
-	assert.Equal(t, len(errors), 1)
+	Context("multi-dep", func() {
+		tools := []configloader.Tool{
+			{InstanceID: "argocd", Name: "argocd"},
+			{InstanceID: "repo", Name: "github"},
+			{InstanceID: "argocdapp", Name: "argocdapp", DependsOn: []string{"argocd.argocd", "github.repo"}},
+		}
+		config := configloader.Config{
+			Tools: tools,
+		}
+		errors := config.ValidateDependency()
+		Expect(len(errors)).To(Equal(0))
+	})
 
-}
-
-func TestMultipleDependencies(t *testing.T) {
-	tools := []Tool{
-		{InstanceID: "argocd", Name: "argocd"},
-		{InstanceID: "repo", Name: "github"},
-		{InstanceID: "argocdapp", Name: "argocdapp", DependsOn: []string{"argocd.argocd", "github.repo"}},
-	}
-	errors := validateDependency(tools)
-	assert.Equal(t, len(errors), 0)
-}
-
-func TestEmptyDependency(t *testing.T) {
-	tools := []Tool{
-		{InstanceID: "argocd", Name: "argocd"},
-		{InstanceID: "argocdapp", Name: "argocdapp", DependsOn: []string{}},
-	}
-	errors := validateDependency(tools)
-	assert.Equal(t, len(errors), 0)
-}
+	Context("empty dep", func() {
+		tools := []configloader.Tool{
+			{InstanceID: "argocd", Name: "argocd"},
+			{InstanceID: "argocdapp", Name: "argocdapp", DependsOn: []string{}},
+		}
+		config := configloader.Config{
+			Tools: tools,
+		}
+		errors := config.ValidateDependency()
+		Expect(len(errors)).To(Equal(0))
+	})
+})

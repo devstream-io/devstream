@@ -10,7 +10,7 @@ import (
 // Verify returns true if all the comments in this function are met
 func Verify(configFile string) bool {
 	// 1. loading config file succeeded
-	cfg, err := configloader.LoadConf(configFile)
+	cfg, err := configloader.LoadConfig(configFile)
 	if err != nil {
 		log.Errorf("verify failed, error: %s", err)
 	}
