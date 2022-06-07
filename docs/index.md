@@ -13,5 +13,5 @@ TL;DR: DevStream (CLI tool named `dtm`) is an open-source DevOps toolchain manag
 
 ## Get Started
 
-- [Quick Start](quickstart_en.md)
-- [Best Pratices - GitOps Toolchain](best-practices/gitops.md)
+- [Quick Start](/quickstart_en)
+- [Best Pratices - GitOps Toolchain](/best-practices/gitops)
