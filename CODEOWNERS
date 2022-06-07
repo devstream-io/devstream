@@ -1,0 +1,13 @@
+*                  @devstream-io/reviewer
+
+CODEOWNERS         @devstream-io/pmc
+
+/.github/          @daniel-hutao
+Makefile           @daniel-hutao
+/hack/             @daniel-hutao
+
+*.tf               @IronCore864
+/docs/             @IronCore864
+CODE_OF_CONDUCT.md @IronCore864
+CONTRIBUTING       @IronCore864
+README.md          @IronCore864
