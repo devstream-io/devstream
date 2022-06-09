@@ -121,7 +121,8 @@ func (c *CoreConfig) genAbsFilePath(filePath string) (string, error) {
 
 	absFilePath, err := filepath.Abs(filePath)
 	if err != nil {
-		return "", fmt.Errorf("file %s not exists. Error: %s", filePath, err)
+		log.Errorf("Failed to get absolute path fo \"%s\".", filePath)
+		return "", err
 	}
 	log.Debugf("Abs path is %s.", absFilePath)
 	if fileExist(absFilePath) {
