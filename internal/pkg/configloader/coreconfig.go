@@ -119,16 +119,10 @@ func (c *CoreConfig) genAbsFilePath(filePath string) (string, error) {
 		return true
 	}
 
-	if filepath.IsAbs(filePath) {
-		log.Debugf("Abs path is %s.", filePath)
-		if fileExist(filePath) {
-			return filePath, nil
-		} else {
-			return "", fmt.Errorf("file %s not exists", filePath)
-		}
+	absFilePath, err := filepath.Abs(filePath)
+	if err != nil {
+		return "", fmt.Errorf("file %s not exists. Error: %s", filePath, err)
 	}
-
-	absFilePath := filepath.Join(filepath.Dir(filePath), filePath)
 	log.Debugf("Abs path is %s.", absFilePath)
 	if fileExist(absFilePath) {
 		return absFilePath, nil
