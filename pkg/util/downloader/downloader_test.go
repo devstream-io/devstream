@@ -13,6 +13,13 @@ var _ = Describe("Downloader", func() {
 	Context("Downloader test", func() {
 		var url = "https://github.com/devstream-io/devstream/releases/download/v0.0.1/argocdapp_0.0.1.so"
 		var targetDir = "tmp"
+
+		It("Should return err", func() {
+			size, err := downloader.Download(url, ".", targetDir)
+			Expect(err).To(HaveOccurred())
+			Expect(size).To(Equal(int64(0)))
+		})
+
 		It("Should get the file", func() {
 			size, err := downloader.Download(url, "", targetDir)
 			Expect(err).NotTo(HaveOccurred())
