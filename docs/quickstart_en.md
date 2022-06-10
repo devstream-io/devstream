@@ -2,6 +2,8 @@
 
 > English | [中文](/quickstart_zh)
 
+If you haven't watch the demo yet, see it on the [main page](./index.md).
+
 ## 1 Download DevStream (`dtm`)
 
 Please visit GitHub [Releases](https://github.com/devstream-io/devstream/releases) page and download the appropriate binary according to your operating system and architecture.

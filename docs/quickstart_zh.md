@@ -2,6 +2,8 @@
 
 > 中文 | [English](/quickstart_en)
 
+如果你还没有观看我们的demo，你可以在[文档站点的主页](./index.md)观看。
+
 ## 1 下载 DevStream (`dtm`)
 
 根据你的实际环境从 [DevStream Releases](https://github.com/devstream-io/devstream/releases) 下载合适的 `dtm` 版本。
