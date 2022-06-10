@@ -14,12 +14,12 @@ import (
 func Download(url, filename, targetDir string) (int64, error) {
 	log.Debugf("Target dir: %s.", targetDir)
 	log.Debugf("URL: %s.", url)
-	var fileName = filename
-	if fileName == "" {
-		fileName = filepath.Base(url)
+	if filename == "" {
+		// when url is empty filepath.Base(url) will return "."
+		filename = filepath.Base(url)
 	}
-	log.Debugf("Filename: %s.", fileName)
-	if fileName == "." {
+	log.Debugf("Filename: %s.", filename)
+	if filename == "." {
 		return 0, fmt.Errorf("failed to get the filename from url: %s", url)
 	}
 
@@ -27,7 +27,7 @@ func Download(url, filename, targetDir string) (int64, error) {
 		return 0, err
 	}
 
-	f, err := os.Create(filepath.Join(targetDir, fileName))
+	f, err := os.Create(filepath.Join(targetDir, filename))
 	if err != nil {
 		return 0, err
 	}

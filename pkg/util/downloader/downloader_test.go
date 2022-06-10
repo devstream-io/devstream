@@ -20,6 +20,12 @@ var _ = Describe("Downloader", func() {
 			Expect(size).To(Equal(int64(0)))
 		})
 
+		It("when url and filename are empty, Shold return err", func() {
+			size, err := downloader.Download("", "", targetDir)
+			Expect(err).To(HaveOccurred())
+			Expect(size).To(Equal(int64(0)))
+		})
+
 		It("Should get the file", func() {
 			size, err := downloader.Download(url, "", targetDir)
 			Expect(err).NotTo(HaveOccurred())
