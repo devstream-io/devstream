@@ -1,5 +1,5 @@
-site_name: DevStream Docs
-theme: 
+site_name: "DevStream - Your DevOps Toolchain Manager"
+theme:
   name: material
   palette:
     - scheme: default
@@ -35,24 +35,16 @@ extra_css:
 extra_javascript:
 - assets/versions.js
 nav:
+  - 'understanding_the_basics.md'
+  - 'core_concepts.md'
   - 'quickstart_en.md'
-  - Best Practices:
-    - 'best-practices/gitops.md'
-  - Commands:
+  - DTM Commands Explained in Depth:
     - 'commands/autocomplete.md'
     - 'commands/init.md'
     - 'commands/apply.md'
     - 'commands/verify.md'
     - 'commands/delete.md'
     - 'commands/destroy.md'
-    - 'commands/develop.md'
-  - Core Concepts:
-    - 'core-concepts/core-concepts.md'
-    - 'core-concepts/config.md'
-    - 'core-concepts/variables.md'
-    - 'core-concepts/stateconfig.md'
-    - 'core-concepts/dependencies.md'
-    - 'core-concepts/output.md'
   - Plugins:
     - 'plugins/plugins-list.md'
     - 'plugins/argocd.md'
@@ -72,12 +64,23 @@ nav:
     - 'plugins/openldap.md'
     - 'plugins/trello.md'
     - 'plugins/trello-github-integ.md'
+  - Best Practices:
+    - 'best-practices/gitops.md'
   - 'contribute.md'
-  - Development:
+  - Developer Guide:
+    - Core Concepts in Detail:
+      - 'core-concepts/config.md'
+      - 'core-concepts/core-concepts.md'
+      - 'core-concepts/stateconfig.md'
+      - 'core-concepts/variables.md'
+      - 'core-concepts/dependencies.md'
+      - 'core-concepts/output.md'
     - 'development/development-workflow.md'
     - 'development/contributor_ladder_growth_programs.md'
     - 'development/project-layout.md'
     - 'development/architecture.md'
+    - Commands:
+      - 'development/commands/develop.md'
     - 'development/build.md'
     - 'development/test.md'
     - 'development/commit-messages.md'
