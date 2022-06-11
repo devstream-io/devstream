@@ -26,7 +26,7 @@ var _ = Describe("Downloader", func() {
 			Expect(size).To(Equal(int64(0)))
 		})
 
-		It("should download the file properly, func() {
+		It("should download the file properly", func() {
 			size, err := downloader.Download(url, "", targetDir)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(size).NotTo(Equal(int64(0)))
