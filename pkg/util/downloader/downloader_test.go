@@ -14,19 +14,19 @@ var _ = Describe("Downloader", func() {
 		var url = "https://github.com/devstream-io/devstream/releases/download/v0.0.1/argocdapp_0.0.1.so"
 		var targetDir = "tmp"
 
-		It("Should return err", func() {
+		It("returns error if filename is empty and can't be parsed from the url", func() {
 			size, err := downloader.Download(url, ".", targetDir)
 			Expect(err).To(HaveOccurred())
 			Expect(size).To(Equal(int64(0)))
 		})
 
-		It("when url and filename are empty, Shold return err", func() {
+		It("returns an error when url and filename are empty", func() {
 			size, err := downloader.Download("", "", targetDir)
 			Expect(err).To(HaveOccurred())
 			Expect(size).To(Equal(int64(0)))
 		})
 
-		It("Should get the file", func() {
+		It("should download the file properly, func() {
 			size, err := downloader.Download(url, "", targetDir)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(size).NotTo(Equal(int64(0)))
