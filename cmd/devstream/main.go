@@ -2,7 +2,6 @@ package main
 
 import (
 	"os"
-	"strings"
 
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -97,12 +96,9 @@ func initLog() {
 }
 
 func main() {
+
 	err := rootCMD.Execute()
 	if err != nil {
-		if strings.Contains(err.Error(), "unknown command \"install\"") {
-			log.Fatalf("Did you mean \"dtm apply\" instead?")
-		} else {
-			log.Fatal(err.Error())
-		}
+		os.Exit(1)
 	}
 }
