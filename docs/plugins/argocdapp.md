@@ -4,9 +4,9 @@ This plugin creates an [ArgoCD Application](https://argo-cd.readthedocs.io/en/st
 
 **Notes:**
 - ArgoCD itself must have been already installed before the usage of this plugin.
-  To install ArgoCD, use the [argocd plugin](argocd).
+  To install ArgoCD, use the [argocd plugin](argocd.md).
   Or you can use both plugins(argocd+argocdapp) at the same time.
-  See [GitOps Toolchain](/docs/best-practices/gitops) for more info.
+  See [GitOps Toolchain](/docs/best-practices/gitops.md) for more info.
 - Currently, only the Helm chart is supported when creating the ArgoCD application.
 - Modify the file accordingly. Especially remember to modify `ARGOCD_TOOL_NAME`.
 

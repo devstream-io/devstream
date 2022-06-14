@@ -1,6 +1,6 @@
 # Quick Start
 
-> English | [中文](/quickstart_zh)
+> English | [中文](/quickstart_zh.md)
 
 If you haven't watch the demo yet, see it on the [main page](./index.md).
 
@@ -38,7 +38,8 @@ sed -i.bak "s/YOUR_DOCKER_USERNAME/ironcore864/g" quickstart.yaml
 
 > This config file uses two plugins, one will create a GitHub repository and bootstrap it into a Golang web app, and the other will create GitHub Actions workflow for it.
 
-The two plugins, [githubactions-golang](/plugins/githubactions-golang) & [github-repo-scaffolding-golang](/plugins/github-repo-scaffolding-golang), require an environment variable to work, so let's set it:
+The two plugins, [githubactions-golang](./plugins/githubactions-golang.md) &
+[github-repo-scaffolding-golang](./plugins/github-repo-scaffolding-golang.md), require an environment variable to work, so let's set it:
 
 ```shell
 export GITHUB_TOKEN="YOUR_GITHUB_TOKEN_HERE"
@@ -82,7 +83,7 @@ To apply the config, run:
 
 If you don't specify the config file with the "-f" parameter, it will try to use the default value which is "config.yaml" from the current directory.
 
-_`dtm` will compare the config, the state, and the resources to decide whether a "create", "update", or "delete" is needed. For more information, read our [Core Concepts documentation here](/core-concepts/core-concepts)._
+_`dtm` will compare the config, the state, and the resources to decide whether a "create", "update", or "delete" is needed. For more information, read our [Core Concepts documentation here](./core-concepts/core-concepts.md)._
 
 The command above will ask you for confirmation before actually executing the changes. To apply without confirmation (like `apt-get -y update`), run:
 

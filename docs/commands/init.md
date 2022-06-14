@@ -2,7 +2,7 @@
 
 `dtm init` will download the required plugins according to the tool file in the config.
 
-For config file, tool file, see the [config](../../core-concepts/config) section of this documentation.
+For config file, tool file, see the [config](../core-concepts/config.md) section of this documentation.
 
 ## Downloading Plugins
 
