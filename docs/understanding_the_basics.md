@@ -35,5 +35,5 @@ Go through the online Docker and Kubernetes tutorials. You can search for:
 
 ## Getting Started
 
-- [Quick Start](/quickstart_en)
-- [Best Pratices - GitOps Toolchain](/best-practices/gitops)
+- [Quick Start](./quickstart_en.md)
+- [Best Pratices - GitOps Toolchain](./best-practices/gitops.md)

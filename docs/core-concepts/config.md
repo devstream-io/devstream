@@ -88,7 +88,7 @@ The `state` section specifies where to store DevStream state. As of now (v0.5.0)
 
 From v0.6.0 on, we will support both "local" and "s3" backend store the DevStream state.
 
-Read the section [The State Section in the Main Config](/core-concepts/stateconfig) for more details.
+Read the section [The State Section in the Main Config](./stateconfig.md) for more details.
 
 ## Default Values
 

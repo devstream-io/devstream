@@ -2,7 +2,7 @@
 
 Note: please complete **_ALL_** items in the following checklist.
 
-- [ ] I have read through the [CONTRIBUTING.md](../CONTRIBUTING.md) documentation.
+- [ ] I have read through the [CONTRIBUTING.md](https://github.com/devstream-io/devstream/blob/main/docs/contribute.md) documentation.
 - [ ] My code has the necessary comments and documentation (if needed).
 - [ ] I have added relevant tests
 

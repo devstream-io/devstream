@@ -24,7 +24,7 @@ Although dtm is automagic, but it can’t read your mind. I’m afraid that you 
 
 Please fill in the main logic of the plugin here.
 
-You can check out our [Standard Go Project Layout](project-layout) document for detailed instruction on the project layout.
+You can check out our [Standard Go Project Layout](project-layout.md) document for detailed instruction on the project layout.
 
 ## 2 Interfaces
 
