@@ -16,11 +16,11 @@ For Chinese readers, watch this one instead:
 
 ## Plugins needed
 
-1. [github-repo-scaffolding-golang](../plugins/github-repo-scaffolding-golang)
-2. [jira-github](../plugins/jira-github-integ)
-3. [githubactions-golang](../plugins/githubactions-golang)
-4. [argocd](../plugins/argocd)
-5. [argocdapp](../plugins/argocdapp)
+1. [github-repo-scaffolding-golang](../plugins/github-repo-scaffolding-golang.md)
+2. [jira-github](../plugins/jira-github-integ.md)
+3. [githubactions-golang](../plugins/githubactions-golang.md)
+4. [argocd](../plugins/argocd.md)
+5. [argocdapp](../plugins/argocdapp.md)
 
 The dependencies of these plugins are(`a -> b` means for `a depends on b`):
 
