@@ -67,6 +67,7 @@ nav:
   - Best Practices:
     - 'best-practices/gitops.md'
   - 'contribute.md'
+  - Contributor Ladder ⧉: 'https://github.com/devstream-io/devstream/blob/main/CONTRIBUTOR_LADDER.md'
   - Developer Guide:
     - Core Concepts in Detail:
       - 'core-concepts/config.md'
@@ -76,7 +77,6 @@ nav:
       - 'core-concepts/dependencies.md'
       - 'core-concepts/output.md'
     - 'development/development-workflow.md'
-    - 'development/contributor_ladder_growth_programs.md'
     - 'development/project-layout.md'
     - 'development/architecture.md'
     - Commands:
@@ -87,4 +87,5 @@ nav:
     - 'development/lint.md'
     - 'development/creating-a-plugin.md'
     - 'development/branch-and-release.md'
+  - Road Map ⧉: 'https://github.com/devstream-io/devstream/blob/main/ROADMAP.md'
   - 'troubleshooting.md'
