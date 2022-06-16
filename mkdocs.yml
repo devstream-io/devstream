@@ -34,59 +34,143 @@ extra_css:
 - assets/versions.css
 extra_javascript:
 - assets/versions.js
+extra:
+  alternate:
+    - name: English
+      link: ""
+      lang: en
+    - name: 中文
+      link: index.zh/
+      lang: zh
+plugins:
+  - i18n:
+      languages:
+        en: "English"
+        zh: "简体中文"
+      default_language: 'en'
+      no_translation:
+        en: "This page isn't translated to English."
+        zh: "这个页面还没有中文翻译。"
+      translate_nav:
+        en:
+          DTM Commands Explained in Depth: "DTM Commands Explained in Depth"
+          Plugins: "Plugins"
+          Best Practices: "Best Practices"
+          Developer Guide: "Developer Guide"
+          Core Concepts in Detail: "Core Concepts in Detail"
+          Commands: "Commands"
+          Contributor Ladder: "Contributor Ladder"
+          Road Map: "Road Map"
+          Code Review Guide: "Code Review Guide"
+        zh:
+          DTM Commands Explained in Depth: "DTM 命令详解"
+          Plugins: "插件"
+          Best Practices: "最佳实践"
+          Developer Guide: "开发指导"
+          Core Concepts in Detail: "核心概念详解"
+          Commands: "命令"
+          Contributor Ladder: "贡献者成长阶梯"
+          Road Map: "路线图"
+          Code Review Guide: "代码 review 指导"
 nav:
   - 'understanding_the_basics.md'
+  - 'understanding_the_basics.zh.md'
   - 'core_concepts.md'
-  - 'quickstart_en.md'
+  - 'core_concepts.zh.md'
+  - 'quickstart.md'
+  - 'quickstart.zh.md'
   - DTM Commands Explained in Depth:
     - 'commands/autocomplete.md'
+    - 'commands/autocomplete.zh.md'
     - 'commands/init.md'
+    - 'commands/init.zh.md'
     - 'commands/apply.md'
+    - 'commands/apply.zh.md'
     - 'commands/verify.md'
+    - 'commands/verify.zh.md'
     - 'commands/delete.md'
+    - 'commands/delete.zh.md'
     - 'commands/destroy.md'
+    - 'commands/destroy.zh.md'
   - Plugins:
     - 'plugins/plugins-list.md'
+    - 'plugins/plugins-list.zh.md'
     - 'plugins/argocd.md'
+    - 'plugins/argocd.zh.md'
     - 'plugins/argocdapp.md'
+    - 'plugins/argocdapp.zh.md'
     - 'plugins/devlake.md'
+    - 'plugins/devlake.zh.md'
     - 'plugins/github-repo-scaffolding-golang.md'
+    - 'plugins/github-repo-scaffolding-golang.zh.md'
     - 'plugins/githubactions-golang.md'
+    - 'plugins/githubactions-golang.zh.md'
     - 'plugins/githubactions-nodejs.md'
+    - 'plugins/githubactions-nodejs.zh.md'
     - 'plugins/githubactions-python.md'
+    - 'plugins/githubactions-python.zh.md'
     - 'plugins/gitlab-repo-scaffolding-golang.md'
+    - 'plugins/gitlab-repo-scaffolding-golang.zh.md'
     - 'plugins/gitlabci-generic.md'
+    - 'plugins/gitlabci-generic.zh.md'
     - 'plugins/gitlabci-golang.md'
+    - 'plugins/gitlabci-golang.zh.md'
     - 'plugins/hashicorp-vault.md'
+    - 'plugins/hashicorp-vault.zh.md'
     - 'plugins/jenkins.md'
+    - 'plugins/jenkins.zh.md'
     - 'plugins/jira-github-integ.md'
+    - 'plugins/jira-github-integ.zh.md'
     - 'plugins/kube-prometheus.md'
+    - 'plugins/kube-prometheus.zh.md'
     - 'plugins/openldap.md'
+    - 'plugins/openldap.zh.md'
     - 'plugins/trello.md'
+    - 'plugins/trello.zh.md'
     - 'plugins/trello-github-integ.md'
+    - 'plugins/trello-github-integ.zh.md'
   - Best Practices:
     - 'best-practices/gitops.md'
+    - 'best-practices/gitops.zh.md'
   - 'contributing_guide.md'
+  - 'contributing_guide.zh.md'
   - Contributor Ladder ⧉: 'https://github.com/devstream-io/devstream/blob/main/CONTRIBUTOR_LADDER.md'
   - Developer Guide:
     - Core Concepts in Detail:
       - 'core-concepts/config.md'
+      - 'core-concepts/config.zh.md'
       - 'core-concepts/core-concepts.md'
+      - 'core-concepts/core-concepts.zh.md'
       - 'core-concepts/stateconfig.md'
+      - 'core-concepts/stateconfig.zh.md'
       - 'core-concepts/variables.md'
+      - 'core-concepts/variables.zh.md'
       - 'core-concepts/dependencies.md'
+      - 'core-concepts/dependencies.zh.md'
       - 'core-concepts/output.md'
+      - 'core-concepts/output.zh.md'
     - 'development/development-workflow.md'
+    - 'development/development-workflow.zh.md'
     - 'development/project-layout.md'
+    - 'development/project-layout.zh.md'
     - 'development/architecture.md'
+    - 'development/architecture.zh.md'
     - Commands:
       - 'development/commands/develop.md'
+      - 'development/commands/develop.zh.md'
     - 'development/build.md'
+    - 'development/build.zh.md'
     - 'development/test.md'
+    - 'development/test.zh.md'
     - 'development/commit-messages.md'
+    - 'development/commit-messages.zh.md'
     - 'development/lint.md'
+    - 'development/lint.zh.md'
     - Code Review Guide ⧉: 'https://github.com/devstream-io/devstream/blob/main/REVIEWING.md'
     - 'development/creating-a-plugin.md'
+    - 'development/creating-a-plugin.zh.md'
     - 'development/branch-and-release.md'
+    - 'development/branch-and-release.zh.md'
   - Road Map ⧉: 'https://github.com/devstream-io/devstream/blob/main/ROADMAP.md'
   - 'troubleshooting.md'
+  - 'troubleshooting.zh.md'

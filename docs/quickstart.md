@@ -1,7 +1,5 @@
 # Quick Start
 
-> English | [中文](./quickstart_zh.md)
-
 If you haven't watch the demo yet, see it on the [main page](./index.md).
 
 ## 1 Download DevStream (`dtm`)
