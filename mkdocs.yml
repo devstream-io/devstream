@@ -66,7 +66,7 @@ nav:
     - 'plugins/trello-github-integ.md'
   - Best Practices:
     - 'best-practices/gitops.md'
-  - 'contribute.md'
+  - 'contributing_guide.md'
   - Contributor Ladder ⧉: 'https://github.com/devstream-io/devstream/blob/main/CONTRIBUTOR_LADDER.md'
   - Developer Guide:
     - Core Concepts in Detail:
