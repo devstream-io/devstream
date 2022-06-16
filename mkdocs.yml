@@ -134,7 +134,8 @@ nav:
     - 'best-practices/gitops.zh.md'
   - 'contributing_guide.md'
   - 'contributing_guide.zh.md'
-  - Contributor Ladder ⧉: 'https://github.com/devstream-io/devstream/blob/main/CONTRIBUTOR_LADDER.md'
+  - 'contributor_ladder.md'
+  - 'contributor_ladder.zh.md'
   - Developer Guide:
     - Core Concepts in Detail:
       - 'core-concepts/config.md'
@@ -166,7 +167,8 @@ nav:
     - 'development/commit-messages.zh.md'
     - 'development/lint.md'
     - 'development/lint.zh.md'
-    - Code Review Guide ⧉: 'https://github.com/devstream-io/devstream/blob/main/REVIEWING.md'
+    - 'development/reviewing.md'
+    - 'development/reviewing.zh.md'
     - 'development/creating-a-plugin.md'
     - 'development/creating-a-plugin.zh.md'
     - 'development/branch-and-release.md'
