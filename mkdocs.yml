@@ -85,6 +85,7 @@ nav:
     - 'development/test.md'
     - 'development/commit-messages.md'
     - 'development/lint.md'
+    - Code Review Guide ⧉: 'https://github.com/devstream-io/devstream/blob/main/REVIEWING.md'
     - 'development/creating-a-plugin.md'
     - 'development/branch-and-release.md'
   - Road Map ⧉: 'https://github.com/devstream-io/devstream/blob/main/ROADMAP.md'
