@@ -1,7 +1,5 @@
 # 快速开始
 
-> 中文 | [English](./quickstart_en.md)
-
 如果你还没有观看我们的demo，你可以在[文档站点的主页](./index.md)观看。
 
 ## 1 下载 DevStream (`dtm`)
