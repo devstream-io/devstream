@@ -60,6 +60,7 @@ plugins:
           Developer Guide: "Developer Guide"
           Core Concepts in Detail: "Core Concepts in Detail"
           Commands: "Commands"
+          Contributor Ladder: "Contributor Ladder"
         zh:
           DTM Commands Explained in Depth: "DTM 命令详解"
           Plugins: "插件"
@@ -67,6 +68,7 @@ plugins:
           Developer Guide: "开发指导"
           Core Concepts in Detail: "核心概念详解"
           Commands: "命令"
+          Contributor Ladder: "贡献者成长阶梯"
 nav:
   - 'understanding_the_basics.md'
   - 'understanding_the_basics.zh.md'
@@ -129,6 +131,7 @@ nav:
     - 'best-practices/gitops.zh.md'
   - 'contribute.md'
   - 'contribute.zh.md'
+  - Contributor Ladder ⧉: 'https://github.com/devstream-io/devstream/blob/main/CONTRIBUTOR_LADDER.md'
   - Developer Guide:
     - Core Concepts in Detail:
       - 'core-concepts/config.md'
@@ -144,9 +147,12 @@ nav:
       - 'core-concepts/output.md'
       - 'core-concepts/output.zh.md'
     - 'development/development-workflow.md'
+<<<<<<< HEAD
     - 'development/development-workflow.zh.md'
     - 'development/contributor_ladder_growth_programs.md'
     - 'development/contributor_ladder_growth_programs.zh.md'
+=======
+>>>>>>> upstream/main
     - 'development/project-layout.md'
     - 'development/project-layout.zh.md'
     - 'development/architecture.md'
@@ -165,6 +171,10 @@ nav:
     - 'development/creating-a-plugin.md'
     - 'development/creating-a-plugin.zh.md'
     - 'development/branch-and-release.md'
+<<<<<<< HEAD
     - 'development/branch-and-release.zh.md'
+=======
+  - Road Map ⧉: 'https://github.com/devstream-io/devstream/blob/main/ROADMAP.md'
+>>>>>>> upstream/main
   - 'troubleshooting.md'
   - 'troubleshooting.zh.md'
