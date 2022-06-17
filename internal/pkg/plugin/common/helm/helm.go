@@ -90,3 +90,7 @@ func DealWithNsWhenInterruption(opts *Options) error {
 	log.Debugf("The namespace %s has been deleted.", opts.Chart.Namespace)
 	return nil
 }
+
+func GetAnnotationName() string {
+	return "meta.helm.sh/release-name"
+}
