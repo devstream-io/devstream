@@ -62,7 +62,7 @@ plugins:
           Contributor Ladder: "Contributor Ladder"
           Road Map: "Road Map"
           Code Review Guide: "Code Review Guide"
-          HOME: "HOME"
+          Overview: "Overview"
         zh:
           DTM Commands Explained in Depth: "DTM 命令详解"
           Plugins: "插件"
@@ -73,7 +73,7 @@ plugins:
           Contributor Ladder: "贡献者成长阶梯"
           Road Map: "路线图"
           Code Review Guide: "代码 review 指导"
-          HOME: "主页"
+          Overview: "概览"
 nav:
   - Overview: 'https://docs.devstream.io'
   - 'understanding_the_basics.md'
