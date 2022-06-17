@@ -75,7 +75,7 @@ plugins:
           Code Review Guide: "代码 review 指导"
           HOME: "主页"
 nav:
-  - HOME: 'https://docs.devstream.io'
+  - Overview: 'https://docs.devstream.io'
   - 'understanding_the_basics.md'
   - 'understanding_the_basics.zh.md'
   - 'core_concepts.md'
