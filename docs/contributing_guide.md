@@ -77,7 +77,7 @@ The unwritten rules (heck, we are writing them anyways) for PRs, contributors, a
 - linter: [golangci-lint](https://github.com/golangci/golangci-lint)
 - recommended IDE: [Visual Studio Code](https://code.visualstudio.com/), [GoLand](https://www.jetbrains.com/go/).
 - [docs](https://docs.devstream.io/en/latest/)
-- [quick start](./quickstart_en.md)
+- [quick start](./quickstart.md)
 - Get the source code: https://github.com/devstream-io/devstream
 - [Build the source code](./development/build.md)
 - [Test the source code, unit](./development/test.md)

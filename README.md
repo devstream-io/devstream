@@ -77,7 +77,7 @@ Want to remove or reinstall a specific piece in the workflow? DevStream has got 
 
 ## Quick Start
 
-If you want to get a quick start, follow our [quick start](./docs/quickstart_en.md) doc now.
+If you want to get a quick start, follow our [quick start](./docs/quickstart.md) doc now.
 
 ## Best Practices Toolchain Integration
 
