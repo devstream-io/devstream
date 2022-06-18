@@ -14,7 +14,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v2
       with:
-        go-version: 1.17
+        go-version: 1.18
     - name: Build
       run: [[- if not .Build.Command]] go build ./...[[- else]] [[.Build.Command]][[- end]]
   [[- else]]
@@ -27,7 +27,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v2
       with:
-        go-version: 1.17
+        go-version: 1.18
     - name: Test
       run: [[- if not .Test.Command]] go test ./...[[- else]] [[.Test.Command]][[- end]] [[- if .Test.Coverage.Enable]] -race -covermode=atomic -coverprofile=[[- if not .Test.Coverage.Output]]coverage.out[[- else]][[.Test.Coverage.Output]][[- end]] [[- end]]
     [[- if .Test.Coverage.Enable]]
@@ -93,7 +93,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v2
       with:
-        go-version: 1.17
+        go-version: 1.18
     - name: Build
       run: [[- if not .Build.Command]] go build ./...[[- else]] [[.Build.Command]][[- end]]
   [[- else]]
@@ -106,7 +106,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v2
       with:
-        go-version: 1.17
+        go-version: 1.18
     - name: Test
       run: [[- if not .Test.Command]] go test ./...[[- else]] [[.Test.Command]][[- end]] [[- if .Test.Coverage.Enable]] -race -covermode=atomic -coverprofile=[[- if not .Test.Coverage.Output]]coverage.out[[- else]][[.Test.Coverage.Output]][[- end]] [[- end]]
     [[- if .Test.Coverage.Enable]]

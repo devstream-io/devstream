@@ -14,7 +14,7 @@ on:
       - 'hack/terraform/**'
 
 env:
-  go-version: 1.17.x
+  go-version: 1.18.x
 jobs:
   golang-lint:
     name: Golang lint
@@ -37,7 +37,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        go: [1.17.x]
+        go: [1.18.x]
         include:
           - os: ubuntu-latest
             go-build: ~/.cache/go-build

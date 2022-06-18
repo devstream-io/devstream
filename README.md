@@ -102,7 +102,7 @@ Alternatively, run `dtm list plugins` and it will show you all the available plu
 ### Pre-requisites
 
 - Git
-- Go (1.17+)
+- Go (1.18+)
 
 ### Build
 

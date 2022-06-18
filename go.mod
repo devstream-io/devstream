@@ -1,6 +1,6 @@
 module github.com/devstream-io/devstream
 
-go 1.17
+go 1.18
 
 require (
 	github.com/adlio/trello v1.9.0

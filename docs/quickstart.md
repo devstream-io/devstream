@@ -148,7 +148,7 @@ Enter a value (Default is n): y
 2022-03-04 12:09:22 ✔ [SUCCESS]  Plugin go-webapp-repo Create done.
 2022-03-04 12:09:22 ℹ [INFO]  -------------------- [  Processing progress: 2/2.  ] --------------------
 2022-03-04 12:09:22 ℹ [INFO]  Processing: golang-demo-actions -> Create ...
-2022-03-04 12:09:23 ℹ [INFO]  Language is: go-1.17.
+2022-03-04 12:09:23 ℹ [INFO]  Language is: go-1.18.
 2022-03-04 12:09:23 ℹ [INFO]  Creating GitHub Actions workflow pr-builder.yml ...
 2022-03-04 12:09:24 ✔ [SUCCESS]  Github Actions workflow pr-builder.yml created.
 2022-03-04 12:09:25 ℹ [INFO]  Creating GitHub Actions workflow main-builder.yml ...
@@ -187,7 +187,7 @@ Enter a value (Default is n): y
 2022-03-04 12:10:40 ✔ [SUCCESS]  Plugin go-webapp-repo delete done.
 2022-03-04 12:10:40 ℹ [INFO]  -------------------- [  Processing progress: 2/2.  ] --------------------
 2022-03-04 12:10:40 ℹ [INFO]  Processing: golang-demo-actions -> Delete ...
-2022-03-04 12:10:40 ℹ [INFO]  language is go-1.17.
+2022-03-04 12:10:40 ℹ [INFO]  language is go-1.18.
 2022-03-04 12:10:41 ✔ [SUCCESS]  Github Actions workflow pr-builder.yml already removed.
 2022-03-04 12:10:42 ✔ [SUCCESS]  Github Actions workflow main-builder.yml already removed.
 2022-03-04 12:10:42 ℹ [INFO]  Prepare to delete 'golang-demo-actions_githubactions-golang' from States.
