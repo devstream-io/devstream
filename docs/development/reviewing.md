@@ -12,7 +12,7 @@ Reviewers can approve a pull request but they cannot merge it. A maintainer hand
 
 ## Values
 
-All reviewers must abide by the [Code of Conduct](CODE_OF_CONDUCT.md) and are also protected by it. A reviewer should not tolerate poor behavior and is encouraged to report any behavior that violates the Code of Conduct. All of our values listed above are distilled from our Code of Conduct.
+All reviewers must abide by the [Code of Conduct](/CODE_OF_CONDUCT.md) and are also protected by it. A reviewer should not tolerate poor behavior and is encouraged to report any behavior that violates the Code of Conduct. All of our values listed above are distilled from our Code of Conduct.
 
 Below are concrete examples of how it applies to code review specifically:
 

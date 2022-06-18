@@ -32,7 +32,7 @@ You can check out our [Standard Go Project Layout](project-layout.md) document f
 
 Each plugin needs to satisfy all the interfaces defined in the [plugin engine](https://github.com/devstream-io/devstream/blob/main/internal/pkg/pluginengine/plugin.go#L10).
 
-At the moment, there are 4 interfaces, which might be subject to change. Currently, the three interfaces are:
+At the moment, there are 4 interfaces, which might be subject to change. Currently, the 4 interfaces are:
 
 - [`Create`](https://github.com/devstream-io/devstream/blob/main/internal/pkg/pluginengine/plugin.go#L12)
 - [`Read`](https://github.com/devstream-io/devstream/blob/main/internal/pkg/pluginengine/plugin.go#L13)
