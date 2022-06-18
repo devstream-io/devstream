@@ -1,0 +1,31 @@
+---
+# core config
+varFile: "" # If not empty, use the specified external variables config file
+toolFile: "" # If not empty, use the specified external tools config file
+state: # state config, backend can be local or s3
+  backend: local
+  options:
+    stateFile: devstream.state
+
+---
+
+tools:
+# name of the tool
+- name: gitlab-ce-docker
+  # id of the tool instance
+  instanceID: default
+  # format: name.instanceID; If specified, dtm will make sure the dependency is applied first before handling this tool.
+  dependsOn: [ ]
+  # options for the plugin
+  options:
+    # hostname for running docker
+    hostname: gitlab.devstream.io
+    # the absolute path where you store docker volumes of gitlab
+    gitlab_home: /srv/gitlab
+    # ssh port exposed in the host machine
+    ssh_port: 8122
+    # http port exposed in the host machine
+    http_port: 8180
+    # https port exposed in the host machine
+    # todo: support https, reference: https://docs.gitlab.com/omnibus/settings/nginx.html#enable-https
+    https_port: 8443
