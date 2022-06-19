@@ -23,25 +23,24 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, fmt.Errorf("opts are illegal")
 	}
 
-	// TODO(dtm): Add your logic here.
-
 	op := getDockerOperator(opts)
 
 	// 0. check if the volumes are the same
-	volumesBefore, err := op.ListContainerMounts(gitlabContainerName)
+	volumesDockerNow, err := op.ListContainerMounts(gitlabContainerName)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get container mounts: %v", err)
 	}
 
-	volumesCurrent := []string{
+	volumesFromOptions := []string{
 		filepath.Join(opts.GitLabHome, "config"),
 		filepath.Join(opts.GitLabHome, "data"),
 		filepath.Join(opts.GitLabHome, "logs"),
 	}
 
-	if ifVolumesDiffer(volumesBefore, volumesCurrent) {
-		log.Info("Your volumes previously were: %v", strings.Join(volumesBefore, " "))
-		return nil, fmt.Errorf("sorry, you can't change the volumes of the container once it's already been created")
+	if ifVolumesDiffer(volumesDockerNow, volumesFromOptions) {
+		log.Warnf("You changed volumes of the container or change the gitlab home directory")
+		log.Info("Your volumes of the current container were: %v", strings.Join(volumesDockerNow, " "))
+		return nil, fmt.Errorf("sorry, you can't change the gitlab_home of the container once it's already been created")
 	}
 
 	// 1. stop the container
@@ -63,7 +62,7 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, fmt.Errorf("failed to run container: %v", err)
 	}
 
-	return buildState(true, volumesBefore), nil
+	return buildState(true, volumesDockerNow), nil
 }
 
 func ifVolumesDiffer(volumesBefore, volumesCurrent []string) bool {

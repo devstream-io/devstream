@@ -1,5 +1,7 @@
 package gitlabcedocker
 
+import "strings"
+
 // TODO(dtm): Add your logic here.
 
 const gitlabImageName = "gitlab/gitlab-ce:rc"
@@ -33,6 +35,6 @@ func getDockerOperator(_ Options) dockerOperator {
 func buildState(containerRunning bool, volumes []string) map[string]interface{} {
 	return map[string]interface{}{
 		"containerRunning": containerRunning,
-		"volumes":          volumes,
+		"volumes":          strings.Join(volumes, ","),
 	}
 }

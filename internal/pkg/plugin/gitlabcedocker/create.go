@@ -21,7 +21,6 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, fmt.Errorf("opts are illegal")
 	}
 
-	// TODO(dtm): Add your logic here.
 	op := getDockerOperator(opts)
 
 	// 1. try to pull the image
