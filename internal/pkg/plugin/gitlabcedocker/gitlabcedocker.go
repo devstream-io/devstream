@@ -4,7 +4,10 @@ import "strings"
 
 // TODO(dtm): Add your logic here.
 
-const gitlabImageName = "gitlab/gitlab-ce:rc"
+const (
+	gitlabImageName = "gitlab/gitlab-ce:rc"
+	tcp             = "tcp"
+)
 
 var (
 	gitlabContainerName = "gitlab"
@@ -25,6 +28,9 @@ type dockerOperator interface {
 	RemoveContainer(container string) error
 
 	ListContainerMounts(container string) ([]string, error)
+
+	GetContainerHostname(container string) (string, error)
+	GetContainerPortBinding(container, containerPort, protocol string) (hostPort string, err error)
 }
 
 func getDockerOperator(_ Options) dockerOperator {
@@ -32,9 +38,22 @@ func getDockerOperator(_ Options) dockerOperator {
 	return &sshDockerOperator{}
 }
 
-func buildState(containerRunning bool, volumes []string) map[string]interface{} {
+type gitlabResource struct {
+	ContainerRunning bool
+	Volumes          []string
+	Hostname         string
+	SSHPort          string
+	HTTPPort         string
+	HTTPSPort        string
+}
+
+func (res *gitlabResource) toMap() map[string]interface{} {
 	return map[string]interface{}{
-		"containerRunning": containerRunning,
-		"volumes":          strings.Join(volumes, ","),
+		"containerRunning": res.ContainerRunning,
+		"volumes":          strings.Join(res.Volumes, ","),
+		"hostname":         res.Hostname,
+		"SSHPort":          res.SSHPort,
+		"HTTPPort":         res.HTTPPort,
+		"HTTPSPort":        res.HTTPSPort,
 	}
 }

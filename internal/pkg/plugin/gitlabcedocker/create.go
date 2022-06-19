@@ -2,6 +2,7 @@ package gitlabcedocker
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/mitchellh/mapstructure"
 
@@ -45,5 +46,14 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, fmt.Errorf("failed to get container mounts: %v", err)
 	}
 
-	return buildState(true, volumes), nil
+	resource := gitlabResource{
+		ContainerRunning: true,
+		Volumes:          volumes,
+		Hostname:         opts.Hostname,
+		SSHPort:          strconv.Itoa(int(opts.SSHPort)),
+		HTTPPort:         strconv.Itoa(int(opts.HTTPPort)),
+		HTTPSPort:        strconv.Itoa(int(opts.HTTPSPort)),
+	}
+
+	return resource.toMap(), nil
 }
