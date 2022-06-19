@@ -21,7 +21,8 @@ func (op *sshDockerOperator) IfImageExists(imageName string) bool {
 		return false
 	}
 
-	return strings.Contains(outputBuffer.String(), imageName)
+	// note: there should be image name with tag in the output
+	return strings.Contains(outputBuffer.String(), "gitlab/gitlab-ce")
 
 }
 
