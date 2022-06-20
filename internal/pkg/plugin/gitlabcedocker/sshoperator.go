@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
-	osUtil "github.com/devstream-io/devstream/pkg/util/os"
 )
 
 type sshDockerOperator struct{}
@@ -16,7 +15,7 @@ type sshDockerOperator struct{}
 func (op *sshDockerOperator) IfImageExists(imageName string) bool {
 	cmdString := fmt.Sprintf("docker image ls %v", imageName)
 	outputBuffer := &bytes.Buffer{}
-	err := osUtil.ExecInSystem(".", cmdString, outputBuffer, false)
+	err := ExecInSystem(".", cmdString, outputBuffer, false)
 	if err != nil {
 		return false
 	}
@@ -30,7 +29,7 @@ func (op *sshDockerOperator) IfImageExists(imageName string) bool {
 }
 
 func (op *sshDockerOperator) PullImage(imageName string) error {
-	err := osUtil.ExecInSystemWithParams(".", []string{"docker", "pull", imageName}, nil, true)
+	err := ExecInSystemWithParams(".", []string{"docker", "pull", imageName}, nil, true)
 
 	return err
 }
@@ -39,7 +38,7 @@ func (op *sshDockerOperator) RemoveImage(imageName string) error {
 	log.Infof("Removing image %v ...", imageName)
 
 	cmdString := fmt.Sprintf("docker rmi %s", imageName)
-	err := osUtil.ExecInSystem(".", cmdString, nil, true)
+	err := ExecInSystem(".", cmdString, nil, true)
 
 	return err
 }
@@ -47,7 +46,7 @@ func (op *sshDockerOperator) RemoveImage(imageName string) error {
 func (op *sshDockerOperator) IfContainerExists(containerName string) bool {
 	cmdString := fmt.Sprintf("docker inspect %s", containerName)
 	outputBuffer := &bytes.Buffer{}
-	err := osUtil.ExecInSystem(".", cmdString, outputBuffer, false)
+	err := ExecInSystem(".", cmdString, outputBuffer, false)
 	if err != nil {
 		return false
 	}
@@ -77,7 +76,7 @@ func (op *sshDockerOperator) RunContainer(options Options) error {
 	cmdString := BuildDockerRunCommand(options)
 	log.Debugf("Docker run command: %s", cmdString)
 	cmdStringOneline := strings.Replace(cmdString, "\\\n", " ", -1)
-	err := osUtil.ExecInSystem(".", cmdStringOneline, nil, true)
+	err := ExecInSystem(".", cmdStringOneline, nil, true)
 	if err != nil {
 		return fmt.Errorf("docker run failed: %v", err)
 	}
@@ -107,7 +106,7 @@ func (op *sshDockerOperator) StopContainer(containerName string) error {
 	log.Infof("Stopping container %v ...", containerName)
 
 	cmdString := fmt.Sprintf("docker stop %s", containerName)
-	err := osUtil.ExecInSystem(".", cmdString, nil, true)
+	err := ExecInSystem(".", cmdString, nil, true)
 
 	return err
 }
@@ -116,7 +115,7 @@ func (op *sshDockerOperator) RemoveContainer(containerName string) error {
 	log.Infof("Removing container %v ...", containerName)
 
 	cmdString := fmt.Sprintf("docker rm %s", containerName)
-	err := osUtil.ExecInSystem(".", cmdString, nil, true)
+	err := ExecInSystem(".", cmdString, nil, true)
 
 	return err
 }
@@ -125,7 +124,7 @@ func (op *sshDockerOperator) ListContainerMounts(containerName string) ([]string
 	cmdString := fmt.Sprintf(`docker inspect --format='{{range .Mounts}}{{.Source}}{{"\n"}}{{end}}' %s`, containerName)
 	outputBuffer := &bytes.Buffer{}
 
-	err := osUtil.ExecInSystem(".", cmdString, outputBuffer, false)
+	err := ExecInSystem(".", cmdString, outputBuffer, false)
 	if err != nil {
 		return nil, err
 	}
@@ -145,7 +144,7 @@ func (op *sshDockerOperator) GetContainerHostname(container string) (string, err
 	cmdString := fmt.Sprintf("docker inspect --format='{{.Config.Hostname}}' %s", container)
 	outputBuffer := &bytes.Buffer{}
 
-	err := osUtil.ExecInSystem(".", cmdString, outputBuffer, false)
+	err := ExecInSystem(".", cmdString, outputBuffer, false)
 	if err != nil {
 		return "", err
 	}
@@ -164,7 +163,7 @@ func (op *sshDockerOperator) GetContainerPortBinding(container, containerPort, p
 	format := "'{{range $p,$conf := .NetworkSettings.Ports}}{{$p}}->{{(index $conf 0).HostPort}}{{println}}{{end}}'"
 	cmdString := fmt.Sprintf("docker inspect --format=%s %s", format, container)
 	outputBuffer := &bytes.Buffer{}
-	err = osUtil.ExecInSystem(".", cmdString, outputBuffer, false)
+	err = ExecInSystem(".", cmdString, outputBuffer, false)
 	if err != nil {
 		return "", err
 	}
