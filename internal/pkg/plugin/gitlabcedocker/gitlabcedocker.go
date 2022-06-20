@@ -2,11 +2,12 @@ package gitlabcedocker
 
 import "strings"
 
-// TODO(dtm): Add your logic here.
-
 const (
+	// TODO expose image name to user to customize
+	// one who want to do this should pay attention to the comment in `./sshoperator.go/IfImageExists`
 	gitlabImageName = "gitlab/gitlab-ce:rc"
-	tcp             = "tcp"
+
+	tcp = "tcp"
 )
 
 var (

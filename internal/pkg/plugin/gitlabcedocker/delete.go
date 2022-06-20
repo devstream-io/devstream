@@ -24,7 +24,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 
 	op := getDockerOperator(opts)
 
-	// 1. stop the container if it exists
+	// 1. stop the container if it is running
 	if ok := op.IfContainerRunning(gitlabContainerName); ok {
 		if err := op.StopContainer(gitlabContainerName); err != nil {
 			log.Errorf("Failed to stop container: %v", err)

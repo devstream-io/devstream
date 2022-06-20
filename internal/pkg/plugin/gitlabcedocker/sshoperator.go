@@ -21,7 +21,10 @@ func (op *sshDockerOperator) IfImageExists(imageName string) bool {
 		return false
 	}
 
-	// note: there should be image name with tag in the output
+	// note: there should be image name without tag
+	// TODO: since the bare image name is hardcoded here,
+	// TODO: maybe we should add a function to extract the bare image name from the full imageName,
+	// TODO: such as: gitlab/gitlab-ce:rc -> gitlab/gitlab-ce.
 	return strings.Contains(outputBuffer.String(), "gitlab/gitlab-ce")
 
 }
