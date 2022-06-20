@@ -142,6 +142,8 @@ nav:
   - 'contributor_ladder.md'
   - 'contributor_ladder.zh.md'
   - Developer Guide:
+    - 'development/good-first-issues.md'
+    - 'development/good-first-issues.zh.md'
     - Core Concepts in Detail:
       - 'core-concepts/config.md'
       - 'core-concepts/config.zh.md'
