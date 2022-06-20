@@ -8,11 +8,11 @@ Run all unit tests:
 go test ./...
 ```
 
-### End-to-end tests
+### End-to-end Tests
 
 ##### 1. e2e test with Github action
 
-GitHub Actions will run e2e test automatically
+GitHub Actions will run e2e test automatically.
 
 ##### 2. e2e test locally
 
