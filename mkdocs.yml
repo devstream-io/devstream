@@ -43,6 +43,7 @@ extra:
       link: index.zh/
       lang: zh
 plugins:
+  - search:
   - i18n:
       languages:
         en: "English"
@@ -128,6 +129,7 @@ nav:
     - 'plugins/kube-prometheus.zh.md'
     - 'plugins/openldap.md'
     - 'plugins/openldap.zh.md'
+    - 'plugins/tekton.md'
     - 'plugins/trello.md'
     - 'plugins/trello.zh.md'
     - 'plugins/trello-github-integ.md'
