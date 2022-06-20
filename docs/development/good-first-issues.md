@@ -23,7 +23,7 @@ After a contributor has completed one (or two) "good first issue" items, it's re
 
 All of these make new contributors feel welcome and valued and assure them that they will have an extra level of help with their first contribution.
 
-_Please make sure that new contributors should not be left to find a reviewer, ping for reviews or bump, understand why the CLA/DCO check failed, identify that their build failed due to a flake, etc._
+_Please make sure that new contributors should not be left to find a reviewer, ping for reviews or bump, understand why the CLA([Contributor License Agreement](https://en.wikipedia.org/wiki/Contributor_License_Agreement))/DCO([Developer Certificate of Origin](https://developercertificate.org/))_ check failed, identify that their build failed due to a flake, etc._
 
 ## Criteria for "good first issue" Items
 
