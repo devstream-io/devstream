@@ -17,7 +17,7 @@ tools:
       language:
         name: go
         # version of the language
-        version: "1.17"
+        version: "1.18"
       # main branch of the repo (to which branch the plugin will submit the workflows)
       branch: main
       build:

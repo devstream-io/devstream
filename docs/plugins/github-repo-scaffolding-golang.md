@@ -65,7 +65,7 @@ tools:
     repo: ${{go-webapp-repo.github-repo-scaffolding-golang.outputs.repo}}
     language:
       name: go
-      version: "1.17"
+      version: "1.18"
     branch: main
     build:
       enable: True
