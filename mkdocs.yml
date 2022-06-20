@@ -172,6 +172,8 @@ nav:
     - 'development/commit-messages.zh.md'
     - 'development/lint.md'
     - 'development/lint.zh.md'
+    - 'development/mkdocs.md'
+    - 'development/mkdocs.zh.md'
     - 'development/reviewing.md'
     - 'development/reviewing.zh.md'
     - 'development/creating-a-plugin.md'
