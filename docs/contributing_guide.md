@@ -41,7 +41,7 @@ Absolutely everyone is welcome to come to any of our meetings. You never need an
 
 We have good first issues for new contributors and help wanted issues suitable for any contributor.
 
-- [good first issue](https://github.com/devstream-io/devstream/labels/good%20first%20issue) has extra information to help you make your first contribution. If you are new to DevStream (or even new to open-source,) this is a good place to get yourself started.
+- [good first issue](https://github.com/devstream-io/devstream/labels/good%20first%20issue) has extra information to help you make your first contribution. If you are new to DevStream (or even new to open-source,) this is a good place to get yourself started. For more information, see the [good first issues doc](./development/good-first-issues.md).
 - [help wanted](https://github.com/devstream-io/devstream/labels/help%20wanted) are issues suitable for someone who isn't a core maintainer and is good to move onto after your "good first issue."
 - Sometimes there won’t be any issues with these labels. That’s ok! There is likely still something for you to work on. If you want to contribute but you don’t know where to start or can't find a suitable issue, you can reach out to us on our [Slack channel](https://join.slack.com/t/devstream-io/shared_invite/zt-16tb0iwzr-krcFGYRN7~Vv1suGZjdv4w) and ask for an issue to work on.
 
