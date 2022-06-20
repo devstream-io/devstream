@@ -13,6 +13,7 @@
 
 ## 如何贡献
 我们欢迎各种贡献，包括但不限于：
+
 - 新功能（feature）
 - 代码构建、CI/CD
 - Bug 修复
@@ -80,9 +81,9 @@ DevStream 真诚地欢迎每一个人参与我们的会议，不需要被邀请�
 - TODO: 生成本地文档预览
 
 ## 代码提交署名（Sign Off）
-授权与认证（licensing) 对于开源项目非常重要，它确保了软件能基于作者提供的条款继续运作。我们需要您在贡献代码的时候署名您的提交，[Developer Certificate of Origin (DCO)](https://developercertificate.org/) 是一种认证您编写了此段代码，并表明您持有这段代码。
+授权与认证（licensing) 对于开源项目非常重要，它确保了软件能基于作者提供的条款继续运作。我们需要您在贡献代码的时候署名您的提交，[Developer Certificate of Origin (DCO)](https://developercertificate.org/) 是一种认证您编写了此段代码，并表明您持有这段代码的方式。
 
-您可以通过在提交信息（Git Commit Message）中附加这段信息。注意，您的署名必须用 Git 的用户名和邮箱对应。
+您可以通过在提交信息（Git Commit Message）中附加这段信息。注意，您的署名必须与 Git 的用户名和邮箱对应。
 
     This is my commit message
 
