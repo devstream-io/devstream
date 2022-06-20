@@ -2,44 +2,28 @@ package configloader
 
 import (
 	"fmt"
+	"github.com/devstream-io/devstream/pkg/util/validator"
 	"io/ioutil"
 
-	"gopkg.in/yaml.v3"
-	"k8s.io/apimachinery/pkg/util/validation"
-
 	"github.com/devstream-io/devstream/pkg/util/log"
+	"gopkg.in/yaml.v3"
 )
 
 // Tool is the struct for one section of the DevStream tool file (part of the config.)
 type Tool struct {
-	Name string `yaml:"name"`
+	Name string `yaml:"name" validate:"required"`
 	// RFC 1123 - DNS Subdomain Names style
 	// contain no more than 253 characters
 	// contain only lowercase alphanumeric characters, '-' or '.'
 	// start with an alphanumeric character
 	// end with an alphanumeric character
-	InstanceID string                 `yaml:"instanceID"`
+	InstanceID string                 `yaml:"instanceID" validate:"required,dns1123subdomain"`
 	DependsOn  []string               `yaml:"dependsOn"`
 	Options    map[string]interface{} `yaml:"options"`
 }
 
 func (t *Tool) Validate() []error {
-	errors := make([]error, 0)
-
-	if t.InstanceID == "" {
-		errors = append(errors, fmt.Errorf("instance id is empty"))
-	}
-
-	errs := validation.IsDNS1123Subdomain(t.InstanceID)
-	for _, e := range errs {
-		errors = append(errors, fmt.Errorf("instance id %s is invalid: %s", t.InstanceID, e))
-	}
-
-	if t.Name == "" {
-		errors = append(errors, fmt.Errorf("plugin name is empty"))
-	}
-
-	return errors
+	return validator.Struct(t)
 }
 
 func (t *Tool) DeepCopy() *Tool {
