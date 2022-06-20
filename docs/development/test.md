@@ -10,11 +10,11 @@ go test ./...
 
 ### End-to-end Tests
 
-##### 1. e2e test with Github action
+#### 1. e2e Test with Github Action
 
 GitHub Actions will run e2e test automatically.
 
-##### 2. e2e test locally
+#### 2. e2e Test Locally
 
 ```shell
 bash hack/e2e/e2e-run.sh
