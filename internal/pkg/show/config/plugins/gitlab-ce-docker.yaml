@@ -1,0 +1,24 @@
+tools:
+# name of the tool
+- name: gitlab-ce-docker
+  # id of the tool instance
+  instanceID: default
+  # format: name.instanceID; If specified, dtm will make sure the dependency is applied first before handling this tool.
+  dependsOn: [ ]
+  # options for the plugin
+  options:
+    # hostname for running docker
+    hostname: gitlab.devstream.io
+    # the directory where you store docker volumes of gitlab
+    # 1. it should be a absolute path
+    # 2. once the tool is applied, it can't be changed
+    gitlab_home: /srv/gitlab
+    # ssh port exposed in the host machine
+    ssh_port: 22
+    # http port exposed in the host machine
+    http_port: 80
+    # https port exposed in the host machine
+    # todo: support https, reference: https://docs.gitlab.com/omnibus/settings/nginx.html#enable-https
+    https_port: 443
+    # whether to delete the gitlab_home directory when the tool is removed
+    rm_data_after_delete: false
