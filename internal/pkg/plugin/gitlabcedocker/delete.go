@@ -39,9 +39,9 @@ func Delete(options map[string]interface{}) (bool, error) {
 	}
 
 	// 3. remove the image if it exists
-	if ok := op.IfImageExists(gitlabImageName); ok {
-		if err := op.RemoveImage(gitlabImageName); err != nil {
-			log.Errorf("failed to remove image %v: %v", gitlabImageName, err)
+	if ok := op.IfImageExists(gitlabImageNameWithTag); ok {
+		if err := op.RemoveImage(gitlabImageNameWithTag); err != nil {
+			log.Errorf("failed to remove image %v: %v", gitlabImageNameWithTag, err)
 		}
 	}
 
@@ -63,8 +63,8 @@ func Delete(options map[string]interface{}) (bool, error) {
 	}
 
 	// 2. check if the image is removed
-	if ok := op.IfImageExists(gitlabImageName); ok {
-		errs = append(errs, fmt.Errorf("failed to delete image %s", gitlabImageName))
+	if ok := op.IfImageExists(gitlabImageNameWithTag); ok {
+		errs = append(errs, fmt.Errorf("failed to delete image %s", gitlabImageNameWithTag))
 	}
 
 	// TODO: 3. check if data is removed successfully(if opts.RmDataAfterDelete is true)

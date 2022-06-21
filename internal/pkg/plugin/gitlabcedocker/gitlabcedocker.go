@@ -1,19 +1,21 @@
 package gitlabcedocker
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 const (
-	// TODO expose image name to user to customize
-	// one who want to do this should take a little look at the "to do" comment in `./sshoperator.go/IfImageExists`
-	// you don't need to change the code in `./sshoperator.go/IfImageExists`, they are two separate tasks
-	// this comment just tells you that your PR can only merged after that task is done
-	gitlabImageName = "gitlab/gitlab-ce:rc"
+	gitlabImageName = "gitlab/gitlab-ce"
+	// TODO expose image tag to user in config file to customize
+	gitlabImageTag = "rc"
 
 	tcp = "tcp"
 )
 
 var (
-	gitlabContainerName = "gitlab"
+	gitlabImageNameWithTag = fmt.Sprintf("%v:%v", gitlabImageName, gitlabImageTag)
+	gitlabContainerName    = "gitlab"
 )
 
 // dockerOperator is an interface for docker operations
