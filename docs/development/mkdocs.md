@@ -46,7 +46,29 @@ To create new documentation, do the following:
 
 - Create `doc_name.md` and `doc_name.zh.md` in the `/docs` folder. You can put them under a subfolder if necessary. Refer to the current directory structure and use your best judgment to decide the best place for that new doc.
 - Write the content of the doc. You can choose to write only the English doc or the Chinese doc; you don't have to (but it's highly recommended if you can) write documentation in both languages.
-- Update the `/mkdocs.yml` file, update the `nav:` section. It's the table of content of the whole doc website.
+- In most cases, you don't need to think about the navigation menu which is the table of content of the whole doc website. But If you need to customize the navigation menu, you can refer to [Setting up Navigation](#setting-up-navigation).
+
+## Setting up Navigation
+
+If you want to customize the navigation menu, you can update `nav:` section in `mkdocs.yaml`. We support wildcards and [subdirectory cross-link](https://oprypin.github.io/mkdocs-literate-nav/reference.html#subdirectory-cross-link). For example:
+
+```yaml
+nav:
+  - DTM Commands Explained in Depth:
+    - commands/autocomplete*.md
+    - commands/*.md
+  - Plugins:
+    - plugins/plugins-list*.md
+    - plugins/*.md
+  - Best Practices: best-practices/
+  - 'contributing_guide*.md'
+  - 'contributor_ladder*.md'
+```
+
+- Normally, 'contributing_guide*.md' will be expanded to 'contributing_guide.md' and 'contributing_guide.zh.md'
+- If you create documentation in the `commands/`, `plugins/`, and `best-practices/` directories, you will not need to update the `nav`.
+
+If you want to know more about the configuration of navigation, please refer to [Configure Pages and Navigation](https://www.mkdocs.org/user-guide/writing-your-docs/#configure-pages-and-navigation) and [Literate Nav Syntax](https://oprypin.github.io/mkdocs-literate-nav/)
 
 ## Review Your Change Locally
 
