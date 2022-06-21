@@ -124,3 +124,9 @@ We will regularly organize `DevStream Community Meeting`, please visit the [wiki
 - For Chinese users, the WeChat group QR code is as below:
 
 ![](docs/images/wechat-group-qr-code.png)
+
+## Code of Conduct
+
+[DevStream code of conduct](./CODE_OF_CONDUCT.md)
+
+As of Jun 2022, we joined CNCF sandbox. We also need to follow the [CNCF Community Code of Conduct](https://github.com/cncf/foundation/blob/main/code-of-conduct.md).

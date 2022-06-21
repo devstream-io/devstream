@@ -127,3 +127,9 @@ DevStream已经支持许多工具，而且还在不断增加。关于支持的�
 - 对于中国用户，微信群的二维码如下：
 
 ![](images/wechat-group-qr-code.png)
+
+## 行为守则
+
+[DevStream行为守则](./CODE_OF_CONDUCT.md)
+
+DevStream于2022年6月加入CNCF沙盒。我们也需要遵循[云原生计算基金会（CNCF）社区行为准则](https://github.com/cncf/foundation/blob/main/code-of-conduct-languages/zh.md).
