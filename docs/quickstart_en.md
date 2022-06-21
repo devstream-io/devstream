@@ -15,7 +15,7 @@ For Linux/Macos users:
 
 ## 2 Prepare a Config File
 
-> Before you start: for an example of DevStream config, see [examples/tools-quickstart.yaml](https://github.com/devstream-io/devstream/blob/main/examples/tools-quickstart.yaml).
+> Before you start: for an example of DevStream config, see [examples/tools-quickstart.yaml](https://raw.githubusercontent.com/devstream-io/devstream/release-0.6/examples/tools-quickstart.yaml).
 
 Download the [examples/quickstart.yaml](https://raw.githubusercontent.com/devstream-io/devstream/release-0.6/examples/quickstart.yaml), [examples/tools-quickstart.yaml](https://raw.githubusercontent.com/devstream-io/devstream/release-0.6/examples/tools-quickstart.yaml) and [examples/variables-quickstart.yaml](https://raw.githubusercontent.com/devstream-io/devstream/release-0.6/examples/variables-quickstart.yaml) to your working directory and rename `quickstart.yaml` to `config.yaml`:
 

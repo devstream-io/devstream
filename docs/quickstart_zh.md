@@ -12,7 +12,7 @@
 
 ## 2 准备一个配置文件
 
-> 开始之前：这是一个DevStream配置的例子：[examples/tools-quickstart.yaml](https://github.com/devstream-io/devstream/blob/main/examples/quickstart.yaml)。
+> 开始之前：这是一个DevStream配置的例子：[examples/tools-quickstart.yaml](https://raw.githubusercontent.com/devstream-io/devstream/release-0.6/examples/tools-quickstart.yaml)。
 
 将 [examples/quickstart.yaml](https://raw.githubusercontent.com/devstream-io/devstream/release-0.6/examples/quickstart.yaml), [examples/tools-quickstart.yaml](https://raw.githubusercontent.com/devstream-io/devstream/release-0.6/examples/tools-quickstart.yaml) 和 [examples/variables-quickstart.yaml](https://raw.githubusercontent.com/devstream-io/devstream/release-0.6/examples/variables-quickstart.yaml)文件下载到你到工作目录下，然后重命名`quickstart.yaml` 成 `config.yaml`：
 
