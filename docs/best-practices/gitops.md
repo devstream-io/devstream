@@ -32,7 +32,7 @@ Note: These dependencies are not consistent, such as when the repo operated by `
 
 We should use the `dependency` according to the actual usage situation.
 
-## Download DevStream (`dtm`)
+## 1. Download DevStream (`dtm`)
 
 Download the appropriate `dtm` version for your platform from [DevStream Releases](https://github.com/devstream-io/devstream/releases).
 
@@ -40,7 +40,7 @@ Download the appropriate `dtm` version for your platform from [DevStream Release
 
 > Once downloaded, you can run the binary from anywhere. Ideally, you want to put it in a place that is in your PATH (e.g., `/usr/local/bin`).
 
-## Prepare the Config File
+## 2. Prepare the Config File
 
 Download the `gitops.yaml` to your working directory:
 
