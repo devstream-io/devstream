@@ -4,7 +4,9 @@ import "strings"
 
 const (
 	// TODO expose image name to user to customize
-	// one who want to do this should pay attention to the comment in `./sshoperator.go/IfImageExists`
+	// one who want to do this should take a little look at the "to do" comment in `./sshoperator.go/IfImageExists`
+	// you don't need to change the code in `./sshoperator.go/IfImageExists`, they are two separate tasks
+	// this comment just tells you that your PR can only merged after that task is done
 	gitlabImageName = "gitlab/gitlab-ce:rc"
 
 	tcp = "tcp"
