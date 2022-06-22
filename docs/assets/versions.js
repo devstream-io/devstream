@@ -46,13 +46,13 @@ if (rtdData.version === "latest") {
     document.querySelector('style').textContent +=
     "@media screen and (min-width: 60em){ .md-sidebar--secondary { height: 0;  top:"+ (bannerHeight+headerHeight)+"px !important; }}"
 }
-else if (rtdData.version !== "stable") {
-    document.querySelector("div[data-md-component=announce]").innerHTML = "<div id='announce-msg'>You are viewing the docs for a previous version of DevStream, <a href='https://docs.devstream.io/en/stable/'>click here to go to the latest stable version.</a></div>"
-    var bannerHeight = document.getElementById('announce-msg').offsetHeight + margin
-    document.querySelector("header.md-header").style.top = bannerHeight +"px";   
-    document.querySelector('style').textContent +=
-    "@media screen and (min-width: 76.25em){ .md-sidebar { height: 0;  top:"+ (bannerHeight+headerHeight)+"px !important; }}"
-    document.querySelector('style').textContent +=
-    "@media screen and (min-width: 60em){ .md-sidebar--secondary { height: 0;  top:"+ (bannerHeight+headerHeight)+"px !important; }}"
-}
+// else if (rtdData.version !== "stable") {
+//     document.querySelector("div[data-md-component=announce]").innerHTML = "<div id='announce-msg'>You are viewing the docs for a previous version of DevStream, <a href='https://docs.devstream.io/en/stable/'>click here to go to the latest stable version.</a></div>"
+//     var bannerHeight = document.getElementById('announce-msg').offsetHeight + margin
+//     document.querySelector("header.md-header").style.top = bannerHeight +"px";   
+//     document.querySelector('style').textContent +=
+//     "@media screen and (min-width: 76.25em){ .md-sidebar { height: 0;  top:"+ (bannerHeight+headerHeight)+"px !important; }}"
+//     document.querySelector('style').textContent +=
+//     "@media screen and (min-width: 60em){ .md-sidebar--secondary { height: 0;  top:"+ (bannerHeight+headerHeight)+"px !important; }}"
+// }
 });
