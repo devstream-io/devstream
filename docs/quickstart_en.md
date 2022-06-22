@@ -25,7 +25,7 @@ curl -o tools-quickstart.yaml https://raw.githubusercontent.com/devstream-io/dev
 curl -o variables-quickstart.yaml https://raw.githubusercontent.com/devstream-io/devstream/release-0.6/examples/variables-quickstart.yaml
 ```
 
-Remember to open the varFile and modify all values to your own. Pay attention to the meaning of each item to ensure that it is what you want. For other plugins, checkout the "Plugins" section in our [doc](https://docs.devstream.io) for detailed usage.
+Remember to open the varFile(`variables-quickstart.yaml`) and modify all values to your own. Pay attention to the meaning of each item to ensure that it is what you want. For other plugins, checkout the "Plugins" section in our [doc](https://docs.devstream.io) for detailed usage.
 
 > This config file uses two plugins, one will create a GitHub repository and bootstrap it into a Golang web app, and the other will create GitHub Actions workflow for it.
 
@@ -68,7 +68,7 @@ Note: if your dtm binary's MD5 sum doesn't match the MD5 sum from our release pa
 To apply the config, run:
 
 ```shell
-./dtm apply -f YOUR_CONFIG_FILE.yaml
+dtm apply -f YOUR_CONFIG_FILE.yaml
 ```
 
 If you don't specify the config file with the "-f" parameter, it will try to use the default value which is "config.yaml" from the current directory.
@@ -78,13 +78,13 @@ _`dtm` will compare the config, the state, and the resources to decide whether a
 The command above will ask you for confirmation before actually executing the changes. To apply without confirmation (like `apt-get -y update`), run:
 
 ```shell
-./dtm -y apply -f YOUR_CONFIG_FILE.yaml
+dtm -y apply -f YOUR_CONFIG_FILE.yaml
 ```
 
 To delete everything defined in the config, run:
 
 ```shell
-./dtm delete -f YOUR_CONFIG_FILE.yaml
+dtm delete -f YOUR_CONFIG_FILE.yaml
 ```
 
 _Note that this deletes everything defined in the config. If some config is deleted after apply (state has it but config not), `dtm delete` won't delete it. It differs from `dtm destroy`._
@@ -92,24 +92,24 @@ _Note that this deletes everything defined in the config. If some config is dele
 Similarly, to delete without confirmation:
 
 ```shell
-./dtm -y delete -f YOUR_CONFIG_FILE.yaml
+dtm -y delete -f YOUR_CONFIG_FILE.yaml
 ```
 To delete everything defined in the config, regardless of the state:
 
 ```shell
-./dtm delete --force -f YOUR_CONFIG_FILE.yaml
+dtm delete --force -f YOUR_CONFIG_FILE.yaml
 ```
 
 To verify, run:
 
 ```shell
-./dtm verify -f YOUR_CONFIG_FILE.yaml
+dtm verify -f YOUR_CONFIG_FILE.yaml
 ```
 
 To destroy everything, run:
 
 ```shell
-./dtm destroy
+dtm destroy
 ```
 
 _`dtm` will read the state, then determine which tools are installed, and then remove those tools. It's same as `dtm apply -f empty.yaml` (empty.yaml is an empty config file)._

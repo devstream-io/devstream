@@ -8,7 +8,7 @@ For Chinese readers, watch this one instead:
 
 [https://www.bilibili.com/video/BV1W3411P7oW/](https://www.bilibili.com/video/BV1W3411P7oW/)
 
-## Plugins needed
+## 0. Plugins needed
 
 1. [github-repo-scaffolding-golang](../plugins/github-repo-scaffolding-golang)
 2. [jira-github](../plugins/jira-github-integ)
@@ -26,7 +26,7 @@ Note: These dependencies are not consistent, such as when the repo operated by `
 
 We should use the `dependency` according to the actual usage situation.
 
-## Download DevStream (`dtm`)
+## 1. Download DevStream (`dtm`)
 
 Download the appropriate `dtm` version for your platform from [DevStream Releases](https://github.com/devstream-io/devstream/releases).
 
@@ -34,7 +34,7 @@ Download the appropriate `dtm` version for your platform from [DevStream Release
 
 > Once downloaded, you can run the binary from anywhere. Ideally, you want to put it in a place that is in your PATH (e.g., `/usr/local/bin`).
 
-## Prepare the Config File
+## 2. Prepare the Config File
 
 Download the `gitops.yaml`, `tools-gitops.yaml` and `variables-gitops.yaml` to your working directory:
 
@@ -71,8 +71,8 @@ export DOCKERHUB_TOKEN="YOUR_DOCKERHUB_TOKEN_HERE"
 
 If you don't know how to create these three tokens, check out:
 
-- GITHUB_TOKEN: [Manage API tokens for your Atlassian account](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/)
-- JIRA_API_TOKEN: [Creating a personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+- GITHUB_TOKEN: [Creating a personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+- JIRA_API_TOKEN: [Manage API tokens for your Atlassian account](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/)
 - DOCKERHUB_TOKEN: [Manage access tokens](https://docs.docker.com/docker-hub/access-tokens/)
 
 ## 3. Initialize
