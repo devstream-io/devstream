@@ -12,20 +12,28 @@ import (
 
 type sshDockerOperator struct{}
 
-func (op *sshDockerOperator) IfImageExists(imageName string) bool {
-	cmdString := fmt.Sprintf("docker image ls %v", imageName)
+func (op *sshDockerOperator) IfImageExists(imageNameWithTag string) bool {
+	// eg. docker image ls gitlab/gitlab-ce:rc
+	cmdString := fmt.Sprintf("docker image ls %v", imageNameWithTag)
+	// output: eg.
+	// REPOSITORY         TAG       IMAGE ID       CREATED      SIZE
+	// gitlab/gitlab-ce   rc        a8543d702e39   4 days ago   2.49GB
 	outputBuffer := &bytes.Buffer{}
 	err := ExecInSystem(".", cmdString, outputBuffer, false)
 	if err != nil {
 		return false
 	}
+	// eg. gitlab/gitlab-ce
+	imageNameWithoutTag := extractImageName(imageNameWithTag)
 
-	// note: there should be image name without tag
-	// TODO: since the bare image name is hardcoded here,
-	// TODO: maybe we should add a function to extract the bare image name from the full imageName,
-	// TODO: such as: gitlab/gitlab-ce:rc -> gitlab/gitlab-ce.
-	return strings.Contains(outputBuffer.String(), "gitlab/gitlab-ce")
+	return strings.Contains(outputBuffer.String(), imageNameWithoutTag)
 
+}
+
+func extractImageName(imageNameWithTag string) string {
+	// the imageNameWithTag is in the format of "registry/image:tag"
+	// we only want to return the image name "registry/image"
+	return strings.Split(imageNameWithTag, ":")[0]
 }
 
 func (op *sshDockerOperator) PullImage(imageName string) error {
@@ -98,7 +106,7 @@ func BuildDockerRunCommand(options Options) string {
 	%s
 	`
 	cmdString := fmt.Sprintf(cmdTemplate, options.Hostname, options.HTTPSPort,
-		options.HTTPPort, options.SSHPort, gitlabContainerName, options.GitLabHome, gitlabImageName)
+		options.HTTPPort, options.SSHPort, gitlabContainerName, options.GitLabHome, gitlabImageNameWithTag)
 	return cmdString
 }
 

@@ -39,16 +39,14 @@ func Delete(options map[string]interface{}) (bool, error) {
 	}
 
 	// 3. remove the image if it exists
-	if ok := op.IfImageExists(gitlabImageName); ok {
-		if err := op.RemoveImage(gitlabImageName); err != nil {
-			log.Errorf("failed to remove image %v: %v", gitlabImageName, err)
+	if ok := op.IfImageExists(gitlabImageNameWithTag); ok {
+		if err := op.RemoveImage(gitlabImageNameWithTag); err != nil {
+			log.Errorf("failed to remove image %v: %v", gitlabImageNameWithTag, err)
 		}
 	}
 
 	// 4. remove the volume if it exists
 	if opts.RmDataAfterDelete {
-		// TODO: read user input to ask if the user really want to remove the data
-		// you can use the /internal/pkg/pluginengine/helper.go/readUserInput function
 		if err := os.RemoveAll(opts.GitLabHome); err != nil {
 			log.Errorf("failed to remove data %v: %v", opts.GitLabHome, err)
 		}
@@ -56,22 +54,23 @@ func Delete(options map[string]interface{}) (bool, error) {
 
 	var errs []error
 
-	// judge if the deletion is successful by checking if the container is running
+	// 1. check if the container is stopped and deleted
 	if ok := op.IfContainerRunning(gitlabContainerName); ok {
 		errs = append(errs, fmt.Errorf("failed to delete/stop container %s", gitlabContainerName))
 	}
-
-	if ok := op.IfImageExists(gitlabImageName); ok {
-		errs = append(errs, fmt.Errorf("failed to delete image %s", gitlabImageName))
-	}
-
 	if ok := op.IfContainerExists(gitlabContainerName); ok {
 		errs = append(errs, fmt.Errorf("failed to delete container %s", gitlabContainerName))
 	}
 
-	// TODO: check if data is removed successfully(if opts.RmDataAfterDelete is true)
-	// this is related to "read user input to ask if the user really want to remove the data"
+	// 2. check if the image is removed
+	if ok := op.IfImageExists(gitlabImageNameWithTag); ok {
+		errs = append(errs, fmt.Errorf("failed to delete image %s", gitlabImageNameWithTag))
+	}
 
+	// TODO: 3. check if data is removed successfully(if opts.RmDataAfterDelete is true)
+	// note: the data is defined by opts.GitLabHome
+
+	// splice the errors
 	if len(errs) != 0 {
 		errsString := ""
 		for _, e := range errs {
