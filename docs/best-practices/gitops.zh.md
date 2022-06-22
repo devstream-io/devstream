@@ -22,7 +22,7 @@
 - `githubactions-golang` -> `github-repo-scaffolding-golang`
 - `argocdapp` -> `argocd` 和 `github-repo-scaffolding-golang`
 
-**注意**：这些依赖并不一致，比如当jira-github和github-repo-scaffolding-golang操作的repo不一样时，依赖就消失了。
+**注意**：这些依赖并不一致，比如当jira-github和github-repo-scaffolding-golang操作的repo不一样时，这两个插件彼此之间的依赖就消失了。
 
 我们应该根据实际的使用场景来使用`denpendency`。
 
