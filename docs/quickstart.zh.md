@@ -18,7 +18,7 @@
 将 [examples/quickstart.yaml](https://raw.githubusercontent.com/devstream-io/devstream/main/examples/quickstart.yaml) 文件下载到你到工作目录下：
 
 ```shell
-curl -o quickstart.yaml https://raw.githubusercontent.com/devstream-io/devstream/main/examples/quickstart.yaml
+curl -o quickstart.yaml https://raw.githubusercontent.com/devstream-io/devstream/release-0.7/examples/quickstart.yaml
 ```
 
 然后相应的修改配置文件中的内容。
