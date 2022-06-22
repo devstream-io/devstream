@@ -1,12 +1,10 @@
 # GitOps 工具链
 
-你可以参考以下视频demo来快速熟悉GitOps工具链：
+请参考视频demo来快速熟悉用DevStream来实施GitOps工具链的部署和整合：
 - YouTube
 <iframe width="100%" height="500" src="https://www.youtube.com/embed/q7TK3vFr1kg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-<!-- [![image](https://user-images.githubusercontent.com/41871212/174718332-03c448a8-0e6d-439f-b769-cd762b4272df.png)](https://www.youtube.com/watch?v=q7TK3vFr1kg) -->
 - 哔哩哔哩
 <iframe src="//player.bilibili.com/player.html?aid=426762434&bvid=BV1W3411P7oW&cid=728576152&high_quality=1&danmaku=0" allowfullscreen="allowfullscreen" width="100%" height="500" scrolling="no" frameborder="0" sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts"></iframe>
-<!-- [![image](https://user-images.githubusercontent.com/41871212/174718740-65570217-830d-4b03-b8c9-6ea82bf6ad00.png)](https://www.bilibili.com/video/BV1W3411P7oW/) -->
 
 ## 所需插件
 
@@ -16,25 +14,23 @@
 4. [argocd](../plugins/argocd.md)
 5. [argocdapp](../plugins/argocdapp.md)
 
-这些插件的依赖关系如下（`a -> b`意味着`a依赖于b`）：
+这些插件的依赖关系如下（`a -> b`意味着`a依赖b`）：
 
 - `jira-github` -> `github-repo-scaffolding-golang`
 - `githubactions-golang` -> `github-repo-scaffolding-golang`
 - `argocdapp` -> `argocd` 和 `github-repo-scaffolding-golang`
 
-**注意**：这些依赖并不一致，比如当jira-github和github-repo-scaffolding-golang操作的repo不一样时，这两个插件彼此之间的依赖就消失了。
+**注意**：依赖并不是必须指定的，我们可以用依赖确保某个工具可以先于另外一个工具安装。我们应该根据实际的使用场景来使用`dependsOn`。
 
-我们应该根据实际的使用场景来使用`denpendency`。
+## 1 下载DevStream（`dtm`）
 
-## 1. 下载DevStream（`dtm`）
+在[DevStream Releases](https://github.com/devstream-io/devstream/releases)页面下载适合你操作系统和CPU架构的`dtm`。
 
-根据你的平台，从[DevStream Releases](https://github.com/devstream-io/devstream/releases)中下载合适版本的`dtm`。
+> 将二进制文件改名为`dtm`，以便易于使用。例如，执行：`mv dtm-drawin-arm64 dtm`。
 
-> 记得将二进制文件改名为`dtm`以便易于使用。例如`mv dtm-drawin-arm64 dtm`。
+> 下载之后，你可以在任意地方执行这个二进制文件。你可以将它加入到你的PATH中（例如`/usr/local/bin`）。
 
-> 下载之后，你可以在任意地方运行这个二进制文件。理想情况下，你可以将它加入到你的PATH中（例如`/usr/local/bin`）。
-
-## 2. 准备配置文件
+## 2 准备配置文件
 
 将`gitops.yaml`下载到你的工作目录下：
 
@@ -44,7 +40,7 @@ curl -o gitops.yaml https://raw.githubusercontent.com/devstream-io/devstream/mai
 
 然后对`gitops.yaml`文件做相应的修改。
 
-对于我个人而言我可以将变量进行如下设定：
+配置文件中用到的变量的解释和示例值如下：
 
 | Variable                       | Example           | Note                                                         |
 | ------------------------------ | ----------------- | ------------------------------------------------------------ |
@@ -58,7 +54,7 @@ curl -o gitops.yaml https://raw.githubusercontent.com/devstream-io/devstream/mai
 | argocdNameSpace                | argocd            | ArgoCD用的namespace |
 | argocdDeployTimeout            | 10m               | ArgoCD部署的timeout时长 |
 
-这些插件需要设定一些环境变量才能工作：
+这些插件需要设定一下环境变量：
 
 ```bash
 export GITHUB_TOKEN="YOUR_GITHUB_TOKEN_HERE"
@@ -66,14 +62,14 @@ export JIRA_API_TOKEN="YOUR_JIRA_API_TOKEN_HERE"
 export DOCKERHUB_TOKEN="YOUR_DOCKERHUB_TOKEN_HERE"
 ```
 
-如果你不知道如何创建这三个token，参考以下链接：
+如果你不知道如何获取以上环境变量的值，请参考以下链接（英文）：
 
 - GITHUB_TOKEN: [Manage API tokens for your Atlassian account](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
 - JIRA_API_TOKEN: [Creating a personal access token](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/)
 - DOCKERHUB_TOKEN: [Manage access tokens](https://docs.docker.com/docker-hub/access-tokens/)
 
 
-## 3. 初始化
+## 3 初始化
 
 执行：
 
@@ -81,7 +77,7 @@ export DOCKERHUB_TOKEN="YOUR_DOCKERHUB_TOKEN_HERE"
 dtm init -f gitops.yaml
 ```
 
-## 4. Apply
+## 4 Apply
 
 执行：
 
@@ -89,7 +85,7 @@ dtm init -f gitops.yaml
 dtm apply -f gitops.yaml
 ```
 
-并且确认继续，然后你就能看到类似的输出结果：
+并且确认继续，然后你就能看到类似如下的输出：
 
 ```
 ...
@@ -97,19 +93,19 @@ dtm apply -f gitops.yaml
 2022-03-11 13:36:11 ✔ [SUCCESS]  Apply finished.
 ```
 
-## 5. 检查结果
+## 5 检查结果
 
 我们接着来看`apply`命令的结果。
 
 ### 5.1 仓库结构
 
-- 我们得到的仓库结构看起来像这样：
+- 我们得到的仓库结构看起来如下：
 
 ![](a.png)
 
 ### 5.2 Jira-Github 集成
 
-- Jira和Github如何集成呢？让我们新创建一个issue：
+- 测试Jira和Github之间的整合，让我们新创建一个issue：
 
 ![](b.png)
 
@@ -141,7 +137,7 @@ dtm apply -f gitops.yaml
 
 ### 5.4 ArgoCD部署
 
-- 当然，ArgoCD必须事先完成安装
+- ArgoCD已经被装好了：
 
 ![](h.png)
 
@@ -151,7 +147,7 @@ dtm apply -f gitops.yaml
 
 ![](i.png)
 
-## 6. 清理
+## 6 清理
 
 执行：
 
