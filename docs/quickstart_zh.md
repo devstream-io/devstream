@@ -22,7 +22,7 @@ curl -o tools-quickstart.yaml https://raw.githubusercontent.com/devstream-io/dev
 curl -o variables-quickstart.yaml https://raw.githubusercontent.com/devstream-io/devstream/release-0.6/examples/variables-quickstart.yaml
 ```
 
-记得打开varFile，把里面所有的值修改成你自己的。注意每一项的含义，并确保它是你要的。对于其他插件，请查看我们的 [文档](https://docs.devstream.io) 中的"插件"部分，以了解详细用法。
+记得打开varFile(`variables-quickstart.yaml`)，把里面所有的值修改成你自己的。注意每一项的含义，并确保它是你要的。对于其他插件，请查看我们的 [文档](https://docs.devstream.io) 中的"插件"部分，以了解详细用法。
 
 > 这个配置文件会使用两个插件，一个用来创建 GitHub 项目，而且初始化成一个 Golang 的 web 应用结构。接着另外一个插件会给这个项目创建对应的 GitHub Actions 工作流。
 
@@ -66,7 +66,7 @@ dtm init -f config.yaml
 如果你需要应用配置，请运行：
 
 ```shell
-./dtm apply -f YOUR_CONFIG_FILE.yaml
+dtm apply -f YOUR_CONFIG_FILE.yaml
 ```
 
 如果你没有用` -f `参数指定配置文件，它将尝试使用默认值，即当前目录下的 `config.yaml` 。
@@ -76,35 +76,35 @@ dtm init -f config.yaml
 上面的命令在实际执行改变之前会要求你确认。如果不需要确认就应用 `Config`（就像 `apt-get -y update` ），请运行：
 
 ```shell
-./dtm -y apply -f YOUR_CONFIG_FILE.yaml
+dtm -y apply -f YOUR_CONFIG_FILE.yaml
 ```
 
 要删除 `Config` 中定义的所有内容，请运行:
 
 ```shell
-./dtm delete -f YOUR_CONFIG_FILE.yaml
+dtm delete -f YOUR_CONFIG_FILE.yaml
 ```
 
 注意，这将删除 `Config` 中定义的所有内容。如果某些 `Config` 在应用后被删除（`State` 有，但 `Config` 没有），`dtm delete`不会删除它，这与`dtm destroy`不同。
 
 同样的，如果不需要确认就删除内容，请运行：
 ```shell
-./dtm -y delete -f YOUR_CONFIG_FILE.yaml
+dtm -y delete -f YOUR_CONFIG_FILE.yaml
 ```
 
 要删除 `Config` 中定义的所有内容，且无论 `State` 是什么：
 ```shell
-./dtm delete --force -f YOUR_CONFIG_FILE.yaml
+dtm delete --force -f YOUR_CONFIG_FILE.yaml
 ```
 
 验证以上命令已正确执行，请运行：
 ```shell
-./dtm verify -f YOUR_CONFIG_FILE.yaml
+dtm verify -f YOUR_CONFIG_FILE.yaml
 ```
 
 销毁所有内容，请运行：
 ```shell
-./dtm destroy
+dtm destroy
 ```
 
 `dtm`将读取 `State`，然后确定哪些 `Tool` 应被安装，然后删除这些 `Tool`。这与`dtm apply -f empty.yaml`相同（ `empty.yaml` 是一个空的配置文件）。
