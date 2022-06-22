@@ -79,7 +79,6 @@ plugins:
 nav:
   - Overview: 'https://docs.devstream.io'
   - 'understanding_the_basics*.md'
-  - 'core_concepts*.md'
   - 'quickstart*.md'
   - DTM Commands Explained in Depth:
     - commands/autocomplete*.md
