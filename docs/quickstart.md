@@ -21,7 +21,7 @@ Remember to open this configuration file, modify all FULL_UPPER_CASE_STRINGS (li
 Download the [examples/quickstart.yaml](https://raw.githubusercontent.com/devstream-io/devstream/main/examples/quickstart.yaml) to your working directory:
 
 ```shell
-curl -o quickstart.yaml https://raw.githubusercontent.com/devstream-io/devstream/main/examples/quickstart.yaml
+curl -o quickstart.yaml https://raw.githubusercontent.com/devstream-io/devstream/release-0.7/examples/quickstart.yaml
 ```
 
 Then modify the file accordingly.

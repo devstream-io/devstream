@@ -43,7 +43,7 @@ Download the appropriate `dtm` version for your platform from [DevStream Release
 Download the `gitops.yaml` to your working directory:
 
 ```bash
-curl -o gitops.yaml https://raw.githubusercontent.com/devstream-io/devstream/main/examples/gitops.yaml
+curl -o gitops.yaml https://raw.githubusercontent.com/devstream-io/devstream/release-0.7/examples/gitops.yaml
 ```
 
 Then modify the `gitops.yaml` file accordingly.

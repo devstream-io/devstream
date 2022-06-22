@@ -35,7 +35,7 @@
 将`gitops.yaml`下载到你的工作目录下：
 
 ```shell
-curl -o gitops.yaml https://raw.githubusercontent.com/devstream-io/devstream/main/examples/gitops.yaml
+curl -o gitops.yaml https://raw.githubusercontent.com/devstream-io/devstream/release-0.7/examples/gitops.yaml
 ```
 
 然后对`gitops.yaml`文件做相应的修改。
