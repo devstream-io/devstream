@@ -20,18 +20,28 @@ The architecture documentation explains how in general DevStream works. If you h
 
 DevStream defines your DevOps toolchain in config files.
 
-The major part of the config file is definition of your DevOps _Tools_.
+We have three config files:
 
-Each _Tool_ has its name, instanceID (unique identifier), and options for that tool.
+- main config file
+- variable config file
+- tool config file
 
-Each _Tool_ can also have its dependencies, and can refer to other tool's output as values of its own options.
+The main config file contains:
+
+- `varFile`: the file path for the var file
+- `toolFile`: the file path for the tool file
+- `state`: settings related to the state. For more information, see [here](./stateconfig.md).
+
+The variable config file is a YAML file containing keys and values, which can be used in the tool config file.
+
+The tool config file a list of _Tools_, each containing its name, instanceID (unique identifier), and options for that tool.
+
+_Note: you can put multiple YAML files into the same one with three dashes (`---`) separating different files. Read more on this [here](https://stackoverflow.com/questions/50788277/why-3-dashes-hyphen-in-yaml-file) and [here](https://www.javatpoint.com/yaml-structure)._
 
 ### 2. Tool
 
-//TODO(daniel-hutao): @IronCore Please help to update the descriptions below.
-
-- One of the major part of the _Config_ is a list of tools, defined in [here](https://github.com/devstream-io/devstream/blob/main/internal/pkg/configloader/config.go#L23).
-- Each _Tool_ has its Name, InstanceID, and Options, as defined [here](https://github.com/devstream-io/devstream/blob/main/internal/pkg/configloader/config.go#L40).
+- Each _Tool_ corresponds to a plugin, which can either be used to install, configure, or integrate some DevOps tools.
+- Each _Tool_ has its Name, InstanceID, and Options, as defined [here](https://github.com/devstream-io/devstream/blob/main/internal/pkg/configloader/toolconfig.go#L13).
 - Each _Tool_ can have its dependencies, which are specified by the `dependsOn` keyword.
 
 The dependency `dependsOn` is an array of strings, with each element being a dependency. Each dependency is named in the format of "TOOL_NAME.INSTANCE_ID". 
