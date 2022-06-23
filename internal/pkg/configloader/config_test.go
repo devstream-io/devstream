@@ -24,8 +24,8 @@ var _ = Describe("Config", func() {
 			})
 		})
 		Context("when the Yaml parses fails", func() {
-			Specify("Yaml parses fails", func() {
-				Expect(err).ShouldNot(BeNil())
+			It("should not error", func() {
+				Expect(err).NotTo(HaveOccurred())
 			})
 		})
 	})
