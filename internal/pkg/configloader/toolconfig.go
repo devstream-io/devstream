@@ -2,11 +2,13 @@ package configloader
 
 import (
 	"fmt"
-	"github.com/devstream-io/devstream/pkg/util/validator"
 	"io/ioutil"
 
-	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/validator"
+
 	"gopkg.in/yaml.v3"
+
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 // Tool is the struct for one section of the DevStream tool file (part of the config.)
