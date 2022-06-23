@@ -6,4 +6,7 @@ var (
 	continueDirectly bool
 )
 
-const configFlagName = "config-file"
+const (
+	configFlagName    = "config-file"
+	pluginDirFlagName = "plugin-dir"
+)

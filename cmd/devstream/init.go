@@ -35,7 +35,8 @@ func initCMDFunc(cmd *cobra.Command, args []string) {
 
 func init() {
 	initCMD.Flags().StringVarP(&configFile, configFlagName, "f", "config.yaml", "config file")
-	initCMD.Flags().StringVarP(&pluginDir, "plugin-dir", "d", pluginengine.DefaultPluginDir, "plugins directory")
+	initCMD.Flags().StringVarP(&pluginDir, pluginDirFlagName, "d", pluginengine.DefaultPluginDir, "plugins directory")
 
 	completion.FlagFilenameCompletion(initCMD, configFlagName)
+	completion.FlagDirnameCompletion(initCMD, pluginDirFlagName)
 }

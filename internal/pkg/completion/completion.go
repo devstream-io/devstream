@@ -22,8 +22,16 @@ func FlagPluginsCompletion(cmd *cobra.Command, flag string) {
 
 func FlagFilenameCompletion(cmd *cobra.Command, flagName string) {
 
-	// Ref: https://github.com/spf13/cobra/blob/d8184d32696bee36f682bcb3ace5642af54cd7ad/shell_completions.md#specify-valid-filename-extensions-for-flags-that-take-a-filename
+	// Ref: https://github.com/spf13/cobra/blob/master/shell_completions.md#specify-valid-filename-extensions-for-flags-that-take-a-filename
 	if err := cmd.MarkFlagFilename(flagName, "yaml", "yml"); err != nil {
+		log.Warn(err)
+	}
+}
+
+func FlagDirnameCompletion(cmd *cobra.Command, flagName string) {
+
+	// Ref: https://github.com/spf13/cobra/blob/master/shell_completions.md#limit-flag-completions-to-directory-names
+	if err := cmd.MarkFlagDirname(flagName); err != nil {
 		log.Warn(err)
 	}
 }
