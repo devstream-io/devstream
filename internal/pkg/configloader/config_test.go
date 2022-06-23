@@ -10,7 +10,7 @@ import (
 var _ = Describe("Config", func() {
 	Describe("LoadConfig yaml", func() {
 		configStateObj, err := configloader.LoadConfig("../../../examples/quickstart.yaml")
-		Context("when  sthe Yaml parses successfully", func() {
+		Context("when the Yaml parses successfully", func() {
 			Specify("should state filed correctly", func() {
 				Expect(configStateObj.State.Backend).To(Or(Equal("local"), Equal("s3")))
 				Expect(configStateObj.State.Options.StateFile).To(Equal("devstream.state"))
