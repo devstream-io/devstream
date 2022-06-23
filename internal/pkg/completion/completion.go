@@ -20,10 +20,10 @@ func FlagPluginsCompletion(cmd *cobra.Command, flag string) {
 	}
 }
 
-func FlagConfigFileCompletion(cmd *cobra.Command) {
-	validConfigFilenames := []string{"yaml"}
+func FlagFilenameCompletion(cmd *cobra.Command, flagName string) {
 
-	if err := cmd.Flags().SetAnnotation("config-file", cobra.BashCompFilenameExt, validConfigFilenames); err != nil {
+	// Ref: https://github.com/spf13/cobra/blob/d8184d32696bee36f682bcb3ace5642af54cd7ad/shell_completions.md#specify-valid-filename-extensions-for-flags-that-take-a-filename
+	if err := cmd.MarkFlagFilename(flagName, "yaml", "yml"); err != nil {
 		log.Warn(err)
 	}
 }

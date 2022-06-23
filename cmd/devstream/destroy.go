@@ -27,8 +27,8 @@ func destroyCMDFunc(cmd *cobra.Command, args []string) {
 }
 
 func init() {
-	destroyCMD.Flags().StringVarP(&configFile, "config-file", "f", "config.yaml", "config file")
+	destroyCMD.Flags().StringVarP(&configFile, configFlagName, "f", "config.yaml", "config file")
 	destroyCMD.Flags().BoolVarP(&continueDirectly, "yes", "y", false, "destroy directly without confirmation")
 
-	completion.FlagConfigFileCompletion(destroyCMD)
+	completion.FlagFilenameCompletion(destroyCMD, configFlagName)
 }

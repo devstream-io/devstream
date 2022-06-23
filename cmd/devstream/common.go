@@ -5,3 +5,5 @@ var (
 	pluginDir        string
 	continueDirectly bool
 )
+
+const configFlagName = "config-file"
