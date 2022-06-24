@@ -63,10 +63,10 @@ nav:
   - 'contributor_ladder*.md'
 ```
 
-- 通常，`contributing_guide*.md`应该是`contributing_guide.md`和`contributing_guide.zh.md`两个文件；
+- 通常，`contributing_guide*.md`指代了`contributing_guide.md`和`contributing_guide.zh.md`两个文件，分别是英文和中文文档；
 - 如果在`commands/`, `plugins/`, `best-practices/`目录中创建文档，不需要更新`nav`。
 
-如果想了解更多关于导航的配置，请参阅配置[页面导航](https://www.mkdocs.org/user-guide/writing-your-docs/#configure-pages-and-navigation)和[导航语法](https://oprypin.github.io/mkdocs-literate-nav/)。
+如果想了解更多关于导航的配置，请参阅[配置页面与导航](https://www.mkdocs.org/user-guide/writing-your-docs/#configure-pages-and-navigation)和[导航语法](https://oprypin.github.io/mkdocs-literate-nav/)。
 
 ## 在本地查看您的更改
 
