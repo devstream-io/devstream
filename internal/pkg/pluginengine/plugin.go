@@ -1,10 +1,17 @@
 package pluginengine
 
 import (
+	"path/filepath"
+
+	"k8s.io/client-go/util/homedir"
+
 	"github.com/devstream-io/devstream/internal/pkg/configloader"
 )
 
-const DefaultPluginDir = ".devstream"
+// DefaultPluginDir The default path of the plugin is in the user's home directory
+func DefaultPluginDir() string {
+	return filepath.Join(homedir.HomeDir(), ".devstream")
+}
 
 // DevStreamPlugin is a struct, on which Create/Read/Update/Delete interfaces are defined.
 type DevStreamPlugin interface {

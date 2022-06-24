@@ -12,7 +12,7 @@ import (
 func getPluginDir() string {
 	var pluginDir string
 	if pluginDir = viper.GetString("plugin-dir"); pluginDir == "" {
-		pluginDir = DefaultPluginDir
+		pluginDir = DefaultPluginDir()
 	}
 	return pluginDir
 }
