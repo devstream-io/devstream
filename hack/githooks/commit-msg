@@ -1,0 +1,51 @@
+#!/bin/sh
+
+# ignore merge commits
+MERGE_MSG=`cat $1 | egrep '^Merge branch*'`
+
+if [ "$MERGE_MSG" != "" ]; then
+    exit 0
+fi
+
+
+# check for a valid commit message
+COMMIT_MSG=`cat $1 | egrep "^(feat|fix|doc|docs|chore|build|ci|perf|style|revert|test)(\(\w+\))?!?:\s(\S|\w)+"`
+
+if [ "$COMMIT_MSG" = "" ]; then
+    echo -e "
+    \033[31mError!\033[0m The commit message should be structured as follows:
+    \033[31m
+    <type>[optional scope]: <description>
+    [optional body]
+    [optional footer(s)]
+    \033[0m
+    where \"type\" can be: \033[32m feat fix doc docs chore ci build perf style revert test \033[0m
+    For details, please refer to \033[34m https://www.conventionalcommits.org/en/v1.0.0/#summary \033[0m
+    "
+    exit 1
+fi
+
+NAME=$(git config user.name)
+EMAIL=$(git config user.email)
+
+if [ -z "$NAME" ]; then
+    echo "please config user.name"
+    exit 1
+fi
+
+if [ -z "$EMAIL" ]; then
+    echo "please config user.email"
+    exit 1
+fi
+
+# add sign off
+git interpret-trailers --if-exists doNothing --trailer \
+    "Signed-off-by: $NAME <$EMAIL>" \
+    --in-place "$1"
+
+# check duplicate sign off
+test "" = "$(grep '^Signed-off-by: ' "$1" |
+	 sort | uniq -c | sed -e '/^[ 	]*1[ 	]/d')" || {
+	echo >&2 Duplicate Signed-off-by lines.
+	exit 1
+}
