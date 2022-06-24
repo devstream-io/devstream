@@ -28,9 +28,7 @@ The dependencies of these plugins are(`a -> b` means for `a depends on b`):
 - `githubactions-golang` -> `github-repo-scaffolding-golang`
 - `argocdapp` -> `argocd` and `github-repo-scaffolding-golang`
 
-Note: These dependencies are not consistent, such as when the repo operated by `jira-github` and `github-repo-scaffolding-golang` are not the same, the dependencies disappear.
-
-We should use the `dependency` according to the actual usage situation.
+Note: These dependencies are optional; you can use dependency to make sure a certain tool is installed before another. We should use dependency according to the actual usage situation.
 
 ## Download DevStream (`dtm`)
 

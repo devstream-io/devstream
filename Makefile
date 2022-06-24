@@ -43,6 +43,9 @@ PLUGINS_DIR := $(ROOT_DIR)/.devstream
 $(shell mkdir -p $(PLUGINS_DIR))
 endif
 
+.PHONY: all
+all: build
+
 .PHONY: help
 help: ## Display this help.
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_0-9.%-]+:.*?##/ { printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
@@ -53,14 +56,14 @@ clean: ## Remove dtm and plugins. It's best to run a "clean" before "build".
 	-rm -f dtm*
 
 .PHONY: build-core
-build-core: fmt lint vet mod-tidy ## Build dtm core only, without plugins, locally.
+build-core: generate fmt lint vet mod-tidy ## Build dtm core only, without plugins, locally.
 	go build -trimpath -gcflags="all=-N -l" -ldflags "$(GO_LDFLAGS)" -o dtm-${GOOS}-${GOARCH} ./cmd/devstream/
 	@-rm -f dtm
 	@mv dtm-${GOOS}-${GOARCH} dtm
 	@echo "${GREEN}✔'dtm' has been generated in the current directory($(PWD))!${RESET}"
 
 .PHONY: build-plugin.%
-build-plugin.%: fmt lint vet mod-tidy ## Build one dtm plugin, like "make build-plugin.argocd".
+build-plugin.%: generate fmt lint vet mod-tidy ## Build one dtm plugin, like "make build-plugin.argocd".
 	$(eval plugin_name := $(strip $*))
 	@[ -d  $(ROOT_DIR)/cmd/plugin/$(plugin_name) ] || { echo -e "\n${RED}✘ Plugin '$(plugin_name)' not found!${RESET} The valid plugin name is as follows (Eg. You can use  ${YELLOW}make build-plugin.argocd${RESET} to build argocd plugin): \n\n$(shell ls ./cmd/plugin/)\n"; exit 1; }
 	@echo "$(YELLOW)Building plugin '$(plugin_name)'$(RESET)"
@@ -68,7 +71,7 @@ build-plugin.%: fmt lint vet mod-tidy ## Build one dtm plugin, like "make build-
 	@$(MAKE) md5-plugin.$(plugin_name)
 
 .PHONY: build-plugins
-build-plugins: fmt vet mod-tidy $(addprefix build-plugin.,$(PLUGINS)) ## Build dtm plugins only. Use multi-threaded like "make build-plugins -j8" to speed up.
+build-plugins: generate fmt vet mod-tidy $(addprefix build-plugin.,$(PLUGINS)) ## Build dtm plugins only. Use multi-threaded like "make build-plugins -j8" to speed up.
 
 .PHONY: build
 build: build-core build-plugins ## Build everything. Use multi-threaded like "make build -j8" to speed up.
@@ -91,6 +94,9 @@ fmt: verify.goimports ## Run 'go fmt' & goimports against code.
 	@$(FIND) -type f | xargs ${GOPATH}/bin/goimports -w -local $(DTM_ROOT)
 	@go mod edit -fmt
 
+.PHONY: generate
+generate: ## Run "go generate ./...".
+	go generate ./...
 
 .PHONY: lint
 lint: verify.golangci-lint ## Run 'golangci-lint' against code.
