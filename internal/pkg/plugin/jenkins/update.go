@@ -5,7 +5,7 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
-	. "github.com/devstream-io/devstream/internal/pkg/plugin/common/helm"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/common/helm"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -25,7 +25,7 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	}
 
 	// 2. install or upgrade
-	if err := InstallOrUpgradeChart(&opts); err != nil {
+	if err := helm.InstallOrUpgradeChart(&opts.Options); err != nil {
 		return nil, err
 	}
 

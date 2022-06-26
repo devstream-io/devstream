@@ -2,9 +2,7 @@ package jenkins
 
 import (
 	"fmt"
-	"os"
 	"path/filepath"
-	"syscall"
 
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
@@ -16,29 +14,28 @@ import (
 )
 
 const (
-	JenkinsName          = "jenkins"
-	JenkinsNamespace     = "jenkins"
-	JenkinsDataDirectory = "/data/jenkins-volume/"
-	JenkinsUid           = 1000
-	JenkinsGid           = 1000
+	JenkinsName                      = "jenkins"
+	JenkinsNamespace                 = "jenkins"
+	JenkinsDataDirectory             = "/data/jenkins-volumes/"
+	JenkinsPvName                    = "jenkins-pv"
+	JenkinsPvDefaultStorageClassName = "jenkins-pv"
 )
 
 // See the docs below for more info:
 // https://www.jenkins.io/doc/book/installing/kubernetes/
 // https://raw.githubusercontent.com/jenkins-infra/jenkins.io/master/content/doc/tutorials/kubernetes/installing-jenkins-on-kubernetes/jenkins-volume.yaml
 // https://raw.githubusercontent.com/jenkins-infra/jenkins.io/master/content/doc/tutorials/kubernetes/installing-jenkins-on-kubernetes/jenkins-sa.yaml
-func preCreate() error {
+func preCreate(opts Options) error {
 	kubeClient, err := k8s.NewClient()
 	if err != nil {
 		return err
 	}
 
-	if err = initDataDirectory(); err != nil {
-		return err
-	}
-
-	if err = createPersistentVolume(kubeClient); err != nil {
-		return err
+	if opts.TestEnv {
+		log.Info("Test environment is enabled. Please ensure you have created the directories correctly under the guide of plugin doc.")
+		if err = createPersistentVolume(kubeClient); err != nil {
+			return err
+		}
 	}
 
 	if err = createServiceAccount(kubeClient); err != nil {
@@ -63,12 +60,12 @@ func createPersistentVolume(kubeClient *k8s.Client) error {
 	}
 
 	pvOption := &k8s.PVOption{
-		Name:             "jenkins-pv",
-		StorageClassName: "jenkins-pv",
+		Name:             JenkinsPvName,
+		StorageClassName: JenkinsPvDefaultStorageClassName,
 		AccessMode: []corev1.PersistentVolumeAccessMode{
 			corev1.ReadWriteOnce,
 		},
-		Capacity:                      "10Gi",
+		Capacity:                      "20Gi",
 		PersistentVolumeReclaimPolicy: corev1.PersistentVolumeReclaimRetain,
 		HostPath:                      dataDir,
 	}
@@ -177,32 +174,7 @@ func createClusterRoleBinding(kubeClient *k8s.Client) error {
 	return nil
 }
 
-func initDataDirectory() error {
-	dataDir := getRealJenkinsDataDirectory()
-	if dataDir == "" {
-		return fmt.Errorf("failed to get the real Jenkins data directory")
-	}
-
-	f, err := os.Stat(dataDir)
-	if err != nil && os.IsNotExist(err) {
-		return fmt.Errorf("you should create the data directory \"%s\" manually", dataDir)
-	}
-
-	if err != nil {
-		return fmt.Errorf("failed to stat the data directory \"%s\": %s", dataDir, err)
-	}
-
-	uid := int(f.Sys().(*syscall.Stat_t).Uid)
-	gid := int(f.Sys().(*syscall.Stat_t).Gid)
-
-	if uid != JenkinsUid || gid != JenkinsGid {
-		return fmt.Errorf("you should chown the data directory to 1000:1000. Expected the %s with uid=%d gid=%d, but got the uid=%d gid=%d", dataDir, JenkinsUid, JenkinsGid, uid, gid)
-	}
-
-	log.Debugf("The data directory %s is ready.", dataDir)
-	return nil
-}
-
+// get the data directory of Jenkins by the home dir of the machine where dtm is running
 func getRealJenkinsDataDirectory() string {
 	home := homedir.HomeDir()
 	if home == "" {
