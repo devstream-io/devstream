@@ -22,3 +22,5 @@ tools:
     https_port: 443
     # whether to delete the gitlab_home directory when the tool is removed
     rm_data_after_delete: false
+    # gitlab-ce tag, default tag is rc
+    image_tag: "rc"
