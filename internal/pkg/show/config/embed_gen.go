@@ -68,6 +68,9 @@ var (
 
 	//go:embed plugins/trello.yaml
 	TrelloDefaultConfig string
+
+	//go:embed plugins/zentao.yaml
+	ZentaoDefaultConfig string
 )
 
 var pluginDefaultConfigs = map[string]string{
@@ -91,4 +94,5 @@ var pluginDefaultConfigs = map[string]string{
 	"tekton":                         TektonDefaultConfig,
 	"trello-github-integ":            TrelloGithubIntegDefaultConfig,
 	"trello":                         TrelloDefaultConfig,
+	"zentao":                         ZentaoDefaultConfig,
 }

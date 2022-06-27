@@ -34,6 +34,16 @@ type PVOption struct {
 	HostPath                      string
 }
 
+type PVCOption struct {
+	Name             string
+	NameSpace        string
+	StorageClassName string
+
+	AccessMode []corev1.PersistentVolumeAccessMode
+
+	Requirement corev1.ResourceRequirements
+}
+
 func (c *Client) CreatePersistentVolume(option *PVOption) error {
 	quantity, err := resource.ParseQuantity(option.Capacity)
 	if err != nil {
@@ -67,5 +77,28 @@ func (c *Client) CreatePersistentVolume(option *PVOption) error {
 	}
 
 	log.Debugf("The PersistentVolume < %s > has created.", pv.Name)
+	return nil
+}
+
+func (c *Client) CreatePersistentVolumeClaim(opt *PVCOption) error {
+	pvc := &corev1.PersistentVolumeClaim{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: opt.Name,
+		},
+		Spec: corev1.PersistentVolumeClaimSpec{
+			AccessModes:      opt.AccessMode,
+			Resources:        opt.Requirement,
+			StorageClassName: &opt.StorageClassName,
+		},
+	}
+
+	log.Debugf("The PersistentVolumeCliam option for creation is %v", pvc)
+	_, err := c.CoreV1().PersistentVolumeClaims(opt.NameSpace).Create(context.TODO(), pvc, metav1.CreateOptions{})
+	if err != nil {
+		log.Errorf("Failed to create PersistentVolumeClaim < %s >: %s.", pvc.Name, err)
+		return err
+	}
+
+	log.Debugf("The PersistentVolumeClaim < %s > has created.", pvc.Name)
 	return nil
 }
