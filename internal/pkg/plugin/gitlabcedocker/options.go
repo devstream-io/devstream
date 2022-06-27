@@ -9,4 +9,5 @@ type Options struct {
 	HTTPPort          uint   `validate:"required" mapstructure:"http_port"`
 	HTTPSPort         uint   `validate:"required" mapstructure:"https_port"`
 	RmDataAfterDelete bool   `mapstructure:"rm_data_after_delete"`
+	ImageTag          string `mapstructure:"image_tag"`
 }

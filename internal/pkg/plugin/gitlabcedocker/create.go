@@ -26,7 +26,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 
 	// 1. try to pull the image
 	// always pull the image because docker will check the image existence
-	if err := op.PullImage(gitlabImageNameWithTag); err != nil {
+	if err := op.PullImage(getImageNameWithTag(opts)); err != nil {
 		return nil, err
 	}
 

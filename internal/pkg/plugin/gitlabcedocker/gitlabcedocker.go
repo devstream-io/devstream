@@ -1,22 +1,25 @@
 package gitlabcedocker
 
 import (
-	"fmt"
 	"strings"
 )
 
 const (
-	gitlabImageName = "gitlab/gitlab-ce"
-	// TODO expose image tag to user in config file to customize
-	gitlabImageTag = "rc"
-
-	tcp = "tcp"
+	gitlabImageName     = "gitlab/gitlab-ce"
+	defaultImageTag     = "rc"
+	gitlabContainerName = "gitlab"
+	tcp                 = "tcp"
 )
 
-var (
-	gitlabImageNameWithTag = fmt.Sprintf("%v:%v", gitlabImageName, gitlabImageTag)
-	gitlabContainerName    = "gitlab"
-)
+func getImageNameWithTag(opt Options) string {
+	var imageTag string
+	if opt.ImageTag == "" {
+		imageTag = defaultImageTag
+	} else {
+		imageTag = opt.ImageTag
+	}
+	return gitlabImageName + ":" + imageTag
+}
 
 // dockerOperator is an interface for docker operations
 // It is implemented by sshDockerOperator

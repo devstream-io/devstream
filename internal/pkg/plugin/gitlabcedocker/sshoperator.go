@@ -106,7 +106,7 @@ func BuildDockerRunCommand(options Options) string {
 	%s
 	`
 	cmdString := fmt.Sprintf(cmdTemplate, options.Hostname, options.HTTPSPort,
-		options.HTTPPort, options.SSHPort, gitlabContainerName, options.GitLabHome, gitlabImageNameWithTag)
+		options.HTTPPort, options.SSHPort, gitlabContainerName, options.GitLabHome, getImageNameWithTag(options))
 	return cmdString
 }
 
