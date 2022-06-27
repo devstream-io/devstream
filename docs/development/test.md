@@ -1,6 +1,6 @@
 # Test
 
-### Unit Test
+## Unit Test
 
 Run all unit tests:
 
@@ -8,13 +8,13 @@ Run all unit tests:
 go test ./...
 ```
 
-### End-to-end Tests
+## End-to-end Tests
 
-#### 1. e2e Test with Github Action
+### 1 e2e Test with GitHub Action
 
 GitHub Actions will run e2e test automatically.
 
-#### 2. e2e Test Locally
+### 2 e2e Test Locally
 
 ```shell
 bash hack/e2e/e2e-run.sh
