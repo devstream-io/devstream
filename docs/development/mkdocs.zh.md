@@ -44,7 +44,29 @@
 
 - 在`/docs`文件夹中创建`doc_name.md`和`doc_name.zh.md`。如有必要，您可以将它们放在恰当的子文件夹下。参考当前目录结构来确定适合该文档的最佳路径。
 - 编写文档的内容。您可以选择只写英文文档或中文文档；您不必用两种语言编写文档；当然如果您希望展示您中英双语的实力的话，我们建议您两种语言的文档同时编写，一并提交。
-- 更新`/mkdocs.yml`文件，更新`nav:`部分。这是整个文档网站的目录。
+- 大多数情况下，您不需要考虑导航菜单，它是整个文档网站的目录。但是如果需要自定义导航菜单，可以参考[设置导航](https://github.com/devstream-io/devstream/blob/main/docs/development/mkdocs.md#setting-up-navigation)。
+
+## 设置导航
+
+如果要自定义导航菜单，可以更新`mkdocs.yaml`中的`nav:`部分，支持通配符和子目录链接。例如：
+
+```
+nav:
+  - DTM Commands Explained in Depth:
+    - commands/autocomplete*.md
+    - commands/*.md
+  - Plugins:
+    - plugins/plugins-list*.md
+    - plugins/*.md
+  - Best Practices: best-practices/
+  - 'contributing_guide*.md'
+  - 'contributor_ladder*.md'
+```
+
+- 通常，`contributing_guide*.md`指代了`contributing_guide.md`和`contributing_guide.zh.md`两个文件，分别是英文和中文文档；
+- 如果在`commands/`, `plugins/`, `best-practices/`目录中创建文档，不需要更新`nav`。
+
+如果想了解更多关于导航的配置，请参阅[配置页面与导航](https://www.mkdocs.org/user-guide/writing-your-docs/#configure-pages-and-navigation)和[导航语法](https://oprypin.github.io/mkdocs-literate-nav/)。
 
 ## 在本地查看您的更改
 
