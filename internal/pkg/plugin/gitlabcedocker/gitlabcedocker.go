@@ -5,8 +5,7 @@ import (
 )
 
 const (
-	gitlabImageName = "gitlab/gitlab-ce"
-	// TODO expose image tag to user in config file to customize
+	gitlabImageName     = "gitlab/gitlab-ce"
 	defaultImageTag     = "rc"
 	gitlabContainerName = "gitlab"
 	tcp                 = "tcp"
