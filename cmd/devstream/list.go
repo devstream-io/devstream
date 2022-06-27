@@ -20,7 +20,10 @@ var listPluginsCMD = &cobra.Command{
 	Short: "List all plugins",
 	Long: `This command lists all of the plugins.
 Examples:
-  dtm list plugins`,
+  dtm list plugins
+  dtm list plugins --filter=argo.*
+  dtm list plugins -r ^argo
+`,
 	Run: listPluginsCMDFunc,
 }
 
