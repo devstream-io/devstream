@@ -1,29 +1,27 @@
 # 快速开始
 
-如果你还没有观看我们的demo，你可以在[文档站点的主页](./index.md)观看。
+如果你还没有观看我们的demo，可以前往[文档站点的主页](./index.md)观看。
 
-## 1 下载 DevStream (`dtm`)
+## 1 下载 DevStream (`dtm`) 与配置文件
 
-根据你的实际环境从 [DevStream Releases](https://github.com/devstream-io/devstream/releases) 下载合适的 `dtm` 版本。
+注意：dtm 仅支持 Linux 与 macOS。
 
-> 记得将二进制文件重命名为 `dtm`，这样用起来更简单。比如：`mv dtm-darwin-arm64 dtm`。
-
-> 一旦下载完成，你就可以将 dtm 文件放到任何目录下运行了。当然更加建议你将 dtm 加到 PATH 下(比如 `/usr/local/bin`)。
-
-## 2 准备一个配置文件
-
-开始之前：这是一个DevStream配置的例子：[examples/quickstart.yaml](https://github.com/devstream-io/devstream/blob/main/examples/quickstart.yaml) 。
-记得打开这个配置文件，把里面所有的 `FULL_UPPER_CASE_STRINGS`（比如说 `YOUR_GITHUB_USERNAME` ）修改成你自己的。注意每一项的含义，并确保它是你要的。对于其他插件，请查看我们的 [文档](https://docs.devstream.io) 中的"插件"部分，以了解详细用法。
-
-将 [examples/quickstart.yaml](https://raw.githubusercontent.com/devstream-io/devstream/main/examples/quickstart.yaml) 文件下载到你到工作目录下：
-
+进入你的工作目录，运行以下命令，自动下载最新的 `dtm` 与配置文件：
 ```shell
-curl -o quickstart.yaml https://raw.githubusercontent.com/devstream-io/devstream/main/examples/quickstart.yaml
+sh -c "$(curl -fsSL https://github.com/devstream-io/devstream/blob/main/hack/quick-start/quickstart.sh)"
 ```
 
-然后相应的修改配置文件中的内容。
+此命令执行完毕，你的工作区将会多出两个文件：dtm 与 quickstart.yaml。
 
-比如我的 GitHub 用户名是 "IronCore864", 然后我的 Dockerhub 用户名是 "ironcore864"，这样我就可以运行：
+建议你将 dtm 加到 PATH 下(比如 `/usr/local/bin`)。
+
+## 2 修改配置文件内容与设置环境变量
+
+打开 quickstart.yaml，把里面所有的`全大写字母的标识`（如 `YOUR_GITHUB_USERNAME` ）修改成你自己的。对于其他插件，请查看我们的 [文档](https://docs.devstream.io) 中的"插件"部分，以了解详细用法。
+
+将 [examples/quickstart.yaml](https://raw.githubusercontent.com/devstream-io/devstream/main/examples/quickstart.yaml) 文件下载到你的工作目录下：
+
+比如我的 GitHub 用户名是 "IronCore864", Dockerhub 用户名是 "ironcore864"，可以运行：
 
 ```shell
 sed -i.bak "s/YOUR_GITHUB_USERNAME_CASE_SENSITIVE/IronCore864/g" quickstart.yaml
@@ -78,7 +76,7 @@ dtm init -f quickstart.yaml
 
 如果你没有用` -f `参数指定配置文件，它将尝试使用默认值，即当前目录下的 `config.yaml` 。
 
-`dtm`将对比 `Config`、`State` 和 `Resource`，决定是否需要 `Create`、`Update` 或 `Delete`。更多信息请阅读我们的 [核心概念](https://docs.devstream.io/en/latest/core-concepts/core-concepts/) 文档。
+`dtm` 将对比 `Config`、`State` 和 `Resource`，决定是否需要 `Create`、`Update` 或 `Delete`。更多信息请阅读我们的 [核心概念](https://docs.devstream.io/en/latest/core-concepts/core-concepts/) 文档。
 
 上面的命令在实际执行改变之前会要求你确认。如果不需要确认就应用 `Config`（就像 `apt-get -y update` ），请运行：
 
@@ -190,3 +188,7 @@ Enter a value (Default is n): y
 2022-03-04 12:10:42 ✔ [SUCCESS]  All plugins destroyed successfully.
 2022-03-04 12:10:42 ✔ [SUCCESS]  Destroy finished.
 ```
+
+### 8 了解更多
+
+DevStream 能实现的远不止这些，更多强大功能，请前往[最佳实践](https://docs.devstream.io/en/latest/best-practices/gitops.zh/)。
