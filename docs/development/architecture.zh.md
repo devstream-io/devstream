@@ -3,8 +3,11 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> docs: translation for architecture.md
+=======
+>>>>>>> docs: translation for create-a-plugin.md
 本文介绍了DevStream的架构，总结了DevStream的主要组件，以及数据、命令是如何在各个组件之间流转的。
 
 ## 0 工作流程
@@ -30,6 +33,7 @@ _注意：为了简单起见，CLI被命名为`dtm`（DevOps Toolchain Manager)�
 `pluginengine`首先调用`configloader`，将本地YAML配置文件读取到一个结构体中，然后调用`pluginmanager`来下载所需的插件。
 
 之后，`pluginengine`调用`statemanager`来计算congfig、状态和实际DevOps工具的状态之间的"差异"。最后，`pluginengine`根据这变更执行对应的操作，并更新状态。在执行过程中，`pluginengine`加载每个插件（`*.so`文件）并根据每个变更调用相应的接口。
+<<<<<<< HEAD
 =======
 本文件总结了DevStream的主要组成部分以及数据在这些组成部分之间的流动。
 <<<<<<< HEAD
@@ -95,6 +99,8 @@ _注意：为了简单起见，CLI被命名为`dtm`（DevOps Toolchain Manager)�
 >>>>>>> docs: fix issues according to code review
 =======
 >>>>>>> docs: translation for architecture.md
+=======
+>>>>>>> docs: translation for create-a-plugin.md
 
 ## 2 插件引擎
 
@@ -103,6 +109,9 @@ _注意：为了简单起见，CLI被命名为`dtm`（DevOps Toolchain Manager)�
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> docs: translation for create-a-plugin.md
 - 确保所需的插件（根据配置文件的设置）存在
 - 根据配置、状态和工具的实际状态生成变更
 - 通过加载每个插件和调用所需的接口来执行这些变更
@@ -112,6 +121,7 @@ _注意：为了简单起见，CLI被命名为`dtm`（DevOps Toolchain Manager)�
 ### 2.1 配置加载器
 
 包[`configloader`](https://github.com/devstream-io/devstream/blob/main/internal/pkg/configloader/config.go#L19)中的struct代表了顶层的配置结构。
+<<<<<<< HEAD
 =======
 - 确保所需的插件（根据配置文件的设置）是存在的
 =======
@@ -146,6 +156,8 @@ _注意：为了简单起见，CLI被命名为`dtm`（DevOps Toolchain Manager)�
 包[`configloader`](https://github.com/devstream-io/devstream/blob/main/internal/pkg/configloader/config.go#L19)中的模型类型代表了顶层的配置结构。
 >>>>>>> docs: translation for architecture.md
 >>>>>>> docs: translation for architecture.md
+=======
+>>>>>>> docs: translation for create-a-plugin.md
 
 ### 2.2 插件管理器
 
@@ -155,6 +167,7 @@ _注意：为了简单起见，CLI被命名为`dtm`（DevOps Toolchain Manager)�
 
 ### 2.3 状态管理器
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -171,11 +184,15 @@ _注意：为了简单起见，CLI被命名为`dtm`（DevOps Toolchain Manager)�
 [`statemanager`](https://github.com/devstream-io/devstream/blob/main/internal/pkg/statemanager/manager.go)负责管理 "状态"，即哪些事情已经成功完成，哪些没有。
 >>>>>>> docs: translation for architecture.md
 >>>>>>> docs: translation for architecture.md
+=======
+[`statemanager`](https://github.com/devstream-io/devstream/blob/main/internal/pkg/statemanager/manager.go)负责管理"状态"，即哪些事情已经成功完成，哪些没有。
+>>>>>>> docs: translation for create-a-plugin.md
 
 `statemanager`将状态存储在一个[`backend`](https://github.com/devstream-io/devstream/blob/main/internal/pkg/backend/backend.go)中。
 
 ## 3 插件
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -189,12 +206,15 @@ _注意：为了简单起见，CLI被命名为`dtm`（DevOps Toolchain Manager)�
 =======
 =======
 >>>>>>> docs: translation for architecture.md
+=======
+>>>>>>> docs: translation for create-a-plugin.md
 一个 _plugin_ 实现了上述的预定义接口。
 >>>>>>> docs: fix issues according to code review
 
 它执行的包括"创建"、"读取"、"更新"和"删除"等操作。
 
 要开发一个新的插件，请参阅[创建一个插件](./development/creating-a-plugin.md)。
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> docs: translation for architecture.md
@@ -209,3 +229,5 @@ _注意：为了简单起见，CLI被命名为`dtm`（DevOps Toolchain Manager)�
 要开发一个新的插件，请参阅[创建一个插件](./development/creating-a-plugin.md)。
 >>>>>>> docs: translation for architecture.md
 >>>>>>> docs: translation for architecture.md
+=======
+>>>>>>> docs: translation for create-a-plugin.md
