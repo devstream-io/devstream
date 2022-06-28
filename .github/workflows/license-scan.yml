@@ -4,7 +4,7 @@ on: [pull_request]
 env:
   # DO NOT use the GITHUB_TOKEN here
   # see https://github.com/devstream-io/devstream/pull/414 for more info
-  FOSSA-API-KEY: ${{ secrets.${{ FOSSA_PUSH_ONLY_API_KEY }} }}
+  FOSSA-API-KEY: ${{ secrets.FOSSA_PUSH_ONLY_API_KEY }}
 
 jobs:
   fossa:
