@@ -29,9 +29,9 @@ function init() {
   fi
 
   if [ "$(arch)" == "amd64" ];then
-    HOST_ARCH="arm64"
-  elif [ "$(arch)" == "arm64" ];then
     HOST_ARCH="amd64"
+  elif [ "$(arch)" == "arm64" ];then
+    HOST_ARCH="arm64"
   else
     echo "Support amd64/arm64 CPU arch only"
     exit 1
