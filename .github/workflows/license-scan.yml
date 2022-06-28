@@ -1,6 +1,6 @@
 name: license check by FOSS
 on:
-  pull_request_target
+  pull_request
 
 jobs:
   fossa:
