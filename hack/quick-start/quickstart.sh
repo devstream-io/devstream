@@ -26,7 +26,7 @@ function getLatestReleaseVersion() {
     echo "Failed to get latest release version"
     exit 1
   fi
-  echo "Latest dtm release version: ${latestVersion}"
+  echo "Latest dtm release version: ${latestVersion}\n"
 }
 
 function downloadDtm() {
@@ -36,14 +36,16 @@ function downloadDtm() {
   echo "Downloading dtm from: $fullReleaseUrl"
   # use -L to follow redirects
   curl -L -o dtm $fullReleaseUrl
-  echo "dtm downloaded completed"
+  echo "dtm downloaded completed\n"
 
   # grant execution rights
   chmod +x dtm
 }
 
 function downloadQuickStartConfig() {
-  curl -o quickstart.yaml https://raw.githubusercontent.com/devstream-io/devstream/main/examples/quickstart.yaml
+  # config file is small so we use -s to ignore the output
+  curl -s -o quickstart.yaml https://raw.githubusercontent.com/devstream-io/devstream/main/examples/quickstart.yaml
+  echo "quickstart.yaml downloaded completed"
 }
 
 function showDtmHelp() {
