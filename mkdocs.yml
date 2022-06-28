@@ -80,7 +80,13 @@ nav:
   - Overview: .
   - understanding_the_basics*.md
   - quickstart*.md
-  - Core Concepts: core-concepts/
+  - Core Concepts:
+    - core-concepts/core-concepts*.md
+    - core-concepts/config*.md
+    - core-concepts/stateconfig*.md
+    - core-concepts/variable*.md
+    - core-concepts/dependencies*.md
+    - core-concepts/output*.md
   - Commands:
     - commands/autocomplete*.md
     - commands/*.md
