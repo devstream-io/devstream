@@ -89,11 +89,11 @@ I am happy to tell you that we have, and we are constantly adding more possible 
 
 so you are more than welcome to tell us what combinations you expect.
 
-- [GitOps Toolchain](https://docs.devstream.io/en/latest/tutorials/best-practices/gitops/)
+- [GitOps Toolchain](https://docs.devstream.io/en/latest/best-practices/gitops/)
 
 ## Supported DevOps Tools
 
-DevStream already supports many tools and it's still growing. For a complete list of supported tools, check out our [list of plugins](https://www.devstream.io/docs/plugins/plugins-list) document.
+DevStream already supports many tools and it's still growing. For a complete list of supported tools, check out our [list of plugins](https://docs.devstream.io/en/latest/plugins/plugins-list/) document.
 
 Alternatively, run `dtm list plugins` and it will show you all the available plugins.
 

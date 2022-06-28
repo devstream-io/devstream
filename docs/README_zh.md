@@ -90,7 +90,7 @@ DevStream支持许多工具的管理。你可以灵活地结合一些工具来�
 
 我们非常欢迎你告诉我们你期望的组合。
 
-- [GitOps工具链](https://docs.devstream.io/en/latest/tutorials/best-practices/gitops/)
+- [GitOps工具链](https://docs.devstream.io/en/latest/best-practices/gitops.zh/)
 
 ## 支持的DevOps工具
 
