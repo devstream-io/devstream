@@ -1,4 +1,4 @@
-# Reviewing Guide
+# Code Reviewing Guide
 
 This document covers who may review pull requests for this project, and provides guidance on how to perform code reviews that meet our community standards and code of conduct. All reviewers must read this document and agree to follow the project review guidelines. Reviewers who do not follow these guidelines may have their privileges revoked.
 

@@ -1,3 +1,3 @@
-# Reviewing Guide 中文文档
+# Code Reviewing Guide 中文文档
 
 TODO
