@@ -1,6 +1,11 @@
 name: license check by FOSS
 on: [pull_request]
 
+env:
+  # DO NOT use the GITHUB_TOKEN here
+  # see https://github.com/devstream-io/devstream/pull/414 for more info
+  FOSSA-API-KEY: ${{ secrets.${{ FOSSA_PUSH_ONLY_API_KEY }} }}
+
 jobs:
   fossa:
     runs-on: ubuntu-latest
@@ -11,4 +16,4 @@ jobs:
       - uses: fossa-contrib/fossa-action@v1
         with:
           # https://docs.fossa.com/docs/api-reference#push-only-api-token
-          fossa-api-key: c03fe407c7aa56b90b7dac1ae1868dd0
+          fossa-api-key: ${{ env.FOSSA-API-KEY }}
