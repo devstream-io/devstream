@@ -8,7 +8,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func howToGetPwdOfAdmin(opts *Options) {
+func howToGetPasswdOfAdmin(opts *Options) {
 	log.Info("Here is how to get the password of the admin user:")
 	method := fmt.Sprintf("kubectl exec --namespace jenkins -it svc/%s-jenkins -c jenkins "+
 		"-- /bin/cat /run/secrets/additional/chart-admin-password && echo", opts.Chart.ReleaseName)

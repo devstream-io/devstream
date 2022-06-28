@@ -15,7 +15,7 @@ func validate(opts *Options) []error {
 		return errs
 	}
 
-	// if dev mode, replace the storage class name with default storage class which is auto created with hostpath type.
+	// if dev mode, replace the StorageClass name with default StorageClass which is auto created with hostpath type.
 	if opts.TestEnv {
 		chartNew := opts.Chart
 		var err error
@@ -29,16 +29,16 @@ func validate(opts *Options) []error {
 }
 
 func ReplaceStorageClass(valuesYaml string) (string, error) {
-	// find the storage class name in the options
+	// find the StorageClass name in the options
 	re, _ := regexp.Compile(`storageClass:.*\n`)
 	storageConfig := re.FindString(valuesYaml)
 	if storageConfig == "" {
 		return "", fmt.Errorf("storageClass is required in  values_yaml config")
 	}
 
-	// replace the storage class name with default storage class name
+	// replace the StorageClass name with default StorageClass name
 	valuesYaml = re.ReplaceAllString(valuesYaml, fmt.Sprintf("storageClass: %s\n", JenkinsPvDefaultStorageClassName))
-	log.Debugf("new values_yaml whose storage class is replaced by default : %s\n", valuesYaml)
+	log.Debugf("new values_yaml whose StorageClass is replaced by default : %s\n", valuesYaml)
 
 	return valuesYaml, nil
 }

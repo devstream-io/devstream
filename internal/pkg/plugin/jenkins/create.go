@@ -62,7 +62,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	log.Debugf("Return map: %v.", retMap)
 
 	// show how to get pwd of the admin user
-	howToGetPwdOfAdmin(&opts)
+	howToGetPasswdOfAdmin(&opts)
 
 	// show jenkins url
 	showJenkinsUrl(&opts)

@@ -16,7 +16,7 @@ import (
 const (
 	JenkinsName                      = "jenkins"
 	JenkinsNamespace                 = "jenkins"
-	JenkinsDataDirectory             = "/data/jenkins-volumes/"
+	JenkinsDataDirectory             = "/data/jenkins-volume/"
 	JenkinsPvName                    = "jenkins-pv"
 	JenkinsPvDefaultStorageClassName = "jenkins-pv"
 )

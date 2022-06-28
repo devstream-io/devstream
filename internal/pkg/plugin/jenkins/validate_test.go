@@ -9,9 +9,9 @@ import (
 
 var _ = Describe("Validate", func() {
 
-	Describe("test storage class name replacement", func() {
-		Context("when storage class name is provided", func() {
-			It("storage class should be replaced successfully", func() {
+	Describe("test StorageClass name replacement", func() {
+		Context("when StorageClass name is provided", func() {
+			It("StorageClass should be replaced successfully", func() {
 				valuesYaml := `
 persistence:
             storageClass: custom-storage-class
@@ -39,7 +39,7 @@ persistence:
 		})
 	})
 
-	Context("when storage class name is not provided", func() {
+	Context("when StorageClass name is not provided", func() {
 		valuesYaml := `
 persistence:
           serviceAccount:
