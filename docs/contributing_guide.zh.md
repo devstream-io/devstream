@@ -24,13 +24,13 @@
 - 在各种媒体、博客文章宣传 DevStream
 - 发版管理
 
-不是只有提交 Pull Request 才能与 DevStream 擦出火花，您还可以参与我们的 [社区会议](https://github.com/devstream-io/devstream/wiki)，或者直接联系我们([slack](https://join.slack.com/t/devstream-io/shared_invite/zt-16tb0iwzr-krcFGYRN7~Vv1suGZjdv4w)、[微信群](https://raw.githubusercontent.com/devstream-io/devstream/main/docs/images/wechat-group-qr-code.png)）一起聊聊怎么共建社区。
+不是只有提交 Pull Request 才能与 DevStream 擦出火花，您还可以参与我们的 [社区会议](https://github.com/devstream-io/devstream/wiki)，或者直接联系我们([slack](https://cloud-native.slack.com/archives/C03LA2B8K0A)、[微信群](https://raw.githubusercontent.com/devstream-io/devstream/main/docs/images/wechat-group-qr-code.png)）一起聊聊怎么共建社区。
 
 ## 参与社区会议
 DevStream 真诚地欢迎每一个人参与我们的会议，不需要被邀请，直接来就行！哪怕您暂时没有贡献的想法，只是来听听，我们也非常热烈欢迎。来听，就够了。
 
 - 您可以在我们的 [wiki 页面](https://github.com/devstream-io/devstream/wiki)) 找到关于社区会议的详细信息
-- 也请加入我们的 [Slack 频道](https://join.slack.com/t/devstream-io/shared_invite/zt-16tb0iwzr-krcFGYRN7~Vv1suGZjdv4w) ，因为会议日程和重要的事情会在 Slack 公布。
+- 也请加入我们的 [Slack 频道](https://cloud-native.slack.com/archives/C03LA2B8K0A) ，因为会议日程和重要的事情会在 Slack 公布。
 - 对于中国用户，也可以加 [微信群](https://raw.githubusercontent.com/devstream-io/devstream/main/docs/images/wechat-group-qr-code.png)。
 - 第一次参会您可以不打开摄像头，简单地介绍自己就足够了。当然，如果您想多聊几句，无论是 Q&A 还是聊天，我们都非常欢迎。
 - 随着时间的推移与您对 DevStream 沟通的加深，我们希望您能自如地发表意见、对他人的想法提出反馈，甚至分享您的想法与经验。
@@ -49,7 +49,7 @@ DevStream 真诚地欢迎每一个人参与我们的会议，不需要被邀请�
 在贡献时，向我们提问的最好的方式如下：
 
 - 直接在 GitHub issue 下评论
-- [Slack 频道](https://join.slack.com/t/devstream-io/shared_invite/zt-16tb0iwzr-krcFGYRN7~Vv1suGZjdv4w)
+- [Slack 频道](https://cloud-native.slack.com/archives/C03LA2B8K0A)
 - [微信群](https://raw.githubusercontent.com/devstream-io/devstream/main/docs/images/wechat-group-qr-code.png) 也可以
 
 我们更推荐您在 GitHub 或 Slack 提问，这有助于技术讨论被沉淀下来，以帮助后来的贡献者。

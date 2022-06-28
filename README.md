@@ -9,7 +9,7 @@
 ![Test](https://github.com/devstream-io/devstream/actions/workflows/main.yml/badge.svg)
 [![Go Report Card](https://goreportcard.com/badge/github.com/devstream-io/devstream)](https://goreportcard.com/report/github.com/devstream-io/devstream)
 [![Downloads](https://img.shields.io/github/downloads/devstream-io/devstream/total.svg)](https://github.com/devstream-io/devstream/releases)
-[![Slack](https://img.shields.io/badge/slack-join_chat-success.svg?logo=slack)](https://join.slack.com/t/devstream-io/shared_invite/zt-16tb0iwzr-krcFGYRN7~Vv1suGZjdv4w)
+[![Slack](https://img.shields.io/badge/slack-join_chat-success.svg?logo=slack)](https://cloud-native.slack.com/archives/C03LA2B8K0A)
 
 | English | [中文](docs/README_zh.md) |
 | --- | --- |
@@ -89,11 +89,11 @@ I am happy to tell you that we have, and we are constantly adding more possible 
 
 so you are more than welcome to tell us what combinations you expect.
 
-- [GitOps Toolchain](https://docs.devstream.io/en/latest/tutorials/best-practices/gitops/)
+- [GitOps Toolchain](https://docs.devstream.io/en/latest/best-practices/gitops/)
 
 ## Supported DevOps Tools
 
-DevStream already supports many tools and it's still growing. For a complete list of supported tools, check out our [list of plugins](https://www.devstream.io/docs/plugins/plugins-list) document.
+DevStream already supports many tools and it's still growing. For a complete list of supported tools, check out our [list of plugins](https://docs.devstream.io/en/latest/plugins/plugins-list/) document.
 
 Alternatively, run `dtm list plugins` and it will show you all the available plugins.
 
@@ -120,7 +120,7 @@ First of all, thanks for wanting to contribute to DevStream! For more details on
 
 We will regularly organize `DevStream Community Meeting`, please visit the [wiki](https://github.com/devstream-io/devstream/wiki) page for details.
 
-- Message us on <a href="https://join.slack.com/t/devstream-io/shared_invite/zt-16tb0iwzr-krcFGYRN7~Vv1suGZjdv4w" target="_blank">Slack.</a>
+- Message us on <a href="https://cloud-native.slack.com/archives/C03LA2B8K0A" target="_blank">Slack.</a>
 - For Chinese users, the WeChat group QR code is as below:
 
 ![](docs/images/wechat-group-qr-code.png)

@@ -58,7 +58,7 @@ plugins:
           Plugins: "Plugins"
           Best Practices: "Best Practices"
           Developer Guide: "Developer Guide"
-          Core Concepts in Detail: "Core Concepts in Detail"
+          Core Concepts: "Core Concepts"
           Commands: "Commands"
           Contributor Ladder: "Contributor Ladder"
           Road Map: "Road Map"
@@ -69,7 +69,7 @@ plugins:
           Plugins: "插件"
           Best Practices: "最佳实践"
           Developer Guide: "开发指导"
-          Core Concepts in Detail: "核心概念详解"
+          Core Concepts: "核心概念"
           Commands: "命令"
           Contributor Ladder: "贡献者成长阶梯"
           Road Map: "路线图"
@@ -77,32 +77,37 @@ plugins:
           Overview: "概览"
   - literate-nav
 nav:
-  - Overview: 'https://docs.devstream.io'
-  - 'understanding_the_basics*.md'
-  - 'quickstart*.md'
-  - DTM Commands Explained in Depth:
+  - Overview: .
+  - understanding_the_basics*.md
+  - quickstart*.md
+  - Core Concepts:
+    - core-concepts/core-concepts*.md
+    - core-concepts/config*.md
+    - core-concepts/stateconfig*.md
+    - core-concepts/variable*.md
+    - core-concepts/dependencies*.md
+    - core-concepts/output*.md
+  - Commands:
     - commands/autocomplete*.md
     - commands/*.md
   - Plugins:
     - plugins/plugins-list*.md
     - plugins/*.md
   - Best Practices: best-practices/
-  - 'contributing_guide*.md'
-  - 'contributor_ladder*.md'
+  - contributing_guide*.md
+  - contributor_ladder*.md
   - Developer Guide:
+    - development/architecture*.md
+    - development/development-workflow*.md
+    - development/commit-messages*.md
+    - development/lint*.md
+    - development/project-layout*.md
+    - development/build*.md
+    - development/test*.md
+    - development/mkdocs*.md
+    - development/creating-a-plugin*.md
+    - development/commands/develop*.md
+    - development/reviewing*.md
     - development/good-first-issues*.md
-    - Core Concepts in Detail: core-concepts/
-    - 'development/development-workflow*.md'
-    - 'development/project-layout*.md'
-    - 'development/architecture*.md'
-    - Commands: development/commands/
-    - 'development/build*.md'
-    - 'development/test*.md'
-    - 'development/commit-messages*.md'
-    - 'development/lint*.md'
-    - 'development/mkdocs*.md'
-    - 'development/reviewing*.md'
-    - 'development/creating-a-plugin*.md'
-    - 'development/branch-and-release*.md'
-  - Road Map ⧉: 'https://github.com/devstream-io/devstream/blob/main/ROADMAP.md'
-  - 'troubleshooting*.md'
+    - development/branch-and-release*.md
+  - Road Map ⧉: https://github.com/devstream-io/devstream/blob/main/ROADMAP.md

@@ -9,7 +9,7 @@
 ![Test](https://github.com/devstream-io/devstream/actions/workflows/main.yml/badge.svg)
 [![Go Report Card](https://goreportcard.com/badge/github.com/devstream-io/devstream)](https://goreportcard.com/report/github.com/devstream-io/devstream)
 [![Downloads](https://img.shields.io/github/downloads/devstream-io/devstream/total.svg)](https://github.com/devstream-io/devstream/releases)
-[![Slack](https://img.shields.io/badge/slack-join_chat-success.svg?logo=slack)](https://join.slack.com/t/devstream-io/shared_invite/zt-16tb0iwzr-krcFGYRN7~Vv1suGZjdv4w)
+[![Slack](https://img.shields.io/badge/slack-join_chat-success.svg?logo=slack)](https://cloud-native.slack.com/archives/C03LA2B8K0A)
 
 | [English](../README.md) | 中文 |
 | --- | --- |
@@ -90,7 +90,7 @@ DevStream支持许多工具的管理。你可以灵活地结合一些工具来�
 
 我们非常欢迎你告诉我们你期望的组合。
 
-- [GitOps工具链](https://docs.devstream.io/en/latest/tutorials/best-practices/gitops/)
+- [GitOps工具链](https://docs.devstream.io/en/latest/best-practices/gitops.zh/)
 
 ## 支持的DevOps工具
 
@@ -123,7 +123,7 @@ DevStream已经支持许多工具，而且还在不断增加。关于支持的�
 
 我们将定期组织 "DevStream Community Meeting"，请访问 [WIKI](https://github.com/devstream-io/devstream/wiki) 页面了解详情。
 
-- 在 <a href="https://join.slack.com/t/devstream-io/shared_invite/zt-16tb0iwzr-krcFGYRN7~Vv1suGZjdv4w" target="_blank">Slack</a> 给我们留言。
+- 在 <a href="https://cloud-native.slack.com/archives/C03LA2B8K0A" target="_blank">Slack</a> 给我们留言。
 - 对于中国用户，微信群的二维码如下：
 
 ![](images/wechat-group-qr-code.png)

@@ -6,11 +6,12 @@ ROOT_DIR=$(dirname "${BASH_SOURCE[0]}")/../..
 SCRIPT_DIR=${ROOT_DIR}/hack/e2e
 CONFIG_DIR=${ROOT_DIR}/test/e2e/yaml
 CONFIG_FILENAME=e2e-test-local.yaml
-# CONFIG_FILENAME=e2e-config.yaml
-# TOOLS_FILENAME=e2e-tools.yaml
-# VARIABLES_FILENAME=e2e-variables.yaml
 
-function check_variables() {
+function check() {
+    if [ ! -f "${ROOT_DIR}/dtm" ]; then
+        echo "Binary dtm not found. Maybe you forgot to 'make build' first?"
+        exit 1
+    fi
 
     if [ -z ${GITHUB_USER} ]; then
         echo "You have to set environment variable 'GITHUB_USER' first!"
@@ -38,7 +39,9 @@ function check_variables() {
 }
 
 # setup k8s cluster and setup config yaml files
-function init() {
+function set_up() {
+    check
+
     set -u
     echo "[dtm e2e test script] Create k8s cluster by kind!"
     bash ${SCRIPT_DIR}/e2e-down.sh
@@ -51,13 +54,13 @@ function init() {
 function gen_config() {
     set -u
 
-    # modify user's github name in e2e-test template config file and generate temporary config file in devstream root path
-    sed -e "s/GITHUBUSERNAME/${GITHUB_USER}/g" ${CONFIG_DIR}/${CONFIG_FILENAME} >${ROOT_DIR}/${CONFIG_FILENAME}
-
+    # modify e2e-test template config file and generate temporary config file in devstream root path
+    sed -e "s/GITHUBUSERNAME/${GITHUB_USER}/g" ${CONFIG_DIR}/${CONFIG_FILENAME} >${ROOT_DIR}/${CONFIG_FILENAME}.tmp
+    sed -e "s/DOCKERUSERNAME/${DOCKERHUB_USERNAME}/g" ${ROOT_DIR}/${CONFIG_FILENAME}.tmp >${ROOT_DIR}/${CONFIG_FILENAME}
 }
 
 # dtm e2e test
-function dtm_test() {
+function run_test() {
     set -u
     cd ${ROOT_DIR}
 
@@ -74,14 +77,14 @@ function check_status() {
     set -u
     pod_ready=1
     time=0
-    timeout=120
+    timeout=600
     echo "[dtm e2e test script] Start check pod status!"
-    while [ "$(kubectl get pods -l app=dtm-e2e-go -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}')" != "True" ]; do
+    while [ "$(kubectl get pods -l app=dtm-e2e-test-golang -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}')" != "True" ]; do
         echo "pod not ready yet..."
-        sleep 5
-        time=$((time + 5))
+        sleep 10
+        time=$((time + 10))
         if [ ${time} -ge ${timeout} ]; then
-            ${pod_ready}=0
+            pod_ready=0
             break
         fi
     done
@@ -91,19 +94,19 @@ function check_status() {
     else
         echo "[dtm e2e test script] Pod is not ready!"
         echo "[dtm e2e test script] E2E test failed!"
-        clean
+        clean_up
         exit 1
     fi
 }
 
-function clean() {
+function clean_up() {
     echo "[dtm e2e test script] Start to clean test environment and configuration files!"
     echo "[dtm e2e test script] Remove k8s cluster!"
     bash ${SCRIPT_DIR}/e2e-down.sh
 
     echo "[dtm e2e test script] Remove yaml files!"
-    rm -rf ${ROOT_DIR}/${CONFIG_FILENAME}
-    echo "[dtm e2e test script] E2E test success!"
+    rm -f ${ROOT_DIR}/${CONFIG_FILENAME}
+    rm -f ${ROOT_DIR}/${CONFIG_FILENAME}.tmp
 }
 
 function usage() {
@@ -115,7 +118,7 @@ function usage() {
   - 'DOCKERHUB_TOKEN'."
 }
 
-check_variables
-init
-dtm_test
-clean
+set_up
+run_test
+clean_up
+echo "[dtm e2e test script] E2E test success!"

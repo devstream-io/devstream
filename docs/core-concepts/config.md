@@ -1,4 +1,4 @@
-# Config
+# DevStream Configuration
 
 DevStream uses YAML files to describe your DevOps toolchain configuration.
 

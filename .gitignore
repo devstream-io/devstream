@@ -32,6 +32,7 @@ variables*.yaml
 variables*.yaml.bak
 tools*.yaml
 tools*.yaml.bak
+e2e-test-local.yaml
 
 # IDE
 .idea/

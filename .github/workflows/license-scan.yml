@@ -1,0 +1,14 @@
+name: license check by FOSS
+on: [pull_request]
+
+jobs:
+  fossa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: fossa-contrib/fossa-action@v1
+        with:
+          # https://docs.fossa.com/docs/api-reference#push-only-api-token
+          fossa-api-key: c03fe407c7aa56b90b7dac1ae1868dd0
