@@ -26,14 +26,14 @@ We welcome many different types of contributions including:
 - Communications / Social Media / Blog Posts
 - Release management
 
-Not everything happens through a GitHub pull request. Please come to our [meetings](https://github.com/devstream-io/devstream/wiki) or [contact us](https://join.slack.com/t/devstream-io/shared_invite/zt-16tb0iwzr-krcFGYRN7~Vv1suGZjdv4w) and let's discuss how we can work together. 
+Not everything happens through a GitHub pull request. Please come to our [meetings](https://github.com/devstream-io/devstream/wiki) or [contact us](https://cloud-native.slack.com/archives/C03LA2B8K0A) and let's discuss how we can work together. 
 
 ## Come to Meetings
 
 Absolutely everyone is welcome to come to any of our meetings. You never need an invitation to join us. We want you to join us, even if you don’t have anything you feel like you want to contribute. Just being there is enough!
 
 - You can find out more about our meetings on [our wiki page here](https://github.com/devstream-io/devstream/wiki).
-- Please also consider joining our [Slack channel](https://join.slack.com/t/devstream-io/shared_invite/zt-16tb0iwzr-krcFGYRN7~Vv1suGZjdv4w) because meeting schedules and announcements will also be made available there.
+- Please also consider joining our [Slack channel](https://cloud-native.slack.com/archives/C03LA2B8K0A) because meeting schedules and announcements will also be made available there.
 - You don’t have to turn on your video. The first time you come, introducing yourself is more than enough.
 - Over time, we hope that you feel comfortable voicing your opinions, giving feedback on others’ ideas, and even share your ideas and experiences.
 
@@ -43,7 +43,7 @@ We have good first issues for new contributors and help wanted issues suitable f
 
 - [good first issue](https://github.com/devstream-io/devstream/labels/good%20first%20issue) has extra information to help you make your first contribution. If you are new to DevStream (or even new to open-source,) this is a good place to get yourself started. For more information, see the [good first issues doc](./development/good-first-issues.md).
 - [help wanted](https://github.com/devstream-io/devstream/labels/help%20wanted) are issues suitable for someone who isn't a core maintainer and is good to move onto after your "good first issue."
-- Sometimes there won’t be any issues with these labels. That’s ok! There is likely still something for you to work on. If you want to contribute but you don’t know where to start or can't find a suitable issue, you can reach out to us on our [Slack channel](https://join.slack.com/t/devstream-io/shared_invite/zt-16tb0iwzr-krcFGYRN7~Vv1suGZjdv4w) and ask for an issue to work on.
+- Sometimes there won’t be any issues with these labels. That’s ok! There is likely still something for you to work on. If you want to contribute but you don’t know where to start or can't find a suitable issue, you can reach out to us on our [Slack channel](https://cloud-native.slack.com/archives/C03LA2B8K0A) and ask for an issue to work on.
 
 Once you see an issue that you'd like to work on, please post a comment saying that you want to work on it. Something like "I want to work on this" is fine.
 
@@ -52,7 +52,7 @@ Once you see an issue that you'd like to work on, please post a comment saying t
 The best way to reach us with a question when contributing is to ask:
 
 - The original GitHub issue
-- Our [Slack channel](https://join.slack.com/t/devstream-io/shared_invite/zt-16tb0iwzr-krcFGYRN7~Vv1suGZjdv4w).
+- Our [Slack channel](https://cloud-native.slack.com/archives/C03LA2B8K0A).
 
 ## Pull Request Lifecycle
 
@@ -62,7 +62,7 @@ The unwritten rules (heck, we are writing them anyways) for PRs, contributors, a
 - If a PR is still a work-in-progress, use the "[draft PR](https://github.blog/2019-02-14-introducing-draft-pull-requests/)" function of GitHub to indicate you are already working on it, and show the community members your progress.
 - When a PR is ready for review (not in the draft PR status,) reviewers are expected to do an initial review within 24 hours. If it's a weekend or holiday, it might get delayed.
 - The author should ping/bump when the pull request is ready for further review. If the PR appears to be stalled for over 24 hours, you can also ping/bump.
-- If your PR is stuck (seems can't get reviewed,) besides ping/bump, you can also reach out to the [Slack channel](https://join.slack.com/t/devstream-io/shared_invite/zt-16tb0iwzr-krcFGYRN7~Vv1suGZjdv4w) and notify the reviewers there.
+- If your PR is stuck (seems can't get reviewed,) besides ping/bump, you can also reach out to the [Slack channel](https://cloud-native.slack.com/archives/C03LA2B8K0A) and notify the reviewers there.
 - Small scope (incremental value, even one spelling correction) PR is completely fine. No PR is too small. Don't worry that because you only changed a word and that PR won't get merged.
 - Complete feature PRs are also welcome. In this case, however, try not to make the PR so huge that it becomes extremely hard for reviewers to review.
 - Small or big PR, it's nice to create an issue for each PR to keep things tracked.

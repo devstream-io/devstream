@@ -18,7 +18,7 @@ After a contributor has completed one (or two) "good first issue" items, it's re
 - Let them know what the next step is. For example:
     - move on to another good first issue if they are not completely confident yet
     - find "help wanted" issues
-    - join the community [Slack channel](https://join.slack.com/t/devstream-io/shared_invite/zt-16tb0iwzr-krcFGYRN7~Vv1suGZjdv4w), etc.
+    - join the community [Slack channel](https://cloud-native.slack.com/archives/C03LA2B8K0A), etc.
 - Proactively call out when there is a problem, and provide information on how to fix it.
 
 All of these make new contributors feel welcome and valued and assure them that they will have an extra level of help with their first contribution.
@@ -46,7 +46,7 @@ To make our community as welcoming as possible, the following action items are s
 
 - Encourage new contributors to seek help on the appropriate Slack channels, introduce them, and include them in your conversations.
 - Invite them to your project's meetings, introduce them when they attend, and give them a chance to participate.
-- Give credit to new contributors so that others get to know them, "Hey, would someone help give a second LGTM on @newperson's first PR on chocolate bunnies?". Mention their work in [Slack](https://join.slack.com/t/devstream-io/shared_invite/zt-16tb0iwzr-krcFGYRN7~Vv1suGZjdv4w) or during a meeting, thank them on Twitter, etc.
+- Give credit to new contributors so that others get to know them, "Hey, would someone help give a second LGTM on @newperson's first PR on chocolate bunnies?". Mention their work in [Slack](https://cloud-native.slack.com/archives/C03LA2B8K0A) or during a meeting, thank them on Twitter, etc.
 - Use all the emojis in your approval or LGTM comment. 💖 🚀
 - Acknowledge and thank them for submitting their first pull request and then let them know that you are here to help.
 - Suggest a related help wanted so that can build up experience in an area.
