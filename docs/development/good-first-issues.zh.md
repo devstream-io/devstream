@@ -15,7 +15,7 @@
 - 请让他们知道下一步该做什么，如：
   - 如果他们不够自信，觉得无法胜任，请向他们推荐更合适的 good first issue。
   - 继续参与 "help wanted" issues 。
-  - 参与社区交流，如 [Slack 频道](https://join.slack.com/t/devstream-io/shared_invite/zt-16tb0iwzr-krcFGYRN7~Vv1suGZjdv4w)。
+  - 参与社区交流，如 [Slack 频道](https://cloud-native.slack.com/archives/C03LA2B8K0A)。
 - 若贡献者的代码有问题，应主动指出，并提供修复所需的相关信息（文字、链接、图片、伪代码等）。
 
 所有的行为，都应该让新的贡献者感受到受欢迎与被重视，获得价值感，并向他们保证，他们将在第一次贡献中获得额外的帮助。
