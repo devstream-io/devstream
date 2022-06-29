@@ -6,7 +6,6 @@ import (
 	"github.com/mitchellh/mapstructure"
 	"k8s.io/utils/strings/slices"
 
-	. "github.com/devstream-io/devstream/internal/pkg/plugin/common/helm"
 	"github.com/devstream-io/devstream/pkg/util/helm"
 	"github.com/devstream-io/devstream/pkg/util/k8s"
 	"github.com/devstream-io/devstream/pkg/util/log"

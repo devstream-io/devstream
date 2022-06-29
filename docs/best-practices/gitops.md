@@ -30,7 +30,7 @@ The dependencies of these plugins are(`a -> b` means for `a depends on b`):
 
 Note: These dependencies are optional; you can use dependency to make sure a certain tool is installed before another. We should use dependency according to the actual usage situation.
 
-## Download DevStream (`dtm`)
+## 1 Download DevStream (`dtm`)
 
 Download the appropriate `dtm` version for your platform from [DevStream Releases](https://github.com/devstream-io/devstream/releases).
 
@@ -38,7 +38,7 @@ Download the appropriate `dtm` version for your platform from [DevStream Release
 
 > Once downloaded, you can run the binary from anywhere. Ideally, you want to put it in a place that is in your PATH (e.g., `/usr/local/bin`).
 
-## Prepare the Config File
+## 2 Prepare the Config File
 
 Download the `gitops.yaml` to your working directory:
 
@@ -77,7 +77,7 @@ If you don't know how to create these three tokens, check out:
 - JIRA_API_TOKEN: [Creating a personal access token](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/)
 - DOCKERHUB_TOKEN: [Manage access tokens](https://docs.docker.com/docker-hub/access-tokens/)
 
-## 3. Initialize
+## 3 Initialize
 
 Run:
 
@@ -85,7 +85,7 @@ Run:
 dtm init -f gitops.yaml
 ```
 
-## 4. Apply
+## 4 Apply
 
 Run:
 
@@ -101,7 +101,7 @@ and confirm to continue, then you should see similar output to:
 2022-03-11 13:36:11 ✔ [SUCCESS]  Apply finished.
 ```
 
-## 5. Check the Results
+## 5 Check the Results
 
 Let's continue to look at the results of the `apply` command.
 
@@ -155,7 +155,7 @@ Let's continue to look at the results of the `apply` command.
 
 ![](i.png)
 
-## 6. Clean Up
+## 6 Clean Up
 
 Run:
 

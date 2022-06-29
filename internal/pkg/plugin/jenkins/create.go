@@ -5,7 +5,7 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
-	. "github.com/devstream-io/devstream/internal/pkg/plugin/common/helm"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/common/helm"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -25,7 +25,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	}
 
 	// 2. deal with ns
-	if err := DealWithNsWhenInstall(&opts); err != nil {
+	if err := helm.DealWithNsWhenInstall(&opts.Options); err != nil {
 		return nil, err
 	}
 
@@ -34,7 +34,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		if retErr == nil {
 			return
 		}
-		if err := DealWithNsWhenInterruption(&opts); err != nil {
+		if err := helm.DealWithNsWhenInterruption(&opts.Options); err != nil {
 			log.Errorf("Failed to deal with namespace: %s.", err)
 		}
 		log.Debugf("Deal with namespace when interruption succeeded.")
@@ -46,13 +46,13 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	}()
 
 	// 3. pre-create
-	if retErr = preCreate(); retErr != nil {
+	if retErr = preCreate(opts); retErr != nil {
 		log.Errorf("The pre-create logic failed: %s.", retErr)
 		return nil, retErr
 	}
 
 	// 4. install or upgrade
-	if retErr = InstallOrUpgradeChart(&opts); retErr != nil {
+	if retErr = helm.InstallOrUpgradeChart(&opts.Options); retErr != nil {
 		return nil, retErr
 	}
 
@@ -60,6 +60,12 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	releaseName := opts.Chart.ReleaseName
 	retMap := GetStaticState(releaseName).ToStringInterfaceMap()
 	log.Debugf("Return map: %v.", retMap)
+
+	// show how to get pwd of the admin user
+	howToGetPasswdOfAdmin(&opts)
+
+	// show jenkins url
+	showJenkinsUrl(&opts)
 
 	return retMap, nil
 }
