@@ -1,7 +1,7 @@
 <div align="center">
 <br/>
 
-![](./docs/images/logo-120px.jpg)
+<img src="./docs/images/icon-color.svg" width="120">
 
 # DevStream
 
