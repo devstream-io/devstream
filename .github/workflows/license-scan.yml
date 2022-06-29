@@ -14,4 +14,4 @@ jobs:
       - uses: fossa-contrib/fossa-action@v1
         with:
           # https://docs.fossa.com/docs/api-reference#push-only-api-token
-            fossa-api-key: ${{ env.SECRETS_FOSSA_API_KEY }}
+          fossa-api-key: ${{ env.SECRETS_FOSSA_API_KEY }}
