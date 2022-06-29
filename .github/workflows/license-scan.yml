@@ -1,5 +1,6 @@
 name: license check by FOSS
-on: [pull_request]
+on:
+  pull_request
 
 jobs:
   fossa:
@@ -11,4 +12,4 @@ jobs:
       - uses: fossa-contrib/fossa-action@v1
         with:
           # https://docs.fossa.com/docs/api-reference#push-only-api-token
-          fossa-api-key: c03fe407c7aa56b90b7dac1ae1868dd0
+          fossa-api-key: 047e53daaa907de4fda24866d0346f1d
