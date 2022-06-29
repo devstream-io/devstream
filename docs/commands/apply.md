@@ -7,6 +7,7 @@ When _applying_ a config file using `dtm`, here's what happens:
 We compare the _Tool_, its _State_, and the _Resoruce_ it has created before (if the state exists).
 
 We generate a plan of changes according to the comparison result:
+
 - If the _Tool_ isn't in the _State_, the `Create` interface will be called.
 - If the _Tool_ is in the _State_, but the _Config_ is different than the _State_ (meaning users probably updated the config after the last `apply`,) the `Update` interface will be called.
 - If the _Tool_ is in the _State_, and the _Config_ is the same as the _State_, we try to read the _Resource_.

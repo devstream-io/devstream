@@ -9,6 +9,7 @@ This plugin installs [OpenLDAP](https://www.openldap.org/) in an existing Kubern
 ```
 
 ## Description of Key Fields in `values_yaml`
+
 - `replicaCount`: The default value is 3, for the convenience of local testing, the above example is set to 1
 - `service.type`: The default value is `ClusterIP`, if you have services outside the Kubernetes cluster that require ldap integration, the value preferably be set to `NodePort`, so that services outside the Kubernetes cluster can access the ldap service via `ldap://ip:389` instead of `ldap://openldap.openldap-openldap-stack-ha:389`
 - `adminPassword`: Use your own custom password
