@@ -1,4 +1,4 @@
-# 项目结构
+# 项目组织结构
 
 参见 [`标准 Go 项目布局`](https://github.com/golang-standards/project-layout) 以了解更多背景信息。
 
@@ -27,7 +27,7 @@
 
 ### `/internal`
 
-存放私有程序和库代码。这里是你不希望别人在其应用程序或库中导入的代码。请注意，这种布局模式是由 Go 编译器强制执行的。更多细节请参见 Go 1.4 [`release notes`](https://golang.org/doc/go1.4#internalpackages) 。并不是只能在根目录放置`internal`，任何级别的目录下都可以建立`internal`目录。
+存放私有程序和库代码。这里是你不希望别人在其应用程序或库中导入的代码。请注意，这种项目组织结构是由 Go 编译器强制执行的。更多细节请参见 Go 1.4 [`release notes`](https://golang.org/doc/go1.4#internalpackages) 。并不是只能在根目录放置`internal`，任何级别的目录下都可以建立`internal`目录。
 
 你可以选择性的给你的 internal 包添加一些额外的结构，以分离共享和非共享的内部代码。这不是必须的（特别是对于较小的项目），但可以使包的用途一目了然。应用程序相关代码可以放在`/internal/app`目录下（例如 `/internal/app/myapp`），被其他程序复用的代码可以放在`/internal/pkg`目录下（例如 `/internal/pkg/myprivlib`）。
 
@@ -83,7 +83,7 @@
 
 有些 Go 项目确实有一个`src`文件夹，但这通常是由于开发人员之前是 Java 程序员，这在 Java 中是一种常见的模式。但请尽可能不要采用这种 Java 模式，不要把你的 Go 代码或 Go 项目写成 Java 的样子:-)
 
-不要把项目级的`/src`目录与[`如何编写Go代码`](https://golang.org/doc/code.html)中描述的 Go 用于其工作区的`/src`目录混淆。`$GOPATH`环境变量指向你的（当前）工作空间（在非 Windows 系统上默认指向`$HOME/go`）。这个工作空间包括顶层的`/pkg`、`/bin`和`/src`目录。你的实际项目其实是`/src`下的一个子目录，所以如果你的项目中有`/src`目录，项目路径看起来会是这样：`/some/path/to/workspace/src/your_project/src/your_code.go`。请注意，在 Go 1.11中，你的项目有可能在`GOPATH`之外，但这不意味着使用这种布局模式是一个好主意。
+不要把项目级的`/src`目录与[`如何编写Go代码`](https://golang.org/doc/code.html)中描述的 Go 用于其工作区的`/src`目录混淆。`$GOPATH`环境变量指向你的（当前）工作空间（在非 Windows 系统上默认指向`$HOME/go`）。这个工作空间包括顶层的`/pkg`、`/bin`和`/src`目录。你的实际项目其实是`/src`下的一个子目录，所以如果你的项目中有`/src`目录，项目路径看起来会是这样：`/some/path/to/workspace/src/your_project/src/your_code.go`。请注意，在 Go 1.11中，你的项目有可能在`GOPATH`之外，但这不意味着使用这种项目组织结构是一个好主意。
 
 ## 徽章
 
