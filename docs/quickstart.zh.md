@@ -8,7 +8,7 @@
 
 进入你的工作目录，运行以下命令，自动下载最新的 `dtm` 与配置文件：
 ```shell
-sh -c "$(curl -fsSL https://github.com/devstream-io/devstream/blob/main/hack/quick-start/quickstart.sh)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/devstream-io/devstream/main/hack/quick-start/quickstart.sh)"
 ```
 
 此命令执行完毕，你的工作区将会多出两个文件：dtm 与 quickstart.yaml。
