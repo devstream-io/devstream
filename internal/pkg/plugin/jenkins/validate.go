@@ -10,7 +10,7 @@ import (
 
 // validate validates the options provided by the core.
 func validate(opts *Options) []error {
-	errs := helm.Validate(opts.GetHelmParam())
+	errs := helm.DefaultsAndValidate(opts.GetHelmParam())
 	if len(errs) != 0 {
 		return errs
 	}
