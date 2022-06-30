@@ -8,6 +8,12 @@ import (
 
 //go:generate go run gen_embed_var.go
 func Show() error {
+	template := viper.GetString("template")
+	if template == "quickstart" {
+		fmt.Println(QuickStart)
+		return nil
+	}
+
 	plugin := viper.GetString("plugin")
 	if plugin == "" {
 		fmt.Println(DefaultConfig)

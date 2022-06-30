@@ -13,6 +13,7 @@ import (
 var plugin string
 var instanceID string
 var statusAllFlag bool
+var template string
 
 var showCMD = &cobra.Command{
 	Use:   "show",
@@ -24,7 +25,8 @@ var showConfigCMD = &cobra.Command{
 	Short: "Show configuration information",
 	Long: `Show config is used for showing plugins' template configuration information.
 Examples:
-  dtm show config --plugin=A-PLUGIN-NAME`,
+  dtm show config --plugin=A-PLUGIN-NAME,
+  dtm show config --template=quickstart`,
 	Run: showConfigCMDFunc,
 }
 
@@ -59,6 +61,7 @@ func init() {
 	showCMD.AddCommand(showStatusCMD)
 
 	showConfigCMD.Flags().StringVarP(&plugin, "plugin", "p", "", "specify name with the plugin")
+	showConfigCMD.Flags().StringVarP(&template, "template", "t", "quickstart", "print a template config, e.g. quickstart/gitops/...")
 	completion.FlagPluginsCompletion(showConfigCMD, "plugin")
 
 	showStatusCMD.Flags().StringVarP(&plugin, "plugin", "p", "", "specify name with the plugin")

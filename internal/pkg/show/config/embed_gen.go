@@ -96,3 +96,6 @@ var pluginDefaultConfigs = map[string]string{
 	"trello":                         TrelloDefaultConfig,
 	"zentao":                         ZentaoDefaultConfig,
 }
+
+//go:embed quickstart.yaml
+var QuickStart string
