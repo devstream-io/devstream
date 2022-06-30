@@ -27,7 +27,6 @@ type Option struct {
 }
 
 func main() {
-
 	srcDir := flag.String("dir", "plugins", "source directory for yaml files")
 	packageName := flag.String("pkg", "config", "package name")
 	flag.Parse()
@@ -69,6 +68,9 @@ var pluginDefaultConfigs = map[string]string{
 	"{{.}}":{{UpperCamelCase . -}}DefaultConfig,
 	{{- end}}
 }
+
+//go:embed quickstart.yaml
+var QuickStart string
 `
 
 // generate generates the code for Option `o` into a file named by `o.Path`.
