@@ -1,28 +1,30 @@
 # jenkins 插件
 
-本插件使用 helm 在已有的 k8s 集群上安装 [jenkins](https://jenkins.io)。
+本插件使用 helm 在已有的 k8s 集群上安装 [Jenkins](https://jenkins.io)。
 
 ## 使用方法
 
-### 注意
+### 生产环境
 
-#### 生产环境
 请将配置中的 `storageClass` 修改为已存在的 StorageClass.
 
-#### 测试环境
+### 测试环境
+
 如果你想**在本地测试插件**：
 
 1. 请将配置文件中的 `test_env` 改为 `true`。
-2. 在运行 k8s 的主机上创建数据目录并修改权限，命令如下：
+2. 在运行 Kubernetes 的主机上创建数据目录并修改权限，命令如下：
+
+如果 Kubernetes 和 dtm 运行在同一个主机上：
 
 ```bash
-# 如果 k8s 和 dtm 运行在同一个主机上
 mkdir -p ~/data/jenkins-volume/
 chown -R 1000:1000 ~/data/jenkins-volume/
+```
 
--------------------------
+如果 Kubernetes 和 dtm 运行在不同的主机上，比如 Kubernetes 运行在 虚拟机或者 Docker 容器中：
 
-# 如果 k8s 和 dtm 运行在不同的主机上，比如 k8s 运行在 docker 中
+```bash
 # 1 获取 dtm 运行的主机的用户的 home 目录
 cd ~ && pwd
 # 2 复制上面的命令结果
