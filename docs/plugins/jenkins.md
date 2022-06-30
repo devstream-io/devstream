@@ -15,14 +15,14 @@ If you want to **test** the plugin in a **local environment**:
 1. Please change the `test_env` to `true` in the config file.
 2. Create the data directory manually in the host where Kubernetes is running. Here's how:
 
-If you run k8s and `dtm` on the same host:
+If you run Kubernetes and `dtm` on the same host:
 
 ```bash
 mkdir -p ~/data/jenkins-volume/
 chown -R 1000:1000 ~/data/jenkins-volume/
 ```
 
-Or, if you run k8s and `dtm` on different "hosts," such as running k8s in an VM or a Docker container:
+Or, if you run Kubernetes and `dtm` on different "hosts," such as running Kubernetes in an VM or a Docker container:
 
 ```bash
 # 1 get the home directory of the user who runs dtm
