@@ -3,6 +3,7 @@
 This plugin creates an [ArgoCD Application](https://argo-cd.readthedocs.io/en/stable/core_concepts/) custom resource.
 
 **Notes:**
+
 - ArgoCD itself must have been already installed before the usage of this plugin.
   To install ArgoCD, use the [argocd plugin](./argocd.md).
   Or you can use both plugins(argocd+argocdapp) at the same time.
