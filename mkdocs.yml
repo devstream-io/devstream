@@ -96,6 +96,7 @@ nav:
   - Best Practices: best-practices/
   - contributing_guide*.md
   - contributor_ladder*.md
+  - Governance ⧉: https://github.com/devstream-io/devstream/blob/main/GOVERNANCE.md
   - Developer Guide:
     - development/architecture*.md
     - development/development-workflow*.md
