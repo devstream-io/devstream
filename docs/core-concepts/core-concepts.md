@@ -6,7 +6,7 @@ These are the core concepts of DevStream.
 ## The Architecture of DevStream
 
 The architecture image below shows how DevStream works in general:
-![](./images/architecture-overview.png)
+![](../images/architecture-overview.png)
 
 ## Workflow
 
