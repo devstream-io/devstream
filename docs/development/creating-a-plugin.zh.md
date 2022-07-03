@@ -1,6 +1,6 @@
 # 创建一个插件
 
-## 0 感谢您的贡献!
+## 0 感谢你的贡献!
 
 首先，请阅读我们的 [CONTRIBUTING](https://github.com/devstream-io/devstream/blob/main/CONTRIBUTING.md) 文档。
 
@@ -12,7 +12,7 @@
 
 这是该插件代码的唯一主要入口。
 
-你不需要修改这个文件。如果您觉得自动生成的这个文件有问题，您可以创建一个PR来直接修改[模板](https://github.com/devstream-io/devstream/blob/main/internal/pkg/develop/plugin/template/main.go)。
+你不需要修改这个文件。如果你觉得自动生成的这个文件有问题，你可以创建一个PR来直接修改[模板](https://github.com/devstream-io/devstream/blob/main/internal/pkg/develop/plugin/template/main.go)。
 
 > ### /docs/plugins/YOUR-PLUGIN-NAME.md
 
@@ -51,6 +51,6 @@
 
 DevStream是使用[go plugin](https://pkg.go.dev/plugin)来实现自定义插件的。。
 
-当你执行一个调用任何接口(`Create`, `Read`, `Update`, `Delete`)的命令时，DevStream的`pluginengine`会调用[`plugin.Lookup("DevStreamPlugin")`函数](https://github.com/devstream-io/devstream/blob/38307894bbc08f691b2c5015366d9e45cc87970c/internal/pkg/pluginengine/plugin_helper.go#L28)来加载插件，获得实现`DevStreamPlugin`接口的变量`DevStreamPlugin`，然后你就可以调用相应的插件接口。所以我们不建议您直接修改`/cmd/plugin/YOUR-PLUGIN-NAME/main.go`文件，因为该文件是根据接口定义自动生成好的。
+当你执行一个调用任何接口(`Create`, `Read`, `Update`, `Delete`)的命令时，DevStream的`pluginengine`会调用[`plugin.Lookup("DevStreamPlugin")`函数](https://github.com/devstream-io/devstream/blob/38307894bbc08f691b2c5015366d9e45cc87970c/internal/pkg/pluginengine/plugin_helper.go#L28)来加载插件，获得实现`DevStreamPlugin`接口的变量`DevStreamPlugin`，然后你就可以调用相应的插件接口。所以我们不建议你直接修改`/cmd/plugin/YOUR-PLUGIN-NAME/main.go`文件，因为该文件是根据接口定义自动生成好的。
 
 注意：`/cmd/plugin/YOUR-PLUGIN-NAME/main.go`文件中的`main()`不会被执行，它只是用来避免golangci-lint错误。

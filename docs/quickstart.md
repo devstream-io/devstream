@@ -117,7 +117,7 @@ input `y` and hit the enter key.
 
 You should see similar output to the following
 
-```shell
+```
 2022-06-30 11:25:47 ℹ [INFO]  Apply started.
 2022-06-30 11:25:47 ℹ [INFO]  Got Backend from config: local
 2022-06-30 11:25:47 ℹ [INFO]  Using dir <.devstream> to store plugins.
