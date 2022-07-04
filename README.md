@@ -121,8 +121,18 @@ First of all, thanks for wanting to contribute to DevStream! For more details on
 
 We will regularly organize `DevStream Community Meeting`, please visit the [wiki](https://github.com/devstream-io/devstream/wiki) page for details.
 
-- Message us on <a href="https://cloud-native.slack.com/archives/C03LA2B8K0A" target="_blank">Slack.</a>
-- For Chinese users, the WeChat group QR code is as below:
+Please join our Slack channel. Here's how:
+
+1. [Invite yourself to CNCF's Slack if you haven't done so](https://slack.cncf.io). 
+    - Input your email address, and click "get my invite."
+    - Open your inbox, find the invitation email, and click "join now."
+    - You can join by Email or with your Google account; follow the instructions.
+2. Join DevStream channel, there are two ways to do so:
+    - Use [this link](https://cloud-native.slack.com/messages/devstream) to join the channel.
+    - In your Slack app, on the left side navigation bar, move your mouse to the "Channels" section, and there should emerge a "plus" sign on the right. Click, and select "browse channels." Input "devstream", and join.
+3. For Mandarin-speaking users and contributors, you are also encouraged to join the [devstream-mandarin](https://cloud-native.slack.com/messages/devstream-mandarin) channel, where all discussions will be in Mandarin.
+
+For WeChat users, you can also join our WeChat group:
 
 ![](docs/images/wechat-group-qr-code.png)
 

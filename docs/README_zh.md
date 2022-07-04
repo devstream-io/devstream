@@ -124,8 +124,18 @@ DevStream已经支持许多工具，而且还在不断增加。关于支持的�
 
 我们将定期组织 "DevStream Community Meeting"，请访问 [WIKI](https://github.com/devstream-io/devstream/wiki) 页面了解详情。
 
-- 在 <a href="https://cloud-native.slack.com/archives/C03LA2B8K0A" target="_blank">Slack</a> 给我们留言。
-- 对于中国用户，微信群的二维码如下：
+另外，请加入我们的Slack channel，请参见如下步骤：
+
+1. [给自己发送邀请进入CNCF的Slack](https://slack.cncf.io). 
+    - 输入邮箱地址，点击"get my invite"。
+    - 打开收件箱，找到邀请邮件，点击邮件中的"join now".
+    - 你可以用邮箱地址或者Google账号等方式加入，跟随屏幕提示即可。
+2. 对于会说英文的用户：加入DevStream的英语频道。以下两种方式均可：
+    - [点击这里](https://cloud-native.slack.com/messages/devstream)。
+    - 在Slack app里，在左侧的导航栏，找到“频道”区域，将鼠标移动到上面，这时“频道”的右侧会出现一个加号。点击加号，然后选择“浏览频道”。输入"devstream"，找到频道然后加入。
+3. 对于只说中文的用户，可以加入[devstream-mandarin](https://cloud-native.slack.com/messages/devstream-mandarin)频道，这里的讨论都是用中文进行的。
+
+对于使用微信的用户，请扫描二维码进群：
 
 ![](images/wechat-group-qr-code.png)
 
