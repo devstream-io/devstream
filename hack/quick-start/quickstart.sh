@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function init() {
   if [ "$(uname)" == "Darwin" ];then
     HOST_OS="darwin"
@@ -8,9 +10,9 @@ function init() {
     exit 1
   fi
 
-  if [ "$(arch)" == "amd64" ];then
+  if [ "$(uname -m)" == "amd64" ] || [ "$(uname -m)" == "x86_64" ];then
     HOST_ARCH="amd64"
-  elif [ "$(arch)" == "arm64" ];then
+  elif [ "$(uname -m)" == "arm64" ];then
     HOST_ARCH="arm64"
   else
     echo "Support amd64/arm64 CPU arch only"
