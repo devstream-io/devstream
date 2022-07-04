@@ -22,7 +22,6 @@ Please report vulnerabilities by e-mail to the following address:
 
 - tiexin.guo@merico.dev
 - tao.hu@merico.dev
-- fangbao.li@merico.dev
 
 If you find a security-related bug in DevStream, we kindly ask you to disclose responsibly and give us appropriate time to react to mitigate the vulnerability.
 
