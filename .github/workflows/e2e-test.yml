@@ -80,5 +80,5 @@ jobs:
         if: failure()
         run: |
             echo "e2e failure"
-            curl -X POST -H "Content-Type: application/json" -d '{"msg_type":"text","content":{"text":"<at user_id=\"all\">All</at>Attention: e2e actions failure"}}' https://open.feishu.cn/open-apis/bot/v2/hook/${{ secrets.FEISHU_BOT_ID }}
+            curl -X POST -H "Content-Type: application/json" -d '{"msg_type":"text","content":{"text":"<at user_id=\"all\">All</at>Attention: dtm-e2e-actions failure"}}' https://open.feishu.cn/open-apis/bot/v2/hook/${{ secrets.FEISHU_BOT_ID }}
 
