@@ -1,4 +1,4 @@
-name: Links
+name: links
 
 on:
   repository_dispatch:
@@ -42,7 +42,7 @@ jobs:
 
           # ./site the MkDocs site directory to check
           # ./*.md all markdown files in the root directory
-          args: -E -v -i -n -t 45 --max-concurrency 32 -a 429,401 -- ./site;*.md
+          args: -E -v -i -n -t 45 --max-concurrency 32 -a 429,401 -- site;*.md
           output: out.md
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

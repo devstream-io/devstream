@@ -1,10 +1,16 @@
 https://github.com/.*/pull/[0-9]+.*
 https://github.com/.*/issues/[0-9]+.*
 https://fonts.gstatic.com/
-.*mkdocs\.yaml\*\.md
 .*foo.*
 .*bar.*
 .*xxx.*
 https://id.atlassian.net
 https://JIRA_ID.atlassian.net
+https://jira_id.atlassian.net
 https://vault-0.vault-internal:8201/
+https://kubernetes.default.svc
+https://github.com/IronCore864/dtm-test-go.git
+https://www.crunchbase.com/organization/merico
+https://jp-gouin.github.io/helm-openldap/
+https://pkg.go.dev/github.com/golang-standards/project-layout
+https://gitlab.com/-/profile/personal_access_tokens\?name=DevStream\+Access\+token&scopes=api

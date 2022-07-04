@@ -42,17 +42,17 @@ curl -o gitops.yaml https://raw.githubusercontent.com/devstream-io/devstream/mai
 
 配置文件中用到的变量的解释和示例值如下：
 
-| Variable                       | Example           | Note                                                         |
-| ------------------------------ | ----------------- | ------------------------------------------------------------ |
-| defaultBranch                  | main              | 你想使用的分支名称 |
-| githubUsername                 | daniel-hutao      | 你的GitHub用户名（区分大小写） |
-| repoName                       | go-webapp         | 只要它不在你的GitHub账户下，这个名称就是合法的 |
-| dockerhubUsername              | exploitht         | 你的DockerHub用户名（区分大小写） |
-| jiraID                         | merico            | 这是一个域名前缀就像https://merico.atlassian.net中的merico |
-| jiraProjectKey                 | DT                | 项目issue key的描述性前缀，用于识别来自该项目的工作 |
-| jiraUserEmail                  | tao.hu@merico.dev | 登录Jira的邮箱 |
-| argocdNameSpace                | argocd            | ArgoCD用的namespace |
-| argocdDeployTimeout            | 10m               | ArgoCD部署的timeout时长 |
+| Variable                       | Example           | Note                                            |
+| ------------------------------ | ----------------- |-------------------------------------------------|
+| defaultBranch                  | main              | 你想使用的分支名称                                       |
+| githubUsername                 | daniel-hutao      | 你的GitHub用户名（区分大小写）                              |
+| repoName                       | go-webapp         | 只要它不在你的GitHub账户下，这个名称就是合法的                      |
+| dockerhubUsername              | exploitht         | 你的DockerHub用户名（区分大小写）                           |
+| jiraID                         | merico            | 这是一个域名前缀就像https://merico.atlassian.net 中的merico |
+| jiraProjectKey                 | DT                | 项目issue key的描述性前缀，用于识别来自该项目的工作                  |
+| jiraUserEmail                  | tao.hu@merico.dev | 登录Jira的邮箱                                       |
+| argocdNameSpace                | argocd            | ArgoCD用的namespace                               |
+| argocdDeployTimeout            | 10m               | ArgoCD部署的timeout时长                              |
 
 这些插件需要设定一下环境变量：
 

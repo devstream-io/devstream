@@ -1,7 +1,7 @@
 <div align="center">
 <br/>
 
-<img src="./images/icon-color.svg" width="120">
+<img src="docs/images/icon-color.svg" width="120">
 
 # DevStream
 
@@ -12,7 +12,7 @@
 [![Downloads](https://img.shields.io/github/downloads/devstream-io/devstream/total.svg)](https://github.com/devstream-io/devstream/releases)
 [![Slack](https://img.shields.io/badge/slack-join_chat-success.svg?logo=slack)](https://cloud-native.slack.com/archives/C03LA2B8K0A)
 
-| [English](../README.md) | 中文 |
+| [English](README.md) | 中文 |
 | --- | --- |
 
 </div>
@@ -79,7 +79,7 @@ A：受 [`git`](https://github.com/git/git#readme) 的启发，这个名字可�
 
 ## 快速入门
 
-现在就跟随我们的[快速入门](./quickstart.zh.md)文档开始使用 DevStream
+现在就跟随我们的[快速入门](docs/quickstart.zh.md)文档开始使用 DevStream
 
 ## 最佳实践
 
@@ -118,7 +118,7 @@ DevStream已经支持许多工具，而且还在不断增加。关于支持的�
 
 首先，感谢你愿意为DevStream做贡献 
 
-关于如何贡献、贡献者成长计划、风格指南等更多细节，请查看我们的 [CONTRIBUTING](../CONTRIBUTING.md) 文档。
+关于如何贡献、贡献者成长计划、风格指南等更多细节，请查看我们的 [CONTRIBUTING](CONTRIBUTING.md) 文档。
 
 ## 社区
 
@@ -127,7 +127,7 @@ DevStream已经支持许多工具，而且还在不断增加。关于支持的�
 - 在 <a href="https://cloud-native.slack.com/archives/C03LA2B8K0A" target="_blank">Slack</a> 给我们留言。
 - 对于中国用户，微信群的二维码如下：
 
-![](images/wechat-group-qr-code.png)
+![](docs/images/wechat-group-qr-code.png)
 
 ## 行为守则
 

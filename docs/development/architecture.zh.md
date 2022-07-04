@@ -58,4 +58,4 @@ _注意：为了简单起见，CLI被命名为`dtm`（DevOps Toolchain Manager)�
 
 它执行的包括"创建"、"读取"、"更新"和"删除"等操作。
 
-要开发一个新的插件，请参阅[创建一个插件](./creating-a-plugin.md)。
+要开发一个新的插件，请参阅[创建一个插件](./creating-a-plugin.zh.md)。
