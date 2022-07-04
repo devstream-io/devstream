@@ -1,6 +1,6 @@
 # Variables File
 
-To not repeat yourself (DRY,) we can define some variables in a var file and use the vars in the config file.
+To not repeat yourself (Don't repeat yourself, DRY, see [here](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself),) we can define some variables in a var file and use the vars in the config file.
 
 You can specify the path/to/your/variablesFile.yaml in the main config. See the [config](./config.md) section for more details.
 
