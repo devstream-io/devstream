@@ -34,7 +34,6 @@ jobs:
           fail: true
             # For parameter description, see https://github.com/lycheeverse/lychee#commandline-parameters
             # -E, --exclude-all-private    Exclude all private IPs from checking.
-            # -v, --verbose                Verbose program output
             # -i, --insecure               Proceed for server connections considered insecure (invalid TLS)
             # -n, --no-progress            Do not show progress bar.
             # -t, --timeout <timeout>      Website timeout in seconds from connect to response finished [default:20]
@@ -43,6 +42,6 @@ jobs:
 
             # ./site the MkDocs site directory to check
             # ./*.md all markdown files in the root directory
-          args: -E -v -i -n -t 45 --max-concurrency 32 -a 429,401 -- site;*.md
+          args: -E -i -n -t 45 --max-concurrency 64 -a 429,401 -- 'site' '*.md'
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
