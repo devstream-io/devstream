@@ -47,9 +47,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
-#      - name: Create Issue From File
-#        uses: peter-evans/create-issue-from-file@v3
-#        with:
-#          title: Broken Link Detected
-#          content-filepath: out.md
-##          assignees: aFlyBird0
+      - name: Create Issue From File
+        uses: peter-evans/create-issue-from-file@v3
+        with:
+          title: Broken Link Detected
+          content-filepath: out.md
+#          assignees: aFlyBird0
