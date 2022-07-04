@@ -226,6 +226,9 @@ func SplitConfigFileBytes(fileBytes []byte) (coreConfig []byte, varConfig []byte
 	return
 }
 
+// checkConfigType checks the bytes of the configType
+// core config is the core configType and can be identified by key state
+// plugins config is the tool configType and can be identified by key tool
 func checkConfigType(bytes []byte, configType string) (bool, error) {
 	result := make(map[string]interface{})
 	if err := yaml.Unmarshal(bytes, &result); err != nil {
