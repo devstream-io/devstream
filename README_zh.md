@@ -1,7 +1,7 @@
 <div align="center">
 <br/>
 
-<img src="./images/icon-color.svg" width="120">
+<img src="docs/images/icon-color.svg" width="120">
 
 # DevStream
 
@@ -12,7 +12,7 @@
 [![Downloads](https://img.shields.io/github/downloads/devstream-io/devstream/total.svg)](https://github.com/devstream-io/devstream/releases)
 [![Slack](https://img.shields.io/badge/slack-join_chat-success.svg?logo=slack)](https://cloud-native.slack.com/archives/C03LA2B8K0A)
 
-| [English](../README.md) | 中文 |
+| [English](README.md) | 中文 |
 | --- | --- |
 
 </div>
@@ -79,7 +79,7 @@ A：受 [`git`](https://github.com/git/git#readme) 的启发，这个名字可�
 
 ## 快速入门
 
-现在就跟随我们的[快速入门](./quickstart.zh.md)文档开始使用 DevStream
+现在就跟随我们的[快速入门](docs/quickstart.zh.md)文档开始使用 DevStream
 
 ## 最佳实践
 
@@ -118,7 +118,7 @@ DevStream已经支持许多工具，而且还在不断增加。关于支持的�
 
 首先，感谢你愿意为DevStream做贡献 
 
-关于如何贡献、贡献者成长计划、风格指南等更多细节，请查看我们的 [CONTRIBUTING](../CONTRIBUTING.md) 文档。
+关于如何贡献、贡献者成长计划、风格指南等更多细节，请查看我们的 [CONTRIBUTING](CONTRIBUTING.md) 文档。
 
 ## 社区
 
@@ -126,9 +126,9 @@ DevStream已经支持许多工具，而且还在不断增加。关于支持的�
 
 另外，请加入我们的Slack channel，请参见如下步骤：
 
-1. [给自己发送邀请进入CNCF的Slack](https://slack.cncf.io). 
+1. [给自己发送进入CNCF的Slack的邀请](https://slack.cncf.io)。
     - 输入邮箱地址，点击"get my invite"。
-    - 打开收件箱，找到邀请邮件，点击邮件中的"join now".
+    - 打开收件箱，找到邀请邮件，点击邮件中的"join now"。
     - 你可以用邮箱地址或者Google账号等方式加入，跟随屏幕提示即可。
 2. 对于会说英文的用户：加入DevStream的英语频道。以下两种方式均可：
     - [点击这里](https://cloud-native.slack.com/messages/devstream)。
@@ -137,7 +137,7 @@ DevStream已经支持许多工具，而且还在不断增加。关于支持的�
 
 对于使用微信的用户，请扫描二维码进群：
 
-![](images/wechat-group-qr-code.png)
+![](docs/images/wechat-group-qr-code.png)
 
 ## 行为守则
 

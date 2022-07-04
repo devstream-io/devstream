@@ -93,5 +93,5 @@ vault-agent-injector-68dc986-bnsj2   1/1     Running   0          2m28s
 ```
 
 7. After the above operations, you want to use the Vault to write/read secrets. You need to follow the documentation of the hashicorp Vault:
-- [Set a secret in Vault](https://learn.hashicorp.com/tutorials/vault/kubernetes-minikube?in=vault/kubernetes#set-a-secret-in-vault)
+- [Set a secret in Vault](https://learn.hashicorp.com/tutorials/vault/kubernetes-minikube-consul#set-a-secret-in-vault)
 - [Your First Secret](https://learn.hashicorp.com/tutorials/vault/getting-started-first-secret)

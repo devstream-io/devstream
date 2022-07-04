@@ -1,4 +1,4 @@
-name: Links When PR
+name: links when pr
 
 on:
   pull_request:
@@ -43,6 +43,6 @@ jobs:
 
             # ./site the MkDocs site directory to check
             # ./*.md all markdown files in the root directory
-          args: -E -v -i -n -t 45 --max-concurrency 32 -a 429,401 -- ./site;*.md
+          args: -E -v -i -n -t 45 --max-concurrency 32 -a 429,401 -- site;*.md
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

@@ -69,7 +69,7 @@ After reloading your shell, dtm autocompletion should be working!
 
 ```{admonition} Note
 :class: note
-Main reference [bash auto-completion on macOS](https://kubernetes.io/docs/tasks/tools/included/optional-kubectl-configs-bash-macos/)
+Main reference [bash auto-completion on macOS](https://kubernetes.io/docs/tasks/tools/included/optional-kubectl-configs-bash-mac/)
 ```
 
 The completion script depends on `bash-completion`, So you have to install it first.
