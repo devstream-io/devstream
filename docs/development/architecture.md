@@ -60,4 +60,4 @@ A _plugin_ implements the aforementioned, predefined interfaces.
 
 It executes operations like `Create`, `Read`, `Update`, and `Delete`.
 
-To develop a new plugin, see [creating a plugin](./development/creating-a-plugin.md).
+To develop a new plugin, see [creating a plugin](./creating-a-plugin.md).
