@@ -2,8 +2,8 @@
 
 ## 背景
 
-1. 我们使用[readthedocs](https://readthedocs.org/)托管文档，不过您并不需要对readthedocs了解很多，即可为DevStream的文档做出贡献。
-1. Readthedocs支持[`sphinx`](https://docs.readthedocs.io/en/stable/intro/getting-started-with-sphinx.html)和[`mkdocs`](https://docs.readthedocs.io/en/stable/intro/getting-started-with-mkdocs.html)来构建文档站点；我们选择了`mkdocs`。如果您遇到任何问题，请参阅[`mkdocs`的官方文档](https://www.mkdocs.org/)。
+1. 我们使用[readthedocs](https://readthedocs.org/)托管文档，不过你并不需要对readthedocs了解很多，即可为DevStream的文档做出贡献。
+1. Readthedocs支持[`sphinx`](https://docs.readthedocs.io/en/stable/intro/getting-started-with-sphinx.html)和[`mkdocs`](https://docs.readthedocs.io/en/stable/intro/getting-started-with-mkdocs.html)来构建文档站点；我们选择了`mkdocs`。如果你遇到任何问题，请参阅[`mkdocs`的官方文档](https://www.mkdocs.org/)。
 1. 我们使用了`mkdocs`的`material`主题。有关`material`主题的更多信息请参见：
     - [网站](https://squidfunk.github.io/mkdocs-material/)
     - [文档](https://squidfunk.github.io/mkdocs-material/getting-started/)
@@ -42,9 +42,9 @@
 
 要创建新文档，请执行以下操作：
 
-- 在`/docs`文件夹中创建`doc_name.md`和`doc_name.zh.md`。如有必要，您可以将它们放在恰当的子文件夹下。参考当前目录结构来确定适合该文档的最佳路径。
-- 编写文档的内容。您可以选择只写英文文档或中文文档；您不必用两种语言编写文档；当然如果您希望展示您中英双语的实力的话，我们建议您两种语言的文档同时编写，一并提交。
-- 大多数情况下，您不需要考虑导航菜单，它是整个文档网站的目录。但是如果需要自定义导航菜单，可以参考[设置导航](https://github.com/devstream-io/devstream/blob/main/docs/development/mkdocs.md#setting-up-navigation)。
+- 在`/docs`文件夹中创建`doc_name.md`和`doc_name.zh.md`。如有必要，你可以将它们放在恰当的子文件夹下。参考当前目录结构来确定适合该文档的最佳路径。
+- 编写文档的内容。你可以选择只写英文文档或中文文档；你不必用两种语言编写文档；当然如果你希望展示你中英双语的实力的话，我们建议你两种语言的文档同时编写，一并提交。
+- 大多数情况下，你不需要考虑导航菜单，它是整个文档网站的目录。但是如果需要自定义导航菜单，可以参考[设置导航](https://github.com/devstream-io/devstream/blob/main/docs/development/mkdocs.md#setting-up-navigation)。
 
 ## 设置导航
 
@@ -68,7 +68,7 @@ nav:
 
 如果想了解更多关于导航的配置，请参阅[配置页面与导航](https://www.mkdocs.org/user-guide/writing-your-docs/#configure-pages-and-navigation)和[导航语法](https://oprypin.github.io/mkdocs-literate-nav/)。
 
-## 在本地查看您的更改
+## 在本地查看你的更改
 
 运行：
 
@@ -78,7 +78,7 @@ pip3 install -r docs/requirements.txt
 mkdocs serve
 ```
 
-请在提交PR之前在本地确认您的更改。
+请在提交PR之前在本地确认你的更改。
 
 ## 推荐的工具和阅读材料
 
