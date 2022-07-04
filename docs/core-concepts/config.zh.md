@@ -1,12 +1,13 @@
-# DevStream 配置
+# DevStream配置
 
-DevStream使用Yaml文件来描述你的DevOps工作流配置。
+DevStream使用YAML文件来描述你的DevOps工具链配置。
 
 ## 主配置文件
 
 默认情况下，`dtm` 会使用当前目录下的`config.yaml`来作为主配置。
 
 主配置包含三个部分：
+
 - `varFile`: 指向定义变量的文件路径
 - `toolFile`: 指向定义插件的文件路径
 - `state`: 指定DevStream状态存储位置
@@ -28,7 +29,7 @@ state:
 
 ### varFile
 
-变量文件是一个用`key: value`格式来定义变量的Yaml文件。
+变量文件是一个用`key: value`格式来定义变量的YAML文件。
 
 _At the moment, nested/composite values (for example, the value is a list/dictionary) are not supported yet._
 
@@ -84,8 +85,6 @@ tools:
 
 从v0.6.0开始，我们将支持`local`和`s3`两种存储。
 
-The `state` section specifies where to store DevStream state. As of now (v0.5.0), we only support local backend.
-
 更多状态存储细节请参见[DevStream状态存储](./stateconfig.md)
 
 ## 默认值
@@ -101,10 +100,10 @@ dtm apply -f path/to/your/config.yaml
 dtm apply --config-file path/to/your/config.yaml
 ```
 
-### varFile 和 toolFile 默认没有值
+### varFile和toolFile默认没有值
 
-对于`varFile` and `toolFile`, 默认没有任何值
+对于`varFile`和`toolFile`, 默认没有任何值。
 
-如果主配置中没有指定`varFile`，`dtm` 将不会使用任何 var 文件，即使当前目录下已经有一个名为 `variables.yaml` 的文件。
+如果主配置中没有指定`varFile`，`dtm`将不会使用任何var文件，即使当前目录下已经有一个名为`variables.yaml`的文件。
 
-同样，如果主配置中没有指定`toolFile`，即使当前目录下有 `tools.yaml` 文件，`dtm` 也会抛出错误。
+同样，如果主配置中没有指定`toolFile`，即使当前目录下有`tools.yaml`文件，`dtm`也会抛出错误。
