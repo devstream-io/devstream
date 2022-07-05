@@ -185,18 +185,38 @@ func (c *Config) ValidateDependency() []error {
 func SplitConfigFileBytes(fileBytes []byte) (coreConfig []byte, varConfig []byte, toolConfig []byte, err error) {
 	splitBytes := bytes.Split(bytes.TrimPrefix(fileBytes, []byte("---")), []byte("---"))
 
-	switch len(splitBytes) {
-	case 1:
-		coreConfig = splitBytes[0]
-	case 2:
-		coreConfig = splitBytes[0]
-		toolConfig = splitBytes[1]
-	case 3:
-		coreConfig = splitBytes[0]
-		varConfig = splitBytes[1]
-		toolConfig = splitBytes[2]
-	default:
+	if len(splitBytes) > 3 {
 		err = fmt.Errorf("invalid config format")
+		return
+	}
+
+	var result bool
+
+	for _, configBytes := range splitBytes {
+		if result, err = checkConfigType(configBytes, "core"); result {
+			if len(coreConfig) > 0 {
+				err = fmt.Errorf("exist multiple sections of core config")
+				return
+			}
+			coreConfig = configBytes
+			continue
+		}
+		if result, err = checkConfigType(configBytes, "tool"); result {
+			if len(toolConfig) > 0 {
+				err = fmt.Errorf("exist multiple sections of tool config")
+				return
+			}
+			toolConfig = configBytes
+			continue
+		}
+		if err != nil {
+			return
+		}
+		if len(varConfig) > 0 {
+			err = fmt.Errorf("exist multiple sections of var config")
+			return
+		}
+		varConfig = configBytes
 	}
 
 	if len(coreConfig) == 0 {
@@ -204,6 +224,28 @@ func SplitConfigFileBytes(fileBytes []byte) (coreConfig []byte, varConfig []byte
 	}
 
 	return
+}
+
+// checkConfigType checks the bytes of the configType
+// core config is the core configType and can be identified by key state
+// plugins config is the tool configType and can be identified by key tool
+func checkConfigType(bytes []byte, configType string) (bool, error) {
+	result := make(map[string]interface{})
+	if err := yaml.Unmarshal(bytes, &result); err != nil {
+		log.Errorf("Please verify the format of your core config. Error: %s.", err)
+		return false, err
+	}
+	switch configType {
+	case "core":
+		if _, ok := result["state"]; ok {
+			return true, nil
+		}
+	case "tool":
+		if _, ok := result["tools"]; ok {
+			return true, nil
+		}
+	}
+	return false, nil
 }
 
 // GetPluginFileName creates the file name based on the tool's name and version
