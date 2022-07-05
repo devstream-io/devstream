@@ -1,12 +1,10 @@
 # Contributor Ladder
 
-## Contributor Ladder
-
 Hello! We are excited that you want to learn more about our project contributor ladder! This contributor ladder outlines the different contributor roles within the project, along with the responsibilities and privileges that come with them. Community members generally start at the first levels of the "ladder" and advance up it as their involvement in the project grows.  Our project members are happy to help you advance along the contributor ladder.
 
 Each of the contributor roles below is organized into lists of three types of things. "Responsibilities" are things that contributor is expected to do. "Requirements" are qualifications a person needs to meet to be in that role, and "Privileges" are things contributors on that level are entitled to.
 
-### Contributor
+## Contributor
 
 _Description: A Contributor contributes directly to the project and adds value to it. Contributions need not be code. Non-code contributions are equally, if not more, valued. People at the Contributor level may be new contributors, or they may only contribute occasionally._
 
@@ -30,7 +28,7 @@ _Description: A Contributor contributes directly to the project and adds value t
     - Invitations to contributor events
     - Eligible to become an Organization Member
 
-### Organization Member
+## Organization Member
 
 _Description: An Organization Member is an established contributor who regularly participates in the project. Organization Members have privileges in both project repositories and elections, and as such are expected to act in the interests of the whole project._
 
@@ -64,7 +62,7 @@ The process for a Contributor to become an Organization Member is as follows:
 3. The nomination is reviewed publicly in a community meeting. All members vote for the nomination. A majority is required in order to approve the nomination.
 4. Publicly announce the result in the issue, and in the contributor slack channel; and invite the member into the member channel.
 
-### Reviewer
+## Reviewer
 
 _Description: A Reviewer has responsibility for specific code, documentation, test, or other project areas. They are collectively responsible, with other Reviewers, for reviewing all changes to those areas and indicating whether those changes are ready to merge. They have a track record of contribution and review in the project._
 
@@ -97,7 +95,7 @@ The process of becoming a Reviewer is:
 1. The contributor is nominated by opening a PR against the appropriate repository, which adds their GitHub username to the OWNERS file for one or more directories.
 2. At least two members of the team that owns that repository or main directory, who are already Approvers, approve the PR.
 
-### Maintainer
+## Maintainer
 
 _Description: Maintainers are very established contributors who are responsible for the entire project. As such, they have the ability to approve PRs against any area of the project, and are expected to participate in making decisions about the strategy and priorities of the project._
 

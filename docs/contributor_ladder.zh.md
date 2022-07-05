@@ -33,7 +33,7 @@ _定义：直接为项目做出有价值的贡献。其表现形式可以不只�
 - 受邀参加 Contributor 活动。
 - 能够进一步成为组织成员（Organization Member）。
 
-### 组织成员（Organization Member）
+## 组织成员（Organization Member）
 _定义：组织成员（Organization Member）首先也是贡献者（Contributor），不同的是组织成员（Organization Member）经常性的参与 DevStream 项目。
 组织成员（Organization Member）在项目资源库和选举中都拥有特权，他们对项目抱有极大的兴趣。_
 
@@ -61,7 +61,7 @@ _定义：组织成员（Organization Member）首先也是贡献者（Contribut
 3. 提名将会在社区会议上公开 review。所有成员对该提名进行投票。需要多数票才能批准该提名。
 4. 在 issue 中公开宣布结果，且公开宣布在贡献者（Contributor）的 Slack 频道中，并邀请该成员进入组织成员（Organization Member）频道。
 
-### 评审者（Reviewer）
+## 评审者（Reviewer）
 _定义：评审者在项目中有贡献和审查的记录，负责审查特定的代码、文档、测试或其他项目区域，并与其他评审员一起审查已修改的地方，判断是否可以合并该修改。_
 
 评审者负责"特定区域"。可以是特定的代码目录、驱动程序、文档章节、测试作业、事件或其他规模小于主库或子项目的组件。多数情况下，可能是 Git 仓库中的一个或一组目录。
@@ -92,7 +92,7 @@ _定义：评审者在项目中有贡献和审查的记录，负责审查特定�
 1. 提名贡献者（Contributor）的方式是在对应仓库打开一个 PR ，将提名者的 Github 用户名添加到一个或多个目录的 OWNERS 文件中。
 2. 至少要有两名成员在该仓库或主库中已是批准者，才可批准此 PR 。
 
-### 维护者（Maintainer）
+## 维护者（Maintainer）
 _定义：维护者（Maintainer）是非常成熟的贡献者（Contributor），负责整个项目，并有权批准针对项目的任何类型的 PR 。同时在有关项目战略和决策上有主导权。_
 
 此外，维护者（Maintainer）必须满足评审者的所有的责任和要求：
