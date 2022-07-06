@@ -1,12 +1,15 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/spf13/cobra"
 
 	"github.com/devstream-io/devstream/internal/pkg/completion"
 	"github.com/devstream-io/devstream/internal/pkg/configloader"
 	"github.com/devstream-io/devstream/internal/pkg/pluginengine"
 	"github.com/devstream-io/devstream/internal/pkg/pluginmanager"
+	"github.com/devstream-io/devstream/internal/pkg/version"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -17,19 +20,24 @@ var initCMD = &cobra.Command{
 	Run:   initCMDFunc,
 }
 
-func initCMDFunc(cmd *cobra.Command, args []string) {
+func initCMDFunc(_ *cobra.Command, _ []string) {
 	cfg, err := configloader.LoadConfig(configFile)
 	if err != nil {
 		log.Errorf("Error: %s.", err)
 		return
 	}
 
-	err = pluginmanager.DownloadPlugins(cfg)
-	if err != nil {
+	if version.Dev {
+		log.Errorf("Dev version plugins can't be downloaded from the remote plugin repo; please run `make build-plugin.PLUGIN_NAME` to build it locally.")
+		return
+	}
+
+	if err = pluginmanager.DownloadPlugins(cfg); err != nil {
 		log.Errorf("Error: %s.", err)
 		return
 	}
 
+	fmt.Println()
 	log.Success("Initialize finished.")
 }
 
