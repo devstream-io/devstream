@@ -99,3 +99,6 @@ var pluginDefaultConfigs = map[string]string{
 
 //go:embed quickstart.yaml
 var QuickStart string
+
+//go:embed gitops.yaml
+var GitOps string
