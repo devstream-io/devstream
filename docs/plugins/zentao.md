@@ -75,3 +75,37 @@ tools:
         # nodePort of zentao service, currently zentao plugin only support `nodePort` type
         nodePort: 30081
 ```
+
+## Deployment
+
+### Step1: Prepare a Kubernetes Cluster
+- If you already have a kubernetes cluster, ignore this step. 
+- If not, you can use `hack/e2e/e2e-up.sh` to create a k8s cluster via `Kind` as test environment.
+  ```shell
+  bash hack/e2e/e2e-up.sh
+  ```
+
+### Step2: Create Zentao Application via Config File
+- Create a zentao config file following the usage example above.
+  ```shell
+  ./dtm apply -f zentao.yaml --debug
+  ```
+
+### Step3: Initialize Zentao Application
+- Visit `http://NodeIP:NodePort`("NodeIP" and "NodePort" are Kubernets node IP and node port) to start the initialization process. Press `Start Installation` button to the next step.
+![](zentao/zentao-welcome.jpg)
+
+- You don't need to do anything about the system check and it's done automatically. If there are system check items that do not pass, please make sure that the previous operation is correct. If it still doesn't work, create an issue to track your problem.
+![](zentao/zentao-systemCheck.jpg)
+
+- Fill in database password filed with `options.deployment.mysqlPasswdValue` which was set previously in `zentao.yaml`.
+![](zentao/zentao-configuration.jpg)
+
+- If everything proceeds successfully, you will see the Zendo introduction.
+![](zentao/zentao-intro.jpg)
+
+- Fill in your company name and create an administrator account.
+![](zentao/zentao-account.jpg)
+
+- Now, the Zendo application has been successfully deployed.
+![](zentao/zentao-web.jpg)
