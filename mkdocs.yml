@@ -110,5 +110,6 @@ nav:
     - development/commands/develop*.md
     - development/reviewing*.md
     - development/good-first-issues*.md
+    - development/help-wanted*.md
     - development/branch-and-release*.md
   - Road Map ⧉: https://github.com/devstream-io/devstream/blob/main/ROADMAP.md
