@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"regexp"
 
 	"github.com/spf13/viper"
 
@@ -14,8 +13,6 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/md5"
 )
-
-const DTMRemoteMD5Dir = ".remote"
 
 func DownloadPlugins(conf *configloader.Config) error {
 	// create plugins dir if not exist
@@ -29,10 +26,13 @@ func DownloadPlugins(conf *configloader.Config) error {
 	dc := NewPbDownloadClient()
 
 	for _, tool := range conf.Tools {
+		pluginName := configloader.GetPluginName(&tool)
 		pluginFileName := configloader.GetPluginFileName(&tool)
 		pluginMD5FileName := configloader.GetPluginMD5FileName(&tool)
-		// version regex
-		versionRegex := regexp.MustCompile(`^\d+\.\d+\.\d+$`)
+
+		// a new line to make outputs more beautiful
+		fmt.Println()
+		log.Separator(pluginName)
 
 		_, pluginFileErr := os.Stat(filepath.Join(pluginDir, pluginFileName))
 		_, pluginMD5FileErr := os.Stat(filepath.Join(pluginDir, pluginMD5FileName))
@@ -41,9 +41,6 @@ func DownloadPlugins(conf *configloader.Config) error {
 		if pluginFileErr != nil {
 			if !errors.Is(pluginFileErr, os.ErrNotExist) {
 				return pluginFileErr
-			}
-			if !versionRegex.MatchString(version.Version) {
-				return fmt.Errorf("%s (dev version) not exist in the local plugins dir \"%s\". Dev version plugins can't be downloaded from the remote plugin repo; please run `make build-plugin.%s` to build it locally", pluginFileName, pluginDir, tool.Name)
 			}
 			// download .so file
 			if err := dc.download(pluginDir, pluginFileName, version.Version); err != nil {
@@ -56,35 +53,33 @@ func DownloadPlugins(conf *configloader.Config) error {
 			if !errors.Is(pluginMD5FileErr, os.ErrNotExist) {
 				return pluginMD5FileErr
 			}
-			if !versionRegex.MatchString(version.Version) {
-				return fmt.Errorf("%s (dev version) not exist in the local plugins dir \"%s\". Dev version plugins can't be downloaded from the remote plugin repo; please run `make build-plugin.%s` to build it locally", pluginFileName, pluginDir, tool.Name)
-			}
 			// download .md5 file
 			if err := dc.download(pluginDir, pluginMD5FileName, version.Version); err != nil {
 				return err
 			}
 			log.Successf("[%s] download succeeded.", pluginMD5FileName)
 		}
+
 		// check if the plugin matches with .md5
 		isMD5Match, err := md5.FileMatchesMD5(filepath.Join(pluginDir, pluginFileName), filepath.Join(pluginDir, pluginMD5FileName))
 		if err != nil {
 			return err
 		}
 
-		// if .so matches with .md5, continue
-		if isMD5Match && pluginFileErr == nil && pluginMD5FileErr == nil {
-			log.Infof("Plugin: %s already exists, no need to download.", pluginFileName)
-			continue
+		if !isMD5Match {
+			// if existing .so doesn't matches with .md5, re-download
+			log.Infof("Plugin: [%s] doesn't match with .md5 and will be downloaded.", pluginFileName)
+			if err = redownloadPlugins(dc, pluginDir, pluginFileName, pluginMD5FileName, version.Version); err != nil {
+				return err
+			}
+			// check if the downloaded plugin md5 matches with .md5
+			if err = pluginAndMD5Matches(pluginDir, pluginFileName, pluginMD5FileName, tool.Name); err != nil {
+				return err
+			}
 		}
-		// if existing .so doesn't matches with .md5, re-download
-		log.Infof("Plugin: %s doesn't match with .md5 and will be downloaded.", pluginFileName)
-		if err := redownloadPlugins(dc, pluginDir, pluginFileName, pluginMD5FileName, version.Version); err != nil {
-			return err
-		}
-		// check if the downloaded plugin md5 matches with .md5
-		if err := pluginAndMD5Matches(pluginDir, pluginFileName, pluginMD5FileName, tool.Name); err != nil {
-			return err
-		}
+
+		log.Infof("Initialize [%s] finished.", pluginName)
+		log.Separatorf(pluginName)
 	}
 	return nil
 }
