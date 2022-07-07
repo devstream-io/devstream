@@ -1,6 +1,6 @@
 # Core Concepts Overview
 
-Let's assume you're familiar with core Git, Docker, Kubernetes, Continuous Integratoin, Continuous Delivery, and GitOps concepts. 
+Let's assume you're familiar with core Git, Docker, Kubernetes, Continuous Integration, Continuous Delivery, and GitOps concepts. 
 These are the core concepts of DevStream.
 
 ## The Architecture of DevStream
