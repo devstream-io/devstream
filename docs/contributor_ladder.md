@@ -60,7 +60,7 @@ The process for a Contributor to become an Organization Member is as follows:
 1. The member contributor is nominated by a sponsor, by opening an issue in the appropriate repository.
 2. The second sponsor from a different employer seconds the nomination in the issue.
 3. The nomination is reviewed publicly in a community meeting. All members vote for the nomination. A majority is required in order to approve the nomination.
-4. Publicly announce the result in the issue, and in the contributor slack channel; and invite the member into the member channel.
+4. Publicly announce the result in the issue, and in the [contributor slack channel](https://cloud-native.slack.com/messages/devstream-contributors)。
 
 ## Reviewer
 
