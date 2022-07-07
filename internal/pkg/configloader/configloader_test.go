@@ -56,3 +56,27 @@ var _ = Describe("Dependency", func() {
 		Expect(len(errors)).To(Equal(0))
 	})
 })
+
+var _ = Describe("Tool Validation", func() {
+	It("should return empty error array if tools all valid", func() {
+		tools := []configloader.Tool{
+			{Name: "test_tool", InstanceID: "0", DependsOn: []string{}},
+		}
+		config := configloader.Config{
+			Tools: tools,
+		}
+		errors := config.Validate()
+		Expect(errors).Should(BeEmpty())
+	})
+	It("should return error if tool not valid", func() {
+		tools := []configloader.Tool{
+			{Name: "", InstanceID: "", DependsOn: []string{}},
+		}
+		config := configloader.Config{
+			Tools: tools,
+		}
+		errors := config.Validate()
+		Expect(errors).ShouldNot(BeEmpty())
+	})
+
+})
