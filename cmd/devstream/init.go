@@ -28,7 +28,7 @@ func initCMDFunc(_ *cobra.Command, _ []string) {
 	}
 
 	if version.Dev {
-		log.Errorf("Dev version plugins can't be downloaded from the remote plugin repo; please run `make build-plugin.PLUGIN_NAME` to build it locally.")
+		log.Errorf("Dev version plugins can't be downloaded from the remote plugin repo; please run `make build-plugin.PLUGIN_NAME` to build them locally.")
 		return
 	}
 
