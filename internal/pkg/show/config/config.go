@@ -12,6 +12,9 @@ func Show() error {
 	if template == "quickstart" {
 		fmt.Println(QuickStart)
 		return nil
+	} else if template == "gitops" {
+		fmt.Println(GitOps)
+		return nil
 	}
 
 	plugin := viper.GetString("plugin")

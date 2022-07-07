@@ -71,6 +71,9 @@ var pluginDefaultConfigs = map[string]string{
 
 //go:embed quickstart.yaml
 var QuickStart string
+
+//go:embed gitops.yaml
+var GitOps string
 `
 
 // generate generates the code for Option `o` into a file named by `o.Path`.
