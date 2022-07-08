@@ -1,11 +1,11 @@
 # zentao Plugin
 
-This plugin installs [zentao](https://zentao.net/) in an existing Kubernetes cluster by go client.
+This plugin installs [ZenTao](https://zentao.net/) in an existing Kubernetes cluster by go client.
 
 **Notes:**
 
-- Zentao will be installed in K8S cluster, please prepare a k8s cluster before using zentao plugin.
-  For local build, you can use `hack/e2e/e2e-up.sh` to create a k8s cluster via `Kind`.
+- ZenTao will be installed in K8s cluster, please prepare a K8s cluster before using ZenTao plugin.
+  For local build, you can use `hack/e2e/e2e-up.sh` to create a K8s cluster via `Kind`.
 - Currently, all fields list in the example config file below are required. You can modify them according to your needs.
 - This plugin is not supported to run on `arm64` architecture now.
 
@@ -32,80 +32,85 @@ tools:
     dependsOn: []
     # options for the plugin
     options:
-      # namespace for zentao application
+      # namespace for ZenTao application
       namespace: 'zentao'
       # storageClassName used to match pv and pvc
       storageClassName: 'zentao-storage'
-      # two PersistentVolumes for zentao and mysql should be specified
+      # two PersistentVolumes for ZenTao and mysql should be specified
       persistentVolume:
-        # name of zentao pv
+        # name of ZenTao pv
         zentaoPVName: 'zentao-pv'
-        # capacity of zentao pv
+        # capacity of ZenTao pv
         zentaoPVCapacity: '1G'
         # name of mysql pv
         mysqlPVName: 'mysql-pv'
         # capacity of mysql pv
         mysqlPVCapacity: '1G'
-      # two PersistentVolumeClaims for zentao and mysql should be specified
+      # two PersistentVolumeClaims for ZenTao and mysql should be specified
       persistentVolumeClaim:
-        # name of zentao pvc
+        # name of ZenTao pvc
         zentaoPVCName: 'zentao-pvc'
-        # capacity of zentao pvc
+        # capacity of ZenTao pvc
         zentaoPVCCapacity: '1G'
         # name of mysql pvc
         mysqlPVCName: 'mysql-pv'
         # capacity of mysql pvc
         mysqlPVCCapacity: '1G'
-      # zentao application is deployed by K8S Deployment
+      # ZenTao application is deployed by K8s Deployment
       deployment:
-        # name of zentao deployment
+        # name of ZenTao deployment
         name: 'zentao-dp'
         # number of application replica
         replicas: 3
-        # zentao image
+        # ZenTao image
         image: 'easysoft/zentao:latest'
         # initial password name for mysql database, you can specify any name you like
         mysqlPasswdName: 'MYSQL_ROOT_PASSWORD'
         # initial password value for mysql database, you can specify any value you like
         mysqlPasswdValue: '1234567'
-      # zentao application is exposed via K8S Service
+      # ZenTao application is exposed via K8s Service
       service:
-        # name of zentao service
+        # name of ZenTao service
         name: 'zentao-svc'
-        # nodePort of zentao service, currently zentao plugin only support `nodePort` type
+        # nodePort of ZenTao service, currently ZenTao plugin only support `nodePort` type
         nodePort: 30081
 ```
 
 ## Deployment
 
 ### Step1: Prepare a Kubernetes Cluster
-- If you already have a kubernetes cluster, ignore this step. 
-- If not, you can use `hack/e2e/e2e-up.sh` to create a k8s cluster via `Kind` as test environment.
-  ```shell
-  bash hack/e2e/e2e-up.sh
-  ```
 
-### Step2: Create Zentao Application via Config File
-- Create a zentao config file following the usage example above.
-  ```shell
-  ./dtm apply -f zentao.yaml --debug
-  ```
+- If you already have a Kubernetes cluster, ignore this step. 
+- If not, you can use `hack/e2e/e2e-up.sh` to create a K8s cluster via `Kind` as test environment.
 
-### Step3: Initialize Zentao Application
-- Visit `http://NodeIP:NodePort`("NodeIP" and "NodePort" are Kubernets node IP and node port) to start the initialization process. Press `Start Installation` button to the next step.
+```shell
+bash hack/e2e/e2e-up.sh
+```
+
+### Step2: Create ZenTao Application via Config File
+
+- Create a ZenTao config file following the usage example above.
+
+```shell
+./dtm apply -f ZenTao.yaml --debug
+```
+
+### Step3: Initialize ZenTao Application
+
+1. Visit `http://NodeIP:NodePort`("NodeIP" and "NodePort" are Kubernets node IP and node port) to start the initialization process. Press `Start Installation` button to the next step.
 ![](zentao/zentao-welcome.jpg)
 
-- You don't need to do anything about the system check and it's done automatically. If there are system check items that do not pass, please make sure that the previous operation is correct. If it still doesn't work, create an issue to track your problem.
+2. You don't need to do anything about the system check and it's done automatically. If there are system check items that do not pass, please make sure that the previous operation is correct. If it still doesn't work, create an issue to track your problem.
 ![](zentao/zentao-systemCheck.jpg)
 
-- Fill in database password filed with `options.deployment.mysqlPasswdValue` which was set previously in `zentao.yaml`.
+3. Fill in database password filed with `options.deployment.mysqlPasswdValue` which was set previously in `ZenTao.yaml`.
 ![](zentao/zentao-configuration.jpg)
 
-- If everything proceeds successfully, you will see the Zendo introduction.
+4. If everything proceeds successfully, you will see the Zendo introduction.
 ![](zentao/zentao-intro.jpg)
 
-- Fill in your company name and create an administrator account.
+5. Fill in your company name and create an administrator account.
 ![](zentao/zentao-account.jpg)
 
-- Now, the Zendo application has been successfully deployed.
+6. Now, the Zendo application has been successfully deployed.
 ![](zentao/zentao-web.jpg)
