@@ -9,5 +9,5 @@ import (
 
 func TestPlanmanager(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Downloader Suite")
+	RunSpecs(t, "ConfigLoader Suite")
 }
