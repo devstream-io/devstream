@@ -2,7 +2,6 @@ package gitlabcedocker
 
 import (
 	"fmt"
-	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -32,13 +31,9 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, fmt.Errorf("failed to get container mounts: %v", err)
 	}
 
-	volumesFromOptions := []string{
-		filepath.Join(opts.GitLabHome, "config"),
-		filepath.Join(opts.GitLabHome, "data"),
-		filepath.Join(opts.GitLabHome, "logs"),
-	}
+	volumesDirFromOptions := getVolumesDirFromOptions(opts)
 
-	if ifVolumesDiffer(volumesDockerNow, volumesFromOptions) {
+	if ifVolumesDiffer(volumesDockerNow, volumesDirFromOptions) {
 		log.Warnf("You changed volumes of the container or change the gitlab home directory")
 		log.Infof("Your volumes of the current container were: %v", strings.Join(volumesDockerNow, " "))
 		return nil, fmt.Errorf("sorry, you can't change the gitlab_home of the container once it's already been created")

@@ -3,7 +3,6 @@ package gitlabcedocker
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 
 	"github.com/mitchellh/mapstructure"
 
@@ -47,13 +46,9 @@ func Delete(options map[string]interface{}) (bool, error) {
 	}
 
 	// 4. remove the volume if it exists
-	volumesFromOptions := []string{
-		filepath.Join(opts.GitLabHome, "config"),
-		filepath.Join(opts.GitLabHome, "data"),
-		filepath.Join(opts.GitLabHome, "logs"),
-	}
+	volumesDirFromOptions := getVolumesDirFromOptions(opts)
 	if opts.RmDataAfterDelete {
-		for _, volume := range volumesFromOptions {
+		for _, volume := range volumesDirFromOptions {
 			if err := os.RemoveAll(volume); err != nil {
 				log.Errorf("failed to remove data %v: %v", volume, err)
 			}
@@ -76,9 +71,11 @@ func Delete(options map[string]interface{}) (bool, error) {
 	}
 
 	// 3. check if the data volume is removed
-	for _, volume := range volumesFromOptions {
-		if _, err := os.Stat(volume); !os.IsNotExist(err) {
-			errs = append(errs, fmt.Errorf("failed to delete data %s", volume))
+	if opts.RmDataAfterDelete {
+		for _, volume := range volumesDirFromOptions {
+			if _, err := os.Stat(volume); !os.IsNotExist(err) {
+				errs = append(errs, fmt.Errorf("failed to delete data %s", volume))
+			}
 		}
 	}
 
