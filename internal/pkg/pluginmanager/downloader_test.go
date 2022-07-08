@@ -3,6 +3,7 @@ package pluginmanager
 import (
 	"errors"
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"testing"
@@ -25,9 +26,12 @@ func TestDownloadSuccess(t *testing.T) {
 	version := "0.0.1-ut-do-not-delete"
 	c := NewDownloadClient()
 	tmpFilePath := filepath.Join(tmpDir, fmt.Sprintf("%s.tmp", plugName))
-	os.Create(tmpFilePath)
+	_, err := os.Create(tmpFilePath)
+	if err != nil {
+		log.Fatal("Download logic create tmp file failed")
+	}
 	c.pluginGetter = mockPlugGetter
-	err := c.download(tmpDir, plugName, version)
+	err = c.download(tmpDir, plugName, version)
 	assert.Nil(t, err)
 	// check plug file renamed
 	_, err = os.Stat(filepath.Join(tmpDir, plugName))
