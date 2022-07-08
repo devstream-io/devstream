@@ -3,6 +3,7 @@ package gitlabcedocker
 import (
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/mitchellh/mapstructure"
 
@@ -41,10 +42,14 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, fmt.Errorf("failed to run container")
 	}
 
+	// 4. check if the volume is created successfully
 	volumes, err := op.ListContainerMounts(gitlabContainerName)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get container mounts: %v", err)
 	}
+
+	// 5. show the access url
+	showGitLabUrl(opts)
 
 	resource := gitlabResource{
 		ContainerRunning: true,
@@ -56,4 +61,16 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	}
 
 	return resource.toMap(), nil
+}
+
+func showGitLabUrl(opts Options) {
+	accessUrl := opts.Hostname
+	if opts.HTTPPort != 80 {
+		accessUrl += ":" + strconv.Itoa(int(opts.HTTPPort))
+	}
+	if !strings.HasPrefix(accessUrl, "http") {
+		accessUrl = "http://" + accessUrl
+	}
+
+	log.Infof("GitLab access URL: %s", accessUrl)
 }
