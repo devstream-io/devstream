@@ -1,29 +1,51 @@
 package pluginmanager
 
 import (
+	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 	"testing"
 
+	"github.com/go-resty/resty/v2"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestDownload(t *testing.T) {
-	os.Remove(filepath.Join(".", "argocdapp_0.0.1-rc1.so"))
+func mockPlugGetter(reqClient *resty.Client, url, plugName string) error {
+	return nil
+}
 
+func mockPlugNotFoundGetter(reqClient *resty.Client, url, plugName string) error {
+	return errors.New("Plug Not Exist")
+}
+
+func TestDownloadSuccess(t *testing.T) {
+	tmpDir := t.TempDir()
+	plugName := "argocdapp_0.0.1-rc1.so"
+	version := "0.0.1-ut-do-not-delete"
 	c := NewDownloadClient()
-	err := c.download(".", "argocdapp_0.0.1-rc1.so", "0.0.1-ut-do-not-delete")
-	if err != nil {
-		t.Fatal("downloaded error")
-	}
+	tmpFilePath := filepath.Join(tmpDir, fmt.Sprintf("%s.tmp", plugName))
+	os.Create(tmpFilePath)
+	c.pluginGetter = mockPlugGetter
+	err := c.download(tmpDir, plugName, version)
+	assert.Nil(t, err)
+	// check plug file renamed
+	_, err = os.Stat(filepath.Join(tmpDir, plugName))
+	assert.Nil(t, err)
+}
 
-	os.Remove(filepath.Join(".", "argocdapp_0.0.1-rc1.so"))
+func TestDownloadFileNotDownloadSuccess(t *testing.T) {
+	tmpDir := t.TempDir()
+	c := NewDownloadClient()
+	c.pluginGetter = mockPlugGetter
+	err := c.download(tmpDir, "argocdapp_0.0.1-rc1.so", "0.0.1-ut-do-not-delete")
+	assert.Contains(t, err.Error(), "no such file or directory")
 }
 
 func TestDownloadNotFound(t *testing.T) {
+	tmpDir := t.TempDir()
 	c := NewDownloadClient()
-	err := c.download(".", "doesntexist", "0.0.1-ut-do-not-delete")
-	// Since the right granted to public users on aws does not include listing bucket
-	// AWS returns 403 instead of 404 when acquiring an object where bucket does not exist: there is no list right.
-	assert.Contains(t, err.Error(), "403")
+	c.pluginGetter = mockPlugNotFoundGetter
+	err := c.download(tmpDir, "doesntexist", "0.0.1-ut-do-not-delete")
+	assert.Contains(t, err.Error(), "Plug Not Exist")
 }
