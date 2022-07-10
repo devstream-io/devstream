@@ -1,9 +1,7 @@
 package pluginmanager
 
 import (
-	"errors"
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 	"testing"
@@ -17,18 +15,19 @@ func mockPlugGetter(reqClient *resty.Client, url, plugName string) error {
 }
 
 func mockPlugNotFoundGetter(reqClient *resty.Client, url, plugName string) error {
-	return errors.New("Plug Not Exist")
+	return fmt.Errorf("downloading plugin %s from %s status code %d", plugName, url, 404)
 }
 
 func TestDownloadSuccess(t *testing.T) {
 	tmpDir := t.TempDir()
-	plugName := "argocdapp_0.0.1-rc1.so"
-	version := "0.0.1-ut-do-not-delete"
+	const plugName = "argocdapp_0.0.1-rc1.so"
+	const version = "0.0.1-ut-do-not-delete"
 	c := NewDownloadClient()
 	tmpFilePath := filepath.Join(tmpDir, fmt.Sprintf("%s.tmp", plugName))
-	_, err := os.Create(tmpFilePath)
+	f, err := os.Create(tmpFilePath)
+	defer f.Close()
 	if err != nil {
-		log.Fatal("Download logic create tmp file failed")
+		t.Fatal("Download logic create tmp file failed")
 	}
 	c.pluginGetter = mockPlugGetter
 	err = c.download(tmpDir, plugName, version)
@@ -51,5 +50,5 @@ func TestDownloadNotFound(t *testing.T) {
 	c := NewDownloadClient()
 	c.pluginGetter = mockPlugNotFoundGetter
 	err := c.download(tmpDir, "doesntexist", "0.0.1-ut-do-not-delete")
-	assert.Contains(t, err.Error(), "Plug Not Exist")
+	assert.Contains(t, err.Error(), "404")
 }
