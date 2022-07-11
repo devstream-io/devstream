@@ -1,0 +1,15 @@
+tools:
+# name of the tool
+- name: jenkins-pipeline-kubernetes
+  # id of the tool instance
+  instanceID: default
+  # format: name.instanceID; If specified, dtm will make sure the dependency is applied first before handling this tool.
+  dependsOn: [ ]
+  # options for the plugin
+  options:
+  # TODO(dtm): Add your default config here.
+    # jenkinsUrl, format: hostname:port
+    jenkinsUrl: http://localhost:8080
+    jenkinsUser: admin
+    githubRepoUrl: https://github.com/xxx/xxx.git
+    jenkinsJobName:

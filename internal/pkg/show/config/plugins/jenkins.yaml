@@ -44,3 +44,8 @@ tools:
           controller:
             serviceType: NodePort
             nodePort: 32000
+            additionalPlugins:
+              # install "GitHub Pull Request Builder" plugin, see https://plugins.jenkins.io/ghprb/ for more details
+              - ghprb
+              # install "OWASP Markup Formatter" plugin, see https://plugins.jenkins.io/antisamy-markup-formatter/ for more details
+              - antisamy-markup-formatter

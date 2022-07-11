@@ -48,6 +48,9 @@ var (
 	//go:embed plugins/helm-generic.yaml
 	HelmGenericDefaultConfig string
 
+	//go:embed plugins/jenkins-pipeline-kubernetes.yaml
+	JenkinsPipelineKubernetesDefaultConfig string
+
 	//go:embed plugins/jenkins.yaml
 	JenkinsDefaultConfig string
 
@@ -87,6 +90,7 @@ var pluginDefaultConfigs = map[string]string{
 	"gitlabci-golang":                GitlabciGolangDefaultConfig,
 	"hashicorp-vault":                HashicorpVaultDefaultConfig,
 	"helm-generic":                   HelmGenericDefaultConfig,
+	"jenkins-pipeline-kubernetes":    JenkinsPipelineKubernetesDefaultConfig,
 	"jenkins":                        JenkinsDefaultConfig,
 	"jira-github-integ":              JiraGithubIntegDefaultConfig,
 	"kube-prometheus":                KubePrometheusDefaultConfig,
