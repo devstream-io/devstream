@@ -4,51 +4,78 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"testing"
 
 	"github.com/go-resty/resty/v2"
-	"github.com/stretchr/testify/assert"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 )
 
-func mockPlugGetter(reqClient *resty.Client, url, plugName string) error {
-	return nil
-}
-
-func mockPlugNotFoundGetter(reqClient *resty.Client, url, plugName string) error {
-	return fmt.Errorf("downloading plugin %s from %s status code %d", plugName, url, 404)
-}
-
-func TestDownloadSuccess(t *testing.T) {
-	tmpDir := t.TempDir()
-	const plugName = "argocdapp_0.0.1-rc1.so"
-	const version = "0.0.1-ut-do-not-delete"
-	c := NewDownloadClient()
-	tmpFilePath := filepath.Join(tmpDir, fmt.Sprintf("%s.tmp", plugName))
-	f, err := os.Create(tmpFilePath)
-	defer f.Close()
-	if err != nil {
-		t.Fatal("Download logic create tmp file failed")
+var _ = Describe("DownloadClient", Ordered, func() {
+	// mock download success func
+	mockPlugSuccessGetter := func(reqClient *resty.Client, url, plugName string) error {
+		return nil
 	}
-	c.pluginGetter = mockPlugGetter
-	err = c.download(tmpDir, plugName, version)
-	assert.Nil(t, err)
-	// check plug file renamed
-	_, err = os.Stat(filepath.Join(tmpDir, plugName))
-	assert.Nil(t, err)
-}
+	// mock download failed func
+	mockPlugNotFoundGetter := func(reqClient *resty.Client, url, plugName string) error {
+		return fmt.Errorf("downloading plugin %s from %s status code %d", plugName, url, 404)
+	}
+	var (
+		validPlugName    string
+		notExistPlugName string
+		version          string
+		tempDir          string
+	)
 
-func TestDownloadFileNotDownloadSuccess(t *testing.T) {
-	tmpDir := t.TempDir()
-	c := NewDownloadClient()
-	c.pluginGetter = mockPlugGetter
-	err := c.download(tmpDir, "argocdapp_0.0.1-rc1.so", "0.0.1-ut-do-not-delete")
-	assert.Contains(t, err.Error(), "no such file or directory")
-}
+	BeforeAll(func() {
+		tempDir = GinkgoT().TempDir()
+		validPlugName = "argocdapp_0.0.1-rc1.so"
+		notExistPlugName = "argocdapp_not_exist.so"
+		version = "0.0.1-ut-do-not-delete"
 
-func TestDownloadNotFound(t *testing.T) {
-	tmpDir := t.TempDir()
-	c := NewDownloadClient()
-	c.pluginGetter = mockPlugNotFoundGetter
-	err := c.download(tmpDir, "doesntexist", "0.0.1-ut-do-not-delete")
-	assert.Contains(t, err.Error(), "404")
-}
+	})
+
+	Describe("download method failed", func() {
+		var testTable = []struct {
+			downloadFunc     func(reqClient *resty.Client, url, plugName string) error
+			plugName         string
+			expectedErrorMsg string
+			describeMsg      string
+		}{
+			{
+				downloadFunc: mockPlugSuccessGetter, plugName: notExistPlugName, expectedErrorMsg: "no such file or directory",
+				describeMsg: "should return file not exist if plugin not normal download",
+			},
+			{
+				downloadFunc: mockPlugNotFoundGetter, plugName: validPlugName, expectedErrorMsg: "404",
+				describeMsg: "should return 404 if plugin not exist",
+			},
+		}
+
+		for _, testcase := range testTable {
+			It(testcase.describeMsg, func() {
+				c := NewDownloadClient()
+				c.pluginGetter = testcase.downloadFunc
+				err := c.download(tempDir, testcase.plugName, version)
+				Expect(err).Error().Should(HaveOccurred())
+				Expect(err.Error()).Should(ContainSubstring(testcase.expectedErrorMsg))
+			})
+		}
+	})
+
+	Describe("download method success", func() {
+		It("should reanme file if download success", func() {
+			tmpFilePath := filepath.Join(tempDir, fmt.Sprintf("%s.tmp", validPlugName))
+			f, err := os.Create(tmpFilePath)
+			defer os.Remove(tmpFilePath)
+			defer f.Close()
+			Expect(err).NotTo(HaveOccurred())
+			c := NewDownloadClient()
+			c.pluginGetter = mockPlugSuccessGetter
+			err = c.download(tempDir, validPlugName, version)
+			Expect(err).ShouldNot(HaveOccurred())
+			renamedFilePath := filepath.Join(tempDir, validPlugName)
+			_, err = os.Stat(renamedFilePath)
+			Expect(err).ShouldNot(HaveOccurred())
+		})
+	})
+})
