@@ -17,13 +17,41 @@ Please be sure to change the `storageClass` in the options of the config to an e
 
 This plugin support `Ingress`, `ClusterIP`, `NodePort`, `LoadBalancer` ，You can give choice to your needs.
 
+##### TLS config
+- Use self-signed certificates
+  1. Set `tls.enabled` to `true` and edit the corresponding domain name `externalURL`
+  2. Copy the self-signed certificate stored in the Pod `harbor-core` directory `/etc/core/ca` to your own PC
+  3. Trust the certificate on your own host
+- Using public Certificates
+  1. Add the public certificate as Secret
+  2. Set `tls.enabled` to `true` and edit the corresponding domain name `externalURL`
+  3. Configure `tls.secretName` to use the public certificate
+
+
 ### Test/Local Dev Environment
 
 If you want **test plugin locally**，you can just use default params
 
 - Postgresql and Redis dependencies are automatically created
 - By default, local disks on machines in the cluster are used for data mounting
-- Helm automatically creates a `Service` that points to harbor services that are started and can be accessed locally using command `Kubectl proxy`
+- Set the value of `values_yaml` in the configuration as follows. Use `nodePort` to provide the harbor service externally
+```yaml
+        values_yaml: |
+          expose:
+            type: nodePort
+            tls:
+              enabled: false
+          chartmuseum:
+            enabled: false
+          clair:
+            enabled: false
+          notary:
+            enabled: false
+          trivy:
+            enabled: false
+
+```
+- Now you can access harbor through the domain name `http://{{k8s node IP}}:30002`. The default account name and password are admin/Harbor12345 (please replace the default account password in production environment)
 
 ### Config
 
@@ -57,7 +85,8 @@ tools:
       # whether to perform a CRD upgrade during installation
       upgradeCRDs: true
       values_yaml: |
-        notary.enabled: false
+          trivy:
+            enabled: false
 ```
 
 Currently, all the parameters in the example above are mandatory.
