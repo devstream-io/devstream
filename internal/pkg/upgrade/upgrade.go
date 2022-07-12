@@ -9,10 +9,9 @@ import (
 	"github.com/Masterminds/semver"
 	"github.com/tcnksm/go-input"
 
-	"github.com/devstream-io/devstream/pkg/util/log"
-
 	"github.com/devstream-io/devstream/internal/pkg/version"
 	"github.com/devstream-io/devstream/pkg/util/github"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 const (
@@ -49,7 +48,7 @@ func Upgrade(continueDirectly bool) error {
 		return err
 	}
 
-	ltstReleaseTagName, err := ghClient.LatestReleaseTagName()
+	ltstReleaseTagName, err := ghClient.GetLatestReleaseTagName()
 	if err != nil {
 		return err
 	}
