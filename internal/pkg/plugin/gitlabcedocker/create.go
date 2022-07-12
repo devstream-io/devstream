@@ -49,7 +49,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	}
 
 	// 5. show the access url
-	showGitLabUrl(opts)
+	showGitLabURL(opts)
 
 	resource := gitlabResource{
 		ContainerRunning: true,
@@ -63,7 +63,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	return resource.toMap(), nil
 }
 
-func showGitLabUrl(opts Options) {
+func showGitLabURL(opts Options) {
 	accessUrl := opts.Hostname
 	if opts.HTTPPort != 80 {
 		accessUrl += ":" + strconv.Itoa(int(opts.HTTPPort))

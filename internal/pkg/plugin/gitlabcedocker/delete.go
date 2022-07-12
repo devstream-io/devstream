@@ -72,11 +72,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 
 	// 3. check if the data volume is removed
 	if opts.RmDataAfterDelete {
-		for _, volume := range volumesDirFromOptions {
-			if _, err := os.Stat(volume); !os.IsNotExist(err) {
-				errs = append(errs, fmt.Errorf("failed to delete data %s", volume))
-			}
-		}
+		errs = append(errs, RemoveDirs(volumesDirFromOptions)...)
 	}
 
 	// splice the errors
@@ -89,4 +85,16 @@ func Delete(options map[string]interface{}) (bool, error) {
 	}
 
 	return true, nil
+}
+
+// RemoveDirs removes the all the directories in the given list recursively
+func RemoveDirs(dirs []string) []error {
+	var errs []error
+	for _, dir := range dirs {
+		if err := os.RemoveAll(dir); err != nil {
+			errs = append(errs, err)
+		}
+	}
+
+	return errs
 }
