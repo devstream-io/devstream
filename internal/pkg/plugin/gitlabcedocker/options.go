@@ -14,6 +14,7 @@ type Options struct {
 	ImageTag          string `mapstructure:"image_tag"`
 }
 
+// getVolumesDirFromOptions returns the volumes' directory from the options.
 func getVolumesDirFromOptions(opts Options) []string {
 	volumesDirFromOptions := []string{
 		filepath.Join(opts.GitLabHome, "config"),
