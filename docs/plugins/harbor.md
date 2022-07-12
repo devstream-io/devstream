@@ -22,7 +22,6 @@ values_yaml: |
     enabled: false
   trivy:
     enabled: false
-
 ```
 
 In this configuration

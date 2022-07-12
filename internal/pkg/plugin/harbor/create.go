@@ -6,7 +6,6 @@ import (
 	"github.com/mitchellh/mapstructure"
 
 	. "github.com/devstream-io/devstream/internal/pkg/plugin/common/helm"
-	helmCommon "github.com/devstream-io/devstream/internal/pkg/plugin/common/helm"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
@@ -41,7 +40,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	}()
 
 	// 2. install or upgrade harbor by helm
-	if retErr = helmCommon.InstallOrUpgradeChart(&opts); retErr != nil {
+	if retErr = InstallOrUpgradeChart(&opts); retErr != nil {
 		return nil, retErr
 	}
 
