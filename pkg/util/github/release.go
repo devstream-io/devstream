@@ -8,7 +8,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func (c *Client) LatestReleaseTagName() (string, error) {
+func (c *Client) GetLatestReleaseTagName() (string, error) {
 	ltstRelease, resp, err := c.Repositories.GetLatestRelease(context.Background(), c.Org, c.Repo)
 	if err != nil {
 		return "", err

@@ -1,17 +1,16 @@
 package main
 
 import (
-	"github.com/devstream-io/devstream/pkg/util/log"
-
 	"github.com/spf13/cobra"
 
 	"github.com/devstream-io/devstream/internal/pkg/upgrade"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 var upgradeCMD = &cobra.Command{
 	Use:   "upgrade",
-	Short: "Upgrade dtm to the latest version",
-	Long:  `Upgrade dtm to the latest version.`,
+	Short: "Upgrade dtm to the latest release version",
+	Long:  `Upgrade dtm to the latest release version.`,
 	Run:   upgradeCMDFunc,
 }
 
