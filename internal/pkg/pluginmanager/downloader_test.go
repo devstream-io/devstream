@@ -20,17 +20,17 @@ var _ = Describe("DownloadClient", Ordered, func() {
 		return fmt.Errorf("downloading plugin %s from %s status code %d", plugName, url, 404)
 	}
 	var (
-		validPlugName    string
-		notExistPlugName string
-		version          string
-		tempDir          string
+		tempDir string
+	)
+
+	const (
+		validPlugName    = "argocdapp_0.0.1-rc1.so"
+		notExistPlugName = "argocdapp_not_exist.so"
+		version          = "0.0.1-ut-do-not-delete"
 	)
 
 	BeforeAll(func() {
 		tempDir = GinkgoT().TempDir()
-		validPlugName = "argocdapp_0.0.1-rc1.so"
-		notExistPlugName = "argocdapp_not_exist.so"
-		version = "0.0.1-ut-do-not-delete"
 
 	})
 
