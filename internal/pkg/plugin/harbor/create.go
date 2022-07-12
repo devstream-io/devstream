@@ -5,13 +5,14 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
+	. "github.com/devstream-io/devstream/internal/pkg/plugin/common/helm"
 	helmCommon "github.com/devstream-io/devstream/internal/pkg/plugin/common/helm"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
-	var opts helmCommon.Options
+	var opts Options
 	if err := mapstructure.Decode(options, &opts); err != nil {
 		return nil, err
 	}
@@ -23,25 +24,28 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, fmt.Errorf("opts are illegal")
 	}
 
-	if err := helmCommon.DealWithNsWhenInstall(&opts); err != nil {
+	// 1. create namespace if set create_namespace and namespace not exist
+	if err := DealWithNsWhenInstall(&opts); err != nil {
 		return nil, err
 	}
 	var retErr error
-	// delete namespace if encounter error
+	// delete namespace if encounter error for consistency
 	defer func() {
 		if retErr == nil {
 			return
 		}
-		if err := helmCommon.DealWithNsWhenInterruption(&opts); err != nil {
+		if err := DealWithNsWhenInterruption(&opts); err != nil {
 			log.Errorf("Failed to deal with namespace: %s.", err)
 		}
 		log.Debugf("Deal with namespace when interruption succeeded.")
 	}()
 
+	// 2. install or upgrade harbor by helm
 	if retErr = helmCommon.InstallOrUpgradeChart(&opts); retErr != nil {
 		return nil, retErr
 	}
 
+	// 3. get habor status
 	retMap := GetStaticState().ToStringInterfaceMap()
 	log.Debugf("Return map: %v", retMap)
 	return retMap, nil

@@ -1,7 +1,7 @@
 package harbor
 
 import (
-	helmCommon "github.com/devstream-io/devstream/internal/pkg/plugin/common/helm"
+	. "github.com/devstream-io/devstream/internal/pkg/plugin/common/helm"
 	"github.com/devstream-io/devstream/pkg/util/helm"
 	"github.com/devstream-io/devstream/pkg/util/k8s"
 	"github.com/devstream-io/devstream/pkg/util/log"
@@ -23,7 +23,7 @@ func GetStaticState() *helm.InstanceState {
 	return retState
 }
 
-func GetDynamicState(opts *helmCommon.Options) (*helm.InstanceState, error) {
+func GetDynamicState(opts *Options) (*helm.InstanceState, error) {
 	namespace := getOrDefaultNamespace(opts.Chart.Namespace)
 	kubeClient, err := k8s.NewClient()
 	if err != nil {
@@ -36,10 +36,11 @@ func GetDynamicState(opts *helmCommon.Options) (*helm.InstanceState, error) {
 	}
 
 	retState := &helm.InstanceState{}
+	// get habor related deploy info by helm release name
 	for _, dp := range dps {
 		dpAn := dp.GetAnnotations()
 		dpName := dp.GetName()
-		helmNameAn, exist := dpAn[helmCommon.GetAnnotationName()]
+		helmNameAn, exist := dpAn[GetAnnotationName()]
 		if !exist || helmNameAn != opts.Chart.ReleaseName {
 			log.Infof("Found unknown deployment: %s.", dp.GetName())
 		}

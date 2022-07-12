@@ -16,7 +16,7 @@ tools:
     chart:
       # name of the chart
       chart_name: harbor/harbor
-      # k8s namespace where Tekton will be installed
+      # k8s namespace where Harbor will be installed
       namespace: harbor
       # release name of the chart
       release_name: harbor
