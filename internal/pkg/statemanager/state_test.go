@@ -1,21 +1,88 @@
 package statemanager
 
-import "testing"
+import (
+	"fmt"
+	"reflect"
 
-type generateStateKeyByToolNameAndPluginKindTest struct {
-	arg1     string
-	arg2     string
-	expected StateKey
-}
+	"github.com/devstream-io/devstream/pkg/util/mapz/concurrentmap"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+)
 
-var generateStateKeyByToolNameAndPluginKindTests = []generateStateKeyByToolNameAndPluginKindTest{
-	{"name", "kind", "name_kind"},
-}
+var _ = Describe("Statemanager.state", func() {
+	Describe("GenerateStateKeyByToolNameAndPluginKind func", func() {
+		It("should ouput state key base on toolName and plugin kind", func() {
+			var testCases = []struct {
+				toolName       string
+				plugKind       string
+				expectStateKey StateKey
+			}{
+				{"test_tool", "test_kind", "test_tool_test_kind"},
+				{"123", "1", "123_1"},
+			}
+			for _, t := range testCases {
+				funcResult := GenerateStateKeyByToolNameAndPluginKind(t.toolName, t.plugKind)
+				Expect(funcResult).Should(Equal(t.expectStateKey))
+			}
+		})
+	})
 
-func TestGenerateStateKeyByToolNameAndPluginKind(t *testing.T) {
-	for _, test := range generateStateKeyByToolNameAndPluginKindTests {
-		if got := GenerateStateKeyByToolNameAndPluginKind(test.arg1, test.arg2); got != test.expected {
-			t.Errorf("Output %s not equal to expected %s. Input: %s, %s.", got, test.expected, test.arg1, test.arg2)
-		}
-	}
-}
+	Describe("NewStatesMap func", func() {
+		It("should return normal statesMap", func() {
+			newStatesMap := NewStatesMap()
+			Expect(newStatesMap).ShouldNot(BeNil())
+		})
+	})
+
+	Describe("StatesMap struct", func() {
+		var testMap StatesMap
+		var testStateKey StateKey
+		var testStateVal State
+
+		BeforeEach(func() {
+			testStateKey = StateKey("test_key")
+			testStateVal = State{
+				Name:       "test_tool",
+				InstanceID: "test_instance",
+			}
+			testMap = StatesMap{
+				ConcurrentMap: concurrentmap.NewConcurrentMap(
+					StateKey(""), State{},
+				),
+			}
+		})
+
+		Context("DeepCopy method", func() {
+			It("should return not same map", func() {
+				newTestMap := testMap.DeepCopy()
+				oldMapAddress := reflect.ValueOf(&testMap)
+				newMapAddress := reflect.ValueOf(&newTestMap)
+				Expect(oldMapAddress).ShouldNot(Equal(newMapAddress))
+				valEqual := reflect.DeepEqual(newTestMap, testMap)
+				Expect(valEqual).Should(BeTrue())
+			})
+		})
+
+		Describe("ToList method", func() {
+			It("should return not empty list if have key", func() {
+				testMap.Store(testStateKey, testStateVal)
+				tList := testMap.ToList()
+				Expect(len(tList)).Should(Equal(1))
+				Expect(tList[0].Name).Should(Equal(testStateVal.Name))
+				Expect(tList[0].InstanceID).Should(Equal(testStateVal.InstanceID))
+			})
+		})
+
+		Describe("Format method", func() {
+			It("should return formated info for map", func() {
+				testMap.Store(testStateKey, testStateVal)
+				formatedInfo := testMap.Format()
+				formatResult := fmt.Sprintf(
+					"test_key:\n  name: %s\n  instanceid: %s\n  dependson: []\n  options: {}\n  resource: {}\n",
+					testStateVal.Name, testStateVal.InstanceID,
+				)
+				Expect(string(formatedInfo)).Should(Equal(formatResult))
+			})
+		})
+	})
+})

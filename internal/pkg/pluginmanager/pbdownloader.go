@@ -19,11 +19,14 @@ import (
 
 type PbDownloadClient struct {
 	*http.Client
+	baseURL string
 }
 
-func NewPbDownloadClient() *PbDownloadClient {
+func NewPbDownloadClient(baseURL string) *PbDownloadClient {
 	dClient := PbDownloadClient{}
 	dClient.Client = http.DefaultClient
+	dClient.Client.Timeout = time.Second * 60 * 60
+	dClient.baseURL = baseURL
 	return &dClient
 }
 
@@ -35,21 +38,22 @@ func (pd *PbDownloadClient) download(pluginsDir, pluginFilename, version string)
 		return err
 	}
 
-	downloadURL := fmt.Sprintf("%s/v%s/%s", defaultReleaseUrl, version, pluginFilename)
+	downloadURL := fmt.Sprintf("%s/v%s/%s", pd.baseURL, version, pluginFilename)
 	log.Debugf("Downloading url is: %s.", downloadURL)
 
 	tmpName := pluginFilename + ".tmp"
 
-	pd.Timeout = time.Second * 60 * 60
 	resp, err := pd.Get(downloadURL)
 	if err != nil {
 		return err
 	}
+	pluginTmpLocation := filepath.Join(pluginsDir, tmpName)
+	pluginLocation := filepath.Join(pluginsDir, pluginFilename)
 
 	if resp.StatusCode == http.StatusOK {
 		log.Infof("Downloading: [%s] ...", pluginFilename)
 
-		downFile, err := os.Create(filepath.Join(pluginsDir, tmpName))
+		downFile, err := os.Create(pluginTmpLocation)
 		if err != nil {
 			return err
 		}
@@ -63,16 +67,14 @@ func (pd *PbDownloadClient) download(pluginsDir, pluginFilename, version string)
 		}
 	} else {
 		log.Errorf("[%s] download failed, %s.", pluginFilename, resp.Status)
-		if err = os.Remove(filepath.Join(pluginsDir, tmpName)); err != nil {
-			log.Errorf("Remove [%s] failed, %s.", filepath.Join(pluginsDir, tmpName), err)
+		if err = os.Remove(pluginTmpLocation); err != nil {
+			log.Errorf("Remove [%s] failed, %s.", pluginLocation, err)
 		}
 		return fmt.Errorf("downloading %s from %s status code %d", pluginFilename, downloadURL, resp.StatusCode)
 	}
 
 	// rename, tmp file to real file
-	if err = os.Rename(
-		filepath.Join(pluginsDir, tmpName),
-		filepath.Join(pluginsDir, pluginFilename)); err != nil {
+	if err = os.Rename(pluginTmpLocation, pluginLocation); err != nil {
 		log.Error(err)
 		return err
 	}
