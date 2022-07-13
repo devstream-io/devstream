@@ -6,15 +6,21 @@ import (
 	"github.com/spf13/viper"
 )
 
+var templates = map[string]string{
+	"quickstart": QuickStart,
+	"gitops":     GitOps,
+}
+
 //go:generate go run gen_embed_var.go
 func Show() error {
+	// at first, check is template arg is set
 	template := viper.GetString("template")
-	if template == "quickstart" {
-		fmt.Println(QuickStart)
-		return nil
-	} else if template == "gitops" {
-		fmt.Println(GitOps)
-		return nil
+	if template != "" {
+		if tmpl, ok := templates[template]; ok {
+			fmt.Println(tmpl)
+			return nil
+		}
+		return fmt.Errorf("illegal template name : < %s >", template)
 	}
 
 	plugin := viper.GetString("plugin")

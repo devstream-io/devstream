@@ -42,14 +42,14 @@ Examples:
 	Run: showStatusCMDFunc,
 }
 
-func showConfigCMDFunc(cmd *cobra.Command, args []string) {
+func showConfigCMDFunc(_ *cobra.Command, _ []string) {
 	log.Debug("Show configuration information.")
 	if err := config.Show(); err != nil {
 		log.Fatal(err)
 	}
 }
 
-func showStatusCMDFunc(cmd *cobra.Command, args []string) {
+func showStatusCMDFunc(_ *cobra.Command, _ []string) {
 	log.Debug("Show status information.")
 	if err := status.Show(configFile); err != nil {
 		log.Fatal(err)
@@ -61,7 +61,7 @@ func init() {
 	showCMD.AddCommand(showStatusCMD)
 
 	showConfigCMD.Flags().StringVarP(&plugin, "plugin", "p", "", "specify name with the plugin")
-	showConfigCMD.Flags().StringVarP(&template, "template", "t", "quickstart", "print a template config, e.g. quickstart/gitops/...")
+	showConfigCMD.Flags().StringVarP(&template, "template", "t", "", "print a template config, e.g. quickstart/gitops/...")
 	completion.FlagPluginsCompletion(showConfigCMD, "plugin")
 
 	showStatusCMD.Flags().StringVarP(&plugin, "plugin", "p", "", "specify name with the plugin")
