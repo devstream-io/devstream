@@ -9,6 +9,7 @@ tools:
     options:
       # need to create the namespace or not, default: false
       create_namespace: true
+      # Helm repo information, this section is optional
       repo:
         # name of the Helm repo
         name: argo
@@ -31,5 +32,5 @@ tools:
         # custom configuration (Optional). You can refer to [ArgoCD values.yaml](https://github.com/argoproj/argo-helm/blob/master/charts/argo-cd/values.yaml)
         values_yaml: |
           controller:
-            service: 
+            service:
               port: 8080

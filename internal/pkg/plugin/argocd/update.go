@@ -10,9 +10,13 @@ import (
 )
 
 func Update(options map[string]interface{}) (map[string]interface{}, error) {
-	// 1. decode options
+	// 1. decode options and fill default options if miss
 	var opts Options
 	if err := mapstructure.Decode(options, &opts); err != nil {
+		return nil, err
+	}
+
+	if err := defaultMissedOptions(&opts); err != nil {
 		return nil, err
 	}
 
