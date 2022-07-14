@@ -3,18 +3,16 @@ package jenkinspipelinekubernetes
 import (
 	_ "embed"
 	"fmt"
-	"os/exec"
 	"strings"
 
 	"github.com/mitchellh/mapstructure"
-	"github.com/parnurzeal/gorequest"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 const (
-	jenkinsCredentialID   = "credential-devstream-io-jenkins-pipeline-kubernetes"
-	jenkinsCredentialDesc = "Jenkins Pipeline secret, created by devstream-io/jenkins-pipeline-kubernetes"
+	jenkinsCredentialID   = "credential-jenkins-pipeline-kubernetes-by-devstream"
+	jenkinsCredentialDesc = "Jenkins Pipeline secret, created by devstream/jenkins-pipeline-kubernetes"
 )
 
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
@@ -30,109 +28,70 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, fmt.Errorf("opts are illegal")
 	}
 
+	client := NewClient(&opts)
+
 	// always try to create credential, there will be no error if it already exists
-	if err := CreateCredentialUsernamePassword(&opts); err != nil {
+	if err := client.CreateCredentialUsernamePassword(); err != nil {
 		return nil, err
 	}
 
-	// todo: check if the job already exists
-	if err := CreateItem(&opts); err != nil {
+	jobXmlContent := renderJobXml(jobTemplate, &opts)
+
+	// TODO(aFlyBird0): check if the job already exists
+
+	if err := client.CreateItem(jobXmlContent); err != nil {
 		return nil, fmt.Errorf("failed to create job: %s", err)
 	}
+
+	// TODO(aFlyBird0): use JCasC to configure job creation
+	// configuration as code: update jenkins config
+	//        + configure system -> GitHub Pull Request Builder -> Jenkins URL override
+	//        + configure system -> GitHub Pull Request Builder -> git personal access token
+	// - job creation:
+	//        + pr builder
+	//        + main builder
+	//        + GitHub project Project url
+	//        + select GitHub Pull Request Builder under Build Triggers
+	//        + Trigger phrase: optional
+	//        + Pipeline Definition: pipeline script from SCM
+	//        + Branch Specifier & Refspec: PR/main
+	//        + unselect Lightweight checkout
+	//        + Jenkinsfile template -> github repo (https://github.com/IronCore864/jenkins-test/blob/main/Jenkinsfile, https://plugins.jenkins.io/kubernetes/)
+
+	// TODO(aFlyBird0): about how to create an new config yaml in JCasC:
+	// refer: https://plugins.jenkins.io/configuration-as-code/
+	// refer: https://github.com/jenkinsci/helm-charts/blob/e4242561e5ea205bfa3405064cf5fe39b5a22d93/charts/jenkins/values.yaml#L341
+	// refer: https://github.com/jenkinsci/helm-charts/blob/e4242561e5ea205bfa3405064cf5fe39b5a22d93/charts/jenkins/templates/jcasc-config.yaml#L1-L25
+	// example: If we want to create a new config yaml in JCasC, we can use the following code:
+	// 			1. render this ConfigMap by yourself: https://github.com/jenkinsci/helm-charts/blob/e4242561e5ea205bfa3405064cf5fe39b5a22d93/charts/jenkins/templates/jcasc-config.yaml#L6-L26
+	//          2. $key should be your config file name(without .yaml extension), value should be the real config file content
+	//			3. once you want to put a new config yaml into $JenkinsHome/config-as-code/ folder, just use k8s sdk to create a new ConfigMap
+	//			4. don't forget to add a label to the ConfigMap, such as "author: devstream". So that we could easy to filter the ConfigMap created by devstream to delete them.
+	// 			5. if you want to update an existing config yaml, just use k8s sdk to update the ConfigMap
+	//			6. it seems that once you create/update a ConfigMap, Jenkins(installed by helm) will automatically reload the config yaml,
+	//				if not, you can use the following api to reload the config yaml: "POST JENKINS_URL/configuration-as-code/reload"（ remember to add jenkins crumb in http header)
+	//				see here for info:https://github.com/jenkinsci/configuration-as-code-plugin/blob/master/docs/features/configurationReload.md
+	// there are many things to do:
+	// 1. figure out the JCasC content we want to create
+	// 2. create a new ConfigMap according to the explanation above
+	// 3. handle update of ConfigMap
+	// 4. add "read" functions to the ConfigMap to get the content of the ConfigMap and check if the resource is drifted
+	// 5. maybe we also should consider to expose some config key in ConfigMap to the user
+
+	// TODO(aFlyBird0): build dtm resource
+
+	// TODO(aFlyBird0): what if user doesn't use helm to install jenkins? then the JCasC may not be automatically reloaded.
 
 	return (&resource{}).toMap(), nil
 }
 
-//func ifCredentialExists(options *Options) bool {
-//	// todo
-//	return false
-//}
-
-func CreateCredentialSecretText(opts *Options) error {
-
-	accessURL := opts.GetJenkinsAccessURL()
-
-	// todo: use gorequest to do the request
-	cmdGetCrumb := fmt.Sprintf(`CRUMB=$(curl -s '%s/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)')`, accessURL)
-	cmdCreateCredential := fmt.Sprintf(`
-curl -H $CRUMB -X POST '%s/credentials/store/system/domain/_/createCredentials' \
---data-urlencode 'json={
-  "": "0",
-   "credentials": {
-	   "scope": "GLOBAL",
-	   "id": "%s",
-	   "secret": "%s",
-	   "description": "%s",
-	   "$class": "org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl"
-  }
-}'`, accessURL, jenkinsCredentialID, opts.GitHubToken, jenkinsCredentialDesc)
-
-	cmd := exec.Command("sh", "-c", cmdGetCrumb+" && "+cmdCreateCredential)
-	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("failed to create credential secret: %s", err)
-	}
-
-	return nil
-}
-
-func CreateCredentialUsernamePassword(opts *Options) error {
-
-	accessURL := opts.GetJenkinsAccessURL()
-
-	// todo: use gorequest to do the request
-	cmdGetCrumb := fmt.Sprintf(`CRUMB=$(curl -s '%s/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)')`, accessURL)
-	cmdCreateCredential := fmt.Sprintf(`
-curl -H $CRUMB -X POST '%s/credentials/store/system/domain/_/createCredentials' \
---data-urlencode 'json={
-	"": "0",
-	"credentials": {
-		"scope": "GLOBAL",
-		"id": "%s",
-		"username": "foo-useless-username",
-		"password": "%s",
-		"description": "%s",
-		"$class": "com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl"
-  }
-}'`, accessURL, jenkinsCredentialID, opts.GitHubToken, jenkinsCredentialDesc)
-
-	cmd := exec.Command("sh", "-c", cmdGetCrumb+" && "+cmdCreateCredential)
-	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("failed to create credential secret: %s", err)
-	}
-
-	return nil
-}
-
-//go:embed job-template.xml
-var jobTemplate string
-
-func CreateItem(opts *Options) error {
-
-	jobXml := renderJobXml(jobTemplate, opts)
-
-	// create job
-	request := gorequest.New()
-	resp, body, errs := request.Post(opts.GetJenkinsAccessURL()+"/createItem").
-		Set("Content-Type", "application/xml").
-		Query("name=" + opts.JenkinsJobName).Send(jobXml).End()
-
-	if len(errs) != 0 {
-		return fmt.Errorf("failed to create job: %s", errs)
-	} else if resp.StatusCode != 200 {
-		return fmt.Errorf("failed to create job, here is response: %s", body)
-	}
-
-	return nil
-}
-
-// todo: unit test
+// TODO(aFlyBird0): unit test
 func renderJobXml(jobTemplate string, opts *Options) string {
 	// note: maybe it is better to use html/template to generate the job template,
-	// but it is complex and this is the simplest way to do it
+	// but that way is complex and this is the simplest way to do it
 	jobXml := strings.Replace(jobTemplate, "{{.GitHubRepoURL}}", opts.GitHubRepoURL, 1)
 	jobXml = strings.Replace(jobXml, "{{.CredentialsID}}", jenkinsCredentialID, 1)
 
-	fmt.Println(jobXml)
-
+	log.Debugf("job xml rendered: %s", jobXml)
 	return jobXml
 }

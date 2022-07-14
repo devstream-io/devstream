@@ -1,8 +1,6 @@
 package jenkinspipelinekubernetes
 
-// TODO(dtm): Add your logic here.
-
-// todo: specify the resource fields here.
+// TODO(aFlyBird0): specify the resource fields here.
 type resource struct {
 }
 

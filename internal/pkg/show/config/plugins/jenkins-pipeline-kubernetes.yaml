@@ -7,9 +7,8 @@ tools:
   dependsOn: [ ]
   # options for the plugin
   options:
-  # TODO(dtm): Add your default config here.
     # jenkinsUrl, format: hostname:port
-    jenkinsUrl: http://localhost:8080
+    jenkinsUrl: localhost:8080
     jenkinsUser: admin
     githubRepoUrl: https://github.com/xxx/xxx.git
     jenkinsJobName:

@@ -21,7 +21,10 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, fmt.Errorf("opts are illegal")
 	}
 
-	// TODO(dtm): Add your logic here.
+	// TODO(aFlyBird0): determine how to update the resource, such as:
+	// if some config/resource are changed, we should restart the Jenkins
+	// some, we should only call some update function
+	// others, we just ignore them
 
 	return (&resource{}).toMap(), nil
 }

@@ -4,7 +4,6 @@ import "fmt"
 
 // Options is the struct for configurations of the jenkins-pipeline-kubernetes plugin.
 type Options struct {
-	// TODO(dtm): Add your params here.
 	JenkinsURL     string `mapstructure:"jenkinsUrl" validate:"required,hostname_port"`
 	JenkinsUser    string `mapstructure:"jenkinsUser" validate:"required"`
 	JenkinsToken   string `mapstructure:"jenkinsToken"`

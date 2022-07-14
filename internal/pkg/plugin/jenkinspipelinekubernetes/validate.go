@@ -21,6 +21,12 @@ func validate(options *Options) []error {
 	}
 
 	options.GitHubToken = os.Getenv("GITHUB_TOKEN")
+
+	// TODO(aFlyBird0): now jenkins token should be provided by the user,
+	// so, user should install jenkins first and stop to set the token in env, then install this pipeline plugin.
+	// could we generate a token automatically in "jenkins" plugin?
+	// and put it into .outputs of "jenkins" plugin,
+	// so that user could run "jenkins" and "jenkins-pipeline-kubernetes"  in the same tool file.(using depends on).
 	options.JenkinsToken = os.Getenv("JENKINS_TOKEN")
 	if options.GitHubToken == "" {
 		retErrs = append(retErrs, fmt.Errorf("GITHUB_TOKEN is required"))
@@ -29,7 +35,7 @@ func validate(options *Options) []error {
 		retErrs = append(retErrs, fmt.Errorf("JENKINS_TOKEN is required"))
 	}
 
-	// todo: check if the jenkins url is valid (try to connect to jenkins)
+	// TODO(aFlyBird0): check if the jenkins url is valid (try to connect to jenkins)
 
 	return retErrs
 }

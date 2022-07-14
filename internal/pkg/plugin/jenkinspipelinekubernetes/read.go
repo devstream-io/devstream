@@ -21,9 +21,12 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, fmt.Errorf("opts are illegal")
 	}
 
-	// TODO(dtm): Add your logic here.
-
-	// todo: specify the resource to be read and the way to read it.
+	// TODO(aFlyBird0): specify the resource to be read and the way to read it, such as:
+	// plugins install info(GitHub Pull Request Builder Plugin and OWASP Markup Formatter must be installed)
+	// job list(filter the jobs which are created by devstream)
+	// credential list(filter the credentials which are created by devstream)(if credential created by devstream exists)
+	// JCasC configuration
+	// job configuration && status
 
 	return nil, nil
 }
