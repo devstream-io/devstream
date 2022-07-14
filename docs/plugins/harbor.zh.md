@@ -54,8 +54,8 @@ Harbor的大部分组件都是无状态的。因此我们可以通过增加 `Pod
   2. 将 Pod `harbor-core` 中目录 `/etc/core/ca` 存储的自签名证书复制到自己的本机；
   3. 在自己的主机上信任该证书。
 - 使用公共证书
-  1. 将公共证书添加为密钥 (Secret)；
-  2. 将 `tls.enabled` 设置为 `true`，并编辑对应的域名 `externalURL；`
+  1. 将公共证书添加为密钥 (`Secret`)；
+  2. 将 `tls.enabled` 设置为 `true`，并编辑对应的域名 `externalURL`；
   3. 配置 `tls.secretName` 使用该公共证书。
 
 ### 配置
