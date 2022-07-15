@@ -38,7 +38,6 @@ var _ = Describe("Statemanager", func() {
 
 	Describe("Manager", func() {
 		It("Should add state right", func() {
-
 			err = smgr.AddState(testKey, testState)
 			Expect(err).NotTo(HaveOccurred())
 
@@ -88,11 +87,10 @@ var _ = Describe("Statemanager", func() {
 			stateList := smgr.GetStatesMap().ToList()
 			Expect(stateList).To(Equal([]statemanager.State{stateA, stateB, stateC}))
 		})
-
 	})
+
 	AfterEach(func() {
 		err = os.RemoveAll(local.DefaultStateFile)
 		Expect(err).NotTo(HaveOccurred())
 	})
-
 })

@@ -8,6 +8,7 @@ import (
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+
 	"github.com/onsi/gomega/ghttp"
 )
 
@@ -29,7 +30,7 @@ var _ = Describe("pbdownloader", func() {
 	})
 
 	Describe("download func", func() {
-		Context("when server return err code", func() {
+		When("server return err code", func() {
 			BeforeEach(func() {
 				server.AppendHandlers(
 					ghttp.CombineHandlers(
@@ -38,16 +39,15 @@ var _ = Describe("pbdownloader", func() {
 					),
 				)
 			})
+
 			It("should return err for download from url error", func() {
 				err := pbDownlodClient.download(tempDir, pluginName, pluginVersion)
 				Expect(err).Error().Should(HaveOccurred())
 				Expect(err.Error()).Should(ContainSubstring("404"))
 			})
-
 		})
 
-		Context("when response return success", func() {
-
+		When("response return success", func() {
 			var testContent string
 
 			BeforeEach(func() {
@@ -59,6 +59,7 @@ var _ = Describe("pbdownloader", func() {
 					),
 				)
 			})
+
 			It("should return err if body error", func() {
 				err := pbDownlodClient.download(tempDir, pluginName, pluginVersion)
 				Expect(err).Error().ShouldNot(HaveOccurred())
@@ -68,9 +69,9 @@ var _ = Describe("pbdownloader", func() {
 				Expect(err).Error().ShouldNot(HaveOccurred())
 				Expect(string(fileContent)).Should(Equal(testContent))
 			})
-
 		})
 	})
+
 	AfterEach(func() {
 		server.Close()
 	})

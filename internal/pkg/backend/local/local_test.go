@@ -5,9 +5,10 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/devstream-io/devstream/internal/pkg/backend/local"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+
+	"github.com/devstream-io/devstream/internal/pkg/backend/local"
 )
 
 var _ = Describe("NewLocal func", func() {
@@ -43,11 +44,13 @@ var _ = Describe("Local struct", func() {
 
 	Describe("Read method", func() {
 		var testData []byte
+
 		BeforeEach(func() {
 			testData = []byte("this is test data")
 			err := ioutil.WriteFile(tFileLoc, testData, 0644)
 			Expect(err).Error().ShouldNot(HaveOccurred())
 		})
+
 		It("should return file content", func() {
 			fileData, err := tLocal.Read()
 			Expect(err).Error().ShouldNot(HaveOccurred())
@@ -57,9 +60,11 @@ var _ = Describe("Local struct", func() {
 
 	Describe("Write method", func() {
 		var writeData []byte
+
 		BeforeEach(func() {
 			writeData = []byte("this is write test")
 		})
+
 		It("should write  data to file", func() {
 			err := tLocal.Write(writeData)
 			Expect(err).Error().ShouldNot(HaveOccurred())
@@ -67,7 +72,6 @@ var _ = Describe("Local struct", func() {
 			Expect(err).Error().ShouldNot(HaveOccurred())
 			Expect(fileData).Should(Equal(writeData))
 		})
-
 	})
 
 	// After each test, clean file content
@@ -75,5 +79,4 @@ var _ = Describe("Local struct", func() {
 		err := os.Truncate(tFileLoc, 0)
 		Expect(err).Error().ShouldNot(HaveOccurred())
 	})
-
 })

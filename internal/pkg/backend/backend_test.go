@@ -1,10 +1,11 @@
 package backend_test
 
 import (
-	"github.com/devstream-io/devstream/internal/pkg/backend"
-	"github.com/devstream-io/devstream/internal/pkg/configloader"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+
+	"github.com/devstream-io/devstream/internal/pkg/backend"
+	"github.com/devstream-io/devstream/internal/pkg/configloader"
 )
 
 var _ = Describe("GetBackend", func() {
@@ -22,7 +23,6 @@ var _ = Describe("GetBackend", func() {
 			_, err := backend.GetBackend(state)
 			Expect(err).Error().ShouldNot(HaveOccurred())
 		})
-
 	})
 
 	When("use unknown backend", func() {
@@ -32,7 +32,5 @@ var _ = Describe("GetBackend", func() {
 			Expect(err).Error().Should(HaveOccurred())
 			Expect(err.Error()).Should(Equal("the backend type < not_exist_plug > is illegal"))
 		})
-
 	})
-
 })

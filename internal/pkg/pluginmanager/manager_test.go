@@ -47,6 +47,7 @@ var _ = Describe("MD5", func() {
 		}
 		return nil
 	}
+
 	BeforeEach(func() {
 		tempDir = GinkgoT().TempDir()
 		viper.Set("plugin-dir", tempDir)
@@ -84,7 +85,6 @@ var _ = Describe("MD5", func() {
 	})
 
 	Describe("pluginAndMD5Matches func", func() {
-
 		It("should match .md5 file content", func() {
 			err = pluginAndMD5Matches(tempDir, file, fileMD5, tools[0].InstanceID)
 			Expect(err).Error().ShouldNot(HaveOccurred())
@@ -97,7 +97,6 @@ var _ = Describe("MD5", func() {
 			expectErrMsg := fmt.Sprintf("plugin %s doesn't match with .md5", tools[0].InstanceID)
 			Expect(err.Error()).To(Equal(expectErrMsg))
 		})
-
 	})
 
 	Describe("redownloadPlugins func", func() {
@@ -105,9 +104,11 @@ var _ = Describe("MD5", func() {
 			pbDownloadClient *PbDownloadClient
 			pluginVersion    string
 		)
+
 		BeforeEach(func() {
 			pbDownloadClient = NewPbDownloadClient("not_exist_url")
 		})
+
 		When("pluginFile not exist", func() {
 			It("should return error", func() {
 				notExistPluginFile := "not_exist_plugin"
@@ -119,12 +120,10 @@ var _ = Describe("MD5", func() {
 					pbDownloadClient, tempDir, file, notExistPluginFile, pluginVersion,
 				)
 				Expect(err).Error().Should(HaveOccurred())
-
 			})
 		})
 
 		When("old plugin exist", func() {
-
 			var (
 				server     *ghttp.Server
 				rspContent string
@@ -147,7 +146,6 @@ var _ = Describe("MD5", func() {
 						ghttp.RespondWith(http.StatusOK, rspContent),
 					),
 				)
-
 			})
 
 			It("should re download success if download success", func() {
@@ -176,5 +174,4 @@ var _ = Describe("MD5", func() {
 			})
 		})
 	})
-
 })

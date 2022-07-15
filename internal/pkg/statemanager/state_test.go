@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/devstream-io/devstream/pkg/util/mapz/concurrentmap"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+
+	"github.com/devstream-io/devstream/pkg/util/mapz/concurrentmap"
 )
 
 var _ = Describe("Statemanager.state", func() {
@@ -35,9 +36,11 @@ var _ = Describe("Statemanager.state", func() {
 	})
 
 	Describe("StatesMap struct", func() {
-		var testMap StatesMap
-		var testStateKey StateKey
-		var testStateVal State
+		var (
+			testMap      StatesMap
+			testStateKey StateKey
+			testStateVal State
+		)
 
 		BeforeEach(func() {
 			testStateKey = StateKey("test_key")
