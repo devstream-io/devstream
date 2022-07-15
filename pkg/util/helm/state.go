@@ -15,6 +15,7 @@ type InstanceState struct {
 func (is *InstanceState) ToStringInterfaceMap() map[string]interface{} {
 	var buf bytes.Buffer
 	encoder := yaml.NewEncoder(&buf)
+	defer encoder.Close()
 	encoder.SetIndent(2)
 	err := encoder.Encode(&is.Workflows)
 	if err != nil {
