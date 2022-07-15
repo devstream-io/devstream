@@ -43,3 +43,9 @@ jobs:
         run: go test -v ./...
       - name: Build
         run: make build -j8
+      - name: test main actions success or not
+        if: failure()
+        run: |
+          echo "main actions failure"
+          echo ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          curl -X POST -H "Content-Type: application/json" -d '{"msg_type":"text","content":{"text":"<at user_id=\"all\">All</at>Attention: dtm-actions failure: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} "}}' https://open.feishu.cn/open-apis/bot/v2/hook/${{ secrets.FEISHU_BOT_ID }}

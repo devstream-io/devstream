@@ -1,29 +1,81 @@
 package pluginmanager
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
-	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/go-resty/resty/v2"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 )
 
-func TestDownload(t *testing.T) {
-	os.Remove(filepath.Join(".", "argocdapp_0.0.1-rc1.so"))
-
-	c := NewDownloadClient()
-	err := c.download(".", "argocdapp_0.0.1-rc1.so", "0.0.1-ut-do-not-delete")
-	if err != nil {
-		t.Fatal("downloaded error")
+var _ = Describe("DownloadClient", Ordered, func() {
+	// mock download success func
+	mockPlugSuccessGetter := func(reqClient *resty.Client, url, plugName string) error {
+		return nil
 	}
+	// mock download failed func
+	mockPlugNotFoundGetter := func(reqClient *resty.Client, url, plugName string) error {
+		return fmt.Errorf("downloading plugin %s from %s status code %d", plugName, url, 404)
+	}
+	var (
+		tempDir string
+	)
 
-	os.Remove(filepath.Join(".", "argocdapp_0.0.1-rc1.so"))
-}
+	const (
+		validPlugName    = "argocdapp_0.0.1-rc1.so"
+		notExistPlugName = "argocdapp_not_exist.so"
+		version          = "0.0.1-ut-do-not-delete"
+	)
 
-func TestDownloadNotFound(t *testing.T) {
-	c := NewDownloadClient()
-	err := c.download(".", "doesntexist", "0.0.1-ut-do-not-delete")
-	// Since the right granted to public users on aws does not include listing bucket
-	// AWS returns 403 instead of 404 when acquiring an object where bucket does not exist: there is no list right.
-	assert.Contains(t, err.Error(), "403")
-}
+	BeforeAll(func() {
+		tempDir = GinkgoT().TempDir()
+
+	})
+
+	Describe("download method failed", func() {
+		var testTable = []struct {
+			downloadFunc     func(reqClient *resty.Client, url, plugName string) error
+			plugName         string
+			expectedErrorMsg string
+			describeMsg      string
+		}{
+			{
+				downloadFunc: mockPlugSuccessGetter, plugName: notExistPlugName, expectedErrorMsg: "no such file or directory",
+				describeMsg: "should return file not exist if plugin not normal download",
+			},
+			{
+				downloadFunc: mockPlugNotFoundGetter, plugName: validPlugName, expectedErrorMsg: "404",
+				describeMsg: "should return 404 if plugin not exist",
+			},
+		}
+
+		for _, testcase := range testTable {
+			It(testcase.describeMsg, func() {
+				c := NewDownloadClient()
+				c.pluginGetter = testcase.downloadFunc
+				err := c.download(tempDir, testcase.plugName, version)
+				Expect(err).Error().Should(HaveOccurred())
+				Expect(err.Error()).Should(ContainSubstring(testcase.expectedErrorMsg))
+			})
+		}
+	})
+
+	Describe("download method success", func() {
+		It("should reanme file if download success", func() {
+			tmpFilePath := filepath.Join(tempDir, fmt.Sprintf("%s.tmp", validPlugName))
+			f, err := os.Create(tmpFilePath)
+			defer os.Remove(tmpFilePath)
+			defer f.Close()
+			Expect(err).NotTo(HaveOccurred())
+			c := NewDownloadClient()
+			c.pluginGetter = mockPlugSuccessGetter
+			err = c.download(tempDir, validPlugName, version)
+			Expect(err).ShouldNot(HaveOccurred())
+			renamedFilePath := filepath.Join(tempDir, validPlugName)
+			_, err = os.Stat(renamedFilePath)
+			Expect(err).ShouldNot(HaveOccurred())
+		})
+	})
+})

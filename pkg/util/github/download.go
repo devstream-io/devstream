@@ -11,7 +11,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func (c *Client) DownloadAsset(tagName, assetName string) error {
+func (c *Client) DownloadAsset(tagName, assetName, fileName string) error {
 	var owner = c.Owner
 	if c.Org != "" {
 		owner = c.Org
@@ -70,7 +70,7 @@ func (c *Client) DownloadAsset(tagName, assetName string) error {
 	}
 
 	// 4. download
-	n, err := downloader.Download(downloadUrl, "", c.WorkPath)
+	n, err := downloader.Download(downloadUrl, fileName, c.WorkPath)
 	if err != nil {
 		log.Debugf("Failed to download asset from %s.", downloadUrl)
 		return err
