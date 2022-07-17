@@ -50,7 +50,10 @@ func (m *CliLoggerFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 
 	newLog := fmt.Sprintf("%s %s %s %s\n", timestamp, m.prefix, m.formatLevelName, entry.Message)
 
-	b.WriteString(newLog)
+	_, err := b.WriteString(newLog)
+	if err != nil {
+		return nil, err
+	}
 	return b.Bytes(), nil
 }
 
@@ -74,7 +77,7 @@ func (m *CliLoggerFormatter) levelPrintRender() {
 		m.formatLevelName = color.BgRed.Render(ERROR)
 		m.prefix = color.Red.Render(normal.Error)
 	case "fatal":
-		m.level = logrus.InfoLevel
+		m.level = logrus.FatalLevel
 		m.formatLevelName = color.BgRed.Render(FATAL)
 		m.prefix = color.Red.Render(normal.Fatal)
 	case "success":
@@ -102,7 +105,10 @@ func (s *SeparatorFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 		color.Blue.Render(INFO),
 		color.Blue.Render(fmt.Sprintf("%s %s %s", "-------------------- [ ", entry.Message, " ] --------------------")))
 
-	b.WriteString(newLog)
+	_, err := b.WriteString(newLog)
+	if err != nil {
+		return nil, err
+	}
 	return b.Bytes(), nil
 }
 
