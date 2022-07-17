@@ -54,9 +54,7 @@ func GetPluginDynamicStateWrapper(defaultDepList []string) plugininstaller.Statu
 
 		retMap := retState.ToStringInterfaceMap()
 		log.Debugf("Return map: %v.", retMap)
-
 		return retMap, nil
-
 	}
 	return getPluginDynamicState
 }
