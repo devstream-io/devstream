@@ -4,12 +4,13 @@ import (
 	"context"
 	"fmt"
 
+	mapset "github.com/deckarep/golang-set/v2"
+
 	"github.com/mitchellh/mapstructure"
 
 	"github.com/devstream-io/devstream/pkg/util/github"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/mapz"
-	"github.com/devstream-io/devstream/pkg/util/slicez"
 )
 
 type TrelloGithub struct {
@@ -61,7 +62,7 @@ func NewTrelloGithub(options map[string]interface{}) (*TrelloGithub, error) {
 
 // CompareFiles compare files between local and remote
 func (tg *TrelloGithub) CompareFiles(wsFiles, filesInRemoteDir []string) map[string]error {
-	lostFiles := slicez.SliceInSliceStr(wsFiles, filesInRemoteDir)
+	lostFiles := mapset.NewSet[string](wsFiles...).Difference(mapset.NewSet[string](filesInRemoteDir...)).ToSlice()
 	// all files exist
 	if len(lostFiles) == 0 {
 		log.Info("All workflows exist.")
