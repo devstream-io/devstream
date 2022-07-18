@@ -14,39 +14,40 @@ import (
 var _ = Describe("Statemanager", func() {
 	var smgr statemanager.Manager
 	var err error
+	var testKey statemanager.StateKey
+	var testState statemanager.State
 
-	Context("States", func() {
-		BeforeEach(func() {
-			stateCfg := configloader.State{
-				Backend: "local",
-				Options: configloader.StateConfigOptions{
-					StateFile: "devstream.state",
-				},
-			}
-			smgr, err = statemanager.NewManager(stateCfg)
-			Expect(err).NotTo(HaveOccurred())
-			Expect(smgr).NotTo(BeNil())
-		})
+	BeforeEach(func() {
+		stateCfg := configloader.State{
+			Backend: "local",
+			Options: configloader.StateConfigOptions{
+				StateFile: "devstream.state",
+			},
+		}
+		smgr, err = statemanager.NewManager(stateCfg)
+		Expect(err).NotTo(HaveOccurred())
+		Expect(smgr).NotTo(BeNil())
+		testKey = statemanager.StateKey("name_githubactions")
+		testState = statemanager.State{
+			InstanceID: "name",
+			Name:       "githubactions",
+			Options:    map[string]interface{}{"a": "value"},
+			Resource:   map[string]interface{}{"a": "value"},
+		}
+	})
 
-		It("Should get the state right", func() {
-			key := statemanager.StateKey("name_githubactions")
-			stateA := statemanager.State{
-				InstanceID: "name",
-				Name:       "githubactions",
-				Options:    map[string]interface{}{"a": "value"},
-				Resource:   map[string]interface{}{"a": "value"},
-			}
-
-			err = smgr.AddState(key, stateA)
-			Expect(err).NotTo(HaveOccurred())
-
-			stateB := smgr.GetState(key)
-			Expect(&stateA).To(Equal(stateB))
-
-			err = smgr.DeleteState(key)
+	Describe("Manager", func() {
+		It("Should add state right", func() {
+			err = smgr.AddState(testKey, testState)
 			Expect(err).NotTo(HaveOccurred())
 
-			stateC := smgr.GetState(key)
+			stateB := smgr.GetState(testKey)
+			Expect(&testState).To(Equal(stateB))
+
+			err = smgr.DeleteState(testKey)
+			Expect(err).NotTo(HaveOccurred())
+
+			stateC := smgr.GetState(testKey)
 			Expect(stateC).To(BeZero())
 		})
 
@@ -86,10 +87,10 @@ var _ = Describe("Statemanager", func() {
 			stateList := smgr.GetStatesMap().ToList()
 			Expect(stateList).To(Equal([]statemanager.State{stateA, stateB, stateC}))
 		})
+	})
 
-		AfterEach(func() {
-			err = os.RemoveAll(local.DefaultStateFile)
-			Expect(err).NotTo(HaveOccurred())
-		})
+	AfterEach(func() {
+		err = os.RemoveAll(local.DefaultStateFile)
+		Expect(err).NotTo(HaveOccurred())
 	})
 })

@@ -23,7 +23,7 @@ func DownloadPlugins(conf *configloader.Config) error {
 	log.Infof("Using dir <%s> to store plugins.", pluginDir)
 
 	// download all plugins that don't exist locally
-	dc := NewPbDownloadClient()
+	dc := NewPbDownloadClient(defaultReleaseUrl)
 
 	for _, tool := range conf.Tools {
 		pluginName := configloader.GetPluginName(&tool)
