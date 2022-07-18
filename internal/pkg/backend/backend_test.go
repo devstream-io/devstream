@@ -17,8 +17,8 @@ var _ = Describe("GetBackend", func() {
 		})
 	})
 
-	When("use s3 backend", func() {
-		It("should return s3 backend struct", func() {
+	When("use local backend", func() {
+		It("should return local backend struct", func() {
 			state := configloader.State{Backend: "local"}
 			_, err := backend.GetBackend(state)
 			Expect(err).Error().ShouldNot(HaveOccurred())
