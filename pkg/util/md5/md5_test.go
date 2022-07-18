@@ -60,6 +60,8 @@ func createFileAndMD5File(fileName string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	defer md5File.Close()
+
 	_, err = md5File.Write([]byte(md5))
 	if err != nil {
 		return "", err
