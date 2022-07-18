@@ -60,5 +60,3 @@ tools:
                 # this will create a file named "safe_html.yaml" in the ${JENKINS_HOME}/casc_configs/ directory.
                 # it is used to configure the "Safe HTML" plugin.
                 # filename must meet RFC 1123, see https://tools.ietf.org/html/rfc1123 for more details
-
-

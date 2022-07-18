@@ -10,6 +10,7 @@ type Options struct {
 	GitHubToken    string `mapstructure:"githubToken"`
 	GitHubRepoURL  string `mapstructure:"githubRepoUrl" validate:"required"`
 	JenkinsJobName string `mapstructure:"jenkinsJobName" validate:"required"`
+	// TODO(aFlyBird0): add options to configure the script path in GitHub repo, now it is hardcoded to "Jenkinsfile"
 }
 
 func (options *Options) GetJenkinsAccessURL() string {

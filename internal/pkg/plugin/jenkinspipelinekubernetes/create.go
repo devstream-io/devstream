@@ -86,6 +86,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 }
 
 // TODO(aFlyBird0): unit test
+// TODO(aFlyBird0): now jenkins script path is hardcoded to "Jenkinsfile", it should be configurable
 func renderJobXml(jobTemplate string, opts *Options) string {
 	// note: maybe it is better to use html/template to generate the job template,
 	// but that way is complex and this is the simplest way to do it
