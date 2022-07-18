@@ -5,11 +5,12 @@ import (
 	"net/http"
 	"strings"
 
+	mapset "github.com/deckarep/golang-set/v2"
+
 	"github.com/google/go-github/v42/github"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/mapz"
-	"github.com/devstream-io/devstream/pkg/util/slicez"
 )
 
 // Workflow is the struct for a GitHub Actions Workflow.
@@ -141,7 +142,7 @@ func (c *Client) VerifyWorkflows(workflows []*Workflow) (map[string]error, error
 		filesInRemoteDir = append(filesInRemoteDir, f.GetName())
 	}
 
-	lostFiles := slicez.SliceInSliceStr(wsFiles, filesInRemoteDir)
+	lostFiles := mapset.NewSet[string](wsFiles...).Difference(mapset.NewSet[string](filesInRemoteDir...)).ToSlice()
 	// all files exist
 	if len(lostFiles) == 0 {
 		log.Info("All files exist.")
