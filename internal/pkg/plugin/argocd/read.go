@@ -12,14 +12,15 @@ const (
 
 func Read(options map[string]interface{}) (map[string]interface{}, error) {
 	// 1. config read operations
-	installer := &plugininstaller.Runner{
+	runner := &plugininstaller.Runner{
 		PreExecuteOperations: []plugininstaller.MutableOperation{
+			defaultMissedOption,
 			helm.Validate,
 		},
 		GetStatusOperation: helm.GetPluginStaticStateWrapper(defaultDeploymentList),
 	}
 
-	status, err := installer.Execute(plugininstaller.RawOptions(options))
+	status, err := runner.Execute(plugininstaller.RawOptions(options))
 	if err != nil {
 		return nil, err
 	}

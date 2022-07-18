@@ -42,6 +42,9 @@ var (
 	//go:embed plugins/gitlabci-golang.yaml
 	GitlabciGolangDefaultConfig string
 
+	//go:embed plugins/harbor.yaml
+	HarborDefaultConfig string
+
 	//go:embed plugins/hashicorp-vault.yaml
 	HashicorpVaultDefaultConfig string
 
@@ -85,6 +88,7 @@ var pluginDefaultConfigs = map[string]string{
 	"gitlab-repo-scaffolding-golang": GitlabRepoScaffoldingGolangDefaultConfig,
 	"gitlabci-generic":               GitlabciGenericDefaultConfig,
 	"gitlabci-golang":                GitlabciGolangDefaultConfig,
+	"harbor":                         HarborDefaultConfig,
 	"hashicorp-vault":                HashicorpVaultDefaultConfig,
 	"helm-generic":                   HelmGenericDefaultConfig,
 	"jenkins":                        JenkinsDefaultConfig,

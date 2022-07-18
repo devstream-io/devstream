@@ -8,8 +8,9 @@ import (
 
 func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	// 1. config update operations
-	installer := &plugininstaller.Runner{
+	runner := &plugininstaller.Runner{
 		PreExecuteOperations: []plugininstaller.MutableOperation{
+			defaultMissedOption,
 			helm.Validate,
 		},
 		ExecuteOperations: []plugininstaller.BaseOperation{
@@ -19,11 +20,10 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	}
 
 	// 2. update by helm config and get status
-	status, err := installer.Execute(plugininstaller.RawOptions(options))
+	status, err := runner.Execute(plugininstaller.RawOptions(options))
 	if err != nil {
 		return nil, err
 	}
-
 	log.Debugf("Return map: %v", status)
 	return status, nil
 }

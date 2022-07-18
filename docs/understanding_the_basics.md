@@ -1,3 +1,5 @@
+# Understanding the Basics
+
 Before effectively using DevStream, it is necessary to understand the underlying technology that it is built on.
 
 It is also necessary to understand the features and commands provided to you, and how to use them.

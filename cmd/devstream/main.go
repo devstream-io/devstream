@@ -44,6 +44,7 @@ func init() {
 	rootCMD.AddCommand(developCMD)
 	rootCMD.AddCommand(listCMD)
 	rootCMD.AddCommand(showCMD)
+	rootCMD.AddCommand(upgradeCMD)
 }
 
 func initConfig() {
