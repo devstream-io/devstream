@@ -1,55 +1,34 @@
 package argocd
 
 import (
-	"fmt"
-
-	"github.com/mitchellh/mapstructure"
-
-	. "github.com/devstream-io/devstream/internal/pkg/plugin/common/helm"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/helm"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 // Create creates ArgoCD with provided options.
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
-	// 1. decode options and fill default options if miss
-	var opts Options
-	if err := mapstructure.Decode(options, &opts); err != nil {
+	// 1. config install operations
+	runner := &plugininstaller.Runner{
+		PreExecuteOperations: []plugininstaller.MutableOperation{
+			defaultMissedOption,
+			helm.Validate,
+		},
+		ExecuteOperations: []plugininstaller.BaseOperation{
+			helm.DealWithNsWhenInstall,
+			helm.InstallOrUpdate,
+		},
+		TermateOperations: []plugininstaller.BaseOperation{
+			helm.DealWithNsWhenInterruption,
+		},
+		GetStatusOperation: helm.GetPluginStaticStateWrapper(defaultDeploymentList),
+	}
+
+	// 2. execute installer get status and error
+	status, err := runner.Execute(plugininstaller.RawOptions(options))
+	if err != nil {
 		return nil, err
 	}
-
-	defaultMissedOptions(&opts)
-
-	if errs := validate(&opts); len(errs) != 0 {
-		for _, e := range errs {
-			log.Errorf("Options error: %s.", e)
-		}
-		return nil, fmt.Errorf("opts are illegal")
-	}
-
-	// 2. deal with ns
-	if err := DealWithNsWhenInstall(&opts); err != nil {
-		return nil, err
-	}
-
-	var retErr error
-	defer func() {
-		if retErr == nil {
-			return
-		}
-		if err := DealWithNsWhenInterruption(&opts); err != nil {
-			log.Errorf("Failed to deal with namespace: %s.", err)
-		}
-		log.Debugf("Deal with namespace when interruption succeeded.")
-	}()
-
-	// 3. install or upgrade
-	if retErr = InstallOrUpgradeChart(&opts); retErr != nil {
-		return nil, retErr
-	}
-
-	// 4. fill the return map
-	retMap := GetStaticState().ToStringInterfaceMap()
-	log.Debugf("Return map: %v", retMap)
-
-	return retMap, nil
+	log.Debugf("Return map: %v", status)
+	return status, nil
 }

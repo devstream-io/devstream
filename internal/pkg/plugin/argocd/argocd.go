@@ -1,37 +1,32 @@
 package argocd
 
 import (
-	. "github.com/devstream-io/devstream/internal/pkg/plugin/common/helm"
-	"github.com/devstream-io/devstream/pkg/util/helm"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/helm"
 )
 
-const (
-	defaultRepoName = "argo"
+var (
+	defaultDeploymentList = []string{
+		"argocd-applicationset-controller",
+		"argocd-dex-server",
+		"argocd-notifications-controller",
+		"argocd-redis",
+		"argocd-repo-server",
+		"argocd-server"}
 	defaultRepoURL  = "https://argoproj.github.io/argo-helm"
+	defaultRepoName = "argo"
 )
 
-var DefaultDeploymentList = []string{
-	"argocd-applicationset-controller",
-	"argocd-dex-server",
-	"argocd-notifications-controller",
-	"argocd-redis",
-	"argocd-repo-server",
-	"argocd-server",
-}
-
-func GetStaticState() *helm.InstanceState {
-	retState := &helm.InstanceState{}
-	for _, dpName := range DefaultDeploymentList {
-		retState.Workflows.AddDeployment(dpName, true)
+func defaultMissedOption(options plugininstaller.RawOptions) (plugininstaller.RawOptions, error) {
+	opts, err := helm.NewOptions(options)
+	if err != nil {
+		return nil, err
 	}
-	return retState
-}
-
-func defaultMissedOptions(opts *Options) {
 	if opts.Repo.URL == "" {
 		opts.Repo.URL = defaultRepoURL
 	}
 	if opts.Repo.Name == "" {
 		opts.Repo.Name = defaultRepoName
 	}
+	return opts.Encode()
 }
