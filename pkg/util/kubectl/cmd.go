@@ -7,8 +7,16 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-const APPLY string = "apply"
-const DELETE string = "delete"
+const (
+	CREATE string = "create"
+	APPLY  string = "apply"
+	DELETE string = "delete"
+)
+
+// KubeCreate runs "kubectl create -f filename"
+func KubeCreate(filename string) error {
+	return kubectlAction(CREATE, filename)
+}
 
 // KubeApply runs "kubectl apply -f filename"
 func KubeApply(filename string) error {
