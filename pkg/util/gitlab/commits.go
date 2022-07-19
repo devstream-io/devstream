@@ -1,6 +1,8 @@
 package gitlab
 
 import (
+	"fmt"
+
 	"github.com/xanzy/go-gitlab"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
@@ -72,8 +74,8 @@ func (c *Client) UpdateSingleFile(project, branch, commitMessage, filename, cont
 }
 
 func (c *Client) CommitMultipleFiles(project, branch, commitMessage string, files map[string][]byte) error {
-	var commitActionsOptions = make([]*gitlab.CommitActionOptions, 0)
-
+	var commitActionsOptions = make([]*gitlab.CommitActionOptions, len(files))
+	fmt.Println("---> ", len(commitActionsOptions))
 	for fileName, content := range files {
 		commitActionsOptions = append(commitActionsOptions, &gitlab.CommitActionOptions{
 			Action:   gitlab.FileAction(gitlab.FileCreate),

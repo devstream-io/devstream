@@ -1,6 +1,8 @@
 package gitlab
 
 import (
+	"net/http"
+
 	"github.com/xanzy/go-gitlab"
 )
 
@@ -13,8 +15,10 @@ func (c *Client) FileExists(project, branch, filename string) (bool, error) {
 	}
 
 	_, response, err := c.RepositoryFiles.GetFile(project, filename, getFileOptions)
-	if response.StatusCode == 404 {
-		return false, nil
+	for _, v := range []int{http.StatusBadRequest, http.StatusUnauthorized, http.StatusNotFound} {
+		if response.StatusCode == v {
+			return false, nil
+		}
 	}
 
 	if err != nil {
