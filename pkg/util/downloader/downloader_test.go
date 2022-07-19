@@ -4,9 +4,10 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/devstream-io/devstream/pkg/util/downloader"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+
+	"github.com/devstream-io/devstream/pkg/util/downloader"
 )
 
 func CreateFile(dir, filename string) (*os.File, error) {
