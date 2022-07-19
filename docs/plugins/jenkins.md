@@ -2,6 +2,8 @@
 
 This plugin installs [Jenkins](https://jenkins.io) in an existing Kubernetes cluster using the Helm chart.
 
+It also installs [GitHub Pull Request Builder(ghprb)](https://plugins.jenkins.io/ghprb/) and [OWASP Markup Formatter](https://plugins.jenkins.io/antisamy-markup-formatter/) plugins. Then enable HTML parsing using OWASP Markup Formatter Plugin , useful with ghprb plugin.
+
 ## Usage
 
 ### Production Environment

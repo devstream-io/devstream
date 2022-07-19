@@ -2,6 +2,8 @@
 
 本插件使用 helm 在已有的 k8s 集群上安装 [Jenkins](https://jenkins.io)。
 
+并且安装 [GitHub Pull Request Builder](https://plugins.jenkins.io/ghprb/) 插件和 [OWASP Markup Formatter](https://plugins.jenkins.io/antisamy-markup-formatter/) 插件；同时利用 OWASP Markup Formatter 插件激活 HTML 渲染模式。
+
 ## 使用方法
 
 ### 生产环境
