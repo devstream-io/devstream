@@ -5,17 +5,27 @@ import (
 	"os/exec"
 	"strings"
 
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func howToGetPasswdOfAdmin(opts *Options) {
+func howToGetPasswdOfAdmin(options plugininstaller.RawOptions) error {
+	opts, err := newOptions(options)
+	if err != nil {
+		return err
+	}
 	log.Info("Here is how to get the password of the admin user:")
 	method := fmt.Sprintf("kubectl exec --namespace jenkins -it svc/%s-jenkins -c jenkins "+
 		"-- /bin/cat /run/secrets/additional/chart-admin-password && echo", opts.Chart.ReleaseName)
 	log.Info(method)
+	return nil
 }
 
-func showJenkinsUrl(opts *Options) {
+func showJenkinsUrl(options plugininstaller.RawOptions) error {
+	opts, err := newOptions(options)
+	if err != nil {
+		return err
+	}
 	commands := []string{
 		`jsonpath="{.spec.ports[0].nodePort}"`,
 		fmt.Sprintf(`NODE_PORT=$(kubectl get -n jenkins -o jsonpath=$jsonpath services %s-jenkins)`, opts.Chart.ReleaseName),
@@ -32,5 +42,5 @@ func showJenkinsUrl(opts *Options) {
 	}
 
 	log.Info("Jenkins url:", string(output))
-
+	return nil
 }

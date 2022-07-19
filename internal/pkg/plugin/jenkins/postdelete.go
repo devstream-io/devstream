@@ -1,11 +1,12 @@
 package jenkins
 
 import (
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/pkg/util/k8s"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func postDelete() error {
+func postDelete(options plugininstaller.RawOptions) error {
 	kubeClient, err := k8s.NewClient()
 	if err != nil {
 		return err
@@ -29,15 +30,15 @@ func postDelete() error {
 }
 
 func clearClusterRoleBinding(kubeClient *k8s.Client) error {
-	return kubeClient.DeleteClusterRoleBinding(JenkinsName)
+	return kubeClient.DeleteClusterRoleBinding(jenkinsName)
 }
 
 func clearClusterRole(kubeClient *k8s.Client) error {
-	return kubeClient.DeleteClusterRole(JenkinsName)
+	return kubeClient.DeleteClusterRole(jenkinsName)
 }
 
 func clearServiceAccount(kubeClient *k8s.Client) error {
-	return kubeClient.DeleteServiceAccount(JenkinsName, JenkinsNamespace)
+	return kubeClient.DeleteServiceAccount(jenkinsName, jenkinsNamespace)
 }
 
 func clearPersistentVolume() {

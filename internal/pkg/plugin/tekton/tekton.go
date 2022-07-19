@@ -1,3 +1,6 @@
 package tekton
 
-// TODO(dtm): Add your logic here.
+var defaultDeploymentList = []string{
+	"tekton-pipelines-controller",
+	"tekton-pipelines-webhook",
+}

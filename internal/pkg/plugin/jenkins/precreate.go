@@ -9,23 +9,28 @@ import (
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/client-go/util/homedir"
 
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/pkg/util/k8s"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 const (
-	JenkinsName                      = "jenkins"
-	JenkinsNamespace                 = "jenkins"
-	JenkinsDataDirectory             = "/data/jenkins-volume/"
-	JenkinsPvName                    = "jenkins-pv"
-	JenkinsPvDefaultStorageClassName = "jenkins-pv"
+	jenkinsName                      = "jenkins"
+	jenkinsNamespace                 = "jenkins"
+	jenkinsDataDirectory             = "/data/jenkins-volume/"
+	jenkinsPvName                    = "jenkins-pv"
+	jenkinsPvDefaultStorageClassName = "jenkins-pv"
 )
 
 // See the docs below for more info:
 // https://www.jenkins.io/doc/book/installing/kubernetes/
 // https://raw.githubusercontent.com/jenkins-infra/jenkins.io/master/content/doc/tutorials/kubernetes/installing-jenkins-on-kubernetes/jenkins-volume.yaml
 // https://raw.githubusercontent.com/jenkins-infra/jenkins.io/master/content/doc/tutorials/kubernetes/installing-jenkins-on-kubernetes/jenkins-sa.yaml
-func preCreate(opts Options) error {
+func preCreate(options plugininstaller.RawOptions) error {
+	opts, err := newOptions(options)
+	if err != nil {
+		return err
+	}
 	kubeClient, err := k8s.NewClient()
 	if err != nil {
 		return err
@@ -60,8 +65,8 @@ func createPersistentVolume(kubeClient *k8s.Client) error {
 	}
 
 	pvOption := &k8s.PVOption{
-		Name:             JenkinsPvName,
-		StorageClassName: JenkinsPvDefaultStorageClassName,
+		Name:             jenkinsPvName,
+		StorageClassName: jenkinsPvDefaultStorageClassName,
 		AccessMode: []corev1.PersistentVolumeAccessMode{
 			corev1.ReadWriteOnce,
 		},
@@ -81,7 +86,7 @@ func createPersistentVolume(kubeClient *k8s.Client) error {
 }
 
 func createServiceAccount(kubeClient *k8s.Client) error {
-	if err := kubeClient.CreateServiceAccount(JenkinsName, JenkinsNamespace); err != nil {
+	if err := kubeClient.CreateServiceAccount(jenkinsName, jenkinsNamespace); err != nil {
 		if !errors.IsAlreadyExists(err) {
 			return err
 		}
@@ -93,7 +98,7 @@ func createServiceAccount(kubeClient *k8s.Client) error {
 
 func createClusterRole(kubeClient *k8s.Client) error {
 	crOption := &k8s.CROption{
-		Name: JenkinsName,
+		Name: jenkinsName,
 		PolicyRules: []rbacv1.PolicyRule{
 			{
 				APIGroups: []string{"*"},
@@ -159,9 +164,9 @@ func createClusterRole(kubeClient *k8s.Client) error {
 
 func createClusterRoleBinding(kubeClient *k8s.Client) error {
 	crbOption := &k8s.CRBOption{
-		Name:    JenkinsName,
-		SANames: []string{JenkinsName},
-		RName:   JenkinsName,
+		Name:    jenkinsName,
+		SANames: []string{jenkinsName},
+		RName:   jenkinsName,
 	}
 
 	if err := kubeClient.CreateClusterRoleBinding(crbOption); err != nil {
@@ -183,7 +188,7 @@ func getRealJenkinsDataDirectory() string {
 	}
 
 	log.Debugf("Got the homedir: %s", home)
-	realPath := filepath.Join(home, JenkinsDataDirectory)
+	realPath := filepath.Join(home, jenkinsDataDirectory)
 	log.Debugf("The real Jenkins data directory is: %s", realPath)
 	return realPath
 }

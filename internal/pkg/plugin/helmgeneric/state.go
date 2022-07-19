@@ -1,11 +1,9 @@
 package helmgeneric
 
-import "github.com/devstream-io/devstream/pkg/util/helm"
+import "github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 
-func GetStaticState(DefaultDeploymentList []string) *helm.InstanceState {
-	retState := &helm.InstanceState{}
-	for _, dpName := range DefaultDeploymentList {
-		retState.Workflows.AddDeployment(dpName, true)
-	}
-	return retState
+// return empty
+func getEmptyState(options plugininstaller.RawOptions) (map[string]interface{}, error) {
+	retMap := make(map[string]interface{})
+	return retMap, nil
 }

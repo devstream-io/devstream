@@ -29,6 +29,10 @@ func (opts *Options) GetNamespace() string {
 	return opts.Chart.Namespace
 }
 
+func (opts *Options) GetReleaseName() string {
+	return opts.Chart.ReleaseName
+}
+
 func (opts *Options) Encode() (map[string]interface{}, error) {
 	var options map[string]interface{}
 	if err := mapstructure.Decode(opts, &options); err != nil {

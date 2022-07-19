@@ -17,7 +17,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 			defaultMissedOption,
 			helm.Validate,
 		},
-		GetStatusOperation: helm.GetPluginStaticStateWrapper(defaultDeploymentList),
+		GetStatusOperation: helm.GetPluginAllState,
 	}
 
 	status, err := runner.Execute(plugininstaller.RawOptions(options))
