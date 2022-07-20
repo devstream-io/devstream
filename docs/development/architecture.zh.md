@@ -11,7 +11,7 @@
 DevStream主要由三大块组成：
 
 - CLI：处理用户输入的命令和参数
-- `pluginengine`：插件引擎，通过调用其他组件（`configloader`、`pluginmanager`、`statemanager`等）来实现DevStream的核心功能。
+- Plugin engine: 插件引擎，通过调用其他组件（config manager, plugin manager, state manager, backend manager）来实现DevStream的核心功能。
 - 插件：实现某个DevOps工具的CRUD接口。
 
 ## 1 CLI
@@ -28,29 +28,33 @@ _注意：为了简单起见，CLI被命名为`dtm`（DevOps Toolchain Manager)�
 
 ## 2 插件引擎
 
-`pluginengine`有几个职责：
+`pluginengine`有以下各种职责：
 
-- 确保所需的插件（根据配置文件的设置）存在
-- 根据配置、状态和工具的实际状态生成变更
-- 通过加载每个插件和调用所需的接口来执行这些变更
+- 根据配置文件来决定需要哪些插件，以及确保这些插件的存在
+- 根据配置、状态和工具的实际状态来生成变更
+- 通过加载每个插件的so文件并调用所需的接口来执行变更
 
-它通过调用以下模块来实现这些功能：
+Plugin engine通过调用以下模块来实现目标：
 
-### 2.1 配置加载器
+### 2.1 配置管理器
 
-包[`configloader`](https://github.com/devstream-io/devstream/blob/main/internal/pkg/configloader/config.go#L19)中的struct代表了顶层的配置结构。
+[`configloader`包](https://github.com/devstream-io/devstream/blob/main/internal/pkg/configloader/config.go#L23)中的模型结构体用来表示顶级配置的结构。
 
 ### 2.2 插件管理器
 
-[`pluginmanager`](https://github.com/devstream-io/devstream/blob/main/internal/pkg/pluginmanager/manager.go)负责根据配置下载必要的插件。
+[`pluginmanager`包](https://github.com/devstream-io/devstream/blob/main/internal/pkg/pluginmanager/manager.go)负责根据配置下载必要的插件。
 
-如果本地已经存在所需版本的插件，将不再下载。
+如果本地已存在所需版本的插件，则不会再次下载。
 
 ### 2.3 状态管理器
 
-[`statemanager`](https://github.com/devstream-io/devstream/blob/main/internal/pkg/statemanager/manager.go)负责管理"状态"，即哪些事情已经成功完成，哪些没有。
+[`statemanager`包](https://github.com/devstream-io/devstream/blob/main/internal/pkg/statemanager/manager.go)是用来管理“状态”的，即哪些变更已经成功完成，哪些失败。
 
-`statemanager`将状态存储在一个[`backend`](https://github.com/devstream-io/devstream/blob/main/internal/pkg/backend/backend.go)中。
+`statemanager`将状态存储在[`backend`](https://github.com/devstream-io/devstream/blob/main/internal/pkg/backend/backend.go)中。
+
+### 2.4 后端管理器
+
+[`backend`包](https://github.com/devstream-io/devstream/tree/main/internal/pkg/backend)是“后端”管理器，在这里，“后端”指的是状态的实际存储。目前，DevStream已经支持本地和远程（与AWS S3兼容）状态。
 
 ## 3 插件
 
