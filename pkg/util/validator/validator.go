@@ -29,6 +29,10 @@ func Struct(s interface{}) []error {
 	return nil
 }
 
+func StructAllError(s interface{}) error {
+	return v.Struct(s)
+}
+
 func dns1123SubDomain(fl validator.FieldLevel) bool {
 	return len(validation.IsDNS1123Subdomain(fl.Field().String())) == 0
 }

@@ -3,15 +3,35 @@ package golang
 import (
 	"fmt"
 
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/github"
+	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/validator"
 )
 
-// validate validates the options provided by the core.
-func validate(opts *Options) []error {
-	retErrors := make([]error, 0)
+func validate(options plugininstaller.RawOptions) (plugininstaller.RawOptions, error) {
+	opts, err := github.NewGithubActionOptions(options)
+	if err != nil {
+		return nil, err
+	}
+	errs := validateGolangStruct(opts)
+	if len(errs) > 0 {
+		for _, e := range errs {
+			log.Errorf("Options error: %s.", e)
+		}
+		return nil, fmt.Errorf("opts are illegal")
+	}
+	return options, nil
+}
 
+// validate validates the options provided by the core.
+func validateGolangStruct(opts *github.GithubActionOptions) []error {
+	retErrors := make([]error, 0)
 	if errs := validator.Struct(opts); len(errs) != 0 {
 		retErrors = append(retErrors, errs...)
+	}
+	if opts.Test == nil {
+		retErrors = append(retErrors, fmt.Errorf("golang project must have test file"))
 	}
 	// too complex to validate automatically
 	if opts.Docker == nil {
@@ -23,6 +43,5 @@ func validate(opts *Options) []error {
 			retErrors = append(retErrors, fmt.Errorf("docker is invalid: %s", e))
 		}
 	}
-
 	return retErrors
 }

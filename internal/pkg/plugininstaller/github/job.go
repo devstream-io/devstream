@@ -1,13 +1,8 @@
-package golang
+package github
 
 import "fmt"
 
 type RegistryType string
-
-const (
-	RegistryDockerhub RegistryType = "dockerhub"
-	RegistryHarbor    RegistryType = "harbor"
-)
 
 // Build is the struct for githubactions job.
 type Build struct {
