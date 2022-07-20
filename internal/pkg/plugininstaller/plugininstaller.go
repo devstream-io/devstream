@@ -24,6 +24,7 @@ type Runner struct {
 func (runner *Runner) Execute(options RawOptions) (map[string]interface{}, error) {
 	var err error
 	// 1. Run PreExecuteOperations first, these func can change options
+	log.Debugf("Start Execute PreInstall Operations...")
 	for _, preInstallOperation := range runner.PreExecuteOperations {
 		options, err = preInstallOperation(options)
 		if err != nil {
@@ -36,29 +37,27 @@ func (runner *Runner) Execute(options RawOptions) (map[string]interface{}, error
 		if installError == nil {
 			return
 		}
+		log.Debugf("Start Execute Clean Operations...")
 		for _, termateOperation := range runner.TermateOperations {
 			err := termateOperation(options)
 			if err != nil {
 				log.Errorf("Failed to deal with namespace: %s.", err)
 			}
 		}
-		log.Debugf("Deal with termate func succeeded.")
 	}()
 
+	log.Debugf("Start Execute Install Operations...")
 	// 3. Run ExecuteOperations in order, these func can't change options
 	for _, installOperation := range runner.ExecuteOperations {
 		installError = installOperation(options)
-		if err != nil {
-			break
+		if installError != nil {
+			return nil, installError
 		}
 	}
-	// 4. If encounter err, return error
-	if installError != nil {
-		return nil, err
-	}
-	// 5. Get Status for this execute
+	// 4. Get Status for this execute
 	var status map[string]interface{}
 	if runner.GetStatusOperation != nil {
+		log.Debugf("Start Execute Status Operations...")
 		status, err = runner.GetStatusOperation(options)
 	}
 	return status, err

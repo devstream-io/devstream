@@ -9,7 +9,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-// GetPluginStaticState will return status by static deploy config
+// GetPluginStaticStateWrapper will return status by static deploy config
 func GetPluginStaticStateWrapper(defaultDepList []string) plugininstaller.StatusOperation {
 	getPluginStaticState := func(options plugininstaller.RawOptions) (map[string]interface{}, error) {
 		retState := &helm.InstanceState{}
@@ -22,7 +22,7 @@ func GetPluginStaticStateWrapper(defaultDepList []string) plugininstaller.Status
 
 }
 
-// GetPluginStaticState will return status by query kubernetes deployment
+// GetPluginDynamicStateWrapper will return status by query kubernetes deployment
 func GetPluginDynamicStateWrapper(defaultDepList []string) plugininstaller.StatusOperation {
 	getPluginDynamicState := func(options plugininstaller.RawOptions) (map[string]interface{}, error) {
 		opts, err := NewOptions(options)
