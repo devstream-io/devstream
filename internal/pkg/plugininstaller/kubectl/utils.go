@@ -40,7 +40,13 @@ func createKubectlFile(downloadUrl, content string, options plugininstaller.RawO
 	if err != nil {
 		return "", err
 	}
-	defer tempFile.Close()
+
+	defer func() {
+		err := tempFile.Close()
+		if err != nil {
+			log.Debugf("kubectl file close failed: %s", err)
+		}
+	}()
 
 	if downloadUrl != "" {
 		// download config file

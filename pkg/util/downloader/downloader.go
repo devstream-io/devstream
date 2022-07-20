@@ -32,6 +32,12 @@ func Download(url, filename, targetDir string) (int64, error) {
 	if err != nil {
 		return 0, err
 	}
+	defer func() {
+		err := f.Close()
+		if err != nil {
+			log.Debugf("download create file failed: %s", err)
+		}
+	}()
 	return DownloadToFile(url, f)
 }
 
