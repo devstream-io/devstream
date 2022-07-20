@@ -1,10 +1,10 @@
 package nodejs
 
 import (
-	ga "github.com/devstream-io/devstream/internal/pkg/plugin/githubactions"
-	github "github.com/devstream-io/devstream/pkg/util/github"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/github"
+	githubCommon "github.com/devstream-io/devstream/pkg/util/github"
 )
 
-var workflows = []*github.Workflow{
-	{CommitMessage: ga.CommitMessage, WorkflowFileName: ga.MainBuilderFileName, WorkflowContent: mainPipeline},
+var workflows = []*githubCommon.Workflow{
+	{CommitMessage: github.CommitMessage, WorkflowFileName: github.MainBuilderFileName, WorkflowContent: mainPipeline},
 }
