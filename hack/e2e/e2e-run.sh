@@ -66,10 +66,28 @@ function run_test() {
 
     echo "[dtm e2e test script] Start dtm e2e test locally!"
     ./dtm apply -f ${CONFIG_FILENAME} -y
+    if [ $? -ne 0 ]; then
+        echo "[dtm e2e test script] Execute dtm apply failed!"
+        clean_up
+        exit 1
+    fi
+
     check_status
 
     ./dtm verify -f ${CONFIG_FILENAME}
+    if [ $? -ne 0 ]; then
+        echo "[dtm e2e test script] Execute dtm verify failed!"
+        clean_up
+        exit 1
+    fi
+
     ./dtm delete -f ${CONFIG_FILENAME} -y
+    if [ $? -ne 0 ]; then
+        echo "[dtm e2e test script] Execute dtm delete failed!"
+        clean_up
+        exit 1
+    fi
+
     cd -
 }
 
