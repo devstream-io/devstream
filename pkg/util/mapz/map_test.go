@@ -2,6 +2,8 @@ package mapz
 
 import (
 	"fmt"
+	"strconv"
+	"testing"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -12,15 +14,13 @@ var _ = Describe("Mapz", func() {
 		"key1", "key2",
 	}
 	value := fmt.Errorf("error")
+	expectMap := map[string]error{
+		"key1": value,
+		"key2": value,
+	}
 	retMap1 := FillMapWithStrAndError(keys, value)
 	It("should be a map with 2 items", func() {
-		Expect(len(retMap1)).To(Equal(2))
-		v1, ok := retMap1["key1"]
-		Expect(ok).To(Equal(true))
-		Expect(v1).To(Equal(value))
-		v2, ok := retMap1["key2"]
-		Expect(ok).To(Equal(true))
-		Expect(v2).To(Equal(value))
+		Expect(retMap1).Should(Equal(expectMap))
 	})
 
 	retMap2 := FillMapWithStrAndError(nil, value)
@@ -28,3 +28,17 @@ var _ = Describe("Mapz", func() {
 		Expect(len(retMap2)).To(Equal(0))
 	})
 })
+
+func BenchmarkFillMapWithStrAndError(b *testing.B) {
+	keys_length := 100
+	keys := make([]string, 0, keys_length)
+	for i := 0; i < keys_length; i++ {
+		keys = append(keys, "key"+strconv.Itoa(i))
+	}
+	value := fmt.Errorf("error")
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = FillMapWithStrAndError(keys, value)
+	}
+	b.StopTimer()
+}
