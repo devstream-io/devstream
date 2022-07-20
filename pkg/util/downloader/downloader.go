@@ -6,21 +6,19 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-
-	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 // if filename is "", use the remote filename at local.
 func Download(url, filename, targetDir string) (int64, error) {
-	log.Debugf("Target dir: %s.", targetDir)
-	log.Debugf("URL: %s.", url)
+	if url == "" {
+		return 0, fmt.Errorf("url must not be empty: %s", url)
+	}
+	if filename == "." {
+		return 0, fmt.Errorf("filename must not be [%s]", filename)
+	}
 	if filename == "" {
 		// when url is empty filepath.Base(url) will return "."
 		filename = filepath.Base(url)
-	}
-	log.Debugf("Filename: %s.", filename)
-	if filename == "." {
-		return 0, fmt.Errorf("failed to get the filename from url: %s", url)
 	}
 
 	if err := os.MkdirAll(targetDir, 0755); err != nil {
@@ -31,11 +29,13 @@ func Download(url, filename, targetDir string) (int64, error) {
 	if err != nil {
 		return 0, err
 	}
-
+	defer f.Close()
 	resp, err := http.Get(url)
 	if err != nil {
 		return 0, err
 	}
-
+	if resp.Body != nil {
+		defer resp.Body.Close()
+	}
 	return io.Copy(f, resp.Body)
 }
