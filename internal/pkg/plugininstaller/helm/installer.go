@@ -20,7 +20,7 @@ func InstallOrUpdate(options plugininstaller.RawOptions) error {
 
 	log.Info("Creating or updating helm chart ...")
 	if err := h.InstallOrUpgradeChart(); err != nil {
-		log.Debugf("Failed to install or upgrade the chart: %s.", err)
+		log.Errorf("Failed to install or upgrade the chart: %s.", err)
 		return err
 	}
 	return err

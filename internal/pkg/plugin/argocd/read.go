@@ -20,11 +20,11 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 		GetStatusOperation: helm.GetPluginStaticStateWrapper(defaultDeploymentList),
 	}
 
+	// 2. get plugin status
 	status, err := runner.Execute(plugininstaller.RawOptions(options))
 	if err != nil {
 		return nil, err
 	}
-
 	log.Debugf("Return map: %v", status)
 	return status, nil
 }
