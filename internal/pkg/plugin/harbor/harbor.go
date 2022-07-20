@@ -1,9 +1,9 @@
 package harbor
 
 var defaultDeploymentList = []string{
-	"habor-chartmuseum",
+	"harbor-chartmuseum",
 	"harbor-core",
-	"harbor-jobserice",
+	"harbor-jobservice",
 	"harbor-portal",
 	"harbor-registry",
 }
