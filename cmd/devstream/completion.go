@@ -7,6 +7,8 @@ import (
 
 	"github.com/spf13/cobra"
 
+	cobracompletefig "github.com/withfig/autocomplete-tools/integrations/cobra"
+
 	"github.com/devstream-io/devstream/internal/pkg/completion"
 )
 
@@ -55,7 +57,8 @@ func completionCMD(out io.Writer) *cobra.Command {
 			return cmd.Root().GenPowerShellCompletionWithDesc(out)
 		},
 	}
-	cmd.AddCommand(bash, zsh, fish, powershell)
+
+	cmd.AddCommand(bash, zsh, fish, powershell, cobracompletefig.CreateCompletionSpecCommand(cobracompletefig.Opts{Use: "fig"}))
 
 	return cmd
 }
