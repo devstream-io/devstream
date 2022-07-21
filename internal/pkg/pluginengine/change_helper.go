@@ -198,6 +198,8 @@ func topologicalSortChangesInBatch(changes []*Change) ([][]*Change, error) {
 
 	// get tools from changes
 	tools := getToolsFromChanges(changes)
+	// map key to changes
+	changesKeyMap := getChangesKeyMap(changes)
 
 	batchesOfChanges := make([][]*Change, 0)
 
@@ -216,10 +218,9 @@ func topologicalSortChangesInBatch(changes []*Change) ([][]*Change, error) {
 		changesOneBatch := make([]*Change, 0)
 		// for each tool in the batch, find the change that matches it
 		for _, tool := range batch {
-			for _, change := range changes {
-				if change.Tool.Key() == tool.Key() {
-					changesOneBatch = append(changesOneBatch, change)
-				}
+			// only add the change that has the tool match with it
+			if change, ok := changesKeyMap[tool.Key()]; ok {
+				changesOneBatch = append(changesOneBatch, change)
 			}
 		}
 
@@ -246,4 +247,12 @@ func getToolsFromChanges(changes []*Change) []configloader.Tool {
 	}
 
 	return tools
+}
+
+func getChangesKeyMap(changes []*Change) map[string]*Change {
+	changesKeyMap := make(map[string]*Change)
+	for _, change := range changes {
+		changesKeyMap[change.Tool.Key()] = change
+	}
+	return changesKeyMap
 }
