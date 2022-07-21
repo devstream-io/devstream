@@ -3,35 +3,16 @@ package kubeprometheus
 import (
 	"fmt"
 
-	"github.com/devstream-io/devstream/pkg/util/helm"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/helm"
+	helmCommon "github.com/devstream-io/devstream/pkg/util/helm"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-var DefaultDeploymentTplList = []string{
-	// ${release-name}-grafana
-	"%s-grafana",
-	// ${release-name}-kube-prometheus-stack-operator
-	"%s-kube-prometheus-stack-operator",
-	// ${release-name}-kube-state-metrics
-	"%s-kube-state-metrics",
-}
-
-var DefaultDaemonsetTplList = []string{
-	// ${release-name}-prometheus-node-exporter
-	"%s-prometheus-node-exporter",
-}
-
-var DefaultStatefulsetTplList = []string{
-	// alertmanager-${release-name}-kube-prometheus-stack-alertmanager
-	"alertmanager-%s-kube-prometheus-stack-alertmanager",
-	// prometheus-${release-name}-kube-prometheus-stack-prometheus
-	"prometheus-%s-kube-prometheus-stack-prometheus",
-}
-
-func GetDefaultDeploymentList(releaseName string) []string {
+func getDefaultDeploymentList(releaseName string) []string {
 	retList := make([]string, 0)
 
-	for _, name := range DefaultDeploymentTplList {
+	for _, name := range defaultDeploymentTplList {
 		retList = append(retList, fmt.Sprintf(name, releaseName))
 	}
 	log.Debugf("DefaultDeploymentList: %v", retList)
@@ -39,10 +20,10 @@ func GetDefaultDeploymentList(releaseName string) []string {
 	return retList
 }
 
-func GetDefaultDaemonsetList(releaseName string) []string {
+func getDefaultDaemonsetList(releaseName string) []string {
 	retList := make([]string, 0)
 
-	for _, name := range DefaultDaemonsetTplList {
+	for _, name := range defaultDaemonsetTplList {
 		retList = append(retList, fmt.Sprintf(name, releaseName))
 	}
 	log.Debugf("DefaultDaemonsetList: %v", retList)
@@ -50,10 +31,10 @@ func GetDefaultDaemonsetList(releaseName string) []string {
 	return retList
 }
 
-func GetDefaultStatefulsetList(releaseName string) []string {
+func getDefaultStatefulsetList(releaseName string) []string {
 	retList := make([]string, 0)
 
-	for _, name := range DefaultStatefulsetTplList {
+	for _, name := range defaultStatefulsetTplList {
 		retList = append(retList, fmt.Sprintf(name, releaseName))
 	}
 	log.Debugf("DefaultStatefulsetList: %v", retList)
@@ -61,11 +42,15 @@ func GetDefaultStatefulsetList(releaseName string) []string {
 	return retList
 }
 
-func GetStaticState(releaseName string) *helm.InstanceState {
-	retState := &helm.InstanceState{}
-	DefaultDeploymentList := GetDefaultDeploymentList(releaseName)
-	DefaultDaemonsetList := GetDefaultDaemonsetList(releaseName)
-	DefaultStatefulsetList := GetDefaultStatefulsetList(releaseName)
+func getStaticState(options plugininstaller.RawOptions) (map[string]interface{}, error) {
+	opts, err := helm.NewOptions(options)
+	if err != nil {
+		return nil, err
+	}
+	retState := &helmCommon.InstanceState{}
+	DefaultDeploymentList := getDefaultDeploymentList(opts.GetReleaseName())
+	DefaultDaemonsetList := getDefaultDaemonsetList(opts.GetReleaseName())
+	DefaultStatefulsetList := getDefaultStatefulsetList(opts.GetReleaseName())
 
 	for _, dpName := range DefaultDeploymentList {
 		retState.Workflows.AddDeployment(dpName, true)
@@ -77,5 +62,5 @@ func GetStaticState(releaseName string) *helm.InstanceState {
 		retState.Workflows.AddStatefulset(ssName, true)
 	}
 
-	return retState
+	return retState.ToStringInterfaceMap(), nil
 }

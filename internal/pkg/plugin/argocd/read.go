@@ -17,7 +17,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 			defaultMissedOption,
 			helm.Validate,
 		},
-		GetStatusOperation: helm.GetPluginStaticStateWrapper(defaultDeploymentList),
+		GetStatusOperation: helm.GetPluginAllState,
 	}
 
 	// 2. get plugin status

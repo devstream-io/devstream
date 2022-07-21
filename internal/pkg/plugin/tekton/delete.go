@@ -1,41 +1,26 @@
 package tekton
 
 import (
-	"fmt"
-
-	"github.com/mitchellh/mapstructure"
-
-	. "github.com/devstream-io/devstream/internal/pkg/plugin/common/helm"
-	"github.com/devstream-io/devstream/pkg/util/helm"
-	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/helm"
 )
 
 func Delete(options map[string]interface{}) (bool, error) {
-	var opts Options
-	if err := mapstructure.Decode(options, &opts); err != nil {
-		return false, err
+	// 1. config delete operations
+	runner := &plugininstaller.Runner{
+		PreExecuteOperations: []plugininstaller.MutableOperation{
+			helm.Validate,
+		},
+		ExecuteOperations: []plugininstaller.BaseOperation{
+			helm.Delete,
+			helm.DealWithNsWhenInterruption,
+		},
 	}
-
-	if errs := validate(&opts); len(errs) != 0 {
-		for _, e := range errs {
-			log.Errorf("Options error: %s.", e)
-		}
-		return false, fmt.Errorf("opts are illegal")
-	}
-
-	h, err := helm.NewHelm(opts.GetHelmParam())
+	_, err := runner.Execute(plugininstaller.RawOptions(options))
 	if err != nil {
 		return false, err
 	}
-	log.Info("Uninstalling tekton helm chart.")
 
-	if err = h.UninstallHelmChartRelease(); err != nil {
-		return false, err
-	}
-
-	//delete ns if tekton is deleted
-	if err := DealWithNsWhenInterruption(&opts); err != nil {
-		return false, err
-	}
+	// 2. return ture if all process success
 	return true, nil
 }

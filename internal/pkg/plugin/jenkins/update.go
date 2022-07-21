@@ -1,38 +1,33 @@
 package jenkins
 
 import (
-	"fmt"
-
-	"github.com/mitchellh/mapstructure"
-
-	"github.com/devstream-io/devstream/internal/pkg/plugin/common/helm"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/helm"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 // Update updates jenkins with provided options.
 func Update(options map[string]interface{}) (map[string]interface{}, error) {
-	// 1. decode options
-	var opts Options
-	if err := mapstructure.Decode(options, &opts); err != nil {
+	// 1. config install operations
+	runner := &plugininstaller.Runner{
+		PreExecuteOperations: []plugininstaller.MutableOperation{
+			helm.Validate,
+			replaceStroageClass,
+		},
+		ExecuteOperations: []plugininstaller.BaseOperation{
+			helm.InstallOrUpdate,
+		},
+		TermateOperations: []plugininstaller.BaseOperation{
+			helm.DealWithNsWhenInterruption,
+		},
+		GetStatusOperation: helm.GetPluginStaticStateByReleaseNameWrapper(defaultStatefulsetTplList),
+	}
+
+	// 2. execute installer get status and error
+	status, err := runner.Execute(plugininstaller.RawOptions(options))
+	if err != nil {
 		return nil, err
 	}
-
-	if errs := validate(&opts); len(errs) != 0 {
-		for _, e := range errs {
-			log.Errorf("Options error: %s.", e)
-		}
-		return nil, fmt.Errorf("opts are illegal")
-	}
-
-	// 2. install or upgrade
-	if err := helm.InstallOrUpgradeChart(&opts.Options); err != nil {
-		return nil, err
-	}
-
-	// 3. fill the return map
-	releaseName := opts.Chart.ReleaseName
-	retMap := GetStaticState(releaseName).ToStringInterfaceMap()
-	log.Debugf("Return map: %v.", retMap)
-
-	return retMap, nil
+	log.Debugf("Return map: %v", status)
+	return status, nil
 }
