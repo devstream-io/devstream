@@ -150,12 +150,6 @@ func (op *ShellOperator) ContainerRemove(containerName string) error {
 }
 
 func (op *ShellOperator) ContainerListMounts(containerName string) (docker.Mounts, error) {
-	// result: the list of mounts, format: "SourcePath:DestinationPath"
-	// e.g.
-	// /srv/gitlab/config:/etc/gitlab
-	// /srv/gitlab/logs:/var/log/gitlab
-	// /srv/gitlab/data:/var/opt/gitlab
-
 	cmdString := fmt.Sprintf(`docker inspect --format='{{json .Mounts}}' %s`, containerName)
 
 	outputBuffer := &bytes.Buffer{}
@@ -190,7 +184,6 @@ func (op *ShellOperator) ContainerGetHostname(container string) (string, error) 
 }
 
 func (op *ShellOperator) ContainerGetPortBinding(container, containerPort, protocol string) (hostPort string, err error) {
-
 	// get container port binding map
 	// the result is like:
 	// 22/tcp->8122
