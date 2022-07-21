@@ -20,7 +20,7 @@ tools:
     owner: [[ githubUsername ]]
     repo: [[ repoName ]]
     branch: [[ defaultBranch ]]
-    image_repo: [[ dockerRegistryUserName ]]/[[ repoName ]]
+    image_repo: "[[ dockerRegistryUserName ]]/[[ repoName ]]"
 - name: githubactions-golang
   instanceID: default
   dependsOn: ["github-repo-scaffolding-golang.default"]
