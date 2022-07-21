@@ -1,6 +1,6 @@
 # gitlab-ce-docker 插件
 
-这个插件用来在本机已存在的 Docker 上安装 [Gitlab-CE](https://about.gitlab.com/)
+这个插件用来在本机已存在的 Docker 上安装 [Gitlab-CE](https://about.gitlab.com/), 容器名为 `gitlab`。
 ## 使用
 
 注意: 

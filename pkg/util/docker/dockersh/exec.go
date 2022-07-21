@@ -1,4 +1,4 @@
-package gitlabcedocker
+package dockersh
 
 import (
 	"bufio"

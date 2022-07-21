@@ -1,6 +1,6 @@
 # gitlab-ce-docker plugin
 
-This plugin installs [Gitlab-CE](https://about.gitlab.com/) in an existing docker.
+This plugin installs [Gitlab-CE](https://about.gitlab.com/) in an existing docker, and the container name is `gitlab`.
 ## Usage
 
 Note: 

@@ -1,4 +1,4 @@
-package gitlabcedocker
+package dockersh
 
 import (
 	"testing"
@@ -7,7 +7,7 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-func TestGitlabcedocker(t *testing.T) {
+func TestDockersh(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Gitlabcedocker Suite")
+	RunSpecs(t, "Dockersh Suite")
 }
