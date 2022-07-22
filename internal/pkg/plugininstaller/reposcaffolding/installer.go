@@ -49,7 +49,7 @@ func InstallRepo(options plugininstaller.RawOptions) error {
 	return nil
 }
 
-// InstallRepo will install repo by opts config
+// DeleteRepo will delete repo by options
 func DeleteRepo(options plugininstaller.RawOptions) error {
 	opts, err := NewOptions(options)
 	if err != nil {

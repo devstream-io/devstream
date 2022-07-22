@@ -8,7 +8,7 @@ tools:
   # options for the plugin
   options:
     # desination_repo is the config for desination repo
-    dstination_repo:
+    destination_repo:
       owner: YOUR_GITHUB_USERNAME
       org: YOUR_GITHUB_ORGANIZATION_NAME
       repo: YOUR_GITHUB_REPO_NAME

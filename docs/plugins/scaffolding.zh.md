@@ -1,6 +1,6 @@
 # scaffolding 插件
 
-这个插件会基于一个脚手架仓库来初始化一个 Gihub 或者 Gitlab 仓库。
+这个插件会基于一个脚手架仓库来初始化一个 Gihub 或者 GitLab 仓库。
 
 ## 运行需求
 
@@ -14,9 +14,11 @@
 
 *注意：*
 
-*1. 如果你执行 `dtm delete` 命令，这个 GitHub 上的仓库将会被删除。*
+- 如果你执行 `dtm delete` 命令，这个 GitHub 上的仓库将会被删除。
 
-*2. 如果你执行 `dtm update` 命令,  这个 GitHub 上的仓库将会被删除然后重新创建。 *
+- 如果你执行 `dtm update` 命令,  这个 GitHub 上的仓库将会被删除然后重新创建。 
+
+- 对于 `scaffolding` 插件，目前只需要 token 有 `repo`, `delete_repo` 权限即可。 
 
 ## 使用方法
 
@@ -28,7 +30,7 @@
 
 在配置文件中替换以下配置：
 
-### dstination_repo
+### destination_repo
 
 这个是目标仓库的配置，包括以下几个配置项：
 
@@ -50,7 +52,7 @@
 
 ### repo_type
 
-这个配置用于设置推送的目标仓库类型，目前支持 `gitlab` 和 `github`。
+这个配置用于设置推送的目标仓库类型，目前支持 `GitLab` 和 `github`。
 
 ### vars
 
@@ -58,9 +60,9 @@
 
 ```json
 {
-    "AppName": dstination_repo.repo,
+    "AppName": destination_repo.repo,
     "Repo": {
-        "Name": dstination_repo.repo,
+        "Name": destination_repo.repo,
         "Owner": destination_repo.owner
     }
 }
@@ -72,7 +74,7 @@
 
 以下仓库是用于在 `source_repo` 设置的官方脚手架仓库，你可以使用这些仓库或者创建自己的脚手架仓库。
 
-| Language | org | repo |
+| language | org | repo |
 |  ----  | ----  |----  |
 | Golang | devstream-io | dtm-scaffolding-golang |
 | Java Spring | spring-guides | gs-spring-boot |
@@ -85,7 +87,7 @@ tools:
   - name: scaffolding
     instanceID: golang-scaffolding
     options:
-      dstination_repo:
+      destination_repo:
         owner: test_owner
         org: ""
         repo: dtm-test-golang
@@ -107,7 +109,7 @@ tools:
   - name: scaffolding
     instanceID: java-scaffolding
     options:
-      dstination_repo:
+      destination_repo:
         owner: test_owner
         org: ""
         repo: dtm-test-java

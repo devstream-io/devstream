@@ -38,5 +38,5 @@ func RenderForFile(name, tplFileName, dstFileName string, variable any) error {
 		log.Debugf("render %s failed: %s", name, err)
 		return err
 	}
-	return ioutil.WriteFile(dstFileName, []byte(renderedStr), 0666)
+	return ioutil.WriteFile(dstFileName, []byte(renderedStr), 0644)
 }

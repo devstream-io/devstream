@@ -79,18 +79,9 @@ func (d *DstRepo) generateRenderWalker(
 		// if file endswith tpl, render this file, else copy this file directly
 		if strings.Contains(path, "tpl") {
 			outputPath = strings.TrimSuffix(outputPath, ".tpl")
-			err = template.RenderForFile(
-				"repo-scaffolding", path, outputPath, renderConfig,
-			)
-			if err != nil {
-				return err
-			}
-		} else {
-			if err = util.CopyFile(path, outputPath); err != nil {
-				return err
-			}
+			return template.RenderForFile("repo-scaffolding", path, outputPath, renderConfig)
 		}
-		return nil
+		return util.CopyFile(path, outputPath)
 	}
 }
 

@@ -32,15 +32,8 @@ func replaceAppNameInPathStr(filePath, appName string) (string, error) {
 	if !strings.Contains(filePath, appNamePlaceHolder) {
 		return filePath, nil
 	}
-
-	reg, err := regexp.Compile(appNamePlaceHolder)
-	if err != nil {
-		return "", err
-	}
-	newFilePath := reg.ReplaceAllString(filePath, appName)
-
+	newFilePath := regexp.MustCompile(appNamePlaceHolder).ReplaceAllString(filePath, appName)
 	log.Debugf("Replace file path place holder. Before: %s, after: %s.", filePath, newFilePath)
-
 	return newFilePath, nil
 }
 

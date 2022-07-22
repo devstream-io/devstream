@@ -10,8 +10,5 @@ func CopyFile(src, dest string) error {
 		return err
 	}
 
-	if err = ioutil.WriteFile(dest, bytesRead, 0644); err != nil {
-		return err
-	}
-	return nil
+	return ioutil.WriteFile(dest, bytesRead, 0644)
 }

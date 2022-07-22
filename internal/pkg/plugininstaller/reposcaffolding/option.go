@@ -15,7 +15,7 @@ const (
 type Options struct {
 	RepoType        string  `validate:"oneof=gitlab github" mapstructure:"repo_type"`
 	SourceRepo      SrcRepo `validate:"required" mapstructure:"source_repo"`
-	DestinationRepo DstRepo `validate:"required" mapstructure:"dstination_repo"`
+	DestinationRepo DstRepo `validate:"required" mapstructure:"destination_repo"`
 	Vars            map[string]interface{}
 }
 

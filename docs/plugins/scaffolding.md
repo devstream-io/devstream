@@ -1,6 +1,6 @@
 # scaffolding plugin
 
-This plugin bootstraps a GitHub or Gitlab repo with scaffolding code for a web application.
+This plugin bootstraps a GitHub or GitLab repo with scaffolding code for a web application.
 
 ## Requirement
 
@@ -16,9 +16,11 @@ If you don't know how to create this token, check out:
 
 *Tips:*
 
-*1. If you run `dtm delete`, the repo on GitHub will be completely removed.*
+- If you run `dtm delete`, the repo on GitHub will be completely removed.
 
-*2. If the `Update` interface is called, the repo will be completely removed and recreated. *
+- If the `Update` interface is called, the repo will be completely removed and recreated. 
+
+- For the  `scaffolding` plugin, we only need `repo`, `delete_repo` permission for the token.
 
 ## Usage
 
@@ -30,9 +32,9 @@ If you don't know how to create this token, check out:
 
 Replace the following from the config above:
 
-### dstination_repo
+### destination_repo
 
-This configuration is used for the target repo, It includes the following config.
+This configuration is used for the target repo, it includes the following config.
 
 - `YOUR_GITHUB_USERNAME`
 - `YOUR_GITHUB_ORGANIZATION_NAME`
@@ -52,7 +54,7 @@ All the parameters in the example above are mandatory for now.
 
 ### repo_type
 
-This configuration is used for dstination_repo location, `gitlab` and `github` can be used for now. If you set it to "github", the generated repo will be pushed to GitHub. If you set it to "gitlab", the generated repo will be pushed to Gitlab by your config.
+This configuration is used for destination_repo location, `gitlab` and `github` can be used for now. If you set it to "github", the generated repo will be pushed to GitHub. If you set it to "gitlab", the generated repo will be pushed to GitLab by your config.
 
 ### vars
 
@@ -60,9 +62,9 @@ This configuration is used for template render, It has default variables listed 
 
 ```json
 {
-    "AppName": dstination_repo.repo,
+    "AppName": destination_repo.repo,
     "Repo": {
-        "Name": dstination_repo.repo,
+        "Name": destination_repo.repo,
         "Owner": destination_repo.owner
     }
 }
@@ -74,7 +76,7 @@ This configuration is used for template render, It has default variables listed 
 
 These repos are official scaffolding repo to use for `source_repo` config, You can use these repo directly or just create one for yourself.
 
-| Language | org | repo |
+| language | org | repo |
 |  ----  | ----  |----  |
 | Golang | devstream-io | dtm-scaffolding-golang |
 | Java Spring | spring-guides | gs-spring-boot |
@@ -87,7 +89,7 @@ tools:
   - name: scaffolding
     instanceID: golang-scaffolding
     options:
-      dstination_repo:
+      destination_repo:
         owner: test_owner
         org: ""
         repo: dtm-test-golang
@@ -109,7 +111,7 @@ tools:
   - name: scaffolding
     instanceID: java-scaffolding
     options:
-      dstination_repo:
+      destination_repo:
         owner: test_owner
         org: ""
         repo: dtm-test-java
