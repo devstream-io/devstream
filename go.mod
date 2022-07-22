@@ -33,6 +33,7 @@ require (
 	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8
 	gopkg.in/gookit/color.v1 v1.1.6
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
+	gotest.tools v2.2.0+incompatible
 	helm.sh/helm/v3 v3.7.2
 	k8s.io/api v0.22.4
 	k8s.io/apimachinery v0.22.4
