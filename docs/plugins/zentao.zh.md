@@ -31,47 +31,47 @@ tools:
     dependsOn: []
     # options for the plugin
     options:
-      # namespace for zentao application
+      # namespace for ZenTao application
       namespace: 'zentao'
       # storageClassName used to match pv and pvc
       storageClassName: 'zentao-storage'
-      # two PersistentVolumes for zentao and mysql should be specified
-      persistentVolume:
-        # name of zentao pv
-        zentaoPVName: 'zentao-pv'
-        # capacity of zentao pv
-        zentaoPVCapacity: '1G'
-        # name of mysql pv
-        mysqlPVName: 'mysql-pv'
-        # capacity of mysql pv
-        mysqlPVCapacity: '1G'
-      # two PersistentVolumeClaims for zentao and mysql should be specified
-      persistentVolumeClaim:
-        # name of zentao pvc
-        zentaoPVCName: 'zentao-pvc'
-        # capacity of zentao pvc
-        zentaoPVCCapacity: '1G'
-        # name of mysql pvc
-        mysqlPVCName: 'mysql-pv'
-        # capacity of mysql pvc
-        mysqlPVCCapacity: '1G'
-      # zentao application is deployed by K8S Deployment
+      # two PersistentVolumes for ZenTao and mysql should be specified
+      persistentVolumes:
+          # name of ZenTao pv
+        - pvName: "zentao-pv"
+          # capacity of ZenTao pv
+          pvCapacity: "1G"
+          # name of mysql pv
+        - pvName: "mysql-pv"
+          # capacity of mysql pv
+          pvCapacity: "1G"
+      # two PersistentVolumeClaims for ZenTao and mysql should be specified
+      persistentVolumeClaims:
+          # name of ZenTao pvc
+        - pvcName: "zentao-pvc"
+          # capacity of ZenTao pvc
+          pvcCapacity: "1G"
+          # name of mysql pvc
+        - pvcName: "mysql-pvc"
+          # capacity of mysql pvc
+          pvcCapacity: "1G"
+      # ZenTao application is deployed by K8s Deployment
       deployment:
-        # name of zentao deployment
+        # name of ZenTao deployment
         name: 'zentao-dp'
         # number of application replica
-        replicas: 3
-        # zentao image
+        replicas: 1
+        # ZenTao image
         image: 'easysoft/zentao:latest'
-        # initial password name for mysql database, you can specify any name you like
-        mysqlPasswdName: 'MYSQL_ROOT_PASSWORD'
-        # initial password value for mysql database, you can specify any value you like
-        mysqlPasswdValue: '1234567'
-      # zentao application is exposed via K8S Service
+        env:
+          key: 'MYSQL_ROOT_PASSWORD'
+          # initial password value for mysql database, you can specify any value you like
+          value: '12345678'
+      # ZenTao application is exposed via K8s Service
       service:
-        # name of zentao service
+        # name of ZenTao service
         name: 'zentao-svc'
-        # nodePort of zentao service, currently zentao plugin only support `nodePort` type
+        # nodePort of ZenTao service, currently ZenTao plugin only support `nodePort` type
         nodePort: 30081
 ```
 

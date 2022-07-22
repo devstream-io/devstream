@@ -25,6 +25,10 @@ func (c *Client) GetNamespace(namespace string) (*corev1.Namespace, error) {
 	return c.CoreV1().Namespaces().Get(context.TODO(), namespace, metav1.GetOptions{})
 }
 
+func (c *Client) GetDevstreamNamespace() (*corev1.NamespaceList, error) {
+	return c.CoreV1().Namespaces().List(context.TODO(), metav1.ListOptions{LabelSelector: "created_by=DevStream"})
+}
+
 func (c *Client) CreateNamespace(namespace string) error {
 	ns := &corev1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
@@ -59,4 +63,9 @@ func (c *Client) IsNamespaceExists(namespace string) (bool, error) {
 	}
 	// exist
 	return true, nil
+}
+
+func (c *Client) DeleteService(namespace, serviceName string) error {
+	return c.CoreV1().Services(namespace).
+		Delete(context.TODO(), serviceName, metav1.DeleteOptions{})
 }
