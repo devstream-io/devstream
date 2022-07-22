@@ -19,7 +19,7 @@ type DstRepo struct {
 	Repo              string `validate:"required"`
 	Branch            string `validate:"required"`
 	PathWithNamespace string
-	// TODO: used for gitlab
+	// TODO(steinliber): used for gitlab
 	BaseURL    string `validate:"omitempty,url"`
 	Visibility string `validate:"omitempty,oneof=public private internal"`
 }
@@ -115,7 +115,7 @@ func (d *DstRepo) createGithubClient(needAuth bool) (*github.Client, error) {
 	return ghClient, nil
 }
 
-// TODO: add gitlab support, temporary comment code
+// TODO(steinliber): add gitlab support, temporary comment code
 // func (d *DstRepo) createGitlabClient() (*gitlab.Client, error) {
 // return gitlab.NewClient(gitlab.WithBaseURL(d.BaseURL))
 // }
