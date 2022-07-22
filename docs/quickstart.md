@@ -37,7 +37,9 @@ export GITHUB_TOKEN="<YOUR_GITHUB_PERSONAL_ACCESS_TOKEN_HERE>"
 export DOCKERHUB_USERNAME="<YOUR_DOCKER_HUB_USER_NAME_HERE>"
 ```
 
-> Note: if you don't know how to get your GITHUB_TOKEN, see this official document "[Creating a personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)."
+> Tip: Go to [Personal Access Token](https://github.com/settings/tokens/new) to generate a new `GITHUB_TOKEN` for `dtm`.
+> 
+> For "Quick Start", we only need `repo`,`workflow`,`delete_repo` scopes. However, we recommend that you check all and future plugins may require more scopes.
 
 Then we run the following commands to update our config file with those env vars:
 
