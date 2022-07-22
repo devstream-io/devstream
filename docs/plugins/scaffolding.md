@@ -1,4 +1,4 @@
-# scaffolding plugin
+# repo-scaffolding plugin
 
 This plugin bootstraps a GitHub or GitLab repo with scaffolding code for a web application.
 
@@ -20,14 +20,14 @@ If you don't know how to create this token, check out:
 
 - If the `Update` interface is called, the repo will be completely removed and recreated. 
 
-- For the  `scaffolding` plugin, we only need `repo`, `delete_repo` permission for the token.
+- For the  `repo-scaffolding` plugin, we only need `repo`, `delete_repo` permission for the token.
 
 ## Usage
 
 **Please note that all parameter is case-sensitive.**
 
 ```yaml
---8<-- "scaffolding.yaml"
+--8<-- "repo-scaffolding.yaml"
 ```
 
 Replace the following from the config above:
@@ -86,7 +86,7 @@ These repos are official scaffolding repo to use for `source_repo` config, You c
 
 ```yaml
 tools:
-  - name: scaffolding
+  - name: repo-scaffolding
     instanceID: golang-scaffolding
     options:
       destination_repo:
@@ -108,7 +108,7 @@ This config will create `dtm-test-golang` repo for user test_owner in GitHub, an
 
 ```yaml
 tools:
-  - name: scaffolding
+  - name: repo-scaffolding
     instanceID: java-scaffolding
     options:
       destination_repo:

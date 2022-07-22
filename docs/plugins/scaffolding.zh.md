@@ -1,4 +1,4 @@
-# scaffolding 插件
+# repo-scaffolding 插件
 
 这个插件会基于一个脚手架仓库来初始化一个 Gihub 或者 GitLab 仓库。
 
@@ -18,14 +18,14 @@
 
 - 如果你执行 `dtm update` 命令,  这个 GitHub 上的仓库将会被删除然后重新创建。 
 
-- 对于 `scaffolding` 插件，目前只需要 token 有 `repo`, `delete_repo` 权限即可。 
+- 对于 `repo-scaffolding` 插件，目前只需要 token 有 `repo`, `delete_repo` 权限即可。 
 
 ## 使用方法
 
 **请注意这里的设置参数都是大小写敏感的**
 
 ```yaml
---8<-- "scaffolding.yaml"
+--8<-- "repo-scaffolding.yaml"
 ```
 
 在配置文件中替换以下配置：
@@ -84,7 +84,7 @@
 
 ```yaml
 tools:
-  - name: scaffolding
+  - name: repo-scaffolding
     instanceID: golang-scaffolding
     options:
       destination_repo:
@@ -106,7 +106,7 @@ tools:
 
 ```yaml
 tools:
-  - name: scaffolding
+  - name: repo-scaffolding
     instanceID: java-scaffolding
     options:
       destination_repo:
