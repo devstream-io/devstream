@@ -73,3 +73,50 @@ func (c *Client) GetRepoDescription() (*github.Repository, error) {
 
 	return repo, nil
 }
+
+// PushLocalPathToBranch will push local change to remote repo
+// return boolean value is for control whether to rollout if encounter error
+func (c *Client) PushLocalPathToBranch(mergeBranch, mainBranch, repoPath string) (bool, error) {
+	// 1. create new branch from main
+	err := c.NewBranch(mainBranch, mergeBranch)
+	if err != nil {
+		log.Debugf("Failed to create transit branch: %s", err)
+		return false, err
+	}
+	// 2. push local file change to new branch
+	if err := c.PushLocalPath(repoPath, mergeBranch); err != nil {
+		log.Debugf("Failed to walk local repo-path: %s.", err)
+		return true, err
+	}
+	// 3. merge new branch to main
+	if err = c.MergeCommits(mergeBranch, mainBranch); err != nil {
+		log.Debugf("Failed to merge commits: %s.", err)
+		return true, err
+	}
+	// 4. delete new branch
+	err = c.DeleteBranch(mergeBranch)
+	if err != nil {
+		log.Debugf("Failed to delete transit branch: %s", err)
+		return false, err
+	}
+	return false, nil
+}
+
+func (c *Client) InitRepo(mainBranch string) error {
+	log.Infof(c.Repo, mainBranch)
+	// It's ok to give the opts.Org to CreateRepo() when create a repository for a authenticated user.
+	if err := c.CreateRepo(c.Org, mainBranch); err != nil {
+		// recreate if set tryTime
+		log.Errorf("Failed to create repo: %s.", err)
+		return err
+	}
+	log.Infof("The repo %s has been created.", c.Repo)
+
+	// upload a placeholder file to make repo not empty
+	if err := c.CreateFile([]byte(" "), ".placeholder", mainBranch); err != nil {
+		log.Debugf("Failed to add the first file: %s.", err)
+		return err
+	}
+	log.Debugf("Added the .placeholder file.")
+	return nil
+}

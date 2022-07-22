@@ -47,3 +47,12 @@ func (c *Client) DeleteBranch(branch string) error {
 	_, err := c.Git.DeleteRef(c.Context, owner, c.Repo, refStr)
 	return err
 }
+
+func (c *Client) MergeCommits(mergeBranch, mainBranch string) error {
+	number, err := c.NewPullRequest(mergeBranch, mainBranch)
+	if err != nil {
+		return err
+	}
+
+	return c.MergePullRequest(number, MergeMethodMerge)
+}

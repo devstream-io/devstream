@@ -66,6 +66,9 @@ var (
 	//go:embed plugins/openldap.yaml
 	OpenldapDefaultConfig string
 
+	//go:embed plugins/scaffolding.yaml
+	ScaffoldingDefaultConfig string
+
 	//go:embed plugins/tekton.yaml
 	TektonDefaultConfig string
 
@@ -99,6 +102,7 @@ var pluginDefaultConfigs = map[string]string{
 	"jira-github-integ":              JiraGithubIntegDefaultConfig,
 	"kube-prometheus":                KubePrometheusDefaultConfig,
 	"openldap":                       OpenldapDefaultConfig,
+	"scaffolding":                    ScaffoldingDefaultConfig,
 	"tekton":                         TektonDefaultConfig,
 	"trello-github-integ":            TrelloGithubIntegDefaultConfig,
 	"trello":                         TrelloDefaultConfig,

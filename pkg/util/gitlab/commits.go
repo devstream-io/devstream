@@ -75,6 +75,7 @@ func (c *Client) CommitMultipleFiles(project, branch, commitMessage string, file
 	var commitActionsOptions = make([]*gitlab.CommitActionOptions, len(files))
 
 	for fileName, content := range files {
+		log.Infof("0-00000000000000000000000-> %s[%s]", fileName, project)
 		commitActionsOptions = append(commitActionsOptions, &gitlab.CommitActionOptions{
 			Action:   gitlab.FileAction(gitlab.FileCreate),
 			FilePath: gitlab.String(fileName),
