@@ -2,48 +2,32 @@ package gitlabcedocker
 
 import (
 	"strings"
+
+	"github.com/devstream-io/devstream/pkg/util/docker"
+	"github.com/devstream-io/devstream/pkg/util/docker/dockersh"
 )
 
 const (
-	gitlabImageName     = "gitlab/gitlab-ce"
-	defaultImageTag     = "rc"
-	gitlabContainerName = "gitlab"
-	tcp                 = "tcp"
+	gitlabImageName       = "gitlab/gitlab-ce"
+	defaultImageTag       = "rc"
+	gitlabContainerName   = "gitlab"
+	tcp                   = "tcp"
+	dockerRunShmSizeParam = "--shm-size 256m"
 )
 
 func getImageNameWithTag(opt Options) string {
-	var imageTag string
-	if opt.ImageTag == "" {
-		imageTag = defaultImageTag
-	} else {
-		imageTag = opt.ImageTag
+	return gitlabImageName + ":" + opt.ImageTag
+}
+
+func defaults(opts *Options) {
+	if opts.ImageTag == "" {
+		opts.ImageTag = defaultImageTag
 	}
-	return gitlabImageName + ":" + imageTag
 }
 
-// dockerOperator is an interface for docker operations
-// It is implemented by sshDockerOperator
-// in the future, we can add other implementations such as sshDockerOperator
-type dockerOperator interface {
-	IfImageExists(imageName string) bool
-	PullImage(image string) error
-	RemoveImage(image string) error
-
-	IfContainerExists(container string) bool
-	IfContainerRunning(container string) bool
-	RunContainer(options Options) error
-	StopContainer(container string) error
-	RemoveContainer(container string) error
-
-	ListContainerMounts(container string) ([]string, error)
-
-	GetContainerHostname(container string) (string, error)
-	GetContainerPortBinding(container, containerPort, protocol string) (hostPort string, err error)
-}
-
-func getDockerOperator(_ Options) dockerOperator {
-	// just return a sshDockerOperator for now
-	return &sshDockerOperator{}
+func GetDockerOperator(_ Options) docker.Operator {
+	// just return a ShellOperator for now
+	return &dockersh.ShellOperator{}
 }
 
 type gitlabResource struct {

@@ -1,18 +1,23 @@
-package gitlabcedocker
+package dockersh
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"os/exec"
-	"sort"
 	"strings"
 
+	"github.com/devstream-io/devstream/pkg/util/docker"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-type sshDockerOperator struct{}
+// ShellOperator is an implementation of /pkg/util/docker.Operator interface by using shell commands
+type ShellOperator struct{}
 
-func (op *sshDockerOperator) IfImageExists(imageNameWithTag string) bool {
+// TODO(aFlyBird0): maybe use one param "ImageNameWithTag" is not a good idea,
+// because we have to extract the bare image name from the image name with tag
+// we could use (a struct)/(a interface)/(two params) to represent the image name and tag
+func (op *ShellOperator) ImageIfExist(imageNameWithTag string) bool {
 	// eg. docker image ls gitlab/gitlab-ce:rc
 	cmdString := fmt.Sprintf("docker image ls %v", imageNameWithTag)
 	// output: eg.
@@ -36,13 +41,13 @@ func extractImageName(imageNameWithTag string) string {
 	return strings.Split(imageNameWithTag, ":")[0]
 }
 
-func (op *sshDockerOperator) PullImage(imageName string) error {
+func (op *ShellOperator) ImagePull(imageName string) error {
 	err := ExecInSystemWithParams(".", []string{"docker", "pull", imageName}, nil, true)
 
 	return err
 }
 
-func (op *sshDockerOperator) RemoveImage(imageName string) error {
+func (op *ShellOperator) ImageRemove(imageName string) error {
 	log.Infof("Removing image %v ...", imageName)
 
 	cmdString := fmt.Sprintf("docker rmi %s", imageName)
@@ -51,7 +56,7 @@ func (op *sshDockerOperator) RemoveImage(imageName string) error {
 	return err
 }
 
-func (op *sshDockerOperator) IfContainerExists(containerName string) bool {
+func (op *ShellOperator) ContainerIfExist(containerName string) bool {
 	cmdString := fmt.Sprintf("docker inspect %s", containerName)
 	outputBuffer := &bytes.Buffer{}
 	err := ExecInSystem(".", cmdString, outputBuffer, false)
@@ -66,7 +71,7 @@ func (op *sshDockerOperator) IfContainerExists(containerName string) bool {
 	return true
 }
 
-func (op *sshDockerOperator) IfContainerRunning(containerName string) bool {
+func (op *ShellOperator) ContainerIfRunning(containerName string) bool {
 	command := exec.Command("docker", "inspect", "--format='{{.State.Status}}'", containerName)
 	output, err := command.Output()
 	if err != nil {
@@ -80,11 +85,16 @@ func (op *sshDockerOperator) IfContainerRunning(containerName string) bool {
 	return false
 }
 
-func (op *sshDockerOperator) RunContainer(options Options) error {
-	cmdString := BuildDockerRunCommand(options)
+func (op *ShellOperator) ContainerRun(opts docker.RunOptions, params ...string) error {
+	// build the command
+	cmdString, err := BuildContainerRunCommand(opts, params...)
+	if err != nil {
+		return err
+	}
 	log.Debugf("Docker run command: %s", cmdString)
-	cmdStringOneline := strings.Replace(cmdString, "\\\n", " ", -1)
-	err := ExecInSystem(".", cmdStringOneline, nil, true)
+
+	// run the command
+	err = ExecInSystem(".", cmdString, nil, true)
 	if err != nil {
 		return fmt.Errorf("docker run failed: %v", err)
 	}
@@ -92,25 +102,36 @@ func (op *sshDockerOperator) RunContainer(options Options) error {
 	return nil
 }
 
-func BuildDockerRunCommand(options Options) string {
-	cmdTemplate := `
-	docker run --detach \
-	--hostname %s \
-	--publish %d:443 --publish %d:80 --publish %d:22 \
-	--name %s \
-	--restart always \
-	--volume %[6]s/config:/etc/gitlab \
-	--volume %[6]s/logs:/var/log/gitlab \
-	--volume %[6]s/data:/var/opt/gitlab \
-	--shm-size 256m \
-	%s
-	`
-	cmdString := fmt.Sprintf(cmdTemplate, options.Hostname, options.HTTPSPort,
-		options.HTTPPort, options.SSHPort, gitlabContainerName, options.GitLabHome, getImageNameWithTag(options))
-	return cmdString
+// BuildContainerRunCommand builds the docker run command string from the given options and additional params
+func BuildContainerRunCommand(opts docker.RunOptions, params ...string) (string, error) {
+	if err := opts.Validate(); err != nil {
+		return "", err
+	}
+
+	cmdBuilder := strings.Builder{}
+	cmdBuilder.WriteString("docker run --detach ")
+	if opts.Hostname != "" {
+		cmdBuilder.WriteString(fmt.Sprintf("--hostname %s ", opts.Hostname))
+	}
+	for _, publish := range opts.PortPublishes {
+		cmdBuilder.WriteString(fmt.Sprintf("--publish %d:%d ", publish.HostPort, publish.ContainerPort))
+	}
+	cmdBuilder.WriteString(fmt.Sprintf("--name %s ", opts.ContainerName))
+	if opts.RestartAlways {
+		cmdBuilder.WriteString("--restart always ")
+	}
+	for _, volume := range opts.Volumes {
+		cmdBuilder.WriteString(fmt.Sprintf("--volume %s:%s ", volume.HostPath, volume.ContainerPath))
+	}
+	for _, param := range params {
+		cmdBuilder.WriteString(param + " ")
+	}
+	cmdBuilder.WriteString(docker.CombineImageNameAndTag(opts.ImageName, opts.ImageTag))
+
+	return cmdBuilder.String(), nil
 }
 
-func (op *sshDockerOperator) StopContainer(containerName string) error {
+func (op *ShellOperator) ContainerStop(containerName string) error {
 	log.Infof("Stopping container %v ...", containerName)
 
 	cmdString := fmt.Sprintf("docker stop %s", containerName)
@@ -119,7 +140,7 @@ func (op *sshDockerOperator) StopContainer(containerName string) error {
 	return err
 }
 
-func (op *sshDockerOperator) RemoveContainer(containerName string) error {
+func (op *ShellOperator) ContainerRemove(containerName string) error {
 	log.Infof("Removing container %v ...", containerName)
 
 	cmdString := fmt.Sprintf("docker rm %s", containerName)
@@ -128,8 +149,9 @@ func (op *sshDockerOperator) RemoveContainer(containerName string) error {
 	return err
 }
 
-func (op *sshDockerOperator) ListContainerMounts(containerName string) ([]string, error) {
-	cmdString := fmt.Sprintf(`docker inspect --format='{{range .Mounts}}{{.Source}}{{"\n"}}{{end}}' %s`, containerName)
+func (op *ShellOperator) ContainerListMounts(containerName string) (docker.Mounts, error) {
+	cmdString := fmt.Sprintf(`docker inspect --format='{{json .Mounts}}' %s`, containerName)
+
 	outputBuffer := &bytes.Buffer{}
 
 	err := ExecInSystem(".", cmdString, outputBuffer, false)
@@ -137,18 +159,18 @@ func (op *sshDockerOperator) ListContainerMounts(containerName string) ([]string
 		return nil, err
 	}
 
-	volumes := strings.Split(strings.TrimSpace(outputBuffer.String()), "\n")
+	mounts := make([]docker.MountPoint, 0)
+	err = json.Unmarshal([]byte(strings.TrimSpace(outputBuffer.String())), &mounts)
+	if err != nil {
+		return nil, fmt.Errorf("failed to unmarshal docker inspect output when list mounts: %v", err)
+	}
 
-	sort.Slice(volumes, func(i, j int) bool {
-		return volumes[i] < volumes[j]
-	})
+	log.Debugf("Container %v mounts: %v", containerName, mounts)
 
-	log.Debugf("Container %v volumes: %v", containerName, volumes)
-
-	return volumes, nil
+	return mounts, nil
 }
 
-func (op *sshDockerOperator) GetContainerHostname(container string) (string, error) {
+func (op *ShellOperator) ContainerGetHostname(container string) (string, error) {
 	cmdString := fmt.Sprintf("docker inspect --format='{{.Config.Hostname}}' %s", container)
 	outputBuffer := &bytes.Buffer{}
 
@@ -161,8 +183,7 @@ func (op *sshDockerOperator) GetContainerHostname(container string) (string, err
 
 }
 
-func (op *sshDockerOperator) GetContainerPortBinding(container, containerPort, protocol string) (hostPort string, err error) {
-
+func (op *ShellOperator) ContainerGetPortBinding(container, containerPort, protocol string) (hostPort string, err error) {
 	// get container port binding map
 	// the result is like:
 	// 22/tcp->8122

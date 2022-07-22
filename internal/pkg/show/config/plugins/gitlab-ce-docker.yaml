@@ -8,7 +8,7 @@ tools:
   # options for the plugin
   options:
     # hostname for running docker
-    hostname: gitlab.devstream.io
+    hostname: gitlab.example.com
     # the directory where you store docker volumes of gitlab
     # 1. it should be a absolute path
     # 2. once the tool is applied, it can't be changed
