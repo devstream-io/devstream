@@ -59,7 +59,7 @@ func handleEnv(options *Options) []error {
 	}
 
 	if options.J.Password == "" {
-		errs = append(errs, fmt.Errorf("env JENKINS_PASSWORD is required"))
+		errs = append(errs, fmt.Errorf("jenkins password is required"))
 	}
 
 	return errs

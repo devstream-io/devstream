@@ -47,3 +47,10 @@ chown -R 1000:1000 <your-dtm-home-dir>/data/jenkins-volume/
 ```
 
 Currently, all the parameters in the example above are mandatory.
+
+## Outputs
+
+This plugin has two outputs:
+
+- `jenkinsURL` (format: `hostname:port`, example: "localhost:8080")
+- `jenkinsPasswordOfAdmin` 

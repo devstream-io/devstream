@@ -47,3 +47,10 @@ chown -R 1000:1000 <your-dtm-home-dir>/data/jenkins-volume/
 ```
 
 当前，所有配置项均为必填。
+
+## 输出
+
+这个插件有两个输出：
+
+- `jenkinsURL` (格式: `hostname:port`, 例如: "localhost:8080")
+- `jenkinsPasswordOfAdmin` 
