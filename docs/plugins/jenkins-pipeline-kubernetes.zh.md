@@ -4,11 +4,10 @@
 
 步骤：
 
-1. 访问 Jenkins web UI，创建 token。步骤：People -> admin ->Configure -> API Token -> Add new Token。
-2. 按需修改配置项，其中 `githubRepoUrl` 为 GitHub 仓库地址，应预先建立一个 GitHub 仓库，并创建一个名为 "Jenkinsfile" 的文件放至仓库根目录。
-3. 设置环境变量
+1. 按需修改配置项，其中 `githubRepoUrl` 为 GitHub 仓库地址，应预先建立一个 GitHub 仓库，并创建一个名为 "Jenkinsfile" 的文件放至仓库根目录。
+2. 设置环境变量
     - `GITHUB_TOKEN`
-    - `JENKINS_TOKEN`
+    - `JENKINS_PASSWORD`
 
 ## 用例
 
@@ -17,5 +16,3 @@
 --8<-- "jenkins-pipeline-kubernetes.yaml"
 
 ```
-
-目前，所有选项均为必填项。

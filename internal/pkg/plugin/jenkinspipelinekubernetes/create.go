@@ -1,6 +1,7 @@
 package jenkinspipelinekubernetes
 
 import (
+	"context"
 	_ "embed"
 	"fmt"
 	"strings"
@@ -21,26 +22,40 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	if errs := validate(&opts); len(errs) != 0 {
+	if errs := validateAndHandleOptions(&opts); len(errs) != 0 {
 		for _, e := range errs {
 			log.Errorf("Options error: %s.", e)
 		}
 		return nil, fmt.Errorf("opts are illegal")
 	}
 
-	client := NewClient(&opts)
-
-	// always try to create credential, there will be no error if it already exists
-	if err := client.CreateCredentialUsernamePassword(); err != nil {
+	// get the jenkins client and test the connection
+	client, err := NewJenkinsFromOptions(&opts)
+	if err != nil {
 		return nil, err
 	}
 
-	jobXmlContent := renderJobXml(jobTemplate, &opts)
+	// create credential if not exists
+	if _, err := client.GetCredentialsUsername(jenkinsCredentialID); err != nil {
+		log.Infof("credential %s not found, creating...", jenkinsCredentialID)
+		if err := client.CreateCredentialsUsername(jenkinsCredentialID, jenkinsCredentialDesc); err != nil {
+			return nil, err
+		}
+	}
 
-	// TODO(aFlyBird0): check if the job already exists
-
-	if err := client.CreateItem(jobXmlContent); err != nil {
-		return nil, fmt.Errorf("failed to create job: %s", err)
+	// create job if not exists
+	ctx := context.Background()
+	if _, err := client.GetJob(ctx, opts.J.JobName); err != nil {
+		log.Infof("job %s not found, creating...", opts.J.JobName)
+		jobXmlOpts := &JobXmlOptions{
+			GitHubRepoURL:      opts.GitHubRepoURL,
+			CredentialsID:      jenkinsCredentialID,
+			PipelineScriptPath: opts.J.PipelineScriptPath,
+		}
+		jobXmlContent := renderJobXml(jobTemplate, jobXmlOpts)
+		if _, err := client.CreateJob(context.Background(), jobXmlContent, opts.J.JobName); err != nil {
+			return nil, fmt.Errorf("failed to create job: %s", err)
+		}
 	}
 
 	// TODO(aFlyBird0): use JCasC to configure job creation
@@ -78,20 +93,28 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	// 4. add "read" functions to the ConfigMap to get the content of the ConfigMap and check if the resource is drifted
 	// 5. maybe we also should consider to expose some config key in ConfigMap to the user
 
-	// TODO(aFlyBird0): build dtm resource
-
 	// TODO(aFlyBird0): what if user doesn't use helm to install jenkins? then the JCasC may not be automatically reloaded.
 
-	return (&resource{}).toMap(), nil
+	res := &resource{
+		CredentialsCreated: true,
+		JobCreated:         true,
+	}
+
+	return res.toMap(), nil
+}
+
+type JobXmlOptions struct {
+	GitHubRepoURL      string
+	CredentialsID      string
+	PipelineScriptPath string
 }
 
 // TODO(aFlyBird0): unit test
-// TODO(aFlyBird0): now jenkins script path is hardcoded to "Jenkinsfile", it should be configurable
-func renderJobXml(jobTemplate string, opts *Options) string {
-	// note: maybe it is better to use html/template to generate the job template,
-	// but that way is complex and this is the simplest way to do it
+func renderJobXml(jobTemplate string, opts *JobXmlOptions) string {
+	// TODO(aFlyBird0): use html/template to generate the job template
 	jobXml := strings.Replace(jobTemplate, "{{.GitHubRepoURL}}", opts.GitHubRepoURL, 1)
-	jobXml = strings.Replace(jobXml, "{{.CredentialsID}}", jenkinsCredentialID, 1)
+	jobXml = strings.Replace(jobXml, "{{.CredentialsID}}", opts.CredentialsID, 1)
+	jobXml = strings.Replace(jobXml, "{{.PipelineScriptPath}}", opts.PipelineScriptPath, 1)
 
 	log.Debugf("job xml rendered: %s", jobXml)
 	return jobXml
