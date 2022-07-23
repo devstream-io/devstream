@@ -12,8 +12,9 @@ import (
 )
 
 const (
-	jenkinsCredentialID   = "credential-jenkins-pipeline-kubernetes-by-devstream"
-	jenkinsCredentialDesc = "Jenkins Pipeline secret, created by devstream/jenkins-pipeline-kubernetes"
+	jenkinsCredentialID       = "credential-jenkins-pipeline-kubernetes-by-devstream"
+	jenkinsCredentialDesc     = "Jenkins Pipeline secret, created by devstream/jenkins-pipeline-kubernetes"
+	jenkinsCredentialUsername = "foo-useless-username"
 )
 
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
@@ -38,7 +39,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	// create credential if not exists
 	if _, err := client.GetCredentialsUsername(jenkinsCredentialID); err != nil {
 		log.Infof("credential %s not found, creating...", jenkinsCredentialID)
-		if err := client.CreateCredentialsUsername(jenkinsCredentialID, jenkinsCredentialDesc); err != nil {
+		if err := client.CreateCredentialsUsername(jenkinsCredentialUsername, opts.GitHubToken, jenkinsCredentialID, jenkinsCredentialDesc); err != nil {
 			return nil, err
 		}
 	}
@@ -109,9 +110,8 @@ type JobXmlOptions struct {
 	PipelineScriptPath string
 }
 
-// TODO(aFlyBird0): unit test
 func renderJobXml(jobTemplate string, opts *JobXmlOptions) string {
-	// TODO(aFlyBird0): use html/template to generate the job template
+	// TODO(aFlyBird0): use html/template to generate the job template. It's a good first issue. :)
 	jobXml := strings.Replace(jobTemplate, "{{.GitHubRepoURL}}", opts.GitHubRepoURL, 1)
 	jobXml = strings.Replace(jobXml, "{{.CredentialsID}}", opts.CredentialsID, 1)
 	jobXml = strings.Replace(jobXml, "{{.PipelineScriptPath}}", opts.PipelineScriptPath, 1)

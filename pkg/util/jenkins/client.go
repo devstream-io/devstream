@@ -62,12 +62,12 @@ func (j *Jenkins) GetCredentialManager() *gojenkins.CredentialsManager {
 	}
 }
 
-func (j *Jenkins) CreateCredentialsUsername(id, description string) error {
+func (j *Jenkins) CreateCredentialsUsername(username, password, id, description string) error {
 	cred := gojenkins.UsernameCredentials{
 		ID:          id,
 		Scope:       credentialScope,
-		Username:    j.Username,
-		Password:    j.Password,
+		Username:    username,
+		Password:    password,
 		Description: description,
 	}
 

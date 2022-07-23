@@ -103,11 +103,11 @@ tools:
         url: ${{jenkins.default.outputs.jenkinsURL}}
         # jenkins user name, default: admin
         user: admin
-        # jenkins password, you have 2 options to set the password:
+        # jenkins password, you have 3 options to set the password:
         # 1. use outputs of the `jenkins` plugin, see docs for more details
         # 2. set the `JENKINS_PASSWORD` environment variable
         # 3. fill in the password in this field(not recommended)
-        # if all set, devstream will read the password from the config file first.
+        # if all set, devstream will read the password from the config file or outputs from jenkins plugin first, then env var.
         password: ${{jenkins.default.outputs.jenkinsPasswordOfAdmin}}
         # jenkins job name, mandatory
         jobName:

@@ -130,7 +130,7 @@ func showJenkinsUrl(options plugininstaller.RawOptions) error {
 			log.Error(err)
 			return err
 		}
-		log.Info(", Jenkins url in K8s:", fmt.Sprintf("http://%s/login", urlInK8s))
+		log.Info("Jenkins url in K8s:", fmt.Sprintf("http://%s/login", urlInK8s))
 
 	}
 
