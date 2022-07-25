@@ -1,4 +1,4 @@
-package scaffolding
+package reposcaffolding
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"

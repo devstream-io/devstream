@@ -1,4 +1,4 @@
-package scaffolding
+package reposcaffolding
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
@@ -6,18 +6,25 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func Read(options map[string]interface{}) (map[string]interface{}, error) {
+func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	runner := &plugininstaller.Runner{
 		PreExecuteOperations: []plugininstaller.MutableOperation{
 			reposcaffolding.Validate,
+			reposcaffolding.SetDefaultTemplateRepo,
 		},
-		GetStatusOperation: reposcaffolding.GetDynamicState,
+		ExecuteOperations: []plugininstaller.BaseOperation{
+			reposcaffolding.DeleteRepo,
+			reposcaffolding.InstallRepo,
+		},
+		GetStatusOperation: reposcaffolding.GetStaticState,
 	}
 
+	// 2. execute installer get status and error
 	status, err := runner.Execute(plugininstaller.RawOptions(options))
 	if err != nil {
 		return nil, err
 	}
 	log.Debugf("Return map: %v", status)
 	return status, nil
+
 }

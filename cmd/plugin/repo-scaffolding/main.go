@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/devstream-io/devstream/internal/pkg/plugin/scaffolding"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/reposcaffolding"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -11,24 +11,24 @@ const NAME = "repo-scaffolding"
 // Plugin is the type used by DevStream core. It's a string.
 type Plugin string
 
-// Create implements the create of scaffolding.
+// Create implements the create of repo-scaffolding.
 func (p Plugin) Create(options map[string]interface{}) (map[string]interface{}, error) {
-	return scaffolding.Create(options)
+	return reposcaffolding.Create(options)
 }
 
-// Update implements the update of scaffolding.
+// Update implements the update of repo-scaffolding.
 func (p Plugin) Update(options map[string]interface{}) (map[string]interface{}, error) {
-	return scaffolding.Update(options)
+	return reposcaffolding.Update(options)
 }
 
-// Delete implements the delete of scaffolding.
+// Delete implements the delete of repo-scaffolding.
 func (p Plugin) Delete(options map[string]interface{}) (bool, error) {
-	return scaffolding.Delete(options)
+	return reposcaffolding.Delete(options)
 }
 
-// Read implements the read of scaffolding.
+// Read implements the read of repo-scaffolding.
 func (p Plugin) Read(options map[string]interface{}) (map[string]interface{}, error) {
-	return scaffolding.Read(options)
+	return reposcaffolding.Read(options)
 }
 
 // DevStreamPlugin is the exported variable used by the DevStream core.
