@@ -112,10 +112,15 @@ type JobXmlOptions struct {
 
 func renderJobXml(jobTemplate string, opts *JobXmlOptions) string {
 	// TODO(aFlyBird0): use html/template to generate the job template. It's a good first issue. :)
-	jobXml := strings.Replace(jobTemplate, "{{.GitHubRepoURL}}", opts.GitHubRepoURL, 1)
-	jobXml = strings.Replace(jobXml, "{{.CredentialsID}}", opts.CredentialsID, 1)
-	jobXml = strings.Replace(jobXml, "{{.PipelineScriptPath}}", opts.PipelineScriptPath, 1)
+	replacerSlice := []string{
+		"{{.GitHubRepoURL}}", opts.GitHubRepoURL,
+		"{{.CredentialsID}}", opts.CredentialsID,
+		"{{.PipelineScriptPath}}", opts.PipelineScriptPath,
+	}
+
+	jobXml := strings.NewReplacer(replacerSlice...).Replace(jobTemplate)
 
 	log.Debugf("job xml rendered: %s", jobXml)
+
 	return jobXml
 }
