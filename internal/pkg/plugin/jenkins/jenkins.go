@@ -12,7 +12,7 @@ var defaultStatefulsetTplList = []string{
 // now `plugininstaller.GetStatusOperation` only support one resource get function,
 // if we want to use both existing resource get function(such as helm's methods) and custom function,
 // we have to wrap them into one function.
-func wrapperHelmResourceAndCustomResource(options plugininstaller.RawOptions, helmResFunc plugininstaller.StatusOperation) plugininstaller.StatusOperation {
+func wrapperHelmResourceAndCustomResource(helmResFunc plugininstaller.StatusOperation) plugininstaller.StatusOperation {
 	return func(options plugininstaller.RawOptions) (map[string]interface{}, error) {
 		opts, err := newOptions(options)
 		if err != nil {
