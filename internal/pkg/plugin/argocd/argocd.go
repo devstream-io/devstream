@@ -6,13 +6,6 @@ import (
 )
 
 var (
-	defaultDeploymentList = []string{
-		"argocd-applicationset-controller",
-		"argocd-dex-server",
-		"argocd-notifications-controller",
-		"argocd-redis",
-		"argocd-repo-server",
-		"argocd-server"}
 	defaultRepoURL  = "https://argoproj.github.io/argo-helm"
 	defaultRepoName = "argo"
 )

@@ -26,7 +26,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		TermateOperations: []plugininstaller.BaseOperation{
 			helm.DealWithNsWhenInterruption,
 		},
-		GetStatusOperation: wrapperHelmResourceAndCustomResource(helm.GetPluginStaticStateByReleaseNameWrapper(defaultStatefulsetTplList)),
+		GetStatusOperation: getHelmResourceAndCustomResource,
 	}
 
 	// 2. execute installer get status and error
