@@ -61,31 +61,6 @@ func deleteApp(kubeClient *k8s.Client, opts *Options) error {
 	return nil
 }
 
-// Check whether the given namespace is created by dtm
-// If the given namespace has label "created_by=DevStream", we'll control it.
-// 1. The specified namespace is created by zentao plugin, then it should be deleted
-//    when errors are encountered during creation or `dtm delete`.
-// 2. The specified namespace is controlled by user, maybe they want to deploy zentao in
-//    an existing namespace or other situations, then we should not delete this namespace.
-func isDevstreamNSExists(kubeClient *k8s.Client, namespace string) (bool, error) {
-	nsList, err := kubeClient.GetDevstreamNamespace()
-	if err != nil {
-		// not exist
-		if kerr.IsNotFound(err) {
-			return false, nil
-		}
-		return false, err
-	}
-
-	for _, ns := range nsList.Items {
-		// exist
-		if ns.ObjectMeta.Name == namespace {
-			return true, nil
-		}
-	}
-	return false, nil
-}
-
 // Generate []corev1.Volume for deployment from Options.PersistentVolumeClaims
 func (opts *Options) genVolumesForDeployment() []corev1.Volume {
 	var v []corev1.Volume

@@ -69,7 +69,7 @@ func DealWithErrWhenInstall(options plugininstaller.RawOptions) error {
 		return err
 	}
 
-	exist, err := isDevstreamNSExists(kubeClient, opts.Namespace)
+	exist, err := kubeClient.IsDevstreamNS(opts.Namespace)
 	if err != nil {
 		log.Debugf("Failed to check whether namespace: %s exists.", opts.Namespace)
 		return err
@@ -334,7 +334,7 @@ func Delete(options plugininstaller.RawOptions) error {
 	}
 
 	// 5. Delete namespace only when namespace is controlled by dtm
-	exist, err := isDevstreamNSExists(kubeClient, opts.Namespace)
+	exist, err := kubeClient.IsDevstreamNS(opts.Namespace)
 	if err != nil {
 		log.Debugf("Failed to check whether namespace: %s exists.", opts.Namespace)
 		return err
