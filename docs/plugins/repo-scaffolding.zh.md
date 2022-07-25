@@ -4,19 +4,23 @@
 
 ## 运行需求
 
-这个插件运行需要设置以下环境变量：
+这个插件基于你使用的代码仓库类型需要设置以下配置：
 
-- GITHUB_TOKEN
+### GitHub
 
-在使用插件之前请先设置这个环境变量，如果你不知道如何获取这个 token，可以查看以下文档：
+- GITHUB_TOKEN: 在使用插件之前请先设置这个环境变量，如果你不知道如何获取这个 token，可以查看文档 [Creating a personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)。
 
-- [Creating a personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+### GitLab
+
+- GITLAB_TOKEN： 在使用插件之前请先设置这个环境变量，如果你不知道如何获取这个 token，可以查看文档 [Personal access tokens](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html)。
+- `destination_repo.baseUrl`：如果你使用的是自建的 GitLab 仓库，需要将该配置设置为自建 GItLab 的 URL 地址。
+- `destination_repo.visibility`：此配置用于设置新建仓库的权限，支持的选项有 `public`, `private` 和 `internal`。
 
 *注意：*
 
-- 如果你执行 `dtm delete` 命令，这个 GitHub 上的仓库将会被删除。
+- 如果你执行 `dtm delete` 命令，这个仓库将会被删除。
 
-- 如果你执行 `dtm update` 命令,  这个 GitHub 上的仓库将会被删除然后重新创建。 
+- 如果你执行 `dtm update` 命令,  这个仓库将会被删除然后重新创建。 
 
 - 对于 `repo-scaffolding` 插件，目前只需要 token 有 `repo`, `delete_repo` 权限即可。 
 
@@ -114,13 +118,15 @@ tools:
         org: ""
         repo: dtm-test-java
         branch: main
-      repo_type: github
+        baseUrl: 127.0.0.1:30001
+        visibility: public
+      repo_type: gitlab
       source_repo:
         org: spring-guides
         repo: gs-spring-boot
 ```
 
-这个配置会在 GitHub 为用户 test_owner 创建 `dtm-test-java` 仓库，使用的是 Spring 官方的 `spring-guides/gs-spring-boot` 仓库。
+这个配置会在 GitLab 为用户 test_owner 创建 `dtm-test-java` 仓库，使用的是 Spring 官方的 `spring-guides/gs-spring-boot` 仓库。
 
 ## Outputs
 

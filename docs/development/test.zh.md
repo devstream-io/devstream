@@ -22,7 +22,7 @@ GitHub Action 工作流程的定义在[这里](https://github.com/devstream-io/d
 
 目前，我们编写了针对以下插件的简单端到端测试：
 
-- `github-repo-scaffolding-golang`
+- `repo-scaffolding`
 - `githubactions-golang`
 - `argocd`
 - `argocdapp`

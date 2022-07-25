@@ -72,7 +72,7 @@ func (c *Client) UpdateSingleFile(project, branch, commitMessage, filename, cont
 }
 
 func (c *Client) CommitMultipleFiles(project, branch, commitMessage string, files map[string][]byte) error {
-	var commitActionsOptions = make([]*gitlab.CommitActionOptions, len(files))
+	var commitActionsOptions = make([]*gitlab.CommitActionOptions, 0)
 
 	for fileName, content := range files {
 		commitActionsOptions = append(commitActionsOptions, &gitlab.CommitActionOptions{

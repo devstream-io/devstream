@@ -1,6 +1,6 @@
 # dtm-scaffolding-golang
 
-This repo contains templates used by DevStream plugin "github-repo-scaffolding-golang" (thereafter: the plugin).
+This repo contains templates used by DevStream plugin "repo-scaffolding" (thereafter: the plugin).
 
 This repo isn't intended to be used directly without DevStream. It should only be consumed by the plugin automatically.
 

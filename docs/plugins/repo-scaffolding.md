@@ -4,19 +4,23 @@ This plugin bootstraps a GitHub or GitLab repo with scaffolding code for a web a
 
 ## Requirement
 
-This plugin depends on the following environment variable:
+This plugin need fllowing config base on your repo type:
 
-- GITHUB_TOKEN
+### GitHub
 
-Set it before using this plugin.
+- GITHUB_TOKEN: Set it before using this plugin.If you don't know how to create this token, check out [Creating a personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).
 
-If you don't know how to create this token, check out:
+### GitLab
 
-- [Creating a personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+- GITLAB_TOKEN: Please set the environment variable before using the plugin. If you do not know how to create the token, Can view the document [Personal access tokens](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html).
+
+- `destination_repo.baseUrl`: If you are using a self-built GitLab repository, set this configuration to the URL of the self-built GitLab.
+
+- `destination_repo.visibility`: This configuration is used to set the permissions of the new repository. The options are `public`, `private`, and `internal`.
 
 *Tips:*
 
-- If you run `dtm delete`, the repo on GitHub will be completely removed.
+- If you run `dtm delete`, the repo will be completely removed.
 
 - If the `Update` interface is called, the repo will be completely removed and recreated. 
 
@@ -54,7 +58,7 @@ All the parameters in the example above are mandatory for now.
 
 ### repo_type
 
-This configuration is used for destination_repo location, `gitlab` and `github` can be used for now. If you set it to "github", the generated repo will be pushed to GitHub. If you set it to "gitlab", the generated repo will be pushed to GitLab by your config.
+This configuration is used for destination_repo location, `gitlab` and `github` can be used for now. 
 
 ### vars
 
@@ -116,7 +120,9 @@ tools:
         org: ""
         repo: dtm-test-java
         branch: main
-      repo_type: github
+        baseUrl: 127.0.0.1:30001
+        visibility: public
+      repo_type: gitlab
       source_repo:
         org: spring-guides
         repo: gs-spring-boot

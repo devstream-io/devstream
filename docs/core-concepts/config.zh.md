@@ -59,17 +59,23 @@ dockerhubUsername: exploitht
 
 ```yaml
 tools:
-- name: github-repo-scaffolding-golang
-  instanceID: default
+- name: repo-scaffolding
+  instanceID: golang-github
   options:
-    owner: [[ githubUsername ]]
-    org: ""
-    repo: [[ repoName ]]
-    branch: [[ defaultBranch ]]
-    image_repo: [[ dockerhubUsername ]]/[[ repoName ]]
+    destination_repo:
+      owner: [[ githubUsername ]]
+      org: ""
+      repo: [[ repoName ]]
+      branch: [[ defaultBranch ]]
+    vars:
+      ImageRepo: "[[ dockerhubUsername ]]/[[ repoName ]]"
+    repo_type: github
+    source_repo:
+      org: devstream-io
+      repo: dtm-scaffolding-golang
 - name: jira-github-integ
   instanceID: default
-  dependsOn: [ "github-repo-scaffolding-golang.default" ]
+  dependsOn: [ "repo-scaffolding.golang-github" ]
   options:
     owner: [[ githubUsername ]]
     repo: [[ repoName ]]

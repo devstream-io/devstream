@@ -46,7 +46,7 @@ var _ = Describe("Tool Config", func() {
 	Context("NewToolWithToolConfigBytesAndVarsConfigBytes func", func() {
 		toolConfigBytes := []byte(`
 tools:
-  - name: github-repo-scaffolding-golang
+  - name: repo-scaffolding
     instanceID: 0
     options:
       owner: [[ owner ]]

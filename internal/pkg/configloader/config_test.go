@@ -18,7 +18,7 @@ var _ = Describe("Config", func() {
 	BeforeEach(func() {
 		validToolBytes = []byte(`
 tools:
-  - name: github-repo-scaffolding-golang
+  - name: repo-scaffolding
     instanceID: default
     options:
       owner: YOUR_GITHUB_USERNAME_CASE_SENSITIVE
@@ -134,11 +134,11 @@ state:
 				notValidContent := []byte(`
 ---
 tools:
-  - name: github-repo-scaffolding-golang
+  - name: repo-scaffolding
     instanceID: default
 ---
 tools:
-  - name: github-repo-scaffolding-golang
+  - name: repo-scaffolding
     instanceID: default`)
 				_, _, _, err := SplitConfigFileBytes(notValidContent)
 				Expect(err).Error().Should(HaveOccurred())
@@ -168,7 +168,7 @@ tools:
 			It("should return false if config type not valid", func() {
 				notValidType := []byte(`
 test:
-  - name: github-repo-scaffolding-golang
+  - name: repo-scaffolding
     instanceID: default`)
 				isValid, err := checkConfigType(notValidType, "core")
 				Expect(err).Error().ShouldNot(HaveOccurred())
