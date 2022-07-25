@@ -1,0 +1,29 @@
+# defaultconfig.yaml sample:
+# var file path, you can set it to absolute path or relative path.
+varFile: variables.yaml # here is a relative path. (defaults is ./variables.yaml)
+# tool file path, you can set it to absolute path or relative path.
+toolFile: tools.yaml # here is a relative path.
+# state config
+state:
+  backend: local # backend can be local or s3
+  options:
+    stateFile: devstream.state
+
+# tools.yaml sample:
+tools:
+  - name: repo-scaffolding
+    instanceID: default
+    options:
+    destination_repo:
+      owner: [[ githubUsername ]]
+      org: ""
+      repo: [[ repo ]]
+      branch: main
+    repo_type: github
+    source_repo:
+      org: devstream-io
+      repo: dtm-scaffolding-golang
+
+# variables.yaml sample:
+githubUsername: daniel-hutao
+repo: go-webapp-demo
