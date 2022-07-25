@@ -27,7 +27,7 @@ values_yaml: |
 
 #### 外部存储
 
-- Postgresql：设置  `database.url` 来设置数据库地址，具体配置可参考 [config](https://www.jfrog.com/confluence/display/JFROG/Configuring+the+Database) 中的选项。
+- PostgreSQL：设置  `database.url` 来设置数据库地址，具体配置可参考 [Config](https://www.jfrog.com/confluence/display/JFROG/Configuring+the+Database) 中的选项。
 
 #### 磁盘存储
 

@@ -27,7 +27,7 @@ In this configuration
 
 #### External Storage
 
-- Postgresql: Set the `database.url` to Postgresql's address. More info can be found in [config](https://www.jfrog.com/confluence/display/JFROG/Configuring+the+Database).
+- PostgreSQL: Set the `database.url` to Postgresql's address. More info can be found in [Config](https://www.jfrog.com/confluence/display/JFROG/Configuring+the+Database).
 
 #### Disk Storage
 
