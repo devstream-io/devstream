@@ -1,0 +1,24 @@
+tools:
+# name of the tool
+- name: reposcaffolding
+  # id of the tool instance
+  instanceID: default
+  # format: name.instanceID; If specified, dtm will make sure the dependency is applied first before handling this tool.
+  dependsOn: [ ]
+  # options for the plugin
+  options:
+    # desination_repo is the config for desination repo
+    destination_repo:
+      owner: YOUR_GITHUB_USERNAME
+      org: YOUR_GITHUB_ORGANIZATION_NAME
+      repo: YOUR_GITHUB_REPO_NAME
+      branch: YOUR_GITHUB_REPO_MAIN_BRANCH
+    # repo_type is the type of repo to push, support github|gitlab
+    repo_type: YOUR_REPO_TYPE
+    # source_repo is the template repo location, support github only
+    source_repo:
+      org: YOUR_TEMPLATE_REPO_ORG
+      repo: YOUR_TEMPLATE_REPO_NAME
+    # this is used for template render
+    vars:
+      ImageRepo: YOUR_DOCKERHUB_REPOSITORY
