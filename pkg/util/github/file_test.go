@@ -7,7 +7,7 @@ import (
 )
 
 type fileTest struct {
-	baseTest
+	BaseTest
 	content      []byte
 	filePath     string
 	targetBranch string
@@ -15,12 +15,12 @@ type fileTest struct {
 }
 
 func TestClient_CreateFile(t *testing.T) {
-	mux, serverUrl, teardown := setup(t)
+	mux, serverUrl, teardown := Setup()
 	defer teardown()
 	tests := []fileTest{
 		// TODO: Add test cases.
 		{
-			baseTest{"base ", getClientWithOption(
+			BaseTest{"base ", GetClientWithOption(
 				t, &Option{Owner: "o", Repo: "r", Org: "or"}, serverUrl,
 			),
 				"/repos/or/r/contents/a", http.MethodPut, true, `{"message":"Initialize the repository","content":"Yw==","branch":"b"}`, ""},
@@ -30,7 +30,7 @@ func TestClient_CreateFile(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			mux.HandleFunc(tt.registerUrl, func(w http.ResponseWriter, r *http.Request) {
-				testMethod(t, r, tt.wantMethod)
+				DoTestMethod(t, r, tt.wantMethod)
 				fmt.Fprint(w, tt.respBody)
 			})
 			if err := tt.client.CreateFile(tt.content, tt.filePath, tt.targetBranch); (err != nil) != tt.wantErr {

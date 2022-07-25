@@ -9,24 +9,24 @@ import (
 )
 
 type releaseTest struct {
-	baseTest
+	BaseTest
 	wantTag string
 	wantErr bool
 }
 
 func TestClient_GetLatestReleaseTagName(t *testing.T) {
-	mux, serverUrl, teardown := setup(t)
+	mux, serverUrl, teardown := Setup()
 	defer teardown()
 
 	tests := []releaseTest{
 		{
-			baseTest{"base err != nil", getClientWithOption(
+			BaseTest{"base err != nil", GetClientWithOption(
 				t, &Option{Owner: ""}, serverUrl,
 			),
 				"/repos2/o/r/releases/latest", http.MethodGet, false, "", ""},
 			"", true},
 		{
-			baseTest{"base 200", getClientWithOption(
+			BaseTest{"base 200", GetClientWithOption(
 				t, &Option{Owner: "", Org: "o", Repo: "r"}, serverUrl,
 			),
 				"/repos/o/r/releases/latest", http.MethodGet, false, "", `{"id":3,"tag_name":"v1.0.0"}`},
@@ -35,8 +35,8 @@ func TestClient_GetLatestReleaseTagName(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			mux.HandleFunc(tt.registerUrl, func(w http.ResponseWriter, r *http.Request) {
-				testMethod(t, r, tt.wantMethod)
-				testBody(t, r, "")
+				DoTestMethod(t, r, tt.wantMethod)
+				DoTestBody(t, r, "")
 				fmt.Fprint(w, `{"id":3,"tag_name":"v1.0.0"}`)
 			})
 			tag, err := tt.client.GetLatestReleaseTagName()

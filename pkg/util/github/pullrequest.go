@@ -57,9 +57,8 @@ func (c *Client) MergePullRequest(number int, mergeMethod MergeMethod) error {
 
 	commitMsg := "Initialized by DevStream"
 	ret, _, err := c.PullRequests.Merge(c.Context, owner, c.Repo, number, commitMsg, &github.PullRequestOptions{
-		CommitTitle: commitMsg,
-		SHA:         "",
-		// "merge", "squash", and "rebase"
+		CommitTitle:        commitMsg,
+		SHA:                "",
 		MergeMethod:        string(mergeMethod),
 		DontDefaultIfBlank: false,
 	})
