@@ -41,9 +41,10 @@ func NewJenkins(jenkinsURL, username, password string) (*Jenkins, error) {
 	// create gojenkins client
 	gojenkinsClient := gojenkins.CreateJenkins(nil, jenkinsURL, username, password)
 	ctx := context.Background()
+
 	// init and validate client
 	if _, err := gojenkinsClient.Init(ctx); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to init jenkins client: %v", err)
 	}
 
 	return &Jenkins{

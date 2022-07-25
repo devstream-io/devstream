@@ -41,7 +41,6 @@ func (j *Jenkins) GetCrumb() (crumbHeaderKey, crumbHeaderValue string, cookie st
 	log.Debugf("crumb: %+v", crumbResp)
 
 	return crumbResp.CrumbRequestField, crumbResp.Crumb, resp.Header.Get("set-cookie"), nil
-
 }
 
 // SetCrumb sets the jenkins crumb to the request
@@ -57,5 +56,4 @@ func (j *Jenkins) SetCrumb(req *gorequest.SuperAgent) error {
 	req.SetBasicAuth(j.BasicAuth.Username, j.BasicAuth.Password)
 
 	return nil
-
 }
