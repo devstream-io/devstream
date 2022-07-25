@@ -36,7 +36,9 @@ export GITHUB_TOKEN="<YOUR_GITHUB_PERSONAL_ACCESS_TOKEN_HERE>"
 export DOCKERHUB_USERNAME="<YOUR_DOCKER_HUB_USER_NAME_HERE>"
 ```
 
-> 小贴士：如果你不知道怎么获取 GitHub token，可以前往 [GitHub 官方文档](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) 。
+> 小贴士：前往 [Personal Access Token](https://github.com/settings/tokens/new) 为 `dtm` 生成新的 `GITHUB_TOKEN`。 
+> 
+> 对于“快速开始”，我们只需要勾选 `repo`、`workflow`、`delete_repo` 权限，但我们更建议你全部勾选，未来的插件可能需要更多权限。
 
 接着，让我们运行以下命令，以使用环境变量来修改配置文件：
 
