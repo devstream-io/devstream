@@ -10,3 +10,13 @@ body:
     description: Please provide as much info as possible.
   validations:
     required: true
+- type: checkboxes
+  id: terms
+  attributes:
+    label: Please read the documents below.
+    description: |
+      1. [Creating a Documentation for DevStream](https://docs.devstream.io/en/latest/development/mkdocs/)
+      2. [Document Translation(Chinese only)](https://docs.devstream.io/en/latest/development/translation.zh/)
+    options:
+      - label: I've read the documents above. (If you want to submit a document type contribution.)
+        required: false
