@@ -8,12 +8,12 @@ import (
 
 // Options is the struct for parameters used by the goclient install config.
 type Options struct {
-	Namespace              string                  `validate:"required"`
-	StorageClassName       string                  `validate:"required"`
-	PersistentVolumes      []PersistentVolume      `validate:"required"`
-	PersistentVolumeClaims []PersistentVolumeClaim `validate:"required"`
-	Deployment             Deployment              `validate:"required"`
-	Service                Service                 `validate:"required"`
+	Namespace              string                   `validate:"required"`
+	StorageClassName       string                   `validate:"required"`
+	PersistentVolumes      []*PersistentVolume      `validate:"required"`
+	PersistentVolumeClaims []*PersistentVolumeClaim `validate:"required"`
+	Deployment             *Deployment              `validate:"required"`
+	Service                *Service                 `validate:"required"`
 }
 
 type PersistentVolume struct {
@@ -31,7 +31,7 @@ type Deployment struct {
 	Name     string `validate:"required"`
 	Replicas int    `validate:"required"`
 	Image    string `validate:"required"`
-	Env      Env    `validate:"required"`
+	Envs     []*Env `validate:"required"`
 }
 
 type Service struct {

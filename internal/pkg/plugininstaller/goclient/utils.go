@@ -1,8 +1,7 @@
 package goclient
 
 import (
-	"strings"
-
+	corev1 "k8s.io/api/core/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 
 	"github.com/devstream-io/devstream/pkg/util/k8s"
@@ -18,7 +17,7 @@ func checkDeploymentsAndServicesReady(kubeClient *k8s.Client, opts *Options) (bo
 	dp, err := kubeClient.GetDeployment(namespace, deploy)
 	if err != nil {
 		log.Debugf("Get deployment err: %s", err.Error())
-		if strings.Contains(err.Error(), "not found") {
+		if kerr.IsNotFound(err) {
 			return false, nil
 		}
 		return false, err
@@ -33,7 +32,7 @@ func checkDeploymentsAndServicesReady(kubeClient *k8s.Client, opts *Options) (bo
 	_, err = kubeClient.GetService(namespace, svc)
 	if err != nil {
 		log.Debugf("Get service err: %s", err.Error())
-		if strings.Contains(err.Error(), "not found") {
+		if kerr.IsNotFound(err) {
 			return false, nil
 		}
 		return false, err
@@ -47,14 +46,14 @@ func checkDeploymentsAndServicesReady(kubeClient *k8s.Client, opts *Options) (bo
 func deleteApp(kubeClient *k8s.Client, opts *Options) error {
 	// 1. Delete service
 	if err := kubeClient.DeleteService(opts.Namespace, opts.Service.Name); err != nil {
-		if !strings.Contains(err.Error(), "not found") {
+		if !kerr.IsNotFound(err) {
 			return err
 		}
 	}
 
 	// 2. Delete deployment
 	if err := kubeClient.DeleteDeployment(opts.Namespace, opts.Deployment.Name); err != nil {
-		if !strings.Contains(err.Error(), "not found") {
+		if !kerr.IsNotFound(err) {
 			return err
 		}
 	}
@@ -85,4 +84,33 @@ func isDevstreamNSExists(kubeClient *k8s.Client, namespace string) (bool, error)
 		}
 	}
 	return false, nil
+}
+
+// Generate []corev1.Volume for deployment from Options.PersistentVolumeClaims
+func (opts *Options) genVolumesForDeployment() []corev1.Volume {
+	var v []corev1.Volume
+	for _, pvc := range opts.PersistentVolumeClaims {
+		v = append(v, corev1.Volume{
+			Name: pvc.PVCName,
+			VolumeSource: corev1.VolumeSource{
+				PersistentVolumeClaim: &corev1.PersistentVolumeClaimVolumeSource{
+					ClaimName: pvc.PVCName,
+				},
+			},
+		})
+	}
+
+	return v
+}
+
+// Generate []corev1.EnvVar for deployment from Options.PersistentVolumeClaims
+func (opts *Options) genEnvsForDeployment() []corev1.EnvVar {
+	var e []corev1.EnvVar
+	for _, env := range opts.Deployment.Envs {
+		e = append(e, corev1.EnvVar{
+			Name:  env.Key,
+			Value: env.Value,
+		})
+	}
+	return e
 }

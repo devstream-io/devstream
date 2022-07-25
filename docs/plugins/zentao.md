@@ -64,10 +64,10 @@ tools:
         replicas: 1
         # ZenTao image
         image: 'easysoft/zentao:latest'
-        env:
-          key: 'MYSQL_ROOT_PASSWORD'
-          # initial password value for mysql database, you can specify any value you like
-          value: '12345678'
+        envs:
+          - key: 'MYSQL_ROOT_PASSWORD'
+            # initial password value for mysql database, you can specify any value you like
+            value: '123456'
       # ZenTao application is exposed via K8s Service
       service:
         # name of ZenTao service

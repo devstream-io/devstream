@@ -190,17 +190,8 @@ func CreateDeploymentWrapperLabelAndContainerPorts(label map[string]string, cont
 			return err
 		}
 
-		var v []corev1.Volume
-		for _, pvc := range opts.PersistentVolumeClaims {
-			v = append(v, corev1.Volume{
-				Name: pvc.PVCName,
-				VolumeSource: corev1.VolumeSource{
-					PersistentVolumeClaim: &corev1.PersistentVolumeClaimVolumeSource{
-						ClaimName: pvc.PVCName,
-					},
-				},
-			})
-		}
+		volumes := opts.genVolumesForDeployment()
+		envs := opts.genEnvsForDeployment()
 
 		deployment := &appsv1.Deployment{
 			ObjectMeta: metav1.ObjectMeta{
@@ -219,16 +210,11 @@ func CreateDeploymentWrapperLabelAndContainerPorts(label map[string]string, cont
 							{
 								Name:  name,
 								Image: opts.Deployment.Image,
-								Env: []corev1.EnvVar{
-									{
-										Name:  opts.Deployment.Env.Key,
-										Value: opts.Deployment.Env.Value,
-									},
-								},
+								Env:   envs,
 								Ports: *containerPorts,
 							},
 						},
-						Volumes: v,
+						Volumes: volumes,
 					},
 				},
 			},
