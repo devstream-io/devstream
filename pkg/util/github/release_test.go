@@ -8,27 +8,29 @@ import (
 	"gotest.tools/assert/cmp"
 )
 
+type releaseTest struct {
+	baseTest
+	wantTag string
+	wantErr bool
+}
+
 func TestClient_GetLatestReleaseTagName(t *testing.T) {
 	mux, serverUrl, teardown := setup(t)
 	defer teardown()
 
-	tests := []struct {
-		name        string
-		client      *Client
-		registerUrl string
-		wantMethod  string
-		wantReqBody bool
-		reqBody     string
-		respBody    string
-		wantTag     string
-		wantErr     bool
-	}{
-		{"base err != nil", getClientWithOption(
-			t, &Option{Owner: ""}, serverUrl,
-		), "/repos2/o/r/releases/latest", http.MethodGet, false, "", "", "", true},
-		{"base 200", getClientWithOption(
-			t, &Option{Owner: "", Org: "o", Repo: "r"}, serverUrl,
-		), "/repos/o/r/releases/latest", http.MethodGet, false, "", `{"id":3,"tag_name":"v1.0.0"}`, "v1.0.0", false},
+	tests := []releaseTest{
+		{
+			baseTest{"base err != nil", getClientWithOption(
+				t, &Option{Owner: ""}, serverUrl,
+			),
+				"/repos2/o/r/releases/latest", http.MethodGet, false, "", ""},
+			"", true},
+		{
+			baseTest{"base 200", getClientWithOption(
+				t, &Option{Owner: "", Org: "o", Repo: "r"}, serverUrl,
+			),
+				"/repos/o/r/releases/latest", http.MethodGet, false, "", `{"id":3,"tag_name":"v1.0.0"}`},
+			"v1.0.0", false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

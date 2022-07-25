@@ -34,6 +34,16 @@ var (
 	}
 )
 
+type baseTest struct {
+	name        string //test name
+	client      *Client
+	registerUrl string // url resigtered in mock server
+	wantMethod  string // wanted method in mock server
+	wantReqBody bool   // want request body nor not in mock server
+	reqBody     string // content of request body
+	respBody    string // content of response body
+}
+
 func testMethod(t *testing.T, r *http.Request, want string) {
 	if got := r.Method; got != want {
 		t.Errorf("Request method: %v, want %v", got, want)
