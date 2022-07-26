@@ -7,6 +7,13 @@ import (
 	"github.com/spf13/viper"
 )
 
+type RegistryType string
+
+const (
+	RegistryDockerhub RegistryType = "dockerhub"
+	RegistryHarbor    RegistryType = "harbor"
+)
+
 // Options is the struct for configurations of the gitlabci-java plugin.
 type Options struct {
 	PathWithNamespace string   `validate:"required"`
@@ -18,26 +25,31 @@ type Options struct {
 }
 
 type BaseOption struct {
-	Enable bool `validate:"required"`
-	Image  string
-	Tags   string
+	Enable        bool
+	Image         string
+	Tags          string
+	AllowedBranch []string
 }
 
 type Package struct {
-	BaseOption    `validate:"required"`
+	*BaseOption
 	ScriptCommand []string
 }
 
 type Build struct {
-	BaseOption `validate:"required"`
-	UserName   string
-	ImageName  string
-
+	*BaseOption
+	Registry      *Registry
+	ImageName     string
 	ScriptCommand []string
 }
 
+type Registry struct {
+	Type     RegistryType
+	Username string
+}
+
 type Deploy struct {
-	BaseOption    `validate:"required"`
+	*BaseOption
 	ScriptCommand []template.HTML
 	K8sAgentName  string
 }
@@ -73,6 +85,10 @@ func (p *Package) setup() {
 	if p.Tags == "" {
 		p.Tags = defaultTags
 	}
+
+	if len(p.AllowedBranch) == 0 {
+		p.AllowedBranch = append(p.AllowedBranch, "main")
+	}
 }
 
 func (b *Build) setup() error {
@@ -87,9 +103,9 @@ func (b *Build) setup() error {
 		}
 
 		defaultDuildScripts := []string{
-			fmt.Sprintf("- docker login -u %s -p %s", b.UserName, dockerhubToken),
-			fmt.Sprintf("- docker build -t %s/%s:$CI_PIPELINE_ID .", b.UserName, b.ImageName),
-			fmt.Sprintf("- docker push %s/%s:$CI_PIPELINE_ID", b.UserName, b.ImageName),
+			fmt.Sprintf("docker login -u %s -p %s", b.Registry.Username, dockerhubToken),
+			fmt.Sprintf("docker build -t %s/%s:$CI_PIPELINE_ID .", b.Registry.Username, b.ImageName),
+			fmt.Sprintf("docker push %s/%s:$CI_PIPELINE_ID", b.Registry.Username, b.ImageName),
 		}
 
 		b.ScriptCommand = append(b.ScriptCommand, defaultDuildScripts...)
@@ -98,6 +114,11 @@ func (b *Build) setup() error {
 	if b.Tags == "" {
 		b.Tags = defaultTags
 	}
+
+	if len(b.AllowedBranch) == 0 {
+		b.AllowedBranch = append(b.AllowedBranch, "main")
+	}
+
 	return nil
 }
 
@@ -108,12 +129,12 @@ func (d *Deploy) setup(opts *Options) {
 
 	if len(d.ScriptCommand) == 0 {
 		defalutDeployScripts := []template.HTML{
-			"- kubectl config get-contexts",
+			"kubectl config get-contexts",
 			template.HTML(fmt.Sprintf("- kubectl config use-context %s:%s", opts.PathWithNamespace, d.K8sAgentName)),
-			"- cd manifests",
-			template.HTML(`- sed -i "s/IMAGE_TAG/$CI_PIPELINE_ID/g" deployment.yaml`),
-			"- cat deployment.yaml",
-			"- kubectl apply -f deployment.yaml",
+			"cd manifests",
+			template.HTML(`sed -i "s/IMAGE_TAG/$CI_PIPELINE_ID/g" deployment.yaml`),
+			"cat deployment.yaml",
+			"kubectl apply -f deployment.yaml",
 		}
 		d.ScriptCommand = append(d.ScriptCommand, defalutDeployScripts...)
 	}
@@ -121,4 +142,9 @@ func (d *Deploy) setup(opts *Options) {
 	if d.Tags == "" {
 		d.Tags = defaultTags
 	}
+
+	if len(d.AllowedBranch) == 0 {
+		d.AllowedBranch = append(d.AllowedBranch, "main")
+	}
+
 }

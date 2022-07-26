@@ -29,8 +29,17 @@ func validate(opts *Options) []error {
 func (b *Build) validate() []error {
 	retErrors := make([]error, 0)
 
-	if b.UserName == "" {
-		retErrors = append(retErrors, fmt.Errorf("dockerhub username is empty"))
+	if b.Registry.Username == "" {
+		retErrors = append(retErrors, fmt.Errorf("registry username is empty"))
+	}
+
+	if b.Registry.Type == "" {
+		b.Registry.Type = RegistryDockerhub
+		return retErrors
+	}
+
+	if b.Registry.Type != RegistryDockerhub && b.Registry.Type != RegistryHarbor {
+		retErrors = append(retErrors, fmt.Errorf("registry type != (dockerhub || harbor)"))
 	}
 
 	if b.ImageName == "" {
