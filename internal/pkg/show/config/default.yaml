@@ -19,10 +19,11 @@ tools:
       org: ""
       repo: [[ repo ]]
       branch: main
-    repo_type: github
+      repo_type: github
     source_repo:
       org: devstream-io
       repo: dtm-scaffolding-golang
+      repo_type: github
 
 # variables.yaml sample:
 githubUsername: daniel-hutao

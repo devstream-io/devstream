@@ -25,7 +25,7 @@ func GetStaticState(options plugininstaller.RawOptions) (map[string]interface{},
 	outputs["org"] = dstRepo.Org
 	outputs["repo"] = dstRepo.Repo
 
-	switch opts.RepoType {
+	switch dstRepo.RepoType {
 	case "github":
 		if dstRepo.Owner != "" {
 			outputs["repoURL"] = fmt.Sprintf("https://github.com/%s/%s.git", dstRepo.Owner, dstRepo.Repo)
@@ -54,13 +54,14 @@ func GetDynamicState(options plugininstaller.RawOptions) (map[string]interface{}
 	if err != nil {
 		return nil, err
 	}
-	switch opts.RepoType {
+	dstRepo := opts.DestinationRepo
+	switch dstRepo.RepoType {
 	case "github":
-		return getGithubStatus(opts.DestinationRepo)
+		return getGithubStatus(dstRepo)
 	case "gitlab":
-		return getGitlabStatus(opts.DestinationRepo)
+		return getGitlabStatus(dstRepo)
 	default:
-		return nil, fmt.Errorf("read state not support repo type: %s", opts.RepoType)
+		return nil, fmt.Errorf("read state not support repo type: %s", dstRepo.RepoType)
 	}
 
 }

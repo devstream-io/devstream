@@ -55,12 +55,13 @@ tools:
       org: ""
       repo: golang-demo
       branch: main
+      repo_type: github
     vars:
       ImageRepo: "ironcore864/golang-demo"
-    repo_type: github
     source_repo:
       org: devstream-io
       repo: dtm-scaffolding-golang
+      repo_type: github
 - name: argocd
   instanceID: default
   options:

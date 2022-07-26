@@ -67,12 +67,13 @@ tools:
       org: ""
       repo: [[ repoName ]]
       branch: [[ defaultBranch ]]
+      repo_type: github
     vars:
       ImageRepo: "[[ dockerhubUsername ]]/[[ repoName ]]"
-    repo_type: github
     source_repo:
       org: devstream-io
       repo: dtm-scaffolding-golang
+      repo_type: github
 - name: jira-github-integ
   instanceID: default
   dependsOn: [ "repo-scaffolding.golang-github" ]

@@ -38,12 +38,13 @@
 
 这个是目标仓库的配置，包括以下几个配置项：
 
-- `YOUR_GITHUB_USERNAME`
-- `YOUR_GITHUB_ORGANIZATION_NAME`
-- `YOUR_GITHUB_REPO_NAME`
-- `YOUR_GITHUB_REPO_MAIN_BRANCH`
+- `YOUR_DESTINATION_USERNAME`
+- `YOUR_DESTINATION_ORGANIZATION_NAME`
+- `YOUR_DESTINATION_REPO_NAME`
+- `YOUR_DESTINATION_REPO_MAIN_BRANCH`
+- `YOUR_DESTINATION_REPO_TYPE`
 
-`owner`，`org` 和 `repo` 目前是必填的，`branch` 的默认值是  "main"。
+`owner`，`org` 和 `repo` 目前是必填的，`branch` 的默认值是  "main"，`repo_type` 配置目前支持 `gitlab` 和 `github`。
 
 ### source_repo
 
@@ -51,12 +52,9 @@
 
 - `YOUR_TEMPLATE_REPO_ORG`
 - `YOUR_TEMPLATE_REPO_NAME`
+- `YOUR_TEMPLATE_REPO_TYPE`
 
-目前这两个配置项都是必填的。
-
-### repo_type
-
-这个配置用于设置推送的目标仓库类型，目前支持 `GitLab` 和 `github`。
+目前这两个配置项都是必填的，`repo_type` 配置目前只支持 `github`。
 
 ### vars
 
@@ -96,10 +94,11 @@ tools:
         org: ""
         repo: dtm-test-golang
         branch: main
-      repo_type: github
+        repo_type: github
       source_repo:
         org: devstream-io
         repo: dtm-scaffolding-golang
+        repo_type: github
       vars:
         ImageRepo: dtm-test/golang-repo
 ```
@@ -120,10 +119,11 @@ tools:
         branch: main
         baseUrl: 127.0.0.1:30001
         visibility: public
-      repo_type: gitlab
+        repo_type: gitlab
       source_repo:
         org: spring-guides
         repo: gs-spring-boot
+        repo_type: github
 ```
 
 这个配置会在 GitLab 为用户 test_owner 创建 `dtm-test-java` 仓库，使用的是 Spring 官方的 `spring-guides/gs-spring-boot` 仓库。

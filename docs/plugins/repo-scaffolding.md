@@ -40,12 +40,13 @@ Replace the following from the config above:
 
 This configuration is used for the target repo, it includes the following config.
 
-- `YOUR_GITHUB_USERNAME`
-- `YOUR_GITHUB_ORGANIZATION_NAME`
-- `YOUR_GITHUB_REPO_NAME`
-- `YOUR_GITHUB_REPO_MAIN_BRANCH`
+- `YOUR_DESTINATION_USERNAME`
+- `YOUR_DESTINATION_ORGANIZATION_NAME`
+- `YOUR_DESTINATION_REPO_NAME`
+- `YOUR_DESTINATION_REPO_MAIN_BRANCH`
+- `YOUR_DESTINATION_REPO_TYPE` 
 
-Currently, `owner`, `org`, and `repo` are mandatory, `branch` has the default value "main".
+Currently, `owner`, `org`, and `repo` are mandatory, `branch` has the default value "main", `repo_type` support  `gitlab` and `github` for now. 
 
 ### source_repo
 
@@ -53,12 +54,9 @@ This configuration is used for the source scaffolding repoI(only supports GitHub
 
 - `YOUR_TEMPLATE_REPO_ORG`
 - `YOUR_TEMPLATE_REPO_NAME`
+- `YOUR_TEMPLATE_REPO_TYPE`
 
-All the parameters in the example above are mandatory for now.
-
-### repo_type
-
-This configuration is used for destination_repo location, `gitlab` and `github` can be used for now. 
+All the parameters in the example above are mandatory for now, `repo_type` only support `github` for now. 
 
 ### vars
 
@@ -98,10 +96,11 @@ tools:
         org: ""
         repo: dtm-test-golang
         branch: main
-      repo_type: github
+        repo_type: github
       source_repo:
         org: devstream-io
         repo: dtm-scaffolding-golang
+        repo_type: github
       vars:
         ImageRepo: dtm-test/golang-repo
 ```
@@ -122,10 +121,11 @@ tools:
         branch: main
         baseUrl: 127.0.0.1:30001
         visibility: public
-      repo_type: gitlab
+        repo_type: gitlab
       source_repo:
         org: spring-guides
         repo: gs-spring-boot
+        repo_type: github
 ```
 
 this config will create `dtm-test-java` repo for user test_owner in GitHub.

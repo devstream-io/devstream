@@ -33,15 +33,16 @@ func InstallRepo(options plugininstaller.RawOptions) error {
 		return err
 	}
 
+	dstRepo := opts.DestinationRepo
 	// 2. Push local repo to remote
 	repoLoc := filepath.Join(dirName, opts.DestinationRepo.Repo)
-	switch opts.RepoType {
+	switch dstRepo.RepoType {
 	case "github":
 		err = opts.PushToRemoteGithub(repoLoc)
 	case "gitlab":
 		err = opts.PushToRemoteGitlab(repoLoc)
 	default:
-		err = fmt.Errorf("scaffolding not support repo destination: %s", opts.RepoType)
+		err = fmt.Errorf("scaffolding not support repo destination: %s", dstRepo.RepoType)
 	}
 	if err != nil {
 		return err
@@ -57,7 +58,8 @@ func DeleteRepo(options plugininstaller.RawOptions) error {
 		return err
 	}
 
-	switch opts.RepoType {
+	dstRepo := opts.DestinationRepo
+	switch dstRepo.RepoType {
 	case "github":
 		// 1. create ghClient
 		ghClient, err := opts.DestinationRepo.createGithubClient(true)
@@ -67,12 +69,11 @@ func DeleteRepo(options plugininstaller.RawOptions) error {
 		// 2. delete github repo
 		return ghClient.DeleteRepo()
 	case "gitlab":
-		dstRepo := opts.DestinationRepo
 		gLclient, err := dstRepo.createGitlabClient()
 		if err != nil {
 			return err
 		}
 		return gLclient.DeleteProject(dstRepo.PathWithNamespace)
 	}
-	return fmt.Errorf("scaffolding not support repo destination: %s", opts.RepoType)
+	return fmt.Errorf("scaffolding not support repo destination: %s", dstRepo.RepoType)
 }

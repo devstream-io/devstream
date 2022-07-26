@@ -82,7 +82,7 @@ var (
 var pluginDefaultConfigs = map[string]string{
 	"argocd":                      ArgocdDefaultConfig,
 	"argocdapp":                   ArgocdappDefaultConfig,
-  "artifactory":                 ArtifactoryDefaultConfig,
+	"artifactory":                 ArtifactoryDefaultConfig,
 	"devlake":                     DevlakeDefaultConfig,
 	"githubactions-golang":        GithubactionsGolangDefaultConfig,
 	"githubactions-nodejs":        GithubactionsNodejsDefaultConfig,

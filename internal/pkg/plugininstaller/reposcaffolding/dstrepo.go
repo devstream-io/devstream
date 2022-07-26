@@ -20,7 +20,8 @@ type DstRepo struct {
 	Repo              string `validate:"required"`
 	Branch            string `validate:"required"`
 	PathWithNamespace string
-	// TODO(steinliber): used for gitlab
+	RepoType          string `validate:"oneof=gitlab github" mapstructure:"repo_type"`
+	// This is config for gitlab
 	BaseURL    string `validate:"omitempty,url"`
 	Visibility string `validate:"omitempty,oneof=public private internal"`
 }
