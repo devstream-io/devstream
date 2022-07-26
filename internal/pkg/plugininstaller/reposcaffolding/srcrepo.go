@@ -15,7 +15,7 @@ var srcDefaultBranch = "main"
 type SrcRepo struct {
 	Repo     string `validate:"required"`
 	Org      string `validate:"required"`
-	RepoType string `validate:"oneof=gitlab github" mapstructure:"repo_type"`
+	RepoType string `validate:"oneof=github" mapstructure:"repo_type"`
 }
 
 func (t *SrcRepo) DownloadRepo(workpath string) error {
