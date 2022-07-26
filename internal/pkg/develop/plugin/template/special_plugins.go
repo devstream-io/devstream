@@ -13,9 +13,9 @@ func NewSpecialPlugin(dirName string, packageName string) *SpecialPlugin {
 }
 
 var SpecialPluginNameMap = map[string]*SpecialPlugin{
-	"gitlabci-golang":                NewSpecialPlugin("gitlabci/golang", "gitlabci"),
-	"gitlabci-generic":               NewSpecialPlugin("gitlabci/generic", "generic"),
-	"githubactions-golang":           NewSpecialPlugin("githubactions/golang", "golang"),
-	"githubactions-nodejs":           NewSpecialPlugin("githubactions/nodejs", "nodejs"),
-	"githubactions-python":           NewSpecialPlugin("githubactions/python", "python"),
+	"gitlabci-golang":      NewSpecialPlugin("gitlabci/golang", "gitlabci"),
+	"gitlabci-generic":     NewSpecialPlugin("gitlabci/generic", "generic"),
+	"githubactions-golang": NewSpecialPlugin("githubactions/golang", "golang"),
+	"githubactions-nodejs": NewSpecialPlugin("githubactions/nodejs", "nodejs"),
+	"githubactions-python": NewSpecialPlugin("githubactions/python", "python"),
 }

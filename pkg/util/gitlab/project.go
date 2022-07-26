@@ -80,6 +80,7 @@ func (c *Client) DescribeProject(project string) (*gitlab.Project, error) {
 	res, _, err := c.Projects.GetProject(project, p)
 
 	if err != nil {
+		log.Debugf("gitlab project: get [%s] info error %s", project, err)
 		return nil, err
 	}
 

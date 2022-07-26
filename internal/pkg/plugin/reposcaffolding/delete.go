@@ -10,6 +10,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 	runner := &plugininstaller.Runner{
 		PreExecuteOperations: []plugininstaller.MutableOperation{
 			reposcaffolding.Validate,
+			reposcaffolding.SetDefaultTemplateRepo,
 		},
 		ExecuteOperations: []plugininstaller.BaseOperation{
 			reposcaffolding.DeleteRepo,

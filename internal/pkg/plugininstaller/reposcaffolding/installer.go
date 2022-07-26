@@ -51,18 +51,28 @@ func InstallRepo(options plugininstaller.RawOptions) error {
 
 // DeleteRepo will delete repo by options
 func DeleteRepo(options plugininstaller.RawOptions) error {
+	var err error
 	opts, err := NewOptions(options)
 	if err != nil {
 		return err
 	}
 
-	// 1. create ghClient
-	dstRepo := &opts.DestinationRepo
-	ghClient, err := dstRepo.createGithubClient(true)
-	if err != nil {
-		return err
+	switch opts.RepoType {
+	case "github":
+		// 1. create ghClient
+		ghClient, err := opts.DestinationRepo.createGithubClient(true)
+		if err != nil {
+			return err
+		}
+		// 2. delete github repo
+		return ghClient.DeleteRepo()
+	case "gitlab":
+		dstRepo := opts.DestinationRepo
+		gLclient, err := dstRepo.createGitlabClient()
+		if err != nil {
+			return err
+		}
+		return gLclient.DeleteProject(dstRepo.PathWithNamespace)
 	}
-
-	// 2. delete github repo
-	return ghClient.DeleteRepo()
+	return fmt.Errorf("scaffolding not support repo destination: %s", opts.RepoType)
 }

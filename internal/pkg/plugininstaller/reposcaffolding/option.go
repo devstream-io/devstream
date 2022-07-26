@@ -14,9 +14,9 @@ const (
 )
 
 type Options struct {
-	RepoType        string  `validate:"oneof=gitlab github" mapstructure:"repo_type"`
-	SourceRepo      SrcRepo `validate:"required" mapstructure:"source_repo"`
-	DestinationRepo DstRepo `validate:"required" mapstructure:"destination_repo"`
+	RepoType        string   `validate:"oneof=gitlab github" mapstructure:"repo_type"`
+	SourceRepo      *SrcRepo `validate:"required" mapstructure:"source_repo"`
+	DestinationRepo *DstRepo `validate:"required" mapstructure:"destination_repo"`
 	Vars            map[string]interface{}
 }
 
@@ -52,7 +52,7 @@ func (opts *Options) CreateAndRenderLocalRepo(workpath string) error {
 
 // PushToRemoteGitLab push local repo to remote gitlab repo
 func (opts *Options) PushToRemoteGitlab(repoPath string) error {
-	dstRepo := &opts.DestinationRepo
+	dstRepo := opts.DestinationRepo
 	// 1. init gitlab client
 	c, err := dstRepo.createGitlabClient()
 	if err != nil {
@@ -90,7 +90,7 @@ func (opts *Options) PushToRemoteGitlab(repoPath string) error {
 
 // PushToRemoteGithub push local repo to remote github repo
 func (opts *Options) PushToRemoteGithub(repoPath string) error {
-	dstRepo := &opts.DestinationRepo
+	dstRepo := opts.DestinationRepo
 	// 1. init github client
 	ghClient, err := dstRepo.createGithubClient(true)
 	if err != nil {
