@@ -18,11 +18,15 @@ tools:
         # Set true to enable package function
         enable: True
         # The docker iamge used for packaging, default use "maven:3.6.2-jdk-14"
-        Image: "IMAGE_FOR_PACKAGE"
+        image: "IMAGE_FOR_PACKAGE"
         # The Gitlab runner tag, you should set up a runner first, default use name "gitlab-java"
-        Tags: "YOUR_GITLAB_RUNNER_TAG"
+        tags: "YOUR_GITLAB_RUNNER_TAG"
+        # Package step will run on the specified branchs, default use "main"
+        allowedBranch:
+          - "main"
+          - "test"
       # Customized pipeline scripts. Leave it blank to use default value. 
-      ScriptCommand:
+      scriptCommand:
         - "YOUR_PACKAGE_SCRIPTS"
     build:
       # Same as above

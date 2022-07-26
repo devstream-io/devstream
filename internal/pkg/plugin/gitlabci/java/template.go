@@ -5,7 +5,7 @@ import (
 	"html/template"
 )
 
-var gitlab_ci_template = `
+var gitlabCITemplate = `
 image: docker:stable
 
 stages:
@@ -21,11 +21,15 @@ mvn_package_job:
     - {{.Package.BaseOption.Tags}}
   script: 
     {{range .Package.ScriptCommand}}
-    {{.}}
+    - {{.}}
     {{end}} 
   artifacts:
     paths:
       - target/*.jar
+  only:
+    {{range .Package.BaseOption.AllowedBranch}}
+    - {{.}}
+    {{end}}
 {{end}}
 
 {{if .Build.Enable}}
@@ -36,8 +40,12 @@ docker_build_job:
     - {{.Build.BaseOption.Tags}}
   script:
     {{range .Build.ScriptCommand}}
-    {{.}}
+    - {{.}}
     {{end}} 
+  only:
+    {{range .Build.BaseOption.AllowedBranch}}
+    - {{.}}
+    {{end}}
 {{end}}
 
 {{if .Deploy.Enable}}
@@ -50,20 +58,21 @@ k8s_deploy_job:
     - {{.Deploy.BaseOption.Tags}}
   script:
     {{range .Deploy.ScriptCommand}}
-    {{.}}
+    - {{.}}
     {{end}} 
+  only:
+    {{range .Deploy.BaseOption.AllowedBranch}}
+    - {{.}}
+    {{end}}
 {{end}}
 `
 
 // Render gitlab-ci.yml template with Options
 func renderTmpl(Opts *Options) (string, error) {
-	t, err := template.New("gitlabci-java").Option("missingkey=error").Parse(gitlab_ci_template)
-	if err != nil {
-		return "", err
-	}
+	t := template.Must(template.New("gitlabci-java").Option("missingkey=error").Parse(gitlabCITemplate))
 
 	var buf bytes.Buffer
-	err = t.Execute(&buf, Opts)
+	err := t.Execute(&buf, Opts)
 	if err != nil {
 		return "", err
 	}

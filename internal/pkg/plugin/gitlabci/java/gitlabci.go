@@ -9,7 +9,7 @@ var (
 	defaultTags = "gitlab-java"
 
 	defaultMVNPackageJobImg    = "maven:3.6.2-jdk-14"
-	defaultMVNPackageJobScript = "- mvn clean package -B"
+	defaultMVNPackageJobScript = "mvn clean package -B"
 
 	defaultDockerBuildJobImg = "docker:latest"
 
