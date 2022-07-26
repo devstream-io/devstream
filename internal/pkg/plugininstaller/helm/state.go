@@ -39,7 +39,7 @@ func GetPluginAllState(options plugininstaller.RawOptions) (map[string]interface
 		state.Workflows.AddStatefulset(sts.Name, sts.Ready)
 	}
 	for _, ds := range allResource.DaemonSet {
-		state.Workflows.AddStatefulset(ds.Name, ds.Ready)
+		state.Workflows.AddDaemonset(ds.Name, ds.Ready)
 	}
 
 	retMap := state.ToStringInterfaceMap()
