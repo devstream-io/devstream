@@ -32,12 +32,12 @@ type BaseOption struct {
 }
 
 type Package struct {
-	*BaseOption
+	*BaseOption   `validate:"required"`
 	ScriptCommand []string
 }
 
 type Build struct {
-	*BaseOption
+	*BaseOption   `validate:"required"`
 	Registry      *Registry
 	ImageName     string
 	ScriptCommand []string
@@ -49,7 +49,7 @@ type Registry struct {
 }
 
 type Deploy struct {
-	*BaseOption
+	*BaseOption   `validate:"required"`
 	ScriptCommand []template.HTML
 	K8sAgentName  string
 }

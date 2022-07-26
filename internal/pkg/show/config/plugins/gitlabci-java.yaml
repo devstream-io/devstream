@@ -32,8 +32,9 @@ tools:
       # Same as above
       baseOption:
         enable: True
-      # DockerHub username
-      userName: "YOUR_DOCKERHUB_USERNAME"
+      registry:
+        # DockerHub username
+        username: "YOUR_DOCKERHUB_USERNAME"
       # Image name for building
       imageName: "YOUR_BUILD_IMAGE"
     deploy:
