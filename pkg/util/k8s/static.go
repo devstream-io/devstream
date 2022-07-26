@@ -25,6 +25,35 @@ func (c *Client) GetNamespace(namespace string) (*corev1.Namespace, error) {
 	return c.CoreV1().Namespaces().Get(context.TODO(), namespace, metav1.GetOptions{})
 }
 
+func (c *Client) ListDevstreamNamespace() (*corev1.NamespaceList, error) {
+	return c.CoreV1().Namespaces().List(context.TODO(), metav1.ListOptions{LabelSelector: "created_by=DevStream"})
+}
+
+// Check whether the given namespace is created by dtm
+// If the given namespace has label "created_by=DevStream", we'll control it.
+// 1. The specified namespace is created by dtm, then it should be deleted
+//    when errors are encountered during creation or `dtm delete`.
+// 2. The specified namespace is controlled by user, maybe they want to deploy plugins in
+//    an existing namespace or other situations, then we should not delete this namespace.
+func (c *Client) IsDevstreamNS(namespace string) (bool, error) {
+	nsList, err := c.ListDevstreamNamespace()
+	if err != nil {
+		// not exist
+		if errors.IsNotFound(err) {
+			return false, nil
+		}
+		return false, err
+	}
+
+	for _, ns := range nsList.Items {
+		// exist
+		if ns.ObjectMeta.Name == namespace {
+			return true, nil
+		}
+	}
+	return false, nil
+}
+
 func (c *Client) CreateNamespace(namespace string) error {
 	ns := &corev1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
@@ -59,4 +88,9 @@ func (c *Client) IsNamespaceExists(namespace string) (bool, error) {
 	}
 	// exist
 	return true, nil
+}
+
+func (c *Client) DeleteService(namespace, serviceName string) error {
+	return c.CoreV1().Services(namespace).
+		Delete(context.TODO(), serviceName, metav1.DeleteOptions{})
 }

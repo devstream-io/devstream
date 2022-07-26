@@ -37,37 +37,37 @@ tools:
       # storageClassName used to match pv and pvc
       storageClassName: 'zentao-storage'
       # two PersistentVolumes for ZenTao and mysql should be specified
-      persistentVolume:
-        # name of ZenTao pv
-        zentaoPVName: 'zentao-pv'
-        # capacity of ZenTao pv
-        zentaoPVCapacity: '1G'
-        # name of mysql pv
-        mysqlPVName: 'mysql-pv'
-        # capacity of mysql pv
-        mysqlPVCapacity: '1G'
+      persistentVolumes:
+          # name of ZenTao pv
+        - pvName: "zentao-pv"
+          # capacity of ZenTao pv
+          pvCapacity: "1G"
+          # name of mysql pv
+        - pvName: "mysql-pv"
+          # capacity of mysql pv
+          pvCapacity: "1G"
       # two PersistentVolumeClaims for ZenTao and mysql should be specified
-      persistentVolumeClaim:
-        # name of ZenTao pvc
-        zentaoPVCName: 'zentao-pvc'
-        # capacity of ZenTao pvc
-        zentaoPVCCapacity: '1G'
-        # name of mysql pvc
-        mysqlPVCName: 'mysql-pv'
-        # capacity of mysql pvc
-        mysqlPVCCapacity: '1G'
+      persistentVolumeClaims:
+          # name of ZenTao pvc
+        - pvcName: "zentao-pvc"
+          # capacity of ZenTao pvc
+          pvcCapacity: "1G"
+          # name of mysql pvc
+        - pvcName: "mysql-pvc"
+          # capacity of mysql pvc
+          pvcCapacity: "1G"
       # ZenTao application is deployed by K8s Deployment
       deployment:
         # name of ZenTao deployment
         name: 'zentao-dp'
         # number of application replica
-        replicas: 3
+        replicas: 1
         # ZenTao image
         image: 'easysoft/zentao:latest'
-        # initial password name for mysql database, you can specify any name you like
-        mysqlPasswdName: 'MYSQL_ROOT_PASSWORD'
-        # initial password value for mysql database, you can specify any value you like
-        mysqlPasswdValue: '1234567'
+        envs:
+          - key: 'MYSQL_ROOT_PASSWORD'
+            # initial password value for mysql database, you can specify any value you like
+            value: '123456'
       # ZenTao application is exposed via K8s Service
       service:
         # name of ZenTao service
