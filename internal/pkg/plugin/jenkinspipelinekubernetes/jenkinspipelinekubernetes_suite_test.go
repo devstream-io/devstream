@@ -1,4 +1,4 @@
-package jenkinspipelinekubernetes_test
+package jenkinspipelinekubernetes
 
 import (
 	"testing"

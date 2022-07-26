@@ -80,6 +80,14 @@ func (c *Client) CreatePersistentVolume(option *PVOption) error {
 	return nil
 }
 
+func (c *Client) DeletePersistentVolume(pvName string) error {
+	if err := c.CoreV1().PersistentVolumes().
+		Delete(context.TODO(), pvName, metav1.DeleteOptions{}); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (c *Client) CreatePersistentVolumeClaim(opt *PVCOption) error {
 	pvc := &corev1.PersistentVolumeClaim{
 		ObjectMeta: metav1.ObjectMeta{
@@ -100,5 +108,13 @@ func (c *Client) CreatePersistentVolumeClaim(opt *PVCOption) error {
 	}
 
 	log.Debugf("The PersistentVolumeClaim < %s > has created.", pvc.Name)
+	return nil
+}
+
+func (c *Client) DeletePersistentVolumeClaim(namespace, pvcName string) error {
+	if err := c.CoreV1().PersistentVolumeClaims(namespace).
+		Delete(context.TODO(), pvcName, metav1.DeleteOptions{}); err != nil {
+		return err
+	}
 	return nil
 }

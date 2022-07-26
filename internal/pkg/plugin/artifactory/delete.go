@@ -1,25 +1,26 @@
-package zentao
+package artifactory
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/goclient"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/helm"
 )
 
 func Delete(options map[string]interface{}) (bool, error) {
-	// 1. config install operations
+	// 1. config delete operations
 	runner := &plugininstaller.Runner{
 		PreExecuteOperations: []plugininstaller.MutableOperation{
-			goclient.Validate,
+			helm.Validate,
 		},
 		ExecuteOperations: []plugininstaller.BaseOperation{
-			goclient.Delete,
+			helm.Delete,
+			helm.DealWithNsWhenInterruption,
 		},
 	}
-
-	// 2. execute installer get status and error
 	_, err := runner.Execute(plugininstaller.RawOptions(options))
 	if err != nil {
 		return false, err
 	}
+
+	// 2. return ture if all process success
 	return true, nil
 }
