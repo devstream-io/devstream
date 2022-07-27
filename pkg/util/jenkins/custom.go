@@ -9,6 +9,8 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
+//const reloadJCasCURL = "/reload-configuration-as-code"
+
 // this file is used to write custom implementation of jenkins client
 
 // GetCrumb returns the crumb for jenkins,

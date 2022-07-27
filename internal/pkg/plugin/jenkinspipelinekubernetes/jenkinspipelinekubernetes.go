@@ -6,6 +6,12 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 )
 
+const (
+	jenkinsCredentialID       = "credential-by-devstream-jenkins-pipeline-kubernetes"
+	jenkinsCredentialDesc     = "Jenkins Pipeline secret, created by devstream/jenkins-pipeline-kubernetes"
+	jenkinsCredentialUsername = "github-by-devstream-jenkins-pipeline-kubernetes"
+)
+
 //go:embed job-template.xml
 var jobTemplate string
 

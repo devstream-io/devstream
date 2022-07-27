@@ -11,12 +11,6 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-const (
-	jenkinsCredentialID       = "credential-jenkins-pipeline-kubernetes-by-devstream"
-	jenkinsCredentialDesc     = "Jenkins Pipeline secret, created by devstream/jenkins-pipeline-kubernetes"
-	jenkinsCredentialUsername = "foo-useless-username"
-)
-
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	var opts Options
 	if err := mapstructure.Decode(options, &opts); err != nil {

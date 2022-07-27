@@ -1,8 +1,9 @@
-package jenkinspipelinekubernetes
+package jenkinsgithub
 
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/devstream-io/devstream/pkg/util/validator"
 )
@@ -24,6 +25,10 @@ func validate(options *Options) []error {
 
 func defaults(options *Options) {
 	// pre handle the options
+	if options.Helm.Namespace == "" {
+		options.Helm.Namespace = "jenkins"
+	}
+
 	if options.J.PipelineScriptPath == "" {
 		options.J.PipelineScriptPath = defaultJenkinsPipelineScriptPath
 	}
@@ -33,6 +38,10 @@ func defaults(options *Options) {
 	}
 
 	options.J.URL = "http://" + options.J.URL
+
+	if !strings.HasSuffix(options.J.URLOverride, "/") {
+		options.J.URLOverride += "/"
+	}
 }
 
 func handleEnv(options *Options) []error {
