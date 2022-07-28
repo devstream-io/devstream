@@ -22,7 +22,7 @@ env:
   TRELLO_API_KEY: ${{ secrets.E2E_TRELLO_API_KEY }}
   TRELLO_TOKEN: ${{ secrets.E2E_TRELLO_TOKEN }}
 
-# limit the number of concurrent jobs to avoid some errors
+# limit the number of concurrent jobs to avoid cancel running e2e actions
 concurrency:
   group: ${{ github.workflow }}
 
