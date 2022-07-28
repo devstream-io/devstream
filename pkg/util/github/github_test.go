@@ -1,7 +1,6 @@
 package github
 
 import (
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -11,22 +10,21 @@ import (
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
-	// "github.com/devstream-io/devstream/pkg/util/github"
 )
 
 const (
-	// baseURLPath is a non-empty Client.BaseURL path to use during tests,
+	// BaseURLPath is a non-empty Client.BaseURL path to use during tests,
 	// to ensure relative URLs are used for all endpoints.
-	baseURLPath = "/api-v3"
+	BaseURLPath = "/api-v3"
 )
 
 var (
-	optNotNeedAuth = &Option{
+	OptNotNeedAuth = &Option{
 		Owner: "",
 		Org:   "devstream-io",
 		Repo:  "dtm-scaffolding-golang",
 	}
-	optNeedAuth = &Option{
+	OptNeedAuth = &Option{
 		Owner:    "",
 		Org:      "devstream-io",
 		Repo:     "dtm-scaffolding-golang",
@@ -34,7 +32,7 @@ var (
 	}
 )
 
-type baseTest struct {
+type BaseTest struct {
 	name        string //test name
 	client      *Client
 	registerUrl string // url resigtered in mock server
@@ -44,13 +42,13 @@ type baseTest struct {
 	respBody    string // content of response body
 }
 
-func testMethod(t *testing.T, r *http.Request, want string) {
+func DoTestMethod(t *testing.T, r *http.Request, want string) {
 	if got := r.Method; got != want {
 		t.Errorf("Request method: %v, want %v", got, want)
 	}
 }
 
-func testBody(t *testing.T, r *http.Request, want string) {
+func DoTestBody(t *testing.T, r *http.Request, want string) {
 	b, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		t.Errorf("Error reading request body: %v", err)
@@ -60,10 +58,10 @@ func testBody(t *testing.T, r *http.Request, want string) {
 	}
 }
 
-// setup sets up a test HTTP server along with a github.Client that is
+// Setup sets up a test HTTP server along with a github.Client that is
 // configured to talk to that test server. Tests should register handlers on
 // mux which provide mock responses for the API method being tested.
-func setup(t *testing.T) (mux *http.ServeMux, serverURL string, teardown func()) {
+func Setup() (mux *http.ServeMux, serverURL string, teardown func()) {
 	// mux is the HTTP request multiplexer used with the test server.
 	mux = http.NewServeMux()
 
@@ -71,7 +69,7 @@ func setup(t *testing.T) (mux *http.ServeMux, serverURL string, teardown func())
 	// specified as absolute rather than relative. It only makes a difference
 	// when there's a non-empty base URL path.
 	apiHandler := http.NewServeMux()
-	apiHandler.Handle(baseURLPath+"/", http.StripPrefix(baseURLPath, mux))
+	apiHandler.Handle(BaseURLPath+"/", http.StripPrefix(BaseURLPath, mux))
 
 	// server is a test HTTP server used to provide mock API responses.
 	server := httptest.NewServer(apiHandler)
@@ -79,17 +77,30 @@ func setup(t *testing.T) (mux *http.ServeMux, serverURL string, teardown func())
 	return mux, server.URL, server.Close
 }
 
-func getClientWithOption(t *testing.T, opt *Option, severUrl string) *Client {
+func GetClientWithOption(t *testing.T, opt *Option, severUrl string) *Client {
 	client, err := NewClient(opt)
 	if err != nil {
 		t.Error(err)
 	}
 
-	url, _ := url.Parse(severUrl + baseURLPath + "/")
+	url, _ := url.Parse(severUrl + BaseURLPath + "/")
 
 	client.Client.BaseURL = url
 	client.Client.UploadURL = url
 	return client
+}
+
+func NewClientWithOption(opt *Option, severUrl string) (*Client, error) {
+	client, err := NewClient(opt)
+	if err != nil {
+		return nil, err
+	}
+
+	url, _ := url.Parse(severUrl + BaseURLPath + "/")
+
+	client.Client.BaseURL = url
+	client.Client.UploadURL = url
+	return client, nil
 }
 
 var _ = Describe("GitHub", func() {
@@ -98,13 +109,13 @@ var _ = Describe("GitHub", func() {
 		var err error
 
 		BeforeEach(func() {
-			ghClient, err = NewClient(optNotNeedAuth)
+			ghClient, err = NewClient(OptNotNeedAuth)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(ghClient).NotTo(Equal(nil))
 		})
 
 		It("with cacahe client", func() {
-			ghClient, err = NewClient(optNotNeedAuth)
+			ghClient, err = NewClient(OptNotNeedAuth)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(ghClient).NotTo(Equal(nil))
 		})
@@ -114,18 +125,15 @@ var _ = Describe("GitHub", func() {
 		var ghClient *Client
 		var err error
 		It("", func() {
-			ghClient, err = NewClient(optNotNeedAuth)
+			ghClient, err = NewClient(OptNotNeedAuth)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(ghClient).NotTo(Equal(nil))
 		})
 	})
 
 	Context("Client with auth enabled but not github token", func() {
-		var ghClient *Client
-		var err error
 		It("", func() {
-			ghClient, err = NewClient(optNeedAuth)
-			fmt.Printf("--->: %+v\n", ghClient)
+			_, err := NewClient(OptNeedAuth)
 			Expect(err).To(HaveOccurred())
 		})
 	})
@@ -137,7 +145,7 @@ var _ = Describe("GitHub", func() {
 			os.Setenv("GITHUB_TOKEN", "GITHUB_TOKEN")
 		})
 		It("", func() {
-			ghClient, err = NewClient(optNeedAuth)
+			ghClient, err = NewClient(OptNeedAuth)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(ghClient).NotTo(Equal(nil))
 		})

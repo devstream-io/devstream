@@ -7,14 +7,14 @@ import (
 )
 
 type newBranchTest struct {
-	baseTest
+	BaseTest
 	baseBranch string
 	newBranch  string
 	wantErr    bool
 }
 
 type delBranchTest struct {
-	baseTest
+	BaseTest
 	branch  string
 	wantErr bool
 }
@@ -30,20 +30,20 @@ func TestClient_NewBranch(t *testing.T) {
 			"url": "https://api.github.com/repos/o/r/git/commits/aa218f56b14c9653891f9e74264a383fa43fefbd"
 		}
 	}`
-	mux, serverUrl, teardown := setup(t)
+	mux, serverUrl, teardown := Setup()
 	defer teardown()
 
 	tests := []newBranchTest{
 		// TODO: Add test cases.
 		{
-			baseTest{"base", getClientWithOption(
+			BaseTest{"base", GetClientWithOption(
 				t, &Option{Owner: "o", Repo: "r", Org: "or"}, serverUrl,
 			),
 				"/repos/or/r/git/ref/heads/b", http.MethodGet, false, "", ""},
 			"b", "", true,
 		},
 		{
-			baseTest{"base set wrong register url for GetRef api in mock server", getClientWithOption(
+			BaseTest{"base set wrong register url for GetRef api in mock server", GetClientWithOption(
 				t, &Option{Owner: "o", Repo: "r"}, serverUrl,
 			),
 				"repos", http.MethodGet, false, "", ""},
@@ -64,13 +64,13 @@ func TestClient_NewBranch(t *testing.T) {
 }
 
 func TestClient_DeleteBranch(t *testing.T) {
-	mux, serverUrl, teardown := setup(t)
+	mux, serverUrl, teardown := Setup()
 	defer teardown()
 
 	tests := []delBranchTest{
 		// TODO: Add test cases.
 		{
-			baseTest{"base", getClientWithOption(
+			BaseTest{"base", GetClientWithOption(
 				t, &Option{Owner: "o", Repo: "r", Org: "or"}, serverUrl,
 			),
 				"/repos/or/r/git/ref/heads/b", http.MethodGet, false, "", ""},

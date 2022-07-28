@@ -10,33 +10,33 @@ import (
 )
 
 type commitTest struct {
-	baseTest
+	BaseTest
 	want    *github.RepositoryCommit
 	wantErr bool
 }
 
 func TestClient_GetLastCommit(t *testing.T) {
-	mux, serverUrl, teardown := setup(t)
+	mux, serverUrl, teardown := Setup()
 	defer teardown()
 	sha := "s"
 	tests := []commitTest{
 		// TODO: Add test cases.
 		{
-			baseTest{"base 200 ", getClientWithOption(
+			BaseTest{"base 200 ", GetClientWithOption(
 				t, &Option{Owner: "o", Repo: "r", Org: "or"}, serverUrl,
 			),
 				"/repos/or/r/commits", http.MethodGet, false, "", `[{"sha": "s"}]`},
 			&github.RepositoryCommit{SHA: &sha}, false,
 		},
 		{
-			baseTest{"base 200 with empty result", getClientWithOption(
+			BaseTest{"base 200 with empty result", GetClientWithOption(
 				t, &Option{Owner: "o", Repo: "r"}, serverUrl,
 			),
 				"/repos/o/r/commits", http.MethodGet, false, "", `[]`},
 			nil, true,
 		},
 		{
-			baseTest{"base 404", getClientWithOption(
+			BaseTest{"base 404", GetClientWithOption(
 				t, &Option{Owner: "o"}, serverUrl,
 			),
 				"/aaa", http.MethodGet, false, "", ""},
@@ -46,7 +46,7 @@ func TestClient_GetLastCommit(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			mux.HandleFunc(tt.registerUrl, func(w http.ResponseWriter, r *http.Request) {
-				testMethod(t, r, tt.wantMethod)
+				DoTestMethod(t, r, tt.wantMethod)
 				fmt.Fprint(w, tt.respBody)
 			})
 			got, err := tt.client.GetLastCommit()
