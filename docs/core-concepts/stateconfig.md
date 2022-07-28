@@ -81,7 +81,7 @@ argocdDeployTimeout: 5m
 
 ```yaml
 tools:
-- name: github-repo-scaffolding-golang
+- name: repo-scaffolding
   instanceID: default
   options:
     owner: [[ githubUsername ]]
@@ -112,16 +112,16 @@ tiexin@mbp ~/work/devstream-io/devstream $ ./dtm apply
 2022-05-30 17:07:59 ℹ [INFO]  Apply started.
 2022-05-30 17:07:59 ℹ [INFO]  Using dir <.devstream> to store plugins.
 2022-05-30 17:07:59 ℹ [INFO]  Using s3 backend. Bucket: devstream-test-remote-state, region: ap-southeast-1, key: devstream.state.
-2022-05-30 17:08:00 ℹ [INFO]  Tool (github-repo-scaffolding-golang/default) found in config but doesn't exist in the state, will be created.
+2022-05-30 17:08:00 ℹ [INFO]  Tool (repo-scaffolding/default) found in config but doesn't exist in the state, will be created.
 Continue? [y/n]
 Enter a value (Default is n): y
 
 2022-05-30 17:08:08 ℹ [INFO]  Start executing the plan.
 2022-05-30 17:08:08 ℹ [INFO]  Changes count: 1.
 2022-05-30 17:08:08 ℹ [INFO]  -------------------- [  Processing progress: 1/1.  ] --------------------
-2022-05-30 17:08:08 ℹ [INFO]  Processing: (github-repo-scaffolding-golang/default) -> Create ...
+2022-05-30 17:08:08 ℹ [INFO]  Processing: (repo-scaffolding/default) -> Create ...
 2022-05-30 17:08:12 ℹ [INFO]  The repo dtm-test-go has been created.
-2022-05-30 17:08:29 ✔ [SUCCESS]  Tool (github-repo-scaffolding-golang/default) Create done.
+2022-05-30 17:08:29 ✔ [SUCCESS]  Tool (repo-scaffolding/default) Create done.
 2022-05-30 17:08:29 ℹ [INFO]  -------------------- [  Processing done.  ] --------------------
 2022-05-30 17:08:29 ✔ [SUCCESS]  All plugins applied successfully.
 2022-05-30 17:08:29 ✔ [SUCCESS]  Apply finished.
@@ -138,8 +138,8 @@ tiexin@mbp ~/work/devstream-io/devstream $ aws s3 cp s3://devstream-test-remote-
 And if we open the downloaded file, we will see something similar to the following:
 
 ```yaml
-github-repo-scaffolding-golang_default:
-  name: github-repo-scaffolding-golang
+repo-scaffolding_default:
+  name: repo-scaffolding
   instanceid: default
   dependson: []
   options:

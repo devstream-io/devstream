@@ -10,12 +10,12 @@ import (
 const (
 	transitBranch      = "init-with-devstream"
 	appNamePlaceHolder = "_app_name_"
+	defaultCommitMsg   = "init with devstream"
 )
 
 type Options struct {
-	RepoType        string  `validate:"oneof=gitlab github" mapstructure:"repo_type"`
-	SourceRepo      SrcRepo `validate:"required" mapstructure:"source_repo"`
-	DestinationRepo DstRepo `validate:"required" mapstructure:"destination_repo"`
+	SourceRepo      *SrcRepo `validate:"required" mapstructure:"source_repo"`
+	DestinationRepo *DstRepo `validate:"required" mapstructure:"destination_repo"`
 	Vars            map[string]interface{}
 }
 
@@ -51,13 +51,45 @@ func (opts *Options) CreateAndRenderLocalRepo(workpath string) error {
 
 // PushToRemoteGitLab push local repo to remote gitlab repo
 func (opts *Options) PushToRemoteGitlab(repoPath string) error {
-	// TODO: add gitlab push func
+	dstRepo := opts.DestinationRepo
+	// 1. init gitlab client
+	c, err := dstRepo.createGitlabClient()
+	if err != nil {
+		log.Debugf("Gitlab push: init gitlab client failed %s", err)
+		return err
+	}
+
+	// 2. create the project
+	if err := c.CreateProject(dstRepo.buildgitlabOpts()); err != nil {
+		log.Errorf("Failed to create repo: %s.", err)
+		return err
+	}
+
+	// if encounter error, delete repo
+	var needRollBack bool
+	defer func() {
+		if !needRollBack {
+			return
+		}
+		// need to clean the repo created when retErr != nil
+		if err := c.DeleteProject(dstRepo.PathWithNamespace); err != nil {
+			log.Errorf("Failed to delete the repo %s: %s.", dstRepo.PathWithNamespace, err)
+		}
+	}()
+
+	needRollBack, err = c.PushLocalPathToBranch(
+		repoPath, dstRepo.Branch, dstRepo.PathWithNamespace, defaultCommitMsg,
+	)
+	if err != nil {
+		log.Errorf("Failed to push to remote: %s.", err)
+		return err
+	}
 	return nil
 }
 
 // PushToRemoteGithub push local repo to remote github repo
 func (opts *Options) PushToRemoteGithub(repoPath string) error {
-	dstRepo := &opts.DestinationRepo
+	dstRepo := opts.DestinationRepo
 	// 1. init github client
 	ghClient, err := dstRepo.createGithubClient(true)
 	if err != nil {

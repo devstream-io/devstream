@@ -23,7 +23,7 @@ The definition of the GitHub Action is [here](https://github.com/devstream-io/de
 
 We have a simple e2e test that tests the following plugins:
 
-- `github-repo-scaffolding-golang`
+- `repo-scaffolding`
 - `githubactions-golang`
 - `argocd`
 - `argocdapp`

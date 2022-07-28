@@ -5,8 +5,7 @@
 | Issue Tracking                 | trello-github-integ            | Trello/GitHub integration      | [doc](trello-github-integ.md)            |
 | Issue Tracking                 | trello                         | Trello                         | [doc](trello.md)                         |
 | Issue Tracking                 | jira-github-integ              | Jira/GitHub integration        | [doc](jira-github-integ.md)              |
-| Source Code Management         | github-repo-scaffolding-golang | Go WebApp scaffolding          | [doc](github-repo-scaffolding-golang.md) |
-| Source Code Management         | gitlab-repo-scaffolding-golang | Go WebApp scaffolding          | [doc](gitlab-repo-scaffolding-golang.md) |
+| Source Code Management         | repo-scaffolding | App scaffolding          | [doc](repo-scaffolding.md) |
 | CI                             | jenkins                        | Jenkins installation           | [doc](jenkins.md)                        |
 | CI                             | githubactions-golang           | GitHub Actions CI for Golang   | [doc](githubactions-golang.md)           |
 | CI                             | githubactions-python           | GitHub Actions CI for Python   | [doc](githubactions-python.md)           |
@@ -27,7 +26,7 @@ $ dtm list plugins
 argocd
 argocdapp
 devlake
-github-repo-scaffolding-golang
+repo-scaffolding
 githubactions-golang
 githubactions-nodejs
 githubactions-python
