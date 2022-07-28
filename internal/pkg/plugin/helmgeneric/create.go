@@ -13,14 +13,9 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		PreExecuteOperations: []plugininstaller.MutableOperation{
 			helm.Validate,
 		},
-		ExecuteOperations: []plugininstaller.BaseOperation{
-			helm.DealWithNsWhenInstall,
-			helm.InstallOrUpdate,
-		},
-		TerminateOperations: []plugininstaller.BaseOperation{
-			helm.DealWithNsWhenInterruption,
-		},
-		GetStatusOperation: getEmptyState,
+		ExecuteOperations:   helm.DefaultCreateOperations,
+		TerminateOperations: helm.DefaultTerminateOperations,
+		GetStatusOperation:  getEmptyState,
 	}
 
 	// 2. execute installer get status and error

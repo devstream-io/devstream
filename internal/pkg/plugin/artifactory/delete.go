@@ -11,10 +11,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 		PreExecuteOperations: []plugininstaller.MutableOperation{
 			helm.Validate,
 		},
-		ExecuteOperations: []plugininstaller.BaseOperation{
-			helm.Delete,
-			helm.DealWithNsWhenInterruption,
-		},
+		ExecuteOperations: helm.DefaultDeleteOperations,
 	}
 	_, err := runner.Execute(plugininstaller.RawOptions(options))
 	if err != nil {
