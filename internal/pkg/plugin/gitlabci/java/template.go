@@ -11,7 +11,7 @@ var gitlabCITemplate string
 
 // Render gitlab-ci.yml template with Options
 func renderTmpl(Opts *Options) (string, error) {
-	t := template.Must(template.New("gitlabci-java").Option("missingkey=error").Parse(gitlabCITemplate))
+	t := template.Must(template.New("gitlabci-java").Delims("[[", "]]").Option("missingkey=error").Parse(gitlabCITemplate))
 
 	var buf bytes.Buffer
 	err := t.Execute(&buf, Opts)
