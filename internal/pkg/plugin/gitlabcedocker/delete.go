@@ -15,6 +15,8 @@ func Delete(options map[string]interface{}) (bool, error) {
 		return false, err
 	}
 
+	defaults(&opts)
+
 	if errs := validate(&opts); len(errs) != 0 {
 		for _, e := range errs {
 			log.Errorf("Options error: %s.", e)
@@ -22,25 +24,25 @@ func Delete(options map[string]interface{}) (bool, error) {
 		return false, fmt.Errorf("opts are illegal")
 	}
 
-	op := getDockerOperator(opts)
+	op := GetDockerOperator(opts)
 
 	// 1. stop the container if it is running
-	if ok := op.IfContainerRunning(gitlabContainerName); ok {
-		if err := op.StopContainer(gitlabContainerName); err != nil {
+	if ok := op.ContainerIfRunning(gitlabContainerName); ok {
+		if err := op.ContainerStop(gitlabContainerName); err != nil {
 			log.Errorf("Failed to stop container: %v", err)
 		}
 	}
 
 	// 2. remove the container if it exists
-	if ok := op.IfContainerExists(gitlabContainerName); ok {
-		if err := op.RemoveContainer(gitlabContainerName); err != nil {
+	if ok := op.ContainerIfExist(gitlabContainerName); ok {
+		if err := op.ContainerRemove(gitlabContainerName); err != nil {
 			log.Errorf("failed to remove container %v: %v", gitlabContainerName, err)
 		}
 	}
 
 	// 3. remove the image if it exists
-	if ok := op.IfImageExists(getImageNameWithTag(opts)); ok {
-		if err := op.RemoveImage(getImageNameWithTag(opts)); err != nil {
+	if ok := op.ImageIfExist(getImageNameWithTag(opts)); ok {
+		if err := op.ImageRemove(getImageNameWithTag(opts)); err != nil {
 			log.Errorf("failed to remove image %v: %v", getImageNameWithTag(opts), err)
 		}
 	}
@@ -58,15 +60,15 @@ func Delete(options map[string]interface{}) (bool, error) {
 	var errs []error
 
 	// 1. check if the container is stopped and deleted
-	if ok := op.IfContainerRunning(gitlabContainerName); ok {
+	if ok := op.ContainerIfRunning(gitlabContainerName); ok {
 		errs = append(errs, fmt.Errorf("failed to delete/stop container %s", gitlabContainerName))
 	}
-	if ok := op.IfContainerExists(gitlabContainerName); ok {
+	if ok := op.ContainerIfExist(gitlabContainerName); ok {
 		errs = append(errs, fmt.Errorf("failed to delete container %s", gitlabContainerName))
 	}
 
 	// 2. check if the image is removed
-	if ok := op.IfImageExists(getImageNameWithTag(opts)); ok {
+	if ok := op.ImageIfExist(getImageNameWithTag(opts)); ok {
 		errs = append(errs, fmt.Errorf("failed to delete image %s", getImageNameWithTag(opts)))
 	}
 

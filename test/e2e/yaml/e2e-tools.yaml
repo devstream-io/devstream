@@ -1,17 +1,24 @@
 tools:
-  - name: github-repo-scaffolding-golang
-    instanceID: default
+  - name: repo-scaffolding
+    instanceID: golang-github
     options:
-      org: [[ githubOrganization ]]
-      repo: [[ repoName ]]
-      branch: [[ defaultBranch ]]
-      image_repo: [[ dockerRegistryUserName ]]/[[ repoName ]]
+      destination_repo:
+        org: [[ githubOrganization ]]
+        repo: [[ repoName ]]
+        branch: [[ defaultBranch ]]
+        repo_type: github
+      vars:
+        ImageRepo: "[[ dockerRegistryUserName ]]/[[ repoName ]]"
+      source_repo:
+        org: devstream-io
+        repo: dtm-scaffolding-golang
+        repo_type: github
   - name: githubactions-golang
     instanceID: default
-    dependsOn: ["github-repo-scaffolding-golang.default"]
+    dependsOn: ["repo-scaffolding.golang-github"]
     options:
-      org: ${{github-repo-scaffolding-golang.default.outputs.org}}
-      repo: ${{github-repo-scaffolding-golang.default.outputs.repo}}
+      org: ${{repo-scaffolding.golang-github.outputs.org}}
+      repo: ${{repo-scaffolding.golang-github.outputs.repo}}
       language:
         name: go
         version: "1.18"
@@ -43,15 +50,15 @@ tools:
         upgradeCRDs: true
   - name: argocdapp
     instanceID: default
-    dependsOn: ["argocd.default", "github-repo-scaffolding-golang.default"]
+    dependsOn: ["argocd.default", "repo-scaffolding.golang-github"]
     options:
       app:
-        name: ${{github-repo-scaffolding-golang.default.outputs.repo}}
+        name: ${{repo-scaffolding.golang-github.outputs.repo}}
         namespace: [[ argocdNameSpace ]]
       destination:
         server: https://kubernetes.default.svc
         namespace: default
       source:
         valuefile: values.yaml
-        path: helm/${{github-repo-scaffolding-golang.default.outputs.repo}}
-        repoURL: ${{github-repo-scaffolding-golang.default.outputs.repoURL}}
+        path: helm/${{repo-scaffolding.golang-github.outputs.repo}}
+        repoURL: ${{repo-scaffolding.golang-github.outputs.repoURL}}

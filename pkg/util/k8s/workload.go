@@ -2,9 +2,13 @@ package k8s
 
 import (
 	"context"
+	"errors"
+	"time"
 
 	appsv1 "k8s.io/api/apps/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 func (c *Client) ListDeployments(namespace string) ([]appsv1.Deployment, error) {
@@ -21,6 +25,36 @@ func (c *Client) GetDeployment(namespace, name string) (*appsv1.Deployment, erro
 
 func (c *Client) IsDeploymentReady(deployment *appsv1.Deployment) bool {
 	return deployment.Status.ReadyReplicas == *deployment.Spec.Replicas
+}
+
+// Wait for deployment to be ready after creating
+func (c *Client) WaitForDeploymentReady(retry int, namespace, deployName string) error {
+	deployRunning := false
+	for i := 0; i < retry; i++ {
+		var dp *appsv1.Deployment
+		dp, err := c.GetDeployment(namespace, deployName)
+		if err != nil {
+			return err
+		}
+
+		if c.IsDeploymentReady(dp) {
+			log.Infof("The deployment %s is ready.", dp.Name)
+			deployRunning = true
+			break
+		}
+		time.Sleep(5 * time.Second)
+		log.Debugf("Retry check deployment status %v times", i)
+	}
+
+	if !deployRunning {
+		return errors.New("create deployment failed")
+	}
+	return nil
+}
+
+func (c *Client) DeleteDeployment(namespace, deployName string) error {
+	return c.AppsV1().Deployments(namespace).
+		Delete(context.TODO(), deployName, metav1.DeleteOptions{})
 }
 
 func (c *Client) ListDaemonsets(namespace string) ([]appsv1.DaemonSet, error) {

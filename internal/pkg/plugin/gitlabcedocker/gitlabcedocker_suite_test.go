@@ -1,4 +1,4 @@
-package gitlabcedocker_test
+package gitlabcedocker
 
 import (
 	"testing"

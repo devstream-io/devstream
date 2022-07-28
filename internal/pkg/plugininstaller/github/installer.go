@@ -7,6 +7,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
+// ProcessAction config github
 func ProcessAction(action string) plugininstaller.BaseOperation {
 	return func(options plugininstaller.RawOptions) error {
 		opts, err := NewGithubActionOptions(options)

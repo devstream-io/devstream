@@ -13,10 +13,10 @@ body:
 - type: checkboxes
   id: terms
   attributes:
-    label: I've read the documents below.
-    description: Please read the list of documents below if you want to submit a document type contribution.
+    label: Please read the documents below.
+    description: |
+      1. [Creating a Documentation for DevStream](https://docs.devstream.io/en/latest/development/mkdocs/)
+      2. [Document Translation(Chinese only)](https://docs.devstream.io/en/latest/development/translation.zh/)
     options:
-      - label: [Creating a Documentation for DevStream](https://docs.devstream.io/en/latest/development/mkdocs/)
-        required: false
-      - label: [Document Translation(Chinese only)](https://docs.devstream.io/en/latest/development/translation.zh/)
+      - label: I've read the documents above. (If you want to submit a document type contribution.)
         required: false

@@ -12,10 +12,8 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 		PreExecuteOperations: []plugininstaller.MutableOperation{
 			helm.Validate,
 		},
-		ExecuteOperations: []plugininstaller.BaseOperation{
-			helm.InstallOrUpdate,
-		},
-		GetStatusOperation: helm.GetPluginStaticStateWrapper(defaultDeploymentList),
+		ExecuteOperations:  helm.DefaultUpdateOperations,
+		GetStatusOperation: helm.GetPluginAllState,
 	}
 
 	// 2. execute update get status and error

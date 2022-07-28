@@ -25,22 +25,22 @@ _If Docker image build/push is enabled (see the example below), you also need to
 
 Some parameters are optional. See the default values and optional parameters in the example above.
 
-## Use Together with the `github-repo-scaffolding-golang` Plugin
+## Use Together with the `repo-scaffolding` Plugin
 
-This plugin can be used together with the `github-repo-scaffolding-golang` plugin (see document [here](./github-repo-scaffolding-golang.md).)
+This plugin can be used together with the `repo-scaffolding` plugin (see document [here](./repo-scaffolding.md).)
 
-For example, you can first use `github-repo-scaffolding-golang` to bootstrap a Golang repo, then use this plugin to set up basic GitHub Actions CI workflows. In this scenario:
+For example, you can first use `repo-scaffolding` to bootstrap a Golang repo, then use this plugin to set up basic GitHub Actions CI workflows. In this scenario:
 
-- This plugin can specify `github-repo-scaffolding-golang` as a dependency, so that the dependency is first satisfied before executing this plugin.
-- This plugin can refer to `github-repo-scaffolding-golang`'s output to reduce copy/paste human error.
+- This plugin can specify `repo-scaffolding` as a dependency, so that the dependency is first satisfied before executing this plugin.
+- This plugin can refer to `repo-scaffolding`'s output to reduce copy/paste human error.
 
 See the example below:
 
 ```yaml
 ---
 tools:
-- name: github-repo-scaffolding-golang
-  instanceID: default
+- name: repo-scaffolding
+  instanceID: golang-github
   options:
     owner: IronCore864
     repo: go-webapp-devstream-demo
@@ -48,10 +48,10 @@ tools:
     image_repo: ironcore864/go-webapp-devstream-demo
 - name: githubactions-golang
   instanceID: default
-  dependsOn: ["github-repo-scaffolding-golang.default"]
+  dependsOn: ["repo-scaffolding.golang-github"]
   options:
-    owner: ${{github-repo-scaffolding-golang.default.outputs.owner}}
-    repo: ${{github-repo-scaffolding-golang.default.outputs.repo}}
+    owner: ${{repo-scaffolding.golang-github.outputs.owner}}
+    repo: ${{repo-scaffolding.golang-github.outputs.repo}}
     language:
       name: go
       version: "1.18"
@@ -67,12 +67,12 @@ tools:
       registry:
         type: dockerhub
         username: [[ dockerhubUsername ]]
-        repository: ${{github-repo-scaffolding-golang.default.outputs.repo}}
+        repository: ${{repo-scaffolding.golang-github.outputs.repo}}
 ```
 
 In the example above:
 
-- We put `ggithub-repo-scaffolding-golang.default` as dependency by using the `dependsOn` keyword.
-- We used `github-repo-scaffolding-golang.default`'s output as input for the `githubactions-golang` plugin.
+- We put `repo-scaffolding.golang-github` as dependency by using the `dependsOn` keyword.
+- We used `repo-scaffolding.golang-github`'s output as input for the `githubactions-golang` plugin.
 
 Pay attention to the `${{ xxx }}` part in the example. `${{ TOOL_NAME.TOOL_INSTANCE_ID.outputs.var}}` is the syntax for using an output.

@@ -1,6 +1,10 @@
 package gitlabcedocker
 
-import "path/filepath"
+import (
+	"path/filepath"
+
+	"github.com/devstream-io/devstream/pkg/util/docker"
+)
 
 // Options is the struct for configurations of the gitlab-ce-docker plugin.
 type Options struct {
@@ -14,13 +18,38 @@ type Options struct {
 	ImageTag          string `mapstructure:"image_tag"`
 }
 
-// getVolumesDirFromOptions returns the volumes' directory from the options.
+// getVolumesDirFromOptions returns host directories of the volumes from the options.
 func getVolumesDirFromOptions(opts Options) []string {
-	volumesDirFromOptions := []string{
-		filepath.Join(opts.GitLabHome, "config"),
-		filepath.Join(opts.GitLabHome, "data"),
-		filepath.Join(opts.GitLabHome, "logs"),
+	volumes := buildDockerVolumes(opts)
+	return volumes.ExtractHostPaths()
+}
+
+func buildDockerVolumes(opts Options) docker.Volumes {
+	volumes := []docker.Volume{
+		{HostPath: filepath.Join(opts.GitLabHome, "config"), ContainerPath: "/etc/gitlab"},
+		{HostPath: filepath.Join(opts.GitLabHome, "data"), ContainerPath: "/var/opt/gitlab"},
+		{HostPath: filepath.Join(opts.GitLabHome, "logs"), ContainerPath: "/var/log/gitlab"},
 	}
 
-	return volumesDirFromOptions
+	return volumes
+}
+
+func buildDockerRunOptions(opts Options) docker.RunOptions {
+	dockerRunOpts := docker.RunOptions{}
+	dockerRunOpts.ImageName = gitlabImageName
+	dockerRunOpts.ImageTag = opts.ImageTag
+	dockerRunOpts.Hostname = opts.Hostname
+	dockerRunOpts.ContainerName = gitlabContainerName
+	dockerRunOpts.RestartAlways = true
+
+	portPublishes := []docker.PortPublish{
+		{HostPort: opts.SSHPort, ContainerPort: 22},
+		{HostPort: opts.HTTPPort, ContainerPort: 80},
+		{HostPort: opts.HTTPSPort, ContainerPort: 443},
+	}
+	dockerRunOpts.PortPublishes = portPublishes
+
+	dockerRunOpts.Volumes = buildDockerVolumes(opts)
+
+	return dockerRunOpts
 }

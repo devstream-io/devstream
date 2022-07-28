@@ -13,10 +13,8 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 			defaultMissedOption,
 			helm.Validate,
 		},
-		ExecuteOperations: []plugininstaller.BaseOperation{
-			helm.InstallOrUpdate,
-		},
-		GetStatusOperation: helm.GetPluginStaticStateWrapper(defaultDeploymentList),
+		ExecuteOperations:  helm.DefaultUpdateOperations,
+		GetStatusOperation: helm.GetPluginAllState,
 	}
 
 	// 2. update by helm config and get status

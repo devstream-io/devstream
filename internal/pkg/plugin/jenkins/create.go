@@ -23,10 +23,8 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 			// show jenkins url
 			showJenkinsUrl,
 		},
-		TermateOperations: []plugininstaller.BaseOperation{
-			helm.DealWithNsWhenInterruption,
-		},
-		GetStatusOperation: helm.GetPluginStaticStateByReleaseNameWrapper(defaultStatefulsetTplList),
+		TerminateOperations: helm.DefaultTerminateOperations,
+		GetStatusOperation:  getHelmResourceAndCustomResource,
 	}
 
 	// 2. execute installer get status and error

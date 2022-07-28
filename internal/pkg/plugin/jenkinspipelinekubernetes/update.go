@@ -14,7 +14,7 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	if errs := validate(&opts); len(errs) != 0 {
+	if errs := validateAndHandleOptions(&opts); len(errs) != 0 {
 		for _, e := range errs {
 			log.Errorf("Options error: %s.", e)
 		}
@@ -26,5 +26,8 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	// some, we should only call some update function
 	// others, we just ignore them
 
-	return (&resource{}).toMap(), nil
+	// now we just use the same way as create,
+	// because the logic is the same: "if not exists, create; if exists, do nothing"
+	// if it changes in the future, we should change the way to update
+	return Create(options)
 }

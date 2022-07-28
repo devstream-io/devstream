@@ -37,7 +37,9 @@ export GITHUB_TOKEN="<YOUR_GITHUB_PERSONAL_ACCESS_TOKEN_HERE>"
 export DOCKERHUB_USERNAME="<YOUR_DOCKER_HUB_USER_NAME_HERE>"
 ```
 
-> Note: if you don't know how to get your GITHUB_TOKEN, see this official document "[Creating a personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)."
+> Tip: Go to [Personal Access Token](https://github.com/settings/tokens/new) to generate a new `GITHUB_TOKEN` for `dtm`.
+> 
+> For "Quick Start", we only need `repo`,`workflow`,`delete_repo` scopes. However, we recommend that you check all and future plugins may require more scopes.
 
 Then we run the following commands to update our config file with those env vars:
 
@@ -68,19 +70,19 @@ and you should see similar output to the following:
 ```
 2022-06-30 11:21:48 ℹ [INFO]  Got Backend from config: local
 2022-06-30 11:21:48 ℹ [INFO]  Using dir <.devstream> to store plugins.
-2022-06-30 11:21:48 ℹ [INFO]  Downloading: [github-repo-scaffolding-golang-darwin-arm64_0.7.0.so] ...
+2022-06-30 11:21:48 ℹ [INFO]  Downloading: [repo-scaffolding-darwin-arm64_0.7.0.so] ...
  15.05 MiB / 15.05 MiB [================================] 100.00% 21.17 MiB/s 0s
-2022-06-30 11:21:49 ✔ [SUCCESS]  [github-repo-scaffolding-golang-darwin-arm64_0.7.0.so] download succeeded.
-2022-06-30 11:21:49 ℹ [INFO]  Downloading: [github-repo-scaffolding-golang-darwin-arm64_0.7.0.md5] ...
+2022-06-30 11:21:49 ✔ [SUCCESS]  [repo-scaffolding-darwin-arm64_0.7.0.so] download succeeded.
+2022-06-30 11:21:49 ℹ [INFO]  Downloading: [repo-scaffolding-darwin-arm64_0.7.0.md5] ...
  33 B / 33 B [==========================================] 100.00% 35.29 KiB/s 0s
-2022-06-30 11:21:49 ✔ [SUCCESS]  [github-repo-scaffolding-golang-darwin-arm64_0.7.0.md5] download succeeded.
-2022-06-30 11:21:49 ℹ [INFO]  Plugin: github-repo-scaffolding-golang-darwin-arm64_0.7.0.so doesn't match with .md5 and will be downloaded.
-2022-06-30 11:21:49 ℹ [INFO]  Downloading: [github-repo-scaffolding-golang-darwin-arm64_0.7.0.so] ...
+2022-06-30 11:21:49 ✔ [SUCCESS]  [repo-scaffolding-darwin-arm64_0.7.0.md5] download succeeded.
+2022-06-30 11:21:49 ℹ [INFO]  Plugin: repo-scaffolding-darwin-arm64_0.7.0.so doesn't match with .md5 and will be downloaded.
+2022-06-30 11:21:49 ℹ [INFO]  Downloading: [repo-scaffolding-darwin-arm64_0.7.0.so] ...
  15.05 MiB / 15.05 MiB [================================] 100.00% 31.25 MiB/s 0s
-2022-06-30 11:21:50 ✔ [SUCCESS]  [github-repo-scaffolding-golang-darwin-arm64_0.7.0.so] download succeeded.
-2022-06-30 11:21:50 ℹ [INFO]  Downloading: [github-repo-scaffolding-golang-darwin-arm64_0.7.0.md5] ...
+2022-06-30 11:21:50 ✔ [SUCCESS]  [repo-scaffolding-darwin-arm64_0.7.0.so] download succeeded.
+2022-06-30 11:21:50 ℹ [INFO]  Downloading: [repo-scaffolding-darwin-arm64_0.7.0.md5] ...
  33 B / 33 B [==========================================] 100.00% 43.43 KiB/s 0s
-2022-06-30 11:21:50 ✔ [SUCCESS]  [github-repo-scaffolding-golang-darwin-arm64_0.7.0.md5] download succeeded.
+2022-06-30 11:21:50 ✔ [SUCCESS]  [repo-scaffolding-darwin-arm64_0.7.0.md5] download succeeded.
 2022-06-30 11:21:50 ℹ [INFO]  Downloading: [githubactions-golang-darwin-arm64_0.7.0.so] ...
  17.49 MiB / 17.49 MiB [================================] 100.00% 31.18 MiB/s 0s
 2022-06-30 11:21:51 ✔ [SUCCESS]  [githubactions-golang-darwin-arm64_0.7.0.so] download succeeded.
@@ -122,7 +124,7 @@ You should see similar output to the following
 2022-06-30 11:25:47 ℹ [INFO]  Got Backend from config: local
 2022-06-30 11:25:47 ℹ [INFO]  Using dir <.devstream> to store plugins.
 2022-06-30 11:25:47 ℹ [INFO]  Using local backend. State file: devstream.state.
-2022-06-30 11:25:47 ℹ [INFO]  Tool (github-repo-scaffolding-golang/default) found in config but doesn't exist in the state, will be created.
+2022-06-30 11:25:47 ℹ [INFO]  Tool (repo-scaffolding/default) found in config but doesn't exist in the state, will be created.
 2022-06-30 11:25:47 ℹ [INFO]  Tool (githubactions-golang/default) found in config but doesn't exist in the state, will be created.
 Continue? [y/n]
 Enter a value (Default is n): y
@@ -130,9 +132,9 @@ Enter a value (Default is n): y
 2022-06-30 11:26:20 ℹ [INFO]  Start executing the plan.
 2022-06-30 11:26:20 ℹ [INFO]  Changes count: 2.
 2022-06-30 11:26:20 ℹ [INFO]  -------------------- [  Processing progress: 1/2.  ] --------------------
-2022-06-30 11:26:20 ℹ [INFO]  Processing: (github-repo-scaffolding-golang/default) -> Create ...
+2022-06-30 11:26:20 ℹ [INFO]  Processing: (repo-scaffolding/default) -> Create ...
 2022-06-30 11:26:24 ℹ [INFO]  The repo go-webapp-devstream-demo has been created.
-2022-06-30 11:26:37 ✔ [SUCCESS]  Tool (github-repo-scaffolding-golang/default) Create done.
+2022-06-30 11:26:37 ✔ [SUCCESS]  Tool (repo-scaffolding/default) Create done.
 2022-06-30 11:26:37 ℹ [INFO]  -------------------- [  Processing progress: 2/2.  ] --------------------
 2022-06-30 11:26:37 ℹ [INFO]  Processing: (githubactions-golang/default) -> Create ...
 2022-06-30 11:26:38 ℹ [INFO]  Creating GitHub Actions workflow pr-builder.yml ...
@@ -171,7 +173,7 @@ input `y` the same just like you did in the previous steps, and you should see s
 2022-06-30 11:31:01 ℹ [INFO]  Using dir <.devstream> to store plugins.
 2022-06-30 11:31:01 ℹ [INFO]  Using local backend. State file: devstream.state.
 2022-06-30 11:31:01 ℹ [INFO]  Tool (githubactions-golang/default) will be deleted.
-2022-06-30 11:31:01 ℹ [INFO]  Tool (github-repo-scaffolding-golang/default) will be deleted.
+2022-06-30 11:31:01 ℹ [INFO]  Tool (repo-scaffolding/default) will be deleted.
 Continue? [y/n]
 Enter a value (Default is n): y
 
@@ -186,10 +188,10 @@ Enter a value (Default is n): y
 2022-06-30 11:31:06 ℹ [INFO]  Prepare to delete 'githubactions-golang_default' from States.
 2022-06-30 11:31:06 ✔ [SUCCESS]  Tool (githubactions-golang/default) delete done.
 2022-06-30 11:31:06 ℹ [INFO]  -------------------- [  Processing progress: 2/2.  ] --------------------
-2022-06-30 11:31:06 ℹ [INFO]  Processing: (github-repo-scaffolding-golang/default) -> Delete ...
+2022-06-30 11:31:06 ℹ [INFO]  Processing: (repo-scaffolding/default) -> Delete ...
 2022-06-30 11:31:06 ✔ [SUCCESS]  GitHub repo go-webapp-devstream-demo removed.
-2022-06-30 11:31:06 ℹ [INFO]  Prepare to delete 'github-repo-scaffolding-golang_default' from States.
-2022-06-30 11:31:06 ✔ [SUCCESS]  Tool (github-repo-scaffolding-golang/default) delete done.
+2022-06-30 11:31:06 ℹ [INFO]  Prepare to delete 'repo-scaffolding_default' from States.
+2022-06-30 11:31:06 ✔ [SUCCESS]  Tool (repo-scaffolding/default) delete done.
 2022-06-30 11:31:06 ℹ [INFO]  -------------------- [  Processing done.  ] --------------------
 2022-06-30 11:31:06 ✔ [SUCCESS]  All plugins deleted successfully.
 2022-06-30 11:31:06 ✔ [SUCCESS]  Delete finished.

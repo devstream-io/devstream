@@ -17,30 +17,38 @@ This plugin creates an [ArgoCD Application](https://argo-cd.readthedocs.io/en/st
 --8<-- "argocdapp.yaml"
 ```
 
-## Use Together with the `github-repo-scaffolding-golang` Plugin
+## Use Together with the `repo-scaffolding` Plugin
 
-This plugin can be used together with the `github-repo-scaffolding-golang` plugin (see document [here](./github-repo-scaffolding-golang.md).)
+This plugin can be used together with the `repo-scaffolding` plugin (see document [here](./repo-scaffolding.md).)
 
-For example, you can first use `github-repo-scaffolding-golang` to bootstrap a Golang repo, then use this plugin to set up basic GitHub Actions CI workflows. In this scenario:
+For example, you can first use `repo-scaffolding` to bootstrap a Golang repo, then use this plugin to set up basic GitHub Actions CI workflows. In this scenario:
 
-- This plugin can specify `github-repo-scaffolding-golang` as a dependency, so that the dependency is first satisfied before executing this plugin.
-- This plugin can refer to `github-repo-scaffolding-golang`'s output to reduce copy/paste human error.
+- This plugin can specify `repo-scaffolding` as a dependency, so that the dependency is first satisfied before executing this plugin.
+- This plugin can refer to `repo-scaffolding`'s output to reduce copy/paste human error.
 
 See the example below:
 
 ```yaml
 ---
 tools:
-- name: go-webapp-repo
-  plugin: github-repo-scaffolding-golang
+- name: repo-scaffolding
+  instanceID: golang-github
   options:
-    owner: IronCore864
-    repo: go-webapp-devstream-demo
-    branch: main
-    image_repo: ironcore864/go-webapp-devstream-demo
+    destination_repo:
+      owner: [[ githubUsername ]]
+      org: ""
+      repo: [[ repoName ]]
+      branch: [[ defaultBranch ]]
+      repo_type: github
+    vars:
+      ImageRepo: "[[ dockerhubUsername ]]/[[ repoName ]]"
+    source_repo:
+      org: devstream-io
+      repo: dtm-scaffolding-golang
+      repo_type: github
 - name: go-webapp-argocd-deploy
   plugin: argocdapp
-  dependsOn: ["go-webapp-repo.github-repo-scaffolding-golang"]
+  dependsOn: ["repo-scaffolding.golang-github"]
   options:
     app:
       name: hello
@@ -51,12 +59,12 @@ tools:
     source:
       valuefile: values.yaml
       path: charts/go-hello-http
-      repoURL: ${{go-webapp-repo.github-repo-scaffolding-golang.outputs.repoURL}}
+      repoURL: ${{repo-scaffolding.golang-github.outputs.repoURL}}
 ```
 
 In the example above:
 
-- We put `go-webapp-repo.github-repo-scaffolding-golang` as dependency by using the `dependsOn` keyword.
-- We used `go-webapp-repo.github-repo-scaffolding-golang`'s output as input for the `githubactions-golang` plugin.
+- We put `repo-scaffolding.golang-github` as dependency by using the `dependsOn` keyword.
+- We used `repo-scaffolding.golang-github`'s output as input for the `githubactions-golang` plugin.
 
 Pay attention to the `${{ xxx }}` part in the example. `${{ TOOL_NAME.PLUGIN.outputs.var}}` is the syntax for using an output.

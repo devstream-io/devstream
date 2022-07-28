@@ -83,7 +83,6 @@ func NewClient(option *Option) (*Client, error) {
 	}
 	log.Debugf("Token: %s.", token)
 
-	ctx := context.Background()
 	tc := oauth2.NewClient(
 		context.TODO(),
 		oauth2.StaticTokenSource(
@@ -96,7 +95,7 @@ func NewClient(option *Option) (*Client, error) {
 	client = &Client{
 		Option:  option,
 		Client:  github.NewClient(tc),
-		Context: ctx,
+		Context: context.Background(),
 	}
 
 	return client, nil

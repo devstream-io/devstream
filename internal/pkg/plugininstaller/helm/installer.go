@@ -7,6 +7,24 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
+var (
+	DefaultCreateOperations = []plugininstaller.BaseOperation{
+		DealWithNsWhenInstall,
+		InstallOrUpdate,
+	}
+	DefaultUpdateOperations = []plugininstaller.BaseOperation{
+		InstallOrUpdate,
+	}
+	DefaultDeleteOperations = []plugininstaller.BaseOperation{
+		Delete,
+		DealWithNsWhenInterruption,
+	}
+	DefaultTerminateOperations = []plugininstaller.BaseOperation{
+		Delete,
+		DealWithNsWhenInterruption,
+	}
+)
+
 // InstallOrUpdate will install or update service by input options
 func InstallOrUpdate(options plugininstaller.RawOptions) error {
 	opts, err := NewOptions(options)

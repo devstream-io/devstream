@@ -16,7 +16,7 @@ For Chinese readers, watch this one instead:
 
 ## Plugins needed
 
-1. [github-repo-scaffolding-golang](../plugins/github-repo-scaffolding-golang.md)
+1. [repo-scaffolding](../plugins/repo-scaffolding.md)
 2. [jira-github](../plugins/jira-github-integ.md)
 3. [githubactions-golang](../plugins/githubactions-golang.md)
 4. [argocd](../plugins/argocd.md)
@@ -24,9 +24,9 @@ For Chinese readers, watch this one instead:
 
 The dependencies of these plugins are(`a -> b` means for `a depends on b`):
 
-- `jira-github` -> `github-repo-scaffolding-golang`
-- `githubactions-golang` -> `github-repo-scaffolding-golang`
-- `argocdapp` -> `argocd` and `github-repo-scaffolding-golang`
+- `jira-github` -> `repo-scaffolding`
+- `githubactions-golang` -> `repo-scaffolding`
+- `argocdapp` -> `argocd`, `githubactions-golang` and `repo-scaffolding`
 
 Note: These dependencies are optional; you can use dependency to make sure a certain tool is installed before another. We should use dependency according to the actual usage situation.
 

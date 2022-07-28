@@ -16,7 +16,7 @@ func (c *Client) GetLatestReleaseTagName() (string, error) {
 
 	log.Debugf("Response status: %s.", resp.Status)
 	if resp.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("got response status not expected: %s", resp.Status)
+		return "", fmt.Errorf("got an unexpected response status: %s", resp.Status)
 	}
 
 	return *ltstRelease.TagName, nil
