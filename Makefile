@@ -11,7 +11,7 @@ DTM_ROOT=github.com/devstream-io/devstream
 GO_LDFLAGS += -X '$(DTM_ROOT)/internal/pkg/version.Version=$(VERSION)' \
 		-X '$(DTM_ROOT)/cmd/devstream/list.PluginsName=$(PLUGINS)'
 
-FIND := find . -path './cmd/**/*.go' -o -path './test/**/*.go' -o -path './pkg/**/*.go' -o -path './internal/**/*.go'
+FIND := find . -path './cmd/**/*.go' -o -path './pkg/**/*.go' -o -path './internal/**/*.go'
 GITHOOK := $(shell cp -f hack/githooks/* .git/hooks/)
 
 # COLORS
