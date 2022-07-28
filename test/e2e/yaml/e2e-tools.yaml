@@ -4,7 +4,7 @@ tools:
     options:
       destination_repo:
         org: [[ githubOrganization ]]
-        repo: [[ repoName ]
+        repo: [[ repoName ]]
         branch: [[ defaultBranch ]]
         repo_type: github
       vars:
