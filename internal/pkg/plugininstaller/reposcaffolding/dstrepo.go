@@ -8,6 +8,7 @@ import (
 
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/util"
 	"github.com/devstream-io/devstream/pkg/util/github"
+	"github.com/devstream-io/devstream/pkg/util/gitlab"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/template"
 )
@@ -19,7 +20,8 @@ type DstRepo struct {
 	Repo              string `validate:"required"`
 	Branch            string `validate:"required"`
 	PathWithNamespace string
-	// TODO(steinliber): used for gitlab
+	RepoType          string `validate:"oneof=gitlab github" mapstructure:"repo_type"`
+	// This is config for gitlab
 	BaseURL    string `validate:"omitempty,url"`
 	Visibility string `validate:"omitempty,oneof=public private internal"`
 }
@@ -115,16 +117,15 @@ func (d *DstRepo) createGithubClient(needAuth bool) (*github.Client, error) {
 	return ghClient, nil
 }
 
-// TODO(steinliber): add gitlab support, temporary comment code
-// func (d *DstRepo) createGitlabClient() (*gitlab.Client, error) {
-// return gitlab.NewClient(gitlab.WithBaseURL(d.BaseURL))
-// }
+func (d *DstRepo) createGitlabClient() (*gitlab.Client, error) {
+	return gitlab.NewClient(gitlab.WithBaseURL(d.BaseURL))
+}
 
-// func (d *DstRepo) creategitlabOpts() *gitlab.CreateProjectOptions {
-// return &gitlab.CreateProjectOptions{
-// Name:       d.Repo,
-// Branch:     d.Branch,
-// Namespace:  d.Org,
-// Visibility: d.Visibility,
-// }
-// }
+func (d *DstRepo) buildgitlabOpts() *gitlab.CreateProjectOptions {
+	return &gitlab.CreateProjectOptions{
+		Name:       d.Repo,
+		Branch:     d.Branch,
+		Namespace:  d.Org,
+		Visibility: d.Visibility,
+	}
+}

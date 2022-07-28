@@ -47,13 +47,21 @@ Config:
 ```yaml
 ---
 tools:
-- name: github-repo-scaffolding-golang
+- name: repo-scaffolding
   instanceID: default
   options:
-    owner: IronCore864
-    repo: golang-demo
-    branch: main
-    image_repo: ironcore864/golang-demo
+    destination_repo:
+      owner: IronCore864
+      org: ""
+      repo: golang-demo
+      branch: main
+      repo_type: github
+    vars:
+      ImageRepo: "ironcore864/golang-demo"
+    source_repo:
+      org: devstream-io
+      repo: dtm-scaffolding-golang
+      repo_type: github
 - name: argocd
   instanceID: default
   options:
@@ -70,7 +78,7 @@ tools:
       upgradeCRDs: true
 - name: argocdapp
   instanceID: default
-  dependsOn: [ "argocd.default", "github-repo-scaffolding-golang.default" ]
+  dependsOn: [ "argocd.default", "repo-scaffolding.golang-github" ]
   options:
     app:
       name: golang-demo
@@ -81,9 +89,9 @@ tools:
     source:
       valuefile: values.yaml
       path: helm/golang-demo
-      repoURL: ${{ github-repo-scaffolding-golang.default.outputs.repoURL }} # pay attention here
+      repoURL: ${{ repo-scaffolding.golang-github.outputs.repoURL }} # pay attention here
 ```
 
 In this example:
-- The "default" instance of tool `argocdapp` depends on the "default" instance of tool `github-repo-scaffolding-golang` 
-- The "default" instance of tool `argocdapp` has an user option "options.source.repoURL", which uses the "default" instance of tool `github-repo-scaffolding-golang`'s output "repoURL" (`${{ github-repo-scaffolding-golang.default.outputs.repoURL }}`)
+- The "default" instance of tool `argocdapp` depends on the "default" instance of tool `repo-scaffolding` 
+- The "default" instance of tool `argocdapp` has an user option "options.source.repoURL", which uses the "default" instance of tool `repo-scaffolding`'s output "repoURL" (`${{ repo-scaffolding.golang-github.outputs.repoURL }}`)

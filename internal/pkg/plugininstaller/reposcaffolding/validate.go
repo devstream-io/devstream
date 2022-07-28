@@ -28,7 +28,7 @@ func SetDefaultTemplateRepo(options plugininstaller.RawOptions) (plugininstaller
 		return nil, err
 	}
 	// set dstRepo default value
-	dstRepo := &opts.DestinationRepo
+	dstRepo := opts.DestinationRepo
 	// set PathWithNamespace for GitLab. GitHub won't need to use this
 	// opts.PathWithNamespace = fmt.Sprintf("%s/%s", opts.Owner, opts.Repo)
 	if dstRepo.Org != "" {

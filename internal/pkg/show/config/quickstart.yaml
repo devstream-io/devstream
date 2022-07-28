@@ -10,16 +10,24 @@ state: # state config, backend can be local or s3
 ---
 # plugins config
 tools:
-  - name: github-repo-scaffolding-golang
-    instanceID: default
+  - name: repo-scaffolding
+    instanceID: golang-github
     options:
-      owner: YOUR_GITHUB_USERNAME_CASE_SENSITIVE
-      repo: go-webapp-devstream-demo
-      branch: main
-      image_repo: YOUR_DOCKER_USERNAME/go-webapp-devstream-demo
+      destination_repo:
+        owner: YOUR_GITHUB_USERNAME_CASE_SENSITIVE
+        org: ""
+        repo: go-webapp-devstream-demo
+        branch: main
+        repo_type: github
+      source_repo:
+        org: devstream-io
+        repo: dtm-scaffolding-golang
+        repo_type: github
+      vars:
+        ImageRepo: YOUR_DOCKER_USERNAME/go-webapp-devstream-demo
   - name: githubactions-golang
     instanceID: default
-    dependsOn: ["github-repo-scaffolding-golang.default"]
+    dependsOn: ["repo-scaffolding.golang-github"]
     options:
       owner: YOUR_GITHUB_USERNAME_CASE_SENSITIVE
       repo: go-webapp-devstream-demo

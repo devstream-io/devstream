@@ -8,7 +8,7 @@
 
 ## 所需插件
 
-1. [github-repo-scaffolding-golang](../plugins/github-repo-scaffolding-golang.md)
+1. [repo-scaffolding](../plugins/repo-scaffolding.md)
 2. [jira-github](../plugins/jira-github-integ.md)
 3. [githubactions-golang](../plugins/githubactions-golang.md)
 4. [argocd](../plugins/argocd.md)
@@ -16,9 +16,9 @@
 
 这些插件的依赖关系如下（`a -> b`意味着`a依赖b`）：
 
-- `jira-github` -> `github-repo-scaffolding-golang`
-- `githubactions-golang` -> `github-repo-scaffolding-golang`
-- `argocdapp` -> `argocd` 和 `github-repo-scaffolding-golang`
+- `jira-github` -> `repo-scaffolding`
+- `githubactions-golang` -> `repo-scaffolding`
+- `argocdapp` -> `argocd`, `githubactions-golang` 和 `repo-scaffolding`
 
 **注意**：依赖并不是必须指定的，我们可以用依赖确保某个工具可以先于另外一个工具安装。我们应该根据实际的使用场景来使用`dependsOn`。
 
