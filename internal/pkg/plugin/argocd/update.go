@@ -13,9 +13,7 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 			defaultMissedOption,
 			helm.Validate,
 		},
-		ExecuteOperations: []plugininstaller.BaseOperation{
-			helm.InstallOrUpdate,
-		},
+		ExecuteOperations:  helm.DefaultUpdateOperations,
 		GetStatusOperation: helm.GetPluginAllState,
 	}
 

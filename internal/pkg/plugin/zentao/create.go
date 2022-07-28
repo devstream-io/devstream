@@ -19,7 +19,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 			goclient.CreateServiceWrapperLabelAndPorts(defaultZentaolabels, &defaultSVCPort),
 			goclient.WaitForReady(retryTimes),
 		},
-		TermateOperations: []plugininstaller.BaseOperation{
+		TerminateOperations: []plugininstaller.BaseOperation{
 			goclient.DealWithErrWhenInstall,
 		},
 		GetStatusOperation: goclient.GetState,

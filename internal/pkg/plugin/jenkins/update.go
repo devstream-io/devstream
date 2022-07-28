@@ -14,10 +14,9 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 			helm.Validate,
 			replaceStroageClass,
 		},
-		ExecuteOperations: []plugininstaller.BaseOperation{
-			helm.InstallOrUpdate,
-		},
-		GetStatusOperation: getHelmResourceAndCustomResource,
+		ExecuteOperations:   helm.DefaultUpdateOperations,
+		TerminateOperations: helm.DefaultTerminateOperations,
+		GetStatusOperation:  getHelmResourceAndCustomResource,
 	}
 
 	// 2. execute installer get status and error
