@@ -13,7 +13,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 			helm.Validate,
 			replaceStroageClass,
 		},
-		GetStatusOperation: wrapperHelmResourceAndCustomResource(helm.GetPluginAllState),
+		GetStatusOperation: getHelmResourceAndCustomResource,
 	}
 
 	status, err := runner.Execute(plugininstaller.RawOptions(options))
