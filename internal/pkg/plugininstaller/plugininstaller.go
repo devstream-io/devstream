@@ -4,16 +4,30 @@ import "github.com/devstream-io/devstream/pkg/util/log"
 
 type RawOptions map[string]interface{}
 
-// MutableOperation will change options if need
-type MutableOperation func(options RawOptions) (RawOptions, error)
+type (
+	// MutableOperation will changes options if it is needed
+	MutableOperation func(options RawOptions) (RawOptions, error)
+	// BaseOperation only reads options and executes operation
+	BaseOperation func(options RawOptions) error
+	// StatusOperation only reads options and executes operation
+	StatusOperation func(options RawOptions) (map[string]interface{}, error)
+)
 
-// BaseOperation only read options and execute operation
-type BaseOperation func(options RawOptions) error
+type Installer interface {
+	Execute(options RawOptions) (map[string]interface{}, error)
+}
 
-// StatusOperation only read options and execute operation
-type StatusOperation func(options RawOptions) (map[string]interface{}, error)
+// TODO(daniel-hutao): refactor all caller to use NewInstaller() instead of call Runner.
+func NewInstaller(preExecOps []MutableOperation, execOps, termiOps []BaseOperation, getStatusOps StatusOperation) Installer {
+	return &Runner{
+		PreExecuteOperations: preExecOps,
+		ExecuteOperations:    execOps,
+		TerminateOperations:  termiOps,
+		GetStatusOperation:   getStatusOps,
+	}
+}
 
-// Runner is the basic type of plugininstaller, It organize func to run in order
+// Runner is the basic type of Installer, It organize func to run in order
 type Runner struct {
 	PreExecuteOperations []MutableOperation
 	ExecuteOperations    []BaseOperation
@@ -37,7 +51,7 @@ func (runner *Runner) Execute(options RawOptions) (map[string]interface{}, error
 		if installError == nil {
 			return
 		}
-		log.Debugf("Start Execute Clean Operations...")
+		log.Debugf("Start to execute terminating operations...")
 		for _, terminateOperation := range runner.TerminateOperations {
 			err := terminateOperation(options)
 			if err != nil {
@@ -46,7 +60,7 @@ func (runner *Runner) Execute(options RawOptions) (map[string]interface{}, error
 		}
 	}()
 
-	log.Debugf("Start Execute Install Operations...")
+	log.Debugf("Start to execute install operations...")
 	// 3. Run ExecuteOperations in order, these func can't change options
 	for _, installOperation := range runner.ExecuteOperations {
 		installError = installOperation(options)
@@ -54,10 +68,10 @@ func (runner *Runner) Execute(options RawOptions) (map[string]interface{}, error
 			return nil, installError
 		}
 	}
-	// 4. Get Status for this execute
+	// 4. Get Status for this execution step
 	var status map[string]interface{}
 	if runner.GetStatusOperation != nil {
-		log.Debugf("Start Execute Status Operations...")
+		log.Debugf("Start to execute getting status operations...")
 		status, err = runner.GetStatusOperation(options)
 	}
 	return status, err
