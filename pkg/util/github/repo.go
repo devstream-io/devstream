@@ -40,7 +40,7 @@ func (c *Client) DeleteRepo() error {
 	}
 
 	if response.StatusCode == http.StatusNotFound {
-		log.Infof("GitHub repo %s was not found. Nothing to do here.", c.Repo)
+		log.Infof("GitHub repo %s was not found. Nothing to does here.", c.Repo)
 		return nil
 	}
 

@@ -15,8 +15,8 @@ var _ = Describe("Secrets", func() {
 	var registerUrl string = fmt.Sprintf("/repos/%v/%v/actions/secrets/public-key", org, repo)
 	sk, sv := "sk", "sv"
 
-	Context(("do AddRepoSecret"), func() {
-		It("step1: do GetRepoPublicKey with wrong url", func() {
+	Context("does AddRepoSecret", func() {
+		It("step1: does GetRepoPublicKey with wrong url", func() {
 			rightClient, err := github.NewClientWithOption(&github.Option{
 				Owner: owner,
 				Repo:  repo,
@@ -28,7 +28,7 @@ var _ = Describe("Secrets", func() {
 			Expect(err).NotTo(Succeed())
 		})
 
-		It("step2: do AddRepoSecret with correct url", func() {
+		It("step2: does AddRepoSecret with correct url", func() {
 			registerUrl = fmt.Sprintf("/repos/%v/%v/actions/secrets/public-key", org, repo)
 			mux.HandleFunc(registerUrl, func(w http.ResponseWriter, r *http.Request) {
 				fmt.Fprint(w, `{"key_id":"1234","key":"2Sg8iYjAxxmI2LvUXpJjkYrMxURPc8r+dB7TJyvv1234"}`)
@@ -44,7 +44,7 @@ var _ = Describe("Secrets", func() {
 			Expect(err).NotTo(Succeed())
 		})
 
-		It("step3: do CreateOrUpdateRepoSecret with wrong url", func() {
+		It("step3: does CreateOrUpdateRepoSecret with wrong url", func() {
 			rightClient, err := github.NewClientWithOption(&github.Option{
 				Owner: owner,
 				Repo:  repo,
@@ -57,7 +57,7 @@ var _ = Describe("Secrets", func() {
 			Expect(err).NotTo(Succeed())
 		})
 
-		It("step3: do CreateOrUpdateRepoSecret with correct url", func() {
+		It("step3: does CreateOrUpdateRepoSecret with correct url", func() {
 			registerUrl = fmt.Sprintf("/repos/%v/%v/actions/secrets/%v", org, repo, sk)
 			mux.HandleFunc(registerUrl, func(w http.ResponseWriter, r *http.Request) {
 				fmt.Fprint(w, `{"key_id":"1234","key":"2Sg8iYjAxxmI2LvUXpJjkYrMxURPc8r+dB7TJyvv1234"}`)
@@ -77,7 +77,7 @@ var _ = Describe("Secrets", func() {
 	})
 
 	Context("RepoSecretExists", func() {
-		It("do RepoSecretExists with wrong url", func() {
+		It("does RepoSecretExists with wrong url", func() {
 			wrongClient, err := github.NewClientWithOption(&github.Option{
 				Owner: owner,
 				Repo:  "rrrr",
@@ -90,7 +90,7 @@ var _ = Describe("Secrets", func() {
 			Expect(b).To(Equal(false))
 		})
 
-		It("do RepoSecretExists with correct url", func() {
+		It("does RepoSecretExists with correct url", func() {
 			rightClient, err := github.NewClientWithOption(&github.Option{
 				Owner: owner,
 				Repo:  repo,
@@ -105,7 +105,7 @@ var _ = Describe("Secrets", func() {
 	})
 
 	Context("DeleteRepoSecret", func() {
-		It("do DeleteRepoSecret with wrong url", func() {
+		It("does DeleteRepoSecret with wrong url", func() {
 			wrongClient, err := github.NewClientWithOption(&github.Option{
 				Owner: owner,
 				Repo:  "rrrr",
@@ -117,7 +117,7 @@ var _ = Describe("Secrets", func() {
 			Expect(err).To(Succeed())
 		})
 
-		It("do DeleteRepoSecret with correct url", func() {
+		It("does DeleteRepoSecret with correct url", func() {
 			rightClient, err := github.NewClientWithOption(&github.Option{
 				Owner: owner,
 				Repo:  repo,

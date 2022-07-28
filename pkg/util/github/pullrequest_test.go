@@ -11,7 +11,7 @@ import (
 )
 
 var _ = Describe("Pullrequest", func() {
-	Context(("do NewPullRequest 200"), func() {
+	Context("does NewPullRequest 200", func() {
 
 		BeforeEach(func() {
 			mux.HandleFunc("/repos/devstream-io/dtm-scaffolding-golang/pulls", func(w http.ResponseWriter, r *http.Request) {
@@ -19,7 +19,7 @@ var _ = Describe("Pullrequest", func() {
 			})
 		})
 
-		It("do create a new pr", func() {
+		It("does create a new pr", func() {
 			ghClient, err := github.NewClientWithOption(github.OptNotNeedAuth, serverURL)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(ghClient).NotTo(Equal(nil))
@@ -30,9 +30,9 @@ var _ = Describe("Pullrequest", func() {
 
 	})
 
-	Context(("do NewPullRequest 404"), func() {
+	Context("does NewPullRequest 404", func() {
 
-		It("do create a new pr with wrong url", func() {
+		It("does create a new pr with wrong url", func() {
 			ghClient, err := github.NewClientWithOption(&github.Option{
 				Owner: "",
 				Org:   "or",
@@ -46,7 +46,7 @@ var _ = Describe("Pullrequest", func() {
 		})
 	})
 
-	Context(("do MergePullRequest"), func() {
+	Context("does MergePullRequest", func() {
 
 		BeforeEach(func() {
 			mux.HandleFunc("/repos/devstream-io/dtm-scaffolding-golang/pulls/1/merge", func(w http.ResponseWriter, r *http.Request) {
@@ -68,7 +68,7 @@ var _ = Describe("Pullrequest", func() {
 		})
 	})
 
-	Context(("do MergePullRequest"), func() {
+	Context("does MergePullRequest", func() {
 
 		It("404", func() {
 			ghClient, err := github.NewClientWithOption(&github.Option{
@@ -83,7 +83,7 @@ var _ = Describe("Pullrequest", func() {
 		})
 	})
 
-	Context(("do MergePullRequest"), func() {
+	Context("does MergePullRequest", func() {
 
 		BeforeEach(func() {
 			mux.HandleFunc("/repos/or/r/pulls/1/merge", func(w http.ResponseWriter, r *http.Request) {
