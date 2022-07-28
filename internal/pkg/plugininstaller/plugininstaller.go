@@ -17,7 +17,7 @@ type StatusOperation func(options RawOptions) (map[string]interface{}, error)
 type Runner struct {
 	PreExecuteOperations []MutableOperation
 	ExecuteOperations    []BaseOperation
-	TermateOperations    []BaseOperation
+	TerminateOperations  []BaseOperation
 	GetStatusOperation   StatusOperation
 }
 
@@ -31,15 +31,15 @@ func (runner *Runner) Execute(options RawOptions) (map[string]interface{}, error
 			return nil, err
 		}
 	}
-	// 2. register termate function if encounter in install
+	// 2. register terminate function if encounter in install
 	var installError error
 	defer func() {
 		if installError == nil {
 			return
 		}
 		log.Debugf("Start Execute Clean Operations...")
-		for _, termateOperation := range runner.TermateOperations {
-			err := termateOperation(options)
+		for _, terminateOperation := range runner.TerminateOperations {
+			err := terminateOperation(options)
 			if err != nil {
 				log.Errorf("Failed to deal with namespace: %s.", err)
 			}

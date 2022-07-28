@@ -18,7 +18,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 			helm.DealWithNsWhenInstall,
 			helm.InstallOrUpdate,
 		},
-		TermateOperations: []plugininstaller.BaseOperation{
+		TerminateOperations: []plugininstaller.BaseOperation{
 			helm.DealWithNsWhenInterruption,
 		},
 		GetStatusOperation: helm.GetPluginAllState,
