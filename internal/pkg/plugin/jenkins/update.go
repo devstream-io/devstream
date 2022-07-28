@@ -17,9 +17,6 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 		ExecuteOperations: []plugininstaller.BaseOperation{
 			helm.InstallOrUpdate,
 		},
-		TermateOperations: []plugininstaller.BaseOperation{
-			helm.DealWithNsWhenInterruption,
-		},
 		GetStatusOperation: getHelmResourceAndCustomResource,
 	}
 
