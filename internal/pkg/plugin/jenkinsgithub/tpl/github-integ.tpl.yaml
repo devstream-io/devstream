@@ -1,6 +1,6 @@
 unclassified:
   ghprbTrigger:
-    adminlist: "{{range .AdminList}}{{.}} {{end}}"
+    adminlist: "[[range .AdminList]][[.]] [[end]]"
     autoCloseFailedPullRequests: false
     cron: "H/5 * * * *"
     extensions:
@@ -8,10 +8,10 @@ unclassified:
         addTestResults: false
         showMatrixStatus: false
     githubAuth:
-    - credentialsId: "{{.CredentialsID}}"
+    - credentialsId: "[[.CredentialsID]]"
       description: "Anonymous connection"
-      id: "{{.GithubAuthID}}"
-      jenkinsUrl: "{{.JenkinsURLOverride}}"
+      id: "[[.GithubAuthID]]"
+      jenkinsUrl: "[[.JenkinsURLOverride]]"
       serverAPIUrl: "https://api.github.com"
     manageWebhooks: true
     okToTestPhrase: ".*ok\\W+to\\W+test.*"

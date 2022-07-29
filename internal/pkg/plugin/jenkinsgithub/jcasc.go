@@ -16,7 +16,7 @@ import (
 
 const githubIntegName = "github-integ"
 
-//go:embed github-integ.yaml
+//go:embed tpl/github-integ.tpl.yaml
 var githubIntegTemplate string
 
 func applyGitHubIntegConfig(opts *Options) error {
@@ -79,7 +79,7 @@ func applyJCasC(namespace, chartReleaseName, configName, fileContent string) err
 }
 
 func renderGitHubInteg(opts *GitHubIntegOptions) (string, error) {
-	tpl := template.New(githubIntegName)
+	tpl := template.New(githubIntegName).Delims("[[", "]]")
 	tpl, err := tpl.Parse(githubIntegTemplate)
 	if err != nil {
 		return "", err

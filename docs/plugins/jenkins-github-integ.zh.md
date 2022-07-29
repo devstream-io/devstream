@@ -1,6 +1,6 @@
 # jenkins-github-integ 插件
 
-本插件可以在基于 helm 安装的 Jenkins 上集成 GitHu。主要工作如下：
+本插件可以在基于 helm 安装的 Jenkins 上集成 GitHub。主要工作如下：
 
 - 安装 [GitHub Pull Request Builder](https://plugins.jenkins.io/ghprb/) 插件、 [OWASP Markup Formatter](https://plugins.jenkins.io/antisamy-markup-formatter/) 插件。
 - 配置 Jenkins 的 Pull Request Builder 插件，自动为 GitHub repo 创建 WebHook。

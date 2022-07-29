@@ -19,11 +19,7 @@ func getPluginExistsMap(j *jenkins.Jenkins) (map[string]bool, error) {
 		if err != nil {
 			return nil, fmt.Errorf("failed to check plugin %s: %s", pluginName, err)
 		}
-		if plugin != nil {
-			res[pluginName] = true
-		} else {
-			res[pluginName] = false
-		}
+		res[pluginName] = plugin != nil
 	}
 
 	return res, nil
@@ -35,11 +31,13 @@ func installPluginsIfNotExists(j *jenkins.Jenkins) error {
 		return err
 	}
 	for _, pluginName := range plugins {
-		if !hasPlugins[pluginName] {
-			if err := j.InstallPlugin(context.Background(), pluginName, "latest"); err != nil {
-				return fmt.Errorf("failed to install plugin %s: %s", pluginName, err)
-			}
+		if hasPlugins[pluginName] {
+			continue
+		}
+		if err := j.InstallPlugin(context.Background(), pluginName, "latest"); err != nil {
+			return fmt.Errorf("failed to install plugin %s: %s", pluginName, err)
 		}
 	}
+
 	return nil
 }

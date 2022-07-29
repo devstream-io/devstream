@@ -17,7 +17,8 @@ var _ = Describe("Create", func() {
 		})
 
 		It("should return the correct xml", func() {
-			xml := renderJobXml(jobTemplate, opts)
+			xml, err := renderJobXml(jobTemplate, opts)
+			Expect(err).To(Succeed())
 			expect := `<?xml version='1.1' encoding='UTF-8'?>
 <flow-definition plugin="workflow-job@1189.va_d37a_e9e4eda_">
     <description></description>

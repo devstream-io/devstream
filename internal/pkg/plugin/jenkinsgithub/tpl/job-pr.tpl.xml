@@ -4,7 +4,7 @@
     <keepDependencies>false</keepDependencies>
     <properties>
         <com.coravy.hudson.plugins.github.GithubProjectProperty plugin="github@1.34.4">
-            <projectUrl>{{.GitHubRepoURL}}</projectUrl>
+            <projectUrl>[[.GitHubRepoURL]]</projectUrl>
             <displayName></displayName>
         </com.coravy.hudson.plugins.github.GithubProjectProperty>
         <org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
@@ -12,7 +12,7 @@
                 <org.jenkinsci.plugins.ghprb.GhprbTrigger plugin="ghprb@1.42.2">
                     <spec>H/5 * * * *</spec>
                     <configVersion>3</configVersion>
-                    <adminlist>{{range .AdminList}}{{.}} {{end}}</adminlist>
+                    <adminlist>[[range .AdminList]][[.]] [[end]]</adminlist>
                     <allowMembersOfWhitelistedOrgsAsAdmin>false</allowMembersOfWhitelistedOrgsAsAdmin>
                     <orgslist></orgslist>
                     <cron>H/5 * * * *</cron>
@@ -61,8 +61,8 @@
                 <hudson.plugins.git.UserRemoteConfig>
                     <name>origin</name>
                     <refspec>+refs/pull/*:refs/remotes/origin/pr/*</refspec>
-                    <url>{{.GitHubRepoURL}}</url>
-                    <credentialsId>{{.CredentialsID}}</credentialsId>
+                    <url>[[.GitHubRepoURL]]</url>
+                    <credentialsId>[[.CredentialsID]]</credentialsId>
                 </hudson.plugins.git.UserRemoteConfig>
             </userRemoteConfigs>
             <branches>
@@ -74,7 +74,7 @@
             <submoduleCfg class="empty-list"/>
             <extensions/>
         </scm>
-        <scriptPath>{{.PrPipelineScriptPath}}</scriptPath>
+        <scriptPath>[[.PrPipelineScriptPath]]</scriptPath>
         <lightweight>false</lightweight>
     </definition>
     <triggers/>

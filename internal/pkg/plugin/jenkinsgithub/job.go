@@ -1,16 +1,15 @@
 package jenkinsgithub
 
 import (
-	"bytes"
 	"context"
 	_ "embed"
 	"fmt"
-	"text/template"
 
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
+	"github.com/devstream-io/devstream/pkg/util/template"
 )
 
-//go:embed job-pr.xml
+//go:embed tpl/job-pr.tpl.xml
 var jobPrTemplate string
 
 func createJob(client *jenkins.Jenkins, jobName, jobTemplate string, opts *Options) error {
@@ -37,17 +36,5 @@ func createJob(client *jenkins.Jenkins, jobName, jobTemplate string, opts *Optio
 // renderJobXml renders the job xml content from the job template and the job options.
 // pr job && main job
 func renderJobXml(jobTemplate string, opts *JobOptions) (string, error) {
-	tpl := template.New(githubIntegName)
-	tpl, err := tpl.Parse(jobTemplate)
-	if err != nil {
-		return "", err
-	}
-
-	var buf bytes.Buffer
-	err = tpl.Execute(&buf, opts)
-	if err != nil {
-		return "", err
-	}
-
-	return buf.String(), nil
+	return template.Render(githubIntegName, jobTemplate, opts)
 }
