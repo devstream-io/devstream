@@ -1,0 +1,1091 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>github: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/devstream-io/devstream/pkg/util/github/branch.go (82.6%)</option>
+				
+				<option value="file1">github.com/devstream-io/devstream/pkg/util/github/commit.go (100.0%)</option>
+				
+				<option value="file2">github.com/devstream-io/devstream/pkg/util/github/download.go (88.5%)</option>
+				
+				<option value="file3">github.com/devstream-io/devstream/pkg/util/github/file.go (31.8%)</option>
+				
+				<option value="file4">github.com/devstream-io/devstream/pkg/util/github/github.go (100.0%)</option>
+				
+				<option value="file5">github.com/devstream-io/devstream/pkg/util/github/pullrequest.go (100.0%)</option>
+				
+				<option value="file6">github.com/devstream-io/devstream/pkg/util/github/release.go (85.7%)</option>
+				
+				<option value="file7">github.com/devstream-io/devstream/pkg/util/github/repo.go (0.0%)</option>
+				
+				<option value="file8">github.com/devstream-io/devstream/pkg/util/github/secrets.go (89.1%)</option>
+				
+				<option value="file9">github.com/devstream-io/devstream/pkg/util/github/workflow.go (96.8%)</option>
+				
+				<option value="file10">github.com/devstream-io/devstream/pkg/util/github/workflow_helper.go (100.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package github
+
+import (
+        "fmt"
+
+        "github.com/google/go-github/v42/github"
+
+        "github.com/devstream-io/devstream/pkg/util/log"
+)
+
+func (c *Client) NewBranch(baseBranch, newBranch string) error <span class="cov8" title="1">{
+        var owner = c.Owner
+        if c.Org != "" </span><span class="cov8" title="1">{
+                owner = c.Org
+        }</span>
+
+        <span class="cov8" title="1">refStr := fmt.Sprintf("heads/%s", baseBranch)
+        ref, _, err := c.Git.GetRef(c.Context, owner, c.Repo, refStr)
+        if err != nil </span><span class="cov8" title="1">{
+                log.Debugf("Failed to get the ref for %s: %s.", refStr, err)
+                return err
+        }</span>
+        <span class="cov8" title="1">log.Debugf("Got the ref: Ref %s, URL %s, nodeId %s, Obj: %s.",
+                ref.GetRef(), ref.GetURL(), ref.GetNodeID(), ref.GetObject().String())
+
+        newRef := fmt.Sprintf("heads/%s", newBranch)
+        _, _, err = c.Git.CreateRef(c.Context, owner, c.Repo, &amp;github.Reference{
+                Ref: &amp;newRef,
+                Object: &amp;github.GitObject{
+                        Type: nil,
+                        SHA:  ref.GetObject().SHA,
+                        URL:  nil,
+                },
+        })
+        return err</span>
+}
+
+func (c *Client) DeleteBranch(branch string) error <span class="cov8" title="1">{
+        var owner = c.Owner
+        if c.Org != "" </span><span class="cov8" title="1">{
+                owner = c.Org
+        }</span>
+
+        <span class="cov8" title="1">refStr := fmt.Sprintf("heads/%s", branch)
+        log.Debugf("Deleting ref: %s.", refStr)
+
+        _, err := c.Git.DeleteRef(c.Context, owner, c.Repo, refStr)
+        return err</span>
+}
+
+func (c *Client) MergeCommits(mergeBranch, mainBranch string) error <span class="cov0" title="0">{
+        number, err := c.NewPullRequest(mergeBranch, mainBranch)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">return c.MergePullRequest(number, MergeMethodMerge)</span>
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package github
+
+import (
+        "fmt"
+
+        "github.com/google/go-github/v42/github"
+
+        "github.com/devstream-io/devstream/pkg/util/log"
+)
+
+func (c *Client) GetLastCommit() (*github.RepositoryCommit, error) <span class="cov8" title="1">{
+        var owner = c.Owner
+        if c.Org != "" </span><span class="cov8" title="1">{
+                owner = c.Org
+        }</span>
+
+        <span class="cov8" title="1">commits, _, err := c.Client.Repositories.ListCommits(c.Context, owner, c.Repo, &amp;github.CommitsListOptions{})
+        if err != nil </span><span class="cov8" title="1">{
+                log.Debugf("Failed to get RepositoryCommits: %s.", err)
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">if len(commits) == 0 </span><span class="cov8" title="1">{
+                msg := "no commits was found"
+                log.Info(msg)
+                return nil, fmt.Errorf(msg)
+        }</span>
+
+        <span class="cov8" title="1">return commits[0], nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package github
+
+import (
+        "context"
+        "fmt"
+        "net/http"
+
+        "github.com/google/go-github/v42/github"
+
+        "github.com/devstream-io/devstream/pkg/util/downloader"
+        "github.com/devstream-io/devstream/pkg/util/log"
+)
+
+func (c *Client) DownloadAsset(tagName, assetName, fileName string) error <span class="cov8" title="1">{
+        var owner = c.Owner
+        if c.Org != "" </span><span class="cov8" title="1">{
+                owner = c.Org
+        }</span>
+
+        // 1. get releases
+        <span class="cov8" title="1">releases, resp, err := c.Repositories.ListReleases(context.TODO(), owner, c.Repo, &amp;github.ListOptions{})
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+        <span class="cov8" title="1">log.Debug("Got releases successful.")
+        for i, r := range releases </span><span class="cov8" title="1">{
+                log.Debugf("Release(%d): %s.", i+1, r.GetName())
+        }</span>
+
+        <span class="cov8" title="1">log.Debugf("Response status: %s.", resp.Status)
+        if resp.StatusCode != http.StatusOK </span><span class="cov0" title="0">{
+                return fmt.Errorf("got response status not expected: %s", resp.Status)
+        }</span>
+
+        // 2. get assets
+        <span class="cov8" title="1">var assets []*github.ReleaseAsset
+        for _, r := range releases </span><span class="cov8" title="1">{
+                if *r.TagName != tagName </span><span class="cov0" title="0">{
+                        continue</span>
+                }
+                <span class="cov8" title="1">log.Debugf("Got a matched tag %s with release &lt;%s&gt;.", *r.TagName, *r.Name)
+
+                if len(r.Assets) == 0 </span><span class="cov0" title="0">{
+                        log.Debug("Assets is empty.")
+                        return fmt.Errorf("assets is empty")
+                }</span>
+                <span class="cov8" title="1">log.Debugf("%d Assets was found.", len(r.Assets))
+
+                assets = r.Assets
+                break</span>
+        }
+        <span class="cov8" title="1">if len(assets) == 0 </span><span class="cov0" title="0">{
+                log.Debugf("Release with tag &lt;%s&gt; was not found.", tagName)
+                return fmt.Errorf("release with tag &lt;%s&gt; was not found", tagName)
+        }</span>
+
+        // 3. get download url
+        // format: https://github.com/merico-dev/dtm-scaffolding-golang/releases/download/v0.0.1/dtm-scaffolding-golang-v0.0.1.tar.gz
+        <span class="cov8" title="1">var downloadUrl string
+        for _, a := range assets </span><span class="cov8" title="1">{
+                if a.GetName() == assetName </span><span class="cov8" title="1">{
+                        downloadUrl = a.GetBrowserDownloadURL()
+                        log.Debugf("Download url: %s.", downloadUrl)
+                        break</span>
+                }
+        }
+        <span class="cov8" title="1">if downloadUrl == "" </span><span class="cov8" title="1">{
+                log.Debugf("Failed to got the download url for %s, maybe it not exists.", assetName)
+                return fmt.Errorf("failed to got the download url for %s, maybe it not exists", assetName)
+        }</span>
+
+        // 4. download
+        <span class="cov8" title="1">n, err := downloader.Download(downloadUrl, fileName, c.WorkPath)
+        if err != nil </span><span class="cov8" title="1">{
+                log.Debugf("Failed to download asset from %s.", downloadUrl)
+                return err
+        }</span>
+        <span class="cov8" title="1">log.Debugf("Downloaded &lt;%d&gt; bytes.", n)
+
+        return nil</span>
+}
+
+func (c *Client) DownloadLatestCodeAsZipFile() error <span class="cov8" title="1">{
+        var owner = c.Owner
+        if c.Org != "" </span><span class="cov8" title="1">{
+                owner = c.Org
+        }</span>
+
+        <span class="cov8" title="1">latestCodeZipfileDownloadUrl := fmt.Sprintf(DefaultLatestCodeZipfileDownloadUrlFormat, owner, c.Repo)
+        log.Debugf("LatestCodeZipfileDownloadUrl: %s.", latestCodeZipfileDownloadUrl)
+
+        n, err := downloader.Download(latestCodeZipfileDownloadUrl, DefaultLatestCodeZipfileName, c.WorkPath)
+        if err != nil </span><span class="cov8" title="1">{
+                log.Debugf("Failed to download zip file from %s.", latestCodeZipfileDownloadUrl)
+                return err
+        }</span>
+
+        <span class="cov8" title="1">log.Debugf("Downloaded &lt;%d&gt; bytes.", n)
+        return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package github
+
+import (
+        "io/fs"
+        "io/ioutil"
+        "path/filepath"
+
+        "github.com/google/go-github/v42/github"
+
+        "github.com/devstream-io/devstream/pkg/util/log"
+)
+
+func (c *Client) CreateFile(content []byte, filePath, targetBranch string) error <span class="cov8" title="1">{
+        defaultMsg := "Initialize the repository"
+
+        opt := &amp;github.RepositoryContentFileOptions{
+                Message: &amp;defaultMsg,
+                Content: content,
+                Branch:  &amp;targetBranch,
+        }
+
+        var owner = c.Owner
+        if c.Org != "" </span><span class="cov8" title="1">{
+                owner = c.Org
+        }</span>
+
+        <span class="cov8" title="1">_, _, err := c.Repositories.CreateFile(c.Context, owner, c.Repo, filePath, opt)
+        return err</span>
+}
+
+func (c *Client) PushLocalPath(repoPath, branch string) error <span class="cov0" title="0">{
+        if err := filepath.Walk(repoPath, func(path string, info fs.FileInfo, err error) error </span><span class="cov0" title="0">{
+                if err != nil </span><span class="cov0" title="0">{
+                        log.Debugf("Walk error: %s.", err)
+                        return err
+                }</span>
+
+                <span class="cov0" title="0">if info.IsDir() </span><span class="cov0" title="0">{
+                        log.Debugf("Found dir: %s.", path)
+                        return nil
+                }</span>
+
+                <span class="cov0" title="0">log.Debugf("Found file: %s.", path)
+
+                content, err := ioutil.ReadFile(path)
+                if err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+                <span class="cov0" title="0">githubPath, _ := filepath.Rel(repoPath, path)
+                return c.CreateFile(content, githubPath, branch)</span>
+        }); err != nil <span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package github
+
+import (
+        "context"
+        "fmt"
+        "os"
+
+        "github.com/google/go-github/v42/github"
+        "golang.org/x/oauth2"
+
+        "github.com/devstream-io/devstream/pkg/util/log"
+)
+
+const (
+        DefaultWorkPath = ".github-workpath"
+        // https://github.com/merico-dev/dtm-scaffolding-golang/archive/refs/heads/main.zip -&gt; 302 -&gt;
+        // https://codeload.github.com/merico-dev/dtm-scaffolding-golang/zip/refs/heads/main
+        DefaultLatestCodeZipfileDownloadUrlFormat = "https://codeload.github.com/%s/%s/zip/refs/heads/main"
+        DefaultLatestCodeZipfileName              = "main-latest.zip"
+)
+
+var client *Client
+
+type Client struct {
+        *Option
+        *github.Client
+        context.Context
+}
+
+type Option struct {
+        Owner    string
+        Org      string
+        Repo     string
+        NeedAuth bool
+        WorkPath string
+}
+
+func NewClient(option *Option) (*Client, error) <span class="cov8" title="1">{
+        // same option will get same client
+        if client != nil &amp;&amp; *client.Option == *option </span><span class="cov8" title="1">{
+                log.Debug("Use a cached client.")
+                return client, nil
+        }</span>
+
+        <span class="cov8" title="1">var retErr error
+        defer func() </span><span class="cov8" title="1">{
+                if retErr != nil </span><span class="cov8" title="1">{
+                        return
+                }</span>
+                <span class="cov8" title="1">if client.Option.WorkPath == "" </span><span class="cov8" title="1">{
+                        client.Option.WorkPath = DefaultWorkPath
+                }</span>
+        }()
+
+        // a. client without auth enabled
+        <span class="cov8" title="1">if !option.NeedAuth </span><span class="cov8" title="1">{
+                log.Debug("Auth is not enabled.")
+                client = &amp;Client{
+                        Option:  option,
+                        Client:  github.NewClient(nil),
+                        Context: context.Background(),
+                }
+
+                return client, nil
+        }</span>
+        <span class="cov8" title="1">log.Debug("Auth is enabled.")
+
+        // b. client with auth enabled
+
+        // TL;DR: Don't use viper.GetString("xxx") in the `util/xxx` package.
+        // Don't use `token := viper.GetString("github_token")` here,
+        // it will fail without calling `viper.BindEnv("github_token")` first.
+        // os.Getenv() function is more clear and reasonable here.
+        token := os.Getenv("GITHUB_TOKEN")
+        if token == "" </span><span class="cov8" title="1">{
+                // github_token works well as GITHUB_TOKEN.
+                token = os.Getenv("github_token")
+        }</span>
+        <span class="cov8" title="1">if token == "" </span><span class="cov8" title="1">{
+                retErr = fmt.Errorf("environment variable GITHUB_TOKEN is not set. Failed to initialize GitHub token. More info - " +
+                        "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token")
+                return nil, retErr
+        }</span>
+        <span class="cov8" title="1">log.Debugf("Token: %s.", token)
+
+        tc := oauth2.NewClient(
+                context.TODO(),
+                oauth2.StaticTokenSource(
+                        &amp;oauth2.Token{
+                                AccessToken: token,
+                        },
+                ),
+        )
+
+        client = &amp;Client{
+                Option:  option,
+                Client:  github.NewClient(tc),
+                Context: context.Background(),
+        }
+
+        return client, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file5" style="display: none">package github
+
+import (
+        "fmt"
+
+        "github.com/devstream-io/devstream/pkg/util/log"
+
+        "github.com/google/go-github/v42/github"
+)
+
+type MergeMethod string
+
+const (
+        MergeMethodSquash MergeMethod = "squash"
+        MergeMethodMerge  MergeMethod = "merge"
+        MergeMethodRebase MergeMethod = "rebase"
+)
+
+func (c *Client) NewPullRequest(fromBranch, toBranch string) (int, error) <span class="cov8" title="1">{
+        var owner = c.Owner
+        if c.Org != "" </span><span class="cov8" title="1">{
+                owner = c.Org
+        }</span>
+
+        <span class="cov8" title="1">title := "feat: initialized by DevStream"
+        head := fromBranch
+        base := toBranch
+        body := title
+        mcm := false
+        draft := false
+
+        pr, _, err := c.PullRequests.Create(c.Context, owner, c.Repo, &amp;github.NewPullRequest{
+                Title:               &amp;title,
+                Head:                &amp;head,
+                Base:                &amp;base,
+                Body:                &amp;body,
+                Issue:               nil,
+                MaintainerCanModify: &amp;mcm,
+                Draft:               &amp;draft,
+        })
+
+        if err != nil </span><span class="cov8" title="1">{
+                log.Debugf("Failed to create the pr: %s.", err)
+                return 0, err
+        }</span>
+
+        <span class="cov8" title="1">log.Debugf("The pr has been created: #%d.", pr.GetNumber())
+
+        return pr.GetNumber(), nil</span>
+}
+
+func (c *Client) MergePullRequest(number int, mergeMethod MergeMethod) error <span class="cov8" title="1">{
+        var owner = c.Owner
+        if c.Org != "" </span><span class="cov8" title="1">{
+                owner = c.Org
+        }</span>
+
+        <span class="cov8" title="1">commitMsg := "Initialized by DevStream"
+        ret, _, err := c.PullRequests.Merge(c.Context, owner, c.Repo, number, commitMsg, &amp;github.PullRequestOptions{
+                CommitTitle:        commitMsg,
+                SHA:                "",
+                MergeMethod:        string(mergeMethod),
+                DontDefaultIfBlank: false,
+        })
+        if err != nil </span><span class="cov8" title="1">{
+                log.Debugf("Got an error when merge the pr: %s.", err)
+                return err
+        }</span>
+
+        <span class="cov8" title="1">if !ret.GetMerged() </span><span class="cov8" title="1">{
+                return fmt.Errorf("merge failed")
+        }</span>
+
+        <span class="cov8" title="1">return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file6" style="display: none">package github
+
+import (
+        "context"
+        "fmt"
+        "net/http"
+
+        "github.com/devstream-io/devstream/pkg/util/log"
+)
+
+func (c *Client) GetLatestReleaseTagName() (string, error) <span class="cov8" title="1">{
+        ltstRelease, resp, err := c.Repositories.GetLatestRelease(context.Background(), c.Org, c.Repo)
+        if err != nil </span><span class="cov8" title="1">{
+                return "", err
+        }</span>
+
+        <span class="cov8" title="1">log.Debugf("Response status: %s.", resp.Status)
+        if resp.StatusCode != http.StatusOK </span><span class="cov0" title="0">{
+                return "", fmt.Errorf("got an unexpected response status: %s", resp.Status)
+        }</span>
+
+        <span class="cov8" title="1">return *ltstRelease.TagName, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file7" style="display: none">package github
+
+import (
+        "net/http"
+        "strings"
+
+        "github.com/google/go-github/v42/github"
+
+        "github.com/devstream-io/devstream/pkg/util/log"
+)
+
+func (c *Client) CreateRepo(org, defaultBranch string) error <span class="cov0" title="0">{
+        repo := &amp;github.Repository{
+                Name:          &amp;c.Repo,
+                DefaultBranch: github.String(defaultBranch),
+        }
+
+        if org != "" </span><span class="cov0" title="0">{
+                log.Infof("Prepare to create an organization repository: %s/%s", org, repo.GetName())
+        }</span>
+        <span class="cov0" title="0">_, _, err := c.Repositories.Create(c.Context, org, repo)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+}
+
+func (c *Client) DeleteRepo() error <span class="cov0" title="0">{
+        var owner = c.Owner
+        if c.Org != "" </span><span class="cov0" title="0">{
+                owner = c.Org
+        }</span>
+
+        <span class="cov0" title="0">response, err := c.Client.Repositories.Delete(c.Context, owner, c.Repo)
+
+        // error reason is not 404
+        if err != nil &amp;&amp; !strings.Contains(err.Error(), "404") </span><span class="cov0" title="0">{
+                log.Errorf("Delete repo failed: %s.", err)
+                return err
+        }</span>
+
+        <span class="cov0" title="0">if response.StatusCode == http.StatusNotFound </span><span class="cov0" title="0">{
+                log.Infof("GitHub repo %s was not found. Nothing to do here.", c.Repo)
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">log.Successf("GitHub repo %s removed.", c.Repo)
+        return nil</span>
+}
+
+func (c *Client) GetRepoDescription() (*github.Repository, error) <span class="cov0" title="0">{
+        var owner = c.Owner
+        if c.Org != "" </span><span class="cov0" title="0">{
+                owner = c.Org
+        }</span>
+
+        <span class="cov0" title="0">repo, resp, err := c.Client.Repositories.Get(
+                c.Context,
+                owner,
+                c.Repo)
+
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">if repo == nil &amp;&amp; resp.StatusCode == http.StatusNotFound </span><span class="cov0" title="0">{
+                return repo, nil
+        }</span>
+
+        <span class="cov0" title="0">if resp.StatusCode != http.StatusOK </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">return repo, nil</span>
+}
+
+// PushLocalPathToBranch will push local change to remote repo
+// return boolean value is for control whether to rollout if encounter error
+func (c *Client) PushLocalPathToBranch(mergeBranch, mainBranch, repoPath string) (bool, error) <span class="cov0" title="0">{
+        // 1. create new branch from main
+        err := c.NewBranch(mainBranch, mergeBranch)
+        if err != nil </span><span class="cov0" title="0">{
+                log.Debugf("Failed to create transit branch: %s", err)
+                return false, err
+        }</span>
+        // 2. push local file change to new branch
+        <span class="cov0" title="0">if err := c.PushLocalPath(repoPath, mergeBranch); err != nil </span><span class="cov0" title="0">{
+                log.Debugf("Failed to walk local repo-path: %s.", err)
+                return true, err
+        }</span>
+        // 3. merge new branch to main
+        <span class="cov0" title="0">if err = c.MergeCommits(mergeBranch, mainBranch); err != nil </span><span class="cov0" title="0">{
+                log.Debugf("Failed to merge commits: %s.", err)
+                return true, err
+        }</span>
+        // 4. delete new branch
+        <span class="cov0" title="0">err = c.DeleteBranch(mergeBranch)
+        if err != nil </span><span class="cov0" title="0">{
+                log.Debugf("Failed to delete transit branch: %s", err)
+                return false, err
+        }</span>
+        <span class="cov0" title="0">return false, nil</span>
+}
+
+func (c *Client) InitRepo(mainBranch string) error <span class="cov0" title="0">{
+        log.Infof(c.Repo, mainBranch)
+        // It's ok to give the opts.Org to CreateRepo() when create a repository for a authenticated user.
+        if err := c.CreateRepo(c.Org, mainBranch); err != nil </span><span class="cov0" title="0">{
+                // recreate if set tryTime
+                log.Errorf("Failed to create repo: %s.", err)
+                return err
+        }</span>
+        <span class="cov0" title="0">log.Infof("The repo %s has been created.", c.Repo)
+
+        // upload a placeholder file to make repo not empty
+        if err := c.CreateFile([]byte(" "), ".placeholder", mainBranch); err != nil </span><span class="cov0" title="0">{
+                log.Debugf("Failed to add the first file: %s.", err)
+                return err
+        }</span>
+        <span class="cov0" title="0">log.Debugf("Added the .placeholder file.")
+        return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file8" style="display: none">package github
+
+import (
+        "context"
+        crypto_rand "crypto/rand"
+        "encoding/base64"
+        "fmt"
+
+        "github.com/google/go-github/v42/github"
+        "golang.org/x/crypto/nacl/box"
+)
+
+// AddRepoSecret adds a secret to a GitHub repo.
+func (c *Client) AddRepoSecret(secretKey, secretValue string) error <span class="cov8" title="1">{
+        var owner = c.Owner
+        if c.Org != "" </span><span class="cov8" title="1">{
+                owner = c.Org
+        }</span>
+
+        // The transmission of the secret value to GitHub using the api requires the secret value to be encrypted
+        // with the public key of the repo.
+        // First, the public key of the repo is retrieved.
+        <span class="cov8" title="1">ctx := context.Background()
+        publicKey, _, err := client.Actions.GetRepoPublicKey(ctx, owner, c.Repo)
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+
+        // Second, we encrypt the secret to get a github.EncodedSecret
+        <span class="cov8" title="1">encryptedSecret, err := encryptSecretWithPublicKey(publicKey, secretKey, secretValue)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        // Finally, the github.EncodedSecret is passed into the GitHub client.Actions.CreateOrUpdateRepoSecret method to
+        // create the secret in the GitHub repo
+        <span class="cov8" title="1">if _, err := client.Actions.CreateOrUpdateRepoSecret(ctx, owner, c.Repo, encryptedSecret); err != nil </span><span class="cov8" title="1">{
+                return fmt.Errorf("github Actions.CreateOrUpdateRepoSecret returned error: %v", err)
+        }</span>
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+func encryptSecretWithPublicKey(publicKey *github.PublicKey, secretName string, secretValue string) (*github.EncryptedSecret, error) <span class="cov8" title="1">{
+        // The public key comes base64 encoded, so it must be decoded prior to use.
+        decodedPublicKey, err := base64.StdEncoding.DecodeString(publicKey.GetKey())
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("base64.StdEncoding.DecodeString was unable to decode public key: %v", err)
+        }</span>
+
+        // The decode key is converted into a fixed size byte array.
+        <span class="cov8" title="1">var boxKey [32]byte
+
+        // The secret value is converted into a slice of bytes.
+        copy(boxKey[:], decodedPublicKey)
+        secretBytes := []byte(secretValue)
+
+        // The secret is encrypted with box.SealAnonymous using the repo's decoded public key.
+        encryptedBytes, err := box.SealAnonymous([]byte{}, secretBytes, &amp;boxKey, crypto_rand.Reader)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("box.SealAnonymous failed with error %w", err)
+        }</span>
+
+        // The encrypted secret is encoded as a base64 string to be used in a github.EncodedSecret type.
+        <span class="cov8" title="1">encryptedString := base64.StdEncoding.EncodeToString(encryptedBytes)
+        keyID := publicKey.GetKeyID()
+        encryptedSecret := &amp;github.EncryptedSecret{
+                Name:           secretName,
+                KeyID:          keyID,
+                EncryptedValue: encryptedString,
+        }
+        return encryptedSecret, nil</span>
+}
+
+// DeleteRepoSecret deletes a secret in a GitHub repo.
+func (c *Client) DeleteRepoSecret(secretKey string) error <span class="cov8" title="1">{
+        var owner = c.Owner
+        if c.Org != "" </span><span class="cov8" title="1">{
+                owner = c.Org
+        }</span>
+
+        <span class="cov8" title="1">ctx := context.Background()
+        response, err := client.Actions.DeleteRepoSecret(ctx, owner, c.Repo, secretKey)
+        if err != nil </span><span class="cov8" title="1">{
+                if response.StatusCode == 404 </span><span class="cov8" title="1">{
+                        return nil
+                }</span>
+                <span class="cov0" title="0">return fmt.Errorf("github Actions.DeleteRepoSecret returned error: %v", err)</span>
+        }
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+// RepoSecretExists detects if a secret exists in a GitHub repo.
+func (c *Client) RepoSecretExists(secretKey string) (bool, error) <span class="cov8" title="1">{
+        var owner = c.Owner
+        if c.Org != "" </span><span class="cov8" title="1">{
+                owner = c.Org
+        }</span>
+
+        <span class="cov8" title="1">ctx := context.Background()
+        _, response, err := client.Actions.GetRepoSecret(ctx, owner, c.Repo, secretKey)
+        if err != nil </span><span class="cov8" title="1">{
+                if response.StatusCode == 404 </span><span class="cov8" title="1">{
+                        return false, nil
+                }</span>
+                <span class="cov0" title="0">return false, fmt.Errorf("github Actions.GetRepoSecret returned error: %v", err)</span>
+        }
+        <span class="cov8" title="1">return true, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file9" style="display: none">package github
+
+import (
+        "fmt"
+        "net/http"
+        "strings"
+
+        mapset "github.com/deckarep/golang-set/v2"
+
+        "github.com/google/go-github/v42/github"
+
+        "github.com/devstream-io/devstream/pkg/util/log"
+        "github.com/devstream-io/devstream/pkg/util/mapz"
+)
+
+// Workflow is the struct for a GitHub Actions Workflow.
+type Workflow struct {
+        CommitMessage    string
+        WorkflowFileName string
+        WorkflowContent  string
+}
+
+func (c *Client) AddWorkflow(workflow *Workflow, branch string) error <span class="cov8" title="1">{
+        var owner = c.Owner
+        if c.Org != "" </span><span class="cov8" title="1">{
+                owner = c.Org
+        }</span>
+
+        <span class="cov8" title="1">sha, err := c.getFileSHA(workflow.WorkflowFileName)
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+        <span class="cov8" title="1">if sha != "" </span><span class="cov8" title="1">{
+                log.Infof("GitHub Actions workflow %s already exists.", workflow.WorkflowFileName)
+                return nil
+        }</span>
+
+        // Note: the file needs to be absent from the repository as you are not
+        // specifying a SHA reference here.
+        <span class="cov8" title="1">opts := &amp;github.RepositoryContentFileOptions{
+                Message: github.String(workflow.CommitMessage),
+                Content: []byte(workflow.WorkflowContent),
+                Branch:  github.String(branch),
+        }
+
+        log.Infof("Creating GitHub Actions workflow %s ...", workflow.WorkflowFileName)
+        _, _, err = c.Client.Repositories.CreateFile(
+                c.Context,
+                owner,
+                c.Repo,
+                generateGitHubWorkflowFileByName(workflow.WorkflowFileName),
+                opts)
+
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+        <span class="cov8" title="1">log.Successf("Github Actions workflow %s created.", workflow.WorkflowFileName)
+        return nil</span>
+}
+func (c *Client) DeleteWorkflow(workflow *Workflow, branch string) error <span class="cov8" title="1">{
+        var owner = c.Owner
+        if c.Org != "" </span><span class="cov8" title="1">{
+                owner = c.Org
+        }</span>
+
+        <span class="cov8" title="1">sha, err := c.getFileSHA(workflow.WorkflowFileName)
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+        <span class="cov8" title="1">if sha == "" </span><span class="cov8" title="1">{
+                log.Successf("Github Actions workflow %s already removed.", workflow.WorkflowFileName)
+                return nil
+        }</span>
+
+        // Note: the file needs to be absent from the repository as you are not
+        // specifying a SHA reference here.
+        <span class="cov8" title="1">opts := &amp;github.RepositoryContentFileOptions{
+                Message: github.String(workflow.CommitMessage),
+                SHA:     github.String(sha),
+                Branch:  github.String(branch),
+        }
+
+        log.Infof("Deleting GitHub Actions workflow %s ...", workflow.WorkflowFileName)
+        _, _, err = c.Client.Repositories.DeleteFile(
+                c.Context,
+                owner,
+                c.Repo,
+                generateGitHubWorkflowFileByName(workflow.WorkflowFileName),
+                opts)
+
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+        <span class="cov8" title="1">log.Successf("GitHub Actions workflow %s removed.", workflow.WorkflowFileName)
+        return nil</span>
+}
+
+// VerifyWorkflows get the workflows with names "wf1.yml", "wf2.yml", then:
+// If all workflows is ok =&gt; return ({"wf1.yml":nil, "wf2.yml:nil}, nil)
+// If some error occurred =&gt; return (nil, error)
+// If wf1.yml is not found =&gt; return ({"wf1.yml":error("not found"), "wf2.yml:nil},nil)
+func (c *Client) VerifyWorkflows(workflows []*Workflow) (map[string]error, error) <span class="cov8" title="1">{
+        var owner = c.Owner
+        if c.Org != "" </span><span class="cov8" title="1">{
+                owner = c.Org
+        }</span>
+
+        <span class="cov8" title="1">wsFiles := make([]string, 0, len(workflows))
+        for _, w := range workflows </span><span class="cov8" title="1">{
+                wsFiles = append(wsFiles, w.WorkflowFileName)
+        }</span>
+        <span class="cov8" title="1">fmt.Printf("Workflow files: %v", wsFiles)
+
+        _, dirContent, resp, err := c.Client.Repositories.GetContents(
+                c.Context,
+                owner,
+                c.Repo,
+                ".github/workflows",
+                &amp;github.RepositoryContentGetOptions{},
+        )
+
+        // error reason is not 404
+        if err != nil &amp;&amp; !strings.Contains(err.Error(), "404") </span><span class="cov8" title="1">{
+                log.Errorf("GetContents failed with error: %s.", err)
+                return nil, err
+        }</span>
+        // StatusCode == 404
+        <span class="cov8" title="1">if resp.StatusCode == http.StatusNotFound </span><span class="cov8" title="1">{
+                log.Errorf("GetContents return with status code 404.")
+                retMap := mapz.FillMapWithStrAndError(wsFiles, fmt.Errorf("not found"))
+                return retMap, nil
+        }</span>
+        // StatusCode != 200
+        <span class="cov8" title="1">if resp.StatusCode != http.StatusOK </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("got some error is not expected: %s", resp.Status)
+        }</span>
+        // StatusCode == 200
+        <span class="cov8" title="1">log.Success("GetContents return with status code 200.")
+        var filesInRemoteDir = make([]string, 0)
+        for _, f := range dirContent </span><span class="cov8" title="1">{
+                log.Infof("Found remote file: %s.", f.GetName())
+                filesInRemoteDir = append(filesInRemoteDir, f.GetName())
+        }</span>
+
+        <span class="cov8" title="1">lostFiles := mapset.NewSet[string](wsFiles...).Difference(mapset.NewSet[string](filesInRemoteDir...)).ToSlice()
+        // all files exist
+        if len(lostFiles) == 0 </span><span class="cov8" title="1">{
+                log.Info("All files exist.")
+                retMap := mapz.FillMapWithStrAndError(wsFiles, nil)
+                return retMap, nil
+        }</span>
+        // some files lost
+        <span class="cov8" title="1">log.Warn("Some files lost.")
+        retMap := mapz.FillMapWithStrAndError(wsFiles, nil)
+        for _, f := range lostFiles </span><span class="cov8" title="1">{
+                log.Infof("Lost file: %s.", f)
+                retMap[f] = fmt.Errorf("not found")
+        }</span>
+        <span class="cov8" title="1">return retMap, nil</span>
+}
+
+func (c *Client) GetWorkflowPath() (string, error) <span class="cov8" title="1">{
+        var owner = c.Owner
+        if c.Org != "" </span><span class="cov8" title="1">{
+                owner = c.Org
+        }</span>
+
+        <span class="cov8" title="1">_, _, resp, err := c.Client.Repositories.GetContents(
+                c.Context,
+                owner,
+                c.Repo,
+                ".github/workflows",
+                &amp;github.RepositoryContentGetOptions{},
+        )
+
+        if resp.StatusCode == http.StatusNotFound </span><span class="cov8" title="1">{
+                return "", nil
+        }</span>
+
+        <span class="cov8" title="1">if resp.StatusCode != http.StatusOK </span><span class="cov8" title="1">{
+                return "", err
+        }</span>
+
+        <span class="cov8" title="1">return resp.Request.URL.Path, nil</span>
+}
+
+func (c *Client) FetchRemoteContent(wsFiles []string) ([]string, map[string]error, error) <span class="cov8" title="1">{
+        var owner = c.Owner
+        if c.Org != "" </span><span class="cov8" title="1">{
+                owner = c.Org
+        }</span>
+
+        <span class="cov8" title="1">var filesInRemoteDir = make([]string, 0)
+        _, dirContent, resp, err := c.Repositories.GetContents(
+                c.Context,
+                owner,
+                c.Repo,
+                ".github/workflows",
+                &amp;github.RepositoryContentGetOptions{},
+        )
+
+        // error reason is not 404
+        if err != nil &amp;&amp; !strings.Contains(err.Error(), "404") </span><span class="cov0" title="0">{
+                log.Errorf("GetContents failed with error: %s.", err)
+                return nil, nil, err
+        }</span>
+        // StatusCode == 404
+        <span class="cov8" title="1">if resp.StatusCode == http.StatusNotFound </span><span class="cov8" title="1">{
+                log.Error("GetContents returned with status code 404.")
+                retMap := mapz.FillMapWithStrAndError(wsFiles, fmt.Errorf("not found"))
+                return nil, retMap, nil
+        }</span>
+        // StatusCode != 200
+        <span class="cov8" title="1">if resp.StatusCode != http.StatusOK </span><span class="cov8" title="1">{
+                return nil, nil, fmt.Errorf("got some error: %s", resp.Status)
+        }</span>
+        // StatusCode == 200
+        <span class="cov8" title="1">log.Info("GetContents return with status code 200.")
+        for _, f := range dirContent </span><span class="cov8" title="1">{
+                log.Infof("Found remote file: %s.", f.GetName())
+                filesInRemoteDir = append(filesInRemoteDir, f.GetName())
+        }</span>
+        <span class="cov8" title="1">return filesInRemoteDir, nil, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file10" style="display: none">package github
+
+import (
+        "fmt"
+        "net/http"
+        "strings"
+
+        "github.com/google/go-github/v42/github"
+)
+
+func generateGitHubWorkflowFileByName(f string) string <span class="cov8" title="1">{
+        return fmt.Sprintf(".github/workflows/%s", f)
+}</span>
+
+// getFileSHA will try to collect the SHA hash value of the file, then return it. the return values will be:
+// 1. If file exists without error -&gt; string(SHA), nil
+// 2. If some errors occurred -&gt; return "", err
+// 3. If file not found without error -&gt; return "", nil
+func (c *Client) getFileSHA(filename string) (string, error) <span class="cov8" title="1">{
+        var owner = c.Owner
+        if c.Org != "" </span><span class="cov8" title="1">{
+                owner = c.Org
+        }</span>
+
+        <span class="cov8" title="1">content, _, resp, err := c.Client.Repositories.GetContents(
+                c.Context,
+                owner,
+                c.Option.Repo,
+                generateGitHubWorkflowFileByName(filename),
+                &amp;github.RepositoryContentGetOptions{},
+        )
+
+        // error reason is not 404
+        if err != nil &amp;&amp; !strings.Contains(err.Error(), "404") </span><span class="cov8" title="1">{
+                return "", err
+        }</span>
+
+        // error reason is 404
+        <span class="cov8" title="1">if resp.StatusCode == http.StatusNotFound </span><span class="cov8" title="1">{
+                return "", nil
+        }</span>
+
+        // no error occurred
+        <span class="cov8" title="1">if resp.StatusCode == http.StatusOK </span><span class="cov8" title="1">{
+                return *content.SHA, nil
+        }</span>
+        <span class="cov8" title="1">return "", fmt.Errorf("got some unexpected error")</span>
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>
