@@ -31,14 +31,13 @@ func NewPbDownloadClient(baseURL string) *PbDownloadClient {
 }
 
 // download from release assets
-func (pd *PbDownloadClient) download(pluginsDir, pluginFilename, version string) error {
-
+func (pd *PbDownloadClient) download(pluginsDir, pluginFilename, ver string) error {
 	err := createPathIfNotExists(pluginsDir)
 	if err != nil {
 		return err
 	}
 
-	downloadURL := fmt.Sprintf("%s/v%s/%s", pd.baseURL, version, pluginFilename)
+	downloadURL := fmt.Sprintf("%s/v%s/%s", pd.baseURL, ver, pluginFilename)
 	log.Debugf("Downloading url is: %s.", downloadURL)
 
 	tmpName := pluginFilename + ".tmp"
@@ -83,12 +82,12 @@ func (pd *PbDownloadClient) download(pluginsDir, pluginFilename, version string)
 
 // setUpProgressBar create bar and setup
 func setUpProgressBar(resp *http.Response, downFile *os.File) error {
-	//get size
+	// get size
 	i, _ := strconv.Atoi(resp.Header.Get("Content-Length"))
 	sourceSiz := int64(i)
 	source := resp.Body
 
-	//create a bar and set param
+	// create a bar and set param
 	bar := pb.New(int(sourceSiz)).SetRefreshRate(time.Millisecond * 10).SetUnits(pb.U_BYTES).SetWidth(100)
 	bar.ShowSpeed = true
 	bar.ShowTimeLeft = true

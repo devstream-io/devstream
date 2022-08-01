@@ -14,6 +14,8 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/md5"
 )
 
+var errorDev = errors.New("dev version plugins can't be downloaded from the remote plugin repo; please run `make build-plugin.PLUGIN_NAME` to build them locally")
+
 func DownloadPlugins(conf *configloader.Config) error {
 	// create plugins dir if not exist
 	pluginDir := viper.GetString("plugin-dir")
@@ -43,6 +45,9 @@ func DownloadPlugins(conf *configloader.Config) error {
 				return pluginFileErr
 			}
 			// download .so file
+			if version.Dev {
+				return errorDev
+			}
 			if err := dc.download(pluginDir, pluginFileName, version.Version); err != nil {
 				return err
 			}
@@ -54,6 +59,9 @@ func DownloadPlugins(conf *configloader.Config) error {
 				return pluginMD5FileErr
 			}
 			// download .md5 file
+			if version.Dev {
+				return errorDev
+			}
 			if err := dc.download(pluginDir, pluginMD5FileName, version.Version); err != nil {
 				return err
 			}

@@ -9,7 +9,6 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/configloader"
 	"github.com/devstream-io/devstream/internal/pkg/pluginengine"
 	"github.com/devstream-io/devstream/internal/pkg/pluginmanager"
-	"github.com/devstream-io/devstream/internal/pkg/version"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -24,11 +23,6 @@ func initCMDFunc(_ *cobra.Command, _ []string) {
 	cfg, err := configloader.LoadConfig(configFile)
 	if err != nil {
 		log.Errorf("Error: %s.", err)
-		return
-	}
-
-	if version.Dev {
-		log.Errorf("Dev version plugins can't be downloaded from the remote plugin repo; please run `make build-plugin.PLUGIN_NAME` to build them locally.")
 		return
 	}
 
