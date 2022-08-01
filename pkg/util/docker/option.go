@@ -3,6 +3,8 @@ package docker
 import (
 	"fmt"
 	"strings"
+
+	"go.uber.org/multierr"
 )
 
 // RunOptions is used to pass options to ContainerRunWithOptions
@@ -13,8 +15,9 @@ type (
 		Hostname      string
 		ContainerName string
 		PortPublishes []PortPublish
-		Volumes       []Volume
+		Volumes       Volumes
 		RestartAlways bool
+		RunParams     []string
 	}
 
 	Volume struct {
@@ -49,24 +52,11 @@ func (opts *RunOptions) Validate() error {
 		}
 	}
 
-	return CombineErrs(errs)
+	return multierr.Combine(errs...)
 }
 
 func CombineImageNameAndTag(imageName, tag string) string {
 	return imageName + ":" + tag
-}
-
-func CombineErrs(errs []error) error {
-	if len(errs) == 0 {
-		return nil
-	}
-
-	errsString := make([]string, len(errs))
-	for _, err := range errs {
-		errsString = append(errsString, err.Error())
-	}
-
-	return fmt.Errorf(strings.Join(errsString, ";"))
 }
 
 func (volumes Volumes) ExtractHostPaths() []string {

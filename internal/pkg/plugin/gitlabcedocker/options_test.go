@@ -4,15 +4,16 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
+	dockerInstaller "github.com/devstream-io/devstream/internal/pkg/plugininstaller/docker"
 	"github.com/devstream-io/devstream/pkg/util/docker"
 )
 
 var _ = Describe("Options", func() {
 
-	var opts Options
+	var opts *Options
 
 	BeforeEach(func() {
-		opts = Options{
+		opts = &Options{
 			GitLabHome:        "/srv/gitlab",
 			Hostname:          "gitlab.example.com",
 			SSHPort:           8122,
@@ -23,23 +24,10 @@ var _ = Describe("Options", func() {
 		}
 	})
 
-	Describe("getVolumesDirFromOptions func", func() {
-		When("the options is valid", func() {
-			It("should return the volumes' directory", func() {
-				volumesDirFromOptions := getVolumesDirFromOptions(opts)
-				Expect(volumesDirFromOptions).To(Equal([]string{
-					"/srv/gitlab/config",
-					"/srv/gitlab/data",
-					"/srv/gitlab/logs",
-				}))
-			})
-		})
-	})
-
 	Describe("buildDockerRunOptions func", func() {
 		It("should build the docker run options successfully", func() {
-			runOptsBuild := buildDockerRunOptions(opts)
-			runOptsExpect := docker.RunOptions{
+			OptsBuild := *buildDockerOptions(opts)
+			OptsExpect := dockerInstaller.Options{
 				ImageName:     "gitlab/gitlab-ce",
 				ImageTag:      "rc",
 				Hostname:      "gitlab.example.com",
@@ -55,9 +43,10 @@ var _ = Describe("Options", func() {
 					{HostPath: "/srv/gitlab/data", ContainerPath: "/var/opt/gitlab"},
 					{HostPath: "/srv/gitlab/logs", ContainerPath: "/var/log/gitlab"},
 				},
+				RunParams: []string{dockerRunShmSizeParam},
 			}
 
-			Expect(runOptsBuild).To(Equal(runOptsExpect))
+			Expect(OptsBuild).To(Equal(OptsExpect))
 		})
 
 	})
