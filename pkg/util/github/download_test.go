@@ -14,7 +14,7 @@ import (
 )
 
 var _ = Describe("DownloadAsset", func() {
-	Context(("do DownloadAsset 200"), func() {
+	Context("does DownloadAsset 200", func() {
 
 		BeforeEach(func() {
 			mux.HandleFunc("/repos/r/o/releases", func(w http.ResponseWriter, r *http.Request) {
@@ -22,7 +22,7 @@ var _ = Describe("DownloadAsset", func() {
 			})
 		})
 
-		It("do ListReleases with wrong url ", func() {
+		It("does ListReleases with wrong url ", func() {
 			ghClient, err := github.NewClientWithOption(&github.Option{
 				Org: "or",
 			}, serverURL)
@@ -34,7 +34,7 @@ var _ = Describe("DownloadAsset", func() {
 
 	})
 
-	Context(("do Downloaset step 1"), func() {
+	Context("does Downloaset step 1", func() {
 
 		BeforeEach(func() {
 			mux.HandleFunc("/repos/devstream-io/dtm-scaffolding-golang/releases", func(w http.ResponseWriter, r *http.Request) {
@@ -42,7 +42,7 @@ var _ = Describe("DownloadAsset", func() {
 			})
 		})
 
-		It("do ListReleases with correct url ", func() {
+		It("does ListReleases with correct url ", func() {
 			ghClient, err := github.NewClientWithOption(github.OptNotNeedAuth, serverURL)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(ghClient).NotTo(Equal(nil))
@@ -52,7 +52,7 @@ var _ = Describe("DownloadAsset", func() {
 
 	})
 
-	Context(("do DownloadAsset step 2 "), func() {
+	Context("does DownloadAsset step 2", func() {
 
 		BeforeEach(func() {
 			mux.HandleFunc("/repos/oo/rr/releases", func(w http.ResponseWriter, r *http.Request) {
@@ -60,7 +60,7 @@ var _ = Describe("DownloadAsset", func() {
 			})
 		})
 
-		It("do ListReleases with correct url ", func() {
+		It("does ListReleases with correct url ", func() {
 			ghClient, err := github.NewClientWithOption(&github.Option{
 				Owner: "oo",
 				Repo:  "rr",
@@ -73,7 +73,7 @@ var _ = Describe("DownloadAsset", func() {
 
 	})
 
-	Context(("do DownloadAsset step 2"), func() {
+	Context("does DownloadAsset step 2", func() {
 
 		BeforeEach(func() {
 			mux.HandleFunc("/repos/a/b/releases", func(w http.ResponseWriter, r *http.Request) {
@@ -81,7 +81,7 @@ var _ = Describe("DownloadAsset", func() {
 			})
 		})
 
-		It("do ListReleases with correct url but empty asset", func() {
+		It("does ListReleases with correct url but empty asset", func() {
 			ghClient, err := github.NewClientWithOption(&github.Option{
 				Owner: "a",
 				Repo:  "b",
@@ -94,7 +94,7 @@ var _ = Describe("DownloadAsset", func() {
 
 	})
 
-	Context(("do DownloadAsset step 3"), func() {
+	Context("does DownloadAsset step 3", func() {
 
 		BeforeEach(func() {
 			mux.HandleFunc("/repos/ooo/rrr/releases", func(w http.ResponseWriter, r *http.Request) {
@@ -108,7 +108,7 @@ var _ = Describe("DownloadAsset", func() {
 			})
 		})
 
-		It("do get download url without browser_download_url", func() {
+		It("does get download url without browser_download_url", func() {
 			ghClient, err := github.NewClientWithOption(&github.Option{
 				Owner: "ooo",
 				Repo:  "rrr",
@@ -121,7 +121,7 @@ var _ = Describe("DownloadAsset", func() {
 
 	})
 	var WorkPath = "./"
-	Context(("do DownloadAsset step 4"), func() {
+	Context("does DownloadAsset step 4", func() {
 		BeforeEach(func() {
 			DeferCleanup(os.RemoveAll, "./"+github.DefaultWorkPath)
 			mux.HandleFunc("/repos/ow/re/releases", func(w http.ResponseWriter, r *http.Request) {
@@ -135,7 +135,7 @@ var _ = Describe("DownloadAsset", func() {
 			})
 		})
 
-		It("do get download url browser_download_url with unsupported proto scheme", func() {
+		It("does get download url browser_download_url with unsupported proto scheme", func() {
 			ghClient, err := github.NewClientWithOption(&github.Option{
 				Owner: "ow",
 				Repo:  "re",
@@ -148,7 +148,7 @@ var _ = Describe("DownloadAsset", func() {
 
 	})
 
-	Context(("do DownloadAsset step 4"), func() {
+	Context("does DownloadAsset step 4", func() {
 		var filename = "f"
 		var downloadUrl = "/download"
 		BeforeEach(func() {
@@ -166,7 +166,7 @@ var _ = Describe("DownloadAsset", func() {
 			})
 		})
 
-		It("do get download url browser_download_url with supported proto scheme", func() {
+		It("does get download url browser_download_url with supported proto scheme", func() {
 			ghClient, err := github.NewClientWithOption(&github.Option{
 				Owner:    "own",
 				Repo:     "rep",
@@ -187,7 +187,7 @@ var _ = Describe("DownloadAsset", func() {
 
 var _ = Describe("DownloadLatestCodeAsZipFile", func() {
 	var owner, repo, org, workPath = "owner", "repo", "org", "./"
-	Context(("do DownloadLatestCodeAsZipFile"), func() {
+	Context("does DownloadLatestCodeAsZipFile", func() {
 
 		It("corrent url ", func() {
 			ghClient, err := github.NewClientWithOption(&github.Option{

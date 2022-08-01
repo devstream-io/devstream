@@ -104,7 +104,7 @@ func NewClientWithOption(opt *Option, severUrl string) (*Client, error) {
 }
 
 var _ = Describe("GitHub", func() {
-	Context(("Client with cacahe"), func() {
+	Context("Client with cacahe", func() {
 		var ghClient *Client
 		var err error
 
