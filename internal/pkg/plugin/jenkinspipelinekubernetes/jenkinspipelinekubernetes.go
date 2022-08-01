@@ -6,7 +6,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 )
 
-//go:embed job-template.xml
+//go:embed job-template.tpl.xml
 var jobTemplate string
 
 // NewJenkinsFromOptions creates a Jenkins client from the given options and test the connection.

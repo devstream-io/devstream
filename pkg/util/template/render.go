@@ -2,8 +2,8 @@ package template
 
 import (
 	"bytes"
-	"html/template"
 	"io/ioutil"
+	"text/template"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
 )

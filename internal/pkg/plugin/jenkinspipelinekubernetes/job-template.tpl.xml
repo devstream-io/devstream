@@ -8,8 +8,8 @@
             <configVersion>2</configVersion>
             <userRemoteConfigs>
                 <hudson.plugins.git.UserRemoteConfig>
-                    <url>{{.GitHubRepoURL}}</url>
-                    <credentialsId>{{.CredentialsID}}</credentialsId>
+                    <url>[[.GitHubRepoURL]]</url>
+                    <credentialsId>[[.CredentialsID]]</credentialsId>
                 </hudson.plugins.git.UserRemoteConfig>
             </userRemoteConfigs>
             <branches>
@@ -21,7 +21,7 @@
             <submoduleCfg class="empty-list"/>
             <extensions/>
         </scm>
-        <scriptPath>{{.PipelineScriptPath}}</scriptPath>
+        <scriptPath>[[.PipelineScriptPath]]</scriptPath>
         <lightweight>false</lightweight>
     </definition>
     <triggers/>

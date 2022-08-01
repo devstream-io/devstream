@@ -1,4 +1,4 @@
-package jenkinspipelinekubernetes
+package jenkinsgithub
 
 import (
 	"context"
@@ -42,5 +42,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 		}
 	}
 
-	return true, nil
+	// TODO(aFlyBird0): delete configmaps created by devstream
+
+	return false, nil
 }

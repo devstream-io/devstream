@@ -1,0 +1,4 @@
+jenkins:
+  markupFormatter:
+    rawHtml:
+      disableSyntaxHighlighting: false
