@@ -4,221 +4,248 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"path/filepath"
 
 	"github.com/argoproj/gitops-engine/pkg/utils/io"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega/ghttp"
 
 	"github.com/devstream-io/devstream/pkg/util/github"
 )
 
 var _ = Describe("DownloadAsset", func() {
-	Context("does DownloadAsset 200", func() {
+	const (
+		owner, repo                  = "owner", "repo"
+		rightOrg, wrongOrg           = "org", "/"
+		tagName, assetName, fileName = "t", "a", "f3"
+	)
 
+	var (
+		s        *ghttp.Server
+		org      string
+		opts     *github.Option
+		workPath string
+	)
+
+	JustBeforeEach(func() {
+		opts = &github.Option{
+			Owner: owner,
+			Repo:  repo,
+			Org:   org,
+		}
+		if len(workPath) != 0 {
+			opts.WorkPath = workPath
+		}
+	})
+	When("// 1. get releases: the ListReleases url is incorrect", func() {
 		BeforeEach(func() {
-			mux.HandleFunc("/repos/r/o/releases", func(w http.ResponseWriter, r *http.Request) {
-				fmt.Fprint(w, `[{"id":1}]`)
-			})
+			org = wrongOrg
+			s = ghttp.NewServer()
 		})
 
-		It("does ListReleases with wrong url ", func() {
-			ghClient, err := github.NewClientWithOption(&github.Option{
-				Org: "or",
-			}, serverURL)
+		It("should return error", func() {
+			s.SetAllowUnhandledRequests(true)
+			ghClient, err := github.NewClientWithOption(opts, s.URL())
 			Expect(err).NotTo(HaveOccurred())
 			Expect(ghClient).NotTo(Equal(nil))
-			err = ghClient.DownloadAsset("t", "a", "f")
-			Expect(err).NotTo(Succeed())
+			err = ghClient.DownloadAsset(tagName, assetName, fileName)
+			Expect(err).To(HaveOccurred())
 		})
-
 	})
 
-	Context("does Downloaset step 1", func() {
-
+	When("// 1. get releases: the ListReleases url is correct but assets is empty", func() {
 		BeforeEach(func() {
-			mux.HandleFunc("/repos/devstream-io/dtm-scaffolding-golang/releases", func(w http.ResponseWriter, r *http.Request) {
-				fmt.Fprint(w, `[{"id":1, "tag_name":"t", "name":"n", "assets": [{"id":1}]}]`)
-			})
+			org = rightOrg
+			s = ghttp.NewServer()
 		})
 
-		It("does ListReleases with correct url ", func() {
-			ghClient, err := github.NewClientWithOption(github.OptNotNeedAuth, serverURL)
+		It("should return error", func() {
+			u := fmt.Sprintf("/repos/%s/%s/releases", org, repo)
+			s.RouteToHandler("GET", github.BaseURLPath+u, func(w http.ResponseWriter, r *http.Request) {
+				w.WriteHeader(http.StatusAlreadyReported)
+				fmt.Fprint(w, `[{"id":1, "tag_name": "t"}]`)
+			})
+			ghClient, err := github.NewClientWithOption(opts, s.URL())
 			Expect(err).NotTo(HaveOccurred())
 			Expect(ghClient).NotTo(Equal(nil))
-			err = ghClient.DownloadAsset("t", "a", "f")
-			Expect(err).NotTo(Succeed())
+			err = ghClient.DownloadAsset(tagName, assetName, fileName)
+			Expect(err).To(HaveOccurred())
+			Expect(err.Error()).To(ContainSubstring("got response status not expected"))
 		})
-
 	})
 
-	Context("does DownloadAsset step 2", func() {
-
+	When("// 2. get assets: tagName is equal and the assets is empty", func() {
 		BeforeEach(func() {
-			mux.HandleFunc("/repos/oo/rr/releases", func(w http.ResponseWriter, r *http.Request) {
-				fmt.Fprint(w, `[{"id":1, "tag_name":"t", "name":"n", "assets": [{"id":1}]}]`)
-			})
+			org = rightOrg
+			s = ghttp.NewServer()
 		})
 
-		It("does ListReleases with correct url ", func() {
-			ghClient, err := github.NewClientWithOption(&github.Option{
-				Owner: "oo",
-				Repo:  "rr",
-			}, serverURL)
+		It("should return error", func() {
+			u := fmt.Sprintf("/repos/%s/%s/releases", org, repo)
+			s.RouteToHandler("GET", github.BaseURLPath+u, func(w http.ResponseWriter, r *http.Request) {
+				fmt.Fprint(w, `[{"id":1, "tag_name": "t", "name": "n", "assets": []}]`)
+			})
+			ghClient, err := github.NewClientWithOption(opts, s.URL())
 			Expect(err).NotTo(HaveOccurred())
 			Expect(ghClient).NotTo(Equal(nil))
-			err = ghClient.DownloadAsset("t", "a", "f")
-			Expect(err).NotTo(Succeed())
+			err = ghClient.DownloadAsset(tagName, assetName, fileName)
+			Expect(err).To(HaveOccurred())
+			Expect(err.Error()).To(ContainSubstring("assets is empty"))
 		})
-
 	})
 
-	Context("does DownloadAsset step 2", func() {
-
+	When("// 2. get assets: tagName is not equal and the assets is empty", func() {
 		BeforeEach(func() {
-			mux.HandleFunc("/repos/a/b/releases", func(w http.ResponseWriter, r *http.Request) {
-				fmt.Fprint(w, `[{"id":1, "tag_name":"t", "name":"n", "assets":[]}`)
-			})
+			org = rightOrg
+			s = ghttp.NewServer()
 		})
 
-		It("does ListReleases with correct url but empty asset", func() {
-			ghClient, err := github.NewClientWithOption(&github.Option{
-				Owner: "a",
-				Repo:  "b",
-			}, serverURL)
+		It("should return error", func() {
+			u := fmt.Sprintf("/repos/%s/%s/releases", org, repo)
+			s.RouteToHandler("GET", github.BaseURLPath+u, func(w http.ResponseWriter, r *http.Request) {
+				fmt.Fprint(w, `[{"id":1, "tag_name": "tttt", "name": "n", "assets": []}]`)
+			})
+			ghClient, err := github.NewClientWithOption(opts, s.URL())
 			Expect(err).NotTo(HaveOccurred())
 			Expect(ghClient).NotTo(Equal(nil))
-			err = ghClient.DownloadAsset("t", "a", "f")
-			Expect(err).NotTo(Succeed())
+			err = ghClient.DownloadAsset(tagName, assetName, fileName)
+			Expect(err).To(HaveOccurred())
+			Expect(err.Error()).To(ContainSubstring(fmt.Sprintf("release with tag <%s> was not found", tagName)))
 		})
-
 	})
 
-	Context("does DownloadAsset step 3", func() {
-
+	When("// 3. get download url: browser_download_url is empty", func() {
 		BeforeEach(func() {
-			mux.HandleFunc("/repos/ooo/rrr/releases", func(w http.ResponseWriter, r *http.Request) {
-				fmt.Fprint(w, `[
-					{
-						"id":1, 
-						"tag_name":"t", 
-						"name":"n", 
-						"assets": [{"id":1, "name":"a"}]
-					}]`)
-			})
+			org = rightOrg
+			s = ghttp.NewServer()
 		})
 
-		It("does get download url without browser_download_url", func() {
-			ghClient, err := github.NewClientWithOption(&github.Option{
-				Owner: "ooo",
-				Repo:  "rrr",
-			}, serverURL)
+		It("should return error", func() {
+			u := fmt.Sprintf("/repos/%s/%s/releases", org, repo)
+			s.RouteToHandler("GET", github.BaseURLPath+u, func(w http.ResponseWriter, r *http.Request) {
+				fmt.Fprint(w, `[{"id":1, "tag_name": "t", "name": "a", "assets": [{"browser_download_url": ""}]}]`)
+			})
+			ghClient, err := github.NewClientWithOption(opts, s.URL())
 			Expect(err).NotTo(HaveOccurred())
 			Expect(ghClient).NotTo(Equal(nil))
-			err = ghClient.DownloadAsset("t", "a", "f")
-			Expect(err).NotTo(Succeed())
+			err = ghClient.DownloadAsset(tagName, assetName, fileName)
+			Expect(err).To(HaveOccurred())
+			Expect(err.Error()).To(ContainSubstring(fmt.Sprintf("failed to got the download url for %s, maybe it not exists", assetName)))
 		})
-
-	})
-	var WorkPath = "./"
-	Context("does DownloadAsset step 4", func() {
-		BeforeEach(func() {
-			DeferCleanup(os.RemoveAll, "./"+github.DefaultWorkPath)
-			mux.HandleFunc("/repos/ow/re/releases", func(w http.ResponseWriter, r *http.Request) {
-				fmt.Fprint(w, `[
-					{
-						"id":1, 
-						"tag_name":"t", 
-						"name":"n", 
-						"assets": [{"id":1, "name":"a", "browser_download_url":"u"}]
-					}]`)
-			})
-		})
-
-		It("does get download url browser_download_url with unsupported proto scheme", func() {
-			ghClient, err := github.NewClientWithOption(&github.Option{
-				Owner: "ow",
-				Repo:  "re",
-			}, serverURL)
-			Expect(err).NotTo(HaveOccurred())
-			Expect(ghClient).NotTo(Equal(nil))
-			err = ghClient.DownloadAsset("t", "a", "f")
-			Expect(err).NotTo(Succeed())
-		})
-
 	})
 
-	Context("does DownloadAsset step 4", func() {
-		var filename = "f"
-		var downloadUrl = "/download"
+	When("// 4. download: filename is '.' ", func() {
 		BeforeEach(func() {
-			mux.HandleFunc("/repos/own/rep/releases", func(w http.ResponseWriter, r *http.Request) {
+			org = rightOrg
+			s = ghttp.NewServer()
+		})
+
+		It("should return error", func() {
+			downloadUrl := s.URL() + github.BaseURLPath + "/download"
+			u := fmt.Sprintf("/repos/%s/%s/releases", org, repo)
+			s.RouteToHandler("GET", github.BaseURLPath+u, func(w http.ResponseWriter, r *http.Request) {
 				fmt.Fprintf(w, `[
-					{
-						"id":1, 
-						"tag_name":"t", 
-						"name":"n", 
-						"assets": [{"id":1, "name":"a", "browser_download_url":"%s"}]
-					}]`, serverURL+github.BaseURLPath+downloadUrl)
+							{
+								"id":1,
+								"tag_name":"t",
+								"name":"n",
+								"assets": [{"id":1, "name":"a", "browser_download_url":"%s"}]
+							}]`, downloadUrl)
 			})
-			mux.HandleFunc(downloadUrl, func(w http.ResponseWriter, r *http.Request) {
-				fmt.Fprintf(w, "%s", "download content")
-			})
-		})
-
-		It("does get download url browser_download_url with supported proto scheme", func() {
-			ghClient, err := github.NewClientWithOption(&github.Option{
-				Owner:    "own",
-				Repo:     "rep",
-				WorkPath: WorkPath,
-			}, serverURL)
+			ghClient, err := github.NewClientWithOption(opts, s.URL())
 			Expect(err).NotTo(HaveOccurred())
 			Expect(ghClient).NotTo(Equal(nil))
-			err = ghClient.DownloadAsset("t", "a", filename)
-			fmt.Println(err)
+			err = ghClient.DownloadAsset(tagName, assetName, ".")
+			Expect(err).To(HaveOccurred())
+			Expect(err.Error()).To(ContainSubstring(fmt.Sprintf("failed to get the filename from url: %s", downloadUrl)))
+		})
+	})
+
+	When("// 4. download", func() {
+		BeforeEach(func() {
+			org = rightOrg
+			workPath = os.TempDir()
+			s = ghttp.NewServer()
+		})
+
+		It("should return no error", func() {
+			downloadUrl := s.URL() + github.BaseURLPath + "/download"
+			u := fmt.Sprintf("/repos/%s/%s/releases", org, repo)
+			s.RouteToHandler("GET", github.BaseURLPath+"/download", func(w http.ResponseWriter, r *http.Request) {
+				fmt.Fprint(w, "file content")
+			})
+			s.RouteToHandler("GET", github.BaseURLPath+u, func(w http.ResponseWriter, r *http.Request) {
+				fmt.Fprintf(w, `[
+							{
+								"id":1,
+								"tag_name":"t",
+								"name":"n",
+								"assets": [{"id":1, "name":"a", "browser_download_url":"%s"}]
+							}]`, downloadUrl)
+			})
+			ghClient, err := github.NewClientWithOption(opts, s.URL())
+			Expect(err).NotTo(HaveOccurred())
+			Expect(ghClient).NotTo(Equal(nil))
+			err = ghClient.DownloadAsset(tagName, assetName, fileName)
 			Expect(err).To(Succeed())
 		})
+	})
 
-		AfterEach(func() {
-			io.DeleteFile(filepath.Join(WorkPath, filename))
-		})
+	AfterEach(func() {
+		s.Close()
+		DeferCleanup(io.DeleteFile, workPath+"/"+fileName)
 	})
 })
 
 var _ = Describe("DownloadLatestCodeAsZipFile", func() {
-	var owner, repo, org, workPath = "owner", "repo", "org", "./"
-	Context("does DownloadLatestCodeAsZipFile", func() {
+	const (
+		owner, repo, org             = "owner", "repo", "org"
+		rightWorkPath, wrongWorkPath = "./", "//"
+	)
 
-		It("corrent url ", func() {
-			ghClient, err := github.NewClientWithOption(&github.Option{
-				Owner:    owner,
-				Repo:     repo,
-				Org:      org,
-				WorkPath: workPath,
-			}, serverURL)
+	var (
+		workPath string
+		opts     *github.Option
+	)
+
+	JustBeforeEach(func() {
+		opts = &github.Option{
+			Owner:    owner,
+			Repo:     repo,
+			Org:      org,
+			WorkPath: workPath,
+		}
+	})
+
+	When("the url is correct", func() {
+		BeforeEach(func() {
+			workPath = rightWorkPath
+		})
+
+		It("should return no error", func() {
+			ghClient, err := github.NewClientWithOption(opts, serverURL)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(ghClient).NotTo(Equal(nil))
 			err = ghClient.DownloadLatestCodeAsZipFile()
 			Expect(err).To(Succeed())
 		})
+	})
 
-		It("produce an error", func() {
-			ghClient, err := github.NewClientWithOption(&github.Option{
-				Owner:    owner,
-				Repo:     repo,
-				Org:      org,
-				WorkPath: "//",
-			}, serverURL)
+	When("the url is incorrect(caused by wrong work path)", func() {
+		BeforeEach(func() {
+			workPath = wrongWorkPath
+		})
+
+		It("should return an error", func() {
+			ghClient, err := github.NewClientWithOption(opts, serverURL)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(ghClient).NotTo(Equal(nil))
 			err = ghClient.DownloadLatestCodeAsZipFile()
 			Expect(err).NotTo(Succeed())
 		})
-
-		AfterEach(func() {
-			DeferCleanup(io.DeleteFile, workPath+github.DefaultLatestCodeZipfileName)
-		})
-
 	})
 
+	AfterEach(func() {
+		DeferCleanup(io.DeleteFile, workPath+github.DefaultLatestCodeZipfileName)
+	})
 })
