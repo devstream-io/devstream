@@ -36,7 +36,7 @@ tools:
         repo: dtm-scaffolding-golang
         repo_type: github
       vars:
-        ImageRepo: [[ dockerhubUsername ]]/[[ repoName ]]
+        ImageRepo: "[[ dockerhubUsername ]]/[[ repoName ]]"
   - name: jira-github-integ
     instanceID: default
     dependsOn: [ "repo-scaffolding.golang-github" ]

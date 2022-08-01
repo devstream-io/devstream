@@ -113,8 +113,8 @@ var pluginDefaultConfigs = map[string]string{
 	"zentao":                      ZentaoDefaultConfig,
 }
 
-//go:embed quickstart.yaml
+//go:embed templates/quickstart.yaml
 var QuickStart string
 
-//go:embed gitops.yaml
+//go:embed templates/gitops.yaml
 var GitOps string
