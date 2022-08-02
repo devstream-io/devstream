@@ -16,10 +16,10 @@ type AllResourceStatus struct {
 }
 
 //GetResourceStatus get all resource state by input nameSpace and filtermap
-func (c *Client) GetResourceStatus(nameSpace string, anFilter map[string]string) (AllResourceStatus, error) {
+func (c *Client) GetResourceStatus(nameSpace string, anFilter, labelFilter map[string]string) (AllResourceStatus, error) {
 	stateMap := AllResourceStatus{}
 	// 1. list deploy resource
-	dps, err := c.ListDeployments(nameSpace)
+	dps, err := c.ListDeploymentsWithLabel(nameSpace, labelFilter)
 	if err != nil {
 		log.Debugf("Failed to list deployments: %s.", err)
 		return stateMap, err
@@ -28,7 +28,8 @@ func (c *Client) GetResourceStatus(nameSpace string, anFilter map[string]string)
 	for _, dp := range dps {
 		matchFilterd := filterByAnnotation(dp.GetAnnotations(), anFilter)
 		if !matchFilterd {
-			log.Debugf("Found unknown deployment: %s.", dp.GetName())
+			log.Infof("Found unknown statefulSet: %s.", dp.GetName())
+			continue
 		}
 		dpName := dp.GetName()
 		ready := c.IsDeploymentReady(&dp)
@@ -37,7 +38,7 @@ func (c *Client) GetResourceStatus(nameSpace string, anFilter map[string]string)
 	}
 
 	// 2. list statefulsets resource
-	sts, err := c.ListStatefulsets(nameSpace)
+	sts, err := c.ListStatefulsetsWithLabel(nameSpace, labelFilter)
 	if err != nil {
 		log.Debugf("Failed to list statefulsets: %s.", err)
 		return stateMap, err
@@ -47,6 +48,7 @@ func (c *Client) GetResourceStatus(nameSpace string, anFilter map[string]string)
 		matchFilterd := filterByAnnotation(ss.GetAnnotations(), anFilter)
 		if !matchFilterd {
 			log.Infof("Found unknown statefulSet: %s.", ss.GetName())
+			continue
 		}
 
 		ready := c.IsStatefulsetReady(&ss)
@@ -56,7 +58,7 @@ func (c *Client) GetResourceStatus(nameSpace string, anFilter map[string]string)
 	}
 
 	// 3. list daemonset resource
-	dss, err := c.ListDaemonsets(nameSpace)
+	dss, err := c.ListDaemonsetsWithLabel(nameSpace, labelFilter)
 	if err != nil {
 		log.Debugf("Failed to list daemonsets: %s.", err)
 		return stateMap, err
@@ -64,8 +66,9 @@ func (c *Client) GetResourceStatus(nameSpace string, anFilter map[string]string)
 
 	for _, ds := range dss {
 		matchFilterd := filterByAnnotation(ds.GetAnnotations(), anFilter)
-		if matchFilterd {
-			log.Infof("Found unknown daemonSet: %s.", ds.GetName())
+		if !matchFilterd {
+			log.Infof("Found unknown statefulSet: %s.", ds.GetName())
+			continue
 		}
 
 		ready := c.IsDaemonsetReady(&ds)

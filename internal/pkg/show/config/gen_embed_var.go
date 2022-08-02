@@ -17,7 +17,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/util"
+	"github.com/devstream-io/devstream/pkg/util/file"
 
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
@@ -72,7 +72,7 @@ func copyTemplates(src, dst string) error {
 		if d.IsDir() || !strings.HasSuffix(path, ".yaml") {
 			return nil
 		}
-		return util.CopyFile(path, filepath.Join(dst, filepath.Base(path)))
+		return file.CopyFile(path, filepath.Join(dst, filepath.Base(path)))
 	})
 }
 

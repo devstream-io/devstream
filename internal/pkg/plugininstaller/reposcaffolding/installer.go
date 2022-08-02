@@ -62,14 +62,14 @@ func DeleteRepo(options plugininstaller.RawOptions) error {
 	switch dstRepo.RepoType {
 	case "github":
 		// 1. create ghClient
-		ghClient, err := opts.DestinationRepo.createGithubClient(true)
+		ghClient, err := opts.DestinationRepo.CreateGithubClient(true)
 		if err != nil {
 			return err
 		}
 		// 2. delete github repo
 		return ghClient.DeleteRepo()
 	case "gitlab":
-		gLclient, err := dstRepo.createGitlabClient()
+		gLclient, err := dstRepo.CreateGitlabClient()
 		if err != nil {
 			return err
 		}

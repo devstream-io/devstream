@@ -11,7 +11,6 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	runner := &plugininstaller.Runner{
 		ExecuteOperations: []plugininstaller.BaseOperation{
 			kubectl.ProcessByContent("create", devLakeInstallYAMLDownloadURL, ""),
-			kubectl.WaitDeployReadyWithDeployList(defaultNamespace, devLakeDeployments),
 		},
 		GetStatusOperation: getStaticState,
 	}
