@@ -47,14 +47,14 @@ var _ = Describe("Repo", func() {
 	})
 
 	Context("CreateRepo", func() {
-		It("create with err 500", func() {
+		It("create with status 500", func() {
 			s.Reset()
 			s.SetAllowUnhandledRequests(true)
 			err := wrongClient.CreateRepo(org, defaultBranch)
 			Expect(err).NotTo(Succeed())
 			Expect(err.Error()).To(ContainSubstring(strconv.Itoa(http.StatusInternalServerError)))
 		})
-		It("create with err 500", func() {
+		It("create with status 200", func() {
 			s.Reset()
 			s.SetAllowUnhandledRequests(true)
 			s.SetUnhandledRequestStatusCode(http.StatusOK)
@@ -67,7 +67,6 @@ var _ = Describe("Repo", func() {
 		It("DeleteRepo with status 500", func() {
 			s.Reset()
 			s.SetAllowUnhandledRequests(true)
-			s.SetUnhandledRequestStatusCode(http.StatusInternalServerError)
 			err := rightClient.DeleteRepo()
 			Expect(err).NotTo(Succeed())
 			Expect(err.Error()).To(ContainSubstring(strconv.Itoa(http.StatusInternalServerError)))
@@ -103,7 +102,6 @@ var _ = Describe("Repo", func() {
 			u := fmt.Sprintf("/repos/%v/%v", org, repo)
 			s.Reset()
 			s.RouteToHandler("GET", gh.BaseURLPath+u, func(w http.ResponseWriter, r *http.Request) {
-				// w.WriteHeader(http.StatusNotFound)
 				fmt.Fprint(w, ``)
 			})
 			r, err := rightClient.GetRepoDescription()
