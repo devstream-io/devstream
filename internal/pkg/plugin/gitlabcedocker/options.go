@@ -21,6 +21,7 @@ type Options struct {
 
 func buildDockerOptions(opts *Options) *dockerInstaller.Options {
 	dockerOpts := &dockerInstaller.Options{}
+	dockerOpts.RmDataAfterDelete = opts.RmDataAfterDelete
 	dockerOpts.ImageName = gitlabImageName
 	dockerOpts.ImageTag = opts.ImageTag
 	dockerOpts.Hostname = opts.Hostname
