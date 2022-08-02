@@ -44,5 +44,5 @@ func (c *Client) getFileSHA(filename string) (string, error) {
 	if resp.StatusCode == http.StatusOK {
 		return *content.SHA, nil
 	}
-	return "", fmt.Errorf("got some error is not expected")
+	return "", fmt.Errorf("unexpected error")
 }

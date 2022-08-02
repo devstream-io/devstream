@@ -105,7 +105,7 @@ func (c *Client) VerifyWorkflows(workflows []*Workflow) (map[string]error, error
 		owner = c.Org
 	}
 
-	wsFiles := make([]string, 0)
+	wsFiles := make([]string, 0, len(workflows))
 	for _, w := range workflows {
 		wsFiles = append(wsFiles, w.WorkflowFileName)
 	}
