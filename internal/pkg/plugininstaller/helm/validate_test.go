@@ -7,6 +7,7 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/helm"
 	helmCommon "github.com/devstream-io/devstream/pkg/util/helm"
+	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
 var _ = Describe("Validate func", func() {
@@ -60,7 +61,7 @@ var _ = Describe("SetDefaultConfig func", func() {
 		testChartName = "test_chart"
 		testRepoName = "test_repo"
 		testRepoURL = "http://test.com"
-		testBool = helmCommon.GetBoolTrueAddress()
+		testBool = types.Bool(true)
 		testOptions = map[string]interface{}{
 			"chart": map[string]string{},
 			"repo":  map[string]string{},

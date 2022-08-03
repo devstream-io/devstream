@@ -3,14 +3,15 @@ package argocd
 import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/helm"
 	helmCommon "github.com/devstream-io/devstream/pkg/util/helm"
+	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
 var defaultHelmConfig = helm.Options{
 	Chart: helmCommon.Chart{
 		ChartName:   "argo/argo-cd",
 		Timeout:     "5m",
-		UpgradeCRDs: helmCommon.GetBoolTrueAddress(),
-		Wait:        helmCommon.GetBoolTrueAddress(),
+		UpgradeCRDs: types.Bool(true),
+		Wait:        types.Bool(true),
 	},
 	Repo: helmCommon.Repo{
 		URL:  "https://argoproj.github.io/argo-helm",

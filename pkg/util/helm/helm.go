@@ -139,13 +139,3 @@ func GetAnnotationName() string {
 func GetLabelName() string {
 	return "app.kubernetes.io/instance"
 }
-
-func GetBoolTrueAddress() *bool {
-	trueValue := true
-	return &trueValue
-}
-
-func GetBoolFalseAddress() *bool {
-	falseValue := false
-	return &falseValue
-}

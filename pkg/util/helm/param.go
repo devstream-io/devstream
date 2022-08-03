@@ -1,5 +1,9 @@
 package helm
 
+import (
+	"github.com/devstream-io/devstream/pkg/util/types"
+)
+
 // HelmParam is the struct for parameters with helm style.
 type HelmParam struct {
 	Repo  Repo
@@ -51,15 +55,13 @@ func (chart *Chart) FillDefaultValue(defaultChart *Chart) {
 }
 
 func getBoolValue(field, defaultField *bool) *bool {
-	var boolAddress *bool
-	if field == nil {
-		if defaultField == nil {
-			boolAddress = GetBoolFalseAddress()
-		} else {
-			boolAddress = defaultField
-		}
-	} else {
-		boolAddress = field
+	if field != nil {
+		return field
 	}
-	return boolAddress
+
+	if defaultField != nil {
+		return defaultField
+	}
+
+	return types.Bool(false)
 }

@@ -10,6 +10,8 @@ import (
 	helmclient "github.com/mittwald/go-helm-client"
 	"helm.sh/helm/v3/pkg/release"
 	"helm.sh/helm/v3/pkg/repo"
+
+	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
 var (
@@ -26,8 +28,8 @@ var helmParam = &HelmParam{
 	Chart{
 		ReleaseName: "helm:v1.0.0",
 		Timeout:     "1m",
-		Wait:        GetBoolFalseAddress(),
-		UpgradeCRDs: GetBoolFalseAddress(),
+		Wait:        types.Bool(false),
+		UpgradeCRDs: types.Bool(false),
 	},
 }
 
