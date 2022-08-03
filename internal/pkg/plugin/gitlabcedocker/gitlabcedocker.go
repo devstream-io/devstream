@@ -1,8 +1,7 @@
 package gitlabcedocker
 
 import (
-	"strconv"
-	"strings"
+	"fmt"
 
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/pkg/util/log"
@@ -18,16 +17,8 @@ const (
 // gitlabURL is the access URL of GitLab.
 var gitlabURL string
 
-func getGitLabURL(opts *Options) string {
-	accessUrl := opts.Hostname
-	if opts.HTTPPort != 80 {
-		accessUrl += ":" + strconv.Itoa(int(opts.HTTPPort))
-	}
-	if !strings.HasPrefix(accessUrl, "http") {
-		accessUrl = "http://" + accessUrl
-	}
-
-	return accessUrl
+func (opts *Options) getGitLabURL() string {
+	return fmt.Sprintf("http://%s:%d", opts.Hostname, opts.HTTPPort)
 }
 
 func showGitLabURL(options plugininstaller.RawOptions) error {

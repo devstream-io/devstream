@@ -153,7 +153,7 @@ func Delete(options plugininstaller.RawOptions) error {
 	if opts.RmDataAfterDelete {
 		volumesDirFromOptions := opts.Volumes.ExtractHostPaths()
 		for _, volume := range volumesDirFromOptions {
-			if exist := pathExist(volume); exist {
+			if exist := PathExist(volume); exist {
 				errs = append(errs, fmt.Errorf("failed to delete volume %s", volume))
 			}
 		}

@@ -12,8 +12,6 @@ func Delete(options map[string]interface{}) (bool, error) {
 		return false, err
 	}
 
-	gitlabURL = getGitLabURL(opts)
-
 	// 2. config delete operations
 	runner := &plugininstaller.Runner{
 		PreExecuteOperations: []plugininstaller.MutableOperation{

@@ -13,7 +13,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	gitlabURL = getGitLabURL(opts)
+	gitlabURL = opts.getGitLabURL()
 
 	// 2. config read operations
 	runner := &plugininstaller.Runner{

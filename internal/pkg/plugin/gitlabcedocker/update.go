@@ -13,7 +13,7 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	gitlabURL = getGitLabURL(opts)
+	gitlabURL = opts.getGitLabURL()
 
 	// 2. config install operations
 	runner := &plugininstaller.Runner{

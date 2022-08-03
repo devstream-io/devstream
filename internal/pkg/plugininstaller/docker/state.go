@@ -1,6 +1,10 @@
 package docker
 
 import (
+	"fmt"
+
+	"github.com/mitchellh/mapstructure"
+
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/pkg/util/docker"
 	"github.com/devstream-io/devstream/pkg/util/log"
@@ -13,13 +17,14 @@ type State struct {
 	PortPublishes    []docker.PortPublish
 }
 
-func (s *State) toMap() map[string]interface{} {
-	return map[string]interface{}{
-		"ContainerRunning": s.ContainerRunning,
-		"Volumes":          s.Volumes,
-		"Hostname":         s.Hostname,
-		"PortPublishes":    s.PortPublishes,
+func (s *State) toMap() (map[string]interface{}, error) {
+	m := make(map[string]interface{})
+	err := mapstructure.Decode(s, &m)
+	if err != nil {
+		return nil, fmt.Errorf("failed to convert state to map: %v", err)
 	}
+
+	return m, nil
 }
 
 func GetStaticStateFromOptions(options plugininstaller.RawOptions) (map[string]interface{}, error) {
@@ -35,7 +40,7 @@ func GetStaticStateFromOptions(options plugininstaller.RawOptions) (map[string]i
 		PortPublishes:    opts.PortPublishes,
 	}
 
-	return staticState.toMap(), nil
+	return staticState.toMap()
 }
 
 func GetRunningState(options plugininstaller.RawOptions) (map[string]interface{}, error) {
@@ -82,5 +87,5 @@ func GetRunningState(options plugininstaller.RawOptions) (map[string]interface{}
 		PortPublishes:    PortPublishes,
 	}
 
-	return resource.toMap(), nil
+	return resource.toMap()
 }

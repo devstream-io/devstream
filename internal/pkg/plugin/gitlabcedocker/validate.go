@@ -2,7 +2,7 @@ package gitlabcedocker
 
 import (
 	"fmt"
-	"path"
+	"path/filepath"
 
 	"github.com/mitchellh/mapstructure"
 
@@ -35,7 +35,7 @@ func defaults(opts *Options) {
 func validate(options *Options) error {
 	errs := validator.Struct(options)
 	// volume directory must be absolute path
-	if !path.IsAbs(options.GitLabHome) {
+	if !filepath.IsAbs(options.GitLabHome) {
 		errs = append(errs, fmt.Errorf("GitLabHome must be an absolute path"))
 	}
 
