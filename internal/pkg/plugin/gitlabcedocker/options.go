@@ -3,6 +3,7 @@ package gitlabcedocker
 import (
 	"path/filepath"
 
+	dockerInstaller "github.com/devstream-io/devstream/internal/pkg/plugininstaller/docker"
 	"github.com/devstream-io/devstream/pkg/util/docker"
 )
 
@@ -18,13 +19,30 @@ type Options struct {
 	ImageTag          string `mapstructure:"image_tag"`
 }
 
-// getVolumesDirFromOptions returns host directories of the volumes from the options.
-func getVolumesDirFromOptions(opts Options) []string {
-	volumes := buildDockerVolumes(opts)
-	return volumes.ExtractHostPaths()
+func buildDockerOptions(opts *Options) *dockerInstaller.Options {
+	dockerOpts := &dockerInstaller.Options{}
+	dockerOpts.RmDataAfterDelete = opts.RmDataAfterDelete
+	dockerOpts.ImageName = gitlabImageName
+	dockerOpts.ImageTag = opts.ImageTag
+	dockerOpts.Hostname = opts.Hostname
+	dockerOpts.ContainerName = gitlabContainerName
+	dockerOpts.RestartAlways = true
+
+	portPublishes := []docker.PortPublish{
+		{HostPort: opts.SSHPort, ContainerPort: 22},
+		{HostPort: opts.HTTPPort, ContainerPort: 80},
+		{HostPort: opts.HTTPSPort, ContainerPort: 443},
+	}
+	dockerOpts.PortPublishes = portPublishes
+
+	dockerOpts.Volumes = buildDockerVolumes(opts)
+
+	dockerOpts.RunParams = []string{dockerRunShmSizeParam}
+
+	return dockerOpts
 }
 
-func buildDockerVolumes(opts Options) docker.Volumes {
+func buildDockerVolumes(opts *Options) docker.Volumes {
 	volumes := []docker.Volume{
 		{HostPath: filepath.Join(opts.GitLabHome, "config"), ContainerPath: "/etc/gitlab"},
 		{HostPath: filepath.Join(opts.GitLabHome, "data"), ContainerPath: "/var/opt/gitlab"},
@@ -32,24 +50,4 @@ func buildDockerVolumes(opts Options) docker.Volumes {
 	}
 
 	return volumes
-}
-
-func buildDockerRunOptions(opts Options) docker.RunOptions {
-	dockerRunOpts := docker.RunOptions{}
-	dockerRunOpts.ImageName = gitlabImageName
-	dockerRunOpts.ImageTag = opts.ImageTag
-	dockerRunOpts.Hostname = opts.Hostname
-	dockerRunOpts.ContainerName = gitlabContainerName
-	dockerRunOpts.RestartAlways = true
-
-	portPublishes := []docker.PortPublish{
-		{HostPort: opts.SSHPort, ContainerPort: 22},
-		{HostPort: opts.HTTPPort, ContainerPort: 80},
-		{HostPort: opts.HTTPSPort, ContainerPort: 443},
-	}
-	dockerRunOpts.PortPublishes = portPublishes
-
-	dockerRunOpts.Volumes = buildDockerVolumes(opts)
-
-	return dockerRunOpts
 }

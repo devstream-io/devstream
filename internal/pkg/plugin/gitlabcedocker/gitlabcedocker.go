@@ -1,51 +1,28 @@
 package gitlabcedocker
 
 import (
-	"strings"
+	"fmt"
 
-	"github.com/devstream-io/devstream/pkg/util/docker"
-	"github.com/devstream-io/devstream/pkg/util/docker/dockersh"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 const (
 	gitlabImageName       = "gitlab/gitlab-ce"
 	defaultImageTag       = "rc"
 	gitlabContainerName   = "gitlab"
-	tcp                   = "tcp"
 	dockerRunShmSizeParam = "--shm-size 256m"
 )
 
-func getImageNameWithTag(opt Options) string {
-	return gitlabImageName + ":" + opt.ImageTag
+// gitlabURL is the access URL of GitLab.
+var gitlabURL string
+
+func (opts *Options) getGitLabURL() string {
+	return fmt.Sprintf("http://%s:%d", opts.Hostname, opts.HTTPPort)
 }
 
-func defaults(opts *Options) {
-	if opts.ImageTag == "" {
-		opts.ImageTag = defaultImageTag
-	}
-}
+func showGitLabURL(options plugininstaller.RawOptions) error {
+	log.Infof("GitLab access URL: %s", gitlabURL)
 
-func GetDockerOperator(_ Options) docker.Operator {
-	// just return a ShellOperator for now
-	return &dockersh.ShellOperator{}
-}
-
-type gitlabResource struct {
-	ContainerRunning bool
-	Volumes          []string
-	Hostname         string
-	SSHPort          string
-	HTTPPort         string
-	HTTPSPort        string
-}
-
-func (res *gitlabResource) toMap() map[string]interface{} {
-	return map[string]interface{}{
-		"containerRunning": res.ContainerRunning,
-		"volumes":          strings.Join(res.Volumes, ","),
-		"hostname":         res.Hostname,
-		"SSHPort":          res.SSHPort,
-		"HTTPPort":         res.HTTPPort,
-		"HTTPSPort":        res.HTTPSPort,
-	}
+	return nil
 }
