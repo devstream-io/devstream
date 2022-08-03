@@ -134,3 +134,8 @@ func (h *Helm) UninstallHelmChartRelease() (err error) {
 func GetAnnotationName() string {
 	return "meta.helm.sh/release-name"
 }
+
+// GetAnnotationName will return label key for service created by helm
+func GetLabelName() string {
+	return "app.kubernetes.io/instance"
+}

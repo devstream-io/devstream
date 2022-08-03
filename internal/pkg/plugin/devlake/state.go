@@ -2,7 +2,7 @@ package devlake
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/util"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/common"
 )
 
 func getStaticState(opts plugininstaller.RawOptions) (map[string]interface{}, error) {
@@ -17,5 +17,8 @@ func getStaticState(opts plugininstaller.RawOptions) (map[string]interface{}, er
 }
 
 func getDynamicState(opts plugininstaller.RawOptions) (map[string]interface{}, error) {
-	return util.ReadDepAndServiceState(defaultNamespace, devLakeDeployments)
+	labelFilter := map[string]string{
+		"app": "devlake",
+	}
+	return common.GetPluginAllK8sState(defaultNamespace, map[string]string{}, labelFilter)
 }

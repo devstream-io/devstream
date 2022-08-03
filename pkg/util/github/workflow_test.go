@@ -5,10 +5,11 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/devstream-io/devstream/pkg/util/github"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/ghttp"
+
+	"github.com/devstream-io/devstream/pkg/util/github"
 )
 
 var _ = Describe("Workflow", func() {

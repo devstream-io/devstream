@@ -7,18 +7,18 @@ import (
 
 	appsv1 "k8s.io/api/apps/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func (c *Client) ListDeployments(namespace string) ([]appsv1.Deployment, error) {
-	dpList, err := c.AppsV1().Deployments(namespace).List(context.TODO(), metav1.ListOptions{})
+func (c *Client) ListDeploymentsWithLabel(namespace string, labelFilter map[string]string) ([]appsv1.Deployment, error) {
+	dpList, err := c.AppsV1().Deployments(namespace).List(context.TODO(), c.generateLabelFilterOption(labelFilter))
 	if err != nil {
 		return nil, err
 	}
 	return dpList.Items, nil
 }
-
 func (c *Client) GetDeployment(namespace, name string) (*appsv1.Deployment, error) {
 	return c.AppsV1().Deployments(namespace).Get(context.TODO(), name, metav1.GetOptions{})
 }
@@ -57,8 +57,8 @@ func (c *Client) DeleteDeployment(namespace, deployName string) error {
 		Delete(context.TODO(), deployName, metav1.DeleteOptions{})
 }
 
-func (c *Client) ListDaemonsets(namespace string) ([]appsv1.DaemonSet, error) {
-	dsList, err := c.AppsV1().DaemonSets(namespace).List(context.TODO(), metav1.ListOptions{})
+func (c *Client) ListDaemonsetsWithLabel(namespace string, labeFilter map[string]string) ([]appsv1.DaemonSet, error) {
+	dsList, err := c.AppsV1().DaemonSets(namespace).List(context.TODO(), c.generateLabelFilterOption(labeFilter))
 	if err != nil {
 		return nil, err
 	}
@@ -73,8 +73,8 @@ func (c *Client) IsDaemonsetReady(daemonset *appsv1.DaemonSet) bool {
 	return daemonset.Status.NumberReady == daemonset.Status.DesiredNumberScheduled
 }
 
-func (c *Client) ListStatefulsets(namespace string) ([]appsv1.StatefulSet, error) {
-	ssList, err := c.AppsV1().StatefulSets(namespace).List(context.TODO(), metav1.ListOptions{})
+func (c *Client) ListStatefulsetsWithLabel(namespace string, labelFilter map[string]string) ([]appsv1.StatefulSet, error) {
+	ssList, err := c.AppsV1().StatefulSets(namespace).List(context.TODO(), c.generateLabelFilterOption(labelFilter))
 	if err != nil {
 		return nil, err
 	}
@@ -87,4 +87,12 @@ func (c *Client) GetStatefulset(namespace, name string) (*appsv1.StatefulSet, er
 
 func (c *Client) IsStatefulsetReady(statefulset *appsv1.StatefulSet) bool {
 	return statefulset.Status.ReadyReplicas == *statefulset.Spec.Replicas
+}
+
+func (c *Client) generateLabelFilterOption(labelFilter map[string]string) metav1.ListOptions {
+	labelSelector := metav1.LabelSelector{MatchLabels: labelFilter}
+	options := metav1.ListOptions{
+		LabelSelector: labels.Set(labelSelector.MatchLabels).String(),
+	}
+	return options
 }
