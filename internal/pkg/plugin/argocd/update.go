@@ -10,7 +10,7 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	// 1. config update operations
 	runner := &plugininstaller.Runner{
 		PreExecuteOperations: []plugininstaller.MutableOperation{
-			defaultMissedOption,
+			helm.SetDefaultConfig(&defaultHelmConfig),
 			helm.Validate,
 		},
 		ExecuteOperations:  helm.DefaultUpdateOperations,

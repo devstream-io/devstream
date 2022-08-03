@@ -10,6 +10,8 @@ import (
 	helmclient "github.com/mittwald/go-helm-client"
 	"helm.sh/helm/v3/pkg/release"
 	"helm.sh/helm/v3/pkg/repo"
+
+	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
 var (
@@ -26,7 +28,8 @@ var helmParam = &HelmParam{
 	Chart{
 		ReleaseName: "helm:v1.0.0",
 		Timeout:     "1m",
-		Wait:        true,
+		Wait:        types.Bool(false),
+		UpgradeCRDs: types.Bool(false),
 	},
 }
 
@@ -101,7 +104,7 @@ func TestNewHelmWithOption(t *testing.T) {
 		PassCredentialsAll:    false,
 	}
 	atomic := true
-	if !helmParam.Chart.Wait {
+	if !*helmParam.Chart.Wait {
 		atomic = false
 	}
 	tmout, err := time.ParseDuration(helmParam.Chart.Timeout)
@@ -117,14 +120,14 @@ func TestNewHelmWithOption(t *testing.T) {
 		CreateNamespace:  false,
 		DisableHooks:     false,
 		Replace:          true,
-		Wait:             helmParam.Chart.Wait,
+		Wait:             *helmParam.Chart.Wait,
 		DependencyUpdate: false,
 		Timeout:          tmout,
 		GenerateName:     false,
 		NameTemplate:     "",
 		Atomic:           atomic,
 		SkipCRDs:         false,
-		UpgradeCRDs:      helmParam.Chart.UpgradeCRDs,
+		UpgradeCRDs:      *helmParam.Chart.UpgradeCRDs,
 		SubNotes:         false,
 		Force:            false,
 		ResetValues:      false,

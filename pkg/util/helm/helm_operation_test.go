@@ -10,7 +10,7 @@ import (
 
 func TestInstallOrUpgradeChart(t *testing.T) {
 	atomic := true
-	if !helmParam.Chart.Wait {
+	if !*helmParam.Chart.Wait {
 		atomic = false
 	}
 	tmout, err := time.ParseDuration(helmParam.Chart.Timeout)
@@ -26,14 +26,14 @@ func TestInstallOrUpgradeChart(t *testing.T) {
 		CreateNamespace:  false,
 		DisableHooks:     false,
 		Replace:          true,
-		Wait:             helmParam.Chart.Wait,
+		Wait:             *helmParam.Chart.Wait,
 		DependencyUpdate: false,
 		Timeout:          tmout,
 		GenerateName:     false,
 		NameTemplate:     "",
 		Atomic:           atomic,
 		SkipCRDs:         false,
-		UpgradeCRDs:      helmParam.Chart.UpgradeCRDs,
+		UpgradeCRDs:      *helmParam.Chart.UpgradeCRDs,
 		SubNotes:         false,
 		Force:            false,
 		ResetValues:      false,
@@ -77,7 +77,7 @@ func TestAddOrUpdateChartRepo(t *testing.T) {
 		PassCredentialsAll:    false,
 	}
 	atomic := true
-	if !helmParam.Chart.Wait {
+	if !*helmParam.Chart.Wait {
 		atomic = false
 	}
 	tmout, err := time.ParseDuration(helmParam.Chart.Timeout)
@@ -93,14 +93,14 @@ func TestAddOrUpdateChartRepo(t *testing.T) {
 		CreateNamespace:  false,
 		DisableHooks:     false,
 		Replace:          true,
-		Wait:             helmParam.Chart.Wait,
+		Wait:             *helmParam.Chart.Wait,
 		DependencyUpdate: false,
 		Timeout:          tmout,
 		GenerateName:     false,
 		NameTemplate:     "",
 		Atomic:           atomic,
 		SkipCRDs:         false,
-		UpgradeCRDs:      helmParam.Chart.UpgradeCRDs,
+		UpgradeCRDs:      *helmParam.Chart.UpgradeCRDs,
 		SubNotes:         false,
 		Force:            false,
 		ResetValues:      false,
@@ -124,7 +124,7 @@ func TestAddOrUpdateChartRepo(t *testing.T) {
 
 func TestHelm_UninstallHelmChartRelease(t *testing.T) {
 	atomic := true
-	if !helmParam.Chart.Wait {
+	if !*helmParam.Chart.Wait {
 		atomic = false
 	}
 	tmout, err := time.ParseDuration(helmParam.Chart.Timeout)
@@ -140,14 +140,14 @@ func TestHelm_UninstallHelmChartRelease(t *testing.T) {
 		CreateNamespace:  false,
 		DisableHooks:     false,
 		Replace:          true,
-		Wait:             helmParam.Chart.Wait,
+		Wait:             *helmParam.Chart.Wait,
 		DependencyUpdate: false,
 		Timeout:          tmout,
 		GenerateName:     false,
 		NameTemplate:     "",
 		Atomic:           atomic,
 		SkipCRDs:         false,
-		UpgradeCRDs:      helmParam.Chart.UpgradeCRDs,
+		UpgradeCRDs:      *helmParam.Chart.UpgradeCRDs,
 		SubNotes:         false,
 		Force:            false,
 		ResetValues:      false,

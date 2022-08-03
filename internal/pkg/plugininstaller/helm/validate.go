@@ -14,7 +14,7 @@ func Validate(options plugininstaller.RawOptions) (plugininstaller.RawOptions, e
 	if err != nil {
 		return nil, err
 	}
-	errs := helm.DefaultsAndValidate(opts.GetHelmParam())
+	errs := helm.Validate(opts.GetHelmParam())
 	if len(errs) > 0 {
 		for _, e := range errs {
 			log.Errorf("Options error: %s.", e)
@@ -22,4 +22,16 @@ func Validate(options plugininstaller.RawOptions) (plugininstaller.RawOptions, e
 		return nil, fmt.Errorf("opts are illegal")
 	}
 	return options, nil
+}
+
+// SetDefaultConfig will update options empty values base on import options
+func SetDefaultConfig(defaultConfig *Options) plugininstaller.MutableOperation {
+	return func(options plugininstaller.RawOptions) (plugininstaller.RawOptions, error) {
+		opts, err := NewOptions(options)
+		if err != nil {
+			return nil, err
+		}
+		opts.fillDefaultValue(defaultConfig)
+		return opts.Encode()
+	}
 }
