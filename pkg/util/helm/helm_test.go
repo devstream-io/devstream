@@ -15,6 +15,7 @@ import (
 var (
 	NormalError   = errors.New("normal error")
 	NotFoundError = errors.New("release name not found")
+	wait          = true
 )
 
 var mockedRelease = release.Release{Name: "test"}
@@ -26,7 +27,8 @@ var helmParam = &HelmParam{
 	Chart{
 		ReleaseName: "helm:v1.0.0",
 		Timeout:     "1m",
-		Wait:        true,
+		Wait:        GetBoolFalseAddress(),
+		UpgradeCRDs: GetBoolFalseAddress(),
 	},
 }
 
@@ -101,7 +103,7 @@ func TestNewHelmWithOption(t *testing.T) {
 		PassCredentialsAll:    false,
 	}
 	atomic := true
-	if !helmParam.Chart.Wait {
+	if !*helmParam.Chart.Wait {
 		atomic = false
 	}
 	tmout, err := time.ParseDuration(helmParam.Chart.Timeout)
@@ -117,14 +119,14 @@ func TestNewHelmWithOption(t *testing.T) {
 		CreateNamespace:  false,
 		DisableHooks:     false,
 		Replace:          true,
-		Wait:             helmParam.Chart.Wait,
+		Wait:             *helmParam.Chart.Wait,
 		DependencyUpdate: false,
 		Timeout:          tmout,
 		GenerateName:     false,
 		NameTemplate:     "",
 		Atomic:           atomic,
 		SkipCRDs:         false,
-		UpgradeCRDs:      helmParam.Chart.UpgradeCRDs,
+		UpgradeCRDs:      *helmParam.Chart.UpgradeCRDs,
 		SubNotes:         false,
 		Force:            false,
 		ResetValues:      false,

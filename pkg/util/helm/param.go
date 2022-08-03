@@ -9,22 +9,54 @@ type HelmParam struct {
 // Repo is the struct containing details of a git repository.
 // TODO(daniel-hutao): make the Repo equals to repo.Entry
 type Repo struct {
-	Name string `validate:"required"`
-	URL  string `validate:"required"`
+	Name string `validate:"required" mapstructure:"name"`
+	URL  string `validate:"required" mapstructure:"url"`
 }
 
 // Chart is the struct containing details of a helm chart.
 // TODO(daniel-hutao): make the Chart equals to helmclient.ChartSpec
 type Chart struct {
 	ChartName       string `validate:"required" mapstructure:"chart_name"`
-	Version         string
+	Version         string `mapstructure:"version"`
 	ReleaseName     string `mapstructure:"release_name"`
-	Namespace       string
-	CreateNamespace bool `mapstructure:"create_namespace"`
-	Wait            bool
-	Timeout         string // such as "1.5h" or "2h45m", valid time units are "s", "m", "h"
-	UpgradeCRDs     bool   `mapstructure:"upgradeCRDs"`
+	Namespace       string `mapstructure:"name_space"`
+	CreateNamespace *bool  `mapstructure:"create_namespace"`
+	Wait            *bool  `mapstructure:"wait"`
+	Timeout         string `mapstructure:"timeout"` // such as "1.5h" or "2h45m", valid time units are "s", "m", "h"
+	UpgradeCRDs     *bool  `mapstructure:"upgradeCRDs"`
 	// ValuesYaml is the values.yaml content.
 	// use string instead of map[string]interface{}
 	ValuesYaml string `mapstructure:"values_yaml"`
+}
+
+func (repo *Repo) FillDefaultValue(defaultRepo *Repo) {
+	if repo.Name == "" {
+		repo.Name = defaultRepo.Name
+	}
+	if repo.URL == "" {
+		repo.URL = defaultRepo.URL
+	}
+}
+
+func (chart *Chart) FillDefaultValue(defaultChart *Chart) {
+	if chart.ChartName == "" {
+		chart.ChartName = defaultChart.ChartName
+	}
+	if chart.Timeout == "" {
+		chart.Timeout = defaultChart.Timeout
+	}
+	if chart.UpgradeCRDs == nil {
+		if defaultChart.UpgradeCRDs == nil {
+			chart.UpgradeCRDs = GetBoolFalseAddress()
+		} else {
+			chart.UpgradeCRDs = defaultChart.UpgradeCRDs
+		}
+	}
+	if chart.Wait == nil {
+		if defaultChart.Wait == nil {
+			chart.Wait = GetBoolFalseAddress()
+		} else {
+			chart.Wait = defaultChart.Wait
+		}
+	}
 }
