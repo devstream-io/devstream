@@ -19,7 +19,8 @@ func writeContentToTmpFile(output *os.File, content string, opts *plugininstalle
 		return err
 	}
 
-	log.Infof("All opts %+v", opts)
+	log.Debugf("All opts %+v", opts)
+
 	err = t.Execute(output, opts)
 	if err != nil {
 		if strings.Contains(err.Error(), "can't evaluate field name") {
