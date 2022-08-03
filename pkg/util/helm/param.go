@@ -19,7 +19,7 @@ type Chart struct {
 	ChartName       string `validate:"required" mapstructure:"chart_name"`
 	Version         string `mapstructure:"version"`
 	ReleaseName     string `mapstructure:"release_name"`
-	Namespace       string `mapstructure:"name_space"`
+	Namespace       string `mapstructure:"namespace"`
 	CreateNamespace *bool  `mapstructure:"create_namespace"`
 	Wait            *bool  `mapstructure:"wait"`
 	Timeout         string `mapstructure:"timeout"` // such as "1.5h" or "2h45m", valid time units are "s", "m", "h"
@@ -45,18 +45,21 @@ func (chart *Chart) FillDefaultValue(defaultChart *Chart) {
 	if chart.Timeout == "" {
 		chart.Timeout = defaultChart.Timeout
 	}
-	if chart.UpgradeCRDs == nil {
-		if defaultChart.UpgradeCRDs == nil {
-			chart.UpgradeCRDs = GetBoolFalseAddress()
+	chart.UpgradeCRDs = getBoolValue(chart.UpgradeCRDs, defaultChart.UpgradeCRDs)
+	chart.Wait = getBoolValue(chart.Wait, defaultChart.Wait)
+	chart.CreateNamespace = getBoolValue(chart.CreateNamespace, defaultChart.CreateNamespace)
+}
+
+func getBoolValue(field, defaultField *bool) *bool {
+	var boolAddress *bool
+	if field == nil {
+		if defaultField == nil {
+			boolAddress = GetBoolFalseAddress()
 		} else {
-			chart.UpgradeCRDs = defaultChart.UpgradeCRDs
+			boolAddress = defaultField
 		}
+	} else {
+		boolAddress = field
 	}
-	if chart.Wait == nil {
-		if defaultChart.Wait == nil {
-			chart.Wait = GetBoolFalseAddress()
-		} else {
-			chart.Wait = defaultChart.Wait
-		}
-	}
+	return boolAddress
 }

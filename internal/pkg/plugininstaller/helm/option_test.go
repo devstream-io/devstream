@@ -43,7 +43,7 @@ var _ = Describe("Options struct", func() {
 				"release_name":     "",
 				"wait":             emptyBool,
 				"chart_name":       "test_chart",
-				"name_space":       "test_nameSpace",
+				"namespace":        "test_nameSpace",
 				"create_namespace": emptyBool,
 				"timeout":          "",
 				"upgradeCRDs":      emptyBool,

@@ -15,7 +15,6 @@ import (
 var (
 	NormalError   = errors.New("normal error")
 	NotFoundError = errors.New("release name not found")
-	wait          = true
 )
 
 var mockedRelease = release.Release{Name: "test"}

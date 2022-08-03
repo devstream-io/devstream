@@ -50,8 +50,7 @@ var _ = Describe("SetDefaultConfig func", func() {
 		testChartName string
 		testRepoURL   string
 		testRepoName  string
-		testWait      *bool
-		emptyBool     *bool
+		testBool      *bool
 		defaultConfig helm.Options
 		testOptions   plugininstaller.RawOptions
 		expectChart   map[string]interface{}
@@ -61,16 +60,17 @@ var _ = Describe("SetDefaultConfig func", func() {
 		testChartName = "test_chart"
 		testRepoName = "test_repo"
 		testRepoURL = "http://test.com"
-		testWait = helmCommon.GetBoolTrueAddress()
+		testBool = helmCommon.GetBoolTrueAddress()
 		testOptions = map[string]interface{}{
 			"chart": map[string]string{},
 			"repo":  map[string]string{},
 		}
 		defaultConfig = helm.Options{
 			Chart: helmCommon.Chart{
-				ChartName:   testChartName,
-				Wait:        testWait,
-				UpgradeCRDs: testWait,
+				ChartName:       testChartName,
+				Wait:            testBool,
+				UpgradeCRDs:     testBool,
+				CreateNamespace: testBool,
 			},
 			Repo: helmCommon.Repo{
 				URL:  testRepoURL,
@@ -79,14 +79,14 @@ var _ = Describe("SetDefaultConfig func", func() {
 		}
 		expectChart = map[string]interface{}{
 			"chart_name":       testChartName,
-			"wait":             testWait,
-			"name_space":       "",
+			"wait":             testBool,
+			"namespace":        "",
 			"version":          "",
 			"release_name":     "",
 			"values_yaml":      "",
 			"timeout":          "",
-			"create_namespace": emptyBool,
-			"upgradeCRDs":      testWait,
+			"create_namespace": testBool,
+			"upgradeCRDs":      testBool,
 		}
 		expectRepo = map[string]interface{}{
 			"url":  testRepoURL,
