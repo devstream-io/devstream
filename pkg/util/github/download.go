@@ -80,21 +80,12 @@ func (c *Client) DownloadAsset(tagName, assetName, fileName string) error {
 	return nil
 }
 
-func (c *Client) DownloadLatestCodeAsZipFile() error {
+func (c *Client) GetLatestCodeZipURL() string {
 	var owner = c.Owner
 	if c.Org != "" {
 		owner = c.Org
 	}
-
-	latestCodeZipfileDownloadUrl := fmt.Sprintf(DefaultLatestCodeZipfileDownloadUrlFormat, owner, c.Repo)
-	log.Debugf("LatestCodeZipfileDownloadUrl: %s.", latestCodeZipfileDownloadUrl)
-
-	n, err := downloader.Download(latestCodeZipfileDownloadUrl, DefaultLatestCodeZipfileName, c.WorkPath)
-	if err != nil {
-		log.Debugf("Failed to download zip file from %s.", latestCodeZipfileDownloadUrl)
-		return err
-	}
-
-	log.Debugf("Downloaded <%d> bytes.", n)
-	return nil
+	latestCodeZipfileDownloadURL := fmt.Sprintf(DefaultLatestCodeZipfileDownloadUrlFormat, owner, c.Repo)
+	log.Debugf("LatestCodeZipfileDownloadUrl: %s.", latestCodeZipfileDownloadURL)
+	return latestCodeZipfileDownloadURL
 }

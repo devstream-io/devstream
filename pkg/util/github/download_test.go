@@ -199,8 +199,7 @@ var _ = Describe("DownloadAsset", func() {
 
 var _ = Describe("DownloadLatestCodeAsZipFile", func() {
 	const (
-		owner, repo, org             = "owner", "repo", "org"
-		rightWorkPath, wrongWorkPath = "./", "//"
+		owner, repo, org = "owner", "repo", "org"
 	)
 
 	var (
@@ -218,34 +217,14 @@ var _ = Describe("DownloadLatestCodeAsZipFile", func() {
 	})
 
 	When("the url is correct", func() {
-		BeforeEach(func() {
-			workPath = rightWorkPath
-		})
 
 		It("should return no error", func() {
 			ghClient, err := github.NewClientWithOption(opts, serverURL)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(ghClient).NotTo(Equal(nil))
-			err = ghClient.DownloadLatestCodeAsZipFile()
-			Expect(err).To(Succeed())
+			url := ghClient.GetLatestCodeZipURL()
+			Expect(url).ShouldNot(BeEmpty())
 		})
 	})
 
-	When("the url is incorrect(caused by wrong work path)", func() {
-		BeforeEach(func() {
-			workPath = wrongWorkPath
-		})
-
-		It("should return an error", func() {
-			ghClient, err := github.NewClientWithOption(opts, serverURL)
-			Expect(err).NotTo(HaveOccurred())
-			Expect(ghClient).NotTo(Equal(nil))
-			err = ghClient.DownloadLatestCodeAsZipFile()
-			Expect(err).NotTo(Succeed())
-		})
-	})
-
-	AfterEach(func() {
-		DeferCleanup(io.DeleteFile, workPath+github.DefaultLatestCodeZipfileName)
-	})
 })

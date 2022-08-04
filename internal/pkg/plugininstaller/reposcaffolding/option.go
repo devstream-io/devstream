@@ -1,17 +1,19 @@
 package reposcaffolding
 
 import (
+	"path/filepath"
+
 	"github.com/mitchellh/mapstructure"
 
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/common"
+	"github.com/devstream-io/devstream/pkg/util/file"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 const (
-	transitBranch      = "init-with-devstream"
-	defaultCommitMsg   = "init with devstream"
-	appNamePlaceHolder = "_app_name_"
+	transitBranch    = "init-with-devstream"
+	defaultCommitMsg = "init with devstream"
 )
 
 type Options struct {
@@ -36,18 +38,25 @@ func (opts *Options) Encode() (map[string]interface{}, error) {
 	return options, nil
 }
 
-func (opts *Options) CreateAndRenderLocalRepo(workpath string) error {
-	// 1. download template scaffolding repo
-	err := opts.SourceRepo.DownloadRepo(workpath)
+// CreateAndRenderLocalRepo will download repo from source repo and render it locally
+func (opts *Options) CreateAndRenderLocalRepo() (string, error) {
+	// 1. get download url
+	githubCodeZipDownloadURL, err := opts.SourceRepo.getDownloadURL()
 	if err != nil {
-		return err
+		log.Debugf("reposcaffolding get download url failed: %s", err)
+		return "", err
 	}
-	// 2. walk iter repo files to render template
-	if err := walkLocalRepoPath(workpath, opts); err != nil {
-		log.Debugf("create local repo failed walk: %s.", err)
-		return err
+	// 2. download zip file and unzip this file then render folders
+	projectDir, err := file.NewTemplate().FromRemote(githubCodeZipDownloadURL).UnzipFile().RenderRepoDIr(
+		opts.DestinationRepo.Repo, opts.renderTplConfig(),
+	).Run()
+	if err != nil {
+		log.Debugf("reposcaffolding process file error: %s", err)
+		return "", err
 	}
-	return nil
+	// 3. join download path and repo name to get repo path
+	repoDirName := opts.SourceRepo.getRepoName()
+	return filepath.Join(projectDir, repoDirName), nil
 }
 
 // PushToRemoteGitLab push local repo to remote gitlab repo
