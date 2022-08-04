@@ -6,5 +6,7 @@ import (
 )
 
 var workflows = []*githubCommon.Workflow{
-	{CommitMessage: github.CommitMessage, WorkflowFileName: github.MainBuilderFileName, WorkflowContent: mainPipeline},
+	{CommitMessage: github.CommitMessage, WorkflowFileName: "lint.yml", WorkflowContent: lintPipeline},
+	{CommitMessage: github.CommitMessage, WorkflowFileName: "test.yml", WorkflowContent: testPipeline},
+	{CommitMessage: github.CommitMessage, WorkflowFileName: "docker.yml", WorkflowContent: dockerPipeline},
 }

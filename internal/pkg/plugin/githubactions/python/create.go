@@ -15,6 +15,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 			github.BuildWorkFlowsWrapper(workflows),
 		},
 		ExecuteOperations: []plugininstaller.BaseOperation{
+			createDockerHubInfoForPush,
 			github.ProcessAction("create"),
 		},
 		GetStatusOperation: github.GetStaticWorkFlowState,
