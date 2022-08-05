@@ -18,7 +18,8 @@ func createDockerHubInfoForPush(options plugininstaller.RawOptions) error {
 	if err != nil {
 		return err
 	}
-	if opts.Docker != nil && opts.Docker.Enable {
+
+	if opts.CheckAddDockerHubToken() {
 		dockerhubToken := viper.GetString("dockerhub_token")
 		if dockerhubToken == "" {
 			return fmt.Errorf("DockerHub Token is empty")
