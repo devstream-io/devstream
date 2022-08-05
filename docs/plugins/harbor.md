@@ -10,6 +10,7 @@ If you want to **test the plugin locally**， The following `values_yaml` config
 
 ```yaml
 values_yaml: |
+  externalURL: http://127.0.0.1
   expose:
     type: nodePort
     tls:
@@ -25,6 +26,7 @@ values_yaml: |
 ```
 
 In this configuration
+
 - Postgresql and Redis dependencies are automatically created.
 - local disks on machines in the cluster are defaulted used for data mounting.
 - Only the `harbor` main program is installed, not the rest of the plug-ins.
