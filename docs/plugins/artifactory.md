@@ -10,12 +10,12 @@ If you want to **test the plugin locally**， The following `values_yaml` config
 
 ```yaml
 values_yaml: |
-        artifactory:
-          service:
-            type: NodePort
-          nodePort: 30002
-        nginx:
-          enabled: false
+  artifactory:
+    service:
+      type: NodePort
+    nodePort: 30002
+  nginx:
+    enabled: false
 ```
 
 In this configuration

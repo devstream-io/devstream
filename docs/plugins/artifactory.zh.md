@@ -10,12 +10,12 @@
 
 ```yaml
 values_yaml: |
-        artifactory:
-          service:
-            type: NodePort
-          nodePort: 30002
-        nginx:
-          enabled: false
+  artifactory:
+    service:
+      type: NodePort
+    nodePort: 30002
+  nginx:
+    enabled: false
 ```
 
 在该配置下
