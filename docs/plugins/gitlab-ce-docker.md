@@ -1,37 +1,47 @@
-# gitlab-ce-docker plugin
+# gitlab-ce-docker Plugin
 
-This plugin installs [Gitlab-CE](https://about.gitlab.com/) in an existing docker, and the container name is `gitlab`.
+This plugin installs [GitLab](https://about.gitlab.com/) CE(Community Edition) on Docker.
+
 ## Usage
 
 Note: 
-1. the user must be `root` or in `docker` group.
-2. https not support now(todo).
+1. the user you are using must be `root` or is in `docker` group;
+2. `https` isn't supported now.
 
 ```yaml
-
 --8<-- "gitlab-ce-docker.yaml"
-
 ```
 
-## Next
-Here are some commands that may help you:
+## Some Commands May Help You
 
-get password of user root in gitlab-ce-docker
+- get the password of user `root` in gitlab-ce-docker
+
 ```shell
 sudo docker exec -it gitlab grep 'Password:' /etc/gitlab/initial_root_password
 ```
 
-git clone:
-```shell
-#ssh
-# 22 port
-git clone git@hostname/.../xxx.git
-# if not 22 port
-git clone ssh://git@hostname:port/.../xxx.git
+- clone code
 
-# http
-# 80 port
-git clone http://hostname/.../xxx.git
-# if not 80 port
-git clone http://hostname:port/.../xxx.git
+```shell
+export hostname=YOUR_HOSTNAME
+export username=YOUR_USERNAME
+export project=YOUR_PROJECT_NAME
+```
+
+1. ssh
+
+```shell
+# port is 22
+git clone git@${hostname}/${username}/${project}.git
+# port is not 22, 2022 as a sample
+git clone ssh://git@${hostname}:2022/${username}/${project}.git
+```
+
+2. http
+
+```shell
+# port is 80
+git clone http://${hostname}/${username}/${project}.git
+# port is not 80, 8080 as a sample
+git clone http://${hostname}:8080/${username}/${project}.git
 ```
