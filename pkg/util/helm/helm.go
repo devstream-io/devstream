@@ -43,7 +43,7 @@ func NewHelm(param *HelmParam, option ...Option) (*Helm, error) {
 		PassCredentialsAll:    false,
 	}
 	atomic := true
-	if !param.Chart.Wait {
+	if !*param.Chart.Wait {
 		atomic = false
 	}
 	tmout, err := time.ParseDuration(param.Chart.Timeout)
@@ -59,14 +59,14 @@ func NewHelm(param *HelmParam, option ...Option) (*Helm, error) {
 		CreateNamespace:  false,
 		DisableHooks:     false,
 		Replace:          true,
-		Wait:             param.Chart.Wait,
+		Wait:             *param.Chart.Wait,
 		DependencyUpdate: false,
 		Timeout:          tmout,
 		GenerateName:     false,
 		NameTemplate:     "",
 		Atomic:           atomic,
 		SkipCRDs:         false,
-		UpgradeCRDs:      param.Chart.UpgradeCRDs,
+		UpgradeCRDs:      *param.Chart.UpgradeCRDs,
 		SubNotes:         false,
 		Force:            false,
 		ResetValues:      false,
