@@ -10,6 +10,7 @@
 
 ```yaml
 values_yaml: |
+  externalURL: http://127.0.0.1
   expose:
     type: nodePort
     tls:
@@ -25,6 +26,7 @@ values_yaml: |
 ```
 
 在该配置下
+
 - helm 会自动创建依赖的 Postgresql 和 Redis；
 - 数据挂载的磁盘默认会使用集群上机器的本地磁盘；
 - 只安装 `harbor` 主程序而不会安装其余的插件；

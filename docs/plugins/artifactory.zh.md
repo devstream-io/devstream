@@ -13,12 +13,13 @@ values_yaml: |
         artifactory:
           service:
             type: NodePort
-            nodePort: 30002
+          nodePort: 30002
         nginx:
           enabled: false
 ```
 
 在该配置下
+
 - helm 会自动创建依赖的 Postgresql；
 - 数据挂载的磁盘默认会使用集群上机器的本地磁盘；
 - 通过 `NodePort` 对外暴露服务，可使用 `http://{{k8s 节点ip}}:30002` 域名来访问，默认账号名密码为 admin/password (生产环境请替换默认账号密码)。
@@ -34,6 +35,7 @@ values_yaml: |
 可以设置 `customVolumes` 和 `customVolumeMounts` 来配置挂载磁盘，具体配置可参考  [Config](https://www.jfrog.com/confluence/display/JFROG/Configuring+the+Filestore)。
 
 #### 网络层配置
+
 该插件支持 `Ingress`, `ClusterIP`, `NodePort`, `LoadBalancer` 对外暴露的模式，可以基于需求进行选择。
 
 ### 配置
