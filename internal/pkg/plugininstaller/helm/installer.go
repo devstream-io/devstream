@@ -111,7 +111,7 @@ func Delete(options plugininstaller.RawOptions) error {
 		return err
 	}
 
-	log.Info("Uninstalling %s helm chart.", opts.GetReleaseName())
+	log.Infof("Uninstalling %s helm chart.", opts.GetReleaseName())
 	if err = h.UninstallHelmChartRelease(); err != nil {
 		return err
 	}
