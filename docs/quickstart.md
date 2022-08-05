@@ -9,19 +9,7 @@ In this quickstart, we will do the following automatically with DevStream:
 - create a GitHub repository with Golang web app scaffolding;
 - set up GitHub Actions workflow for the Golang app we created, which contains test and build stages for our Go web app.
 
-## 1 Download
-
-In your working directory, run:
-
-```shell
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/devstream-io/devstream/main/hack/quick-start/quickstart.sh)"
-```
-
-This will download the `dtm` binary and a `quickstart.yaml` config file to your working directory, and grant the binary execution permission.
-
-> Optional: you can then move `dtm` to a place which is in your PATH. For example: `mv dtm /usr/local/bin/`.
-
-## 2 Configuration
+## 1 Configuration
 
 As aforementioned, we will handle GitHub repo scaffolding and CI workflows in GitHub Actions, so, we will need the following environment variables (env vars) to be set:
 
@@ -56,6 +44,19 @@ For **GNU** Linux users:
 sed -i "s@YOUR_GITHUB_USERNAME_CASE_SENSITIVE@${GITHUB_USER}@g" quickstart.yaml
 sed -i "s@YOUR_DOCKER_USERNAME@${DOCKERHUB_USERNAME}@g" quickstart.yaml
 ```
+
+## 2 Download
+
+In your working directory, run:
+
+```shell
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/devstream-io/devstream/main/hack/quick-start/quickstart.sh)"
+```
+
+This will download the `dtm` binary and a `quickstart.yaml` config file to your working directory, and grant the binary execution permission.
+
+> Optional: you can then move `dtm` to a place which is in your PATH. For example: `mv dtm /usr/local/bin/`.
+
 
 ## 3 Init
 

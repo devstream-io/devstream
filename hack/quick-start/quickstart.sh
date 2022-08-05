@@ -23,7 +23,7 @@ function init() {
 }
 
 function getLatestReleaseVersion() {
-  latestVersion=$(curl -s https://api.github.com/repos/devstream-io/devstream/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+  latestVersion=$(curl -H "Authorization: token $GITHUB_TOKEN" -s https://api.github.com/repos/devstream-io/devstream/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
   if [ -z "$latestVersion" ]; then
     echo "Failed to get latest release version"
     exit 1

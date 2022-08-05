@@ -9,18 +9,7 @@
 1. 使用 Golang 的 web 应用程序脚手架在 GitHub 创建仓库。
 2. 为我们创建的 Golang 应用程序设置 GitHub Actions，包含 Go web 应用程序的构建和测试阶段。
 
-## 1 下载
-
-进入你的工作目录，运行：
-```shell
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/devstream-io/devstream/main/hack/quick-start/quickstart.sh)"
-```
-
-这个命令会下载 `dtm` 二进制文件和 `quickstart.yaml` 的配置文件到你的工作目录中，并赋予二进制文件执行权限。
-
-> 可选：建议你将 dtm 移动到包含于 PATH 的目录下，比如 `mv dtm /usr/local/bin/`。
-
-## 2 配置
+## 1 配置
 
 正如前文所述，我们将在 GitHub Actions 中操作 GitHub 仓库的脚手架和 CI 工作流。所以，我们需要设置以下环境变量：
 
@@ -56,6 +45,17 @@ sed -i.bak "s@YOUR_DOCKER_USERNAME@${DOCKERHUB_USERNAME}@g" quickstart.yaml
 sed -i "s@YOUR_GITHUB_USERNAME_CASE_SENSITIVE@${GITHUB_USER}@g" quickstart.yaml
 sed -i "s@YOUR_DOCKER_USERNAME@${DOCKERHUB_USERNAME}@g" quickstart.yaml
 ```
+
+## 2 下载
+
+进入你的工作目录，运行：
+```shell
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/devstream-io/devstream/main/hack/quick-start/quickstart.sh)"
+```
+
+这个命令会下载 `dtm` 二进制文件和 `quickstart.yaml` 的配置文件到你的工作目录中，并赋予二进制文件执行权限。
+
+> 可选：建议你将 dtm 移动到包含于 PATH 的目录下，比如 `mv dtm /usr/local/bin/`。
 
 
 
