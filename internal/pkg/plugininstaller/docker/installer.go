@@ -125,7 +125,7 @@ func Delete(options plugininstaller.RawOptions) error {
 	}
 
 	// 4. remove the volume if it exists
-	if opts.RmDataAfterDelete {
+	if *opts.RmDataAfterDelete {
 		volumesDirFromOptions := opts.Volumes.ExtractHostPaths()
 		for _, err := range RemoveDirs(volumesDirFromOptions) {
 			log.Error(err)
@@ -150,7 +150,7 @@ func Delete(options plugininstaller.RawOptions) error {
 	}
 
 	// 8. check if the volume is removed
-	if opts.RmDataAfterDelete {
+	if *opts.RmDataAfterDelete {
 		volumesDirFromOptions := opts.Volumes.ExtractHostPaths()
 		for _, volume := range volumesDirFromOptions {
 			if exist := PathExist(volume); exist {

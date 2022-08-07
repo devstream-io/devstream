@@ -16,8 +16,10 @@ func validateAndDefault(options map[string]interface{}) (*Options, error) {
 		return nil, err
 	}
 
+	opts.Defaults()
+
 	// validate
-	errs := validator.Struct(options)
+	errs := validator.Struct(opts)
 	// volume directory must be absolute path
 	if !filepath.IsAbs(opts.GitLabHome) {
 		errs = append(errs, fmt.Errorf("GitLabHome must be an absolute path"))
@@ -27,11 +29,6 @@ func validateAndDefault(options map[string]interface{}) (*Options, error) {
 			log.Errorf("Options error: %s.", e)
 		}
 		return nil, fmt.Errorf("opts are illegal")
-	}
-
-	// default
-	if opts.ImageTag == "" {
-		opts.ImageTag = defaultGitlabImageTag
 	}
 
 	opts.setGitLabURL()

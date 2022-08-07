@@ -15,7 +15,7 @@ type Options struct {
 	ImageName         string `validate:"required"`
 	ImageTag          string `validate:"required"`
 	ContainerName     string `validate:"required"`
-	RmDataAfterDelete bool
+	RmDataAfterDelete *bool
 
 	RunParams     []string
 	Hostname      string

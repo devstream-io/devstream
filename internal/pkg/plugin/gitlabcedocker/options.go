@@ -12,14 +12,38 @@ import (
 
 // Options is the struct for configurations of the gitlab-ce-docker plugin.
 type Options struct {
+	Hostname string `validate:"hostname" mapstructure:"hostname"`
 	// GitLab home directory, we assume the path set by user is always correct.
-	GitLabHome        string `validate:"required" mapstructure:"gitlab_home"`
-	Hostname          string `validate:"required,hostname" mapstructure:"hostname"`
-	SSHPort           uint   `validate:"required" mapstructure:"ssh_port"`
-	HTTPPort          uint   `validate:"required" mapstructure:"http_port"`
-	HTTPSPort         uint   `validate:"required" mapstructure:"https_port"`
-	RmDataAfterDelete bool   `mapstructure:"rm_data_after_delete"`
+	GitLabHome        string `mapstructure:"gitlab_home"`
+	SSHPort           uint   `mapstructure:"ssh_port"`
+	HTTPPort          uint   `mapstructure:"http_port"`
+	HTTPSPort         uint   `mapstructure:"https_port"`
+	RmDataAfterDelete *bool  `mapstructure:"rm_data_after_delete"`
 	ImageTag          string `mapstructure:"image_tag"`
+}
+
+func (opts *Options) Defaults() {
+	if opts.Hostname == "" {
+		opts.Hostname = defaultHostname
+	}
+	if opts.GitLabHome == "" {
+		opts.GitLabHome = defaultGitlabHome
+	}
+	if opts.SSHPort == 0 {
+		opts.SSHPort = defaultSSHPort
+	}
+	if opts.HTTPPort == 0 {
+		opts.HTTPPort = defaultHTTPPort
+	}
+	if opts.HTTPSPort == 0 {
+		opts.HTTPSPort = defaultHTTPSPort
+	}
+	if opts.RmDataAfterDelete == nil {
+		opts.RmDataAfterDelete = defaultRMDataAfterDelete
+	}
+	if opts.ImageTag == "" {
+		opts.ImageTag = defaultImageTag
+	}
 }
 
 // gitlabURL is the access URL of GitLab.

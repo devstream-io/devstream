@@ -11,7 +11,7 @@ import (
 var _ = Describe("Options", func() {
 
 	var opts *Options
-
+	var rmDataAfterDelete = false
 	BeforeEach(func() {
 		opts = &Options{
 			GitLabHome:        "/srv/gitlab",
@@ -19,7 +19,7 @@ var _ = Describe("Options", func() {
 			SSHPort:           8122,
 			HTTPPort:          8180,
 			HTTPSPort:         8443,
-			RmDataAfterDelete: false,
+			RmDataAfterDelete: &rmDataAfterDelete,
 			ImageTag:          "rc",
 		}
 	})

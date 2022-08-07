@@ -7,20 +7,22 @@ tools:
   dependsOn: [ ]
   # options for the plugin
   options:
-    # hostname for running docker
+    # hostname for running docker. (default: gitlab.example.com)
     hostname: gitlab.example.com
-    # the directory where you store docker volumes of gitlab
+    # pointing to the directory where the configuration, logs, and data files will reside.
+    # (default: /srv/gitlab)
     # 1. it should be a absolute path
-    # 2. once the tool is applied, it can't be changed
+    # 2. once the tool is installed, it can't be changed
     gitlab_home: /srv/gitlab
-    # ssh port exposed in the host machine
+    # ssh port exposed in the host machine. (default: 22)
     ssh_port: 22
-    # http port exposed in the host machine
+    # http port exposed in the host machine. (default: 80)
     http_port: 80
-    # https port exposed in the host machine
+    # https port exposed in the host machine.
+    # (default: 443)
     # todo: support https, reference: https://docs.gitlab.com/omnibus/settings/nginx.html#enable-https
     https_port: 443
-    # whether to delete the gitlab_home directory when the tool is removed
+    # whether to delete the gitlab_home directory when the tool is removed. (default: false)
     rm_data_after_delete: false
-    # gitlab-ce tag, default tag is rc
+    # gitlab-ce tag. (default: "rc")
     image_tag: "rc"
