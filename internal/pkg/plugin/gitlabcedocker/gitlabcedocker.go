@@ -1,5 +1,7 @@
 package gitlabcedocker
 
+import "github.com/devstream-io/devstream/pkg/util/types"
+
 const (
 	defaultHostname       = "gitlab.example.com"
 	defaultGitlabHome     = "/srv/gitlab"
@@ -13,6 +15,5 @@ const (
 )
 
 var (
-	rmDataAfterDelete        = false
-	defaultRMDataAfterDelete = &rmDataAfterDelete
+	defaultRMDataAfterDelete = types.Bool(false)
 )
