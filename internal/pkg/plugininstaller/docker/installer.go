@@ -118,11 +118,11 @@ func Delete(options plugininstaller.RawOptions) error {
 	}
 
 	// 3. remove the image if it exists
-	if ok := op.ImageIfExist(opts.GetImageNameWithTag()); ok {
-		if err := op.ImageRemove(opts.GetImageNameWithTag()); err != nil {
-			log.Errorf("failed to remove image %v: %v", opts.GetImageNameWithTag(), err)
-		}
-	}
+	//if ok := op.ImageIfExist(opts.GetImageNameWithTag()); ok {
+	//	if err := op.ImageRemove(opts.GetImageNameWithTag()); err != nil {
+	//		log.Errorf("failed to remove image %v: %v", opts.GetImageNameWithTag(), err)
+	//	}
+	//}
 
 	// 4. remove the volume if it exists
 	if *opts.RmDataAfterDelete {

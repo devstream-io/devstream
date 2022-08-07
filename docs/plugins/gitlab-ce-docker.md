@@ -2,6 +2,8 @@
 
 This plugin installs [GitLab](https://about.gitlab.com/) CE(Community Edition) on Docker.
 
+_NOTICE: currently, this plugin support Linux only._
+
 ## 背景知识
 
 GitLab officially provides an image [gitlab-ce](https://registry.hub.docker.com/r/gitlab/gitlab-ce). We can use this image to start a container:
@@ -16,7 +18,7 @@ docker run --detach \
   --volume $GITLAB_HOME/logs:/var/log/gitlab \
   --volume $GITLAB_HOME/data:/var/opt/gitlab \
   --shm-size 256m \
-  gitlab/gitlab-ce:latest
+  gitlab/gitlab-ce:rc
 ```
 
 The variable $GITLAB_HOME here pointing to the directory where the configuration, logs, and data files will reside.

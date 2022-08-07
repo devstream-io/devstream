@@ -2,6 +2,7 @@ package gitlabcedocker
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 
 	"github.com/mitchellh/mapstructure"
@@ -29,6 +30,10 @@ func validateAndDefault(options map[string]interface{}) (*Options, error) {
 			log.Errorf("Options error: %s.", e)
 		}
 		return nil, fmt.Errorf("opts are illegal")
+	}
+
+	if err := os.MkdirAll(opts.GitLabHome, 0755); err != nil {
+		return nil, err
 	}
 
 	opts.setGitLabURL()

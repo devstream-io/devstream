@@ -2,6 +2,8 @@
 
 这个插件用于以 Docker 的方式安装 [GitLab](https://about.gitlab.com/) CE（社区版）。
 
+_注意：目前本插件仅支持 Linux。_
+
 ## 背景知识
 
 GitLab 官方提供了 [gitlab-ce](https://registry.hub.docker.com/r/gitlab/gitlab-ce) 镜像，通过这个镜像我们可以实现类似这样的命令来启动一个 GitLab 容器：
@@ -16,7 +18,7 @@ docker run --detach \
   --volume $GITLAB_HOME/logs:/var/log/gitlab \
   --volume $GITLAB_HOME/data:/var/opt/gitlab \
   --shm-size 256m \
-  gitlab/gitlab-ce:latest
+  gitlab/gitlab-ce:rc
 ```
 
 其中 $GITLAB_HOME 表示的是本地存储卷路径，比如我们可以通过 export 命令来设置这个变量：
