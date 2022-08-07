@@ -12,9 +12,7 @@
 ## 用例
 
 ```yaml
-
 --8<-- "jenkins-pipeline-kubernetes.yaml"
-
 ```
 
 ## 和 `jenkins` 插件一起使用

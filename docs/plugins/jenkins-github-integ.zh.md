@@ -32,9 +32,7 @@ tools:
 ## 用例
 
 ```yaml
-
 --8<-- "jenkins-github-integ.yaml"
-
 ```
 
 ## 和 `jenkins` 插件一起使用
