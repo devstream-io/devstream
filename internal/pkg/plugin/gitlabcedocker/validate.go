@@ -27,7 +27,7 @@ func preHandleOptions(options map[string]interface{}) (*Options, error) {
 
 func defaults(opts *Options) {
 	if opts.ImageTag == "" {
-		opts.ImageTag = defaultImageTag
+		opts.ImageTag = defaultGitlabImageTag
 	}
 }
 
