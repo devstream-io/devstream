@@ -7,7 +7,7 @@ import (
 
 func Delete(options map[string]interface{}) (bool, error) {
 	// 1. create config and pre-handle operations
-	opts, err := preHandleOptions(options)
+	opts, err := validateAndDefault(options)
 	if err != nil {
 		return false, err
 	}

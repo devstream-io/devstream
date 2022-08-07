@@ -17,7 +17,7 @@
 - 查看 gitlab 的 root 用户的密码:
 
 ```shell
-sudo docker exec -it gitlab grep 'Password:' /etc/gitlab/initial_root_password
+docker exec -it gitlab grep 'Password:' /etc/gitlab/initial_root_password
 ```
 
 - 克隆项目

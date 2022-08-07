@@ -32,8 +32,9 @@ func (opts *Options) setGitLabURL() {
 	gitlabURL = fmt.Sprintf("http://%s:%d", opts.Hostname, opts.HTTPPort)
 }
 
-func showGitLabURL(options plugininstaller.RawOptions) error {
+func showHelpMsg(options plugininstaller.RawOptions) error {
 	log.Infof("GitLab access URL: %s", gitlabURL)
+	log.Infof("GitLab initial root password: execute the command -> docker exec -it gitlab grep 'Password:' /etc/gitlab/initial_root_password")
 
 	return nil
 }

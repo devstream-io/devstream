@@ -17,7 +17,7 @@ Note:
 - get the password of user `root` in gitlab-ce-docker
 
 ```shell
-sudo docker exec -it gitlab grep 'Password:' /etc/gitlab/initial_root_password
+docker exec -it gitlab grep 'Password:' /etc/gitlab/initial_root_password
 ```
 
 - clone code
