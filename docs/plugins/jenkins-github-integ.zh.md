@@ -133,7 +133,7 @@ tools:
         # release name of the jenkins helm chart, mandatory
         releaseName: 
       # GitHub repo where to put the pipeline script and project. mandatory
-      githubRepoUrl: https://github.com/xxx/xxx
+      githubRepoUrl: https://github.com/YOUR_GITHUB_ACCOUNT/YOUR_TEST_PROJECT_NAME
       adminList:
         - YOUR_GITHUB_USERNAME
 ```
