@@ -101,7 +101,7 @@ generate: ## Run "go generate ./...".
 .PHONY: lint
 lint: verify.golangci-lint ## Run 'golangci-lint' against code.
 	@echo "$(YELLOW)Run golangci to lint source codes$(RESET)"
-	@golangci-lint -c $(ROOT_DIR)/.golangci.yml run $(ROOT_DIR)/...
+	@${GOPATH}/bin/golangci-lint -c $(ROOT_DIR)/.golangci.yml run $(ROOT_DIR)/...
 
 .PHONY: vet
 vet: ## Run "go vet ./...".
