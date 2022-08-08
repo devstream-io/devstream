@@ -120,3 +120,26 @@ func (c *Client) InitRepo(mainBranch string) error {
 	log.Debugf("Added the .placeholder file.")
 	return nil
 }
+
+func (c *Client) PushInitRepo(transitBranch, branch, localPath string) error {
+	// 1. init repo
+	if err := c.InitRepo(branch); err != nil {
+		return err
+	}
+
+	// if encounter rollout error, delete repo
+	var needRollBack bool
+	defer func() {
+		if !needRollBack {
+			return
+		}
+		// need to clean the repo created when retErr != nil
+		if err := c.DeleteRepo(); err != nil {
+			log.Errorf("Failed to delete the repo %s: %s.", c.Repo, err)
+		}
+	}()
+
+	// 2. push local path to repo
+	needRollBack, err := c.PushLocalPathToBranch(transitBranch, branch, localPath)
+	return err
+}
