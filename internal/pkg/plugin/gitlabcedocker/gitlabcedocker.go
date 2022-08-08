@@ -1,28 +1,19 @@
 package gitlabcedocker
 
-import (
-	"fmt"
-
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
-	"github.com/devstream-io/devstream/pkg/util/log"
-)
+import "github.com/devstream-io/devstream/pkg/util/types"
 
 const (
-	gitlabImageName       = "gitlab/gitlab-ce"
+	defaultHostname       = "gitlab.example.com"
+	defaultGitlabHome     = "/srv/gitlab"
+	defaultSSHPort        = 22
+	defaultHTTPPort       = 80
+	defaultHTTPSPort      = 443
 	defaultImageTag       = "rc"
+	gitlabImageName       = "gitlab/gitlab-ce"
 	gitlabContainerName   = "gitlab"
 	dockerRunShmSizeParam = "--shm-size 256m"
 )
 
-// gitlabURL is the access URL of GitLab.
-var gitlabURL string
-
-func (opts *Options) getGitLabURL() string {
-	return fmt.Sprintf("http://%s:%d", opts.Hostname, opts.HTTPPort)
-}
-
-func showGitLabURL(options plugininstaller.RawOptions) error {
-	log.Infof("GitLab access URL: %s", gitlabURL)
-
-	return nil
-}
+var (
+	defaultRMDataAfterDelete = types.Bool(false)
+)
