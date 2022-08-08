@@ -10,6 +10,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 	// 1. config read operations
 	runner := &plugininstaller.Runner{
 		PreExecuteOperations: []plugininstaller.MutableOperation{
+			helm.SetDefaultConfig(&defaultHelmConfig),
 			helm.Validate,
 		},
 		GetStatusOperation: helm.GetPluginAllState,

@@ -68,4 +68,15 @@ This plugin support `Ingress`, `ClusterIP`, `NodePort`, `LoadBalancer` , You can
 --8<-- "harbor.yaml"
 ```
 
-Currently, except for `values_yaml`, all the parameters in the example above are mandatory.
+#### Default Configs
+
+| key              | default value            | description                                    |
+| ----             | ----                     | ----                                           |
+| chart.chart_name | harbor/harbor            | chart name                                     |
+| chart.timeout    | 10m                      | this config will wait 10 minutes to deploy     |
+| upgradeCRDs      | true                     | default update CRD config                      |
+| chart.wait       | true                     | whether to wait until installation is complete |
+| repo.url         | https://helm.goharbor.io | helm official repo address                     |
+| repo.name        | harbor                   | helm repo name                                 |
+
+Currently, except for `values_yaml` and default configs, all the parameters in the example above are mandatory.

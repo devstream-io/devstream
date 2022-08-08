@@ -9,6 +9,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 	// 1. config delete operations
 	runner := &plugininstaller.Runner{
 		PreExecuteOperations: []plugininstaller.MutableOperation{
+			helm.SetDefaultConfig(&defaultHelmConfig),
 			helm.Validate,
 			replaceStroageClass,
 		},

@@ -46,7 +46,18 @@ chown -R 1000:1000 <your-dtm-home-dir>/data/jenkins-volume/
 --8<-- "jenkins.yaml"
 ```
 
-当前，所有配置项均为必填。
+#### 默认配置
+
+| key              | default value             | description                       |
+| ----             | ----                      | ----                              |
+| chart.chart_name | jenkins/jenkins           | helm 包名称                       |
+| chart.timeout    | 5m                        | 等待部署成功的时间                |
+| upgradeCRDs      | true                      | 默认更新 CRD 配置（如果存在的话） |
+| chart.wait       | true                      | 是否等待部署完成                  |
+| repo.url         | https://charts.jenkins.io | helm 官方仓库地址                 |
+| repo.name        | jenkins                   | helm 仓库名                       |
+
+当前，除了默认配置以外，所有配置项均为必填。
 
 ## 输出
 

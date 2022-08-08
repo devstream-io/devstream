@@ -46,7 +46,19 @@ chown -R 1000:1000 <your-dtm-home-dir>/data/jenkins-volume/
 --8<-- "jenkins.yaml"
 ```
 
-Currently, all the parameters in the example above are mandatory.
+#### Default Configs
+
+| key              | default value             | description                                    |
+| ----             | ----                      | ----                                           |
+| chart.chart_name | jenkins/jenkins           | chart name                                     |
+| chart.timeout    | 5m                        | this config will wait 5 minutes to deploy      |
+| upgradeCRDs      | true                      | default update CRD config                      |
+| chart.wait       | true                      | whether to wait until installation is complete |
+| repo.url         | https://charts.jenkins.io | helm official repo address                     |
+| repo.name        | jenkins                   | helm repo name                                 |
+
+
+Currently, expect default configs all the parameters in the example above are mandatory.
 
 ## Outputs
 

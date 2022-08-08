@@ -11,6 +11,7 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	// 1. config install operations
 	runner := &plugininstaller.Runner{
 		PreExecuteOperations: []plugininstaller.MutableOperation{
+			helm.SetDefaultConfig(&defaultHelmConfig),
 			helm.Validate,
 			replaceStroageClass,
 		},
