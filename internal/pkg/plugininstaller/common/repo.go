@@ -1,20 +1,21 @@
-package reposcaffolding
+package common
 
 import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/util"
+	"github.com/devstream-io/devstream/pkg/util/file"
 	"github.com/devstream-io/devstream/pkg/util/github"
 	"github.com/devstream-io/devstream/pkg/util/gitlab"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/template"
 )
 
-// DstRepo is the destination repo to push scaffolding project
-type DstRepo struct {
+// Repo is the repo info of github or gitlab
+type Repo struct {
 	Owner             string `validate:"required_without=Org"`
 	Org               string `validate:"required_without=Owner"`
 	Repo              string `validate:"required"`
@@ -26,7 +27,8 @@ type DstRepo struct {
 	Visibility string `validate:"omitempty,oneof=public private internal"`
 }
 
-func (d *DstRepo) createLocalRepoPath(workpath string) (string, error) {
+// CreateLocalRepoPath create local path for repo
+func (d *Repo) CreateLocalRepoPath(workpath string) (string, error) {
 	localPath := filepath.Join(workpath, d.Repo)
 	if err := os.MkdirAll(localPath, os.ModePerm); err != nil {
 		return "", err
@@ -34,9 +36,9 @@ func (d *DstRepo) createLocalRepoPath(workpath string) (string, error) {
 	return localPath, nil
 }
 
-// this method generate a walker func to render and copy files from srcRepoPath to dstRepoPath
-func (d *DstRepo) generateRenderWalker(
-	srcRepoPath, dstRepoPath string, renderConfig map[string]interface{},
+// Generate is a walker func to render and copy files from srcRepoPath to dstRepoPath
+func (d *Repo) GenerateRenderWalker(
+	srcRepoPath, dstRepoPath, appNamePlaceHolder string, renderConfig map[string]interface{},
 ) func(path string, info fs.FileInfo, err error) error {
 	return func(path string, info fs.FileInfo, err error) error {
 		if err != nil {
@@ -56,7 +58,7 @@ func (d *DstRepo) generateRenderWalker(
 		}
 
 		// replace template with appName
-		outputWithRepoName, err := replaceAppNameInPathStr(relativePath, d.Repo)
+		outputWithRepoName, err := replaceAppNameInPathStr(relativePath, appNamePlaceHolder, d.Repo)
 		if err != nil {
 			log.Debugf("Walk: Replace file name failed %s.", path)
 			return err
@@ -83,11 +85,12 @@ func (d *DstRepo) generateRenderWalker(
 			outputPath = strings.TrimSuffix(outputPath, ".tpl")
 			return template.RenderForFile("repo-scaffolding", path, outputPath, renderConfig)
 		}
-		return util.CopyFile(path, outputPath)
+		return file.CopyFile(path, outputPath)
 	}
 }
 
-func (d *DstRepo) createRepoRenderConfig() map[string]interface{} {
+// CreateRepoRenderConfig will generate template render variables
+func (d *Repo) CreateRepoRenderConfig() map[string]interface{} {
 	var owner = d.Owner
 	if d.Org != "" {
 		owner = d.Org
@@ -103,7 +106,8 @@ func (d *DstRepo) createRepoRenderConfig() map[string]interface{} {
 	return renderConfigMap
 }
 
-func (d *DstRepo) createGithubClient(needAuth bool) (*github.Client, error) {
+// CreateGithubClient build github client connection info
+func (d *Repo) CreateGithubClient(needAuth bool) (*github.Client, error) {
 	ghOptions := &github.Option{
 		Owner:    d.Owner,
 		Org:      d.Org,
@@ -117,15 +121,26 @@ func (d *DstRepo) createGithubClient(needAuth bool) (*github.Client, error) {
 	return ghClient, nil
 }
 
-func (d *DstRepo) createGitlabClient() (*gitlab.Client, error) {
+// CreateGitlabClient build gitlab connection info
+func (d *Repo) CreateGitlabClient() (*gitlab.Client, error) {
 	return gitlab.NewClient(gitlab.WithBaseURL(d.BaseURL))
 }
 
-func (d *DstRepo) buildgitlabOpts() *gitlab.CreateProjectOptions {
+// BuildgitlabOpts build gitlab connection options
+func (d *Repo) BuildgitlabOpts() *gitlab.CreateProjectOptions {
 	return &gitlab.CreateProjectOptions{
 		Name:       d.Repo,
 		Branch:     d.Branch,
 		Namespace:  d.Org,
 		Visibility: d.Visibility,
 	}
+}
+
+func replaceAppNameInPathStr(filePath, appNamePlaceHolder, appName string) (string, error) {
+	if !strings.Contains(filePath, appNamePlaceHolder) {
+		return filePath, nil
+	}
+	newFilePath := regexp.MustCompile(appNamePlaceHolder).ReplaceAllString(filePath, appName)
+	log.Debugf("Replace file path place holder. Before: %s, after: %s.", filePath, newFilePath)
+	return newFilePath, nil
 }

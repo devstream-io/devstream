@@ -19,7 +19,7 @@ type Operator interface {
 	// ContainerRun runs a container with the given options
 	// params is a list of additional parameters for docker run
 	// params will be appended to the end of the command
-	ContainerRun(opts RunOptions, params ...string) error
+	ContainerRun(opts *RunOptions) error
 	ContainerStop(containerName string) error
 	ContainerRemove(containerName string) error
 
@@ -27,9 +27,9 @@ type Operator interface {
 	ContainerListMounts(containerName string) (Mounts, error)
 
 	ContainerGetHostname(containerName string) (string, error)
-	ContainerGetPortBinding(containerName, containerPort, protocol string) (hostPort string, err error)
+	ContainerListPortPublishes(containerName string) ([]PortPublish, error)
+	ContainerGetPortBinding(containerName string, containerPort uint) (hostPort uint, err error)
 }
-
 type MountPoint struct {
 	Type        string `json:"Type"`
 	Source      string `json:"Source"`

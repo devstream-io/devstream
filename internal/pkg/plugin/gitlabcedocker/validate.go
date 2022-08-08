@@ -2,19 +2,41 @@ package gitlabcedocker
 
 import (
 	"fmt"
-	"path"
+	"os"
+	"path/filepath"
 
+	"github.com/mitchellh/mapstructure"
+
+	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/validator"
 )
 
-// validate validates the options provided by the core.
-func validate(options *Options) []error {
-	errs := validator.Struct(options)
-
-	// volume directory must be absolute path
-	if !path.IsAbs(options.GitLabHome) {
-		errs = append(errs, fmt.Errorf("GitLabHome must be an absolute path"))
+func validateAndDefault(options map[string]interface{}) (*Options, error) {
+	var opts *Options
+	if err := mapstructure.Decode(options, &opts); err != nil {
+		return nil, err
 	}
 
-	return errs
+	opts.Defaults()
+
+	// validate
+	errs := validator.Struct(opts)
+	// volume directory must be absolute path
+	if !filepath.IsAbs(opts.GitLabHome) {
+		errs = append(errs, fmt.Errorf("GitLabHome must be an absolute path"))
+	}
+	if len(errs) > 0 {
+		for _, e := range errs {
+			log.Errorf("Options error: %s.", e)
+		}
+		return nil, fmt.Errorf("opts are illegal")
+	}
+
+	if err := os.MkdirAll(opts.GitLabHome, 0755); err != nil {
+		return nil, err
+	}
+
+	opts.setGitLabURL()
+
+	return opts, nil
 }

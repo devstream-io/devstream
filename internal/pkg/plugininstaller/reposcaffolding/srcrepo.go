@@ -2,10 +2,8 @@ package reposcaffolding
 
 import (
 	"fmt"
-	"path/filepath"
 
 	"github.com/devstream-io/devstream/pkg/util/github"
-	"github.com/devstream-io/devstream/pkg/util/zip"
 )
 
 // default get main branch of repo for scaffolding project
@@ -18,20 +16,19 @@ type SrcRepo struct {
 	RepoType string `validate:"oneof=github" mapstructure:"repo_type"`
 }
 
-func (t *SrcRepo) DownloadRepo(workpath string) error {
-	// 1. download scaffolding repo from github
-	if err := downloadGithubRepo(t.Org, t.Repo, workpath); err != nil {
-		return err
-	}
-
-	// 2. unzip downloaded zip file
-	unzipPath := filepath.Join(workpath, github.DefaultLatestCodeZipfileName)
-	if err := zip.UnZip(unzipPath, workpath); err != nil {
-		return err
-	}
-	return nil
+func (t *SrcRepo) getRepoName() string {
+	return fmt.Sprintf("%s-%s", t.Repo, srcDefaultBranch)
 }
 
-func (t *SrcRepo) getLocalRepoPath(workpath string) string {
-	return filepath.Join(workpath, fmt.Sprintf("%s-%s", t.Repo, srcDefaultBranch))
+func (t *SrcRepo) getDownloadURL() (string, error) {
+	ghOption := &github.Option{
+		Org:      t.Org,
+		Repo:     t.Repo,
+		NeedAuth: false,
+	}
+	ghClient, err := github.NewClient(ghOption)
+	if err != nil {
+		return "", err
+	}
+	return ghClient.GetLatestCodeZipURL(), nil
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/common"
 	"github.com/devstream-io/devstream/pkg/util/gitlab"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
@@ -66,8 +67,8 @@ func GetDynamicState(options plugininstaller.RawOptions) (map[string]interface{}
 
 }
 
-func getGithubStatus(dstRepo *DstRepo) (map[string]interface{}, error) {
-	ghClient, err := dstRepo.createGithubClient(true)
+func getGithubStatus(dstRepo *common.Repo) (map[string]interface{}, error) {
+	ghClient, err := dstRepo.CreateGithubClient(true)
 	if err != nil {
 		return nil, err
 	}
@@ -105,8 +106,8 @@ func getGithubStatus(dstRepo *DstRepo) (map[string]interface{}, error) {
 
 }
 
-func getGitlabStatus(dstRepo *DstRepo) (map[string]interface{}, error) {
-	c, err := dstRepo.createGitlabClient()
+func getGitlabStatus(dstRepo *common.Repo) (map[string]interface{}, error) {
+	c, err := dstRepo.CreateGitlabClient()
 	if err != nil {
 		return nil, err
 	}

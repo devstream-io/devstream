@@ -9,7 +9,7 @@ import (
 )
 
 func Render(name, templateStr string, variable any) (string, error) {
-	t, err := template.New(name).Delims("[[", "]]").Parse(templateStr)
+	t, err := template.New(name).Option("missingkey=error").Delims("[[", "]]").Parse(templateStr)
 	if err != nil {
 		log.Debugf("Template parse file failed: %s.", err)
 		return "", err

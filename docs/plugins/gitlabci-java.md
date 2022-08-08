@@ -13,7 +13,5 @@ This plugin set up Gitlab Pipeline in an existing Gitlab Java repository.
 3. If `Deploy` is enabled, you need to offer the Gitlab Kubernetes agent name(see [Gitlab-Kubernetes](https://docs.gitlab.cn/jh/user/clusters/agent/) for more details). This will deploy the new built application to your Kubernetes cluster. This step will use `deployment.yaml` to automatically deploy the application. Please create `manifests` directory in the repository root and create your `deployment.yaml` configuration file in it.
 
 ```yaml
-
 --8<-- "gitlabci-java.yaml"
-
 ```

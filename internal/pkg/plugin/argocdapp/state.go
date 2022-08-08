@@ -6,7 +6,7 @@ import (
 	"github.com/cenkalti/backoff"
 
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/util"
+	"github.com/devstream-io/devstream/pkg/util/k8s"
 )
 
 func getStaticState(options plugininstaller.RawOptions) (map[string]interface{}, error) {
@@ -43,7 +43,7 @@ func getDynamicState(options plugininstaller.RawOptions) (map[string]interface{}
 
 	state := make(map[string]interface{})
 	operation := func() error {
-		err := util.GetArgoCDAppFromK8sAndSetState(state, opts.App.Name, opts.App.Namespace)
+		err := getArgoCDAppFromK8sAndSetState(state, opts.App.Name, opts.App.Namespace)
 		if err != nil {
 			return err
 		}
@@ -56,4 +56,23 @@ func getDynamicState(options plugininstaller.RawOptions) (map[string]interface{}
 		return nil, err
 	}
 	return state, nil
+}
+
+func getArgoCDAppFromK8sAndSetState(state map[string]interface{}, name, namespace string) error {
+	kubeClient, err := k8s.NewClient()
+	if err != nil {
+		return err
+	}
+
+	app, err := kubeClient.GetArgocdApplication(namespace, name)
+	if err != nil {
+		return err
+	}
+
+	d := kubeClient.DescribeArgocdApp(app)
+	state["app"] = d["app"]
+	state["src"] = d["src"]
+	state["dest"] = d["dest"]
+
+	return nil
 }
