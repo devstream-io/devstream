@@ -2,7 +2,7 @@
 
 如果你更喜欢看 DevStream 的实际操作，请先观看[演示视频](./index.md)。
 
-> 注意：DevStream 目前只有 Linux 和 macOS 版本，Windows 将在以后支持。 
+> 注意：DevStream 目前只有 Linux 和 macOS 版本，Windows 将在以后支持。
 
 在这个快速开始的示例中，我们将使用 DevStream 做以下自动化工作：
 
@@ -25,6 +25,8 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/devstream-io/devstream/mai
 ### 用 [asdf](https://asdf-vm.com/) 安装
 
 ```shell
+asdf plugin add dtm
+
 # Show all installable versions
 asdf list-all dtm
 
@@ -54,8 +56,8 @@ export GITHUB_TOKEN="<YOUR_GITHUB_PERSONAL_ACCESS_TOKEN_HERE>"
 export DOCKERHUB_USERNAME="<YOUR_DOCKER_HUB_USER_NAME_HERE>"
 ```
 
-> 小贴士：前往 [Personal Access Token](https://github.com/settings/tokens/new) 为 `dtm` 生成新的 `GITHUB_TOKEN`。 
-> 
+> 小贴士：前往 [Personal Access Token](https://github.com/settings/tokens/new) 为 `dtm` 生成新的 `GITHUB_TOKEN`。
+>
 > 对于“快速开始”，我们只需要勾选 `repo`、`workflow`、`delete_repo` 权限，但我们更建议你全部勾选，未来的插件可能需要更多权限。
 
 接着，让我们运行以下命令，以使用环境变量来修改配置文件：

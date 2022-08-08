@@ -23,9 +23,12 @@ This will download the `dtm` binary and a `quickstart.yaml` config file to your 
 
 > Optional: you can then move `dtm` to a place which is in your PATH. For example: `mv dtm /usr/local/bin/`.
 
-### Install with [asdf](https://asdf-vm.com/) 
+### Install with [asdf](https://asdf-vm.com/)
 
 ```shell
+
+asdf plugin add dtm
+
 # Show all installable versions
 asdf list-all dtm
 
@@ -56,7 +59,7 @@ export DOCKERHUB_USERNAME="<YOUR_DOCKER_HUB_USER_NAME_HERE>"
 ```
 
 > Tip: Go to [Personal Access Token](https://github.com/settings/tokens/new) to generate a new `GITHUB_TOKEN` for `dtm`.
-> 
+>
 > For "Quick Start", we only need `repo`,`workflow`,`delete_repo` scopes. However, we recommend that you check all and future plugins may require more scopes.
 
 Then we run the following commands to update our config file with those env vars:
