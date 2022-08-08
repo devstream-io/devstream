@@ -31,9 +31,9 @@ markdown_extensions:
       auto_title: true
   - pymdownx.superfences
 extra_css:
-- assets/versions.css
+  - assets/versions.css
 extra_javascript:
-- assets/versions.js
+  - assets/versions.js
 extra:
   alternate:
     - name: English
@@ -48,7 +48,7 @@ plugins:
       languages:
         en: "English"
         zh: "简体中文"
-      default_language: 'en'
+      default_language: "en"
       no_translation:
         en: "This page isn't translated to English."
         zh: "这个页面还没有中文翻译。"
@@ -81,36 +81,37 @@ nav:
   - understanding_the_basics*.md
   - quickstart*.md
   - Core Concepts:
-    - core-concepts/core-concepts*.md
-    - core-concepts/config*.md
-    - core-concepts/stateconfig*.md
-    - core-concepts/variable*.md
-    - core-concepts/dependencies*.md
-    - core-concepts/output*.md
+      - core-concepts/core-concepts*.md
+      - core-concepts/config*.md
+      - core-concepts/stateconfig*.md
+      - core-concepts/variable*.md
+      - core-concepts/dependencies*.md
+      - core-concepts/output*.md
   - Commands:
-    - commands/autocomplete*.md
-    - commands/*.md
+      - commands/install*.md
+      - commands/autocomplete*.md
+      - commands/*.md
   - Plugins:
-    - plugins/plugins-list*.md
-    - plugins/*.md
+      - plugins/plugins-list*.md
+      - plugins/*.md
   - Best Practices: best-practices/
   - contributing_guide*.md
   - contributor_ladder*.md
   - Governance ⧉: https://github.com/devstream-io/devstream/blob/main/GOVERNANCE.md
   - Developer Guide:
-    - development/architecture*.md
-    - development/development-workflow*.md
-    - development/commit-messages*.md
-    - development/lint*.md
-    - development/project-layout*.md
-    - development/build*.md
-    - development/test*.md
-    - development/mkdocs*.md
-    - development/translation*.md
-    - development/creating-a-plugin*.md
-    - development/commands/develop*.md
-    - development/reviewing*.md
-    - development/good-first-issues*.md
-    - development/help-wanted*.md
-    - development/branch-and-release*.md
+      - development/architecture*.md
+      - development/development-workflow*.md
+      - development/commit-messages*.md
+      - development/lint*.md
+      - development/project-layout*.md
+      - development/build*.md
+      - development/test*.md
+      - development/mkdocs*.md
+      - development/translation*.md
+      - development/creating-a-plugin*.md
+      - development/commands/develop*.md
+      - development/reviewing*.md
+      - development/good-first-issues*.md
+      - development/help-wanted*.md
+      - development/branch-and-release*.md
   - Road Map ⧉: https://github.com/devstream-io/devstream/blob/main/ROADMAP.md

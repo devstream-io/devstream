@@ -2,16 +2,14 @@
 
 如果你更喜欢看 DevStream 的实际操作，请先观看[演示视频](./index.md)。
 
-> 注意：DevStream 目前只有 Linux 和 macOS 版本，Windows 将在以后支持。
+> 注意：DevStream 目前只有 Linux 和 macOS 版本，Windows 将在以后支持。 
 
 在这个快速开始的示例中，我们将使用 DevStream 做以下自动化工作：
 
 1. 使用 Golang 的 web 应用程序脚手架在 GitHub 创建仓库。
 2. 为我们创建的 Golang 应用程序设置 GitHub Actions，包含 Go web 应用程序的构建和测试阶段。
 
-## 1 安装
-
-### 用 curl 安装
+## 1 下载
 
 进入你的工作目录，运行：
 ```shell
@@ -21,24 +19,6 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/devstream-io/devstream/mai
 这个命令会下载 `dtm` 二进制文件和 `quickstart.yaml` 的配置文件到你的工作目录中，并赋予二进制文件执行权限。
 
 > 可选：建议你将 dtm 移动到包含于 PATH 的目录下，比如 `mv dtm /usr/local/bin/`。
-
-### 用 [asdf](https://asdf-vm.com/) 安装
-
-```shell
-asdf plugin add dtm
-
-# Show all installable versions
-asdf list-all dtm
-
-# Install specific version
-asdf install dtm latest
-
-# Set a version globally (on your ~/.tool-versions file)
-asdf global dtm latest
-
-# Now dtm commands are available
-dtm --help
-```
 
 ## 2 配置
 
@@ -56,8 +36,8 @@ export GITHUB_TOKEN="<YOUR_GITHUB_PERSONAL_ACCESS_TOKEN_HERE>"
 export DOCKERHUB_USERNAME="<YOUR_DOCKER_HUB_USER_NAME_HERE>"
 ```
 
-> 小贴士：前往 [Personal Access Token](https://github.com/settings/tokens/new) 为 `dtm` 生成新的 `GITHUB_TOKEN`。
->
+> 小贴士：前往 [Personal Access Token](https://github.com/settings/tokens/new) 为 `dtm` 生成新的 `GITHUB_TOKEN`。 
+> 
 > 对于“快速开始”，我们只需要勾选 `repo`、`workflow`、`delete_repo` 权限，但我们更建议你全部勾选，未来的插件可能需要更多权限。
 
 接着，让我们运行以下命令，以使用环境变量来修改配置文件：
