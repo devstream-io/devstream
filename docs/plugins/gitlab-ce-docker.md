@@ -4,7 +4,7 @@ This plugin installs [GitLab](https://about.gitlab.com/) CE(Community Edition) o
 
 _NOTICE: currently, this plugin support Linux only._
 
-## 背景知识
+## Background
 
 GitLab officially provides an image [gitlab-ce](https://registry.hub.docker.com/r/gitlab/gitlab-ce). We can use this image to start a container:
 
@@ -21,8 +21,9 @@ docker run --detach \
   gitlab/gitlab-ce:rc
 ```
 
-The variable $GITLAB_HOME here pointing to the directory where the configuration, logs, and data files will reside.
-We could set this variable by the `export` command:
+The variable `$GITLAB_HOME` here pointing to the directory where the configuration, logs, and data files will reside.
+
+We can set this variable by the `export` command:
 
 ```shell
 export GITLAB_HOME=/srv/gitlab
@@ -36,7 +37,7 @@ The GitLab container uses host mounted volumes to store persistent data:
 | `$GITLAB_HOME/logs`   | `/var/log/gitlab` | For storing logs                           |
 | `$GITLAB_HOME/config` | `/etc/gitlab`     | For storing the GitLab configuration files |
 
-So, we can customize some configurations as follows:
+So, we can customize the following configurations:
 
 1. hostname
 2. host port
@@ -46,14 +47,14 @@ So, we can customize some configurations as follows:
 ## Configuration
 
 Note: 
-1. the user you are using must be `root` or is in `docker` group;
-2. `https` isn't supported now.
+1. the user you are using must be `root` or in the `docker` group;
+2. `https` isn't supported for now.
 
 ```yaml
 --8<-- "gitlab-ce-docker.yaml"
 ```
 
-## Some Commands May Help You
+## Some Commands That May Help
 
 - clone code
 
