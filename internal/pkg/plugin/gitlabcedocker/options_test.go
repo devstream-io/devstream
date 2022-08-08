@@ -6,7 +6,6 @@ import (
 
 	dockerInstaller "github.com/devstream-io/devstream/internal/pkg/plugininstaller/docker"
 	"github.com/devstream-io/devstream/pkg/util/docker"
-	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
 var _ = Describe("Options", func() {
@@ -19,7 +18,7 @@ var _ = Describe("Options", func() {
 			SSHPort:           8122,
 			HTTPPort:          8180,
 			HTTPSPort:         8443,
-			RmDataAfterDelete: types.Bool(false),
+			RmDataAfterDelete: nil,
 			ImageTag:          "rc",
 		}
 	})
