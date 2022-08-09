@@ -4,14 +4,18 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	dockerInstaller "github.com/devstream-io/devstream/internal/pkg/plugininstaller/docker"
 	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
 func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	// 1. create config and pre-handle operations
-	_, err := validateAndDefault(options)
+	opts, err := validateAndDefault(options)
 	if err != nil {
 		return nil, err
 	}
+
+	// reserve data when updated
+	opts.RmDataAfterDelete = types.Bool(false)
 
 	// 2. config install operations
 	runner := &plugininstaller.Runner{
@@ -19,7 +23,8 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 			dockerInstaller.Validate,
 		},
 		ExecuteOperations: []plugininstaller.BaseOperation{
-			dockerInstaller.InstallOrUpdate,
+			dockerInstaller.DeleteAll,
+			dockerInstaller.Install,
 			showHelpMsg,
 		},
 		GetStatusOperation: dockerInstaller.GetRunningState,

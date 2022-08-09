@@ -73,7 +73,7 @@ func GetRunningState(options plugininstaller.RawOptions) (map[string]interface{}
 	}
 
 	// 4. get port bindings
-	PortPublishes, err := op.ContainerListPortPublishes(opts.ContainerName)
+	portPublishes, err := op.ContainerListPortPublishes(opts.ContainerName)
 	if err != nil {
 		log.Errorf("failed to get container port publishes: %v", err)
 	}
@@ -84,7 +84,7 @@ func GetRunningState(options plugininstaller.RawOptions) (map[string]interface{}
 		ContainerRunning: running,
 		Volumes:          volumes,
 		Hostname:         hostname,
-		PortPublishes:    PortPublishes,
+		PortPublishes:    portPublishes,
 	}
 
 	return resource.toMap()

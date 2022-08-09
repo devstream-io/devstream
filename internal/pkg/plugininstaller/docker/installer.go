@@ -22,18 +22,19 @@ func UseShellOperator() {
 	op = &dockersh.ShellOperator{}
 }
 
-// InstallOrUpdate runs or updates the docker container
-// note: any update will stop and remove the container, then run the new container
-func InstallOrUpdate(options plugininstaller.RawOptions) error {
+// Install runs the docker container
+func Install(options plugininstaller.RawOptions) error {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return err
 	}
 
-	// 1. try to pull the image
-	// always pull the image because docker will check the image existence
-	if err := op.ImagePull(opts.GetImageNameWithTag()); err != nil {
-		return err
+	// 1. pull the image if it not exists
+	if !op.ImageIfExist(opts.GetImageNameWithTag()) {
+		if err := op.ImagePull(opts.GetImageNameWithTag()); err != nil {
+			log.Debugf("Failed to pull the image: %s.", err)
+			return err
+		}
 	}
 
 	// 2. try to run the container
@@ -42,12 +43,7 @@ func InstallOrUpdate(options plugininstaller.RawOptions) error {
 		return fmt.Errorf("failed to run container: %v", err)
 	}
 
-	// 3. check if the container is started successfully
-	if ok := op.ContainerIfRunning(opts.ContainerName); !ok {
-		return fmt.Errorf("failed to run container")
-	}
-
-	// 4. check if the volume is created successfully
+	// 3. check if the volume is created successfully
 	mounts, err := op.ContainerListMounts(opts.ContainerName)
 	if err != nil {
 		return fmt.Errorf("failed to get container mounts: %v", err)
@@ -60,8 +56,8 @@ func InstallOrUpdate(options plugininstaller.RawOptions) error {
 	return nil
 }
 
-// HandleRunFailure will delete the container if the container fails to run
-func HandleRunFailure(options plugininstaller.RawOptions) error {
+// ClearWhenInterruption will delete the container if the container fails to run
+func ClearWhenInterruption(options plugininstaller.RawOptions) error {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return err
@@ -96,8 +92,8 @@ func HandleRunFailure(options plugininstaller.RawOptions) error {
 	return multierr.Combine(errs...)
 }
 
-// Delete will delete the container/image/volumes
-func Delete(options plugininstaller.RawOptions) error {
+// DeleteAll will delete the container/volumes
+func DeleteAll(options plugininstaller.RawOptions) error {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return err
@@ -117,14 +113,7 @@ func Delete(options plugininstaller.RawOptions) error {
 		}
 	}
 
-	// 3. remove the image if it exists
-	//if ok := op.ImageIfExist(opts.GetImageNameWithTag()); ok {
-	//	if err := op.ImageRemove(opts.GetImageNameWithTag()); err != nil {
-	//		log.Errorf("failed to remove image %v: %v", opts.GetImageNameWithTag(), err)
-	//	}
-	//}
-
-	// 4. remove the volume if it exists
+	// 3. remove the volume if it exists
 	if *opts.RmDataAfterDelete {
 		volumesDirFromOptions := opts.Volumes.ExtractHostPaths()
 		for _, err := range RemoveDirs(volumesDirFromOptions) {
@@ -134,22 +123,17 @@ func Delete(options plugininstaller.RawOptions) error {
 
 	var errs []error
 
-	// 5. check if the container is stopped and deleted
+	// 4. check if the container is stopped and deleted
 	if ok := op.ContainerIfRunning(opts.ContainerName); ok {
 		errs = append(errs, fmt.Errorf("failed to stop container %s", opts.ContainerName))
 	}
 
-	// 6. check if the container is removed
+	// 5. check if the container is removed
 	if ok := op.ContainerIfExist(opts.ContainerName); ok {
 		errs = append(errs, fmt.Errorf("failed to delete container %s", opts.ContainerName))
 	}
 
-	// 7. check if the image is removed
-	if ok := op.ImageIfExist(opts.GetImageNameWithTag()); ok {
-		errs = append(errs, fmt.Errorf("failed to delete image %s", opts.GetImageNameWithTag()))
-	}
-
-	// 8. check if the volume is removed
+	// 6. check if the volume is removed
 	if *opts.RmDataAfterDelete {
 		volumesDirFromOptions := opts.Volumes.ExtractHostPaths()
 		for _, volume := range volumesDirFromOptions {
