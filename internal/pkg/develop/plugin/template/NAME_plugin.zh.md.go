@@ -1,16 +1,26 @@
 package template
 
+import "fmt"
+
 var NAME_plugin_zh_md_nameTpl = "{{ .Name }}.zh.md"
 var NAME_plugin_zh_md_dirTpl = "docs/plugins/"
 
-// TODO(daniel-hutao): * -> `
-var NAME_plugin_zh_md_contentTpl = "# {{ .Name }} 插件\n\nTODO(dtm): 在这里添加文档.\n\n## 用例\n\n" + "```" + "yaml\n--8<-- \"{{ .Name }}.yaml\"\n" + "```"
+var NAME_plugin_zh_md_contentTpl = `# {{ .Name }} 插件
+
+TODO(dtm): 在这里添加文档.
+
+## 用例
+
+%s yaml
+--8<-- "{{ .Name }}.yaml"
+%s
+`
 
 func init() {
 
 	TplFiles = append(TplFiles, TplFile{
 		NameTpl:    NAME_plugin_zh_md_nameTpl,
 		DirTpl:     NAME_plugin_zh_md_dirTpl,
-		ContentTpl: NAME_plugin_zh_md_contentTpl,
+		ContentTpl: fmt.Sprintf(NAME_plugin_zh_md_contentTpl, "```", "```"),
 	})
 }

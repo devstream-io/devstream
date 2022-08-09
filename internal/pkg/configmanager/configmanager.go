@@ -156,8 +156,8 @@ func (m *Manager) loadOriginalConfigFile() ([]byte, error) {
 	originalConfigFileBytes, err := ioutil.ReadFile(m.ConfigFile)
 	if err != nil {
 		log.Errorf("Failed to read the config file. Error: %s", err)
-		log.Info("Maybe the default file (config.yaml) doesn't exist or you forgot to pass your config file to the \"-f\" option?")
-		log.Info("See \"dtm help\" for more information.")
+		log.Info(`Maybe the default file (config.yaml) doesn't exist or you forgot to pass your config file to the "-f" option?`)
+		log.Info(`See "dtm help" for more information."`)
 		return nil, err
 	}
 	log.Debugf("Original config: \n%s\n", string(originalConfigFileBytes))

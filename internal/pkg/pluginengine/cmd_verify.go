@@ -23,7 +23,7 @@ func Verify(configFile string) bool {
 	err = pluginmanager.CheckLocalPlugins(cfg)
 	if err != nil {
 		log.Info(err)
-		log.Info("Maybe you forgot to run \"dtm init\" first?")
+		log.Info(`Maybe you forgot to run "dtm init" first?`)
 		return false
 	}
 	// 3. can successfully create the state

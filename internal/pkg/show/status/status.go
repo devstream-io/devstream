@@ -23,7 +23,7 @@ func Show(configFile string) error {
 	}
 
 	if id == "" && !allFlag {
-		log.Warnf("Empty instance name. Maybe you forgot to add --id=INSTANCE_ID. The default value \"default\" will be used.")
+		log.Warnf(`Empty instance name. Maybe you forgot to add --id=INSTANCE_ID. The default value "default" will be used.`)
 		id = "default"
 	}
 

@@ -19,7 +19,7 @@ func Validate() error {
 
 	name := viper.GetString("name")
 	if name == "" {
-		return fmt.Errorf("the name must be not \"\", you can specify it by --name flag")
+		return fmt.Errorf(`the name must be not "", you can specify it by --name flag`)
 	}
 	log.Debugf("Got the name: %s.", name)
 
