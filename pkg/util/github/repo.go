@@ -103,7 +103,6 @@ func (c *Client) PushLocalPathToBranch(mergeBranch, mainBranch, repoPath string)
 }
 
 func (c *Client) InitRepo(mainBranch string) error {
-	log.Infof("Repo: %s, main branch: %s", c.Repo, mainBranch)
 	// It's ok to give the opts.Org to CreateRepo() when create a repository for a authenticated user.
 	if err := c.CreateRepo(c.Org, mainBranch); err != nil {
 		// recreate if set tryTime
