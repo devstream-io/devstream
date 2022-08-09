@@ -40,7 +40,7 @@ e2e-test-local.yaml
 
 # .devstream
 .devstream/
-devstream.state
+*.state
 
 # e2e
 testbin/

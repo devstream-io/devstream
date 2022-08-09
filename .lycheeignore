@@ -1,10 +1,13 @@
 https://github.com/.*/pull/[0-9]+.*
 https://github.com/.*/issues/[0-9]+.*
 https://fonts.gstatic.com/
+.*\$\{.*\}.*
+.*ssh.*
 .*foo.*
 .*bar.*
 .*xxx.*
 .*example.*
+.*YOUR.*
 https://id.atlassian.net
 https://JIRA_ID.atlassian.net
 https://jira_id.atlassian.net

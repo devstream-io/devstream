@@ -32,9 +32,7 @@ tools:
 ## 用例
 
 ```yaml
-
 --8<-- "jenkins-github-integ.yaml"
-
 ```
 
 ## 和 `jenkins` 插件一起使用
@@ -133,8 +131,8 @@ tools:
         # release name of the jenkins helm chart, mandatory
         releaseName: 
       # GitHub repo where to put the pipeline script and project. mandatory
-      githubRepoUrl: https://github.com/aFlyBird0/jenkins-file-test
+      githubRepoUrl: https://github.com/YOUR_GITHUB_ACCOUNT/YOUR_TEST_PROJECT_NAME
       adminList:
-        - aFlyBird0
+        - YOUR_GITHUB_USERNAME
 ```
 

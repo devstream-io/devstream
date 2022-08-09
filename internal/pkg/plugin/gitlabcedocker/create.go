@@ -8,12 +8,10 @@ import (
 
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	// 1. create config and pre-handle operations
-	opts, err := preHandleOptions(options)
+	opts, err := validateAndDefault(options)
 	if err != nil {
 		return nil, err
 	}
-
-	gitlabURL = opts.getGitLabURL()
 
 	// 2. config install operations
 	runner := &plugininstaller.Runner{
@@ -22,7 +20,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		},
 		ExecuteOperations: []plugininstaller.BaseOperation{
 			dockerInstaller.InstallOrUpdate,
-			showGitLabURL,
+			showHelpMsg,
 		},
 		TerminateOperations: []plugininstaller.BaseOperation{
 			dockerInstaller.HandleRunFailure,

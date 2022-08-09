@@ -10,15 +10,16 @@ If you want to **test the plugin locally**， The following `values_yaml` config
 
 ```yaml
 values_yaml: |
-        artifactory:
-          service:
-            type: NodePort
-            nodePort: 30002
-        nginx:
-          enabled: false
+  artifactory:
+    service:
+      type: NodePort
+    nodePort: 30002
+  nginx:
+    enabled: false
 ```
 
 In this configuration
+
 - Postgresql dependencies are automatically created.
 - local disks on machines in the cluster are defaulted used for data mounting.
 - Using `nodePort` to expose service, You can access `artifactory` by domain `http://{{k8s node IP}}:30002`. The default account name and password are admin/password (please replace the default account password in the production environment).

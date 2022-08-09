@@ -11,20 +11,18 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/validator"
 )
 
-type (
-	Options struct {
-		ImageName         string `validate:"required"`
-		ImageTag          string `validate:"required"`
-		ContainerName     string `validate:"required"`
-		RmDataAfterDelete bool
+type Options struct {
+	ImageName         string `validate:"required"`
+	ImageTag          string `validate:"required"`
+	ContainerName     string `validate:"required"`
+	RmDataAfterDelete *bool
 
-		RunParams     []string
-		Hostname      string
-		PortPublishes []docker.PortPublish
-		Volumes       docker.Volumes
-		RestartAlways bool
-	}
-)
+	RunParams     []string
+	Hostname      string
+	PortPublishes []docker.PortPublish
+	Volumes       docker.Volumes
+	RestartAlways bool
+}
 
 // NewOptions create options by raw options
 func NewOptions(options plugininstaller.RawOptions) (Options, error) {
@@ -36,7 +34,7 @@ func NewOptions(options plugininstaller.RawOptions) (Options, error) {
 }
 
 func (opts *Options) GetImageNameWithTag() string {
-	return opts.ImageName + ":" + opts.ImageTag
+	return fmt.Sprintf("%s:%s", opts.ImageName, opts.ImageTag)
 }
 
 func (opts *Options) GetRunOpts() *docker.RunOptions {

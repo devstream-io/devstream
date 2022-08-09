@@ -12,9 +12,7 @@
 ## 用例
 
 ```yaml
-
 --8<-- "jenkins-pipeline-kubernetes.yaml"
-
 ```
 
 ## 和 `jenkins` 插件一起使用
@@ -114,6 +112,6 @@ tools:
         # path to the pipeline file, relative to the git repo root directory. default: Jenkinsfile
         pipelineScriptPath: Jenkinsfile
       # github repo url where the pipeline script is located. mandatory
-      githubRepoUrl: https://github.com/xxx/xxx.git
+      githubRepoUrl: https://github.com/YOUR_GITHUB_ACCOUNT/YOUR_TEST_PROJECT_NAME.git
 ```
 

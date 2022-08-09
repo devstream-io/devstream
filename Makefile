@@ -99,9 +99,9 @@ generate: ## Run "go generate ./...".
 	go generate ./...
 
 .PHONY: lint
-lint: verify.golangci-lint ## Run 'golangci-lint' against code.
+lint: verify.golangcilint ## Run 'golangci-lint' against code.
 	@echo "$(YELLOW)Run golangci to lint source codes$(RESET)"
-	@golangci-lint -c $(ROOT_DIR)/.golangci.yml run $(ROOT_DIR)/...
+	@${GOPATH}/bin/golangci-lint -c $(ROOT_DIR)/.golangci.yml run $(ROOT_DIR)/...
 
 .PHONY: vet
 vet: ## Run "go vet ./...".
@@ -133,6 +133,6 @@ verify.%:
 install.goimports:
 	@go install golang.org/x/tools/cmd/goimports@latest
 
-.PHONY: install.golangci-lint
-install.golangci-lint:
+.PHONY: install.golangcilint
+install.golangcilint:
 	@go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest

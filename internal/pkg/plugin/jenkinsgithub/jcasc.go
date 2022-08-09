@@ -6,6 +6,7 @@ import (
 	_ "embed"
 	"fmt"
 	"text/template"
+	"time"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	corev1 "k8s.io/client-go/applyconfigurations/core/v1"
@@ -74,6 +75,10 @@ func applyJCasC(namespace, chartReleaseName, configName, fileContent string) err
 	}
 
 	log.Debugf("Created configmap %+v", configMapRes)
+
+	// wait for the config map and the sidecar to be ready
+	// TODO(aFlyBird0): read JCasC to judge if JCasC is ready
+	time.Sleep(time.Second * 3)
 
 	return nil
 }
