@@ -12,7 +12,7 @@ import (
 )
 
 func Remove(configFile string, continueDirectly bool, isForceDelete bool) error {
-	cfg, err := configmanager.LoadConfig(configFile)
+	cfg, err := configmanager.NewManager(configFile).LoadConfig()
 	if err != nil {
 		return err
 	}

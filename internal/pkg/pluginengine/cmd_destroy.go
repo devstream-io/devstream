@@ -11,7 +11,7 @@ import (
 )
 
 func Destroy(configFile string, continueDirectly bool) error {
-	cfg, err := configmanager.LoadConfig(configFile)
+	cfg, err := configmanager.NewManager(configFile).LoadConfig()
 	if err != nil {
 		return err
 	}

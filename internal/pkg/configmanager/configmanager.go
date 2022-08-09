@@ -18,31 +18,45 @@ var (
 	GOARCH string = runtime.GOARCH
 )
 
-// Config is the struct for loading DevStream configuration YAML files.
-// It records rendered config values and is used as a general config in DevStream.
+var manager *Manager
+
+// Config records rendered config values and is used as a general config in DevStream.
 type Config struct {
 	Tools []Tool `yaml:"tools"`
 	State *State
 }
 
+type Manager struct {
+	ConfigFile string
+}
+
+func NewManager(ConfigFileName string) *Manager {
+	if manager == nil {
+		manager = &Manager{
+			ConfigFile: ConfigFileName,
+		}
+	}
+	return manager
+}
+
 // LoadConfig reads an input file as a general config.
-func LoadConfig(configFileName string) (*Config, error) {
+func (m *Manager) LoadConfig() (*Config, error) {
 	// 1. read the original config file
-	originalConfigFileBytes, err := loadOriginalConfigFile(configFileName)
+	originalConfigFileBytes, err := m.loadOriginalConfigFile()
 	if err != nil {
 		return nil, err
 	}
 
 	// 2. split original config
-	coreConfigBytes, variablesConfigBytes, toolsConfigBytes, err := SplitConfigFileBytes(originalConfigFileBytes)
+	coreConfigBytes, variablesConfigBytes, toolsConfigBytes, err := m.splitConfigFileBytes(originalConfigFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	return renderConfigs(coreConfigBytes, variablesConfigBytes, toolsConfigBytes)
+	return m.renderConfigs(coreConfigBytes, variablesConfigBytes, toolsConfigBytes)
 }
 
-func renderConfigs(coreConfigBytes, variablesConfigBytes, toolsConfigBytes []byte) (*Config, error) {
+func (m *Manager) renderConfigs(coreConfigBytes, variablesConfigBytes, toolsConfigBytes []byte) (*Config, error) {
 	// 1. unmarshal core config file
 	var coreConfig CoreConfig
 	if err := yaml.Unmarshal(coreConfigBytes, &coreConfig); err != nil {
@@ -55,7 +69,7 @@ func renderConfigs(coreConfigBytes, variablesConfigBytes, toolsConfigBytes []byt
 	state := coreConfig.State
 
 	// 2. unmarshal tool config with variables(if needed).
-	tools, err := renderToolsFromCoreConfigAndConfigBytes(&coreConfig, toolsConfigBytes, variablesConfigBytes)
+	tools, err := m.renderToolsFromCoreConfigAndConfigBytes(&coreConfig, toolsConfigBytes, variablesConfigBytes)
 	if err != nil {
 		return nil, err
 	}
@@ -66,7 +80,7 @@ func renderConfigs(coreConfigBytes, variablesConfigBytes, toolsConfigBytes []byt
 	}, nil
 }
 
-func renderToolsFromCoreConfigAndConfigBytes(coreConfig *CoreConfig, toolsConfigBytes, variablesConfigBytes []byte) ([]Tool, error) {
+func (m *Manager) renderToolsFromCoreConfigAndConfigBytes(coreConfig *CoreConfig, toolsConfigBytes, variablesConfigBytes []byte) ([]Tool, error) {
 	if coreConfig.ToolFile == "" && len(toolsConfigBytes) == 0 {
 		return nil, fmt.Errorf("tools config is empty")
 	}
@@ -97,8 +111,8 @@ func renderToolsFromCoreConfigAndConfigBytes(coreConfig *CoreConfig, toolsConfig
 	return tools, nil
 }
 
-func loadOriginalConfigFile(configFile string) ([]byte, error) {
-	originalConfigFileBytes, err := ioutil.ReadFile(configFile)
+func (m *Manager) loadOriginalConfigFile() ([]byte, error) {
+	originalConfigFileBytes, err := ioutil.ReadFile(m.ConfigFile)
 	if err != nil {
 		log.Errorf("Failed to read the config file. Error: %s", err)
 		log.Info("Maybe the default file (config.yaml) doesn't exist or you forgot to pass your config file to the \"-f\" option?")
@@ -155,7 +169,7 @@ func (c *Config) ValidateDependency() []error {
 	return errors
 }
 
-// SplitConfigFileBytes take the original config file and split it to:
+// splitConfigFileBytes take the original config file and split it to:
 // 1. core config
 // 2. variables config
 // 3. tools config
@@ -182,7 +196,7 @@ func (c *Config) ValidateDependency() []error {
 //     foo: bar
 //
 // See https://github.com/devstream-io/devstream/issues/596 for more details.
-func SplitConfigFileBytes(fileBytes []byte) (coreConfig []byte, varConfig []byte, toolConfig []byte, err error) {
+func (m *Manager) splitConfigFileBytes(fileBytes []byte) (coreConfig []byte, varConfig []byte, toolConfig []byte, err error) {
 	splitBytes := bytes.Split(bytes.TrimPrefix(fileBytes, []byte("---")), []byte("---"))
 
 	if len(splitBytes) > 3 {
@@ -193,7 +207,7 @@ func SplitConfigFileBytes(fileBytes []byte) (coreConfig []byte, varConfig []byte
 	var result bool
 
 	for _, configBytes := range splitBytes {
-		if result, err = checkConfigType(configBytes, "core"); result {
+		if result, err = m.checkConfigType(configBytes, "core"); result {
 			if len(coreConfig) > 0 {
 				err = fmt.Errorf("exist multiple sections of core config")
 				return
@@ -201,7 +215,7 @@ func SplitConfigFileBytes(fileBytes []byte) (coreConfig []byte, varConfig []byte
 			coreConfig = configBytes
 			continue
 		}
-		if result, err = checkConfigType(configBytes, "tool"); result {
+		if result, err = m.checkConfigType(configBytes, "tool"); result {
 			if len(toolConfig) > 0 {
 				err = fmt.Errorf("exist multiple sections of tool config")
 				return
@@ -229,7 +243,7 @@ func SplitConfigFileBytes(fileBytes []byte) (coreConfig []byte, varConfig []byte
 // checkConfigType checks the bytes of the configType
 // core config is the core configType and can be identified by key state
 // plugins config is the tool configType and can be identified by key tool
-func checkConfigType(bytes []byte, configType string) (bool, error) {
+func (m *Manager) checkConfigType(bytes []byte, configType string) (bool, error) {
 	result := make(map[string]interface{})
 	if err := yaml.Unmarshal(bytes, &result); err != nil {
 		log.Errorf("Please verify the format of your core config. Error: %s.", err)

@@ -27,7 +27,7 @@ func Show(configFile string) error {
 		id = "default"
 	}
 
-	cfg, err := configmanager.LoadConfig(configFile)
+	cfg, err := configmanager.NewManager(configFile).LoadConfig()
 	if err != nil {
 		return err
 	}
