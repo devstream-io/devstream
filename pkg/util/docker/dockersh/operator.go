@@ -88,6 +88,11 @@ func (op *ShellOperator) ContainerRun(opts *docker.RunOptions) error {
 		return fmt.Errorf("docker run failed: %v", err)
 	}
 
+	// check if the container is started successfully
+	if ok := op.ContainerIfRunning(opts.ContainerName); !ok {
+		return fmt.Errorf("failed to run container")
+	}
+
 	return nil
 }
 

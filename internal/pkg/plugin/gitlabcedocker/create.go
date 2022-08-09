@@ -19,11 +19,11 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 			dockerInstaller.Validate,
 		},
 		ExecuteOperations: []plugininstaller.BaseOperation{
-			dockerInstaller.InstallOrUpdate,
+			dockerInstaller.Install,
 			showHelpMsg,
 		},
 		TerminateOperations: []plugininstaller.BaseOperation{
-			dockerInstaller.HandleRunFailure,
+			dockerInstaller.ClearWhenInterruption,
 		},
 		GetStatusOperation: dockerInstaller.GetStaticStateFromOptions,
 	}
