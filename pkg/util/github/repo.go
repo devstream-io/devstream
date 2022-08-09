@@ -1,6 +1,7 @@
 package github
 
 import (
+	"errors"
 	"net/http"
 	"strings"
 
@@ -140,5 +141,44 @@ func (c *Client) PushInitRepo(transitBranch, branch, localPath string) error {
 
 	// 2. push local path to repo
 	needRollBack, err := c.PushLocalPathToBranch(transitBranch, branch, localPath)
+	if err != nil {
+		return err
+	}
+
+	// 3. protect branch
+	err = c.ProtectBranch(branch)
 	return err
+}
+
+// ProtectBranch will protect the special branch
+func (c *Client) ProtectBranch(branch string) error {
+	req := &github.ProtectionRequest{
+		RequiredStatusChecks: nil,
+		EnforceAdmins:        false,
+		RequiredPullRequestReviews: &github.PullRequestReviewsEnforcementRequest{
+			RequireCodeOwnerReviews: true,
+			DismissStaleReviews:     true,
+		},
+		Restrictions: nil,
+	}
+
+	repo, err := c.GetRepoDescription()
+	if err != nil {
+		log.Errorf("Get repo failed: %s.", err)
+		return err
+	}
+
+	_, response, err := c.Repositories.UpdateBranchProtection(c.Context, repo.GetOwner().GetLogin(), repo.GetName(), branch, req)
+	if err != nil {
+		log.Errorf("Protect branch failed: %s.", err)
+		return err
+	}
+
+	if response.StatusCode != http.StatusOK {
+		log.Errorf("Protect branch failed,status code: %d, response: %s.", response.StatusCode, response.Body)
+		return errors.New("protect branch failed")
+	}
+
+	log.Infof("The branch \"%s\" has been protected", branch)
+	return nil
 }

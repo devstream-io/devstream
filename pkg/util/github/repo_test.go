@@ -179,4 +179,30 @@ var _ = Describe("Repo", func() {
 			Expect(err).To(Succeed())
 		})
 	})
+
+	Context("ProtectBranch", func() {
+		BeforeEach(func() {
+			s.Reset()
+			s.SetAllowUnhandledRequests(true)
+		})
+		It("ProtectBranch with status 500", func() {
+			u := fmt.Sprintf("/repos/%v/%v", org, repo)
+			s.Reset()
+			s.SetUnhandledRequestStatusCode(http.StatusInternalServerError)
+			s.SetAllowUnhandledRequests(true)
+			s.RouteToHandler("GET", gh.BaseURLPath+u, func(w http.ResponseWriter, r *http.Request) {
+				fmt.Fprint(w, ``)
+			})
+			err := rightClient.ProtectBranch(mainBranch)
+			Expect(err).NotTo(Succeed())
+			Expect(err.Error()).To(ContainSubstring(strconv.Itoa(http.StatusInternalServerError)))
+		})
+		It("ProtectBranch with status 200", func() {
+			s.Reset()
+			s.SetAllowUnhandledRequests(true)
+			s.SetUnhandledRequestStatusCode(http.StatusOK)
+			err := rightClient.ProtectBranch(mainBranch)
+			Expect(err).To(Succeed())
+		})
+	})
 })
