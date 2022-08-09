@@ -14,7 +14,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	}
 
 	// 2. config install operations
-	runner := &plugininstaller.Runner{
+	runner := &plugininstaller.Operator{
 		PreExecuteOperations: []plugininstaller.MutableOperation{
 			dockerInstaller.Validate,
 		},
@@ -25,7 +25,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		TerminateOperations: []plugininstaller.BaseOperation{
 			dockerInstaller.ClearWhenInterruption,
 		},
-		GetStatusOperation: dockerInstaller.GetStaticStateFromOptions,
+		GetStateOperation: dockerInstaller.GetStaticStateFromOptions,
 	}
 
 	// 3. execute installer get status and error

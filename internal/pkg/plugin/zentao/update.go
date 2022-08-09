@@ -7,7 +7,7 @@ import (
 
 func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	// 1. config install operations
-	runner := &plugininstaller.Runner{
+	runner := &plugininstaller.Operator{
 		PreExecuteOperations: []plugininstaller.MutableOperation{
 			goclient.Validate,
 		},
@@ -20,7 +20,7 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 		TerminateOperations: []plugininstaller.BaseOperation{
 			goclient.DealWithErrWhenInstall,
 		},
-		GetStatusOperation: goclient.GetState,
+		GetStateOperation: goclient.GetState,
 	}
 
 	// 2. execute installer get status and error

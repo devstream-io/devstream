@@ -9,7 +9,7 @@ import (
 // Create creates jenkins with provided options.
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	// 1. config install operations
-	runner := &plugininstaller.Runner{
+	runner := &plugininstaller.Operator{
 		PreExecuteOperations: []plugininstaller.MutableOperation{
 			helm.Validate,
 			replaceStroageClass,
@@ -24,7 +24,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 			showJenkinsUrl,
 		},
 		TerminateOperations: helm.DefaultTerminateOperations,
-		GetStatusOperation:  getHelmResourceAndCustomResource,
+		GetStateOperation:   getHelmResourceAndCustomResource,
 	}
 
 	// 2. execute installer get status and error

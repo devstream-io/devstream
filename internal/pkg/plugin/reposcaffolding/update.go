@@ -7,7 +7,7 @@ import (
 )
 
 func Update(options map[string]interface{}) (map[string]interface{}, error) {
-	runner := &plugininstaller.Runner{
+	runner := &plugininstaller.Operator{
 		PreExecuteOperations: []plugininstaller.MutableOperation{
 			reposcaffolding.Validate,
 			reposcaffolding.SetDefaultTemplateRepo,
@@ -16,7 +16,7 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 			reposcaffolding.DeleteRepo,
 			reposcaffolding.InstallRepo,
 		},
-		GetStatusOperation: reposcaffolding.GetStaticState,
+		GetStateOperation: reposcaffolding.GetStaticState,
 	}
 
 	// 2. execute installer get status and error

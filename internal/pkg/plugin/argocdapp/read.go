@@ -6,11 +6,11 @@ import (
 
 func Read(options map[string]interface{}) (map[string]interface{}, error) {
 	// 1. config install operations
-	runner := &plugininstaller.Runner{
+	runner := &plugininstaller.Operator{
 		PreExecuteOperations: []plugininstaller.MutableOperation{
 			validate,
 		},
-		GetStatusOperation: getDynamicState,
+		GetStateOperation: getDynamicState,
 	}
 
 	// 2. execute installer get status and error

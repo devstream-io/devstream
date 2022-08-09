@@ -8,11 +8,11 @@ import (
 
 func Read(options map[string]interface{}) (map[string]interface{}, error) {
 	// 1. config read operations
-	runner := &plugininstaller.Runner{
+	runner := &plugininstaller.Operator{
 		PreExecuteOperations: []plugininstaller.MutableOperation{
 			helm.Validate,
 		},
-		GetStatusOperation: helm.GetPluginAllState,
+		GetStateOperation: helm.GetPluginAllState,
 	}
 
 	status, err := runner.Execute(plugininstaller.RawOptions(options))

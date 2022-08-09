@@ -7,11 +7,11 @@ import (
 
 func Read(options map[string]interface{}) (map[string]interface{}, error) {
 	// 1. config install operations
-	runner := &plugininstaller.Runner{
+	runner := &plugininstaller.Operator{
 		PreExecuteOperations: []plugininstaller.MutableOperation{
 			goclient.Validate,
 		},
-		GetStatusOperation: goclient.GetState,
+		GetStateOperation: goclient.GetState,
 	}
 
 	// 2. execute installer get status and error

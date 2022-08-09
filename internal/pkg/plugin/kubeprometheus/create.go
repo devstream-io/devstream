@@ -9,13 +9,13 @@ import (
 // Create will create prometheus in k8s
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	// 1. config install operations
-	runner := &plugininstaller.Runner{
+	runner := &plugininstaller.Operator{
 		PreExecuteOperations: []plugininstaller.MutableOperation{
 			helm.Validate,
 		},
 		ExecuteOperations:   helm.DefaultCreateOperations,
 		TerminateOperations: helm.DefaultTerminateOperations,
-		GetStatusOperation:  helm.GetPluginAllState,
+		GetStateOperation:   helm.GetPluginAllState,
 	}
 
 	// 2. execute installer get status and error

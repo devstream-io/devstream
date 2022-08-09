@@ -7,7 +7,7 @@ import (
 
 // getHelmResourceAndCustomResource wraps helm resource and custom resource,
 // this is due to the limitation of `plugininstaller`,
-// now `plugininstaller.GetStatusOperation` only support one resource get function,
+// now `plugininstaller.GetStateOperation` only support one resource get function,
 // if we want to use both existing resource get function(such as helm's methods) and custom function,
 // we have to wrap them into one function.
 func getHelmResourceAndCustomResource(options plugininstaller.RawOptions) (map[string]interface{}, error) {

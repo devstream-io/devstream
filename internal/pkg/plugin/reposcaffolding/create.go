@@ -8,7 +8,7 @@ import (
 
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	// 1. config install operations
-	runner := &plugininstaller.Runner{
+	runner := &plugininstaller.Operator{
 		PreExecuteOperations: []plugininstaller.MutableOperation{
 			reposcaffolding.Validate,
 			reposcaffolding.SetDefaultTemplateRepo,
@@ -16,7 +16,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		ExecuteOperations: []plugininstaller.BaseOperation{
 			reposcaffolding.InstallRepo,
 		},
-		GetStatusOperation: reposcaffolding.GetStaticState,
+		GetStateOperation: reposcaffolding.GetStaticState,
 	}
 
 	// 2. execute installer get status and error

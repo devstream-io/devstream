@@ -12,12 +12,12 @@ const (
 
 func Read(options map[string]interface{}) (map[string]interface{}, error) {
 	// 1. config read operations
-	runner := &plugininstaller.Runner{
+	runner := &plugininstaller.Operator{
 		PreExecuteOperations: []plugininstaller.MutableOperation{
 			helm.SetDefaultConfig(&defaultHelmConfig),
 			helm.Validate,
 		},
-		GetStatusOperation: helm.GetPluginAllState,
+		GetStateOperation: helm.GetPluginAllState,
 	}
 
 	// 2. get plugin status

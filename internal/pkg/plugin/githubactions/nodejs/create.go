@@ -9,7 +9,7 @@ import (
 // Create sets up GitHub Actions workflow(s).
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	// 1. config install operations
-	runner := &plugininstaller.Runner{
+	runner := &plugininstaller.Operator{
 		PreExecuteOperations: []plugininstaller.MutableOperation{
 			github.Validate,
 			github.BuildWorkFlowsWrapper(workflows),
@@ -17,7 +17,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		ExecuteOperations: []plugininstaller.BaseOperation{
 			github.ProcessAction("create"),
 		},
-		GetStatusOperation: github.GetStaticWorkFlowState,
+		GetStateOperation: github.GetStaticWorkFlowState,
 	}
 
 	// 2. execute installer get status and error

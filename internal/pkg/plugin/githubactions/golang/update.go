@@ -8,7 +8,7 @@ import (
 
 // Update remove and set up GitHub Actions workflows.
 func Update(options map[string]interface{}) (map[string]interface{}, error) {
-	runner := &plugininstaller.Runner{
+	runner := &plugininstaller.Operator{
 		PreExecuteOperations: []plugininstaller.MutableOperation{
 			validate,
 			github.BuildWorkFlowsWrapper(workflows),
@@ -18,7 +18,7 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 			createDockerHubInfoForPush,
 			github.ProcessAction("update"),
 		},
-		GetStatusOperation: github.GetActionState,
+		GetStateOperation: github.GetActionState,
 	}
 
 	status, err := runner.Execute(plugininstaller.RawOptions(options))

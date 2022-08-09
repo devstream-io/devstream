@@ -8,7 +8,7 @@ import (
 
 func Delete(options map[string]interface{}) (bool, error) {
 	// 1. config install operations
-	runner := &plugininstaller.Runner{
+	runner := &plugininstaller.Operator{
 		PreExecuteOperations: []plugininstaller.MutableOperation{
 			validate,
 		},

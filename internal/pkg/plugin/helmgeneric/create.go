@@ -9,13 +9,13 @@ import (
 // Create creates helmgeneric with provided options.
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	// 1. config install operations
-	runner := &plugininstaller.Runner{
+	runner := &plugininstaller.Operator{
 		PreExecuteOperations: []plugininstaller.MutableOperation{
 			helm.Validate,
 		},
 		ExecuteOperations:   helm.DefaultCreateOperations,
 		TerminateOperations: helm.DefaultTerminateOperations,
-		GetStatusOperation:  getEmptyState,
+		GetStateOperation:   getEmptyState,
 	}
 
 	// 2. execute installer get status and error

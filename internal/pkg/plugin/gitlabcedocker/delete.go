@@ -13,7 +13,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 	}
 
 	// 2. config delete operations
-	runner := &plugininstaller.Runner{
+	runner := &plugininstaller.Operator{
 		PreExecuteOperations: []plugininstaller.MutableOperation{
 			dockerInstaller.Validate,
 		},

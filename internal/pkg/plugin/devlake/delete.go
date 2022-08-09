@@ -8,7 +8,7 @@ import (
 
 func Delete(options map[string]interface{}) (bool, error) {
 	// 1. config delete operations
-	runner := &plugininstaller.Runner{
+	runner := &plugininstaller.Operator{
 		ExecuteOperations: []plugininstaller.BaseOperation{
 			kubectl.ProcessByContent(
 				"delete", file.NewTemplate().FromRemote(devLakeInstallYAMLDownloadURL),
