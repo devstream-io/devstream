@@ -9,7 +9,7 @@ import (
 func Read(options map[string]interface{}) (map[string]interface{}, error) {
 	// 1. config read operations
 	runner := &plugininstaller.Operator{
-		PreExecuteOperations: []plugininstaller.MutableOperation{
+		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			helm.Validate,
 		},
 		GetStateOperation: getEmptyState,

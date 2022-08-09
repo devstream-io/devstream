@@ -8,11 +8,11 @@ import (
 
 func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	runner := &plugininstaller.Operator{
-		PreExecuteOperations: []plugininstaller.MutableOperation{
+		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			reposcaffolding.Validate,
 			reposcaffolding.SetDefaultTemplateRepo,
 		},
-		ExecuteOperations: []plugininstaller.BaseOperation{
+		ExecuteOperations: plugininstaller.ExecuteOperations{
 			reposcaffolding.DeleteRepo,
 			reposcaffolding.InstallRepo,
 		},

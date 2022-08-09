@@ -8,10 +8,10 @@ import (
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	// 1. config install operations
 	runner := &plugininstaller.Operator{
-		PreExecuteOperations: []plugininstaller.MutableOperation{
+		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			goclient.Validate,
 		},
-		ExecuteOperations: []plugininstaller.BaseOperation{
+		ExecuteOperations: plugininstaller.ExecuteOperations{
 			goclient.DealWithNsWhenInstall,
 			goclient.CreatePersistentVolumeWrapper(defaultPVPath),
 			goclient.CreatePersistentVolumeClaim,
@@ -19,7 +19,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 			goclient.CreateServiceWrapperLabelAndPorts(defaultZentaolabels, &defaultSVCPort),
 			goclient.WaitForReady(retryTimes),
 		},
-		TerminateOperations: []plugininstaller.BaseOperation{
+		TerminateOperations: plugininstaller.TerminateOperations{
 			goclient.DealWithErrWhenInstall,
 		},
 		GetStateOperation: goclient.GetState,

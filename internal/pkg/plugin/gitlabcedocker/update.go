@@ -19,10 +19,10 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 
 	// 2. config install operations
 	runner := &plugininstaller.Operator{
-		PreExecuteOperations: []plugininstaller.MutableOperation{
+		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			dockerInstaller.Validate,
 		},
-		ExecuteOperations: []plugininstaller.BaseOperation{
+		ExecuteOperations: plugininstaller.ExecuteOperations{
 			dockerInstaller.DeleteAll,
 			dockerInstaller.Install,
 			showHelpMsg,

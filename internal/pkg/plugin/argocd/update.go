@@ -9,7 +9,7 @@ import (
 func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	// 1. config update operations
 	runner := &plugininstaller.Operator{
-		PreExecuteOperations: []plugininstaller.MutableOperation{
+		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			helm.SetDefaultConfig(&defaultHelmConfig),
 			helm.Validate,
 		},

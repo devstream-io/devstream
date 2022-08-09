@@ -9,11 +9,11 @@ import (
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	// 1. config install operations
 	runner := &plugininstaller.Operator{
-		PreExecuteOperations: []plugininstaller.MutableOperation{
+		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			reposcaffolding.Validate,
 			reposcaffolding.SetDefaultTemplateRepo,
 		},
-		ExecuteOperations: []plugininstaller.BaseOperation{
+		ExecuteOperations: plugininstaller.ExecuteOperations{
 			reposcaffolding.InstallRepo,
 		},
 		GetStateOperation: reposcaffolding.GetStaticState,

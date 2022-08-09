@@ -10,7 +10,7 @@ import (
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	// 1. config install operations
 	runner := &plugininstaller.Operator{
-		ExecuteOperations: []plugininstaller.BaseOperation{
+		ExecuteOperations: plugininstaller.ExecuteOperations{
 			kubectl.ProcessByContent(
 				"create", file.NewTemplate().FromRemote(devLakeInstallYAMLDownloadURL),
 			),

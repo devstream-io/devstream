@@ -8,7 +8,7 @@ import (
 func Read(options map[string]interface{}) (map[string]interface{}, error) {
 	// 1. config install operations
 	runner := &plugininstaller.Operator{
-		PreExecuteOperations: []plugininstaller.MutableOperation{
+		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			goclient.Validate,
 		},
 		GetStateOperation: goclient.GetState,

@@ -10,11 +10,11 @@ import (
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	// 1. config install operations
 	runner := &plugininstaller.Operator{
-		PreExecuteOperations: []plugininstaller.MutableOperation{
+		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			github.Validate,
 			github.BuildWorkFlowsWrapper(workflows),
 		},
-		ExecuteOperations: []plugininstaller.BaseOperation{
+		ExecuteOperations: plugininstaller.ExecuteOperations{
 			createDockerHubInfoForPush,
 			github.ProcessAction("create"),
 		},

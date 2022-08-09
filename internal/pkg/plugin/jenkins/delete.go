@@ -8,11 +8,11 @@ import (
 func Delete(options map[string]interface{}) (bool, error) {
 	// 1. config delete operations
 	runner := &plugininstaller.Operator{
-		PreExecuteOperations: []plugininstaller.MutableOperation{
+		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			helm.Validate,
 			replaceStroageClass,
 		},
-		ExecuteOperations: []plugininstaller.BaseOperation{
+		ExecuteOperations: plugininstaller.ExecuteOperations{
 			helm.Delete,
 			helm.DealWithNsWhenInterruption,
 			postDelete,

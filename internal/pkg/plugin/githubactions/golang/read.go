@@ -7,7 +7,7 @@ import (
 
 func Read(options map[string]interface{}) (map[string]interface{}, error) {
 	runner := &plugininstaller.Operator{
-		PreExecuteOperations: []plugininstaller.MutableOperation{
+		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			validate,
 			github.BuildWorkFlowsWrapper(workflows),
 		},

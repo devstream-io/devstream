@@ -8,11 +8,11 @@ import (
 func Delete(options map[string]interface{}) (bool, error) {
 	// 1. config delete operations
 	runner := &plugininstaller.Operator{
-		PreExecuteOperations: []plugininstaller.MutableOperation{
+		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			reposcaffolding.Validate,
 			reposcaffolding.SetDefaultTemplateRepo,
 		},
-		ExecuteOperations: []plugininstaller.BaseOperation{
+		ExecuteOperations: plugininstaller.ExecuteOperations{
 			reposcaffolding.DeleteRepo,
 		},
 	}

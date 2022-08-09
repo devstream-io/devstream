@@ -13,26 +13,23 @@ type (
 	StateOperation func(options RawOptions) (map[string]interface{}, error)
 )
 
-type Installer interface {
-	Execute(options RawOptions) (map[string]interface{}, error)
-}
-
-// TODO(daniel-hutao): refactor all caller to use NewInstaller() instead of call Operator.
-func NewInstaller(preExecOps []MutableOperation, execOps, termiOps []BaseOperation, getStatusOps StateOperation) Installer {
-	return &Operator{
-		PreExecuteOperations: preExecOps,
-		ExecuteOperations:    execOps,
-		TerminateOperations:  termiOps,
-		GetStateOperation:    getStatusOps,
-	}
-}
-
-// Operator knows all the operations and can execute them in order
-type Operator struct {
+type (
 	PreExecuteOperations []MutableOperation
 	ExecuteOperations    []BaseOperation
 	TerminateOperations  []BaseOperation
 	GetStateOperation    StateOperation
+)
+
+type Installer interface {
+	Execute(options RawOptions) (map[string]interface{}, error)
+}
+
+// Operator knows all the operations and can execute them in order
+type Operator struct {
+	PreExecuteOperations PreExecuteOperations
+	ExecuteOperations    ExecuteOperations
+	TerminateOperations  TerminateOperations
+	GetStateOperation    GetStateOperation
 }
 
 // Execute will sequentially execute all operations in Operator

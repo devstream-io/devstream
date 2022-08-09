@@ -9,10 +9,10 @@ import (
 func Delete(options map[string]interface{}) (bool, error) {
 	// 1. config install operations
 	runner := &plugininstaller.Operator{
-		PreExecuteOperations: []plugininstaller.MutableOperation{
+		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			validate,
 		},
-		ExecuteOperations: []plugininstaller.BaseOperation{
+		ExecuteOperations: plugininstaller.ExecuteOperations{
 			kubectl.ProcessByContent(
 				"delete", file.NewTemplate().FromContent(templateFileLoc),
 			),
