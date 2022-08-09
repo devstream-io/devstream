@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"io"
-	"io/ioutil"
 	"strconv"
 	"testing"
 
@@ -43,7 +42,7 @@ func (mock *MockS3Client) GetObject(ctx context.Context, params *s3.GetObjectInp
 	checkStringParam(mock.t, "key", mock.key, params.Key)
 
 	return &s3.GetObjectOutput{
-		Body: ioutil.NopCloser(bytes.NewReader([]byte(TestContent))),
+		Body: io.NopCloser(bytes.NewReader([]byte(TestContent))),
 	}, nil
 }
 
@@ -71,7 +70,7 @@ func checkStringParam(t *testing.T, paramName, expected string, actual *string) 
 func checkBodyParam(t *testing.T, expected []byte, body io.Reader) {
 	t.Helper()
 
-	actual, err := ioutil.ReadAll(body)
+	actual, err := io.ReadAll(body)
 	if err != nil {
 		t.Fatalf("failed to get data from body: %s", err)
 	}

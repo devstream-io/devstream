@@ -3,7 +3,7 @@ package configloader
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"runtime"
 	"strings"
 
@@ -98,7 +98,7 @@ func renderToolsFromCoreConfigAndConfigBytes(coreConfig *CoreConfig, toolsConfig
 }
 
 func loadOriginalConfigFile(configFile string) ([]byte, error) {
-	originalConfigFileBytes, err := ioutil.ReadFile(configFile)
+	originalConfigFileBytes, err := os.ReadFile(configFile)
 	if err != nil {
 		log.Errorf("Failed to read the config file. Error: %s", err)
 		log.Info("Maybe the default file (config.yaml) doesn't exist or you forgot to pass your config file to the \"-f\" option?")
@@ -165,9 +165,10 @@ func (c *Config) ValidateDependency() []error {
 // varFile: "" # If not empty, use the specified external variables config file
 // toolFile: "" # If not empty, use the specified external tools config file
 // state:
-//   backend: local
-//   options:
-//     stateFile: devstream.state
+//
+//	backend: local
+//	options:
+//	  stateFile: devstream.state
 //
 // ---
 // # variables config
@@ -176,9 +177,9 @@ func (c *Config) ValidateDependency() []error {
 // ---
 // # plugins config
 // tools:
-// - name: A-PLUGIN-NAME
-//   instanceID: default
-//   options:
+//   - name: A-PLUGIN-NAME
+//     instanceID: default
+//     options:
 //     foo: bar
 //
 // See https://github.com/devstream-io/devstream/issues/596 for more details.

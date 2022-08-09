@@ -4,7 +4,6 @@ import (
 	"archive/zip"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -38,11 +37,11 @@ var _ = Describe("unZipFileProcesser func", func() {
 	It("should work", func() {
 		dstPath, err := unZipFileProcesser(zipFileName)
 		Expect(err).Error().ShouldNot(HaveOccurred())
-		dirFiles, err := ioutil.ReadDir(dstPath)
+		dirFiles, err := os.ReadDir(dstPath)
 		Expect(err).Error().ShouldNot(HaveOccurred())
 		Expect(len(dirFiles)).Should(Equal(1))
 		Expect(dirFiles[0].Name()).Should(Equal(zipLocation))
-		zipDirFiles, err := ioutil.ReadDir(filepath.Join(dstPath, zipLocation))
+		zipDirFiles, err := os.ReadDir(filepath.Join(dstPath, zipLocation))
 		Expect(err).Error().ShouldNot(HaveOccurred())
 		Expect(len(dirFiles)).Should(Equal(1))
 		Expect(zipDirFiles[0].Name()).Should(Equal(tempFile))

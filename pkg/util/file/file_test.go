@@ -2,7 +2,6 @@ package file
 
 import (
 	"errors"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -146,11 +145,11 @@ var _ = Describe("CopyFile func", func() {
 	})
 
 	It("should copy content form src to dst", func() {
-		err := ioutil.WriteFile(srcPath, testContent, 0666)
+		err := os.WriteFile(srcPath, testContent, 0666)
 		Expect(err).Error().ShouldNot(HaveOccurred())
 		err = CopyFile(srcPath, dstPath)
 		Expect(err).Error().ShouldNot(HaveOccurred())
-		data, err := ioutil.ReadFile(dstPath)
+		data, err := os.ReadFile(dstPath)
 		Expect(err).Error().ShouldNot(HaveOccurred())
 		Expect(data).Should(Equal(testContent))
 	})

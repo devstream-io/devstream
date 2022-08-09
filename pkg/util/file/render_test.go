@@ -2,7 +2,6 @@ package file
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -23,7 +22,7 @@ var _ = Describe("renderFile func", func() {
 		Expect(err).Error().ShouldNot(HaveOccurred())
 		defer tempFile.Close()
 		tempFilePath = tempFile.Name()
-		err = ioutil.WriteFile(tempFilePath, []byte(templateContent), 0666)
+		err = os.WriteFile(tempFilePath, []byte(templateContent), 0666)
 		Expect(err).Error().ShouldNot(HaveOccurred())
 	})
 
@@ -58,7 +57,7 @@ var _ = Describe("renderFile func", func() {
 				},
 			})
 			Expect(err).Error().ShouldNot(HaveOccurred())
-			content, err := ioutil.ReadFile(dstPath)
+			content, err := os.ReadFile(dstPath)
 			Expect(err).Error().ShouldNot(HaveOccurred())
 			Expect(string(content)).Should(Equal(rightContent))
 		})
@@ -107,7 +106,7 @@ var _ = Describe("renderGitRepoDir func", func() {
 		f, err := os.Create(filePath)
 		Expect(err).Error().ShouldNot(HaveOccurred())
 		defer f.Close()
-		err = ioutil.WriteFile(filePath, []byte(content), 0755)
+		err = os.WriteFile(filePath, []byte(content), 0755)
 		Expect(err).Error().ShouldNot(HaveOccurred())
 	}
 	createDir := func(dirPath string) {
@@ -158,24 +157,24 @@ var _ = Describe("renderGitRepoDir func", func() {
 		It("should render all dir", func() {
 			dstPath, err := renderGitRepoDir("test", srcPath, vars)
 			Expect(err).Error().ShouldNot(HaveOccurred())
-			files, err := ioutil.ReadDir(dstPath)
+			files, err := os.ReadDir(dstPath)
 			Expect(err).Error().ShouldNot(HaveOccurred())
 			// test README.md dir is not copied
 			Expect(len(files)).Should(Equal(2))
 			// test git dir files should not copied
-			gitDirFiles, err := ioutil.ReadDir(filepath.Join(dstPath, ".git"))
+			gitDirFiles, err := os.ReadDir(filepath.Join(dstPath, ".git"))
 			Expect(err).Error().ShouldNot(HaveOccurred())
 			Expect(len(gitDirFiles)).Should(Equal(0))
 			// test content dir files is copied
 			contentDirLoc := filepath.Join(dstPath, contentDir)
-			contentFiles, err := ioutil.ReadDir(contentDirLoc)
+			contentFiles, err := os.ReadDir(contentDirLoc)
 			Expect(err).Error().ShouldNot(HaveOccurred())
 			Expect(len(contentFiles)).Should(Equal(2))
 			// test file content
-			tplFileContent, err := ioutil.ReadFile(filepath.Join(contentDirLoc, "test.yaml"))
+			tplFileContent, err := os.ReadFile(filepath.Join(contentDirLoc, "test.yaml"))
 			Expect(err).Error().ShouldNot(HaveOccurred())
 			Expect(string(tplFileContent)).Should(Equal(renderdContent))
-			rawFileContent, err := ioutil.ReadFile(filepath.Join(contentDirLoc, "raw.txt"))
+			rawFileContent, err := os.ReadFile(filepath.Join(contentDirLoc, "raw.txt"))
 			Expect(err).Error().ShouldNot(HaveOccurred())
 			Expect(string(rawFileContent)).Should(Equal(rawContent))
 		})

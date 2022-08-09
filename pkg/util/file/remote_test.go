@@ -2,8 +2,8 @@ package file
 
 import (
 	"fmt"
-	"io/ioutil"
 	"net/http"
+	"os"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -53,7 +53,7 @@ var _ = Describe("getFileFromURL", func() {
 			reqURL := fmt.Sprintf("%s%s", server.URL(), testPath)
 			fileName, err := getFileFromURL(reqURL)
 			Expect(err).Error().ShouldNot(HaveOccurred())
-			fileContent, err := ioutil.ReadFile(fileName)
+			fileContent, err := os.ReadFile(fileName)
 			Expect(err).Error().ShouldNot(HaveOccurred())
 			Expect(string(fileContent)).Should(Equal(remoteContent))
 		})

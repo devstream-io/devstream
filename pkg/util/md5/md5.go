@@ -1,7 +1,7 @@
 package md5
 
 import (
-	"io/ioutil"
+	"os"
 
 	"k8s.io/utils/strings"
 )
@@ -15,7 +15,7 @@ func FileMatchesMD5(fileName, md5FileName string) (bool, error) {
 		return false, err
 	}
 
-	md5ContentBytes, err := ioutil.ReadFile(md5FileName)
+	md5ContentBytes, err := os.ReadFile(md5FileName)
 	if err != nil {
 		return false, err
 	}

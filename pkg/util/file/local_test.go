@@ -1,7 +1,6 @@
 package file
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -52,7 +51,7 @@ var _ = Describe("getFileFromContent func", func() {
 	It("should return a file for content", func() {
 		fileName, _ := getFileFromContent(testContent)
 		// check file exist
-		content, err := ioutil.ReadFile(fileName)
+		content, err := os.ReadFile(fileName)
 		Expect(err).ShouldNot(HaveOccurred())
 		Expect(string(content)).Should(Equal(testContent))
 	})

@@ -2,7 +2,7 @@ package configloader
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 
 	"gopkg.in/yaml.v3"
 
@@ -106,7 +106,7 @@ func loadVarsIntoMap(varConfigBytes []byte) (map[string]interface{}, error) {
 }
 
 func readFile(filePath string) ([]byte, error) {
-	fileBytes, err := ioutil.ReadFile(filePath)
+	fileBytes, err := os.ReadFile(filePath)
 	if err != nil {
 		log.Errorf("Failed to read the %s: %s", filePath, err)
 		return nil, err

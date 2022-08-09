@@ -1,5 +1,7 @@
 
 SELF_DIR=$(dir $(lastword $(MAKEFILE_LIST)))
+echo "SELF_DIR:$SELF_DIR"
+
 GOOS=$(shell go env GOOS)
 GOPATH=$(shell go env GOPATH)
 GOARCH=$(shell go env GOARCH)
