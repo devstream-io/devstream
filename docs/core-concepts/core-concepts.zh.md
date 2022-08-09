@@ -40,7 +40,7 @@ _注意: 你可以将多个YAML文件合并为同一个并用三个短横线(`--
 ### 2. 工具(Tool)
 
 - 每个 _Tool_ 对应一个插件, 即可用于安装和配置，也可用于整合 DevOps 的工具。
-- 每个 _Tool_ 有名称, (实例ID)InstanceID 和选项(Options), 定义在[这里](https://github.com/devstream-io/devstream/blob/main/internal/pkg/configloader/toolconfig.go#L13)。
+- 每个 _Tool_ 有名称, (实例ID)InstanceID 和选项(Options), 定义在[这里](https://github.com/devstream-io/devstream/blob/main/internal/pkg/configmanager/toolconfig.go#L13)。
 - 每个 _Tool_ 可以使用`dependsOn` 字段指定其依赖项。
 
  `dependsOn` 是一个字符串数组, 其中每一个元素都是一个依赖。 每个依赖项都以 "TOOL_NAME.INSTANCE_ID" 为格式命名。

@@ -6,7 +6,7 @@ import (
 
 	"github.com/spf13/viper"
 
-	"github.com/devstream-io/devstream/internal/pkg/configloader"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 )
 
 func getPluginDir() string {
@@ -17,8 +17,8 @@ func getPluginDir() string {
 	return pluginDir
 }
 
-func loadPlugin(pluginDir string, tool *configloader.Tool) (DevStreamPlugin, error) {
-	mod := fmt.Sprintf("%s/%s", pluginDir, configloader.GetPluginFileName(tool))
+func loadPlugin(pluginDir string, tool *configmanager.Tool) (DevStreamPlugin, error) {
+	mod := fmt.Sprintf("%s/%s", pluginDir, configmanager.GetPluginFileName(tool))
 	plug, err := plugin.Open(mod)
 	if err != nil {
 		return nil, err

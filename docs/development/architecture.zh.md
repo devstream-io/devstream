@@ -22,7 +22,7 @@ _注意：为了简单起见，CLI被命名为`dtm`（DevOps Toolchain Manager)�
 
 然后，每个命令调用[`internal/pkg`](https://github.com/devstream-io/devstream/tree/main/internal/pkg/pluginengine)下的`pluginengine`包。
 
-`pluginengine`首先调用`configloader`，将本地YAML配置文件读取到一个结构体中，然后调用`pluginmanager`来下载所需的插件。
+`pluginengine`首先调用`configmanager`，将本地YAML配置文件读取到一个结构体中，然后调用`pluginmanager`来下载所需的插件。
 
 之后，`pluginengine`调用`statemanager`来计算congfig、状态和实际DevOps工具的状态之间的"差异"。最后，`pluginengine`根据这变更执行对应的操作，并更新状态。在执行过程中，`pluginengine`加载每个插件（`*.so`文件）并根据每个变更调用相应的接口。
 
@@ -38,7 +38,7 @@ Plugin engine通过调用以下模块来实现目标：
 
 ### 2.1 配置管理器
 
-[`configloader`包](https://github.com/devstream-io/devstream/blob/main/internal/pkg/configloader/config.go#L23)中的模型结构体用来表示顶级配置的结构。
+[`configmanager`包](https://github.com/devstream-io/devstream/blob/main/internal/pkg/configmanager/config.go#L23)中的模型结构体用来表示顶级配置的结构。
 
 ### 2.2 插件管理器
 

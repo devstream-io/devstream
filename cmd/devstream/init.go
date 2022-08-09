@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/devstream-io/devstream/internal/pkg/completion"
-	"github.com/devstream-io/devstream/internal/pkg/configloader"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/pluginengine"
 	"github.com/devstream-io/devstream/internal/pkg/pluginmanager"
 	"github.com/devstream-io/devstream/internal/pkg/version"
@@ -21,7 +21,7 @@ var initCMD = &cobra.Command{
 }
 
 func initCMDFunc(_ *cobra.Command, _ []string) {
-	cfg, err := configloader.LoadConfig(configFile)
+	cfg, err := configmanager.LoadConfig(configFile)
 	if err != nil {
 		log.Errorf("Error: %s.", err)
 		return

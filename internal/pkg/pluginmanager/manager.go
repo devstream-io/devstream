@@ -8,13 +8,13 @@ import (
 
 	"github.com/spf13/viper"
 
-	"github.com/devstream-io/devstream/internal/pkg/configloader"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/version"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/md5"
 )
 
-func DownloadPlugins(conf *configloader.Config) error {
+func DownloadPlugins(conf *configmanager.Config) error {
 	// create plugins dir if not exist
 	pluginDir := viper.GetString("plugin-dir")
 	if pluginDir == "" {
@@ -26,9 +26,9 @@ func DownloadPlugins(conf *configloader.Config) error {
 	dc := NewPbDownloadClient(defaultReleaseUrl)
 
 	for _, tool := range conf.Tools {
-		pluginName := configloader.GetPluginName(&tool)
-		pluginFileName := configloader.GetPluginFileName(&tool)
-		pluginMD5FileName := configloader.GetPluginMD5FileName(&tool)
+		pluginName := configmanager.GetPluginName(&tool)
+		pluginFileName := configmanager.GetPluginFileName(&tool)
+		pluginMD5FileName := configmanager.GetPluginMD5FileName(&tool)
 
 		// a new line to make outputs more beautiful
 		fmt.Println()
@@ -85,7 +85,7 @@ func DownloadPlugins(conf *configloader.Config) error {
 }
 
 // CheckLocalPlugins checks if the local plugins exists, and matches with md5 value.
-func CheckLocalPlugins(conf *configloader.Config) error {
+func CheckLocalPlugins(conf *configmanager.Config) error {
 	pluginDir := viper.GetString("plugin-dir")
 	if pluginDir == "" {
 		return fmt.Errorf("plugins directory doesn't exist")
@@ -94,8 +94,8 @@ func CheckLocalPlugins(conf *configloader.Config) error {
 	log.Infof("Using dir <%s> to store plugins.", pluginDir)
 
 	for _, tool := range conf.Tools {
-		pluginFileName := configloader.GetPluginFileName(&tool)
-		pluginMD5FileName := configloader.GetPluginMD5FileName(&tool)
+		pluginFileName := configmanager.GetPluginFileName(&tool)
+		pluginMD5FileName := configmanager.GetPluginMD5FileName(&tool)
 		if _, err := os.Stat(filepath.Join(pluginDir, pluginFileName)); err != nil {
 			if errors.Is(err, os.ErrNotExist) {
 				return fmt.Errorf("plugin %s doesn't exist", tool.Name)

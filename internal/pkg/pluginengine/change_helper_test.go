@@ -5,16 +5,16 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/devstream-io/devstream/internal/pkg/configloader"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 )
 
 func TestTopologicalSortChangesInBatch(t *testing.T) {
-	toolA := &configloader.Tool{InstanceID: "a", Name: "a"}
-	toolB := &configloader.Tool{InstanceID: "b", Name: "b"}
-	toolC := &configloader.Tool{InstanceID: "c", Name: "c", DependsOn: []string{"a.a", "b.b"}}
-	toolD := &configloader.Tool{InstanceID: "d", Name: "d", DependsOn: []string{"b.b"}}
-	toolE := &configloader.Tool{InstanceID: "e", Name: "e", DependsOn: []string{"c.c"}}
+	toolA := &configmanager.Tool{InstanceID: "a", Name: "a"}
+	toolB := &configmanager.Tool{InstanceID: "b", Name: "b"}
+	toolC := &configmanager.Tool{InstanceID: "c", Name: "c", DependsOn: []string{"a.a", "b.b"}}
+	toolD := &configmanager.Tool{InstanceID: "d", Name: "d", DependsOn: []string{"b.b"}}
+	toolE := &configmanager.Tool{InstanceID: "e", Name: "e", DependsOn: []string{"c.c"}}
 
 	changes := []*Change{
 		{
