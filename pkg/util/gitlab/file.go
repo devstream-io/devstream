@@ -45,3 +45,28 @@ func (c *Client) PushLocalPathToBranch(repoPath, branch, pathWithNamespace, comm
 	}
 	return needRollBack, err
 }
+
+func (c *Client) PushInitRepo(opts *CreateProjectOptions, pathWithNamespace, repoPath, commitMsg string) error {
+	// 1. create the project
+	if err := c.CreateProject(opts); err != nil {
+		log.Errorf("Failed to create repo: %s.", err)
+		return err
+	}
+
+	// if encounter error, delete repo
+	var needRollBack bool
+	defer func() {
+		if !needRollBack {
+			return
+		}
+		// need to clean the repo created when retErr != nil
+		if err := c.DeleteProject(pathWithNamespace); err != nil {
+			log.Errorf("Failed to delete the repo %s: %s.", pathWithNamespace, err)
+		}
+	}()
+
+	needRollBack, err := c.PushLocalPathToBranch(
+		repoPath, opts.Branch, pathWithNamespace, commitMsg,
+	)
+	return err
+}

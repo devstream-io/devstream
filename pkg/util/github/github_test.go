@@ -132,9 +132,21 @@ var _ = Describe("GitHub", func() {
 	})
 
 	Context("Client with auth enabled but not github token", func() {
+		var existToken string
+		BeforeEach(func() {
+			existToken = os.Getenv("GITHUB_TOKEN")
+			err := os.Unsetenv("GITHUB_TOKEN")
+			Expect(err).NotTo(HaveOccurred())
+		})
 		It("", func() {
 			_, err := NewClient(OptNeedAuth)
 			Expect(err).To(HaveOccurred())
+		})
+		AfterEach(func() {
+			if existToken != "" {
+				err := os.Setenv("GITHUB_TOKEN", existToken)
+				Expect(err).NotTo(HaveOccurred())
+			}
 		})
 	})
 

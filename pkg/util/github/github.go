@@ -15,7 +15,7 @@ const (
 	DefaultWorkPath = ".github-workpath"
 	// https://github.com/merico-dev/dtm-scaffolding-golang/archive/refs/heads/main.zip -> 302 ->
 	// https://codeload.github.com/merico-dev/dtm-scaffolding-golang/zip/refs/heads/main
-	DefaultLatestCodeZipfileDownloadUrlFormat = "https://codeload.github.com/%s/%s/zip/refs/heads/main"
+	DefaultLatestCodeZipfileDownloadUrlFormat = "https://codeload.github.com/%s/%s/zip/refs/heads/%s"
 	DefaultLatestCodeZipfileName              = "main-latest.zip"
 )
 
