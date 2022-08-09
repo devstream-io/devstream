@@ -83,6 +83,8 @@ func NewToolWithToolConfigBytesAndVarsConfigBytes(toolConfigBytes, varConfigByte
 		return nil, err
 	}
 
+	log.Debugf("Tool file after rendering with variables: \n%s\n", toolConfigBytesWithVars)
+
 	return newToolWithToolConfig(toolConfigBytesWithVars)
 }
 
@@ -112,6 +114,6 @@ func readFile(filePath string) ([]byte, error) {
 		return nil, err
 	}
 
-	log.Debugf("Variables file: \n%s\n", string(fileBytes))
+	log.Debugf("File content: \n%s\n", string(fileBytes))
 	return fileBytes, nil
 }
