@@ -18,7 +18,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 			dockerInstaller.Validate,
 		},
 		ExecuteOperations: []plugininstaller.BaseOperation{
-			dockerInstaller.Delete,
+			dockerInstaller.DeleteAll,
 		},
 	}
 

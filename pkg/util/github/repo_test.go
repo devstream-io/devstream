@@ -47,9 +47,11 @@ var _ = Describe("Repo", func() {
 	})
 
 	Context("CreateRepo", func() {
-		It("create with status 500", func() {
+		BeforeEach(func() {
 			s.Reset()
 			s.SetAllowUnhandledRequests(true)
+		})
+		It("create with status 500", func() {
 			err := wrongClient.CreateRepo(org, defaultBranch)
 			Expect(err).NotTo(Succeed())
 			Expect(err.Error()).To(ContainSubstring(strconv.Itoa(http.StatusInternalServerError)))
@@ -64,23 +66,21 @@ var _ = Describe("Repo", func() {
 	})
 
 	Context("DeleteRepo", func() {
-		It("DeleteRepo with status 500", func() {
+		BeforeEach(func() {
 			s.Reset()
 			s.SetAllowUnhandledRequests(true)
+		})
+		It("DeleteRepo with status 500", func() {
 			err := rightClient.DeleteRepo()
 			Expect(err).NotTo(Succeed())
 			Expect(err.Error()).To(ContainSubstring(strconv.Itoa(http.StatusInternalServerError)))
 		})
 		It("DeleteRepo with status 404", func() {
-			s.Reset()
-			s.SetAllowUnhandledRequests(true)
 			s.SetUnhandledRequestStatusCode(http.StatusNotFound)
 			err := wrongClient.DeleteRepo()
 			Expect(err).To(Succeed())
 		})
 		It("DeleteRepo with status 200", func() {
-			s.Reset()
-			s.SetAllowUnhandledRequests(true)
 			s.SetUnhandledRequestStatusCode(http.StatusOK)
 			err := wrongClient.DeleteRepo()
 			Expect(err).To(Succeed())
@@ -88,9 +88,12 @@ var _ = Describe("Repo", func() {
 	})
 
 	Context("GetRepoDescription", func() {
-		It("GetRepoDescription with status 500", func() {
+		BeforeEach(func() {
 			s.Reset()
 			s.SetAllowUnhandledRequests(true)
+		})
+
+		It("GetRepoDescription with status 500", func() {
 			s.SetUnhandledRequestStatusCode(http.StatusInternalServerError)
 			r, err := rightClient.GetRepoDescription()
 			Expect(err).NotTo(Succeed())
@@ -112,9 +115,12 @@ var _ = Describe("Repo", func() {
 	})
 
 	Context("PushLocalPathToBranch", func() {
-		It("1. create new branch from main", func() {
+		BeforeEach(func() {
 			s.Reset()
 			s.SetAllowUnhandledRequests(true)
+		})
+
+		It("1. create new branch from main", func() {
 			s.SetUnhandledRequestStatusCode(http.StatusInternalServerError)
 			r, err := rightClient.PushLocalPathToBranch(mergeBranch, mainBranch, filePath)
 			Expect(err).NotTo(Succeed())

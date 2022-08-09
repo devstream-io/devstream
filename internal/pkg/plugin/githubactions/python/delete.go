@@ -13,6 +13,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 			github.BuildWorkFlowsWrapper(workflows),
 		},
 		ExecuteOperations: []plugininstaller.BaseOperation{
+			deleteDockerHubInfoForPush,
 			github.ProcessAction("delete"),
 		},
 	}

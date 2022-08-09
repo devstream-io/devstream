@@ -62,6 +62,7 @@ func Validate(options plugininstaller.RawOptions) (plugininstaller.RawOptions, e
 	if err != nil {
 		return nil, err
 	}
+	log.Debugf("Options: %v.", opts)
 	errs := validator.Struct(opts)
 	if len(errs) > 0 {
 		for _, e := range errs {

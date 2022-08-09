@@ -14,6 +14,8 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 			github.BuildWorkFlowsWrapper(workflows),
 		},
 		ExecuteOperations: []plugininstaller.BaseOperation{
+			deleteDockerHubInfoForPush,
+			createDockerHubInfoForPush,
 			github.ProcessAction("update"),
 		},
 		GetStatusOperation: github.GetActionState,

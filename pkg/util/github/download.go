@@ -12,13 +12,9 @@ import (
 )
 
 func (c *Client) DownloadAsset(tagName, assetName, fileName string) error {
-	var owner = c.Owner
-	if c.Org != "" {
-		owner = c.Org
-	}
 
 	// 1. get releases
-	releases, resp, err := c.Repositories.ListReleases(context.TODO(), owner, c.Repo, &github.ListOptions{})
+	releases, resp, err := c.Repositories.ListReleases(context.TODO(), c.getRepoOwner(), c.Repo, &github.ListOptions{})
 	if err != nil {
 		return err
 	}
@@ -80,12 +76,9 @@ func (c *Client) DownloadAsset(tagName, assetName, fileName string) error {
 	return nil
 }
 
-func (c *Client) GetLatestCodeZipURL() string {
-	var owner = c.Owner
+func (c *Client) getRepoOwner() string {
 	if c.Org != "" {
-		owner = c.Org
+		return c.Org
 	}
-	latestCodeZipfileDownloadURL := fmt.Sprintf(DefaultLatestCodeZipfileDownloadUrlFormat, owner, c.Repo)
-	log.Debugf("LatestCodeZipfileDownloadUrl: %s.", latestCodeZipfileDownloadURL)
-	return latestCodeZipfileDownloadURL
+	return c.Owner
 }

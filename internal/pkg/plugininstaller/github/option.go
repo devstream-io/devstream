@@ -73,3 +73,10 @@ func (opts *GithubActionOptions) Encode() (map[string]interface{}, error) {
 	}
 	return options, nil
 }
+
+func (opts *GithubActionOptions) CheckAddDockerHubToken() bool {
+	if opts.Docker != nil && opts.Docker.Registry.Type == "dockerhub" {
+		return true
+	}
+	return false
+}

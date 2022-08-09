@@ -196,35 +196,3 @@ var _ = Describe("DownloadAsset", func() {
 		DeferCleanup(io.DeleteFile, workPath+"/"+fileName)
 	})
 })
-
-var _ = Describe("DownloadLatestCodeAsZipFile", func() {
-	const (
-		owner, repo, org = "owner", "repo", "org"
-	)
-
-	var (
-		workPath string
-		opts     *github.Option
-	)
-
-	JustBeforeEach(func() {
-		opts = &github.Option{
-			Owner:    owner,
-			Repo:     repo,
-			Org:      org,
-			WorkPath: workPath,
-		}
-	})
-
-	When("the url is correct", func() {
-
-		It("should return no error", func() {
-			ghClient, err := github.NewClientWithOption(opts, serverURL)
-			Expect(err).NotTo(HaveOccurred())
-			Expect(ghClient).NotTo(Equal(nil))
-			url := ghClient.GetLatestCodeZipURL()
-			Expect(url).ShouldNot(BeEmpty())
-		})
-	})
-
-})
