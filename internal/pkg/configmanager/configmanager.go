@@ -74,9 +74,9 @@ type Manager struct {
 	ConfigFile string
 }
 
-func NewManager(ConfigFileName string) *Manager {
+func NewManager(configFileName string) *Manager {
 	return &Manager{
-		ConfigFile: ConfigFileName,
+		ConfigFile: configFileName,
 	}
 }
 
