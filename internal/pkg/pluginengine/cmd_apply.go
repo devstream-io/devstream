@@ -2,23 +2,18 @@ package pluginengine
 
 import (
 	"errors"
-	"fmt"
 	"os"
 
-	"github.com/devstream-io/devstream/internal/pkg/configloader"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/pluginmanager"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 func Apply(configFile string, continueDirectly bool) error {
-	cfg, err := configloader.LoadConfig(configFile)
+	cfg, err := configmanager.NewManager(configFile).LoadConfig()
 	if err != nil {
 		return err
-	}
-
-	if cfg == nil {
-		return fmt.Errorf("failed to load the config file")
 	}
 
 	err = pluginmanager.CheckLocalPlugins(cfg)

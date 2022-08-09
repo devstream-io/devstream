@@ -11,16 +11,16 @@ import (
 	"github.com/onsi/gomega/ghttp"
 	"github.com/spf13/viper"
 
-	"github.com/devstream-io/devstream/internal/pkg/configloader"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/pkg/util/md5"
 )
 
 var _ = Describe("MD5", func() {
 	var (
 		err                                           error
-		config                                        *configloader.Config
+		config                                        *configmanager.Config
 		tempDir, file, fileMD5, filePath, fileMD5Path string
-		tools                                         []configloader.Tool
+		tools                                         []configmanager.Tool
 	)
 
 	createNewFile := func(fileName string) error {
@@ -51,14 +51,14 @@ var _ = Describe("MD5", func() {
 	BeforeEach(func() {
 		tempDir = GinkgoT().TempDir()
 		viper.Set("plugin-dir", tempDir)
-		tools = []configloader.Tool{
+		tools = []configmanager.Tool{
 			{InstanceID: "a", Name: "a"},
 		}
-		config = &configloader.Config{Tools: tools}
+		config = &configmanager.Config{Tools: tools}
 
-		file = configloader.GetPluginFileName(&tools[0])
+		file = configmanager.GetPluginFileName(&tools[0])
 		filePath = filepath.Join(tempDir, file)
-		fileMD5 = configloader.GetPluginMD5FileName(&tools[0])
+		fileMD5 = configmanager.GetPluginMD5FileName(&tools[0])
 		fileMD5Path = filepath.Join(tempDir, fileMD5)
 		err := createNewFile(filePath)
 		Expect(err).NotTo(HaveOccurred())

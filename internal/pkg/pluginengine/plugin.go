@@ -1,7 +1,7 @@
 package pluginengine
 
 import (
-	"github.com/devstream-io/devstream/internal/pkg/configloader"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 )
 
 const DefaultPluginDir = ".devstream"
@@ -17,7 +17,7 @@ type DevStreamPlugin interface {
 }
 
 // Create loads the plugin and calls the Create method of that plugin.
-func Create(tool *configloader.Tool) (map[string]interface{}, error) {
+func Create(tool *configmanager.Tool) (map[string]interface{}, error) {
 	pluginDir := getPluginDir()
 	p, err := loadPlugin(pluginDir, tool)
 	if err != nil {
@@ -27,7 +27,7 @@ func Create(tool *configloader.Tool) (map[string]interface{}, error) {
 }
 
 // Update loads the plugin and calls the Update method of that plugin.
-func Update(tool *configloader.Tool) (map[string]interface{}, error) {
+func Update(tool *configmanager.Tool) (map[string]interface{}, error) {
 	pluginDir := getPluginDir()
 	p, err := loadPlugin(pluginDir, tool)
 	if err != nil {
@@ -36,7 +36,7 @@ func Update(tool *configloader.Tool) (map[string]interface{}, error) {
 	return p.Update(tool.Options)
 }
 
-func Read(tool *configloader.Tool) (map[string]interface{}, error) {
+func Read(tool *configmanager.Tool) (map[string]interface{}, error) {
 	pluginDir := getPluginDir()
 	p, err := loadPlugin(pluginDir, tool)
 	if err != nil {
@@ -46,7 +46,7 @@ func Read(tool *configloader.Tool) (map[string]interface{}, error) {
 }
 
 // Delete loads the plugin and calls the Delete method of that plugin.
-func Delete(tool *configloader.Tool) (bool, error) {
+func Delete(tool *configmanager.Tool) (bool, error) {
 	pluginDir := getPluginDir()
 	p, err := loadPlugin(pluginDir, tool)
 	if err != nil {

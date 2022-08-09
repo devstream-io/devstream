@@ -1,7 +1,7 @@
 package pluginengine
 
 import (
-	"github.com/devstream-io/devstream/internal/pkg/configloader"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/pluginmanager"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
@@ -10,7 +10,7 @@ import (
 // Verify returns true if all the comments in this function are met
 func Verify(configFile string) bool {
 	// 1. loading config file succeeded
-	cfg, err := configloader.LoadConfig(configFile)
+	cfg, err := configmanager.NewManager(configFile).LoadConfig()
 	if err != nil {
 		log.Errorf("verify failed, error: %s", err)
 	}

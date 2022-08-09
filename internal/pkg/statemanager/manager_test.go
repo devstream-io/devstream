@@ -7,7 +7,7 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.com/devstream-io/devstream/internal/pkg/backend/local"
-	"github.com/devstream-io/devstream/internal/pkg/configloader"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 )
 
@@ -18,9 +18,9 @@ var _ = Describe("Statemanager", func() {
 	var testState statemanager.State
 
 	BeforeEach(func() {
-		stateCfg := configloader.State{
+		stateCfg := configmanager.State{
 			Backend: "local",
-			Options: configloader.StateConfigOptions{
+			Options: configmanager.StateConfigOptions{
 				StateFile: "devstream.state",
 			},
 		}

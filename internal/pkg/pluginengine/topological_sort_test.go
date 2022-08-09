@@ -6,18 +6,18 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/devstream-io/devstream/internal/pkg/configloader"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 )
 
 func TestNoDependency(t *testing.T) {
-	tools := []configloader.Tool{
+	tools := []configmanager.Tool{
 		{InstanceID: "a", Name: "a"},
 		{InstanceID: "b", Name: "b"},
 		{InstanceID: "c", Name: "c"},
 		{InstanceID: "d", Name: "d"},
 	}
 	expectedRes :=
-		[][]configloader.Tool{
+		[][]configmanager.Tool{
 			{
 				{InstanceID: "a", Name: "a"},
 				{InstanceID: "b", Name: "b"},
@@ -31,12 +31,12 @@ func TestNoDependency(t *testing.T) {
 }
 
 func TestSingleDependency(t *testing.T) {
-	tools := []configloader.Tool{
+	tools := []configmanager.Tool{
 		{InstanceID: "a", Name: "a"},
 		{InstanceID: "c", Name: "c", DependsOn: []string{"a.a"}},
 	}
 	expectedRes :=
-		[][]configloader.Tool{
+		[][]configmanager.Tool{
 			{
 				{InstanceID: "a", Name: "a"},
 			},
@@ -50,14 +50,14 @@ func TestSingleDependency(t *testing.T) {
 }
 
 func TestMultiDependencies(t *testing.T) {
-	tools := []configloader.Tool{
+	tools := []configmanager.Tool{
 		{InstanceID: "a", Name: "a"},
 		{InstanceID: "b", Name: "b"},
 		{InstanceID: "c", Name: "c", DependsOn: []string{"a.a", "b.b"}},
 		{InstanceID: "d", Name: "d", DependsOn: []string{"c.c"}},
 	}
 	expectedRes :=
-		[][]configloader.Tool{
+		[][]configmanager.Tool{
 			{
 				{InstanceID: "a", Name: "a"},
 				{InstanceID: "b", Name: "b"},
@@ -75,14 +75,14 @@ func TestMultiDependencies(t *testing.T) {
 }
 
 func TestDependencyLoop(t *testing.T) {
-	tools := []configloader.Tool{
+	tools := []configmanager.Tool{
 		{InstanceID: "a", Name: "a"},
 		{InstanceID: "b", Name: "b", DependsOn: []string{"d.d"}},
 		{InstanceID: "c", Name: "c", DependsOn: []string{"b.b"}},
 		{InstanceID: "d", Name: "d", DependsOn: []string{"c.c"}},
 	}
 	expectedRes :=
-		[][]configloader.Tool{
+		[][]configmanager.Tool{
 			{
 				{InstanceID: "a", Name: "a"},
 				{InstanceID: "b", Name: "b"},

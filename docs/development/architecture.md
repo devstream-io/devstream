@@ -22,7 +22,7 @@ Every time a user runs the `dtm` program, the execution transfers immediately in
 
 Then, each command calls the plugin engine package under [`internal/pkg`](https://github.com/devstream-io/devstream/tree/main/internal/pkg/pluginengine).
 
-The `pluginengine` calls the [config manager package](https://github.com/devstream-io/devstream/tree/main/internal/pkg/configloader) first to read the local YAML config file into a struct.
+The `pluginengine` calls the [config manager package](https://github.com/devstream-io/devstream/tree/main/internal/pkg/configmanager) first to read the local YAML config file into a struct.
 
 Then it calls the [`pluginmanager` package](https://github.com/devstream-io/devstream/tree/main/internal/pkg/pluginmanager) to download the required plugins.
 
@@ -40,7 +40,7 @@ It achieves the goal by calling the following modules:
 
 ### 2.1 Config Manager
 
-Model types in package [`configloader`](https://github.com/devstream-io/devstream/blob/main/internal/pkg/configloader/config.go#L23) represent the top-level configuration structure.
+Model types in package [`configmanager`](https://github.com/devstream-io/devstream/blob/main/internal/pkg/configmanager/config.go#L23) represent the top-level configuration structure.
 
 ### 2.2 Plugin Manager
 
