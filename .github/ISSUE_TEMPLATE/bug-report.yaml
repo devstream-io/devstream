@@ -28,8 +28,8 @@ body:
     label: 'DevStream Version'
     description: "To find out the version run: `dtm version`"
     options:
-      - < v0.7.0
-      - v0.7.0
+      - < v0.8.0
+      - v0.8.0
       - latest
   validations:
     required: true
