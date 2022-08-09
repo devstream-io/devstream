@@ -18,12 +18,56 @@ var (
 	GOARCH string = runtime.GOARCH
 )
 
-var manager *Manager
-
 // Config records rendered config values and is used as a general config in DevStream.
 type Config struct {
 	Tools []Tool `yaml:"tools"`
 	State *State
+}
+
+func (c *Config) Validate() []error {
+	errors := make([]error, 0)
+
+	for _, t := range c.Tools {
+		errors = append(errors, t.Validate()...)
+	}
+
+	errors = append(errors, c.ValidateDependency()...)
+
+	return errors
+}
+
+func (c *Config) ValidateDependency() []error {
+	errors := make([]error, 0)
+
+	// config "set" (map)
+	toolMap := make(map[string]bool)
+	// creating the set
+	for _, tool := range c.Tools {
+		toolMap[tool.Key()] = true
+	}
+
+	for _, tool := range c.Tools {
+		// no dependency, pass
+		if len(tool.DependsOn) == 0 {
+			continue
+		}
+
+		// for each dependency
+		for _, dependency := range tool.DependsOn {
+			// skip empty string
+			dependency = strings.TrimSpace(dependency)
+			if dependency == "" {
+				continue
+			}
+
+			// generate an error if the dependency isn't in the config set,
+			if _, ok := toolMap[dependency]; !ok {
+				errors = append(errors, fmt.Errorf("tool %s's dependency %s doesn't exist in the config", tool.InstanceID, dependency))
+			}
+		}
+	}
+
+	return errors
 }
 
 type Manager struct {
@@ -31,12 +75,9 @@ type Manager struct {
 }
 
 func NewManager(ConfigFileName string) *Manager {
-	if manager == nil {
-		manager = &Manager{
-			ConfigFile: ConfigFileName,
-		}
+	return &Manager{
+		ConfigFile: ConfigFileName,
 	}
-	return manager
 }
 
 // LoadConfig reads an input file as a general config.
@@ -121,52 +162,6 @@ func (m *Manager) loadOriginalConfigFile() ([]byte, error) {
 	}
 	log.Debugf("Original config: \n%s\n", string(originalConfigFileBytes))
 	return originalConfigFileBytes, err
-}
-
-func (c *Config) Validate() []error {
-	errors := make([]error, 0)
-
-	for _, t := range c.Tools {
-		errors = append(errors, t.Validate()...)
-	}
-
-	errors = append(errors, c.ValidateDependency()...)
-
-	return errors
-}
-
-func (c *Config) ValidateDependency() []error {
-	errors := make([]error, 0)
-
-	// config "set" (map)
-	toolMap := make(map[string]bool)
-	// creating the set
-	for _, tool := range c.Tools {
-		toolMap[tool.Key()] = true
-	}
-
-	for _, tool := range c.Tools {
-		// no dependency, pass
-		if len(tool.DependsOn) == 0 {
-			continue
-		}
-
-		// for each dependency
-		for _, dependency := range tool.DependsOn {
-			// skip empty string
-			dependency = strings.TrimSpace(dependency)
-			if dependency == "" {
-				continue
-			}
-
-			// generate an error if the dependency isn't in the config set,
-			if _, ok := toolMap[dependency]; !ok {
-				errors = append(errors, fmt.Errorf("tool %s's dependency %s doesn't exist in the config", tool.InstanceID, dependency))
-			}
-		}
-	}
-
-	return errors
 }
 
 // splitConfigFileBytes take the original config file and split it to:
