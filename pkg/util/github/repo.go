@@ -168,7 +168,6 @@ func (c *Client) ProtectBranch(branch string) error {
 
 	_, _, err = c.Repositories.UpdateBranchProtection(c.Context, repo.GetOwner().GetLogin(), repo.GetName(), branch, req)
 	if err != nil {
-		log.Errorf("Protect branch failed: %s.", err)
 		return err
 	}
 
