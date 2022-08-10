@@ -49,6 +49,9 @@ func (chart *Chart) FillDefaultValue(defaultChart *Chart) {
 	if chart.Timeout == "" {
 		chart.Timeout = defaultChart.Timeout
 	}
+	if chart.ReleaseName == "" {
+		chart.ReleaseName = defaultChart.ReleaseName
+	}
 	chart.UpgradeCRDs = getBoolValue(chart.UpgradeCRDs, defaultChart.UpgradeCRDs)
 	chart.Wait = getBoolValue(chart.Wait, defaultChart.Wait)
 	chart.CreateNamespace = getBoolValue(chart.CreateNamespace, defaultChart.CreateNamespace)

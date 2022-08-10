@@ -8,4 +8,17 @@ This plugin installs [kube-prometheus](https://github.com/prometheus-operator/ku
 --8<-- "kube-prometheus.yaml"
 ```
 
-Currently, except for `values_yaml`, all the parameters in the example above are mandatory.
+### Default Configs
+
+| key                | default value                                      | description                                        |
+| ----               | ----                                               | ----                                               |
+| chart.chart_name   | prometheus-community/kube-prometheus-stack         | chart name                                         |
+| chart.timeout      | 5m                                                 | this config will wait 5 minutes to deploy          |
+| chart.release_name | prometheus                                         | helm release name                                  |
+| chart.upgradeCRDs  | true                                               | default update CRD config                          |
+| chart.wait         | true                                               | whether to wait until installation is complete     |
+| repo.url           | https://prometheus-community.github.io/helm-charts | helm official repo address                         |
+| repo.name          | prometheus-community                               | helm repo name                                     |
+| create_namespace   | false                                              | whether to create namespace if namespace not eixst |
+
+Currently, except for `values_yaml` and default configs, all the parameters in the example above are mandatory.

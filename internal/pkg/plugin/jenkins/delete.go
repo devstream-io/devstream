@@ -9,6 +9,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
+			helm.SetDefaultConfig(&defaultHelmConfig),
 			helm.Validate,
 			replaceStroageClass,
 		},

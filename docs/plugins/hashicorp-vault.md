@@ -10,6 +10,19 @@ This plugin installs hashicorp-vault with replicas:3 by default value.
 --8<-- "hashicorp-vault.yaml"
 ```
 
+### Default Configs
+
+| key                | default value                       | description                                        |
+| ----               | ----                                | ----                                               |
+| chart.chart_name   | hashicorp/vault                     | chart name                                         |
+| chart.timeout      | 5m                                  | this config will wait 5 minutes to deploy          |
+| chart.release_name | vault                               | helm release name                                  |
+| chart.upgradeCRDs  | true                                | default update CRD config                          |
+| chart.wait         | true                                | whether to wait until installation is complete     |
+| repo.url           | https://helm.releases.hashicorp.com | helm official repo address                         |
+| repo.name          | hashicorp                           | helm repo name                                     |
+| create_namespace   | false                               | whether to create namespace if namespace not eixst |
+
 ## Initialize all the Vault pods
 
 After installing the Vault on k8s, you can initialize all pods of the Vault on k8s. To know more about the Vault, you can refer to:

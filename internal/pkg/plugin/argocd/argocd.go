@@ -12,7 +12,9 @@ var defaultHelmConfig = helm.Options{
 		Timeout:     "5m",
 		UpgradeCRDs: types.Bool(true),
 		Wait:        types.Bool(true),
+		ReleaseName: "argocd",
 	},
+	CreateNamespace: types.Bool(false),
 	Repo: helmCommon.Repo{
 		URL:  "https://argoproj.github.io/argo-helm",
 		Name: "argo",

@@ -66,4 +66,17 @@ Harbor的大部分组件都是无状态的。因此我们可以通过增加 `Pod
 --8<-- "harbor.yaml"
 ```
 
-目前除了 `values_yaml` 字段，所有示例参数均为必填项。
+#### 默认配置
+
+| key                | default value            | description                                        |
+| ----               | ----                     | ----                                               |
+| chart.chart_name   | harbor/harbor            | helm 包名称                                        |
+| chart.timeout      | 10m                      | 等待部署成功的时间                                 |
+| chart.upgradeCRDs  | true                     | 默认更新 CRD 配置（如果存在的话）                  |
+| chart.release_name | harbor                   | helm 发布名称                                      |
+| chart.wait         | true                     | 是否等待部署完成                                   |
+| repo.url           | https://helm.goharbor.io | helm 官方仓库地址                                  |
+| repo.name          | harbor                   | helm 仓库名                                        |
+| create_namespace   | false                    | 是否需要新建命名空间                               |
+
+目前除了 `values_yaml` 字段和默认配置，其它所有示例参数均为必填项。
