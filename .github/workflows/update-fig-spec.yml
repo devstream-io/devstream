@@ -16,6 +16,7 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: ${{ env.go-version }}
+          cache: true
       - name: Generate the spec
         run: |
           make build-core
