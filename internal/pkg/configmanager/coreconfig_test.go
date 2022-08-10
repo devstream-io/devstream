@@ -1,16 +1,16 @@
-package configloader_test
+package configmanager_test
 
 import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/devstream-io/devstream/internal/pkg/configloader"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 )
 
 var _ = Describe("Core Config", func() {
 	Context("Validate method", func() {
 		It("should return error if state config is empty", func() {
-			coreConfig := configloader.CoreConfig{State: nil}
+			coreConfig := configmanager.CoreConfig{State: nil}
 			isValid, err := coreConfig.Validate()
 			Expect(isValid).Should(BeFalse())
 			Expect(err).Error().Should(HaveOccurred())
@@ -18,8 +18,8 @@ var _ = Describe("Core Config", func() {
 		})
 
 		It("should return error if backend not exist", func() {
-			coreConfig := configloader.CoreConfig{
-				State: &configloader.State{
+			coreConfig := configmanager.CoreConfig{
+				State: &configmanager.State{
 					Backend: "not_exist",
 				},
 			}
@@ -32,8 +32,8 @@ var _ = Describe("Core Config", func() {
 		})
 
 		It("should return error s3 option not config", func() {
-			coreConfig := configloader.CoreConfig{
-				State: &configloader.State{Backend: "s3"},
+			coreConfig := configmanager.CoreConfig{
+				State: &configmanager.State{Backend: "s3"},
 			}
 			isValid, err := coreConfig.Validate()
 			Expect(isValid).Should(BeFalse())
@@ -44,8 +44,8 @@ var _ = Describe("Core Config", func() {
 		})
 
 		It("should return true if config local valid", func() {
-			coreConfig := configloader.CoreConfig{
-				State: &configloader.State{Backend: "local"},
+			coreConfig := configmanager.CoreConfig{
+				State: &configmanager.State{Backend: "local"},
 			}
 			isValid, err := coreConfig.Validate()
 			Expect(isValid).Should(BeTrue())
@@ -53,10 +53,10 @@ var _ = Describe("Core Config", func() {
 		})
 
 		It("should return true if config s3 valid", func() {
-			coreConfig := configloader.CoreConfig{
-				State: &configloader.State{
+			coreConfig := configmanager.CoreConfig{
+				State: &configmanager.State{
 					Backend: "s3",
-					Options: configloader.StateConfigOptions{
+					Options: configmanager.StateConfigOptions{
 						Bucket:    "test_bucket",
 						Region:    "test_region",
 						Key:       "test_key",
@@ -71,14 +71,14 @@ var _ = Describe("Core Config", func() {
 	})
 	Context("ParseToolFilePath method", func() {
 		It("should return nil if varFile is empty", func() {
-			coreConfig := configloader.CoreConfig{State: nil}
+			coreConfig := configmanager.CoreConfig{State: nil}
 			err := coreConfig.ParseToolFilePath()
 			Expect(err).Should(BeNil())
 		})
 
 		It("should return error if varFile not exist", func() {
 			notExistFile := "not_exist_file"
-			coreConfig := configloader.CoreConfig{State: nil, VarFile: notExistFile}
+			coreConfig := configmanager.CoreConfig{State: nil, VarFile: notExistFile}
 			err := coreConfig.ParseToolFilePath()
 			Expect(err).Error().Should(HaveOccurred())
 		})

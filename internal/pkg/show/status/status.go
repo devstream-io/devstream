@@ -7,7 +7,7 @@ import (
 
 	"github.com/spf13/viper"
 
-	"github.com/devstream-io/devstream/internal/pkg/configloader"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/pluginengine"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
@@ -27,7 +27,7 @@ func Show(configFile string) error {
 		id = "default"
 	}
 
-	cfg, err := configloader.LoadConfig(configFile)
+	cfg, err := configmanager.NewManager(configFile).LoadConfig()
 	if err != nil {
 		return err
 	}
@@ -86,7 +86,7 @@ func showOne(smgr statemanager.Manager, id, plugin string) error {
 	}
 
 	// get state from read
-	tool := &configloader.Tool{
+	tool := &configmanager.Tool{
 		InstanceID: id,
 		Name:       plugin,
 		DependsOn:  state.DependsOn,

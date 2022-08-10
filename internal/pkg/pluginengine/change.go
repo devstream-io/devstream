@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/devstream-io/devstream/internal/pkg/configloader"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 // Change is a wrapper for a single Tool and its Action to be executed.
 type Change struct {
-	Tool        *configloader.Tool
+	Tool        *configmanager.Tool
 	ActionName  statemanager.ComponentAction
 	Result      *ChangeResult
 	Description string
@@ -39,17 +39,17 @@ const (
 
 // GetChangesForApply takes "State Manager" & "Config" then do some calculate and return a Plan.
 // All actions should be executed is included in this Plan.changes.
-func GetChangesForApply(smgr statemanager.Manager, cfg *configloader.Config) ([]*Change, error) {
+func GetChangesForApply(smgr statemanager.Manager, cfg *configmanager.Config) ([]*Change, error) {
 	return getChanges(smgr, cfg, CommandApply, false)
 }
 
 // GetChangesForDelete takes "State Manager" & "Config" then do some calculation and return a Plan to delete all plugins in the Config.
 // All actions should be executed is included in this Plan.changes.
-func GetChangesForDelete(smgr statemanager.Manager, cfg *configloader.Config, isForceDelete bool) ([]*Change, error) {
+func GetChangesForDelete(smgr statemanager.Manager, cfg *configmanager.Config, isForceDelete bool) ([]*Change, error) {
 	return getChanges(smgr, cfg, CommandDelete, isForceDelete)
 }
 
-func getChanges(smgr statemanager.Manager, cfg *configloader.Config, commandType CommandType, isForceDelete bool) ([]*Change, error) {
+func getChanges(smgr statemanager.Manager, cfg *configmanager.Config, commandType CommandType, isForceDelete bool) ([]*Change, error) {
 	if cfg == nil {
 		return make([]*Change, 0), nil
 	}

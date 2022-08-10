@@ -7,7 +7,7 @@ import (
 
 	"github.com/devstream-io/devstream/internal/pkg/backend"
 	"github.com/devstream-io/devstream/internal/pkg/backend/local"
-	"github.com/devstream-io/devstream/internal/pkg/configloader"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -41,7 +41,7 @@ type manager struct {
 var m *manager
 
 // NewManager returns a new Manager and reads states through backend defined in config.
-func NewManager(stateConfig configloader.State) (Manager, error) {
+func NewManager(stateConfig configmanager.State) (Manager, error) {
 	if m != nil {
 		return m, nil
 	}

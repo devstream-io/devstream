@@ -8,7 +8,7 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.com/devstream-io/devstream/internal/pkg/backend/local"
-	"github.com/devstream-io/devstream/internal/pkg/configloader"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/pluginengine"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 )
@@ -28,9 +28,9 @@ var _ = Describe("Pluginengine", func() {
 	BeforeEach(func() {
 		defer GinkgoRecover()
 
-		stateCfg := configloader.State{
+		stateCfg := configmanager.State{
 			Backend: "local",
-			Options: configloader.StateConfigOptions{
+			Options: configmanager.StateConfigOptions{
 				StateFile: "devstream.state",
 			},
 		}
@@ -48,8 +48,8 @@ var _ = Describe("Pluginengine", func() {
 		instanceID := "a"
 		name := "tool-a"
 
-		cfg := &configloader.Config{
-			Tools: []configloader.Tool{*getTool(name, instanceID)},
+		cfg := &configmanager.Config{
+			Tools: []configmanager.Tool{*getTool(name, instanceID)},
 		}
 		changes, _ := pluginengine.GetChangesForApply(smgr, cfg)
 		GinkgoWriter.Print(changes)
@@ -63,8 +63,8 @@ var _ = Describe("Pluginengine", func() {
 		instanceID1, instanceID2 := "a", "b"
 		name1, name2 := "tool-a", "too-b"
 
-		cfg := &configloader.Config{
-			Tools: []configloader.Tool{*getTool(name1, instanceID1), *getTool(name2, instanceID2)},
+		cfg := &configmanager.Config{
+			Tools: []configmanager.Tool{*getTool(name1, instanceID1), *getTool(name2, instanceID2)},
 		}
 		changes, _ := pluginengine.GetChangesForApply(smgr, cfg)
 
@@ -84,8 +84,8 @@ var _ = Describe("Pluginengine", func() {
 		instanceID := "a"
 		name := "tool-a"
 
-		cfg := &configloader.Config{
-			Tools: []configloader.Tool{*getTool(name, instanceID)},
+		cfg := &configmanager.Config{
+			Tools: []configmanager.Tool{*getTool(name, instanceID)},
 		}
 
 		err = smgr.AddState(statemanager.StateKey(fmt.Sprintf("%s_%s", name, instanceID)), statemanager.State{})
@@ -233,8 +233,8 @@ var _ = Describe("Pluginengine", func() {
 	})
 })
 
-func getTool(name, instance string) *configloader.Tool {
-	return &configloader.Tool{
+func getTool(name, instance string) *configmanager.Tool {
+	return &configmanager.Tool{
 		Name:       name,
 		InstanceID: instance,
 		Options:    map[string]interface{}{"key": "value"},

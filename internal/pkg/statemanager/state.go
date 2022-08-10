@@ -7,7 +7,7 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/devstream-io/devstream/internal/pkg/configloader"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/mapz/concurrentmap"
 )
@@ -82,7 +82,7 @@ func (s StatesMap) Format() []byte {
 // Note: Please use the StateKeyGenerateFunc function to generate StateKey instance.
 type StateKey string
 
-func StateKeyGenerateFunc(t *configloader.Tool) StateKey {
+func StateKeyGenerateFunc(t *configmanager.Tool) StateKey {
 	return StateKey(fmt.Sprintf("%s_%s", t.Name, t.InstanceID))
 }
 

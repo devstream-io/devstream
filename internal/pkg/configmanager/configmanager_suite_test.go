@@ -1,4 +1,4 @@
-package configloader_test
+package configmanager_test
 
 import (
 	"testing"
@@ -9,5 +9,5 @@ import (
 
 func TestPlanmanager(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "ConfigLoader Suite")
+	RunSpecs(t, "configmanager Suite")
 }

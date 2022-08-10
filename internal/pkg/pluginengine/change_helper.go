@@ -6,26 +6,26 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
 
-	"github.com/devstream-io/devstream/internal/pkg/configloader"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func generateCreateAction(tool *configloader.Tool, description string) *Change {
+func generateCreateAction(tool *configmanager.Tool, description string) *Change {
 	return generateAction(tool, statemanager.ActionCreate, description)
 }
 
-func generateUpdateAction(tool *configloader.Tool, description string) *Change {
+func generateUpdateAction(tool *configmanager.Tool, description string) *Change {
 	return generateAction(tool, statemanager.ActionUpdate, description)
 }
 
-func generateDeleteAction(tool *configloader.Tool, description string) *Change {
+func generateDeleteAction(tool *configmanager.Tool, description string) *Change {
 	return generateAction(tool, statemanager.ActionDelete, description)
 }
 
 func generateDeleteActionFromState(state statemanager.State) *Change {
 	return &Change{
-		Tool: &configloader.Tool{
+		Tool: &configmanager.Tool{
 			InstanceID: state.InstanceID,
 			Name:       state.Name,
 			Options:    state.Options,
@@ -34,7 +34,7 @@ func generateDeleteActionFromState(state statemanager.State) *Change {
 	}
 }
 
-func generateAction(tool *configloader.Tool, action statemanager.ComponentAction, description string) *Change {
+func generateAction(tool *configmanager.Tool, action statemanager.ComponentAction, description string) *Change {
 	return &Change{
 		Tool:        tool.DeepCopy(),
 		ActionName:  action,
@@ -56,14 +56,14 @@ func drifted(a, b map[string]interface{}) bool {
 // - config
 // - state
 // - resource status (by calling the Read() interface of the plugin)
-func changesForApply(smgr statemanager.Manager, cfg *configloader.Config) ([]*Change, error) {
+func changesForApply(smgr statemanager.Manager, cfg *configmanager.Config) ([]*Change, error) {
 	changes := make([]*Change, 0)
 
 	// 1. create a temporary state map used to store unprocessed tools.
 	tmpStatesMap := smgr.GetStatesMap().DeepCopy()
 
 	// 2. handle dependency and sort the tools in the config into "batches" of tools
-	var batchesOfTools [][]configloader.Tool
+	var batchesOfTools [][]configmanager.Tool
 	// the elements in batchesOfTools are sorted "batches"
 	// and each element/batch is a list of tools that, in theory, can run in parallel
 	// that is to say, the tools in the same batch won't depend on each other
@@ -135,7 +135,7 @@ func changesForApply(smgr statemanager.Manager, cfg *configloader.Config) ([]*Ch
 }
 
 // changesForDelete is to create a plan that deletes all the Tools in cfg
-func changesForDelete(smgr statemanager.Manager, cfg *configloader.Config, isForceDelete bool) ([]*Change, error) {
+func changesForDelete(smgr statemanager.Manager, cfg *configmanager.Config, isForceDelete bool) ([]*Change, error) {
 	changes := make([]*Change, 0)
 	batchesOfTools, err := topologicalSort(cfg.Tools)
 	if err != nil {
@@ -165,9 +165,9 @@ func GetChangesForDestroy(smgr statemanager.Manager) ([]*Change, error) {
 
 	// rebuilding tools from config
 	// because destroy will only be used when the config file is missing
-	var tools []configloader.Tool
+	var tools []configmanager.Tool
 	for _, state := range smgr.GetStatesMap().ToList() {
-		tool := configloader.Tool{
+		tool := configmanager.Tool{
 			InstanceID: state.InstanceID,
 			Name:       state.Name,
 			DependsOn:  state.DependsOn,
@@ -232,9 +232,9 @@ func topologicalSortChangesInBatch(changes []*Change) ([][]*Change, error) {
 	return batchesOfChanges, nil
 }
 
-func getToolsFromChanges(changes []*Change) []configloader.Tool {
+func getToolsFromChanges(changes []*Change) []configmanager.Tool {
 	// use slice instead of map to keep the order of tools
-	tools := make([]configloader.Tool, 0)
+	tools := make([]configmanager.Tool, 0)
 	// use map to record the tool that has been added to the slice
 	toolsKeyMap := make(map[string]struct{})
 

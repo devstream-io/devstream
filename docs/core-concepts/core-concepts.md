@@ -41,7 +41,7 @@ _Note: you can put multiple YAML files into the same one with three dashes (`---
 ### 2. Tool
 
 - Each _Tool_ corresponds to a plugin, which can either be used to install, configure, or integrate some DevOps tools.
-- Each _Tool_ has its Name, InstanceID, and Options, as defined [here](https://github.com/devstream-io/devstream/blob/main/internal/pkg/configloader/toolconfig.go#L13).
+- Each _Tool_ has its Name, InstanceID, and Options, as defined [here](https://github.com/devstream-io/devstream/blob/main/internal/pkg/configmanager/toolconfig.go#L13).
 - Each _Tool_ can have its dependencies, which are specified by the `dependsOn` keyword.
 
 The dependency `dependsOn` is an array of strings, with each element being a dependency. Each dependency is named in the format of "TOOL_NAME.INSTANCE_ID". 

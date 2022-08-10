@@ -1,4 +1,4 @@
-package configloader_test
+package configmanager_test
 
 import (
 	"fmt"
@@ -6,19 +6,19 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/devstream-io/devstream/internal/pkg/configloader"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 )
 
 var _ = Describe("Tool Config", func() {
 	Context("Validate method", func() {
 		It("should return empty if tool is valid", func() {
-			tool := configloader.Tool{Name: "test", InstanceID: "test"}
+			tool := configmanager.Tool{Name: "test", InstanceID: "test"}
 			err := tool.Validate()
 			Expect(err).Should(BeEmpty())
 		})
 
 		It("should return error if tool is not valid", func() {
-			tool := configloader.Tool{Name: "！test", InstanceID: "！test"}
+			tool := configmanager.Tool{Name: "！test", InstanceID: "！test"}
 			err := tool.Validate()
 			Expect(err).ShouldNot(BeEmpty())
 		})
@@ -28,7 +28,7 @@ var _ = Describe("Tool Config", func() {
 		It("should return joined key", func() {
 			toolName := "test_tool"
 			toolInstance := "0"
-			tool := configloader.Tool{Name: toolName, InstanceID: toolInstance}
+			tool := configmanager.Tool{Name: toolName, InstanceID: toolInstance}
 			key := tool.Key()
 			Expect(key).Should(Equal(fmt.Sprintf("%s.%s", toolName, toolInstance)))
 		})
@@ -36,7 +36,7 @@ var _ = Describe("Tool Config", func() {
 
 	Context("DeepCopy method", func() {
 		It("should return with different address", func() {
-			tool := configloader.Tool{Name: "test"}
+			tool := configmanager.Tool{Name: "test"}
 			copyTool := tool.DeepCopy()
 			Expect(copyTool.Name).Should(Equal(tool.Name))
 			Expect(copyTool).ShouldNot(Equal(tool))
@@ -56,14 +56,14 @@ tools:
 
 		It("should return error if yaml not valid", func() {
 			varBytes := []byte(`ownertest_owner`)
-			_, err := configloader.NewToolWithToolConfigBytesAndVarsConfigBytes(toolConfigBytes, varBytes)
+			_, err := configmanager.NewToolWithToolConfigBytesAndVarsConfigBytes(toolConfigBytes, varBytes)
 			Expect(err).Error().Should(HaveOccurred())
 		})
 
 		It("should set variable in tool option", func() {
 			varBytes := []byte(`
 owner: test_owner`)
-			tools, err := configloader.NewToolWithToolConfigBytesAndVarsConfigBytes(toolConfigBytes, varBytes)
+			tools, err := configmanager.NewToolWithToolConfigBytesAndVarsConfigBytes(toolConfigBytes, varBytes)
 			Expect(err).Error().ShouldNot(HaveOccurred())
 			Expect(len(tools)).Should(Equal(1))
 			owner, exist := tools[0].Options["owner"]
