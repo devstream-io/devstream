@@ -7,7 +7,7 @@ import (
 
 // Delete remove GitHub Actions workflows.
 func Delete(options map[string]interface{}) (bool, error) {
-	runner := &plugininstaller.Operator{
+	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			github.Validate,
 			github.BuildWorkFlowsWrapper(workflows),
@@ -18,7 +18,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 		},
 	}
 
-	_, err := runner.Execute(plugininstaller.RawOptions(options))
+	_, err := operator.Execute(plugininstaller.RawOptions(options))
 	if err != nil {
 		return false, err
 	}

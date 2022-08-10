@@ -9,8 +9,8 @@ import (
 
 // Create creates an ArgoCD app YAML and applys it.
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
-	// 1. config install operations
-	runner := &plugininstaller.Operator{
+	// Initialize Operator with Operations
+	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			validate,
 		},
@@ -22,8 +22,8 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		GetStateOperation: getStaticState,
 	}
 
-	// 2. execute installer get status and error
-	status, err := runner.Execute(plugininstaller.RawOptions(options))
+	// Execute all Operations in Operator
+	status, err := operator.Execute(plugininstaller.RawOptions(options))
 	if err != nil {
 		return nil, err
 	}

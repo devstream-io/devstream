@@ -8,7 +8,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-// validate validates the options provided by the core.
+// Validate validates the options provided by the dtm-core.
 func Validate(options plugininstaller.RawOptions) (plugininstaller.RawOptions, error) {
 	opts, err := NewOptions(options)
 	if err != nil {

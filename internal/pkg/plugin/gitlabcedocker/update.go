@@ -18,7 +18,7 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	opts.RmDataAfterDelete = types.Bool(false)
 
 	// 2. config install operations
-	runner := &plugininstaller.Operator{
+	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			dockerInstaller.Validate,
 		},
@@ -31,7 +31,7 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	}
 
 	// 3. update and get status
-	status, err := runner.Execute(options)
+	status, err := operator.Execute(options)
 	if err != nil {
 		return nil, err
 	}

@@ -7,8 +7,8 @@ import (
 )
 
 func Update(options map[string]interface{}) (map[string]interface{}, error) {
-	// 1. config update operations
-	runner := &plugininstaller.Operator{
+	// Initialize Operator with Operations
+	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			helm.SetDefaultConfig(&defaultHelmConfig),
 			helm.Validate,
@@ -18,7 +18,7 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	}
 
 	// 2. update by helm config and get status
-	status, err := runner.Execute(plugininstaller.RawOptions(options))
+	status, err := operator.Execute(plugininstaller.RawOptions(options))
 	if err != nil {
 		return nil, err
 	}

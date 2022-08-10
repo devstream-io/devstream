@@ -8,8 +8,8 @@ import (
 
 // Update updates jenkins with provided options.
 func Update(options map[string]interface{}) (map[string]interface{}, error) {
-	// 1. config install operations
-	runner := &plugininstaller.Operator{
+	// Initialize Operator with Operations
+	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			helm.Validate,
 			replaceStroageClass,
@@ -19,8 +19,8 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 		GetStateOperation:   getHelmResourceAndCustomResource,
 	}
 
-	// 2. execute installer get status and error
-	status, err := runner.Execute(plugininstaller.RawOptions(options))
+	// Execute all Operations in Operator
+	status, err := operator.Execute(plugininstaller.RawOptions(options))
 	if err != nil {
 		return nil, err
 	}

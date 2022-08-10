@@ -11,8 +11,8 @@ const (
 )
 
 func Read(options map[string]interface{}) (map[string]interface{}, error) {
-	// 1. config read operations
-	runner := &plugininstaller.Operator{
+	// Initialize Operator with Operations
+	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			helm.SetDefaultConfig(&defaultHelmConfig),
 			helm.Validate,
@@ -21,7 +21,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 	}
 
 	// 2. get plugin status
-	status, err := runner.Execute(plugininstaller.RawOptions(options))
+	status, err := operator.Execute(plugininstaller.RawOptions(options))
 	if err != nil {
 		return nil, err
 	}

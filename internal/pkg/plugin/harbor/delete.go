@@ -6,18 +6,18 @@ import (
 )
 
 func Delete(options map[string]interface{}) (bool, error) {
-	// 1. config delete operations
-	runner := &plugininstaller.Operator{
+	// Initialize Operator with Operations
+	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			helm.Validate,
 		},
 		ExecuteOperations: helm.DefaultDeleteOperations,
 	}
-	_, err := runner.Execute(plugininstaller.RawOptions(options))
+
+	// Execute all Operations in Operator
+	_, err := operator.Execute(plugininstaller.RawOptions(options))
 	if err != nil {
 		return false, err
 	}
-
-	// 2. return ture if all process success
 	return true, nil
 }

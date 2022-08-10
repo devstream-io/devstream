@@ -6,16 +6,16 @@ import (
 )
 
 func Read(options map[string]interface{}) (map[string]interface{}, error) {
-	// 1. config install operations
-	runner := &plugininstaller.Operator{
+	// Initialize Operator with Operations
+	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			goclient.Validate,
 		},
 		GetStateOperation: goclient.GetState,
 	}
 
-	// 2. execute installer get status and error
-	status, err := runner.Execute(plugininstaller.RawOptions(options))
+	// Execute all Operations in Operator
+	status, err := operator.Execute(plugininstaller.RawOptions(options))
 	if err != nil {
 		return nil, err
 	}
