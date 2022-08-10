@@ -1,7 +1,6 @@
 package github
 
 import (
-	"errors"
 	"net/http"
 	"strings"
 
@@ -153,13 +152,13 @@ func (c *Client) PushInitRepo(transitBranch, branch, localPath string) error {
 // ProtectBranch will protect the special branch
 func (c *Client) ProtectBranch(branch string) error {
 	req := &github.ProtectionRequest{
-		RequiredStatusChecks: nil,
-		EnforceAdmins:        false,
+		EnforceAdmins: false,
 		RequiredPullRequestReviews: &github.PullRequestReviewsEnforcementRequest{
-			RequireCodeOwnerReviews: true,
-			DismissStaleReviews:     true,
+			RequireCodeOwnerReviews:      true,
+			DismissStaleReviews:          true,
+			RequiredApprovingReviewCount: 1,
 		},
-		Restrictions: nil,
+		RequiredConversationResolution: github.Bool(true),
 	}
 
 	repo, err := c.GetRepoDescription()
@@ -168,15 +167,10 @@ func (c *Client) ProtectBranch(branch string) error {
 		return err
 	}
 
-	_, response, err := c.Repositories.UpdateBranchProtection(c.Context, repo.GetOwner().GetLogin(), repo.GetName(), branch, req)
+	_, _, err = c.Repositories.UpdateBranchProtection(c.Context, repo.GetOwner().GetLogin(), repo.GetName(), branch, req)
 	if err != nil {
 		log.Errorf("Protect branch failed: %s.", err)
 		return err
-	}
-
-	if response.StatusCode != http.StatusOK {
-		log.Errorf("Protect branch failed,status code: %d, response: %s.", response.StatusCode, response.Body)
-		return errors.New("protect branch failed")
 	}
 
 	log.Infof("The branch \"%s\" has been protected", branch)
