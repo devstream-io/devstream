@@ -20,7 +20,6 @@ jobs:
         go: [1.18.x]
         include:
           - os: macos-latest
-            go-build: ~/Library/Caches/go-build
     runs-on: ${{ matrix.os }}
     name: build-test-${{ matrix.os }}
     steps:
@@ -30,15 +29,7 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: ${{ matrix.go }}
-      - name: Cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            ${{ matrix.go-build }}
-            ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ matrix.go }}-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-${{ matrix.go }}-
+          cache: true
       - name: Test
         run: go test -v ./...
       - name: Build

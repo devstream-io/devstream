@@ -16,22 +16,14 @@ jobs:
     steps:
       - run: echo "🐧 This job is now running on a ${{ runner.os }}-${{ runner.arch }} server hosted by GitHub!"
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: ${{ env.TAG }}
       - name: Setup Golang env
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v3
         with:
           go-version: 1.18
-      - name: Cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
+          cache: true
       - name: Build
         run: make build -j8
       - name: Install Github-release
@@ -60,22 +52,14 @@ jobs:
     steps:
       - run: echo "🐧 This job is now running on a ${{ runner.os }}-${{ runner.arch }} server hosted by GitHub!"
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: ${{ env.TAG }}
       - name: Setup Golang env
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v3
         with:
           go-version: 1.18
-      - name: Cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
+          cache: true
       - name: Build
         run: make build -j8
       - name: Install Github-release
