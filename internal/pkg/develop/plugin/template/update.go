@@ -12,7 +12,6 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-
 func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	var opts Options
 	if err := mapstructure.Decode(options, &opts); err != nil {
