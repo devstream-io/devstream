@@ -163,7 +163,6 @@ func (c *Client) ProtectBranch(branch string) error {
 
 	repo, err := c.GetRepoDescription()
 	if err != nil {
-		log.Errorf("Get repo failed: %s.", err)
 		return err
 	}
 
