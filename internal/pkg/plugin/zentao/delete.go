@@ -7,11 +7,11 @@ import (
 
 func Delete(options map[string]interface{}) (bool, error) {
 	// 1. config install operations
-	runner := &plugininstaller.Runner{
-		PreExecuteOperations: []plugininstaller.MutableOperation{
+	runner := &plugininstaller.Operator{
+		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			goclient.Validate,
 		},
-		ExecuteOperations: []plugininstaller.BaseOperation{
+		ExecuteOperations: plugininstaller.ExecuteOperations{
 			goclient.Delete,
 		},
 	}

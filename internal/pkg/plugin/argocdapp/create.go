@@ -10,16 +10,16 @@ import (
 // Create creates an ArgoCD app YAML and applys it.
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	// 1. config install operations
-	runner := &plugininstaller.Runner{
-		PreExecuteOperations: []plugininstaller.MutableOperation{
+	runner := &plugininstaller.Operator{
+		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			validate,
 		},
-		ExecuteOperations: []plugininstaller.BaseOperation{
+		ExecuteOperations: plugininstaller.ExecuteOperations{
 			kubectl.ProcessByContent(
 				"create", file.NewTemplate().FromContent(templateFileLoc),
 			),
 		},
-		GetStatusOperation: getStaticState,
+		GetStateOperation: getStaticState,
 	}
 
 	// 2. execute installer get status and error

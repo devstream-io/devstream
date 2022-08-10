@@ -8,15 +8,15 @@ import (
 
 // Update remove and set up GitHub Actions workflows.
 func Update(options map[string]interface{}) (map[string]interface{}, error) {
-	runner := &plugininstaller.Runner{
-		PreExecuteOperations: []plugininstaller.MutableOperation{
+	runner := &plugininstaller.Operator{
+		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			github.Validate,
 			github.BuildWorkFlowsWrapper(workflows),
 		},
-		ExecuteOperations: []plugininstaller.BaseOperation{
+		ExecuteOperations: plugininstaller.ExecuteOperations{
 			github.ProcessAction("update"),
 		},
-		GetStatusOperation: github.GetActionState,
+		GetStateOperation: github.GetActionState,
 	}
 
 	status, err := runner.Execute(plugininstaller.RawOptions(options))

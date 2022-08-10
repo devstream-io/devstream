@@ -9,13 +9,13 @@ import (
 // Create creates hashicorp-vault with provided options.
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	// 1. config install operations
-	runner := &plugininstaller.Runner{
-		PreExecuteOperations: []plugininstaller.MutableOperation{
+	runner := &plugininstaller.Operator{
+		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			helm.Validate,
 		},
 		ExecuteOperations:   helm.DefaultCreateOperations,
 		TerminateOperations: helm.DefaultTerminateOperations,
-		GetStatusOperation:  helm.GetPluginAllState,
+		GetStateOperation:   helm.GetPluginAllState,
 	}
 
 	// 2. execute installer get status and error

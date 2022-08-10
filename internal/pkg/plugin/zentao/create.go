@@ -7,11 +7,11 @@ import (
 
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	// 1. config install operations
-	runner := &plugininstaller.Runner{
-		PreExecuteOperations: []plugininstaller.MutableOperation{
+	runner := &plugininstaller.Operator{
+		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			goclient.Validate,
 		},
-		ExecuteOperations: []plugininstaller.BaseOperation{
+		ExecuteOperations: plugininstaller.ExecuteOperations{
 			goclient.DealWithNsWhenInstall,
 			goclient.CreatePersistentVolumeWrapper(defaultPVPath),
 			goclient.CreatePersistentVolumeClaim,
@@ -19,10 +19,10 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 			goclient.CreateServiceWrapperLabelAndPorts(defaultZentaolabels, &defaultSVCPort),
 			goclient.WaitForReady(retryTimes),
 		},
-		TerminateOperations: []plugininstaller.BaseOperation{
+		TerminateOperations: plugininstaller.TerminateOperations{
 			goclient.DealWithErrWhenInstall,
 		},
-		GetStatusOperation: goclient.GetState,
+		GetStateOperation: goclient.GetState,
 	}
 
 	// 2. execute installer get status and error

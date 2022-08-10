@@ -9,14 +9,14 @@ import (
 // Update updates jenkins with provided options.
 func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	// 1. config install operations
-	runner := &plugininstaller.Runner{
-		PreExecuteOperations: []plugininstaller.MutableOperation{
+	runner := &plugininstaller.Operator{
+		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			helm.Validate,
 			replaceStroageClass,
 		},
 		ExecuteOperations:   helm.DefaultUpdateOperations,
 		TerminateOperations: helm.DefaultTerminateOperations,
-		GetStatusOperation:  getHelmResourceAndCustomResource,
+		GetStateOperation:   getHelmResourceAndCustomResource,
 	}
 
 	// 2. execute installer get status and error

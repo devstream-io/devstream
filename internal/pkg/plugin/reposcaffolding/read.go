@@ -7,12 +7,12 @@ import (
 )
 
 func Read(options map[string]interface{}) (map[string]interface{}, error) {
-	runner := &plugininstaller.Runner{
-		PreExecuteOperations: []plugininstaller.MutableOperation{
+	runner := &plugininstaller.Operator{
+		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			reposcaffolding.Validate,
 			reposcaffolding.SetDefaultTemplateRepo,
 		},
-		GetStatusOperation: reposcaffolding.GetDynamicState,
+		GetStateOperation: reposcaffolding.GetDynamicState,
 	}
 
 	status, err := runner.Execute(plugininstaller.RawOptions(options))

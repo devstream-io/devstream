@@ -9,13 +9,13 @@ import (
 
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	// 1. config install operations
-	runner := &plugininstaller.Runner{
-		ExecuteOperations: []plugininstaller.BaseOperation{
+	runner := &plugininstaller.Operator{
+		ExecuteOperations: plugininstaller.ExecuteOperations{
 			kubectl.ProcessByContent(
 				"create", file.NewTemplate().FromRemote(devLakeInstallYAMLDownloadURL),
 			),
 		},
-		GetStatusOperation: getStaticState,
+		GetStateOperation: getStaticState,
 	}
 
 	// 2. execute installer get status and error

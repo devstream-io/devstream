@@ -8,15 +8,15 @@ import (
 
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	// 1. config install operations
-	runner := &plugininstaller.Runner{
-		PreExecuteOperations: []plugininstaller.MutableOperation{
+	runner := &plugininstaller.Operator{
+		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			reposcaffolding.Validate,
 			reposcaffolding.SetDefaultTemplateRepo,
 		},
-		ExecuteOperations: []plugininstaller.BaseOperation{
+		ExecuteOperations: plugininstaller.ExecuteOperations{
 			reposcaffolding.InstallRepo,
 		},
-		GetStatusOperation: reposcaffolding.GetStaticState,
+		GetStateOperation: reposcaffolding.GetStaticState,
 	}
 
 	// 2. execute installer get status and error

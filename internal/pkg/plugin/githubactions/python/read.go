@@ -6,12 +6,12 @@ import (
 )
 
 func Read(options map[string]interface{}) (map[string]interface{}, error) {
-	runner := &plugininstaller.Runner{
-		PreExecuteOperations: []plugininstaller.MutableOperation{
+	runner := &plugininstaller.Operator{
+		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			github.Validate,
 			github.BuildWorkFlowsWrapper(workflows),
 		},
-		GetStatusOperation: github.GetActionState,
+		GetStateOperation: github.GetActionState,
 	}
 
 	status, err := runner.Execute(plugininstaller.RawOptions(options))

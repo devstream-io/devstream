@@ -9,16 +9,16 @@ import (
 // Create sets up GitHub Actions workflow(s).
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	// 1. config install operations
-	runner := &plugininstaller.Runner{
-		PreExecuteOperations: []plugininstaller.MutableOperation{
+	runner := &plugininstaller.Operator{
+		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			validate,
 			github.BuildWorkFlowsWrapper(workflows),
 		},
-		ExecuteOperations: []plugininstaller.BaseOperation{
+		ExecuteOperations: plugininstaller.ExecuteOperations{
 			createDockerHubInfoForPush,
 			github.ProcessAction("create"),
 		},
-		GetStatusOperation: github.GetStaticWorkFlowState,
+		GetStateOperation: github.GetStaticWorkFlowState,
 	}
 
 	// 2. execute installer get status and error

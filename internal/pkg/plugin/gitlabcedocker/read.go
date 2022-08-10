@@ -14,11 +14,11 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 	}
 
 	// 2. config read operations
-	runner := &plugininstaller.Runner{
-		PreExecuteOperations: []plugininstaller.MutableOperation{
+	runner := &plugininstaller.Operator{
+		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			dockerInstaller.Validate,
 		},
-		GetStatusOperation: dockerInstaller.GetRunningState,
+		GetStateOperation: dockerInstaller.GetRunningState,
 	}
 
 	// 3. get status

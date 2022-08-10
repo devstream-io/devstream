@@ -8,18 +8,18 @@ import (
 )
 
 var (
-	DefaultCreateOperations = []plugininstaller.BaseOperation{
+	DefaultCreateOperations = plugininstaller.ExecuteOperations{
 		DealWithNsWhenInstall,
 		InstallOrUpdate,
 	}
-	DefaultUpdateOperations = []plugininstaller.BaseOperation{
+	DefaultUpdateOperations = plugininstaller.ExecuteOperations{
 		InstallOrUpdate,
 	}
-	DefaultDeleteOperations = []plugininstaller.BaseOperation{
+	DefaultDeleteOperations = plugininstaller.ExecuteOperations{
 		Delete,
 		DealWithNsWhenInterruption,
 	}
-	DefaultTerminateOperations = []plugininstaller.BaseOperation{
+	DefaultTerminateOperations = plugininstaller.TerminateOperations{
 		Delete,
 		DealWithNsWhenInterruption,
 	}

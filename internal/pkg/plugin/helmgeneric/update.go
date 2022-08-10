@@ -8,12 +8,12 @@ import (
 
 func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	// 1. config update operations
-	runner := &plugininstaller.Runner{
-		PreExecuteOperations: []plugininstaller.MutableOperation{
+	runner := &plugininstaller.Operator{
+		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			helm.Validate,
 		},
-		ExecuteOperations:  helm.DefaultUpdateOperations,
-		GetStatusOperation: getEmptyState,
+		ExecuteOperations: helm.DefaultUpdateOperations,
+		GetStateOperation: getEmptyState,
 	}
 
 	// 2. execute update get status and error

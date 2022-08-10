@@ -5,74 +5,74 @@ import "github.com/devstream-io/devstream/pkg/util/log"
 type RawOptions map[string]interface{}
 
 type (
-	// MutableOperation will changes options if it is needed
+	// MutableOperation can be used to change options if it is needed
 	MutableOperation func(options RawOptions) (RawOptions, error)
-	// BaseOperation only reads options and executes operation
+	// BaseOperation reads options and executes operation
 	BaseOperation func(options RawOptions) error
-	// StatusOperation only reads options and executes operation
-	StatusOperation func(options RawOptions) (map[string]interface{}, error)
+	// StateOperation reads options and executes operation, then returns the state map
+	StateOperation func(options RawOptions) (map[string]interface{}, error)
+)
+
+type (
+	PreExecuteOperations []MutableOperation
+	ExecuteOperations    []BaseOperation
+	TerminateOperations  []BaseOperation
+	GetStateOperation    StateOperation
 )
 
 type Installer interface {
 	Execute(options RawOptions) (map[string]interface{}, error)
 }
 
-// TODO(daniel-hutao): refactor all caller to use NewInstaller() instead of call Runner.
-func NewInstaller(preExecOps []MutableOperation, execOps, termiOps []BaseOperation, getStatusOps StatusOperation) Installer {
-	return &Runner{
-		PreExecuteOperations: preExecOps,
-		ExecuteOperations:    execOps,
-		TerminateOperations:  termiOps,
-		GetStatusOperation:   getStatusOps,
-	}
+// Operator knows all the operations and can execute them in order
+type Operator struct {
+	PreExecuteOperations PreExecuteOperations
+	ExecuteOperations    ExecuteOperations
+	TerminateOperations  TerminateOperations
+	GetStateOperation    GetStateOperation
 }
 
-// Runner is the basic type of Installer, It organize func to run in order
-type Runner struct {
-	PreExecuteOperations []MutableOperation
-	ExecuteOperations    []BaseOperation
-	TerminateOperations  []BaseOperation
-	GetStatusOperation   StatusOperation
-}
-
-func (runner *Runner) Execute(options RawOptions) (map[string]interface{}, error) {
+// Execute will sequentially execute all operations in Operator
+func (o *Operator) Execute(options RawOptions) (map[string]interface{}, error) {
 	var err error
-	// 1. Run PreExecuteOperations first, these func can change options
-	log.Debugf("Start Execute PreInstall Operations...")
-	for _, preInstallOperation := range runner.PreExecuteOperations {
-		options, err = preInstallOperation(options)
+	// 1. Execute PreExecuteOperations. It may changes the options.
+	log.Debugf("Start to execute PreExecuteOperations...")
+	for _, preOps := range o.PreExecuteOperations {
+		options, err = preOps(options)
 		if err != nil {
 			return nil, err
 		}
 	}
-	// 2. register terminate function if encounter in install
-	var installError error
+
+	// 2. Register defer func so that in case ExecuteOperations fails, it can execute TerminateOperations
+	var execErr error
 	defer func() {
-		if installError == nil {
+		if execErr == nil {
 			return
 		}
-		log.Debugf("Start to execute terminating operations...")
-		for _, terminateOperation := range runner.TerminateOperations {
+		log.Debugf("Start to execute TerminateOperations...")
+		for _, terminateOperation := range o.TerminateOperations {
 			err := terminateOperation(options)
 			if err != nil {
-				log.Errorf("Failed to deal with namespace: %s.", err)
+				log.Errorf("Failed to execute TerminateOperations: %s.", err)
 			}
 		}
 	}()
 
-	log.Debugf("Start to execute install operations...")
-	// 3. Run ExecuteOperations in order, these func can't change options
-	for _, installOperation := range runner.ExecuteOperations {
-		installError = installOperation(options)
-		if installError != nil {
-			return nil, installError
+	// 3. Execute ExecuteOperations in order. It won't change the options.
+	log.Debugf("Start to execute ExecuteOperations...")
+	for _, execOps := range o.ExecuteOperations {
+		execErr = execOps(options)
+		if execErr != nil {
+			return nil, execErr
 		}
 	}
-	// 4. Get Status for this execution step
-	var status map[string]interface{}
-	if runner.GetStatusOperation != nil {
-		log.Debugf("Start to execute getting status operations...")
-		status, err = runner.GetStatusOperation(options)
+
+	// 4. Execute GetStateOperation.
+	var state map[string]interface{}
+	if o.GetStateOperation != nil {
+		log.Debugf("Start to execute GetStateOperation...")
+		state, err = o.GetStateOperation(options)
 	}
-	return status, err
+	return state, err
 }

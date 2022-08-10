@@ -18,16 +18,16 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	opts.RmDataAfterDelete = types.Bool(false)
 
 	// 2. config install operations
-	runner := &plugininstaller.Runner{
-		PreExecuteOperations: []plugininstaller.MutableOperation{
+	runner := &plugininstaller.Operator{
+		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			dockerInstaller.Validate,
 		},
-		ExecuteOperations: []plugininstaller.BaseOperation{
+		ExecuteOperations: plugininstaller.ExecuteOperations{
 			dockerInstaller.DeleteAll,
 			dockerInstaller.Install,
 			showHelpMsg,
 		},
-		GetStatusOperation: dockerInstaller.GetRunningState,
+		GetStateOperation: dockerInstaller.GetRunningState,
 	}
 
 	// 3. update and get status
