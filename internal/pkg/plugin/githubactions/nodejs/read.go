@@ -6,7 +6,7 @@ import (
 )
 
 func Read(options map[string]interface{}) (map[string]interface{}, error) {
-	runner := &plugininstaller.Operator{
+	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			github.Validate,
 			github.BuildWorkFlowsWrapper(workflows),
@@ -14,7 +14,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 		GetStateOperation: github.GetActionState,
 	}
 
-	status, err := runner.Execute(plugininstaller.RawOptions(options))
+	status, err := operator.Execute(plugininstaller.RawOptions(options))
 	if err != nil {
 		return nil, err
 	}

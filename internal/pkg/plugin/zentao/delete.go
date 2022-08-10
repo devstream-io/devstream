@@ -6,8 +6,8 @@ import (
 )
 
 func Delete(options map[string]interface{}) (bool, error) {
-	// 1. config install operations
-	runner := &plugininstaller.Operator{
+	// Initialize Operator with Operations
+	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			goclient.Validate,
 		},
@@ -16,8 +16,8 @@ func Delete(options map[string]interface{}) (bool, error) {
 		},
 	}
 
-	// 2. execute installer get status and error
-	_, err := runner.Execute(plugininstaller.RawOptions(options))
+	// Execute all Operations in Operator
+	_, err := operator.Execute(plugininstaller.RawOptions(options))
 	if err != nil {
 		return false, err
 	}

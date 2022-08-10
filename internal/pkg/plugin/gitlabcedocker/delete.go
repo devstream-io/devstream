@@ -13,7 +13,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 	}
 
 	// 2. config delete operations
-	runner := &plugininstaller.Operator{
+	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			dockerInstaller.Validate,
 		},
@@ -27,7 +27,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	_, err = runner.Execute(rawOptions)
+	_, err = operator.Execute(rawOptions)
 	if err != nil {
 		return false, err
 	}

@@ -7,7 +7,7 @@ import (
 )
 
 func Update(options map[string]interface{}) (map[string]interface{}, error) {
-	runner := &plugininstaller.Operator{
+	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			reposcaffolding.Validate,
 			reposcaffolding.SetDefaultTemplateRepo,
@@ -19,8 +19,8 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 		GetStateOperation: reposcaffolding.GetStaticState,
 	}
 
-	// 2. execute installer get status and error
-	status, err := runner.Execute(plugininstaller.RawOptions(options))
+	// Execute all Operations in Operator
+	status, err := operator.Execute(plugininstaller.RawOptions(options))
 	if err != nil {
 		return nil, err
 	}

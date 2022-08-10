@@ -14,7 +14,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	}
 
 	// 2. config install operations
-	runner := &plugininstaller.Operator{
+	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			dockerInstaller.Validate,
 		},
@@ -33,7 +33,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	status, err := runner.Execute(rawOptions)
+	status, err := operator.Execute(rawOptions)
 	if err != nil {
 		return nil, err
 	}
