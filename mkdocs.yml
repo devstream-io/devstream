@@ -88,6 +88,7 @@ nav:
     - core-concepts/dependencies*.md
     - core-concepts/output*.md
   - Commands:
+    - commands/install*.md
     - commands/autocomplete*.md
     - commands/*.md
   - Plugins:
