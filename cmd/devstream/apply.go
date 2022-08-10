@@ -14,7 +14,7 @@ var applyCMD = &cobra.Command{
 	Use:   "apply",
 	Short: "Create or update DevOps tools according to DevStream configuration file",
 	Long: `Create or update DevOps tools according to DevStream configuration file.
-DevStream will generate and execute a new plan based on the config file and the state file by default.`,
+DevStream will generate and execut e a new plan based on the config file and the state file by default.`,
 	Run:        applyCMDFunc,
 	SuggestFor: []string{"install"},
 }
