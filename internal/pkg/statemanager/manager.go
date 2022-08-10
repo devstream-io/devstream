@@ -126,7 +126,7 @@ func (m *manager) DeleteState(key StateKey) error {
 func (m *manager) GetOutputs(key StateKey) (interface{}, error) {
 	state := m.GetState(key)
 	if state == nil {
-		return nil, fmt.Errorf("key (%s) not in state, it may be failed when \"Create\"", key)
+		return nil, fmt.Errorf(`key (%s) not in state, it may be failed when "Create"`, key)
 	}
 
 	if value, ok := state.Resource["outputs"]; ok {

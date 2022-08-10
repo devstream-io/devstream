@@ -121,7 +121,7 @@ func (c *CoreConfig) genAbsFilePath(filePath string) (string, error) {
 
 	absFilePath, err := filepath.Abs(filePath)
 	if err != nil {
-		log.Errorf("Failed to get absolute path fo \"%s\".", filePath)
+		log.Errorf(`Failed to get absolute path fo "%s".`, filePath)
 		return "", err
 	}
 	log.Debugf("Abs path is %s.", absFilePath)

@@ -1,10 +1,12 @@
 package template
 
+import _ "embed"
+
 var NAME_plugin_zh_md_nameTpl = "{{ .Name }}.zh.md"
 var NAME_plugin_zh_md_dirTpl = "docs/plugins/"
 
-// TODO(daniel-hutao): * -> `
-var NAME_plugin_zh_md_contentTpl = "# {{ .Name }} 插件\n\nTODO(dtm): 在这里添加文档.\n\n## 用例\n\n" + "```" + "yaml\n--8<-- \"{{ .Name }}.yaml\"\n" + "```"
+//go:embed NAME_plugin.zh.md.tpl
+var NAME_plugin_zh_md_contentTpl string
 
 func init() {
 

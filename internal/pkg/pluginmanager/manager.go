@@ -18,7 +18,7 @@ func DownloadPlugins(conf *configmanager.Config) error {
 	// create plugins dir if not exist
 	pluginDir := viper.GetString("plugin-dir")
 	if pluginDir == "" {
-		return fmt.Errorf("plugins directory should not be \"\"")
+		return fmt.Errorf(`plugins directory should not be ""`)
 	}
 	log.Infof("Using dir <%s> to store plugins.", pluginDir)
 
