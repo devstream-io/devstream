@@ -59,9 +59,7 @@ func ResourceDrifted(fromStateFile, fromRead map[string]interface{}) (bool, erro
 	if err != nil {
 		return true, err
 	}
-	log.Info(fromStateFile)
-	log.Info(fromReadWithoutType)
-	log.Info(cmp.Diff(fromStateFile, fromReadWithoutType))
+	log.Debug(cmp.Diff(fromStateFile, fromReadWithoutType))
 
 	return !cmp.Equal(fromStateFile, fromReadWithoutType), nil
 }

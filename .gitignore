@@ -41,6 +41,8 @@ e2e-test-local.yaml
 # .devstream
 .devstream/
 *.state
+# do not ignore this file
+!/test/state/test_drifted.state
 
 # e2e
 testbin/
