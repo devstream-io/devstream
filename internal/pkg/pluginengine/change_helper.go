@@ -5,6 +5,7 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
+	"gopkg.in/yaml.v3"
 
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
@@ -40,6 +41,29 @@ func generateAction(tool *configmanager.Tool, action statemanager.ComponentActio
 		ActionName:  action,
 		Description: description,
 	}
+}
+
+func ResourceDrifted(fromStateFile, fromRead map[string]interface{}) (bool, error) {
+	// nil vs empty map
+	if cmp.Equal(fromStateFile, fromRead, cmpopts.EquateEmpty()) {
+		return false, nil
+	}
+
+	// use marshal and unmarshal to remove type details
+	fromReadBytes, err := yaml.Marshal(fromRead)
+	if err != nil {
+		return true, err
+	}
+	fromReadWithoutType := map[string]interface{}{}
+	err = yaml.Unmarshal(fromReadBytes, &fromReadWithoutType)
+	if err != nil {
+		return true, err
+	}
+	log.Info(fromStateFile)
+	log.Info(fromReadWithoutType)
+	log.Info(cmp.Diff(fromStateFile, fromReadWithoutType))
+
+	return !cmp.Equal(fromStateFile, fromReadWithoutType), nil
 }
 
 func drifted(a, b map[string]interface{}) bool {
@@ -88,7 +112,7 @@ func changesForApply(smgr statemanager.Manager, cfg *configmanager.Config) ([]*C
 				// ignoring errors, since at this stage we are calculating changes, and the dependency might not have its output in the state yet
 				_ = HandleOutputsReferences(smgr, tool.Options)
 
-				if drifted(tool.Options, state.Options) {
+				if drifted(state.Options, tool.Options) {
 					// tool's config differs from State's, Update
 					description := fmt.Sprintf("Tool (%s/%s) config drifted from the state, will be updated.", tool.Name, tool.InstanceID)
 					changes = append(changes, generateUpdateAction(&tool, description))
@@ -105,7 +129,10 @@ func changesForApply(smgr statemanager.Manager, cfg *configmanager.Config) ([]*C
 						// tool exists in the state, but resource doesn't exist, Create
 						description := fmt.Sprintf("Tool (%s/%s) state found but it seems the tool isn't created, will be created.", tool.Name, tool.InstanceID)
 						changes = append(changes, generateCreateAction(&tool, description))
-					} else if drifted(resource, state.Resource) {
+					} else if drifted, err := ResourceDrifted(state.Resource, resource); drifted || err != nil {
+						if err != nil {
+							return nil, err
+						}
 						// resource drifted from state, Update
 						description := fmt.Sprintf("Tool (%s/%s) drifted from the state, will be updated.", tool.Name, tool.InstanceID)
 						changes = append(changes, generateUpdateAction(&tool, description))

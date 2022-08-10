@@ -17,7 +17,7 @@ type State struct {
 	PortPublishes    []docker.PortPublish
 }
 
-func (s *State) toMap() (map[string]interface{}, error) {
+func (s *State) ToMap() (map[string]interface{}, error) {
 	m := make(map[string]interface{})
 	err := mapstructure.Decode(s, &m)
 	if err != nil {
@@ -40,7 +40,7 @@ func GetStaticStateFromOptions(options plugininstaller.RawOptions) (map[string]i
 		PortPublishes:    opts.PortPublishes,
 	}
 
-	return staticState.toMap()
+	return staticState.ToMap()
 }
 
 func GetRunningState(options plugininstaller.RawOptions) (map[string]interface{}, error) {
@@ -87,5 +87,5 @@ func GetRunningState(options plugininstaller.RawOptions) (map[string]interface{}
 		PortPublishes:    portPublishes,
 	}
 
-	return resource.toMap()
+	return resource.ToMap()
 }
