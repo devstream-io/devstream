@@ -15,7 +15,7 @@ type AllResourceStatus struct {
 	DaemonSet   []ResourceStatus
 }
 
-//GetResourceStatus get all resource state by input nameSpace and filtermap
+// GetResourceStatus get all resource state by input nameSpace and filtermap
 func (c *Client) GetResourceStatus(nameSpace string, anFilter, labelFilter map[string]string) (AllResourceStatus, error) {
 	stateMap := AllResourceStatus{}
 	// 1. list deploy resource

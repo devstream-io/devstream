@@ -1,7 +1,6 @@
 package local_test
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -47,7 +46,7 @@ var _ = Describe("Local struct", func() {
 
 		BeforeEach(func() {
 			testData = []byte("this is test data")
-			err := ioutil.WriteFile(tFileLoc, testData, 0644)
+			err := os.WriteFile(tFileLoc, testData, 0644)
 			Expect(err).Error().ShouldNot(HaveOccurred())
 		})
 
@@ -68,7 +67,7 @@ var _ = Describe("Local struct", func() {
 		It("should write  data to file", func() {
 			err := tLocal.Write(writeData)
 			Expect(err).Error().ShouldNot(HaveOccurred())
-			fileData, err := ioutil.ReadFile(tFileLoc)
+			fileData, err := os.ReadFile(tFileLoc)
 			Expect(err).Error().ShouldNot(HaveOccurred())
 			Expect(fileData).Should(Equal(writeData))
 		})

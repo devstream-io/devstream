@@ -2,7 +2,6 @@ package file
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 )
@@ -112,9 +111,9 @@ func (c *TemplateConfig) Run() (string, error) {
 
 // CopyFile will copy file content from src to dst
 func CopyFile(src, dest string) error {
-	bytesRead, err := ioutil.ReadFile(src)
+	bytesRead, err := os.ReadFile(src)
 	if err != nil {
 		return err
 	}
-	return ioutil.WriteFile(dest, bytesRead, 0644)
+	return os.WriteFile(dest, bytesRead, 0644)
 }

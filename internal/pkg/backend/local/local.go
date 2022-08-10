@@ -2,7 +2,6 @@ package local
 
 import (
 	"errors"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"sync"
@@ -44,7 +43,7 @@ func (l *Local) Read() ([]byte, error) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
 
-	data, err := ioutil.ReadFile(l.filename)
+	data, err := os.ReadFile(l.filename)
 	if err != nil {
 		return nil, err
 	}
@@ -61,7 +60,7 @@ func (l *Local) Write(data []byte) error {
 		return err
 	}
 
-	if err := ioutil.WriteFile(l.filename, data, 0644); err != nil {
+	if err := os.WriteFile(l.filename, data, 0644); err != nil {
 		return err
 	}
 	return nil

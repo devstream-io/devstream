@@ -3,7 +3,7 @@ package configmanager
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"runtime"
 	"strings"
 
@@ -153,7 +153,7 @@ func (m *Manager) renderToolsFromCoreConfigAndConfigBytes(coreConfig *CoreConfig
 }
 
 func (m *Manager) loadOriginalConfigFile() ([]byte, error) {
-	originalConfigFileBytes, err := ioutil.ReadFile(m.ConfigFile)
+	originalConfigFileBytes, err := os.ReadFile(m.ConfigFile)
 	if err != nil {
 		log.Errorf("Failed to read the config file. Error: %s", err)
 		log.Info("Maybe the default file (config.yaml) doesn't exist or you forgot to pass your config file to the \"-f\" option?")
@@ -174,9 +174,10 @@ func (m *Manager) loadOriginalConfigFile() ([]byte, error) {
 // varFile: "" # If not empty, use the specified external variables config file
 // toolFile: "" # If not empty, use the specified external tools config file
 // state:
-//   backend: local
-//   options:
-//     stateFile: devstream.state
+//
+//	backend: local
+//	options:
+//	  stateFile: devstream.state
 //
 // ---
 // # variables config
@@ -185,9 +186,9 @@ func (m *Manager) loadOriginalConfigFile() ([]byte, error) {
 // ---
 // # plugins config
 // tools:
-// - name: A-PLUGIN-NAME
-//   instanceID: default
-//   options:
+//   - name: A-PLUGIN-NAME
+//     instanceID: default
+//     options:
 //     foo: bar
 //
 // See https://github.com/devstream-io/devstream/issues/596 for more details.

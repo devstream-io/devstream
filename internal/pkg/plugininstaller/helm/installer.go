@@ -44,7 +44,7 @@ func InstallOrUpdate(options plugininstaller.RawOptions) error {
 	return err
 }
 
-//DealWithNsWhenInstall will create namespace by input options
+// DealWithNsWhenInstall will create namespace by input options
 func DealWithNsWhenInstall(options plugininstaller.RawOptions) error {
 	opts, err := NewOptions(options)
 	if err != nil {
@@ -72,7 +72,7 @@ func DealWithNsWhenInstall(options plugininstaller.RawOptions) error {
 	return nil
 }
 
-//DealWithNsWhenInterruption will Delete namespace by input options
+// DealWithNsWhenInterruption will Delete namespace by input options
 func DealWithNsWhenInterruption(options plugininstaller.RawOptions) error {
 	opts, err := NewOptions(options)
 	if err != nil {

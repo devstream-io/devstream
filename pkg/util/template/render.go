@@ -2,7 +2,7 @@ package template
 
 import (
 	"bytes"
-	"io/ioutil"
+	"os"
 	"text/template"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
@@ -28,7 +28,7 @@ func RenderForFile(name, tplFileName, dstFileName string, variable any) error {
 	log.Debugf("Render config: %v.", variable)
 	log.Debugf("Render output: %s.", dstFileName)
 
-	textBytes, err := ioutil.ReadFile(tplFileName)
+	textBytes, err := os.ReadFile(tplFileName)
 	if err != nil {
 		return err
 	}
@@ -38,5 +38,5 @@ func RenderForFile(name, tplFileName, dstFileName string, variable any) error {
 		log.Debugf("render %s failed: %s", name, err)
 		return err
 	}
-	return ioutil.WriteFile(dstFileName, []byte(renderedStr), 0644)
+	return os.WriteFile(dstFileName, []byte(renderedStr), 0644)
 }

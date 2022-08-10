@@ -2,7 +2,7 @@ package github
 
 import (
 	"io/fs"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 
 	"github.com/google/go-github/v42/github"
@@ -42,7 +42,7 @@ func (c *Client) PushLocalPath(repoPath, branch string) error {
 
 		log.Debugf("Found file: %s.", path)
 
-		content, err := ioutil.ReadFile(path)
+		content, err := os.ReadFile(path)
 		if err != nil {
 			return err
 		}

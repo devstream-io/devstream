@@ -32,7 +32,7 @@ type Source struct {
 	RepoURL   string `validate:"required"`
 }
 
-/// NewOptions create options by raw options
+// / NewOptions create options by raw options
 func NewOptions(options plugininstaller.RawOptions) (Options, error) {
 	var opts Options
 	if err := mapstructure.Decode(options, &opts); err != nil {

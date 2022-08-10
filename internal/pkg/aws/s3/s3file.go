@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -100,7 +100,7 @@ func (f *S3File) Get() ([]byte, error) {
 	}
 
 	defer out.Body.Close()
-	data, err := ioutil.ReadAll(out.Body)
+	data, err := io.ReadAll(out.Body)
 	if err != nil {
 		return nil, err
 	}

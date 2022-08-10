@@ -2,7 +2,7 @@ package gitlab
 
 import (
 	"io/fs"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
@@ -25,7 +25,7 @@ func (c *Client) PushLocalPathToBranch(repoPath, branch, pathWithNamespace, comm
 
 		log.Debugf("Found file: %s.", path)
 
-		content, err := ioutil.ReadFile(path)
+		content, err := os.ReadFile(path)
 		if err != nil {
 			return err
 		}
