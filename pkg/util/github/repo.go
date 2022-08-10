@@ -140,5 +140,37 @@ func (c *Client) PushInitRepo(transitBranch, branch, localPath string) error {
 
 	// 2. push local path to repo
 	needRollBack, err := c.PushLocalPathToBranch(transitBranch, branch, localPath)
+	if err != nil {
+		return err
+	}
+
+	// 3. protect branch
+	err = c.ProtectBranch(branch)
 	return err
+}
+
+// ProtectBranch will protect the special branch
+func (c *Client) ProtectBranch(branch string) error {
+	req := &github.ProtectionRequest{
+		EnforceAdmins: false,
+		RequiredPullRequestReviews: &github.PullRequestReviewsEnforcementRequest{
+			RequireCodeOwnerReviews:      true,
+			DismissStaleReviews:          true,
+			RequiredApprovingReviewCount: 1,
+		},
+		RequiredConversationResolution: github.Bool(true),
+	}
+
+	repo, err := c.GetRepoDescription()
+	if err != nil {
+		return err
+	}
+
+	_, _, err = c.Repositories.UpdateBranchProtection(c.Context, repo.GetOwner().GetLogin(), repo.GetName(), branch, req)
+	if err != nil {
+		return err
+	}
+
+	log.Infof("The branch \"%s\" has been protected", branch)
+	return nil
 }
