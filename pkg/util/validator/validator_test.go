@@ -61,3 +61,49 @@ func Test_dns1123SubDomain(t *testing.T) {
 		})
 	}
 }
+
+func Test_isYaml(t *testing.T) {
+	goodValues := `
+---
+# An employee record
+name: Martin D'vloper
+foods:
+  - Apple
+languages:
+  perl: Elite
+education: |
+  4 GCSEs
+  3 A-Levels
+  BSc in the Internet of Things
+`
+	badValues := `
+---
+# An employee record
+job: Developer
+skill:Elite
+foods:
+ - Apple
+  - Orange
+languages:
+   perl: Elite
+  python: Elite
+education: ||
+  4 GCSEs
+`
+	tests := []struct {
+		name string
+		fl   validator.FieldLevel
+		want bool
+	}{
+		// TODO: Add test cases.
+		{"base", &FakerFieldLeveler{field: goodValues}, true},
+		{"base", &FakerFieldLeveler{field: badValues}, false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := isYaml(tt.fl); got != tt.want {
+				t.Errorf("isYaml() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

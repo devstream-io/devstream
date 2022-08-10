@@ -30,7 +30,7 @@ type Chart struct {
 	UpgradeCRDs     *bool  `mapstructure:"upgradeCRDs"`
 	// ValuesYaml is the values.yaml content.
 	// use string instead of map[string]interface{}
-	ValuesYaml string `mapstructure:"values_yaml"`
+	ValuesYaml string `validate:"omitempty,yaml" mapstructure:"values_yaml"`
 }
 
 func (repo *Repo) FillDefaultValue(defaultRepo *Repo) {
