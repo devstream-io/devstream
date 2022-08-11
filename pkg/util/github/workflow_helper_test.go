@@ -34,7 +34,7 @@ var _ = Describe("WorkflowHelper", func() {
 	})
 
 	AfterEach(func() {
-		//shut down the server between tests
+		// shut down the server between tests
 		s.Close()
 	})
 
@@ -43,7 +43,7 @@ var _ = Describe("WorkflowHelper", func() {
 		It("error reason is not 404", func() {
 			s.Reset()
 			s.RouteToHandler("GET", BaseURLPath+u, func(w http.ResponseWriter, req *http.Request) {
-				fmt.Fprint(w, "")
+				w.WriteHeader(http.StatusInternalServerError)
 			})
 
 			res, err := rightClient.getFileSHA(f)
@@ -78,12 +78,12 @@ var _ = Describe("WorkflowHelper", func() {
 		It("finally got unexpected error", func() {
 			s.Reset()
 			s.RouteToHandler("GET", BaseURLPath+u, func(w http.ResponseWriter, r *http.Request) {
-				w.WriteHeader(http.StatusAlreadyReported)
+				w.WriteHeader(http.StatusInternalServerError)
 				fmt.Fprint(w, `{}`)
 			})
 			res, err := rightClient.getFileSHA(f)
 			Expect(s.ReceivedRequests()).Should(HaveLen(1))
-			Expect(err.Error()).To(ContainSubstring("unexpected error"))
+			Expect(err.Error()).To(ContainSubstring("500"))
 			Expect(res).To(Equal(""))
 		})
 	})

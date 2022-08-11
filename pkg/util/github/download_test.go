@@ -62,7 +62,7 @@ var _ = Describe("DownloadAsset", func() {
 		It("should return error", func() {
 			u := fmt.Sprintf("/repos/%s/%s/releases", org, repo)
 			s.RouteToHandler("GET", github.BaseURLPath+u, func(w http.ResponseWriter, r *http.Request) {
-				w.WriteHeader(http.StatusAlreadyReported)
+				w.WriteHeader(http.StatusInternalServerError)
 				fmt.Fprint(w, `[{"id":1, "tag_name": "t"}]`)
 			})
 			ghClient, err := github.NewClientWithOption(opts, s.URL())
@@ -70,7 +70,7 @@ var _ = Describe("DownloadAsset", func() {
 			Expect(ghClient).NotTo(Equal(nil))
 			err = ghClient.DownloadAsset(tagName, assetName, fileName)
 			Expect(err).To(HaveOccurred())
-			Expect(err.Error()).To(ContainSubstring("got response status not expected"))
+			Expect(err.Error()).To(ContainSubstring("500"))
 		})
 	})
 

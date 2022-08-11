@@ -80,7 +80,7 @@ var _ = Describe("Workflow", func() {
 	})
 
 	AfterEach(func() {
-		//shut down the server between tests
+		// shut down the server between tests
 		s.Close()
 	})
 
@@ -194,13 +194,13 @@ var _ = Describe("Workflow", func() {
 		It("got GetContents error is nil and status is not 200", func() {
 			s.Reset()
 			s.RouteToHandler("GET", github.BaseURLPath+u, func(w http.ResponseWriter, r *http.Request) {
-				w.WriteHeader(http.StatusAlreadyReported)
+				w.WriteHeader(http.StatusInternalServerError)
 				fmt.Fprint(w, `{}`)
 			})
 			s, m, err := rightClient.FetchRemoteContent(wsFiles)
 			Expect(s).To(Equal(wantS))
 			Expect(m).To(Equal(wantM))
-			Expect(err.Error()).To(ContainSubstring("got some error"))
+			Expect(err.Error()).To(ContainSubstring("500"))
 		})
 		It("got GetContents error is nil and status is 200", func() {
 			wantS := []string{"file1", "file2"}
@@ -292,7 +292,7 @@ var _ = Describe("Workflow", func() {
 		It("200", func() {
 			s.Reset()
 			s.RouteToHandler("GET", github.BaseURLPath+u, func(w http.ResponseWriter, req *http.Request) {
-				fmt.Fprint(w, "")
+				fmt.Fprint(w, "{}")
 			})
 
 			res, err := rightClient.GetWorkflowPath()
