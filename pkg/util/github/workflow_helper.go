@@ -3,7 +3,6 @@ package github
 import (
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/google/go-github/v42/github"
 )
@@ -30,19 +29,15 @@ func (c *Client) getFileSHA(filename string) (string, error) {
 		&github.RepositoryContentGetOptions{},
 	)
 
-	// error reason is not 404
-	if err != nil && !strings.Contains(err.Error(), "404") {
-		return "", err
-	}
-
 	// error reason is 404
 	if resp.StatusCode == http.StatusNotFound {
 		return "", nil
 	}
 
-	// no error occurred
-	if resp.StatusCode == http.StatusOK {
-		return *content.SHA, nil
+	// error reason is not 404
+	if err != nil {
+		return "", err
 	}
-	return "", fmt.Errorf("unexpected error")
+
+	return *content.SHA, nil
 }

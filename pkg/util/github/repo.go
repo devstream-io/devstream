@@ -59,15 +59,11 @@ func (c *Client) GetRepoDescription() (*github.Repository, error) {
 		owner,
 		c.Repo)
 
+	if resp.StatusCode == http.StatusNotFound {
+		return nil, nil
+	}
+
 	if err != nil {
-		return nil, err
-	}
-
-	if repo == nil && resp.StatusCode == http.StatusNotFound {
-		return repo, nil
-	}
-
-	if resp.StatusCode != http.StatusOK {
 		return nil, err
 	}
 

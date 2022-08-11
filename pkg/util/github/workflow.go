@@ -2,10 +2,8 @@ package github
 
 import (
 	"fmt"
-	"net/http"
-	"strings"
-
 	mapset "github.com/deckarep/golang-set/v2"
+	"net/http"
 
 	"github.com/google/go-github/v42/github"
 
@@ -119,21 +117,19 @@ func (c *Client) VerifyWorkflows(workflows []*Workflow) (map[string]error, error
 		&github.RepositoryContentGetOptions{},
 	)
 
-	// error reason is not 404
-	if err != nil && !strings.Contains(err.Error(), "404") {
-		log.Errorf("GetContents failed with error: %s.", err)
-		return nil, err
-	}
 	// StatusCode == 404
 	if resp.StatusCode == http.StatusNotFound {
 		log.Errorf("GetContents return with status code 404.")
 		retMap := mapz.FillMapWithStrAndError(wsFiles, fmt.Errorf("not found"))
 		return retMap, nil
 	}
-	// StatusCode != 200
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("got some error is not expected: %s", resp.Status)
+
+	// error reason is not 404
+	if err != nil {
+		log.Errorf("GetContents failed with error: %s.", err)
+		return nil, err
 	}
+
 	// StatusCode == 200
 	log.Success("GetContents return with status code 200.")
 	var filesInRemoteDir = make([]string, 0)
@@ -177,7 +173,7 @@ func (c *Client) GetWorkflowPath() (string, error) {
 		return "", nil
 	}
 
-	if resp.StatusCode != http.StatusOK {
+	if err != nil {
 		return "", err
 	}
 
@@ -199,23 +195,19 @@ func (c *Client) FetchRemoteContent(wsFiles []string) ([]string, map[string]erro
 		&github.RepositoryContentGetOptions{},
 	)
 
-	// error reason is not 404
-	if err != nil && !strings.Contains(err.Error(), "404") {
-		log.Errorf("GetContents failed with error: %s.", err)
-		return nil, nil, err
-	}
-	// StatusCode == 404
 	if resp.StatusCode == http.StatusNotFound {
 		log.Error("GetContents returned with status code 404.")
 		retMap := mapz.FillMapWithStrAndError(wsFiles, fmt.Errorf("not found"))
 		return nil, retMap, nil
 	}
-	// StatusCode != 200
-	if resp.StatusCode != http.StatusOK {
-		return nil, nil, fmt.Errorf("got some error: %s", resp.Status)
+
+	// error reason is not 404
+	if err != nil {
+		log.Errorf("GetContents failed with error: %s.", err)
+		return nil, nil, err
 	}
-	// StatusCode == 200
-	log.Info("GetContents return with status code 200.")
+
+	log.Info("GetContents successfully.")
 	for _, f := range dirContent {
 		log.Infof("Found remote file: %s.", f.GetName())
 		filesInRemoteDir = append(filesInRemoteDir, f.GetName())
