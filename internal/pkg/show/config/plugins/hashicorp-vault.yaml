@@ -17,10 +17,10 @@ tools:
         # release name of the chart
         release_name: vault
         # k8s namespace where Vault will be installed
-        namespace: hashicorp
+        namespace: vault
         # whether to wait for the release to be deployed or not
         wait: true
-        # the time to wait for any individual Kubernetes operation (like Jobs for hooks). This defaults to 5m0s
+        # the time to wait for any individual Kubernetes operation (like Jobs for hooks). This defaults to 5m
         timeout: 5m
         values_yaml: |
           global:

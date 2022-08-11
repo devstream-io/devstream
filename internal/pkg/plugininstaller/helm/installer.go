@@ -79,7 +79,7 @@ func DealWithNsWhenInterruption(options plugininstaller.RawOptions) error {
 		return err
 	}
 
-	if !opts.CreateNamespace {
+	if !opts.CheckIfCreateNamespace() {
 		return err
 	}
 

@@ -9,7 +9,7 @@ import (
 
 // Options is the struct for parameters used by the helm install config.
 type Options struct {
-	CreateNamespace bool       `mapstructure:"create_namespace"`
+	CreateNamespace *bool      `mapstructure:"create_namespace"`
 	Repo            helm.Repo  `mapstructure:"repo"`
 	Chart           helm.Chart `mapstructure:"chart"`
 }
@@ -22,7 +22,10 @@ func (opts *Options) GetHelmParam() *helm.HelmParam {
 }
 
 func (opts *Options) CheckIfCreateNamespace() bool {
-	return opts.CreateNamespace
+	if opts.CreateNamespace == nil {
+		return false
+	}
+	return *opts.CreateNamespace
 }
 
 func (opts *Options) GetNamespace() string {
@@ -46,6 +49,9 @@ func (opts *Options) fillDefaultValue(defaultOpts *Options) {
 	chart.FillDefaultValue(&defaultOpts.Chart)
 	repo := &opts.Repo
 	repo.FillDefaultValue(&defaultOpts.Repo)
+	if opts.CreateNamespace == nil && defaultOpts.CreateNamespace != nil {
+		opts.CreateNamespace = defaultOpts.CreateNamespace
+	}
 }
 
 // NewOptions create options by raw options
