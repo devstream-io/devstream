@@ -61,7 +61,7 @@ func (c *TemplateConfig) UnzipFile() *TemplateConfig {
 	return c
 }
 
-func (c *TemplateConfig) RenderRepoDIr(templateName string, vars map[string]interface{}) *TemplateConfig {
+func (c *TemplateConfig) RenderRepoDir(templateName string, vars map[string]interface{}) *TemplateConfig {
 	c.render = renderGitRepoDir
 	c.templateName = templateName
 	c.vars = vars

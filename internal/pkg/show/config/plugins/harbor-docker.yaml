@@ -7,4 +7,4 @@ tools:
   dependsOn: [ ]
   # options for the plugin
   options:
-  # TODO(dtm): Add your default config here.
+    hostname: harbor.example.com

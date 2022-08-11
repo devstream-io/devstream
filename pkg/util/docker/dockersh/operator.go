@@ -27,7 +27,6 @@ func (op *ShellOperator) ImageIfExist(imageNameWithTag string) bool {
 	}
 
 	return strings.TrimSpace(outputBuffer.String()) != ""
-
 }
 
 func (op *ShellOperator) ImagePull(imageNameWithTag string) error {

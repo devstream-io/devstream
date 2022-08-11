@@ -1,27 +1,26 @@
 package harbordocker
 
 import (
-	"fmt"
-
-	"github.com/mitchellh/mapstructure"
-
-	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	dockerInstaller "github.com/devstream-io/devstream/internal/pkg/plugininstaller/docker"
 )
 
 func Delete(options map[string]interface{}) (bool, error) {
-	var opts Options
-	if err := mapstructure.Decode(options, &opts); err != nil {
+	// Initialize Operator with Operations
+	operator := &plugininstaller.Operator{
+		PreExecuteOperations: plugininstaller.PreExecuteOperations{
+			renderConfig,
+		},
+		ExecuteOperations: plugininstaller.ExecuteOperations{
+			dockerInstaller.ComposeDown,
+		},
+		GetStateOperation: dockerInstaller.ComposeState,
+	}
+
+	// Execute all Operations in Operator
+	_, err := operator.Execute(plugininstaller.RawOptions(options))
+	if err != nil {
 		return false, err
 	}
-
-	if errs := validate(&opts); len(errs) != 0 {
-		for _, e := range errs {
-			log.Errorf("Options error: %s.", e)
-		}
-		return false, fmt.Errorf("opts are illegal")
-	}
-
-	// TODO(dtm): Add your logic here.
-
-	return false, nil
+	return true, nil
 }
