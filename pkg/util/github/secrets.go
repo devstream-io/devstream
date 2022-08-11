@@ -5,6 +5,7 @@ import (
 	crypto_rand "crypto/rand"
 	"encoding/base64"
 	"fmt"
+	"net/http"
 
 	"github.com/google/go-github/v42/github"
 	"golang.org/x/crypto/nacl/box"
@@ -81,10 +82,12 @@ func (c *Client) DeleteRepoSecret(secretKey string) error {
 
 	ctx := context.Background()
 	response, err := client.Actions.DeleteRepoSecret(ctx, owner, c.Repo, secretKey)
+
+	if response.StatusCode == http.StatusNotFound {
+		return nil
+	}
+
 	if err != nil {
-		if response.StatusCode == 404 {
-			return nil
-		}
 		return fmt.Errorf("github Actions.DeleteRepoSecret returned error: %v", err)
 	}
 
@@ -100,10 +103,12 @@ func (c *Client) RepoSecretExists(secretKey string) (bool, error) {
 
 	ctx := context.Background()
 	_, response, err := client.Actions.GetRepoSecret(ctx, owner, c.Repo, secretKey)
+
+	if response.StatusCode == http.StatusNotFound {
+		return false, nil
+	}
+
 	if err != nil {
-		if response.StatusCode == 404 {
-			return false, nil
-		}
 		return false, fmt.Errorf("github Actions.GetRepoSecret returned error: %v", err)
 	}
 	return true, nil

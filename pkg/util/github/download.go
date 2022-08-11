@@ -3,7 +3,6 @@ package github
 import (
 	"context"
 	"fmt"
-	"net/http"
 
 	"github.com/google/go-github/v42/github"
 
@@ -14,18 +13,14 @@ import (
 func (c *Client) DownloadAsset(tagName, assetName, fileName string) error {
 
 	// 1. get releases
-	releases, resp, err := c.Repositories.ListReleases(context.TODO(), c.getRepoOwner(), c.Repo, &github.ListOptions{})
+	releases, _, err := c.Repositories.ListReleases(context.TODO(), c.getRepoOwner(), c.Repo, &github.ListOptions{})
 	if err != nil {
 		return err
 	}
+
 	log.Debug("Got releases successful.")
 	for i, r := range releases {
 		log.Debugf("Release(%d): %s.", i+1, r.GetName())
-	}
-
-	log.Debugf("Response status: %s.", resp.Status)
-	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("got response status not expected: %s", resp.Status)
 	}
 
 	// 2. get assets
