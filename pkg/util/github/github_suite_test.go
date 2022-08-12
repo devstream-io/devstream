@@ -9,6 +9,7 @@ import (
 
 	"github.com/devstream-io/devstream/pkg/util/github"
 	util_github "github.com/devstream-io/devstream/pkg/util/github"
+	"github.com/devstream-io/devstream/pkg/util/repo"
 )
 
 var (
@@ -25,7 +26,7 @@ var _ = AfterSuite(func() {
 	teardown()
 })
 
-func CreateClientWithOr(opt *github.Option) *github.Client {
+func CreateClientWithOr(opt *repo.RepoInfo) *github.Client {
 	c, err := github.NewClientWithOption(opt, serverURL)
 	Expect(c).NotTo(Equal(nil))
 	Expect(err).To(Succeed())

@@ -11,11 +11,12 @@ import (
 	"github.com/onsi/gomega/ghttp"
 
 	"github.com/devstream-io/devstream/pkg/util/github"
+	"github.com/devstream-io/devstream/pkg/util/repo"
 )
 
 var _ = Describe("DownloadAsset", func() {
 	const (
-		owner, repo                  = "owner", "repo"
+		owner, repoName              = "owner", "repo"
 		rightOrg, wrongOrg           = "org", "/"
 		tagName, assetName, fileName = "t", "a", "f3"
 	)
@@ -23,14 +24,14 @@ var _ = Describe("DownloadAsset", func() {
 	var (
 		s        *ghttp.Server
 		org      string
-		opts     *github.Option
+		opts     *repo.RepoInfo
 		workPath string
 	)
 
 	JustBeforeEach(func() {
-		opts = &github.Option{
+		opts = &repo.RepoInfo{
 			Owner: owner,
-			Repo:  repo,
+			Repo:  repoName,
 			Org:   org,
 		}
 		if len(workPath) != 0 {
@@ -60,7 +61,7 @@ var _ = Describe("DownloadAsset", func() {
 		})
 
 		It("should return error", func() {
-			u := fmt.Sprintf("/repos/%s/%s/releases", org, repo)
+			u := fmt.Sprintf("/repos/%s/%s/releases", org, repoName)
 			s.RouteToHandler("GET", github.BaseURLPath+u, func(w http.ResponseWriter, r *http.Request) {
 				w.WriteHeader(http.StatusInternalServerError)
 				fmt.Fprint(w, `[{"id":1, "tag_name": "t"}]`)
@@ -81,7 +82,7 @@ var _ = Describe("DownloadAsset", func() {
 		})
 
 		It("should return error", func() {
-			u := fmt.Sprintf("/repos/%s/%s/releases", org, repo)
+			u := fmt.Sprintf("/repos/%s/%s/releases", org, repoName)
 			s.RouteToHandler("GET", github.BaseURLPath+u, func(w http.ResponseWriter, r *http.Request) {
 				fmt.Fprint(w, `[{"id":1, "tag_name": "t", "name": "n", "assets": []}]`)
 			})
@@ -101,7 +102,7 @@ var _ = Describe("DownloadAsset", func() {
 		})
 
 		It("should return error", func() {
-			u := fmt.Sprintf("/repos/%s/%s/releases", org, repo)
+			u := fmt.Sprintf("/repos/%s/%s/releases", org, repoName)
 			s.RouteToHandler("GET", github.BaseURLPath+u, func(w http.ResponseWriter, r *http.Request) {
 				fmt.Fprint(w, `[{"id":1, "tag_name": "tttt", "name": "n", "assets": []}]`)
 			})
@@ -121,7 +122,7 @@ var _ = Describe("DownloadAsset", func() {
 		})
 
 		It("should return error", func() {
-			u := fmt.Sprintf("/repos/%s/%s/releases", org, repo)
+			u := fmt.Sprintf("/repos/%s/%s/releases", org, repoName)
 			s.RouteToHandler("GET", github.BaseURLPath+u, func(w http.ResponseWriter, r *http.Request) {
 				fmt.Fprint(w, `[{"id":1, "tag_name": "t", "name": "a", "assets": [{"browser_download_url": ""}]}]`)
 			})
@@ -142,7 +143,7 @@ var _ = Describe("DownloadAsset", func() {
 
 		It("should return error", func() {
 			downloadUrl := s.URL() + github.BaseURLPath + "/download"
-			u := fmt.Sprintf("/repos/%s/%s/releases", org, repo)
+			u := fmt.Sprintf("/repos/%s/%s/releases", org, repoName)
 			s.RouteToHandler("GET", github.BaseURLPath+u, func(w http.ResponseWriter, r *http.Request) {
 				fmt.Fprintf(w, `[
 							{
@@ -170,7 +171,7 @@ var _ = Describe("DownloadAsset", func() {
 
 		It("should return no error", func() {
 			downloadUrl := s.URL() + github.BaseURLPath + "/download"
-			u := fmt.Sprintf("/repos/%s/%s/releases", org, repo)
+			u := fmt.Sprintf("/repos/%s/%s/releases", org, repoName)
 			s.RouteToHandler("GET", github.BaseURLPath+"/download", func(w http.ResponseWriter, r *http.Request) {
 				fmt.Fprint(w, "file content")
 			})

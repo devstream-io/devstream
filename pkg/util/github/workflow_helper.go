@@ -16,15 +16,10 @@ func generateGitHubWorkflowFileByName(f string) string {
 // 2. If some errors occurred -> return "", err
 // 3. If file not found without error -> return "", nil
 func (c *Client) getFileSHA(filename string) (string, error) {
-	var owner = c.Owner
-	if c.Org != "" {
-		owner = c.Org
-	}
-
 	content, _, resp, err := c.Client.Repositories.GetContents(
 		c.Context,
-		owner,
-		c.Option.Repo,
+		c.GetRepoOwner(),
+		c.Repo,
 		generateGitHubWorkflowFileByName(filename),
 		&github.RepositoryContentGetOptions{},
 	)

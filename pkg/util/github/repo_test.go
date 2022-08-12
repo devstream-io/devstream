@@ -13,23 +13,27 @@ import (
 	"github.com/onsi/gomega/ghttp"
 
 	gh "github.com/devstream-io/devstream/pkg/util/github"
+	"github.com/devstream-io/devstream/pkg/util/repo"
 )
 
 var _ = Describe("Repo", func() {
-	var s *ghttp.Server
-	var rightClient, wrongClient *gh.Client
-	var owner, repo, org = "o", "r", "or"
+	var (
+		s                        *ghttp.Server
+		rightClient, wrongClient *gh.Client
+		owner, repoName, org     = "o", "r", "or"
+		commitInfo               *repo.CommitInfo
+	)
 	// var rep *go_github.Repository
 	defaultBranch := "db"
 	mergeBranch := "mb"
 	mainBranch := "mab"
-	filePath := ".placeholder"
-	rightOpt := &gh.Option{
-		Owner: owner,
-		Repo:  repo,
-		Org:   org,
+	rightOpt := &repo.RepoInfo{
+		Owner:  owner,
+		Repo:   repoName,
+		Org:    org,
+		Branch: mainBranch,
 	}
-	wrongOpt := &gh.Option{
+	wrongOpt := &repo.RepoInfo{
 		Owner: owner,
 		Repo:  "",
 		Org:   org,
@@ -40,6 +44,13 @@ var _ = Describe("Repo", func() {
 		Expect(rightClient).NotTo(Equal(nil))
 		wrongClient, _ = gh.NewClientWithOption(wrongOpt, s.URL())
 		Expect(wrongClient).NotTo(Equal(nil))
+		commitInfo = &repo.CommitInfo{
+			CommitMsg:    "test",
+			CommitBranch: mergeBranch,
+			GitFileMap: map[string][]byte{
+				"srcPath": []byte("test data"),
+			},
+		}
 	})
 
 	AfterEach(func() {
@@ -102,7 +113,7 @@ var _ = Describe("Repo", func() {
 			Expect(r).To(Equal(wantR))
 		})
 		It("GetRepoDescription with no error and status 200", func() {
-			u := fmt.Sprintf("/repos/%v/%v", org, repo)
+			u := fmt.Sprintf("/repos/%v/%v", org, repoName)
 			s.Reset()
 			s.RouteToHandler("GET", gh.BaseURLPath+u, func(w http.ResponseWriter, r *http.Request) {
 				fmt.Fprint(w, ``)
@@ -114,7 +125,7 @@ var _ = Describe("Repo", func() {
 		})
 	})
 
-	Context("PushLocalPathToBranch", func() {
+	Context("PushLocalPathToRepo", func() {
 		BeforeEach(func() {
 			s.Reset()
 			s.SetAllowUnhandledRequests(true)
@@ -122,21 +133,21 @@ var _ = Describe("Repo", func() {
 
 		It("1. create new branch from main", func() {
 			s.SetUnhandledRequestStatusCode(http.StatusInternalServerError)
-			r, err := rightClient.PushLocalPathToBranch(mergeBranch, mainBranch, filePath)
+			r, err := rightClient.PushLocalFileToRepo(commitInfo)
 			Expect(err).NotTo(Succeed())
 			Expect(err.Error()).To(ContainSubstring(strconv.Itoa(http.StatusInternalServerError)))
 			Expect(r).To(Equal(false))
 		})
 		It("2. create new branch from main", func() {
 			// u := fmt.Sprintf("/repos/%v/%v/git/ref/heads/%s", org, repo, filePath)
-			u := fmt.Sprintf("/repos/%s/%s/contents/%s", org, repo, strings.Trim(os.TempDir(), "/"))
+			u := fmt.Sprintf("/repos/%s/%s/contents/%s", org, repoName, strings.Trim(os.TempDir(), "/"))
 			s.Reset()
 			s.SetAllowUnhandledRequests(true)
 			s.SetUnhandledRequestStatusCode(http.StatusInternalServerError)
 			s.RouteToHandler("GET", u, func(w http.ResponseWriter, r *http.Request) {
 				fmt.Fprint(w, "")
 			})
-			r, err := rightClient.PushLocalPathToBranch(mergeBranch, mainBranch, filePath)
+			r, err := rightClient.PushLocalFileToRepo(commitInfo)
 			Expect(err).NotTo(Succeed())
 			Expect(err.Error()).To(ContainSubstring(strconv.Itoa(http.StatusInternalServerError)))
 			Expect(r).To(Equal(false))
@@ -148,7 +159,7 @@ var _ = Describe("Repo", func() {
 			s.Reset()
 			s.SetAllowUnhandledRequests(true)
 			s.SetUnhandledRequestStatusCode(http.StatusInternalServerError)
-			err := rightClient.InitRepo(mainBranch)
+			err := rightClient.InitRepo()
 			Expect(err).NotTo(Succeed())
 			Expect(err.Error()).To(ContainSubstring(strconv.Itoa(http.StatusInternalServerError)))
 		})
@@ -160,14 +171,14 @@ var _ = Describe("Repo", func() {
 			s.RouteToHandler("POST", u, func(w http.ResponseWriter, r *http.Request) {
 				fmt.Fprint(w, `{}`)
 			})
-			err := rightClient.InitRepo(mainBranch)
+			err := rightClient.InitRepo()
 			fmt.Println(err)
 			Expect(err).NotTo(Succeed())
 			Expect(err.Error()).To(ContainSubstring(strconv.Itoa(http.StatusInternalServerError)))
 		})
 		It("CreateFile with status 200", func() {
 			u := gh.BaseURLPath + fmt.Sprintf("/orgs/%v/repos", org)
-			u2 := gh.BaseURLPath + fmt.Sprintf("/repos/%s/%s/contents/%s", org, repo, ".placeholder")
+			u2 := gh.BaseURLPath + fmt.Sprintf("/repos/%s/%s/contents/%s", org, repoName, ".placeholder")
 			s.Reset()
 			s.RouteToHandler("POST", u, func(w http.ResponseWriter, r *http.Request) {
 				fmt.Fprint(w, `{}`)
@@ -175,7 +186,7 @@ var _ = Describe("Repo", func() {
 			s.RouteToHandler("PUT", u2, func(w http.ResponseWriter, r *http.Request) {
 				fmt.Fprint(w, `{}`)
 			})
-			err := rightClient.InitRepo(mainBranch)
+			err := rightClient.InitRepo()
 			Expect(err).To(Succeed())
 		})
 	})
@@ -186,7 +197,7 @@ var _ = Describe("Repo", func() {
 			s.SetAllowUnhandledRequests(true)
 		})
 		It("ProtectBranch with status 500", func() {
-			u := fmt.Sprintf("/repos/%v/%v", org, repo)
+			u := fmt.Sprintf("/repos/%v/%v", org, repoName)
 			s.Reset()
 			s.SetUnhandledRequestStatusCode(http.StatusInternalServerError)
 			s.SetAllowUnhandledRequests(true)

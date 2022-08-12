@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"net/http"
 	"testing"
+
+	"github.com/devstream-io/devstream/pkg/util/repo"
 )
 
 type newBranchTest struct {
 	BaseTest
-	baseBranch string
-	newBranch  string
-	wantErr    bool
+	newBranch string
+	wantErr   bool
 }
 
 type delBranchTest struct {
@@ -37,17 +38,16 @@ func TestClient_NewBranch(t *testing.T) {
 		// TODO: Add test cases.
 		{
 			BaseTest{"base", GetClientWithOption(
-				t, &Option{Owner: "o", Repo: "r", Org: "or"}, serverUrl,
+				t, &repo.RepoInfo{Owner: "o", Repo: "r", Org: "or", Branch: "b"}, serverUrl,
 			),
 				"/repos/or/r/git/ref/heads/b", http.MethodGet, false, "", ""},
-			"b", "", true,
+			"", true,
 		},
 		{
 			BaseTest{"base set wrong register url for GetRef api in mock server", GetClientWithOption(
-				t, &Option{Owner: "o", Repo: "r"}, serverUrl,
+				t, &repo.RepoInfo{Owner: "o", Repo: "r", Branch: "b"}, serverUrl,
 			),
-				"repos", http.MethodGet, false, "", ""},
-			"b", "", true,
+				"repos", http.MethodGet, false, "", ""}, "", true,
 		},
 	}
 	for _, tt := range tests {
@@ -56,7 +56,7 @@ func TestClient_NewBranch(t *testing.T) {
 				t.Logf("test name: %s, hit path: %s", tt.name, r.URL.Path)
 				fmt.Fprint(w, respBody)
 			})
-			if err := tt.client.NewBranch(tt.baseBranch, tt.newBranch); (err != nil) != tt.wantErr {
+			if _, err := tt.client.NewBranch(tt.newBranch); (err != nil) != tt.wantErr {
 				t.Errorf("Client.NewBranch() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
@@ -71,7 +71,7 @@ func TestClient_DeleteBranch(t *testing.T) {
 		// TODO: Add test cases.
 		{
 			BaseTest{"base", GetClientWithOption(
-				t, &Option{Owner: "o", Repo: "r", Org: "or"}, serverUrl,
+				t, &repo.RepoInfo{Owner: "o", Repo: "r", Org: "or"}, serverUrl,
 			),
 				"/repos/or/r/git/ref/heads/b", http.MethodGet, false, "", ""},
 			"b", true,

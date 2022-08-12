@@ -9,35 +9,30 @@ import (
 	"golang.org/x/oauth2"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/repo"
 )
 
 const (
-	DefaultWorkPath = ".github-workpath"
+	defaultWorkPath          = ".github-workpath"
+	defaultCommitAuthor      = "devstream"
+	defaultCommitAuthorEmail = "devstream@io"
 	// https://github.com/merico-dev/dtm-scaffolding-golang/archive/refs/heads/main.zip -> 302 ->
 	// https://codeload.github.com/merico-dev/dtm-scaffolding-golang/zip/refs/heads/main
 	DefaultLatestCodeZipfileDownloadUrlFormat = "https://codeload.github.com/%s/%s/zip/refs/heads/%s"
-	DefaultLatestCodeZipfileName              = "main-latest.zip"
+	// defaultLatestCodeZipfileName              = "main-latest.zip"
 )
 
 var client *Client
 
 type Client struct {
-	*Option
+	*repo.RepoInfo
 	*github.Client
 	context.Context
 }
 
-type Option struct {
-	Owner    string
-	Org      string
-	Repo     string
-	NeedAuth bool
-	WorkPath string
-}
-
-func NewClient(option *Option) (*Client, error) {
+func NewClient(option *repo.RepoInfo) (*Client, error) {
 	// same option will get same client
-	if client != nil && *client.Option == *option {
+	if client != nil && *client.RepoInfo == *option {
 		log.Debug("Use a cached client.")
 		return client, nil
 	}
@@ -47,8 +42,8 @@ func NewClient(option *Option) (*Client, error) {
 		if retErr != nil {
 			return
 		}
-		if client.Option.WorkPath == "" {
-			client.Option.WorkPath = DefaultWorkPath
+		if client.RepoInfo.WorkPath == "" {
+			client.RepoInfo.WorkPath = defaultWorkPath
 		}
 	}()
 
@@ -56,9 +51,9 @@ func NewClient(option *Option) (*Client, error) {
 	if !option.NeedAuth {
 		log.Debug("Auth is not enabled.")
 		client = &Client{
-			Option:  option,
-			Client:  github.NewClient(nil),
-			Context: context.Background(),
+			RepoInfo: option,
+			Client:   github.NewClient(nil),
+			Context:  context.Background(),
 		}
 
 		return client, nil
@@ -93,9 +88,9 @@ func NewClient(option *Option) (*Client, error) {
 	)
 
 	client = &Client{
-		Option:  option,
-		Client:  github.NewClient(tc),
-		Context: context.Background(),
+		RepoInfo: option,
+		Client:   github.NewClient(tc),
+		Context:  context.Background(),
 	}
 
 	return client, nil

@@ -1,8 +1,6 @@
 package common
 
 import (
-	"fmt"
-
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
@@ -47,59 +45,6 @@ var _ = Describe("Repo Struct", func() {
 			owner, ok := repoInfoMap["Owner"]
 			Expect(ok).Should(BeTrue())
 			Expect(owner).Should(Equal(org))
-		})
-	})
-
-	Context("CreateGithubClient method", func() {
-		It("should return client", func() {
-			client, err := repo.CreateGithubClient(false)
-			Expect(err).Error().ShouldNot(HaveOccurred())
-			Expect(client).ShouldNot(BeNil())
-		})
-	})
-
-	//TODO(steinliber) add CreateAndRenderLocalRepo test
-
-	Context("getBranch method", func() {
-		When("branch is not set", func() {
-			BeforeEach(func() {
-				repo.Branch = ""
-			})
-			It("should return main branch", func() {
-				repoBranch := repo.getBranch()
-				Expect(repoBranch).Should(Equal("main"))
-			})
-			AfterEach(func() {
-				repo.Branch = branch
-			})
-		})
-	})
-
-	Context("getRepoNameWithBranch method", func() {
-		It("should return repo and branch name", func() {
-			repoNameWithURL := repo.getRepoNameWithBranch()
-			Expect(repoNameWithURL).Should(Equal(fmt.Sprintf("%s-%s", repoName, branch)))
-		})
-	})
-
-	Context("getRepoOwner method", func() {
-		When("org is not empty", func() {
-			It("should return org", func() {
-				ownerName := repo.getRepoOwner()
-				Expect(ownerName).Should(Equal(org))
-			})
-		})
-		When("org is empty", func() {
-			BeforeEach(func() {
-				repo.Org = ""
-			})
-			It("should return owner", func() {
-				ownerName := repo.getRepoOwner()
-				Expect(ownerName).Should(Equal(owner))
-			})
-			AfterEach(func() {
-				repo.Org = org
-			})
 		})
 	})
 })

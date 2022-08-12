@@ -7,6 +7,7 @@ import (
 
 	"github.com/devstream-io/devstream/pkg/util/github"
 	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/repo"
 )
 
 // Delete remove jira-github-integ workflows.
@@ -24,7 +25,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 		return false, fmt.Errorf("options are illegal")
 	}
 
-	ghOptions := &github.Option{
+	ghOptions := &repo.RepoInfo{
 		Owner:    opts.Owner,
 		Org:      opts.Org,
 		Repo:     opts.Repo,

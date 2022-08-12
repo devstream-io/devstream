@@ -6,6 +6,8 @@ import (
 	"testing"
 
 	"gotest.tools/assert/cmp"
+
+	"github.com/devstream-io/devstream/pkg/util/repo"
 )
 
 type releaseTest struct {
@@ -21,13 +23,13 @@ func TestClient_GetLatestReleaseTagName(t *testing.T) {
 	tests := []releaseTest{
 		{
 			BaseTest{"base err != nil", GetClientWithOption(
-				t, &Option{Owner: ""}, serverUrl,
+				t, &repo.RepoInfo{Owner: ""}, serverUrl,
 			),
 				"/repos2/o/r/releases/latest", http.MethodGet, false, "", ""},
 			"", true},
 		{
 			BaseTest{"base 200", GetClientWithOption(
-				t, &Option{Owner: "", Org: "o", Repo: "r"}, serverUrl,
+				t, &repo.RepoInfo{Owner: "", Org: "o", Repo: "r"}, serverUrl,
 			),
 				"/repos/o/r/releases/latest", http.MethodGet, false, "", `{"id":3,"tag_name":"v1.0.0"}`},
 			"v1.0.0", false},

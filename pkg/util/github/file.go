@@ -1,13 +1,11 @@
 package github
 
 import (
-	"io/fs"
-	"os"
-	"path/filepath"
+	"time"
 
 	"github.com/google/go-github/v42/github"
 
-	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/repo"
 )
 
 func (c *Client) CreateFile(content []byte, filePath, targetBranch string) error {
@@ -19,38 +17,25 @@ func (c *Client) CreateFile(content []byte, filePath, targetBranch string) error
 		Branch:  &targetBranch,
 	}
 
-	var owner = c.Owner
-	if c.Org != "" {
-		owner = c.Org
-	}
-
-	_, _, err := c.Repositories.CreateFile(c.Context, owner, c.Repo, filePath, opt)
+	_, _, err := c.Repositories.CreateFile(c.Context, c.GetRepoOwner(), c.Repo, filePath, opt)
 	return err
 }
 
-func (c *Client) PushLocalPath(repoPath, branch string) error {
-	if err := filepath.Walk(repoPath, func(path string, info fs.FileInfo, err error) error {
-		if err != nil {
-			log.Debugf("Walk error: %s.", err)
-			return err
-		}
-
-		if info.IsDir() {
-			log.Debugf("Found dir: %s.", path)
-			return nil
-		}
-
-		log.Debugf("Found file: %s.", path)
-
-		content, err := os.ReadFile(path)
-		if err != nil {
-			return err
-		}
-		githubPath, _ := filepath.Rel(repoPath, path)
-		return c.CreateFile(content, githubPath, branch)
-	}); err != nil {
+func (c *Client) PushLocalPath(ref *github.Reference, tree *github.Tree, commitInfo *repo.CommitInfo) error {
+	parent, _, err := client.Repositories.GetCommit(c.Context, c.GetRepoOwner(), c.Repo, *ref.Object.SHA, nil)
+	if err != nil {
 		return err
 	}
-
-	return nil
+	// This is not always populated, but is needed.
+	parent.Commit.SHA = parent.SHA
+	date := time.Now()
+	author := &github.CommitAuthor{Date: &date, Name: github.String(defaultCommitAuthor), Email: github.String(defaultCommitAuthorEmail)}
+	commit := &github.Commit{Author: author, Message: github.String(commitInfo.CommitMsg), Tree: tree, Parents: []*github.Commit{parent.Commit}}
+	newCommit, _, err := client.Git.CreateCommit(c.Context, c.GetRepoOwner(), c.Repo, commit)
+	if err != nil {
+		return err
+	}
+	ref.Object.SHA = newCommit.SHA
+	_, _, err = client.Git.UpdateRef(c.Context, c.GetRepoOwner(), c.Repo, ref, false)
+	return err
 }

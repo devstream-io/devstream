@@ -11,9 +11,8 @@ import (
 )
 
 func (c *Client) DownloadAsset(tagName, assetName, fileName string) error {
-
 	// 1. get releases
-	releases, _, err := c.Repositories.ListReleases(context.TODO(), c.getRepoOwner(), c.Repo, &github.ListOptions{})
+	releases, _, err := c.Repositories.ListReleases(context.TODO(), c.GetRepoOwner(), c.Repo, &github.ListOptions{})
 	if err != nil {
 		return err
 	}
@@ -69,11 +68,4 @@ func (c *Client) DownloadAsset(tagName, assetName, fileName string) error {
 	log.Debugf("Downloaded <%d> bytes.", n)
 
 	return nil
-}
-
-func (c *Client) getRepoOwner() string {
-	if c.Org != "" {
-		return c.Org
-	}
-	return c.Owner
 }

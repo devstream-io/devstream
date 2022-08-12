@@ -20,7 +20,7 @@ func InstallRepo(options plugininstaller.RawOptions) error {
 	}
 
 	// 2. Push local repo to remote
-	return opts.DestinationRepo.Push(dirPath)
+	return opts.DestinationRepo.CreateAndPush(dirPath)
 }
 
 // DeleteRepo will delete repo by options

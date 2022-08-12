@@ -7,6 +7,7 @@ import (
 	"github.com/google/go-github/v42/github"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/repo"
 )
 
 func (c *Client) CreateRepo(org, defaultBranch string) error {
@@ -26,12 +27,7 @@ func (c *Client) CreateRepo(org, defaultBranch string) error {
 }
 
 func (c *Client) DeleteRepo() error {
-	var owner = c.Owner
-	if c.Org != "" {
-		owner = c.Org
-	}
-
-	response, err := c.Client.Repositories.Delete(c.Context, owner, c.Repo)
+	response, err := c.Client.Repositories.Delete(c.Context, c.GetRepoOwner(), c.Repo)
 
 	// error reason is not 404
 	if err != nil && !strings.Contains(err.Error(), "404") {
@@ -49,14 +45,9 @@ func (c *Client) DeleteRepo() error {
 }
 
 func (c *Client) GetRepoDescription() (*github.Repository, error) {
-	var owner = c.Owner
-	if c.Org != "" {
-		owner = c.Org
-	}
-
 	repo, resp, err := c.Client.Repositories.Get(
 		c.Context,
-		owner,
+		c.GetRepoOwner(),
 		c.Repo)
 
 	if resp.StatusCode == http.StatusNotFound {
@@ -72,35 +63,39 @@ func (c *Client) GetRepoDescription() (*github.Repository, error) {
 
 // PushLocalPathToBranch will push local change to remote repo
 // return boolean value is for control whether to rollout if encounter error
-func (c *Client) PushLocalPathToBranch(mergeBranch, mainBranch, repoPath string) (bool, error) {
+func (c *Client) PushLocalFileToRepo(commitInfo *repo.CommitInfo) (bool, error) {
 	// 1. create new branch from main
-	err := c.NewBranch(mainBranch, mergeBranch)
+	ref, err := c.NewBranch(commitInfo.CommitBranch)
 	if err != nil {
 		log.Debugf("Failed to create transit branch: %s", err)
 		return false, err
 	}
+	// delete new branch after func exit
+	defer func() {
+		err = c.DeleteBranch(commitInfo.CommitBranch)
+		if err != nil {
+			log.Warnf("Failed to delete transit branch: %s", err)
+		}
+	}()
+	tree, err := c.GetCommitTree(ref, commitInfo)
+
 	// 2. push local file change to new branch
-	if err := c.PushLocalPath(repoPath, mergeBranch); err != nil {
+	if err := c.PushLocalPath(ref, tree, commitInfo); err != nil {
 		log.Debugf("Failed to walk local repo-path: %s.", err)
 		return true, err
 	}
+
 	// 3. merge new branch to main
-	if err = c.MergeCommits(mergeBranch, mainBranch); err != nil {
+	if err = c.MergeCommits(commitInfo.CommitBranch); err != nil {
 		log.Debugf("Failed to merge commits: %s.", err)
 		return true, err
-	}
-	// 4. delete new branch
-	err = c.DeleteBranch(mergeBranch)
-	if err != nil {
-		log.Debugf("Failed to delete transit branch: %s", err)
-		return false, err
 	}
 	return false, nil
 }
 
-func (c *Client) InitRepo(mainBranch string) error {
+func (c *Client) InitRepo() error {
 	// It's ok to give the opts.Org to CreateRepo() when create a repository for a authenticated user.
-	if err := c.CreateRepo(c.Org, mainBranch); err != nil {
+	if err := c.CreateRepo(c.Org, c.Branch); err != nil {
 		// recreate if set tryTime
 		log.Errorf("Failed to create repo: %s.", err)
 		return err
@@ -108,7 +103,7 @@ func (c *Client) InitRepo(mainBranch string) error {
 	log.Infof("The repo %s has been created.", c.Repo)
 
 	// upload a placeholder file to make repo not empty
-	if err := c.CreateFile([]byte(" "), ".placeholder", mainBranch); err != nil {
+	if err := c.CreateFile([]byte(" "), ".placeholder", c.Branch); err != nil {
 		log.Debugf("Failed to add the first file: %s.", err)
 		return err
 	}
@@ -116,9 +111,9 @@ func (c *Client) InitRepo(mainBranch string) error {
 	return nil
 }
 
-func (c *Client) PushInitRepo(transitBranch, branch, localPath string) error {
+func (c *Client) PushInitRepo(commitInfo *repo.CommitInfo) error {
 	// 1. init repo
-	if err := c.InitRepo(branch); err != nil {
+	if err := c.InitRepo(); err != nil {
 		return err
 	}
 
@@ -135,13 +130,13 @@ func (c *Client) PushInitRepo(transitBranch, branch, localPath string) error {
 	}()
 
 	// 2. push local path to repo
-	needRollBack, err := c.PushLocalPathToBranch(transitBranch, branch, localPath)
+	needRollBack, err := c.PushLocalFileToRepo(commitInfo)
 	if err != nil {
 		return err
 	}
 
 	// 3. protect branch
-	err = c.ProtectBranch(branch)
+	err = c.ProtectBranch(c.Branch)
 	return err
 }
 
