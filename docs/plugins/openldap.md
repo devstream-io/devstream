@@ -8,6 +8,20 @@ This plugin installs [OpenLDAP](https://www.openldap.org/) in an existing Kubern
 --8<-- "openldap.yaml"
 ```
 
+### Default Configs
+
+| key                | default value                             | description                                        |
+| ----               | ----                                      | ----                                               |
+| chart.chart_name   | helm-openldap/openldap-stack-ha           | community chart name                               |
+| chart.timeout      | 5m                                        | this config will wait 5 minutes to deploy          |
+| chart.release_name | openldap                                  | helm release name                                  |
+| chart.upgradeCRDs  | true                                      | default update CRD config                          |
+| chart.wait         | true                                      | whether to wait until installation is complete     |
+| chart.namespace    | openldap                                  | namespace where helm to deploy                     |
+| repo.url           | https://jp-gouin.github.io/helm-openldap/ | helm repo address                                  |
+| repo.name          | helm-openldap                             | helm repo name                                     |
+| create_namespace   | false                                     | whether to create namespace if namespace not eixst |
+
 ## Description of Key Fields in `values_yaml`
 
 - `replicaCount`: The default value is 3, for the convenience of local testing, the above example is set to 1

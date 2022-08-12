@@ -31,23 +31,23 @@ var _ = Describe("Options struct", func() {
 			Repo: helmCommon.Repo{
 				Name: testRepoName,
 			},
+			CreateNamespace: emptyBool,
 		}
 		expectMap = map[string]interface{}{
-			"create_namespace": false,
+			"create_namespace": emptyBool,
 			"repo": map[string]interface{}{
 				"name": "test_repo",
 				"url":  "",
 			},
 			"chart": map[string]interface{}{
-				"version":          "",
-				"release_name":     "",
-				"wait":             emptyBool,
-				"chart_name":       "test_chart",
-				"namespace":        "test_nameSpace",
-				"create_namespace": emptyBool,
-				"timeout":          "",
-				"upgradeCRDs":      emptyBool,
-				"values_yaml":      "",
+				"version":      "",
+				"release_name": "",
+				"wait":         emptyBool,
+				"chart_name":   "test_chart",
+				"namespace":    "test_nameSpace",
+				"timeout":      "",
+				"upgradeCRDs":  emptyBool,
+				"values_yaml":  "",
 			},
 		}
 	})
@@ -62,7 +62,7 @@ var _ = Describe("Options struct", func() {
 
 	Context("CheckIfCreateNamespace method", func() {
 		It("should equal opts config", func() {
-			Expect(testOpts.CheckIfCreateNamespace()).Should(Equal(testOpts.CreateNamespace))
+			Expect(testOpts.CheckIfCreateNamespace()).Should(Equal(false))
 		})
 	})
 

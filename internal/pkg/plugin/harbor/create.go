@@ -10,6 +10,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
+			helm.SetDefaultConfig(&defaultHelmConfig),
 			helm.Validate,
 		},
 		ExecuteOperations:   helm.DefaultCreateOperations,
