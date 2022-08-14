@@ -16,7 +16,7 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 		ExecuteOperations: plugininstaller.ExecuteOperations{
 			deleteDockerHubInfoForPush,
 			createDockerHubInfoForPush,
-			github.ProcessAction("update"),
+			github.ProcessAction(github.ActionUpdate),
 		},
 		GetStateOperation: github.GetActionState,
 	}
