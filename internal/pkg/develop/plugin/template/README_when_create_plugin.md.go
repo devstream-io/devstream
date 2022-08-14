@@ -1,8 +1,8 @@
 package template
 
-var README_when_create_plugin_md_nameTpl = "README_when_create_plugin.md"
-var README_when_create_plugin_md_dirTpl = "./"
-var README_when_create_plugin_md_contentTpl = `# Note with **dtm develop create-plugin**
+var ReadmeWhenCreatePluginMdNameTpl = "README_when_create_plugin.md"
+var ReadmeWhenCreatePluginMdDirTpl = "./"
+var ReadmeWhenCreatePluginMdContentTpl = `# Note with **dtm develop create-plugin**
 
 ## Done-Done Check
 
@@ -11,8 +11,8 @@ var README_when_create_plugin_md_contentTpl = `# Note with **dtm develop create-
 
 func init() {
 	TplFiles = append(TplFiles, TplFile{
-		NameTpl:    README_when_create_plugin_md_nameTpl,
-		DirTpl:     README_when_create_plugin_md_dirTpl,
-		ContentTpl: README_when_create_plugin_md_contentTpl,
+		NameTpl:    ReadmeWhenCreatePluginMdNameTpl,
+		DirTpl:     ReadmeWhenCreatePluginMdDirTpl,
+		ContentTpl: ReadmeWhenCreatePluginMdContentTpl,
 	})
 }
