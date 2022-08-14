@@ -1,0 +1,72 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "localstack-test",
+            "type": "go",
+            "request": "launch",
+            "mode": "test",
+            "program": "${workspaceFolder}/internal/pkg/plugin/localstack/localstack_suite_test.go",
+        },
+        {
+            "name": "dtm-init",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "${workspaceRoot}/cmd/devstream",
+            "args": [
+                "init",
+                "-f",
+                "${workspaceFolder}/config.yaml",
+                "-d",
+                "${workspaceFolder}/.devstream"
+            ],
+            "buildFlags": "-ldflags='-X github.com/devstream-io/devstream/internal/pkg/version.Version=0.8.0'"
+        },
+        {
+            "name": "dtm-apply",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}/cmd/devstream/",
+            "args": [
+                "apply",
+                "-f",
+                "${workspaceFolder}/config.yaml",
+                "-d",
+                "${workspaceFolder}/.devstream",
+                "-y",
+                "true"
+            ],
+            "showLog": true,
+            "logOutput": "dap",
+            "stopOnEntry": true,
+            "buildFlags": "-ldflags='-X github.com/devstream-io/devstream/internal/pkg/version.Version=0.8.0'"
+        },
+        {
+            "name": "dtm-delete",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}/cmd/devstream/",
+            "args": [
+                "delete",
+                "-f",
+                "${workspaceFolder}/config.yaml",
+                "-d",
+                "${workspaceFolder}/.devstream",
+                "-y",
+                "true"
+            ],
+            "showLog": true,
+            "logOutput": "dap",
+            "stopOnEntry": true,
+            "buildFlags": "-ldflags='-X github.com/devstream-io/devstream/internal/pkg/version.Version=0.8.0'"
+        }
+    ]
+}

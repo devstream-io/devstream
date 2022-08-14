@@ -43,6 +43,10 @@ PLUGINS_DIR := $(ROOT_DIR)/.devstream
 $(shell mkdir -p $(PLUGINS_DIR))
 endif
 
+ifneq ($(origin DEV), undefined)
+GO_PLUGIN_BUILD=go build -buildmode=plugin -gcflags="all=-N -l"
+endif
+
 .PHONY: all
 all: build
 

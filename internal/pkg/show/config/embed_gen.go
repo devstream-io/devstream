@@ -66,6 +66,9 @@ var (
 	//go:embed plugins/kube-prometheus.yaml
 	KubePrometheusDefaultConfig string
 
+	//go:embed plugins/localstack.yaml
+	LocalstackDefaultConfig string
+
 	//go:embed plugins/openldap.yaml
 	OpenldapDefaultConfig string
 
@@ -105,6 +108,7 @@ var pluginDefaultConfigs = map[string]string{
 	"jenkins":                     JenkinsDefaultConfig,
 	"jira-github-integ":           JiraGithubIntegDefaultConfig,
 	"kube-prometheus":             KubePrometheusDefaultConfig,
+	"localstack":                  LocalstackDefaultConfig,
 	"openldap":                    OpenldapDefaultConfig,
 	"repo-scaffolding":            RepoScaffoldingDefaultConfig,
 	"tekton":                      TektonDefaultConfig,

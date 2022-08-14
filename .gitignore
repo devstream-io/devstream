@@ -36,7 +36,8 @@ e2e-test-local.yaml
 
 # IDE
 .idea/
-.vscode/
+.vscode/*
+!.vscode/launch.json
 
 # .devstream
 .devstream/
