@@ -23,17 +23,17 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, fmt.Errorf("opts are illegal")
 	}
 
-	runner := &plugininstaller.Runner{
+	operator := &plugininstaller.Operator{
 		PreExecuteOperations: []plugininstaller.MutableOperation{
 			helm.SetDefaultConfig(&defaultHelmConfig),
 			helm.Validate,
 		},
-		ExecuteOperations:  helm.DefaultUpdateOperations,
-		GetStatusOperation: helm.GetPluginAllState,
+		ExecuteOperations: helm.DefaultUpdateOperations,
+		GetStateOperation: helm.GetPluginAllState,
 	}
 
 	// 2. update by helm config and get status
-	status, err := runner.Execute(plugininstaller.RawOptions(options))
+	status, err := operator.Execute(plugininstaller.RawOptions(options))
 	if err != nil {
 		return nil, err
 	}

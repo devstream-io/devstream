@@ -2,8 +2,9 @@ package github
 
 import (
 	"fmt"
-	mapset "github.com/deckarep/golang-set/v2"
 	"net/http"
+
+	mapset "github.com/deckarep/golang-set/v2"
 
 	"github.com/google/go-github/v42/github"
 

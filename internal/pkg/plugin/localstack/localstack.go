@@ -7,7 +7,7 @@ import (
 )
 
 var defaultHelmConfig = helm.Options{
-	CreateNamespace: *types.Bool(false),
+	CreateNamespace: types.Bool(false),
 	Chart: helmCommon.Chart{
 		ChartName:   "localstack/localstack",
 		ReleaseName: "localstack",
