@@ -16,7 +16,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		},
 		ExecuteOperations: plugininstaller.ExecuteOperations{
 			createDockerHubInfoForPush,
-			github.ProcessAction("create"),
+			github.ProcessAction(github.ActionCreate),
 		},
 		GetStateOperation: github.GetStaticWorkFlowState,
 	}

@@ -18,14 +18,14 @@ func ProcessByContent(action string, templateConfig *file.TemplateConfig) plugin
 		}
 		// kubectl apply -f
 		switch action {
-		case kubectl.APPLY:
+		case kubectl.Create:
 			err = kubectl.KubeApply(configFileName)
-		case kubectl.CREATE:
-			err = kubectl.KubeCreate(configFileName)
-		case kubectl.DELETE:
+		case kubectl.Apply:
+			err = kubectl.KubeApply(configFileName)
+		case kubectl.Delete:
 			err = kubectl.KubeDelete(configFileName)
 		default:
-			err = fmt.Errorf("kubectl not support this kind of action: %s", action)
+			err = fmt.Errorf("kubectl not support this kind of action: %v", action)
 		}
 		if err != nil {
 			return err

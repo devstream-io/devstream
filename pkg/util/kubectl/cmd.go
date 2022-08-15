@@ -8,24 +8,24 @@ import (
 )
 
 const (
-	CREATE string = "create"
-	APPLY  string = "apply"
-	DELETE string = "delete"
+	Create string = "create"
+	Apply  string = "apply"
+	Delete string = "delete"
 )
 
 // KubeCreate runs "kubectl create -f filename"
 func KubeCreate(filename string) error {
-	return kubectlAction(CREATE, filename)
+	return kubectlAction(Create, filename)
 }
 
 // KubeApply runs "kubectl apply -f filename"
 func KubeApply(filename string) error {
-	return kubectlAction(APPLY, filename)
+	return kubectlAction(Apply, filename)
 }
 
 // KubeDelete runs "kubectl delete -f filename"
 func KubeDelete(filename string) error {
-	return kubectlAction(DELETE, filename)
+	return kubectlAction(Delete, filename)
 }
 
 func kubectlAction(action string, filename string) error {

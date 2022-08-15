@@ -4,6 +4,7 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/kubectl"
 	"github.com/devstream-io/devstream/pkg/util/file"
+	kubectlUtil "github.com/devstream-io/devstream/pkg/util/kubectl"
 )
 
 func Delete(options map[string]interface{}) (bool, error) {
@@ -14,7 +15,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 		},
 		ExecuteOperations: plugininstaller.ExecuteOperations{
 			kubectl.ProcessByContent(
-				"delete", file.NewTemplate().FromContent(templateFileLoc),
+				kubectlUtil.Delete, file.NewTemplate().FromContent(templateFileLoc),
 			),
 		},
 	}
