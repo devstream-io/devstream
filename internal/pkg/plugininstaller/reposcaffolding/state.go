@@ -5,6 +5,7 @@ import (
 
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/common"
+	"github.com/devstream-io/devstream/pkg/util/github"
 	"github.com/devstream-io/devstream/pkg/util/gitlab"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
@@ -68,12 +69,13 @@ func GetDynamicState(options plugininstaller.RawOptions) (map[string]interface{}
 }
 
 func getGithubStatus(dstRepo *common.Repo) (map[string]interface{}, error) {
-	ghClient, err := dstRepo.CreateGithubClient(true)
+	repoInfo := dstRepo.BuildRepoInfo()
+	ghClient, err := github.NewClient(repoInfo)
 	if err != nil {
 		return nil, err
 	}
 
-	repo, err := ghClient.GetRepoDescription()
+	repo, err := ghClient.DescribeRepo()
 	if err != nil {
 		return nil, err
 	}
@@ -107,12 +109,12 @@ func getGithubStatus(dstRepo *common.Repo) (map[string]interface{}, error) {
 }
 
 func getGitlabStatus(dstRepo *common.Repo) (map[string]interface{}, error) {
-	c, err := dstRepo.CreateGitlabClient()
+	c, err := gitlab.NewClient(dstRepo.BuildRepoInfo())
 	if err != nil {
 		return nil, err
 	}
 
-	project, err := c.DescribeProject(dstRepo.PathWithNamespace)
+	project, err := c.DescribeRepo()
 	if err != nil {
 		return nil, err
 	}

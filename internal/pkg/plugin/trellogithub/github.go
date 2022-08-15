@@ -5,6 +5,7 @@ import (
 
 	"github.com/spf13/viper"
 
+	"github.com/devstream-io/devstream/pkg/util/git"
 	"github.com/devstream-io/devstream/pkg/util/github"
 )
 
@@ -32,7 +33,7 @@ func (tg *TrelloGithub) VerifyWorkflows(workflows []*github.Workflow) (map[strin
 
 // AddTrelloIdSecret add trello ids to secret
 func (tg *TrelloGithub) AddTrelloIdSecret(trelloId *TrelloItemId) error {
-	ghOptions := &github.Option{
+	ghOptions := &git.RepoInfo{
 		Owner:    tg.options.Owner,
 		Repo:     tg.options.Repo,
 		NeedAuth: true,

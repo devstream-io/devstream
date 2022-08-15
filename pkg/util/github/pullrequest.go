@@ -16,20 +16,15 @@ const (
 	MergeMethodRebase MergeMethod = "rebase"
 )
 
-func (c *Client) NewPullRequest(fromBranch, toBranch string) (int, error) {
-	var owner = c.Owner
-	if c.Org != "" {
-		owner = c.Org
-	}
-
+func (c *Client) NewPullRequest(fromBranch string) (int, error) {
 	title := "feat: initialized by DevStream"
 	head := fromBranch
-	base := toBranch
+	base := c.Branch
 	body := title
 	mcm := false
 	draft := false
 
-	pr, _, err := c.PullRequests.Create(c.Context, owner, c.Repo, &github.NewPullRequest{
+	pr, _, err := c.PullRequests.Create(c.Context, c.GetRepoOwner(), c.Repo, &github.NewPullRequest{
 		Title:               &title,
 		Head:                &head,
 		Base:                &base,
@@ -50,13 +45,8 @@ func (c *Client) NewPullRequest(fromBranch, toBranch string) (int, error) {
 }
 
 func (c *Client) MergePullRequest(number int, mergeMethod MergeMethod) error {
-	var owner = c.Owner
-	if c.Org != "" {
-		owner = c.Org
-	}
-
 	commitMsg := "Initialized by DevStream"
-	ret, _, err := c.PullRequests.Merge(c.Context, owner, c.Repo, number, commitMsg, &github.PullRequestOptions{
+	ret, _, err := c.PullRequests.Merge(c.Context, c.GetRepoOwner(), c.Repo, number, commitMsg, &github.PullRequestOptions{
 		CommitTitle:        commitMsg,
 		SHA:                "",
 		MergeMethod:        string(mergeMethod),

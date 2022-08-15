@@ -7,6 +7,8 @@ import (
 	"testing"
 
 	"github.com/google/go-github/v42/github"
+
+	"github.com/devstream-io/devstream/pkg/util/git"
 )
 
 type commitTest struct {
@@ -23,21 +25,21 @@ func TestClient_GetLastCommit(t *testing.T) {
 		// TODO: Add test cases.
 		{
 			BaseTest{"base 200 ", GetClientWithOption(
-				t, &Option{Owner: "o", Repo: "r", Org: "or"}, serverUrl,
+				t, &git.RepoInfo{Owner: "o", Repo: "r", Org: "or"}, serverUrl,
 			),
 				"/repos/or/r/commits", http.MethodGet, false, "", `[{"sha": "s"}]`},
 			&github.RepositoryCommit{SHA: &sha}, false,
 		},
 		{
 			BaseTest{"base 200 with empty result", GetClientWithOption(
-				t, &Option{Owner: "o", Repo: "r"}, serverUrl,
+				t, &git.RepoInfo{Owner: "o", Repo: "r"}, serverUrl,
 			),
 				"/repos/o/r/commits", http.MethodGet, false, "", `[]`},
 			nil, true,
 		},
 		{
 			BaseTest{"base 404", GetClientWithOption(
-				t, &Option{Owner: "o"}, serverUrl,
+				t, &git.RepoInfo{Owner: "o"}, serverUrl,
 			),
 				"/aaa", http.MethodGet, false, "", ""},
 			nil, true,

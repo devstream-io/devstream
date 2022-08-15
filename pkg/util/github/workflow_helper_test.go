@@ -8,19 +8,21 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/ghttp"
+
+	"github.com/devstream-io/devstream/pkg/util/git"
 )
 
 var _ = Describe("WorkflowHelper", func() {
 	var s *ghttp.Server
 	var rightClient, wrongClient *Client
-	owner, repo, f, org := "o", "r", ".github/workflows/test", "or"
-	u := fmt.Sprintf("/repos/%s/%s/contents/%s", org, repo, generateGitHubWorkflowFileByName(f))
-	rightOpt := &Option{
+	owner, repoName, f, org := "o", "r", ".github/workflows/test", "or"
+	u := fmt.Sprintf("/repos/%s/%s/contents/%s", org, repoName, generateGitHubWorkflowFileByName(f))
+	rightOpt := &git.RepoInfo{
 		Owner: owner,
-		Repo:  repo,
+		Repo:  repoName,
 		Org:   org,
 	}
-	wrongOpt := &Option{
+	wrongOpt := &git.RepoInfo{
 		Owner: owner,
 		Repo:  "",
 		Org:   org,

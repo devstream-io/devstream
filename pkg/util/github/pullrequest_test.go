@@ -8,27 +8,29 @@ import (
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/ghttp"
 
+	"github.com/devstream-io/devstream/pkg/util/git"
 	"github.com/devstream-io/devstream/pkg/util/github"
 )
 
 var _ = Describe("NewPullRequest", func() {
 	const (
 		fromBranch, toBranch = "fb", "tb"
-		owner, repo          = "owner", "repo"
+		owner, repoName      = "owner", "repo"
 		rightOrg, wrongOrg   = "org", "/"
 	)
 
 	var (
 		s    *ghttp.Server
 		org  string
-		opts *github.Option
+		opts *git.RepoInfo
 	)
 
 	JustBeforeEach(func() {
-		opts = &github.Option{
-			Owner: owner,
-			Repo:  repo,
-			Org:   org,
+		opts = &git.RepoInfo{
+			Owner:  owner,
+			Repo:   repoName,
+			Org:    org,
+			Branch: toBranch,
 		}
 	})
 
@@ -46,7 +48,7 @@ var _ = Describe("NewPullRequest", func() {
 			c, err := github.NewClientWithOption(opts, s.URL())
 			Expect(err).NotTo(HaveOccurred())
 			Expect(c).NotTo(Equal(nil))
-			n, err := c.NewPullRequest(fromBranch, toBranch)
+			n, err := c.NewPullRequest(fromBranch)
 			Expect(err).To(HaveOccurred())
 			fmt.Println(err)
 			Expect(n).To(Equal(0))
@@ -58,14 +60,14 @@ var _ = Describe("NewPullRequest", func() {
 			org = rightOrg
 		})
 		It("url is correct", func() {
-			u := github.BaseURLPath + fmt.Sprintf("/repos/%v/%v/pulls", org, repo)
+			u := github.BaseURLPath + fmt.Sprintf("/repos/%v/%v/pulls", org, repoName)
 			s.RouteToHandler("POST", u, func(w http.ResponseWriter, r *http.Request) {
 				fmt.Fprint(w, `{"number": 1}`)
 			})
 			c, err := github.NewClientWithOption(opts, s.URL())
 			Expect(err).NotTo(HaveOccurred())
 			Expect(c).NotTo(Equal(nil))
-			n, err := c.NewPullRequest(fromBranch, toBranch)
+			n, err := c.NewPullRequest(fromBranch)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(n).To(Equal(1))
 		})
@@ -75,7 +77,7 @@ var _ = Describe("NewPullRequest", func() {
 var _ = Describe("MergePullRequest", func() {
 	const (
 		fromBranch, toBranch = "fb", "tb"
-		owner, repo          = "owner", "repo"
+		owner, repoName      = "owner", "repo"
 		rightOrg, wrongOrg   = "org", "/"
 		number               = 1
 	)
@@ -83,14 +85,15 @@ var _ = Describe("MergePullRequest", func() {
 	var (
 		s    *ghttp.Server
 		org  string
-		opts *github.Option
+		opts *git.RepoInfo
 	)
 
 	JustBeforeEach(func() {
-		opts = &github.Option{
-			Owner: owner,
-			Repo:  repo,
-			Org:   org,
+		opts = &git.RepoInfo{
+			Owner:  owner,
+			Repo:   repoName,
+			Org:    org,
+			Branch: toBranch,
 		}
 	})
 
@@ -118,7 +121,7 @@ var _ = Describe("MergePullRequest", func() {
 			org = rightOrg
 		})
 		It("url is correct but merged is false", func() {
-			u := github.BaseURLPath + fmt.Sprintf("/repos/%v/%v/pulls/%d/merge", org, repo, number)
+			u := github.BaseURLPath + fmt.Sprintf("/repos/%v/%v/pulls/%d/merge", org, repoName, number)
 			s.RouteToHandler("PUT", u, func(w http.ResponseWriter, r *http.Request) {
 				fmt.Fprint(w, `{}`)
 			})
@@ -136,7 +139,7 @@ var _ = Describe("MergePullRequest", func() {
 			org = rightOrg
 		})
 		It("url is correct", func() {
-			u := github.BaseURLPath + fmt.Sprintf("/repos/%v/%v/pulls/%d/merge", org, repo, number)
+			u := github.BaseURLPath + fmt.Sprintf("/repos/%v/%v/pulls/%d/merge", org, repoName, number)
 			s.RouteToHandler("PUT", u, func(w http.ResponseWriter, r *http.Request) {
 				fmt.Fprint(w, `{"merged": true}`)
 			})

@@ -5,7 +5,7 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/devstream-io/devstream/pkg/util/gitlab"
+	"github.com/devstream-io/devstream/pkg/util/git"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -26,7 +26,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, fmt.Errorf("opts are illegal")
 	}
 
-	client, err := gitlab.NewClient(gitlab.WithBaseURL(opts.BaseURL))
+	client, err := opts.newGitlabClient()
 	if err != nil {
 		return nil, err
 	}
@@ -36,7 +36,14 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	if err = client.CommitSingleFile(opts.PathWithNamespace, opts.Branch, commitMessage, ciFileName, ciFileContent); err != nil {
+	_, err = client.PushLocalFileToRepo(&git.CommitInfo{
+		CommitMsg:    commitMessage,
+		CommitBranch: opts.Branch,
+		GitFileMap: git.GitFileContentMap{
+			ciFileName: []byte(ciFileContent),
+		},
+	})
+	if err != nil {
 		return nil, err
 	}
 

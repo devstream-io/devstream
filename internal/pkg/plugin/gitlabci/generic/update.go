@@ -7,7 +7,7 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/devstream-io/devstream/pkg/util/gitlab"
+	"github.com/devstream-io/devstream/pkg/util/git"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -42,12 +42,19 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	}
 
 	// update file
-	client, err := gitlab.NewClient(gitlab.WithBaseURL(opts.BaseURL))
+	client, err := opts.newGitlabClient()
 	if err != nil {
 		return nil, err
 	}
+	commitInfo := &git.CommitInfo{
+		CommitMsg:    commitMessage,
+		CommitBranch: opts.Branch,
+		GitFileMap: git.GitFileContentMap{
+			ciFileName: ciFileContentBytes.Bytes(),
+		},
+	}
 	// the only difference between create and update
-	if err = client.UpdateSingleFile(opts.PathWithNamespace, opts.Branch, commitMessage, ciFileName, ciFileContentBytes.String()); err != nil {
+	if err = client.UpdateFiles(commitInfo); err != nil {
 		return nil, err
 	}
 

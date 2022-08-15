@@ -1,69 +1,63 @@
-package gitlab
+package gitlab_test
 
 import (
+	"fmt"
 	"os"
-	"testing"
+
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+
+	"github.com/devstream-io/devstream/pkg/util/git"
+	"github.com/devstream-io/devstream/pkg/util/gitlab"
 )
 
-var fake_gitlab_token = "FAKE_GITLAB_TOKEN"
-var baseURL = ""
-
-func TestWithBaseURL(t *testing.T) {
-	os.Setenv("GITLAB_TOKEN", fake_gitlab_token)
-	defer func() {
-		os.Unsetenv("GITLAB_TOKEN")
-	}()
-	got := WithBaseURL(baseURL)
-	if got == nil {
-		t.Error("got must not be nil\n")
-	}
-	client, err := NewClient(got)
-	if err != nil {
-		t.Error(err)
-	}
-	if client.baseURL != baseURL {
-		t.Errorf("client.baseURL = %s\n, want = %s\n", client.baseURL, baseURL)
-	}
-}
-
-func TestNewClient(t *testing.T) {
-	os.Setenv("GITLAB_TOKEN", fake_gitlab_token)
-	defer func() {
-		os.Unsetenv("GITLAB_TOKEN")
-	}()
-
-	baseURL := ""
-	opts := []OptionFunc{
-		WithBaseURL(baseURL),
-	}
-	opts2 := []OptionFunc{
-		WithBaseURL(DefaultGitlabHost),
-	}
-	testDataName := "last case: empty token"
-	tests := []struct {
-		name        string
-		opts        []OptionFunc
-		isNilClient bool
-		wantErr     bool
-	}{
-		// TODO: Add test cases.
-		{"base", opts, false, false},
-		{"base not empty baseUrl", opts2, false, false},
-		{testDataName, opts, true, true},
-	}
-	for _, tt := range tests {
-		if tt.name == testDataName {
-			os.Setenv("GITLAB_TOKEN", "")
-		}
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := NewClient(tt.opts...)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("NewClient() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if (got != nil) == tt.isNilClient {
-				t.Errorf("NewClient() = %+v\n, want %+v\n", got, tt.isNilClient)
-			}
+var _ = Describe("NewClient func", func() {
+	var (
+		gitlabToken string
+		repoInfo    git.RepoInfo
+	)
+	When("gitlab Token is not set", func() {
+		BeforeEach(func() {
+			gitlabToken = os.Getenv("GITLAB_TOKEN")
+			Expect(gitlabToken).Should(BeEmpty())
 		})
-	}
-}
+		It("should return error", func() {
+			_, err := gitlab.NewClient(&repoInfo)
+			Expect(err).Error().Should(HaveOccurred())
+			Expect(err.Error()).Should(Equal("failed to read GITLAB_TOKEN from environment variable"))
+		})
+	})
+	When("gitlab token is set", func() {
+		BeforeEach(func() {
+			os.Setenv("GITLAB_TOKEN", "test")
+		})
+		When("repoInfo field baseURL is empty", func() {
+			BeforeEach(func() {
+				repoInfo.BaseURL = ""
+			})
+			It("should return client with gitlab url", func() {
+				client, err := gitlab.NewClient(&repoInfo)
+				Expect(err).ShouldNot(HaveOccurred())
+				Expect(client.Client.BaseURL().Host).Should(Equal("gitlab.com"))
+			})
+		})
+		When("repoInfo field baseURL is set", func() {
+			var baseURL string
+			BeforeEach(func() {
+				baseURL = "test.com"
+				repoInfo.BaseURL = fmt.Sprintf("http://%s", baseURL)
+			})
+			It("should return self host url", func() {
+				client, err := gitlab.NewClient(&repoInfo)
+				Expect(err).ShouldNot(HaveOccurred())
+				Expect(client.Client.BaseURL().Host).Should(Equal(baseURL))
+			})
+			AfterEach(func() {
+				repoInfo.BaseURL = ""
+			})
+		})
+		AfterEach(func() {
+			os.Unsetenv("GITLAB_TOKEN")
+		})
+	})
+})

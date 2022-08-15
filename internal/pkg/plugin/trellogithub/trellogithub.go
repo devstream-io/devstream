@@ -8,6 +8,7 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
+	"github.com/devstream-io/devstream/pkg/util/git"
 	"github.com/devstream-io/devstream/pkg/util/github"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/mapz"
@@ -42,7 +43,7 @@ func NewTrelloGithub(options map[string]interface{}) (*TrelloGithub, error) {
 		return nil, fmt.Errorf("params are illegal")
 	}
 
-	ghOptions := &github.Option{
+	ghOptions := &git.RepoInfo{
 		Owner:    opts.Owner,
 		Org:      opts.Org,
 		Repo:     opts.Repo,

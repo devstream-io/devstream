@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 	"testing"
+
+	"github.com/devstream-io/devstream/pkg/util/git"
 )
 
 type fileTest struct {
@@ -21,7 +23,7 @@ func TestClient_CreateFile(t *testing.T) {
 		// TODO: Add test cases.
 		{
 			BaseTest{"base ", GetClientWithOption(
-				t, &Option{Owner: "o", Repo: "r", Org: "or"}, serverUrl,
+				t, &git.RepoInfo{Owner: "o", Repo: "r", Org: "or"}, serverUrl,
 			),
 				"/repos/or/r/contents/a", http.MethodPut, true, `{"message":"Initialize the repository","content":"Yw==","branch":"b"}`, ""},
 			[]byte{'c'}, "a", "b", false,

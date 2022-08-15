@@ -9,6 +9,7 @@ import (
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/ghttp"
 
+	"github.com/devstream-io/devstream/pkg/util/git"
 	"github.com/devstream-io/devstream/pkg/util/github"
 )
 
@@ -17,15 +18,15 @@ var _ = Describe("Workflow", func() {
 	var rightClient, wrongClient *github.Client
 	var wantS []string
 	var wantM map[string]error
-	owner, repo, f, org := "o", "r", ".github/workflows", "or"
+	owner, repoName, f, org := "o", "r", ".github/workflows", "or"
 	branch := "b"
 	wsFiles := []string{"file1", "file2"}
-	rightOpt := &github.Option{
+	rightOpt := &git.RepoInfo{
 		Owner: owner,
-		Repo:  repo,
+		Repo:  repoName,
 		Org:   org,
 	}
-	wrongOpt := &github.Option{
+	wrongOpt := &git.RepoInfo{
 		Owner: owner,
 		Repo:  "",
 		Org:   org,
@@ -57,8 +58,8 @@ var _ = Describe("Workflow", func() {
 		{WorkflowFileName: "file1"},
 		{WorkflowFileName: "file2"},
 	}
-	u := fmt.Sprintf("/repos/%s/%s/contents/%s", org, repo, f)
-	u2 := fmt.Sprintf("/repos/%s/%s/contents/%s", org, repo, ".github/workflows/"+workflows[0].WorkflowFileName)
+	u := fmt.Sprintf("/repos/%s/%s/contents/%s", org, repoName, f)
+	u2 := fmt.Sprintf("/repos/%s/%s/contents/%s", org, repoName, ".github/workflows/"+workflows[0].WorkflowFileName)
 	allFileFoundMap := map[string]error{
 		"file1": nil,
 		"file2": nil,
