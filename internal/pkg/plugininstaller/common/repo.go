@@ -62,9 +62,7 @@ func (d *Repo) CreateAndRenderLocalRepo(appName string, vars map[string]interfac
 	}
 	// 1. download zip file and unzip this file then render folders
 	downloadURL := d.getRepoDownloadURL()
-	projectDir, err := file.NewTemplate().FromRemote(downloadURL).UnzipFile().RenderRepoDir(
-		appName, vars,
-	).Run()
+	projectDir, err := file.DownloadAndUnzipAndRenderGitHubRepo(downloadURL, appName, vars)
 	if err != nil {
 		log.Debugf("reposcaffolding process file error: %s", err)
 		return "", err

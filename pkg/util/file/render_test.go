@@ -9,61 +9,6 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("renderFile func", func() {
-	var (
-		tempFilePath, templateContent string
-	)
-	BeforeEach(func() {
-		templateContent = `
-			metadata:
-			  name: "[[ .App.Name ]]"
-			  namespace: "[[ .App.NameSpace ]]"`
-		tempFile, err := os.CreateTemp("", "test_temp")
-		Expect(err).Error().ShouldNot(HaveOccurred())
-		defer tempFile.Close()
-		tempFilePath = tempFile.Name()
-		err = os.WriteFile(tempFilePath, []byte(templateContent), 0666)
-		Expect(err).Error().ShouldNot(HaveOccurred())
-	})
-
-	When("srcPath file is not exist", func() {
-		It("should return err", func() {
-			_, err := renderFile("test_app", "not_exist_path", map[string]interface{}{})
-			Expect(err).Error().Should(HaveOccurred())
-		})
-	})
-
-	When("input vars is empty", func() {
-		It("should return err", func() {
-			_, err := renderFile("test_app", tempFilePath, map[string]interface{}{})
-			Expect(err).Error().Should(HaveOccurred())
-		})
-	})
-
-	When("input vars and right srcPath", func() {
-		var rightContent string
-		BeforeEach(func() {
-			rightContent = `
-			metadata:
-			  name: "test"
-			  namespace: "test_namespace"`
-		})
-
-		It("should work normal", func() {
-			dstPath, err := renderFile("test_app", tempFilePath, map[string]interface{}{
-				"App": map[string]interface{}{
-					"Name":      "test",
-					"NameSpace": "test_namespace",
-				},
-			})
-			Expect(err).Error().ShouldNot(HaveOccurred())
-			content, err := os.ReadFile(dstPath)
-			Expect(err).Error().ShouldNot(HaveOccurred())
-			Expect(string(content)).Should(Equal(rightContent))
-		})
-	})
-})
-
 var _ = Describe("replaceAppNameInPathStr func", func() {
 	var (
 		placeHolder string

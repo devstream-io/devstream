@@ -73,11 +73,8 @@ func NewToolWithToolConfigBytesAndVarsConfigBytes(toolConfigBytes, varConfigByte
 		return nil, err
 	}
 
-	// handle variables format
-	toolConfigBytesWithDot := addDotForVariablesInConfig(string(toolConfigBytes))
-
 	// render config with variables
-	toolConfigBytesWithVars, err := renderConfigWithVariables(toolConfigBytesWithDot, variables)
+	toolConfigBytesWithVars, err := renderConfigWithVariables(string(toolConfigBytes), variables)
 	if err != nil {
 		log.Errorf("Failed to render tool config with vars: %s.", err)
 		return nil, err

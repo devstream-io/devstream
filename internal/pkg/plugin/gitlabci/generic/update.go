@@ -1,14 +1,13 @@
 package generic
 
 import (
-	"bytes"
 	"fmt"
-	"text/template"
 
 	"github.com/mitchellh/mapstructure"
 
 	"github.com/devstream-io/devstream/pkg/util/git"
 	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/template"
 )
 
 func Update(options map[string]interface{}) (map[string]interface{}, error) {
@@ -31,12 +30,10 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	}
 
 	// render template
-	var ciFileContentBytes bytes.Buffer
-	tpl, err := template.New("ci").Option("missingkey=error").Parse(ciTemplateString)
-	if err != nil {
-		return nil, fmt.Errorf("parse template error: %s", err)
-	}
-	err = tpl.Execute(&ciFileContentBytes, opts.TemplateVariables)
+	ciFileContent, err := template.New().
+		FromContent(ciTemplateString).
+		DefaultRender("ci", opts.TemplateVariables).Render()
+
 	if err != nil {
 		return nil, fmt.Errorf("execute template error: %s", err)
 	}
@@ -50,7 +47,7 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 		CommitMsg:    commitMessage,
 		CommitBranch: opts.Branch,
 		GitFileMap: git.GitFileContentMap{
-			ciFileName: ciFileContentBytes.Bytes(),
+			ciFileName: []byte(ciFileContent),
 		},
 	}
 	// the only difference between create and update

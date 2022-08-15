@@ -8,15 +8,6 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-// getFileFromLocal will check if local file exist
-func getFileFromLocal(location string) (string, error) {
-	_, err := os.Stat(location)
-	if err != nil {
-		return "", err
-	}
-	return location, nil
-}
-
 // getFileFromContent will create a temp file based on content
 func getFileFromContent(content string) (string, error) {
 	// 1. create temp file for save content
