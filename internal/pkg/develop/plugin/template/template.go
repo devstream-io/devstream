@@ -1,6 +1,6 @@
 package template
 
-// TplFile is a file contains some template tags like "{{ .Name }}".
+// TplFile is a file contains some template tags like "[[ .Name ]]".
 // eg. internal/pkg/develop/plugin/template/create.go is a TplFile.
 type TplFile struct {
 	NameTpl       string
@@ -9,7 +9,7 @@ type TplFile struct {
 	MustExistFlag bool
 }
 
-// File is a rendered TplFile that doesn't contain any template tags like "{{ .Name }}".
+// File is a rendered TplFile that doesn't contain any template tags like "[[ .Name ]]".
 type File struct {
 	Name          string
 	Dir           string

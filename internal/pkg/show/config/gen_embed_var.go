@@ -78,7 +78,7 @@ func copyTemplates(src, dst string) error {
 
 // generate generates the code for Option `o` into a file named by `o.Path`.
 func generate(o *Option) {
-	tmpl, err := template.New("gen").Funcs(o.Funcs).Parse(templateCode)
+	tmpl, err := template.New("gen").Delims("[[", "]]").Funcs(o.Funcs).Parse(templateCode)
 	if err != nil {
 		log.Fatal("template Parse:", err)
 	}

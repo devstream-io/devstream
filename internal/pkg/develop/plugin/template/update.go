@@ -1,8 +1,8 @@
 package template
 
-var update_go_nameTpl = "update.go"
-var update_go_dirTpl = "internal/pkg/plugin/{{ .Name | dirFormat }}/"
-var update_go_contentTpl = `package {{ .Name | format }}
+var updateGoNameTpl = "update.go"
+var updateGoDirTpl = "internal/pkg/plugin/[[ .Name | dirFormat ]]/"
+var updateGoContentTpl = `package [[ .Name | format ]]
 
 import (
 	"fmt"
@@ -34,8 +34,8 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 
 func init() {
 	TplFiles = append(TplFiles, TplFile{
-		NameTpl:    update_go_nameTpl,
-		DirTpl:     update_go_dirTpl,
-		ContentTpl: update_go_contentTpl,
+		NameTpl:    updateGoNameTpl,
+		DirTpl:     updateGoDirTpl,
+		ContentTpl: updateGoContentTpl,
 	})
 }

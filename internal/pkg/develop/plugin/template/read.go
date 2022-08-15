@@ -1,8 +1,8 @@
 package template
 
-var read_go_nameTpl = "read.go"
-var read_go_dirTpl = "internal/pkg/plugin/{{ .Name | dirFormat }}/"
-var read_go_contentTpl = `package {{ .Name | format }}
+var readGoNameTpl = "read.go"
+var readGoDirTpl = "internal/pkg/plugin/[[ .Name | dirFormat ]]/"
+var readGoContentTpl = `package [[ .Name | format ]]
 
 import (
 	"fmt"
@@ -34,8 +34,8 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 
 func init() {
 	TplFiles = append(TplFiles, TplFile{
-		NameTpl:    read_go_nameTpl,
-		DirTpl:     read_go_dirTpl,
-		ContentTpl: read_go_contentTpl,
+		NameTpl:    readGoNameTpl,
+		DirTpl:     readGoDirTpl,
+		ContentTpl: readGoContentTpl,
 	})
 }
