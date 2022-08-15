@@ -22,13 +22,7 @@ func (op *ShellOperator) ComposeState() (map[string]interface{}, error) {
 
 	bufStr := buf.String()
 	// TODO(daniel-hutao): enhancement is needed
-	if strings.Contains(bufStr, "running") {
-		return map[string]interface{}{
-			"Running": true,
-		}, nil
-	} else {
-		return map[string]interface{}{
-			"Running": false,
-		}, nil
-	}
+	return map[string]interface{}{
+		"Running": strings.Contains(bufStr, "running"),
+	}, nil
 }
