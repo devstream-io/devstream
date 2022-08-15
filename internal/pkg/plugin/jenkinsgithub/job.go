@@ -36,5 +36,5 @@ func createJob(client *jenkins.Jenkins, jobName, jobTemplate string, opts *Optio
 // renderJobXml renders the job xml content from the job template and the job options.
 // pr job && main job
 func renderJobXml(jobTemplate string, opts *JobOptions) (string, error) {
-	return template.Render(githubIntegName, jobTemplate, opts)
+	return template.New().FromContent(jobTemplate).DefaultRender(githubIntegTemplate, opts).Render()
 }

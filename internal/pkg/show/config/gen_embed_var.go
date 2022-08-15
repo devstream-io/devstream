@@ -6,11 +6,9 @@
 package main
 
 import (
-	"bytes"
 	_ "embed"
 	"flag"
 	"go/format"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -18,6 +16,7 @@ import (
 	"text/template"
 
 	"github.com/devstream-io/devstream/pkg/util/file"
+	templateUtil "github.com/devstream-io/devstream/pkg/util/template"
 
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
@@ -78,23 +77,22 @@ func copyTemplates(src, dst string) error {
 
 // generate generates the code for Option `o` into a file named by `o.Path`.
 func generate(o *Option) {
-	tmpl, err := template.New("gen").Delims("[[", "]]").Funcs(o.Funcs).Parse(templateCode)
+	content, err := templateUtil.New().
+		FromContent(templateCode).
+		DefaultRender("gen", o, o.Funcs).
+		Render()
+
 	if err != nil {
-		log.Fatal("template Parse:", err)
+		log.Fatal("template Execute error:", err)
 	}
 
-	var out bytes.Buffer
-	err = tmpl.Execute(&out, o)
-	if err != nil {
-		log.Fatal("template Execute:", err)
-	}
-
-	formatted, err := format.Source(out.Bytes())
+	formatted, err := format.Source([]byte(content))
 	if err != nil {
 		log.Fatal("format:", err)
+		log.Fatal("template Execute error:", err)
 	}
 
-	if err := ioutil.WriteFile(o.Path, formatted, 0644); err != nil {
+	if err := os.WriteFile(o.Path, formatted, 0644); err != nil {
 		log.Fatal("writeFile:", err)
 	}
 
@@ -103,7 +101,7 @@ func generate(o *Option) {
 // getYamlFiles returns a list of YAML files' names in the given directory.
 func getYamlFiles(dir string) ([]string, error) {
 
-	files, err := ioutil.ReadDir(dir)
+	files, err := os.ReadDir(dir)
 	if err != nil {
 		return nil, err
 	}

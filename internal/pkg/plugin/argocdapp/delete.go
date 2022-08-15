@@ -3,7 +3,6 @@ package argocdapp
 import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/kubectl"
-	"github.com/devstream-io/devstream/pkg/util/file"
 	kubectlUtil "github.com/devstream-io/devstream/pkg/util/kubectl"
 )
 
@@ -14,9 +13,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 			validate,
 		},
 		ExecuteOperations: plugininstaller.ExecuteOperations{
-			kubectl.ProcessByContent(
-				kubectlUtil.Delete, file.NewTemplate().FromContent(templateFileLoc),
-			),
+			kubectl.ProcessByContent(kubectlUtil.Delete, templateFileLoc),
 		},
 	}
 

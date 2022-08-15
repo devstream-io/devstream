@@ -1,11 +1,9 @@
 package jenkinsgithub
 
 import (
-	"bytes"
 	"context"
 	_ "embed"
 	"fmt"
-	"text/template"
 	"time"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -13,6 +11,7 @@ import (
 
 	"github.com/devstream-io/devstream/pkg/util/k8s"
 	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/template"
 )
 
 const githubIntegName = "github-integ"
@@ -84,17 +83,5 @@ func applyJCasC(namespace, chartReleaseName, configName, fileContent string) err
 }
 
 func renderGitHubInteg(opts *GitHubIntegOptions) (string, error) {
-	tpl := template.New(githubIntegName).Delims("[[", "]]")
-	tpl, err := tpl.Parse(githubIntegTemplate)
-	if err != nil {
-		return "", err
-	}
-
-	var buf bytes.Buffer
-	err = tpl.Execute(&buf, opts)
-	if err != nil {
-		return "", err
-	}
-
-	return buf.String(), nil
+	return template.New().FromContent(githubIntegTemplate).DefaultRender(githubIntegName, opts).Render()
 }

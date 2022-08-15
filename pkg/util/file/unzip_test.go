@@ -35,7 +35,7 @@ var _ = Describe("unZipFileProcesser func", func() {
 	})
 
 	It("should work", func() {
-		dstPath, err := unZipFileProcesser(zipFileName)
+		dstPath, err := unzip(zipFileName)
 		Expect(err).Error().ShouldNot(HaveOccurred())
 		dirFiles, err := os.ReadDir(dstPath)
 		Expect(err).Error().ShouldNot(HaveOccurred())

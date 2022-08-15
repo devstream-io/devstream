@@ -1,7 +1,6 @@
 package plugin
 
 import (
-	"bytes"
 	"fmt"
 	"os"
 	"path"
@@ -10,6 +9,7 @@ import (
 
 	pluginTpl "github.com/devstream-io/devstream/internal/pkg/develop/plugin/template"
 	"github.com/devstream-io/devstream/pkg/util/log"
+	templateUtil "github.com/devstream-io/devstream/pkg/util/template"
 )
 
 type Plugin struct {
@@ -79,15 +79,7 @@ func (p *Plugin) renderTplString(tplStr string) (string, error) {
 		"dirFormat": pluginTpl.FormatPackageDirName,
 	}
 
-	t, err := template.New("default").Delims("[[", "]]").Funcs(funcMap).Parse(tplStr)
-	if err != nil {
-		log.Debugf("Template parse failed: %s.", err)
-		log.Debugf("Template content: %s.", tplStr)
-		return "", err
-	}
-
-	var buf bytes.Buffer
-	err = t.Execute(&buf, *p)
+	res, err := templateUtil.New().FromContent(tplStr).DefaultRender("default", *p, funcMap).Render()
 	if err != nil {
 		log.Debugf("Template execute failed: %s.", err)
 		log.Debugf("Template content: %s.", tplStr)
@@ -95,7 +87,7 @@ func (p *Plugin) renderTplString(tplStr string) (string, error) {
 		return "", err
 	}
 
-	return buf.String(), nil
+	return res, nil
 }
 
 // PersistFiles gets the []pluginTpl.File, for each File:

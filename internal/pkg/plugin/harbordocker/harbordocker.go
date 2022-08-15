@@ -3,13 +3,13 @@ package harbordocker
 import (
 	_ "embed"
 	"os"
-	"text/template"
 
 	"github.com/mitchellh/mapstructure"
 
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/pkg/util/docker/dockersh"
 	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/template"
 )
 
 const (
@@ -57,8 +57,7 @@ func renderConfig(options plugininstaller.RawOptions) (plugininstaller.RawOption
 		return nil, err
 	}
 
-	// TODO(daniel-hutao): use template wrapper here
-	tmpl, err := template.New("compose").Delims("[[", "]]").Parse(HarborConfigTemplate)
+	content, err := template.New().FromContent(HarborConfigTemplate).DefaultRender("compose", opts).Render()
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +73,7 @@ func renderConfig(options plugininstaller.RawOptions) (plugininstaller.RawOption
 		}
 	}()
 
-	if err := tmpl.Execute(configFile, opts); err != nil {
+	if _, err := configFile.Write([]byte(content)); err != nil {
 		return nil, err
 	}
 
