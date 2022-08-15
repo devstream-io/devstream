@@ -5,9 +5,9 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
+	"github.com/devstream-io/devstream/pkg/util/git"
 	"github.com/devstream-io/devstream/pkg/util/github"
 	"github.com/devstream-io/devstream/pkg/util/log"
-	"github.com/devstream-io/devstream/pkg/util/repo"
 )
 
 // Read get jira-github-integ workflows.
@@ -25,7 +25,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, fmt.Errorf("options are illegal")
 	}
 
-	ghOptions := &repo.RepoInfo{
+	ghOptions := &git.RepoInfo{
 		Owner:    opts.Owner,
 		Org:      opts.Org,
 		Repo:     opts.Repo,

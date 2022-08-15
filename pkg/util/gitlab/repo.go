@@ -6,19 +6,8 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-// https://docs.gitlab.com/ee/api/projects.html
-// https://github.com/xanzy/go-gitlab/blob/master/projects.go
-
-type CreateProjectOptions struct {
-	Name       string
-	Namespace  string
-	Branch     string
-	Visibility string
-}
-
-// func (c *Client) CreateProject(repoName, branch string) error {
-func (c *Client) CreateProject(opts *CreateProjectOptions) error {
-	log.Debugf("Repo to be created: %s", opts.Name)
+func (c *Client) InitRepo() error {
+	log.Debugf("Repo to be created: %s", c.Repo)
 
 	var err error
 	var res *gitlab.Group
@@ -26,8 +15,8 @@ func (c *Client) CreateProject(opts *CreateProjectOptions) error {
 
 	gitlabGetGroupOptions := &gitlab.GetGroupOptions{}
 
-	if opts.Namespace != "" {
-		res, _, err = c.Groups.GetGroup(opts.Namespace, gitlabGetGroupOptions)
+	if c.Namespace != "" {
+		res, _, err = c.Groups.GetGroup(c.Namespace, gitlabGetGroupOptions)
 		if err != nil {
 			return err
 		}
@@ -37,14 +26,14 @@ func (c *Client) CreateProject(opts *CreateProjectOptions) error {
 	log.Debugf("Group: %#v\n", res)
 
 	p := &gitlab.CreateProjectOptions{
-		Name:                 gitlab.String(opts.Name),
+		Name:                 gitlab.String(c.Repo),
 		Description:          gitlab.String("Bootstrapped by DevStream."),
 		MergeRequestsEnabled: gitlab.Bool(true),
 		SnippetsEnabled:      gitlab.Bool(true),
-		DefaultBranch:        gitlab.String(opts.Branch),
+		DefaultBranch:        gitlab.String(c.Branch),
 	}
 
-	switch opts.Visibility {
+	switch c.Visibility {
 	case "public":
 		p.Visibility = gitlab.Visibility(gitlab.PublicVisibility)
 	case "internal":
@@ -66,8 +55,8 @@ func (c *Client) CreateProject(opts *CreateProjectOptions) error {
 	return nil
 }
 
-func (c *Client) DeleteProject(project string) error {
-	_, err := c.Projects.DeleteProject(project)
+func (c *Client) DeleteRepo() error {
+	_, err := c.Projects.DeleteProject(c.GetRepoPath())
 	if err != nil {
 		return err
 	}
@@ -75,12 +64,12 @@ func (c *Client) DeleteProject(project string) error {
 	return nil
 }
 
-func (c *Client) DescribeProject(project string) (*gitlab.Project, error) {
+func (c *Client) DescribeRepo() (*gitlab.Project, error) {
 	p := &gitlab.GetProjectOptions{}
-	res, _, err := c.Projects.GetProject(project, p)
+	res, _, err := c.Projects.GetProject(c.GetRepoPath(), p)
 
 	if err != nil {
-		log.Debugf("gitlab project: get [%s] info error %s", project, err)
+		log.Debugf("gitlab project: get [%s] info error %s", c.GetRepoPath(), err)
 		return nil, err
 	}
 

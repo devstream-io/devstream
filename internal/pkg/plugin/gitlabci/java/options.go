@@ -1,10 +1,15 @@
 package java
 
 import (
+	"errors"
 	"fmt"
 	"html/template"
+	"strings"
 
 	"github.com/spf13/viper"
+
+	"github.com/devstream-io/devstream/pkg/util/git"
+	"github.com/devstream-io/devstream/pkg/util/gitlab"
 )
 
 type RegistryType string
@@ -147,4 +152,18 @@ func (d *Deploy) setup(opts *Options) {
 		d.AllowedBranch = append(d.AllowedBranch, "main")
 	}
 
+}
+
+func (opts *Options) newGitlabClient() (*gitlab.Client, error) {
+	pathSplit := strings.Split(opts.PathWithNamespace, "/")
+	if len(pathSplit) != 2 {
+		return nil, errors.New("gitlabci generic not valid PathWithNamespace params")
+	}
+	repoInfo := &git.RepoInfo{
+		Owner:   pathSplit[0],
+		Repo:    pathSplit[1],
+		Branch:  opts.Branch,
+		BaseURL: opts.BaseURL,
+	}
+	return gitlab.NewClient(repoInfo)
 }

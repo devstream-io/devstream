@@ -10,9 +10,9 @@ import (
 	"github.com/tcnksm/go-input"
 
 	"github.com/devstream-io/devstream/internal/pkg/version"
+	"github.com/devstream-io/devstream/pkg/util/git"
 	"github.com/devstream-io/devstream/pkg/util/github"
 	"github.com/devstream-io/devstream/pkg/util/log"
-	"github.com/devstream-io/devstream/pkg/util/repo"
 )
 
 const (
@@ -37,7 +37,7 @@ func Upgrade(continueDirectly bool) error {
 	log.Debugf("Dtm upgrade: work path is : %v", workDir)
 
 	// 1. Get the latest release version
-	ghOptions := &repo.RepoInfo{
+	ghOptions := &git.RepoInfo{
 		Org:      dtmOrg,
 		Repo:     dtmRepo,
 		NeedAuth: false,

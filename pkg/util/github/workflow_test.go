@@ -9,8 +9,8 @@ import (
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/ghttp"
 
+	"github.com/devstream-io/devstream/pkg/util/git"
 	"github.com/devstream-io/devstream/pkg/util/github"
-	"github.com/devstream-io/devstream/pkg/util/repo"
 )
 
 var _ = Describe("Workflow", func() {
@@ -21,12 +21,12 @@ var _ = Describe("Workflow", func() {
 	owner, repoName, f, org := "o", "r", ".github/workflows", "or"
 	branch := "b"
 	wsFiles := []string{"file1", "file2"}
-	rightOpt := &repo.RepoInfo{
+	rightOpt := &git.RepoInfo{
 		Owner: owner,
 		Repo:  repoName,
 		Org:   org,
 	}
-	wrongOpt := &repo.RepoInfo{
+	wrongOpt := &git.RepoInfo{
 		Owner: owner,
 		Repo:  "",
 		Org:   org,

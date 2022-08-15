@@ -1,4 +1,4 @@
-package repo_test
+package git_test
 
 import (
 	"testing"
@@ -9,5 +9,5 @@ import (
 
 func TestPlanmanager(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Util repo Suite")
+	RunSpecs(t, "Util git Suite")
 }

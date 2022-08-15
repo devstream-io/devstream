@@ -6,8 +6,8 @@ import (
 
 	"github.com/google/go-github/v42/github"
 
+	"github.com/devstream-io/devstream/pkg/util/git"
 	"github.com/devstream-io/devstream/pkg/util/log"
-	"github.com/devstream-io/devstream/pkg/util/repo"
 )
 
 func (c *Client) CreateRepo(org, defaultBranch string) error {
@@ -44,7 +44,7 @@ func (c *Client) DeleteRepo() error {
 	return nil
 }
 
-func (c *Client) GetRepoDescription() (*github.Repository, error) {
+func (c *Client) DescribeRepo() (*github.Repository, error) {
 	repo, resp, err := c.Client.Repositories.Get(
 		c.Context,
 		c.GetRepoOwner(),
@@ -63,7 +63,7 @@ func (c *Client) GetRepoDescription() (*github.Repository, error) {
 
 // PushLocalPathToBranch will push local change to remote repo
 // return boolean value is for control whether to rollout if encounter error
-func (c *Client) PushLocalFileToRepo(commitInfo *repo.CommitInfo) (bool, error) {
+func (c *Client) PushLocalFileToRepo(commitInfo *git.CommitInfo) (bool, error) {
 	// 1. create new branch from main
 	ref, err := c.NewBranch(commitInfo.CommitBranch)
 	if err != nil {
@@ -77,7 +77,7 @@ func (c *Client) PushLocalFileToRepo(commitInfo *repo.CommitInfo) (bool, error) 
 			log.Warnf("Failed to delete transit branch: %s", err)
 		}
 	}()
-	tree, err := c.GetCommitTree(ref, commitInfo)
+	tree, err := c.BuildCommitTree(ref, commitInfo)
 
 	// 2. push local file change to new branch
 	if err := c.PushLocalPath(ref, tree, commitInfo); err != nil {
@@ -111,7 +111,7 @@ func (c *Client) InitRepo() error {
 	return nil
 }
 
-func (c *Client) PushInitRepo(commitInfo *repo.CommitInfo) error {
+func (c *Client) PushInitRepo(commitInfo *git.CommitInfo) error {
 	// 1. init repo
 	if err := c.InitRepo(); err != nil {
 		return err
@@ -152,7 +152,7 @@ func (c *Client) ProtectBranch(branch string) error {
 		RequiredConversationResolution: github.Bool(true),
 	}
 
-	repo, err := c.GetRepoDescription()
+	repo, err := c.DescribeRepo()
 	if err != nil {
 		return err
 	}

@@ -1,4 +1,4 @@
-package repo_test
+package git_test
 
 import (
 	"fmt"
@@ -6,20 +6,20 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/devstream-io/devstream/pkg/util/repo"
+	"github.com/devstream-io/devstream/pkg/util/git"
 )
 
 var _ = Describe("RepoInfo struct", func() {
 	var (
 		repoName, branch, owner, org string
-		repoInfo                     *repo.RepoInfo
+		repoInfo                     *git.RepoInfo
 	)
 	BeforeEach(func() {
 		repoName = "test_repo"
 		branch = "test_branch"
 		owner = "test_owner"
 		org = "test_org"
-		repoInfo = &repo.RepoInfo{
+		repoInfo = &git.RepoInfo{
 			Repo:   repoName,
 			Branch: branch,
 			Owner:  owner,

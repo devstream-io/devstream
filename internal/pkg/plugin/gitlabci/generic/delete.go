@@ -5,7 +5,7 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/devstream-io/devstream/pkg/util/gitlab"
+	"github.com/devstream-io/devstream/pkg/util/git"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -22,12 +22,17 @@ func Delete(options map[string]interface{}) (bool, error) {
 		return false, fmt.Errorf("opts are illegal")
 	}
 
-	client, err := gitlab.NewClient(gitlab.WithBaseURL(opts.BaseURL))
+	client, err := opts.newGitlabClient()
 	if err != nil {
 		return false, err
 	}
+	commitInfo := &git.CommitInfo{
+		CommitMsg:    commitMessage,
+		CommitBranch: opts.Branch,
+		GitFileMap:   git.GitFileContentMap{ciFileName: []byte("")},
+	}
 
-	if err = client.DeleteSingleFile(opts.PathWithNamespace, opts.Branch, commitMessage, ciFileName); err != nil {
+	if err = client.DeleteFiles(commitInfo); err != nil {
 		return false, err
 	}
 

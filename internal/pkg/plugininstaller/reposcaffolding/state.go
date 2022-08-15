@@ -75,7 +75,7 @@ func getGithubStatus(dstRepo *common.Repo) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	repo, err := ghClient.GetRepoDescription()
+	repo, err := ghClient.DescribeRepo()
 	if err != nil {
 		return nil, err
 	}
@@ -109,12 +109,12 @@ func getGithubStatus(dstRepo *common.Repo) (map[string]interface{}, error) {
 }
 
 func getGitlabStatus(dstRepo *common.Repo) (map[string]interface{}, error) {
-	c, err := gitlab.NewClient(gitlab.WithBaseURL(dstRepo.BaseURL))
+	c, err := gitlab.NewClient(dstRepo.BuildRepoInfo())
 	if err != nil {
 		return nil, err
 	}
 
-	project, err := c.DescribeProject(dstRepo.PathWithNamespace)
+	project, err := c.DescribeRepo()
 	if err != nil {
 		return nil, err
 	}

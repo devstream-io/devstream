@@ -5,26 +5,20 @@ import (
 	"os"
 
 	"github.com/xanzy/go-gitlab"
+
+	"github.com/devstream-io/devstream/pkg/util/git"
 )
 
 const (
 	DefaultGitlabHost = "https://gitlab.com"
 )
 
-type OptionFunc func(*Client)
-
-func WithBaseURL(baseURL string) OptionFunc {
-	return func(c *Client) {
-		c.baseURL = baseURL
-	}
-}
-
 type Client struct {
-	baseURL string
 	*gitlab.Client
+	*git.RepoInfo
 }
 
-func NewClient(opts ...OptionFunc) (*Client, error) {
+func NewClient(options *git.RepoInfo) (*Client, error) {
 	token := os.Getenv("GITLAB_TOKEN")
 	if token == "" {
 		return nil, errors.New("failed to read GITLAB_TOKEN from environment variable")
@@ -32,17 +26,14 @@ func NewClient(opts ...OptionFunc) (*Client, error) {
 
 	c := &Client{}
 
-	for _, opt := range opts {
-		opt(c)
-	}
-
 	var err error
 
-	if c.baseURL == "" {
+	if options.BaseURL == "" {
 		c.Client, err = gitlab.NewClient(token)
 	} else {
-		c.Client, err = gitlab.NewClient(token, gitlab.WithBaseURL(c.baseURL))
+		c.Client, err = gitlab.NewClient(token, gitlab.WithBaseURL(options.BaseURL))
 	}
+	c.RepoInfo = options
 
 	if err != nil {
 		return nil, err

@@ -1,4 +1,4 @@
-package repo
+package git
 
 import (
 	"fmt"
@@ -12,6 +12,7 @@ type RepoInfo struct {
 
 	// used for gitlab
 	Visibility string
+	Namespace  string
 	BaseURL    string
 
 	// used for github

@@ -1,4 +1,4 @@
-package repo
+package git
 
 import (
 	"github.com/devstream-io/devstream/pkg/util/log"
@@ -8,7 +8,6 @@ type ClientOperation interface {
 	InitRepo() error
 	DeleteRepo() error
 	PushLocalFileToRepo(*CommitInfo) (bool, error)
-	// GetRepoDownloadURL() string
 }
 
 func PushInitRepo(client ClientOperation, commitInfo *CommitInfo) error {

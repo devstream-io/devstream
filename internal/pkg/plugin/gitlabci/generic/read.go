@@ -5,7 +5,6 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/devstream-io/devstream/pkg/util/gitlab"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -22,12 +21,12 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, fmt.Errorf("opts are illegal")
 	}
 
-	client, err := gitlab.NewClient(gitlab.WithBaseURL(opts.BaseURL))
+	client, err := opts.newGitlabClient()
 	if err != nil {
 		return nil, err
 	}
 
-	exists, err := client.FileExists(opts.PathWithNamespace, opts.Branch, ciFileName)
+	exists, err := client.FileExists(ciFileName)
 	if err != nil {
 		return nil, err
 	}

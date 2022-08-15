@@ -9,7 +9,7 @@ import (
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/ghttp"
 
-	"github.com/devstream-io/devstream/pkg/util/repo"
+	"github.com/devstream-io/devstream/pkg/util/git"
 )
 
 var _ = Describe("WorkflowHelper", func() {
@@ -17,12 +17,12 @@ var _ = Describe("WorkflowHelper", func() {
 	var rightClient, wrongClient *Client
 	owner, repoName, f, org := "o", "r", ".github/workflows/test", "or"
 	u := fmt.Sprintf("/repos/%s/%s/contents/%s", org, repoName, generateGitHubWorkflowFileByName(f))
-	rightOpt := &repo.RepoInfo{
+	rightOpt := &git.RepoInfo{
 		Owner: owner,
 		Repo:  repoName,
 		Org:   org,
 	}
-	wrongOpt := &repo.RepoInfo{
+	wrongOpt := &git.RepoInfo{
 		Owner: owner,
 		Repo:  "",
 		Org:   org,

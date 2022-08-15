@@ -5,9 +5,10 @@ import (
 	"path/filepath"
 
 	"github.com/devstream-io/devstream/pkg/util/file"
+	"github.com/devstream-io/devstream/pkg/util/git"
 	"github.com/devstream-io/devstream/pkg/util/github"
+	"github.com/devstream-io/devstream/pkg/util/gitlab"
 	"github.com/devstream-io/devstream/pkg/util/log"
-	"github.com/devstream-io/devstream/pkg/util/repo"
 )
 
 const (
@@ -31,30 +32,30 @@ type Repo struct {
 
 // BuildRepoRenderConfig will generate template render variables
 func (d *Repo) BuildRepoRenderConfig() map[string]interface{} {
-	repoInfo := d.BuildRepoInfo()
 	renderConfigMap := map[string]interface{}{
 		"AppName": d.Repo,
 		"Repo": map[string]string{
 			"Name":  d.Repo,
-			"Owner": repoInfo.GetRepoOwner(),
+			"Owner": d.BuildRepoInfo().GetRepoOwner(),
 		},
 	}
 	return renderConfigMap
 }
 
 // CreateGithubClient build github client connection info
-func (d *Repo) NewClient() (repo.ClientOperation, error) {
+func (d *Repo) NewClient() (git.ClientOperation, error) {
 	repoInfo := d.BuildRepoInfo()
 	switch d.RepoType {
 	case "github":
 		return github.NewClient(repoInfo)
+	case "gitlab":
+		return gitlab.NewClient(repoInfo)
 	}
 	return nil, fmt.Errorf("scaffolding not support repo destination: %s", d.RepoType)
 }
 
 // CreateAndRenderLocalRepo will download repo from source repo and render it locally
 func (d *Repo) CreateAndRenderLocalRepo(appName string, vars map[string]interface{}) (string, error) {
-	repoInfo := d.BuildRepoInfo()
 	//TODO(steinliber) support gtlab later
 	if d.RepoType != "github" {
 		return "", fmt.Errorf("the download target repo is currently only supported github")
@@ -69,7 +70,7 @@ func (d *Repo) CreateAndRenderLocalRepo(appName string, vars map[string]interfac
 		return "", err
 	}
 	// 2. join download path and repo name to get repo path
-	repoDirName := repoInfo.GetRepoNameWithBranch()
+	repoDirName := d.BuildRepoInfo().GetRepoNameWithBranch()
 	return filepath.Join(projectDir, repoDirName), nil
 }
 
@@ -79,16 +80,16 @@ func (d *Repo) CreateAndPush(repoPath string) error {
 	if err != nil {
 		return err
 	}
-	gitFilePath, err := repo.GenerateGitFileInfo([]string{repoPath}, "")
+	gitFilePath, err := git.GenerateGitFileInfo([]string{repoPath}, "")
 	if err != nil {
 		return err
 	}
-	commitInfo := &repo.CommitInfo{
+	commitInfo := &git.CommitInfo{
 		CommitMsg:    defaultCommitMsg,
 		CommitBranch: transitBranch,
-		GitFileMap:   repo.GetFileContent(gitFilePath),
+		GitFileMap:   git.GetFileContent(gitFilePath),
 	}
-	return repo.PushInitRepo(client, commitInfo)
+	return git.PushInitRepo(client, commitInfo)
 }
 
 func (d *Repo) Delete() error {
@@ -99,18 +100,19 @@ func (d *Repo) Delete() error {
 	return client.DeleteRepo()
 }
 
-func (d *Repo) BuildRepoInfo() *repo.RepoInfo {
+func (d *Repo) BuildRepoInfo() *git.RepoInfo {
 	branch := d.Branch
 	if branch == "" {
 		branch = defaultMainBranch
 	}
-	return &repo.RepoInfo{
+	return &git.RepoInfo{
 		Repo:       d.Repo,
 		Owner:      d.Owner,
 		Org:        d.Org,
 		Visibility: d.Visibility,
 		NeedAuth:   true,
 		Branch:     branch,
+		BaseURL:    d.BaseURL,
 	}
 }
 

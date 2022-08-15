@@ -7,8 +7,8 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
+	"github.com/devstream-io/devstream/pkg/util/git"
 	"github.com/devstream-io/devstream/pkg/util/github"
-	"github.com/devstream-io/devstream/pkg/util/repo"
 )
 
 var _ = Describe("Secrets", func() {
@@ -18,7 +18,7 @@ var _ = Describe("Secrets", func() {
 
 	Context("does AddRepoSecret", func() {
 		It("step1: does GetRepoPublicKey with wrong url", func() {
-			rightClient, err := github.NewClientWithOption(&repo.RepoInfo{
+			rightClient, err := github.NewClientWithOption(&git.RepoInfo{
 				Owner: owner,
 				Repo:  repoName,
 				Org:   org,
@@ -34,7 +34,7 @@ var _ = Describe("Secrets", func() {
 			mux.HandleFunc(registerUrl, func(w http.ResponseWriter, r *http.Request) {
 				fmt.Fprint(w, `{"key_id":"1234","key":"2Sg8iYjAxxmI2LvUXpJjkYrMxURPc8r+dB7TJyvv1234"}`)
 			})
-			rightClient, err := github.NewClientWithOption(&repo.RepoInfo{
+			rightClient, err := github.NewClientWithOption(&git.RepoInfo{
 				Owner: owner,
 				Repo:  repoName,
 				Org:   org,
@@ -46,7 +46,7 @@ var _ = Describe("Secrets", func() {
 		})
 
 		It("step3: does CreateOrUpdateRepoSecret with wrong url", func() {
-			rightClient, err := github.NewClientWithOption(&repo.RepoInfo{
+			rightClient, err := github.NewClientWithOption(&git.RepoInfo{
 				Owner: owner,
 				Repo:  repoName,
 				Org:   org,
@@ -63,7 +63,7 @@ var _ = Describe("Secrets", func() {
 			mux.HandleFunc(registerUrl, func(w http.ResponseWriter, r *http.Request) {
 				fmt.Fprint(w, `{"key_id":"1234","key":"2Sg8iYjAxxmI2LvUXpJjkYrMxURPc8r+dB7TJyvv1234"}`)
 			})
-			rightClient, err := github.NewClientWithOption(&repo.RepoInfo{
+			rightClient, err := github.NewClientWithOption(&git.RepoInfo{
 				Owner: owner,
 				Repo:  repoName,
 				Org:   org,
@@ -79,7 +79,7 @@ var _ = Describe("Secrets", func() {
 
 	Context("RepoSecretExists", func() {
 		It("does RepoSecretExists with wrong url", func() {
-			wrongClient, err := github.NewClientWithOption(&repo.RepoInfo{
+			wrongClient, err := github.NewClientWithOption(&git.RepoInfo{
 				Owner: owner,
 				Repo:  "rrrr",
 				Org:   "ororor",
@@ -92,7 +92,7 @@ var _ = Describe("Secrets", func() {
 		})
 
 		It("does RepoSecretExists with correct url", func() {
-			rightClient, err := github.NewClientWithOption(&repo.RepoInfo{
+			rightClient, err := github.NewClientWithOption(&git.RepoInfo{
 				Owner: owner,
 				Repo:  repoName,
 				Org:   org,
@@ -107,7 +107,7 @@ var _ = Describe("Secrets", func() {
 
 	Context("DeleteRepoSecret", func() {
 		It("does DeleteRepoSecret with wrong url", func() {
-			wrongClient, err := github.NewClientWithOption(&repo.RepoInfo{
+			wrongClient, err := github.NewClientWithOption(&git.RepoInfo{
 				Owner: owner,
 				Repo:  "rrrr",
 				Org:   "ororor",
@@ -119,7 +119,7 @@ var _ = Describe("Secrets", func() {
 		})
 
 		It("does DeleteRepoSecret with correct url", func() {
-			rightClient, err := github.NewClientWithOption(&repo.RepoInfo{
+			rightClient, err := github.NewClientWithOption(&git.RepoInfo{
 				Owner: owner,
 				Repo:  repoName,
 				Org:   org,

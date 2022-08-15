@@ -5,8 +5,8 @@ import (
 
 	"github.com/google/go-github/v42/github"
 
+	"github.com/devstream-io/devstream/pkg/util/git"
 	"github.com/devstream-io/devstream/pkg/util/log"
-	"github.com/devstream-io/devstream/pkg/util/repo"
 )
 
 func (c *Client) GetLastCommit() (*github.RepositoryCommit, error) {
@@ -25,7 +25,7 @@ func (c *Client) GetLastCommit() (*github.RepositoryCommit, error) {
 	return commits[0], nil
 }
 
-func (c *Client) GetCommitTree(ref *github.Reference, commitInfo *repo.CommitInfo) (*github.Tree, error) {
+func (c *Client) BuildCommitTree(ref *github.Reference, commitInfo *git.CommitInfo) (*github.Tree, error) {
 	entries := []*github.TreeEntry{}
 	for githubPath, content := range commitInfo.GitFileMap {
 		entries = append(entries, &github.TreeEntry{

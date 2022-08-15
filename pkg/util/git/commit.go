@@ -1,8 +1,7 @@
-package repo
+package git
 
 import (
 	"io/fs"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -26,7 +25,7 @@ type GitFilePathInfo struct {
 func GetFileContent(files []*GitFilePathInfo) GitFileContentMap {
 	gitFileMap := make(map[string][]byte)
 	for _, f := range files {
-		content, err := ioutil.ReadFile(f.SourcePath)
+		content, err := os.ReadFile(f.SourcePath)
 		if err != nil {
 			log.Warnf("Repo Process file content error: %s", err)
 			continue

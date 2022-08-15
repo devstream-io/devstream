@@ -3,7 +3,7 @@ package github
 import (
 	"fmt"
 
-	"github.com/devstream-io/devstream/pkg/util/repo"
+	"github.com/devstream-io/devstream/pkg/util/git"
 	"github.com/devstream-io/devstream/pkg/util/template"
 
 	"github.com/mitchellh/mapstructure"
@@ -54,7 +54,7 @@ func (opts *GithubActionOptions) GetLanguage() string {
 }
 
 func (opts *GithubActionOptions) GetGithubClient() (*github.Client, error) {
-	ghOptions := &repo.RepoInfo{
+	ghOptions := &git.RepoInfo{
 		Owner:    opts.Owner,
 		Org:      opts.Org,
 		Repo:     opts.Repo,

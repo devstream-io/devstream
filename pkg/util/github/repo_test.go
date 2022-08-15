@@ -12,8 +12,8 @@ import (
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/ghttp"
 
+	"github.com/devstream-io/devstream/pkg/util/git"
 	gh "github.com/devstream-io/devstream/pkg/util/github"
-	"github.com/devstream-io/devstream/pkg/util/repo"
 )
 
 var _ = Describe("Repo", func() {
@@ -21,19 +21,19 @@ var _ = Describe("Repo", func() {
 		s                        *ghttp.Server
 		rightClient, wrongClient *gh.Client
 		owner, repoName, org     = "o", "r", "or"
-		commitInfo               *repo.CommitInfo
+		commitInfo               *git.CommitInfo
 	)
 	// var rep *go_github.Repository
 	defaultBranch := "db"
 	mergeBranch := "mb"
 	mainBranch := "mab"
-	rightOpt := &repo.RepoInfo{
+	rightOpt := &git.RepoInfo{
 		Owner:  owner,
 		Repo:   repoName,
 		Org:    org,
 		Branch: mainBranch,
 	}
-	wrongOpt := &repo.RepoInfo{
+	wrongOpt := &git.RepoInfo{
 		Owner: owner,
 		Repo:  "",
 		Org:   org,
@@ -44,7 +44,7 @@ var _ = Describe("Repo", func() {
 		Expect(rightClient).NotTo(Equal(nil))
 		wrongClient, _ = gh.NewClientWithOption(wrongOpt, s.URL())
 		Expect(wrongClient).NotTo(Equal(nil))
-		commitInfo = &repo.CommitInfo{
+		commitInfo = &git.CommitInfo{
 			CommitMsg:    "test",
 			CommitBranch: mergeBranch,
 			GitFileMap: map[string][]byte{
@@ -106,7 +106,7 @@ var _ = Describe("Repo", func() {
 
 		It("GetRepoDescription with status 500", func() {
 			s.SetUnhandledRequestStatusCode(http.StatusInternalServerError)
-			r, err := rightClient.GetRepoDescription()
+			r, err := rightClient.DescribeRepo()
 			Expect(err).NotTo(Succeed())
 			Expect(err.Error()).To(ContainSubstring(strconv.Itoa(http.StatusInternalServerError)))
 			var wantR *github.Repository
@@ -118,7 +118,7 @@ var _ = Describe("Repo", func() {
 			s.RouteToHandler("GET", gh.BaseURLPath+u, func(w http.ResponseWriter, r *http.Request) {
 				fmt.Fprint(w, ``)
 			})
-			r, err := rightClient.GetRepoDescription()
+			r, err := rightClient.DescribeRepo()
 			Expect(err).To(Succeed())
 			var wantR *github.Repository = &github.Repository{}
 			Expect(r).To(Equal(wantR))

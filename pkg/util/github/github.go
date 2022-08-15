@@ -8,14 +8,14 @@ import (
 	"github.com/google/go-github/v42/github"
 	"golang.org/x/oauth2"
 
+	"github.com/devstream-io/devstream/pkg/util/git"
 	"github.com/devstream-io/devstream/pkg/util/log"
-	"github.com/devstream-io/devstream/pkg/util/repo"
 )
 
 const (
 	defaultWorkPath          = ".github-workpath"
 	defaultCommitAuthor      = "devstream"
-	defaultCommitAuthorEmail = "devstream@io"
+	defaultCommitAuthorEmail = "devstream@merico.dev"
 	// https://github.com/merico-dev/dtm-scaffolding-golang/archive/refs/heads/main.zip -> 302 ->
 	// https://codeload.github.com/merico-dev/dtm-scaffolding-golang/zip/refs/heads/main
 	DefaultLatestCodeZipfileDownloadUrlFormat = "https://codeload.github.com/%s/%s/zip/refs/heads/%s"
@@ -25,12 +25,12 @@ const (
 var client *Client
 
 type Client struct {
-	*repo.RepoInfo
+	*git.RepoInfo
 	*github.Client
 	context.Context
 }
 
-func NewClient(option *repo.RepoInfo) (*Client, error) {
+func NewClient(option *git.RepoInfo) (*Client, error) {
 	// same option will get same client
 	if client != nil && *client.RepoInfo == *option {
 		log.Debug("Use a cached client.")

@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/devstream-io/devstream/pkg/util/repo"
+	"github.com/devstream-io/devstream/pkg/util/git"
 )
 
 type newBranchTest struct {
@@ -38,14 +38,14 @@ func TestClient_NewBranch(t *testing.T) {
 		// TODO: Add test cases.
 		{
 			BaseTest{"base", GetClientWithOption(
-				t, &repo.RepoInfo{Owner: "o", Repo: "r", Org: "or", Branch: "b"}, serverUrl,
+				t, &git.RepoInfo{Owner: "o", Repo: "r", Org: "or", Branch: "b"}, serverUrl,
 			),
 				"/repos/or/r/git/ref/heads/b", http.MethodGet, false, "", ""},
 			"", true,
 		},
 		{
 			BaseTest{"base set wrong register url for GetRef api in mock server", GetClientWithOption(
-				t, &repo.RepoInfo{Owner: "o", Repo: "r", Branch: "b"}, serverUrl,
+				t, &git.RepoInfo{Owner: "o", Repo: "r", Branch: "b"}, serverUrl,
 			),
 				"repos", http.MethodGet, false, "", ""}, "", true,
 		},
@@ -71,7 +71,7 @@ func TestClient_DeleteBranch(t *testing.T) {
 		// TODO: Add test cases.
 		{
 			BaseTest{"base", GetClientWithOption(
-				t, &repo.RepoInfo{Owner: "o", Repo: "r", Org: "or"}, serverUrl,
+				t, &git.RepoInfo{Owner: "o", Repo: "r", Org: "or"}, serverUrl,
 			),
 				"/repos/or/r/git/ref/heads/b", http.MethodGet, false, "", ""},
 			"b", true,

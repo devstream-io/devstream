@@ -5,7 +5,7 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/devstream-io/devstream/pkg/util/gitlab"
+	"github.com/devstream-io/devstream/pkg/util/git"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -26,7 +26,7 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, fmt.Errorf("opts are illegal")
 	}
 
-	client, err := gitlab.NewClient(gitlab.WithBaseURL(opts.BaseURL))
+	client, err := opts.newGitlabClient()
 	if err != nil {
 		return nil, err
 	}
@@ -35,9 +35,16 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
+	commitInfo := &git.CommitInfo{
+		CommitMsg:    commitMessage,
+		CommitBranch: opts.Branch,
+		GitFileMap: git.GitFileContentMap{
+			ciFileName: []byte(ciFileContent),
+		},
+	}
 
 	// the only difference between "Create" and "Update"
-	if err = client.UpdateSingleFile(opts.PathWithNamespace, opts.Branch, commitMessage, ciFileName, ciFileContent); err != nil {
+	if err = client.UpdateFiles(commitInfo); err != nil {
 		return nil, err
 	}
 

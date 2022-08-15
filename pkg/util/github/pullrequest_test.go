@@ -8,8 +8,8 @@ import (
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/ghttp"
 
+	"github.com/devstream-io/devstream/pkg/util/git"
 	"github.com/devstream-io/devstream/pkg/util/github"
-	"github.com/devstream-io/devstream/pkg/util/repo"
 )
 
 var _ = Describe("NewPullRequest", func() {
@@ -22,11 +22,11 @@ var _ = Describe("NewPullRequest", func() {
 	var (
 		s    *ghttp.Server
 		org  string
-		opts *repo.RepoInfo
+		opts *git.RepoInfo
 	)
 
 	JustBeforeEach(func() {
-		opts = &repo.RepoInfo{
+		opts = &git.RepoInfo{
 			Owner:  owner,
 			Repo:   repoName,
 			Org:    org,
@@ -85,11 +85,11 @@ var _ = Describe("MergePullRequest", func() {
 	var (
 		s    *ghttp.Server
 		org  string
-		opts *repo.RepoInfo
+		opts *git.RepoInfo
 	)
 
 	JustBeforeEach(func() {
-		opts = &repo.RepoInfo{
+		opts = &git.RepoInfo{
 			Owner:  owner,
 			Repo:   repoName,
 			Org:    org,

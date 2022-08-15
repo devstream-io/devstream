@@ -1,4 +1,4 @@
-package repo_test
+package git_test
 
 import (
 	"errors"
@@ -6,7 +6,7 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/devstream-io/devstream/pkg/util/repo"
+	"github.com/devstream-io/devstream/pkg/util/git"
 )
 
 type mockRepoStruct struct {
@@ -23,7 +23,7 @@ func (m *mockRepoStruct) InitRepo() error {
 	return nil
 }
 
-func (m *mockRepoStruct) PushLocalFileToRepo(commitInfo *repo.CommitInfo) (bool, error) {
+func (m *mockRepoStruct) PushLocalFileToRepo(commitInfo *git.CommitInfo) (bool, error) {
 	if m.pushRaiseError {
 		return m.needRollBack, errors.New("push error")
 	}
@@ -38,11 +38,11 @@ func (m *mockRepoStruct) DeleteRepo() error {
 var _ = Describe("PushInitRepo func", func() {
 	var (
 		mockRepo   *mockRepoStruct
-		commitInfo *repo.CommitInfo
+		commitInfo *git.CommitInfo
 		err        error
 	)
 	BeforeEach(func() {
-		commitInfo = &repo.CommitInfo{
+		commitInfo = &git.CommitInfo{
 			CommitMsg:    "test",
 			CommitBranch: "test-branch",
 		}
@@ -55,7 +55,7 @@ var _ = Describe("PushInitRepo func", func() {
 			}
 		})
 		It("should return err", func() {
-			err = repo.PushInitRepo(mockRepo, commitInfo)
+			err = git.PushInitRepo(mockRepo, commitInfo)
 			Expect(err).Error().Should(HaveOccurred())
 			Expect(err.Error()).Should(Equal("init error"))
 		})
@@ -70,7 +70,7 @@ var _ = Describe("PushInitRepo func", func() {
 			}
 		})
 		It("should return err", func() {
-			err = repo.PushInitRepo(mockRepo, commitInfo)
+			err = git.PushInitRepo(mockRepo, commitInfo)
 			Expect(err).Error().Should(HaveOccurred())
 			Expect(err.Error()).Should(Equal("push error"))
 			Expect(mockRepo.deleteFuncIsRun).Should(BeFalse())
@@ -85,7 +85,7 @@ var _ = Describe("PushInitRepo func", func() {
 				}
 			})
 			It("should run DeleteRepo method", func() {
-				err = repo.PushInitRepo(mockRepo, commitInfo)
+				err = git.PushInitRepo(mockRepo, commitInfo)
 				Expect(err).Error().Should(HaveOccurred())
 				Expect(err.Error()).Should(Equal("push error"))
 				Expect(mockRepo.deleteFuncIsRun).Should(BeTrue())

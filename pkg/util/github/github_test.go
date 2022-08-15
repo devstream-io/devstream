@@ -11,7 +11,7 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/devstream-io/devstream/pkg/util/repo"
+	"github.com/devstream-io/devstream/pkg/util/git"
 )
 
 const (
@@ -21,12 +21,12 @@ const (
 )
 
 var (
-	OptNotNeedAuth = &repo.RepoInfo{
+	OptNotNeedAuth = &git.RepoInfo{
 		Owner: "",
 		Org:   "devstream-io",
 		Repo:  "dtm-scaffolding-golang",
 	}
-	OptNeedAuth = &repo.RepoInfo{
+	OptNeedAuth = &git.RepoInfo{
 		Owner:    "",
 		Org:      "devstream-io",
 		Repo:     "dtm-scaffolding-golang",
@@ -79,7 +79,7 @@ func Setup() (mux *http.ServeMux, serverURL string, teardown func()) {
 	return mux, server.URL, server.Close
 }
 
-func GetClientWithOption(t *testing.T, opt *repo.RepoInfo, severUrl string) *Client {
+func GetClientWithOption(t *testing.T, opt *git.RepoInfo, severUrl string) *Client {
 	client, err := NewClient(opt)
 	if err != nil {
 		t.Error(err)
@@ -92,7 +92,7 @@ func GetClientWithOption(t *testing.T, opt *repo.RepoInfo, severUrl string) *Cli
 	return client
 }
 
-func NewClientWithOption(opt *repo.RepoInfo, severUrl string) (*Client, error) {
+func NewClientWithOption(opt *git.RepoInfo, severUrl string) (*Client, error) {
 	client, err := NewClient(opt)
 	if err != nil {
 		return nil, err

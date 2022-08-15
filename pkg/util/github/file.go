@@ -5,7 +5,7 @@ import (
 
 	"github.com/google/go-github/v42/github"
 
-	"github.com/devstream-io/devstream/pkg/util/repo"
+	"github.com/devstream-io/devstream/pkg/util/git"
 )
 
 func (c *Client) CreateFile(content []byte, filePath, targetBranch string) error {
@@ -21,7 +21,7 @@ func (c *Client) CreateFile(content []byte, filePath, targetBranch string) error
 	return err
 }
 
-func (c *Client) PushLocalPath(ref *github.Reference, tree *github.Tree, commitInfo *repo.CommitInfo) error {
+func (c *Client) PushLocalPath(ref *github.Reference, tree *github.Tree, commitInfo *git.CommitInfo) error {
 	parent, _, err := client.Repositories.GetCommit(c.Context, c.GetRepoOwner(), c.Repo, *ref.Object.SHA, nil)
 	if err != nil {
 		return err
