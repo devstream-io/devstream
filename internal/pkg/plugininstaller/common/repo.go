@@ -78,7 +78,7 @@ func (d *Repo) CreateAndRenderLocalRepo(appName string, vars map[string]interfac
 	}
 	// 1. download zip file and unzip this file then render folders
 	downloadURL := d.GetGithubDownloadURL()
-	projectDir, err := file.NewTemplate().FromRemote(downloadURL).UnzipFile().RenderRepoDIr(
+	projectDir, err := file.NewTemplate().FromRemote(downloadURL).UnzipFile().RenderRepoDir(
 		appName, vars,
 	).Run()
 	if err != nil {

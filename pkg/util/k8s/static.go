@@ -31,10 +31,10 @@ func (c *Client) ListDevstreamNamespace() (*corev1.NamespaceList, error) {
 
 // Check whether the given namespace is created by dtm
 // If the given namespace has label "created_by=DevStream", we'll control it.
-//  1. The specified namespace is created by dtm, then it should be deleted
-//     when errors are encountered during creation or `dtm delete`.
-//  2. The specified namespace is controlled by user, maybe they want to deploy plugins in
-//     an existing namespace or other situations, then we should not delete this namespace.
+// 1. The specified namespace is created by dtm, then it should be deleted
+// when errors are encountered during creation or `dtm delete`.
+// 2. The specified namespace is controlled by user, maybe they want to deploy plugins in
+// an existing namespace or other situations, then we should not delete this namespace.
 func (c *Client) IsDevstreamNS(namespace string) (bool, error) {
 	nsList, err := c.ListDevstreamNamespace()
 	if err != nil {

@@ -42,6 +42,9 @@ var (
 	//go:embed plugins/gitlabci-java.yaml
 	GitlabciJavaDefaultConfig string
 
+	//go:embed plugins/harbor-docker.yaml
+	HarborDockerDefaultConfig string
+
 	//go:embed plugins/harbor.yaml
 	HarborDefaultConfig string
 
@@ -97,6 +100,7 @@ var pluginDefaultConfigs = map[string]string{
 	"gitlabci-generic":            GitlabciGenericDefaultConfig,
 	"gitlabci-golang":             GitlabciGolangDefaultConfig,
 	"gitlabci-java":               GitlabciJavaDefaultConfig,
+	"harbor-docker":               HarborDockerDefaultConfig,
 	"harbor":                      HarborDefaultConfig,
 	"hashicorp-vault":             HashicorpVaultDefaultConfig,
 	"helm-generic":                HelmGenericDefaultConfig,

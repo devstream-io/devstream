@@ -8,6 +8,8 @@ import (
 	"os/exec"
 	"strings"
 	"sync"
+
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 // ExecInSystemWithParams can exec a command with some params in system.
@@ -22,6 +24,8 @@ func ExecInSystemWithParams(execPath string, params []string, logsBuffer *bytes.
 func ExecInSystem(execPath string, fullCommand string, logsBuffer *bytes.Buffer, print bool) error {
 	c := "-c"
 	cmdName := "sh"
+
+	log.Infof("Cmd: %s.", fullCommand)
 
 	cmd := exec.Command(cmdName, c, fullCommand)
 	cmd.Dir = execPath
