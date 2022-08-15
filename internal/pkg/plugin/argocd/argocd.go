@@ -10,9 +10,12 @@ var defaultHelmConfig = helm.Options{
 	Chart: helmCommon.Chart{
 		ChartName:   "argo/argo-cd",
 		Timeout:     "5m",
-		UpgradeCRDs: types.Bool(true),
 		Wait:        types.Bool(true),
+		UpgradeCRDs: types.Bool(true),
+		ReleaseName: "argocd",
+		Namespace:   "argocd",
 	},
+	CreateNamespace: types.Bool(false),
 	Repo: helmCommon.Repo{
 		URL:  "https://argoproj.github.io/argo-helm",
 		Name: "argo",

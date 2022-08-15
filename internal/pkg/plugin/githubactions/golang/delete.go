@@ -14,7 +14,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 		},
 		ExecuteOperations: plugininstaller.ExecuteOperations{
 			deleteDockerHubInfoForPush,
-			github.ProcessAction("delete"),
+			github.ProcessAction(github.ActionDelete),
 		},
 	}
 

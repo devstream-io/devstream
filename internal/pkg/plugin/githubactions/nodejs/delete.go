@@ -13,7 +13,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 			github.BuildWorkFlowsWrapper(workflows),
 		},
 		ExecuteOperations: plugininstaller.ExecuteOperations{
-			github.ProcessAction("delete"),
+			github.ProcessAction(github.ActionDelete),
 		},
 	}
 

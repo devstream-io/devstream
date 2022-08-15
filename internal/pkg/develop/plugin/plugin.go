@@ -79,7 +79,7 @@ func (p *Plugin) renderTplString(tplStr string) (string, error) {
 		"dirFormat": pluginTpl.FormatPackageDirName,
 	}
 
-	t, err := template.New("default").Funcs(funcMap).Parse(tplStr)
+	t, err := template.New("default").Delims("[[", "]]").Funcs(funcMap).Parse(tplStr)
 	if err != nil {
 		log.Debugf("Template parse failed: %s.", err)
 		log.Debugf("Template content: %s.", tplStr)
@@ -150,7 +150,7 @@ Source code files created.
 Happy hacking, buddy!
 Please give us feedback through GitHub issues if you encounter any difficulties. We guarantee that you will receive unrivaled help from our passionate community!
 `
-	fmt.Println(help)
+	fmt.Print(help)
 }
 
 // ValidateFiles Validates the []pluginTpl.File, for each File if File in needValidateFiles:

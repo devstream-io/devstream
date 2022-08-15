@@ -11,16 +11,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-var op docker.Operator
-
-func init() {
-	// default to shell operator
-	op = &dockersh.ShellOperator{}
-}
-
-func UseShellOperator() {
-	op = &dockersh.ShellOperator{}
-}
+var op docker.Operator = &dockersh.ShellOperator{}
 
 // Install runs the docker container
 func Install(options plugininstaller.RawOptions) error {

@@ -14,7 +14,7 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 			github.BuildWorkFlowsWrapper(workflows),
 		},
 		ExecuteOperations: plugininstaller.ExecuteOperations{
-			github.ProcessAction("update"),
+			github.ProcessAction(github.ActionUpdate),
 		},
 		GetStateOperation: github.GetActionState,
 	}

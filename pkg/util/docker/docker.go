@@ -29,7 +29,12 @@ type Operator interface {
 	ContainerGetHostname(containerName string) (string, error)
 	ContainerListPortPublishes(containerName string) ([]PortPublish, error)
 	ContainerGetPortBinding(containerName string, containerPort uint) (hostPort uint, err error)
+
+	ComposeUp() error
+	ComposeDown() error
+	ComposeState() (map[string]interface{}, error)
 }
+
 type MountPoint struct {
 	Type        string `json:"Type"`
 	Source      string `json:"Source"`

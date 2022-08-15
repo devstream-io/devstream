@@ -1,8 +1,8 @@
 package template
 
-var create_go_nameTpl = "create.go"
-var create_go_dirTpl = "internal/pkg/plugin/{{ .Name | dirFormat }}/"
-var create_go_contentTpl = `package {{ .Name | format }}
+var createGoNameTpl = "create.go"
+var createGoDirTpl = "internal/pkg/plugin/[[ .Name | dirFormat ]]/"
+var createGoContentTpl = `package [[ .Name | format ]]
 
 import (
 	"fmt"
@@ -34,9 +34,9 @@ var create_go_mustExistFlag = true
 
 func init() {
 	TplFiles = append(TplFiles, TplFile{
-		NameTpl:       create_go_nameTpl,
-		DirTpl:        create_go_dirTpl,
-		ContentTpl:    create_go_contentTpl,
+		NameTpl:       createGoNameTpl,
+		DirTpl:        createGoDirTpl,
+		ContentTpl:    createGoContentTpl,
 		MustExistFlag: create_go_mustExistFlag,
 	})
 }

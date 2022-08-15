@@ -7,8 +7,16 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
+const (
+	ActionCreate action = "create"
+	ActionDelete action = "delete"
+	ActionUpdate action = "update"
+)
+
+type action string
+
 // ProcessAction config github
-func ProcessAction(action string) plugininstaller.BaseOperation {
+func ProcessAction(act action) plugininstaller.BaseOperation {
 	return func(options plugininstaller.RawOptions) error {
 		opts, err := NewGithubActionOptions(options)
 		if err != nil {
@@ -22,18 +30,18 @@ func ProcessAction(action string) plugininstaller.BaseOperation {
 		}
 
 		for _, w := range opts.Workflows {
-			switch action {
-			case "create":
+			switch act {
+			case ActionCreate:
 				err = ghClient.AddWorkflow(w, opts.Branch)
-			case "delete":
+			case ActionDelete:
 				err = ghClient.DeleteWorkflow(w, opts.Branch)
-			case "update":
+			case ActionUpdate:
 				err = ghClient.DeleteWorkflow(w, opts.Branch)
 				if err != nil {
 					err = ghClient.AddWorkflow(w, opts.Branch)
 				}
 			default:
-				err = fmt.Errorf("This github Action not support: %s", action)
+				err = fmt.Errorf("This github Action not support: %s", act)
 			}
 			if err != nil {
 				return err

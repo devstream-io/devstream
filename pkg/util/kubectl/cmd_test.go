@@ -68,7 +68,7 @@ func Test_kubectlAction(t *testing.T) {
 		wantErr  bool
 	}{
 		// TODO: Add test cases.
-		{"base", APPLY, fileName, true},
+		{"base", Apply, fileName, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

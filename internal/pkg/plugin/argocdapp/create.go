@@ -4,6 +4,7 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/kubectl"
 	"github.com/devstream-io/devstream/pkg/util/file"
+	kubectlUtil "github.com/devstream-io/devstream/pkg/util/kubectl"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -16,7 +17,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		},
 		ExecuteOperations: plugininstaller.ExecuteOperations{
 			kubectl.ProcessByContent(
-				"create", file.NewTemplate().FromContent(templateFileLoc),
+				kubectlUtil.Create, file.NewTemplate().FromContent(templateFileLoc),
 			),
 		},
 		GetStateOperation: getStaticState,

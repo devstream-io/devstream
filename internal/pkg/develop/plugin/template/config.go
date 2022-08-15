@@ -1,10 +1,10 @@
 package template
 
-var config_go_nameTpl = "{{ .Name }}.yaml"
-var config_go_dirTpl = "internal/pkg/show/config/plugins/"
-var config_go_contentTpl = `tools:
+var configGoNameTpl = "[[ .Name ]].yaml"
+var configGoDirTpl = "internal/pkg/show/config/plugins/"
+var configGoContentTpl = `tools:
 # name of the tool
-- name: {{ .Name }}
+- name: [[ .Name ]]
   # id of the tool instance
   instanceID: default
   # format: name.instanceID; If specified, dtm will make sure the dependency is applied first before handling this tool.
@@ -16,8 +16,8 @@ var config_go_contentTpl = `tools:
 
 func init() {
 	TplFiles = append(TplFiles, TplFile{
-		NameTpl:    config_go_nameTpl,
-		DirTpl:     config_go_dirTpl,
-		ContentTpl: config_go_contentTpl,
+		NameTpl:    configGoNameTpl,
+		DirTpl:     configGoDirTpl,
+		ContentTpl: configGoContentTpl,
 	})
 }

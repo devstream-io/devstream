@@ -15,7 +15,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 			github.BuildWorkFlowsWrapper(workflows),
 		},
 		ExecuteOperations: plugininstaller.ExecuteOperations{
-			github.ProcessAction("create"),
+			github.ProcessAction(github.ActionCreate),
 		},
 		GetStateOperation: github.GetStaticWorkFlowState,
 	}

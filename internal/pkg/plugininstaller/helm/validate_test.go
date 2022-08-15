@@ -68,10 +68,9 @@ var _ = Describe("SetDefaultConfig func", func() {
 		}
 		defaultConfig = helm.Options{
 			Chart: helmCommon.Chart{
-				ChartName:       testChartName,
-				Wait:            testBool,
-				UpgradeCRDs:     testBool,
-				CreateNamespace: testBool,
+				ChartName:   testChartName,
+				Wait:        testBool,
+				UpgradeCRDs: testBool,
 			},
 			Repo: helmCommon.Repo{
 				URL:  testRepoURL,
@@ -79,15 +78,14 @@ var _ = Describe("SetDefaultConfig func", func() {
 			},
 		}
 		expectChart = map[string]interface{}{
-			"chart_name":       testChartName,
-			"wait":             testBool,
-			"namespace":        "",
-			"version":          "",
-			"release_name":     "",
-			"values_yaml":      "",
-			"timeout":          "",
-			"create_namespace": testBool,
-			"upgradeCRDs":      testBool,
+			"chart_name":   testChartName,
+			"wait":         testBool,
+			"namespace":    "",
+			"version":      "",
+			"release_name": "",
+			"values_yaml":  "",
+			"timeout":      "",
+			"upgradeCRDs":  testBool,
 		}
 		expectRepo = map[string]interface{}{
 			"url":  testRepoURL,
