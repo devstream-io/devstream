@@ -13,24 +13,14 @@ func AddDotForVariablesInConfig(s string) string {
 	return r.ReplaceAllString(s, "[[ .")
 }
 
-type dotProcessor struct{}
-
-func (p *dotProcessor) Process(bytes []byte) ([]byte, error) {
-	return []byte(AddDotForVariablesInConfig(string(bytes))), nil
-}
-
 func AddDotForVariablesInConfigProcessor() Processor {
-	return &dotProcessor{}
+	return func(bytes []byte) ([]byte, error) {
+		return []byte(AddDotForVariablesInConfig(string(bytes))), nil
+	}
 }
 
-type processorFuncWrapper struct {
-	f func([]byte) ([]byte, error)
-}
+// Quick Calls
 
-func (p *processorFuncWrapper) Process(bytes []byte) ([]byte, error) {
-	return p.f(bytes)
-}
-
-func NewProcessorFuncWrapper(f func([]byte) ([]byte, error)) Processor {
-	return &processorFuncWrapper{f: f}
+func (r *rendererWithGetter) AddDotForVariablesInConfigProcessor() *rendererWithGetter {
+	return r.AddProcessor(AddDotForVariablesInConfigProcessor())
 }

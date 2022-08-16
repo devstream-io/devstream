@@ -2,19 +2,13 @@ package template
 
 type (
 	// ContentGetter gets content from any source
-	ContentGetter interface {
-		GetContent() ([]byte, error)
-	}
+	ContentGetter func() ([]byte, error)
 
 	// Processor process content before render
-	Processor interface {
-		Process([]byte) ([]byte, error)
-	}
+	Processor func([]byte) ([]byte, error)
 
-	// RenderInf render content to string
-	RenderInf interface {
-		Render([]byte) (string, error)
-	}
+	// RenderFunc render content to string
+	RenderFunc func([]byte) (string, error)
 )
 
 type (
@@ -38,7 +32,7 @@ type (
 	rendererWithRender struct {
 		getter     ContentGetter // mandatory
 		processors []Processor   // optional
-		render     RenderInf     // mandatory
+		render     RenderFunc    // mandatory
 	}
 )
 
@@ -59,7 +53,7 @@ func (r *rendererWithGetter) AddProcessor(processor Processor) *rendererWithGett
 	}
 }
 
-func (r *rendererWithGetter) SetRender(render RenderInf) *rendererWithRender {
+func (r *rendererWithGetter) SetRender(render RenderFunc) *rendererWithRender {
 	return &rendererWithRender{
 		getter:     r.getter,
 		processors: r.processors,
@@ -70,34 +64,34 @@ func (r *rendererWithGetter) SetRender(render RenderInf) *rendererWithRender {
 // Render gets the content, process the content, render and returns the result string
 func (c *rendererWithRender) Render() (string, error) {
 	// 1. get content
-	content, err := c.getter.GetContent()
+	content, err := c.getter()
 	if err != nil {
 		return "", err
 	}
 
 	// 2. process content
 	for _, processor := range c.processors {
-		content, err = processor.Process(content)
+		content, err = processor(content)
 		if err != nil {
 			return "", err
 		}
 	}
 
 	// 3. render content
-	return c.render.Render(content)
+	return c.render(content)
 }
 
 // String returns the string directly, without rendering
 func (c *rendererWithGetter) String() (string, error) {
 	// 1. get content
-	content, err := c.getter.GetContent()
+	content, err := c.getter()
 	if err != nil {
 		return "", err
 	}
 
 	// 2. process content
 	for _, processor := range c.processors {
-		content, err = processor.Process(content)
+		content, err = processor(content)
 		if err != nil {
 			return "", err
 		}

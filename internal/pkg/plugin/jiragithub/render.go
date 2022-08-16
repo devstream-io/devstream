@@ -14,5 +14,5 @@ func renderTemplate(workflow *github.Workflow, options *Options) (string, error)
 		return "", err
 	}
 
-	return template.New().FromContent(workflow.WorkflowContent).DefaultRender("jiragithub", opts).Render()
+	return template.New().FromContent(workflow.WorkflowContent).SetDefaultRender("jiragithub", opts).Render()
 }

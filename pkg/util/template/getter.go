@@ -12,15 +12,21 @@ import (
 // Getters
 
 func FromLocalFile(filepath string) ContentGetter {
-	return &localGetter{filepath: filepath}
+	return func() ([]byte, error) {
+		return os.ReadFile(filepath)
+	}
 }
 
 func FromContent(content string) ContentGetter {
-	return &contentGetter{content: content}
+	return func() ([]byte, error) {
+		return []byte(content), nil
+	}
 }
 
 func FromURL(url string) ContentGetter {
-	return &urlGetter{url: url}
+	return func() ([]byte, error) {
+		return getContentFromURL(url)
+	}
 }
 
 // Quick Calls
@@ -37,30 +43,8 @@ func (r *render) FromURL(url string) *rendererWithGetter {
 	return r.SetContentGetter(FromURL(url))
 }
 
-// Getters definition
-
-type localGetter struct {
-	filepath string
-}
-
-func (g *localGetter) GetContent() ([]byte, error) {
-	return os.ReadFile(g.filepath)
-}
-
-type contentGetter struct {
-	content string
-}
-
-func (g *contentGetter) GetContent() ([]byte, error) {
-	return []byte(g.content), nil
-}
-
-type urlGetter struct {
-	url string
-}
-
-func (g *urlGetter) GetContent() ([]byte, error) {
-	resp, err := http.Get(g.url)
+func getContentFromURL(url string) ([]byte, error) {
+	resp, err := http.Get(url)
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
 		if err != nil {

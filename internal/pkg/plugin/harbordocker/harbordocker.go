@@ -57,7 +57,7 @@ func renderConfig(options plugininstaller.RawOptions) (plugininstaller.RawOption
 		return nil, err
 	}
 
-	content, err := template.New().FromContent(HarborConfigTemplate).DefaultRender("compose", opts).Render()
+	content, err := template.New().FromContent(HarborConfigTemplate).SetDefaultRender("compose", opts).Render()
 	if err != nil {
 		return nil, err
 	}

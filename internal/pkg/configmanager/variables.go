@@ -8,7 +8,7 @@ func renderConfigWithVariables(fileContent string, variables map[string]interfac
 	str, err := template.New().
 		FromContent(fileContent).
 		AddProcessor(template.AddDotForVariablesInConfigProcessor()).
-		DefaultRender(fileContent, variables).
+		SetDefaultRender(fileContent, variables).
 		Render()
 
 	if err != nil {

@@ -83,5 +83,5 @@ func applyJCasC(namespace, chartReleaseName, configName, fileContent string) err
 }
 
 func renderGitHubInteg(opts *GitHubIntegOptions) (string, error) {
-	return template.New().FromContent(githubIntegTemplate).DefaultRender(githubIntegName, opts).Render()
+	return template.New().FromContent(githubIntegTemplate).SetDefaultRender(githubIntegName, opts).Render()
 }
