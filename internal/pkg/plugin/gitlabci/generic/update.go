@@ -32,7 +32,7 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	// render template
 	ciFileContent, err := template.New().
 		FromContent(ciTemplateString).
-		DefaultRender("ci", opts.TemplateVariables).Render()
+		SetDefaultRender("ci", opts.TemplateVariables).Render()
 
 	if err != nil {
 		return nil, fmt.Errorf("execute template error: %s", err)

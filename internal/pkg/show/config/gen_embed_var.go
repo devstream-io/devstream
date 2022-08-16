@@ -79,7 +79,7 @@ func copyTemplates(src, dst string) error {
 func generate(o *Option) {
 	content, err := templateUtil.New().
 		FromContent(templateCode).
-		DefaultRender("gen", o, o.Funcs).
+		SetDefaultRender("gen", o, o.Funcs).
 		Render()
 
 	if err != nil {

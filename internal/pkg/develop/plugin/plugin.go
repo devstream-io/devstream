@@ -79,7 +79,7 @@ func (p *Plugin) renderTplString(tplStr string) (string, error) {
 		"dirFormat": pluginTpl.FormatPackageDirName,
 	}
 
-	res, err := templateUtil.New().FromContent(tplStr).DefaultRender("default", *p, funcMap).Render()
+	res, err := templateUtil.New().FromContent(tplStr).SetDefaultRender("default", *p, funcMap).Render()
 	if err != nil {
 		log.Debugf("Template execute failed: %s.", err)
 		log.Debugf("Template content: %s.", tplStr)

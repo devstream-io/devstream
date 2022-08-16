@@ -47,22 +47,14 @@ func RenderForFile(name, tplFileName, dstFileName string, variable any) error {
 	return os.WriteFile(dstFileName, []byte(renderedStr), 0644)
 }
 
-type defaultRender struct {
-	templateName string
-	vars         any
-	funcMaps     []template.FuncMap
-}
-
-func (r *defaultRender) Render(src []byte) (string, error) {
-	return Render(r.templateName, string(src), r.vars, r.funcMaps...)
-}
-
-func DefaultRender(templateName string, vars any, funcMaps ...template.FuncMap) RenderInf {
-	return &defaultRender{templateName: templateName, vars: vars, funcMaps: funcMaps}
+func DefaultRender(templateName string, vars any, funcMaps ...template.FuncMap) RenderFunc {
+	return func(src []byte) (string, error) {
+		return Render(templateName, string(src), vars, funcMaps...)
+	}
 }
 
 // Quick Calls
 
-func (r *rendererWithGetter) DefaultRender(templateName string, vars any, funcMaps ...template.FuncMap) *rendererWithRender {
+func (r *rendererWithGetter) SetDefaultRender(templateName string, vars any, funcMaps ...template.FuncMap) *rendererWithRender {
 	return r.SetRender(DefaultRender(templateName, vars, funcMaps...))
 }

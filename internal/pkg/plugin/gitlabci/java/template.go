@@ -11,5 +11,5 @@ var gitlabCITemplate string
 
 // Render gitlab-ci.yml template with Options
 func renderTmpl(Opts *Options) (string, error) {
-	return template.New().FromContent(gitlabCITemplate).DefaultRender("gitlabci-java", Opts).Render()
+	return template.New().FromContent(gitlabCITemplate).SetDefaultRender("gitlabci-java", Opts).Render()
 }
