@@ -3,8 +3,8 @@ package jenkins
 import (
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugin/common/helm"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/helm"
 )
 
 type jenkinsOptions struct {
@@ -27,4 +27,15 @@ func (opts *jenkinsOptions) encode() (map[string]interface{}, error) {
 		return nil, err
 	}
 	return options, nil
+}
+
+func setDefaultValue(defaultOpts *helm.Options) plugininstaller.MutableOperation {
+	return func(options plugininstaller.RawOptions) (plugininstaller.RawOptions, error) {
+		opts, err := newOptions(options)
+		if err != nil {
+			return nil, err
+		}
+		opts.FillDefaultValue(defaultOpts)
+		return opts.encode()
+	}
 }
