@@ -1,6 +1,7 @@
 package downloader
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"net/http"
@@ -38,18 +39,31 @@ func Download(url, filename, targetDir string) (int64, error) {
 			log.Debugf("download create file failed: %s", err)
 		}
 	}()
-	return DownloadToFile(url, f)
-}
-
-func DownloadToFile(url string, f *os.File) (int64, error) {
-	log.Debugf("URL: %s.", url)
-	log.Debugf("Filename: %s.", f.Name())
-
-	resp, err := http.Get(url)
+	content, err := FetchContentFromURL(url)
 	if err != nil {
 		return 0, err
 	}
+	return io.Copy(f, bytes.NewBuffer(content))
+}
 
-	defer resp.Body.Close()
-	return io.Copy(f, resp.Body)
+func FetchContentFromURL(url string) ([]byte, error) {
+	resp, err := http.Get(url)
+
+	// check response error
+	if err != nil {
+		log.Debugf("Download from url failed: %s", err)
+		return nil, err
+	}
+	defer func(body io.ReadCloser) {
+		err := body.Close()
+		if err != nil {
+			log.Errorf("Close response body failed: %s", err)
+		}
+	}(resp.Body)
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("Download file from url failed: %+v", resp)
+	}
+
+	return io.ReadAll(resp.Body)
 }

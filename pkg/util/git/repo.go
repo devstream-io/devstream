@@ -7,7 +7,9 @@ import (
 type ClientOperation interface {
 	InitRepo() error
 	DeleteRepo() error
-	PushLocalFileToRepo(*CommitInfo) (bool, error)
+	PushLocalFileToRepo(commitInfo *CommitInfo, checkUpdate bool) (bool, error)
+	GetLocationInfo(path string) ([]*RepoFileStatus, error)
+	DeleteFiles(commitInfo *CommitInfo) error
 }
 
 func PushInitRepo(client ClientOperation, commitInfo *CommitInfo) error {
@@ -29,6 +31,6 @@ func PushInitRepo(client ClientOperation, commitInfo *CommitInfo) error {
 	}()
 
 	// 2. push local path to repo
-	needRollBack, err := client.PushLocalFileToRepo(commitInfo)
+	needRollBack, err := client.PushLocalFileToRepo(commitInfo, false)
 	return err
 }

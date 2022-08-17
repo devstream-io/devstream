@@ -20,9 +20,10 @@ var _ = Describe("NewPullRequest", func() {
 	)
 
 	var (
-		s    *ghttp.Server
-		org  string
-		opts *git.RepoInfo
+		s          *ghttp.Server
+		org        string
+		opts       *git.RepoInfo
+		commitInfo *git.CommitInfo
 	)
 
 	JustBeforeEach(func() {
@@ -31,6 +32,9 @@ var _ = Describe("NewPullRequest", func() {
 			Repo:   repoName,
 			Org:    org,
 			Branch: toBranch,
+		}
+		commitInfo = &git.CommitInfo{
+			CommitBranch: fromBranch,
 		}
 	})
 
@@ -48,7 +52,7 @@ var _ = Describe("NewPullRequest", func() {
 			c, err := github.NewClientWithOption(opts, s.URL())
 			Expect(err).NotTo(HaveOccurred())
 			Expect(c).NotTo(Equal(nil))
-			n, err := c.NewPullRequest(fromBranch)
+			n, err := c.NewPullRequest(commitInfo)
 			Expect(err).To(HaveOccurred())
 			fmt.Println(err)
 			Expect(n).To(Equal(0))
@@ -67,7 +71,7 @@ var _ = Describe("NewPullRequest", func() {
 			c, err := github.NewClientWithOption(opts, s.URL())
 			Expect(err).NotTo(HaveOccurred())
 			Expect(c).NotTo(Equal(nil))
-			n, err := c.NewPullRequest(fromBranch)
+			n, err := c.NewPullRequest(commitInfo)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(n).To(Equal(1))
 		})

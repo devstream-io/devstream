@@ -2,7 +2,6 @@ package common
 
 import (
 	"fmt"
-	"path/filepath"
 
 	"github.com/devstream-io/devstream/pkg/util/file"
 	"github.com/devstream-io/devstream/pkg/util/git"
@@ -55,37 +54,35 @@ func (d *Repo) NewClient() (git.ClientOperation, error) {
 }
 
 // CreateAndRenderLocalRepo will download repo from source repo and render it locally
-func (d *Repo) CreateAndRenderLocalRepo(appName string, vars map[string]interface{}) (string, error) {
+func (d *Repo) CreateAndRenderLocalRepo(appName string, vars map[string]interface{}) (git.GitFileContentMap, error) {
 	//TODO(steinliber) support gtlab later
 	if d.RepoType != "github" {
-		return "", fmt.Errorf("the download target repo is currently only supported github")
+		return nil, fmt.Errorf("the download target repo is currently only supported github")
 	}
 	// 1. download zip file and unzip this file then render folders
 	downloadURL := d.getRepoDownloadURL()
-	projectDir, err := file.DownloadAndUnzipAndRenderGitHubRepo(downloadURL, appName, vars)
+	zipFilesDir, err := file.DownloadAndUnzipFile(downloadURL)
 	if err != nil {
-		log.Debugf("reposcaffolding process file error: %s", err)
-		return "", err
+		log.Debugf("reposcaffolding process files error: %s", err)
+		return nil, err
 	}
-	// 2. join download path and repo name to get repo path
-	repoDirName := d.BuildRepoInfo().GetRepoNameWithBranch()
-	return filepath.Join(projectDir, repoDirName), nil
+	return file.WalkDir(
+		zipFilesDir, filterGitFiles,
+		getRepoFileNameFunc(appName, d.BuildRepoInfo().GetRepoNameWithBranch()),
+		processRepoFileFunc(appName, vars),
+	)
 }
 
 // This Func will push repo to remote base on repoType
-func (d *Repo) CreateAndPush(repoPath string) error {
+func (d *Repo) CreateAndPush(gitMap git.GitFileContentMap) error {
 	client, err := d.NewClient()
-	if err != nil {
-		return err
-	}
-	gitFilePath, err := git.GenerateGitFileInfo([]string{repoPath}, "")
 	if err != nil {
 		return err
 	}
 	commitInfo := &git.CommitInfo{
 		CommitMsg:    defaultCommitMsg,
 		CommitBranch: transitBranch,
-		GitFileMap:   git.GetFileContent(gitFilePath),
+		GitFileMap:   gitMap,
 	}
 	return git.PushInitRepo(client, commitInfo)
 }
