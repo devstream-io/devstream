@@ -22,5 +22,5 @@ func AddDotForVariablesInConfigProcessor() Processor {
 // Quick Calls
 
 func (r *rendererWithGetter) AddDotForVariablesInConfigProcessor() *rendererWithGetter {
-	return r.AddProcessor(AddDotForVariablesInConfigProcessor())
+	return r.addProcessor(AddDotForVariablesInConfigProcessor())
 }

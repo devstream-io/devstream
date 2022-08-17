@@ -7,7 +7,7 @@ import (
 func renderConfigWithVariables(fileContent string, variables map[string]interface{}) ([]byte, error) {
 	str, err := template.New().
 		FromContent(fileContent).
-		AddProcessor(template.AddDotForVariablesInConfigProcessor()).
+		AddDotForVariablesInConfigProcessor().
 		SetDefaultRender(fileContent, variables).
 		Render()
 

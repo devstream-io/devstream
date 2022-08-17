@@ -40,20 +40,20 @@ func New() *render {
 	return &render{}
 }
 
-func (r *render) SetContentGetter(getter ContentGetter) *rendererWithGetter {
+func (r *render) setContentGetter(getter ContentGetter) *rendererWithGetter {
 	return &rendererWithGetter{
 		getter: getter,
 	}
 }
 
-func (r *rendererWithGetter) AddProcessor(processor Processor) *rendererWithGetter {
+func (r *rendererWithGetter) addProcessor(processor Processor) *rendererWithGetter {
 	return &rendererWithGetter{
 		getter:     r.getter,
 		processors: append(r.processors, processor),
 	}
 }
 
-func (r *rendererWithGetter) SetRender(render RenderFunc) *rendererWithRender {
+func (r *rendererWithGetter) setRender(render RenderFunc) *rendererWithRender {
 	return &rendererWithRender{
 		getter:     r.getter,
 		processors: r.processors,
@@ -61,8 +61,8 @@ func (r *rendererWithGetter) SetRender(render RenderFunc) *rendererWithRender {
 	}
 }
 
-// Render gets the content, process the content, render and returns the result string
-func (c *rendererWithRender) Render() (string, error) {
+// doRender gets the content, process the content, render and returns the result string
+func (c *rendererWithRender) doRender() (string, error) {
 	// 1. get content
 	content, err := c.getter()
 	if err != nil {

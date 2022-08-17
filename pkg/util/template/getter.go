@@ -32,15 +32,15 @@ func FromURL(url string) ContentGetter {
 // Quick Calls
 
 func (r *render) FromLocalFile(filepath string) *rendererWithGetter {
-	return r.SetContentGetter(FromLocalFile(filepath))
+	return r.setContentGetter(FromLocalFile(filepath))
 }
 
 func (r *render) FromContent(content string) *rendererWithGetter {
-	return r.SetContentGetter(FromContent(content))
+	return r.setContentGetter(FromContent(content))
 }
 
 func (r *render) FromURL(url string) *rendererWithGetter {
-	return r.SetContentGetter(FromURL(url))
+	return r.setContentGetter(FromURL(url))
 }
 
 func getContentFromURL(url string) ([]byte, error) {
