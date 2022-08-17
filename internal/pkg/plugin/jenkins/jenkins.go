@@ -8,7 +8,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
-var defaultHelmConfig = helm.Options{
+var defaultHelmConfig = &helm.Options{
 	Chart: helmCommon.Chart{
 		ChartName:   "jenkins/jenkins",
 		Timeout:     "5m",

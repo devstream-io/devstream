@@ -44,7 +44,7 @@ func (opts *Options) Encode() (map[string]interface{}, error) {
 	return options, nil
 }
 
-func (opts *Options) fillDefaultValue(defaultOpts *Options) {
+func (opts *Options) FillDefaultValue(defaultOpts *Options) {
 	chart := &opts.Chart
 	chart.FillDefaultValue(&defaultOpts.Chart)
 	repo := &opts.Repo

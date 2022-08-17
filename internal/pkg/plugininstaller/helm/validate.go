@@ -31,7 +31,7 @@ func SetDefaultConfig(defaultConfig *Options) plugininstaller.MutableOperation {
 		if err != nil {
 			return nil, err
 		}
-		opts.fillDefaultValue(defaultConfig)
+		opts.FillDefaultValue(defaultConfig)
 		return opts.Encode()
 	}
 }

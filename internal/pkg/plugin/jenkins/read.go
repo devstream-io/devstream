@@ -10,7 +10,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
-			helm.SetDefaultConfig(&defaultHelmConfig),
+			setDefaultValue(defaultHelmConfig),
 			helm.Validate,
 			replaceStroageClass,
 		},
