@@ -3,14 +3,13 @@ package main
 import (
 	"fmt"
 
-	"github.com/devstream-io/devstream/pkg/util/file"
-
 	"github.com/spf13/cobra"
 
 	"github.com/devstream-io/devstream/internal/pkg/completion"
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/pluginmanager"
 	"github.com/devstream-io/devstream/internal/pkg/version"
+	"github.com/devstream-io/devstream/pkg/util/file"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 

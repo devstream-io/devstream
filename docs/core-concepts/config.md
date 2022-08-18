@@ -22,7 +22,7 @@ varFile: variables.yaml
 
 toolFile: tools.yaml
 
-pluginDir: /usr/local/.devstream/plugins # optional
+pluginDir: /usr/local/devstream/plugins # optional
 
 state:
   backend: local

@@ -5,10 +5,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/devstream-io/devstream/pkg/util/file"
-
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
+	"github.com/devstream-io/devstream/pkg/util/file"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
