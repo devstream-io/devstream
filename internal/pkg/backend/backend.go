@@ -3,6 +3,7 @@ package backend
 import (
 	"fmt"
 
+	"github.com/devstream-io/devstream/internal/pkg/backend/configmap"
 	"github.com/devstream-io/devstream/internal/pkg/backend/local"
 	"github.com/devstream-io/devstream/internal/pkg/backend/s3"
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
@@ -12,8 +13,9 @@ import (
 type Type string
 
 const (
-	Local Type = "local"
-	S3    Type = "s3"
+	Local     Type = "local"
+	S3        Type = "s3"
+	ConfigMap Type = "configmap"
 )
 
 // Backend is used to persist data, it can be local file/etcd/s3/...
@@ -38,6 +40,11 @@ func GetBackend(stateConfig configmanager.State) (Backend, error) {
 			stateConfig.Options.Region,
 			stateConfig.Options.Key,
 		), nil
+	case ConfigMap:
+		log.Debugf("Used the Backend: %s.", typeName)
+		return configmap.NewBackend(
+			stateConfig.Options.Namespace,
+			stateConfig.Options.ConfigMap)
 	default:
 		return nil, fmt.Errorf("the backend type < %s > is illegal", typeName)
 	}

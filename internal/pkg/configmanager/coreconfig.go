@@ -36,6 +36,9 @@ type StateConfigOptions struct {
 	Key    string `yaml:"key"`
 	// for local backend
 	StateFile string `yaml:"stateFile"`
+	// for ConfigMap backend
+	Namespace string `yaml:"namespace"`
+	ConfigMap string `yaml:"configmap"`
 }
 
 func (c *CoreConfig) Validate() (bool, error) {
@@ -62,6 +65,7 @@ func (c *CoreConfig) Validate() (bool, error) {
 		if c.State.Options.Key == "" {
 			errors = append(errors, fmt.Errorf("state s3 Key is empty"))
 		}
+	case "configmap":
 	default:
 		errors = append(errors, fmt.Errorf("backend type error"))
 	}
