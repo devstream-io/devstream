@@ -26,6 +26,15 @@ tools:
       timeout: 10m
       # whether to perform a CRD upgrade during installation
       upgradeCRDs: true
-      # values_yaml: |
-        # serviceaccount:
-          # enabled: true
+      values_yaml: |
+        externalURL: http://127.0.0.1
+        expose:
+          type: nodePort
+          tls:
+            enabled: false
+        chartmuseum:
+          enabled: false
+        notary:
+          enabled: false
+        trivy:
+          enabled: false

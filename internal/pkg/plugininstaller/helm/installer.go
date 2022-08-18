@@ -72,7 +72,7 @@ func DealWithNsWhenInstall(options plugininstaller.RawOptions) error {
 	return nil
 }
 
-// DealWithNsWhenInterruption will Delete namespace by input options
+// DealWithNsWhenInterruption will Delete the namespace just created if options.create_namespace==true in Config
 func DealWithNsWhenInterruption(options plugininstaller.RawOptions) error {
 	opts, err := NewOptions(options)
 	if err != nil {
