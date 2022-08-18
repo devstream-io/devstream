@@ -10,6 +10,7 @@ DevStream使用YAML文件来描述你的DevOps工具链配置。
 
 - `varFile`: 指向定义变量的文件路径
 - `toolFile`: 指向定义插件的文件路径
+- `pluginDir`: 指向插件目录的路径，默认为 `~/.devstream/plugins`, 或使用 `-d` 参数指定一个目录
 - `state`: 指定DevStream状态存储位置
 
 ### 主配置文件示例
@@ -20,6 +21,8 @@ DevStream使用YAML文件来描述你的DevOps工具链配置。
 varFile: variables.yaml
 
 toolFile: tools.yaml
+
+pluginDir: /usr/local/.devstream/plugins # 可选
 
 state:
   backend: local

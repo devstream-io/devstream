@@ -10,6 +10,7 @@ The main config contains three sections:
 
 - `varFile`: the path/to/your/variables file
 - `toolFile`: the path/to/your/tools configuration file
+- `pluginDir`: the path/to/your/plugins directory, default: `~/.devstream/plugins`, or use `-d` flag to specify a directory
 - `state`: configuration of DevStream state. For example, 
 
 ### Example Main Config File
@@ -20,6 +21,8 @@ See the `config.yaml` example below:
 varFile: variables.yaml
 
 toolFile: tools.yaml
+
+pluginDir: /usr/local/.devstream/plugins # optional
 
 state:
   backend: local
