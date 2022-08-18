@@ -20,6 +20,7 @@ func DownloadPlugins(conf *configmanager.Config) error {
 	if pluginDir == "" {
 		return fmt.Errorf(`plugins directory should not be ""`)
 	}
+
 	log.Infof("Using dir <%s> to store plugins.", pluginDir)
 
 	// download all plugins that don't exist locally
@@ -87,9 +88,6 @@ func DownloadPlugins(conf *configmanager.Config) error {
 // CheckLocalPlugins checks if the local plugins exists, and matches with md5 value.
 func CheckLocalPlugins(conf *configmanager.Config) error {
 	pluginDir := viper.GetString("plugin-dir")
-	if pluginDir == "" {
-		return fmt.Errorf("plugins directory doesn't exist")
-	}
 
 	log.Infof("Using dir <%s> to store plugins.", pluginDir)
 

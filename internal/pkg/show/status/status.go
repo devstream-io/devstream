@@ -5,6 +5,8 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/devstream-io/devstream/pkg/util/file"
+
 	"github.com/spf13/viper"
 
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
@@ -34,6 +36,8 @@ func Show(configFile string) error {
 	if cfg == nil {
 		return fmt.Errorf("failed to load the config file")
 	}
+
+	file.SetPluginDir(cfg.PluginDir)
 
 	smgr, err := statemanager.NewManager(*cfg.State)
 	if err != nil {

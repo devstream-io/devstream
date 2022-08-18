@@ -4,7 +4,6 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/devstream-io/devstream/internal/pkg/completion"
-	"github.com/devstream-io/devstream/internal/pkg/pluginengine"
 	"github.com/devstream-io/devstream/internal/pkg/show/config"
 	"github.com/devstream-io/devstream/internal/pkg/show/status"
 	"github.com/devstream-io/devstream/pkg/util/log"
@@ -67,7 +66,7 @@ func init() {
 	showStatusCMD.Flags().StringVarP(&plugin, "plugin", "p", "", "specify name with the plugin")
 	showStatusCMD.Flags().StringVarP(&instanceID, "id", "i", "", "specify id with the plugin instance")
 	showStatusCMD.Flags().BoolVarP(&statusAllFlag, "all", "a", false, "show all instances of all plugins status")
-	showStatusCMD.Flags().StringVarP(&pluginDir, "plugin-dir", "d", pluginengine.DefaultPluginDir, "plugins directory")
+	showStatusCMD.Flags().StringVarP(&pluginDir, "plugin-dir", "d", "", "plugins directory")
 	showStatusCMD.Flags().StringVarP(&configFile, "config-file", "f", "config.yaml", "config file")
 	completion.FlagPluginsCompletion(showStatusCMD, "plugin")
 }
