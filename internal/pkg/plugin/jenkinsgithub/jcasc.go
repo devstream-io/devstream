@@ -62,7 +62,7 @@ func applyJCasC(namespace, chartReleaseName, configName, fileContent string) err
 	configMap := corev1.ConfigMap(configMapName, namespace).
 		WithLabels(labels).
 		WithData(data).
-		WithImmutable(true)
+		WithImmutable(false)
 
 	applyOptions := metav1.ApplyOptions{
 		FieldManager: "DevStream",
