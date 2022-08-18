@@ -12,20 +12,30 @@ import (
 
 func ProcessByContent(action, content string) plugininstaller.BaseOperation {
 	return func(options plugininstaller.RawOptions) error {
-		if content == "" {
-			return fmt.Errorf("kubectl content is empty")
+		reader, err := renderKubectlContent(content, options)
+		if err != nil {
+			return err
 		}
-
-		reader := strings.NewReader(content)
 
 		return processByIOReader(action, reader)
 	}
 }
 
+func renderKubectlContent(content string, options plugininstaller.RawOptions) (io.Reader, error) {
+	content, err := template.New().FromContent(content).SetDefaultRender("kubectl", options).Render()
+	if err != nil {
+		return nil, err
+	}
+	if content == "" {
+		return nil, fmt.Errorf("kubectl content is empty")
+	}
+
+	return strings.NewReader(content), nil
+}
+
 func ProcessByURL(action, url string) plugininstaller.BaseOperation {
 	return func(options plugininstaller.RawOptions) error {
-		var err error
-		content, err := template.New().FromURL(url).String()
+		content, err := template.New().FromURL(url).SetDefaultRender("kubectl", options).Render()
 		if err != nil {
 			return err
 		}
