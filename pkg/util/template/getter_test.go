@@ -14,7 +14,7 @@ var _ = Describe("Getters(localFile, content, url)", func() {
 	var (
 		getter ContentGetter
 
-		src                string
+		src                string // content of source, each getter will use this content
 		rendered, expected []byte
 		err                error
 	)
@@ -29,6 +29,9 @@ var _ = Describe("Getters(localFile, content, url)", func() {
 	})
 
 	JustAfterEach(func() {
+		// here is the core of the test
+		// because each getter is the same type and the expected result is the same,
+		// we can use "JustAfterEach" to test them all at end of each test case
 		rendered, err = getter()
 		Expect(err).To(Succeed())
 		Expect(rendered).To(Equal(expected))
@@ -42,12 +45,14 @@ var _ = Describe("Getters(localFile, content, url)", func() {
 			Expect(err).To(Succeed())
 
 			getter = FromLocalFile(file.Name())
+			// then "JustAfterEach" will test the result
 		})
 	})
 
 	When("template content is content", func() {
 		It("should return rendered template", func() {
 			getter = FromContent(src)
+			// then "JustAfterEach" will test the result
 		})
 	})
 
@@ -71,6 +76,7 @@ var _ = Describe("Getters(localFile, content, url)", func() {
 
 		It("should return rendered template", func() {
 			getter = FromURL(server.URL() + testPath)
+			// then "JustAfterEach" will test the result
 		})
 
 		AfterEach(func() {
