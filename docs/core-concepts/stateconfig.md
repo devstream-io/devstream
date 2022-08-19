@@ -5,6 +5,7 @@ In the main config, we can specify which "backend" to use to store DevStream sta
 A backend is where to actually store the state file. We support the following types of backend:
 
 - local
+- k8s
 - s3
 
 ## Local Backend
@@ -23,6 +24,20 @@ state:
 ```
 
 The `stateFile` under the `options` section is mandatory for local backend.
+
+## Kubernetes Backend
+
+```yaml
+varFile: variables-gitops.yaml
+
+toolFile: tools-gitops.yaml
+
+state:
+  backend: k8s
+  options:
+    namespace: devstream        # optional, default is "devstream", will be created if not exists
+    configmap: state  # optional, default is "state", will be created if not exists
+```
 
 ## S3 Backend
 

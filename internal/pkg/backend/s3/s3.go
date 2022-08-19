@@ -11,7 +11,13 @@ type S3Backend struct {
 	file *s3.S3File
 }
 
-func NewS3Backend(bucket, region, key string) *S3Backend {
+func NewS3Backend(bucket, region, key string) (*S3Backend, error) {
+	if err := validate(bucket, region, key); err != nil {
+		return nil, err
+	}
+
+	log.Infof("Using s3 backend. Bucket: %s, region: %s, key: %s.", bucket, region, key)
+
 	ctx := context.Background()
 	client, err := s3.NewClient(ctx, region)
 	if err != nil {
@@ -25,7 +31,7 @@ func NewS3Backend(bucket, region, key string) *S3Backend {
 
 	return &S3Backend{
 		file: file,
-	}
+	}, nil
 }
 
 func (b *S3Backend) Read() ([]byte, error) {

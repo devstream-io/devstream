@@ -11,62 +11,9 @@ var _ = Describe("Core Config", func() {
 	Context("Validate method", func() {
 		It("should return error if state config is empty", func() {
 			coreConfig := configmanager.CoreConfig{State: nil}
-			isValid, err := coreConfig.Validate()
-			Expect(isValid).Should(BeFalse())
+			err := coreConfig.Validate()
 			Expect(err).Error().Should(HaveOccurred())
 			Expect(err.Error()).Should(Equal("state config is empty"))
-		})
-
-		It("should return error if backend not exist", func() {
-			coreConfig := configmanager.CoreConfig{
-				State: &configmanager.State{
-					Backend: "not_exist",
-				},
-			}
-			isValid, err := coreConfig.Validate()
-			Expect(isValid).Should(BeFalse())
-			Expect(err).Error().Should(HaveOccurred())
-			Expect(err.Error()).Should(
-				ContainSubstring("backend type error"),
-			)
-		})
-
-		It("should return error s3 option not config", func() {
-			coreConfig := configmanager.CoreConfig{
-				State: &configmanager.State{Backend: "s3"},
-			}
-			isValid, err := coreConfig.Validate()
-			Expect(isValid).Should(BeFalse())
-			Expect(err).Error().Should(HaveOccurred())
-			Expect(err.Error()).Should(
-				ContainSubstring("state s3 Bucket is empty"),
-			)
-		})
-
-		It("should return true if config local valid", func() {
-			coreConfig := configmanager.CoreConfig{
-				State: &configmanager.State{Backend: "local"},
-			}
-			isValid, err := coreConfig.Validate()
-			Expect(isValid).Should(BeTrue())
-			Expect(err).Error().ShouldNot(HaveOccurred())
-		})
-
-		It("should return true if config s3 valid", func() {
-			coreConfig := configmanager.CoreConfig{
-				State: &configmanager.State{
-					Backend: "s3",
-					Options: configmanager.StateConfigOptions{
-						Bucket:    "test_bucket",
-						Region:    "test_region",
-						Key:       "test_key",
-						StateFile: "test_file",
-					},
-				},
-			}
-			isValid, err := coreConfig.Validate()
-			Expect(isValid).Should(BeTrue())
-			Expect(err).Error().ShouldNot(HaveOccurred())
 		})
 	})
 	Context("ParseToolFilePath method", func() {
