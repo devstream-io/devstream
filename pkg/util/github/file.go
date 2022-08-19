@@ -50,7 +50,7 @@ func (c *Client) GetLocationInfo(location string) ([]*git.RepoFileStatus, error)
 		location,
 		&github.RepositoryContentGetOptions{Ref: c.Branch},
 	)
-	if resp.StatusCode == http.StatusNotFound {
+	if resp != nil && resp.StatusCode == http.StatusNotFound {
 		return nil, nil
 	}
 

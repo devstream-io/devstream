@@ -27,5 +27,5 @@ func CaluateGitHubBlobSHA(fileContent string) string {
 	h := sha1.New()
 	h.Write([]byte(p))
 	h.Write([]byte(fileContent))
-	return hex.EncodeToString(h.Sum([]byte(nil)))
+	return hex.EncodeToString(h.Sum(nil))
 }
