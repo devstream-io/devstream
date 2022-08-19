@@ -18,11 +18,14 @@ type Local struct {
 }
 
 // NewLocal will use DefaultStateFile as statemanager file if filename is not given.
-func NewLocal(filename string) *Local {
+func NewLocal(filename string) (*Local, error) {
 	var lFile = filename
 	if filename == "" {
+		log.Debugf("The stateFile has not been set, default value %s will be used.", DefaultStateFile)
 		lFile = DefaultStateFile
 	}
+
+	log.Infof("Using local backend. State file: %s.", filename)
 
 	if _, err := os.Stat(lFile); errors.Is(err, os.ErrNotExist) {
 		file, err := os.Create(lFile)
@@ -35,7 +38,7 @@ func NewLocal(filename string) *Local {
 
 	return &Local{
 		filename: lFile,
-	}
+	}, nil
 }
 
 // Read is used to retrieve the data from local file.

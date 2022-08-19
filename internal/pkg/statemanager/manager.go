@@ -6,7 +6,6 @@ import (
 	"gopkg.in/yaml.v3"
 
 	"github.com/devstream-io/devstream/internal/pkg/backend"
-	"github.com/devstream-io/devstream/internal/pkg/backend/local"
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
@@ -70,9 +69,9 @@ func NewManager(stateConfig configmanager.State) (Manager, error) {
 
 	tmpMap := make(map[StateKey]State)
 	if err = yaml.Unmarshal(data, tmpMap); err != nil {
-		log.Errorf("Failed to unmarshal the state file < %s >. error: %s.", local.DefaultStateFile, err)
-		log.Errorf("Reading the state file failed, it might have been compromised/modified by someone other than DTM.")
-		log.Errorf("The state file is managed by DTM automatically. Please do not modify it yourself.")
+		log.Errorf("Failed to unmarshal the state of type < %s >, . error: %s.", stateConfig.Backend, err)
+		log.Errorf("Reading the state failed, it might have been compromised/modified by someone other than DTM.")
+		log.Errorf("The state is managed by DTM automatically. Please do not modify it yourself.")
 		return nil, fmt.Errorf("state format error")
 	}
 	for k, v := range tmpMap {

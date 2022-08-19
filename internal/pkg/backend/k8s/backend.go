@@ -4,10 +4,13 @@ import (
 	"sync"
 
 	"github.com/devstream-io/devstream/pkg/util/k8s"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 const (
-	stateKey = "state"
+	defaultNamespace     = "devstream"
+	defaultConfigMapName = "devstream-state"
+	stateKey             = "state"
 )
 
 type Backend struct {
@@ -21,6 +24,17 @@ type Backend struct {
 
 // NewBackend returns a backend which uses ConfigMap to store data
 func NewBackend(namespace, configMapName string) (*Backend, error) {
+	// default value
+	if namespace == "" {
+		namespace = defaultNamespace
+	}
+	if configMapName == "" {
+		configMapName = defaultConfigMapName
+	}
+
+	log.Infof("Using configmap backend. Namespace: %s, ConfigMap name: %s.", namespace, configMapName)
+
+	// create client and return
 	c, err := k8s.NewClient()
 	if err != nil {
 		return nil, err

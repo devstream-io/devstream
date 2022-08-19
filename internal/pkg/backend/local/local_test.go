@@ -21,8 +21,9 @@ var _ = Describe("NewLocal func", func() {
 
 	When("input filename", func() {
 		It("should create state file", func() {
-			local.NewLocal(tFileLoc)
-			_, err := os.Stat(tFileLoc)
+			_, err := local.NewLocal(tFileLoc)
+			Expect(err).Should(Succeed())
+			_, err = os.Stat(tFileLoc)
 			Expect(err).Error().ShouldNot(HaveOccurred())
 		})
 	})
@@ -32,13 +33,15 @@ var _ = Describe("Local struct", func() {
 	var (
 		tFile, tFileLoc, tempDir string
 		tLocal                   *local.Local
+		err                      error
 	)
 
 	BeforeEach(func() {
 		tempDir = GinkgoT().TempDir()
 		tFile = "test_state_file"
 		tFileLoc = filepath.Join(tempDir, tFile)
-		tLocal = local.NewLocal(tFileLoc)
+		tLocal, err = local.NewLocal(tFileLoc)
+		Expect(err).ShouldNot(HaveOccurred())
 	})
 
 	Describe("Read method", func() {

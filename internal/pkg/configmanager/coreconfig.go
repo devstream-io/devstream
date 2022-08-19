@@ -4,15 +4,8 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 
-	"github.com/devstream-io/devstream/internal/pkg/backend/local"
 	"github.com/devstream-io/devstream/pkg/util/log"
-)
-
-const (
-	defaultNamespace     = "devstream"
-	defaultConfigMapName = "devstream-state"
 )
 
 // CoreConfig is the struct representing the complete original configuration YAML files.
@@ -46,58 +39,12 @@ type StateConfigOptions struct {
 	ConfigMap string `yaml:"configmap"`
 }
 
-func (c *CoreConfig) ValidateAndDefault() error {
+func (c *CoreConfig) Validate() error {
 	if c.State == nil {
 		return fmt.Errorf("state config is empty")
 	}
 
-	log.Infof("Got Backend from config: %s", c.State.Backend)
-
-	errs := ValidateAndDefaultBackend(c.State)
-	if len(errs) != 0 {
-		var retErr []string
-		log.Error("Config file validation failed.")
-		for i, err := range errs {
-			log.Errorf("%d -> %s.", i+1, err)
-			retErr = append(retErr, err.Error())
-		}
-		return fmt.Errorf("%s", strings.Join(retErr, "; "))
-	}
-
 	return nil
-}
-
-func ValidateAndDefaultBackend(state *State) []error {
-	var errs []error
-	switch {
-	case state.Backend == "local":
-		if state.Options.StateFile == "" {
-			log.Debugf("The stateFile has not been set, default value %s will be used.", local.DefaultStateFile)
-			state.Options.StateFile = local.DefaultStateFile
-		}
-	case state.Backend == "s3":
-		if state.Options.Bucket == "" {
-			errs = append(errs, fmt.Errorf("state s3 Bucket is empty"))
-		}
-		if state.Options.Region == "" {
-			errs = append(errs, fmt.Errorf("state s3 Region is empty"))
-		}
-		if state.Options.Key == "" {
-			errs = append(errs, fmt.Errorf("state s3 Key is empty"))
-		}
-	case strings.ToLower(state.Backend) == "k8s" || strings.ToLower(state.Backend) == "kubernetes":
-		state.Backend = "k8s"
-		if state.Options.Namespace == "" {
-			state.Options.Namespace = defaultNamespace
-		}
-		if state.Options.ConfigMap == "" {
-			state.Options.ConfigMap = defaultConfigMapName
-		}
-	default:
-		errs = append(errs, fmt.Errorf("the backend type < %s > is illegal", state.Backend))
-	}
-
-	return errs
 }
 
 func (c *CoreConfig) ParseVarFilePath() error {
