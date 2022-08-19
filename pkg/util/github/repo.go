@@ -50,7 +50,7 @@ func (c *Client) DescribeRepo() (*github.Repository, error) {
 		c.GetRepoOwner(),
 		c.Repo)
 
-	if resp.StatusCode == http.StatusNotFound {
+	if resp != nil && resp.StatusCode == http.StatusNotFound {
 		return nil, nil
 	}
 

@@ -7,9 +7,9 @@ import (
 
 	"github.com/devstream-io/devstream/internal/pkg/completion"
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
-	"github.com/devstream-io/devstream/internal/pkg/pluginengine"
 	"github.com/devstream-io/devstream/internal/pkg/pluginmanager"
 	"github.com/devstream-io/devstream/internal/pkg/version"
+	"github.com/devstream-io/devstream/pkg/util/file"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -27,6 +27,8 @@ func initCMDFunc(_ *cobra.Command, _ []string) {
 		return
 	}
 
+	file.SetPluginDir(cfg.PluginDir)
+
 	if version.Dev {
 		log.Errorf("Dev version plugins can't be downloaded from the remote plugin repo; please run `make build-plugin.PLUGIN_NAME` to build them locally.")
 		return
@@ -43,7 +45,7 @@ func initCMDFunc(_ *cobra.Command, _ []string) {
 
 func init() {
 	initCMD.Flags().StringVarP(&configFile, configFlagName, "f", "config.yaml", "config file")
-	initCMD.Flags().StringVarP(&pluginDir, pluginDirFlagName, "d", pluginengine.DefaultPluginDir, "plugins directory")
+	initCMD.Flags().StringVarP(&pluginDir, pluginDirFlagName, "d", "", "plugins directory")
 
 	completion.FlagFilenameCompletion(initCMD, configFlagName)
 	completion.FlagDirnameCompletion(initCMD, pluginDirFlagName)

@@ -14,6 +14,8 @@ varFile: variables-gitops.yaml
 
 toolFile: tools-gitops.yaml
 
+pluginDir: /usr/local/devstream/plugins # optional
+
 state:
   backend: local
   options:
@@ -30,6 +32,8 @@ TL;DR: see the config example:
 varFile: variables-gitops.yaml
 
 toolFile: tools-gitops.yaml
+
+pluginDir: /usr/local/.devstream/plugins # optional
 
 state:
   backend: s3
@@ -55,6 +59,8 @@ In short, we can use the "backend" keyword to specify where to store the state: 
 varFile: variables-gitops.yaml
 
 toolFile: tools-gitops.yaml
+
+pluginDir: /usr/local/.devstream/plugins # optional
 
 state:
   backend: s3

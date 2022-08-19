@@ -7,6 +7,7 @@ import (
 
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
+	"github.com/devstream-io/devstream/pkg/util/file"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -18,6 +19,8 @@ func Destroy(configFile string, continueDirectly bool) error {
 	if cfg == nil {
 		return fmt.Errorf("failed to load the config file")
 	}
+
+	file.SetPluginDir(cfg.PluginDir)
 
 	smgr, err := statemanager.NewManager(*cfg.State)
 	if err != nil {

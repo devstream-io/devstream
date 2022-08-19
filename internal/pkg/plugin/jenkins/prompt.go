@@ -10,10 +10,11 @@ import (
 )
 
 func buildPasswdOfAdminCommand(opts jenkinsOptions) string {
-	method := fmt.Sprintf("kubectl exec --namespace jenkins -it svc/%s-jenkins -c jenkins "+
-		"-- /bin/cat /run/secrets/additional/chart-admin-password && echo", opts.Chart.ReleaseName)
+	jenkinsFullName := opts.getJenkinsFullName()
 
-	return method
+	return fmt.Sprintf("kubectl exec --namespace %s -it svc/%s -c jenkins "+
+		"-- /bin/cat /run/secrets/additional/chart-admin-password && echo", opts.Chart.Namespace, jenkinsFullName)
+
 }
 
 func howToGetPasswdOfAdmin(options plugininstaller.RawOptions) error {
@@ -48,21 +49,25 @@ func getPasswdOfAdmin(options plugininstaller.RawOptions) (string, error) {
 }
 
 // getJenkinsURL returns the jenkins url of the jenkins, format: hostname:port
+// there are duplicated code in getJenkinsURLForTestEnv, need to refactor
 func getJenkinsURL(options plugininstaller.RawOptions) (string, error) {
 	opts, err := newOptions(options)
 	if err != nil {
 		return "", err
 	}
 
+	jenkinsFullName := opts.getJenkinsFullName()
 	commands := []string{
 		`jsonpath="{.spec.ports[0].nodePort}"`,
-		fmt.Sprintf(`NODE_PORT=$(kubectl get -n jenkins -o jsonpath=$jsonpath services %s-jenkins)`, opts.Chart.ReleaseName),
+		fmt.Sprintf(`NODE_PORT=$(kubectl get -n %s -o jsonpath=$jsonpath services %s)`, opts.Chart.Namespace, jenkinsFullName),
 		`jsonpath="{.items[0].status.addresses[0].address}"`,
-		`NODE_IP=$(kubectl get nodes -n jenkins -o jsonpath=$jsonpath)`,
+		fmt.Sprintf(`NODE_IP=$(kubectl get nodes -n %s -o jsonpath=$jsonpath)`, opts.Chart.Namespace),
 		`echo $NODE_IP:$NODE_PORT`,
 	}
+	commandsOneLine := strings.Join(commands, " && ")
+	log.Debugf("commands of get jenkins url: %s", commandsOneLine)
 
-	cmd := exec.Command("sh", "-c", strings.Join(commands, " && "))
+	cmd := exec.Command("sh", "-c", commandsOneLine)
 
 	output, err := cmd.Output()
 	if err != nil {
@@ -79,15 +84,18 @@ func getJenkinsURLForTestEnv(options plugininstaller.RawOptions) (string, error)
 		return "", err
 	}
 
+	jenkinsFullName := opts.getJenkinsFullName()
 	commands := []string{
 		`jsonpath="{.spec.ports[0].nodePort}"`,
-		fmt.Sprintf(`NODE_PORT=$(kubectl get -n jenkins -o jsonpath=$jsonpath services %s-jenkins)`, opts.Chart.ReleaseName),
+		fmt.Sprintf(`NODE_PORT=$(kubectl get -n %s -o jsonpath=$jsonpath services %s)`, opts.Chart.Namespace, jenkinsFullName),
 		`jsonpath="{.items[0].status.addresses[0].address}"`,
 		`NODE_IP=127.0.0.1`,
 		`echo $NODE_IP:$NODE_PORT`,
 	}
+	commandsOneLine := strings.Join(commands, " && ")
+	log.Debugf("commands of get jenkins url: %s", commandsOneLine)
 
-	cmd := exec.Command("sh", "-c", strings.Join(commands, " && "))
+	cmd := exec.Command("sh", "-c", commandsOneLine)
 
 	output, err := cmd.Output()
 	if err != nil {
@@ -130,7 +138,7 @@ func showJenkinsUrl(options plugininstaller.RawOptions) error {
 			log.Error(err)
 			return err
 		}
-		log.Info("Jenkins url in K8s:", fmt.Sprintf("http://%s/login", urlInK8s))
+		log.Info("Jenkins url in K8s: ", fmt.Sprintf("http://%s/login", urlInK8s))
 
 	}
 

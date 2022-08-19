@@ -8,6 +8,7 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/pluginmanager"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
+	"github.com/devstream-io/devstream/pkg/util/file"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -20,6 +21,8 @@ func Remove(configFile string, continueDirectly bool, isForceDelete bool) error 
 	if cfg == nil {
 		return fmt.Errorf("failed to load the config file")
 	}
+
+	file.SetPluginDir(cfg.PluginDir)
 
 	err = pluginmanager.CheckLocalPlugins(cfg)
 	if err != nil {

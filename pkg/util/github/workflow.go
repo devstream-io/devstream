@@ -104,7 +104,7 @@ func (c *Client) VerifyWorkflows(workflows []*Workflow) (map[string]error, error
 	)
 
 	// StatusCode == 404
-	if resp.StatusCode == http.StatusNotFound {
+	if resp != nil && resp.StatusCode == http.StatusNotFound {
 		log.Errorf("GetContents return with status code 404.")
 		retMap := mapz.FillMapWithStrAndError(wsFiles, fmt.Errorf("not found"))
 		return retMap, nil
@@ -150,7 +150,7 @@ func (c *Client) GetWorkflowPath() (string, error) {
 		&github.RepositoryContentGetOptions{},
 	)
 
-	if resp.StatusCode == http.StatusNotFound {
+	if resp != nil && resp.StatusCode == http.StatusNotFound {
 		return "", nil
 	}
 
@@ -171,7 +171,7 @@ func (c *Client) FetchRemoteContent(wsFiles []string) ([]string, map[string]erro
 		&github.RepositoryContentGetOptions{},
 	)
 
-	if resp.StatusCode == http.StatusNotFound {
+	if resp != nil && resp.StatusCode == http.StatusNotFound {
 		log.Error("GetContents returned with status code 404.")
 		retMap := mapz.FillMapWithStrAndError(wsFiles, fmt.Errorf("not found"))
 		return nil, retMap, nil
