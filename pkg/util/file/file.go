@@ -10,11 +10,6 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-const (
-	defaultTempName    = "pkg-util-file-create_"
-	appNamePlaceHolder = "_app_name_"
-)
-
 var DefaultPluginDir string
 
 func init() {

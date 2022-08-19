@@ -1,11 +1,15 @@
 package github_test
 
 import (
+	"context"
 	"net/http"
+	"net/url"
 	"testing"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+
+	githubCommon "github.com/google/go-github/v42/github"
 
 	"github.com/devstream-io/devstream/pkg/util/git"
 	"github.com/devstream-io/devstream/pkg/util/github"
@@ -17,6 +21,8 @@ var (
 	serverURL string
 	teardown  func()
 )
+
+const basePath = "/api-v3"
 
 var _ = BeforeSuite(func() {
 	mux, serverURL, teardown = util_github.Setup()
@@ -36,4 +42,18 @@ func CreateClientWithOr(opt *git.RepoInfo) *github.Client {
 func TestPlanmanager(t *testing.T) {
 	RegisterFailHandler(Fail)
 	RunSpecs(t, "GitHub Suite")
+}
+
+func newTestClient(baseUrl string, repoInfo *git.RepoInfo) *github.Client {
+	githubClient := githubCommon.NewClient(nil)
+	url, _ := url.Parse(baseUrl + basePath + "/")
+
+	githubClient.BaseURL = url
+	githubClient.UploadURL = url
+
+	return &github.Client{
+		RepoInfo: repoInfo,
+		Client:   githubClient,
+		Context:  context.Background(),
+	}
 }

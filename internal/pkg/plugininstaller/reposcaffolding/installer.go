@@ -12,7 +12,7 @@ func InstallRepo(options plugininstaller.RawOptions) error {
 	}
 
 	// 1. Create and render repo get from given url
-	dirPath, err := opts.SourceRepo.CreateAndRenderLocalRepo(
+	gitMap, err := opts.SourceRepo.CreateAndRenderLocalRepo(
 		opts.DestinationRepo.Repo, opts.renderTplConfig(),
 	)
 	if err != nil {
@@ -20,7 +20,7 @@ func InstallRepo(options plugininstaller.RawOptions) error {
 	}
 
 	// 2. Push local repo to remote
-	return opts.DestinationRepo.CreateAndPush(dirPath)
+	return opts.DestinationRepo.CreateAndPush(gitMap)
 }
 
 // DeleteRepo will delete repo by options

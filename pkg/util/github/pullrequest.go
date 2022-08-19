@@ -3,6 +3,7 @@ package github
 import (
 	"fmt"
 
+	"github.com/devstream-io/devstream/pkg/util/git"
 	"github.com/devstream-io/devstream/pkg/util/log"
 
 	"github.com/google/go-github/v42/github"
@@ -16,9 +17,9 @@ const (
 	MergeMethodRebase MergeMethod = "rebase"
 )
 
-func (c *Client) NewPullRequest(fromBranch string) (int, error) {
-	title := "feat: initialized by DevStream"
-	head := fromBranch
+func (c *Client) NewPullRequest(commitInfo *git.CommitInfo) (int, error) {
+	title := commitInfo.CommitMsg
+	head := commitInfo.CommitBranch
 	base := c.Branch
 	body := title
 	mcm := false
