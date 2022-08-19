@@ -30,7 +30,11 @@ Harbor 部署架构整体如下图所示(图片来自 Harbor 官网)：
 
 ## 3、开始部署
 
-下文将介绍如何配置 `harbor` 插件，完成 Harbor 应用的部署。演示环境为一台 Linux 云主机，上面装有以 minikube 方式部署的单节点 k8s 集群。
+下文将介绍如何配置 `harbor` 插件，完成 Harbor 应用的部署。
+
+说明：本文所使用的演示环境为一台 Linux 云主机，上面装有以 minikube 方式部署的单节点 k8s 集群。
+minikube 方式部署的 k8s 集群自带一个默认的 StorageClass，另外部署 Ingress 控制器只需要执行 `minikube addons enable ingress` 命令即可。
+其他方式部署的 k8s 集群中如何配置 StorageClass 和 Ingress Controller，请查阅[ k8s 官方文档](https://kubernetes.io)。
 
 你可以选择顺序阅读本文档，从而全面了解 `harbor` 插件的使用方法；也可以选择直接跳到下文"典型场景"小节，直接寻找你感兴趣的使用场景开始阅读。
 
@@ -39,7 +43,25 @@ Harbor 部署架构整体如下图所示(图片来自 Harbor 官网)：
 如果仅是用于开发、测试等目的，希望快速完成 Harbor 的部署，可以使用如下配置快速开始：
 
 ```yaml
---8<-- "harbor.yaml"
+tools:
+- name: harbor
+  instanceID: default
+  dependsOn: [ ]
+  options:
+    create_namespace: true
+    chart:
+      values_yaml: |
+        externalURL: http://127.0.0.1
+        expose:
+          type: nodePort
+          tls:
+            enabled: false
+        chartmuseum:
+          enabled: false
+        notary:
+          enabled: false
+        trivy:
+          enabled: false
 ```
 
 *注意：这个配置示例仅是 tool config，完整的 DevStream 配置文件还需要补充 core config 等内容，具体参考[这个文档](../../core-concepts/config.zh)。*
@@ -134,7 +156,7 @@ kubectl port-forward -n harbor service/harbor --address=${ip} 80
 
 *注意：这里得使用主机真实网卡 ip，而我们在浏览器上输入的 ip 是云主机的公网 ip，两者并不一样。*
 
-### 3.2、最小化配置
+### 3.2、默认配置
 
 `harbor` 插件的配置项多数都有默认值，具体默认值信息如下表：
 
@@ -150,29 +172,13 @@ kubectl port-forward -n harbor service/harbor --address=${ip} 80
 | repo.name          | harbor                   | helm 仓库名                           |
 | create_namespace   | false                    | 是否需要 dtm 来新建命名空间              |
 
-目前除了 `values_yaml` 字段和默认配置，其它所有示例参数均为必填项。因此，我们可以使用如下最小化配置达到和上面"快速开始"配置文件一样的效果：
+因此完整的配置文件应该是这样：
 
 ```yaml
-tools:
-- name: harbor
-  instanceID: default
-  dependsOn: [ ]
-  options:
-    create_namespace: true
-    chart:
-      values_yaml: |
-        externalURL: http://127.0.0.1
-        expose:
-          type: nodePort
-          tls:
-            enabled: false
-        chartmuseum:
-          enabled: false
-        notary:
-          enabled: false
-        trivy:
-          enabled: false
+--8<-- "harbor.yaml"
 ```
+
+目前除了 `values_yaml` 字段和默认配置，其它所有示例参数均为必填项。
 
 ### 3.3、持久化存储数据
 
