@@ -11,8 +11,7 @@ var _ = Describe("Core Config", func() {
 	Context("Validate method", func() {
 		It("should return error if state config is empty", func() {
 			coreConfig := configmanager.CoreConfig{State: nil}
-			isValid, err := coreConfig.Validate()
-			Expect(isValid).Should(BeFalse())
+			err := coreConfig.ValidateAndDefault()
 			Expect(err).Error().Should(HaveOccurred())
 			Expect(err.Error()).Should(Equal("state config is empty"))
 		})
@@ -23,8 +22,7 @@ var _ = Describe("Core Config", func() {
 					Backend: "not_exist",
 				},
 			}
-			isValid, err := coreConfig.Validate()
-			Expect(isValid).Should(BeFalse())
+			err := coreConfig.ValidateAndDefault()
 			Expect(err).Error().Should(HaveOccurred())
 			Expect(err.Error()).Should(
 				ContainSubstring("backend type error"),
@@ -35,8 +33,7 @@ var _ = Describe("Core Config", func() {
 			coreConfig := configmanager.CoreConfig{
 				State: &configmanager.State{Backend: "s3"},
 			}
-			isValid, err := coreConfig.Validate()
-			Expect(isValid).Should(BeFalse())
+			err := coreConfig.ValidateAndDefault()
 			Expect(err).Error().Should(HaveOccurred())
 			Expect(err.Error()).Should(
 				ContainSubstring("state s3 Bucket is empty"),
@@ -47,8 +44,7 @@ var _ = Describe("Core Config", func() {
 			coreConfig := configmanager.CoreConfig{
 				State: &configmanager.State{Backend: "local"},
 			}
-			isValid, err := coreConfig.Validate()
-			Expect(isValid).Should(BeTrue())
+			err := coreConfig.ValidateAndDefault()
 			Expect(err).Error().ShouldNot(HaveOccurred())
 		})
 
@@ -64,8 +60,7 @@ var _ = Describe("Core Config", func() {
 					},
 				},
 			}
-			isValid, err := coreConfig.Validate()
-			Expect(isValid).Should(BeTrue())
+			err := coreConfig.ValidateAndDefault()
 			Expect(err).Error().ShouldNot(HaveOccurred())
 		})
 	})

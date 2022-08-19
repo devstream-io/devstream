@@ -7,9 +7,7 @@ import (
 )
 
 const (
-	defaultNamespace     = "devstream"
-	defaultConfigMapName = "devstream-state"
-	stateKey             = "state"
+	stateKey = "state"
 )
 
 type Backend struct {
@@ -32,12 +30,6 @@ func NewBackend(namespace, configMapName string) (*Backend, error) {
 		namespace:     namespace,
 		configMapName: configMapName,
 		client:        c,
-	}
-	if b.namespace == "" {
-		b.namespace = defaultNamespace
-	}
-	if b.configMapName == "" {
-		b.configMapName = defaultConfigMapName
 	}
 
 	return b, nil

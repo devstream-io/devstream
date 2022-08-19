@@ -10,6 +10,11 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
+const (
+	defaultNamespace     = "devstream"
+	defaultConfigMapName = "devstream-state"
+)
+
 // CoreConfig is the struct representing the complete original configuration YAML files.
 type CoreConfig struct {
 	// TODO(daniel-hutao): Relative path support
@@ -41,46 +46,58 @@ type StateConfigOptions struct {
 	ConfigMap string `yaml:"configmap"`
 }
 
-func (c *CoreConfig) Validate() (bool, error) {
+func (c *CoreConfig) ValidateAndDefault() error {
 	if c.State == nil {
-		return false, fmt.Errorf("state config is empty")
+		return fmt.Errorf("state config is empty")
 	}
-
-	errors := make([]error, 0)
 
 	log.Infof("Got Backend from config: %s", c.State.Backend)
-	switch c.State.Backend {
-	case "local":
-		if c.State.Options.StateFile == "" {
-			log.Debugf("The stateFile has not been set, default value %s will be used.", local.DefaultStateFile)
-			c.State.Options.StateFile = local.DefaultStateFile
-		}
-	case "s3":
-		if c.State.Options.Bucket == "" {
-			errors = append(errors, fmt.Errorf("state s3 Bucket is empty"))
-		}
-		if c.State.Options.Region == "" {
-			errors = append(errors, fmt.Errorf("state s3 Region is empty"))
-		}
-		if c.State.Options.Key == "" {
-			errors = append(errors, fmt.Errorf("state s3 Key is empty"))
-		}
-	case "k8s":
-	default:
-		errors = append(errors, fmt.Errorf("backend type error"))
-	}
 
-	if len(errors) != 0 {
+	errs := ValidateAndDefaultBackend(c.State)
+	if len(errs) != 0 {
 		var retErr []string
 		log.Error("Config file validation failed.")
-		for i, err := range errors {
+		for i, err := range errs {
 			log.Errorf("%d -> %s.", i+1, err)
 			retErr = append(retErr, err.Error())
 		}
-		return false, fmt.Errorf("%s", strings.Join(retErr, "; "))
+		return fmt.Errorf("%s", strings.Join(retErr, "; "))
 	}
 
-	return true, nil
+	return nil
+}
+
+func ValidateAndDefaultBackend(state *State) []error {
+	var errs []error
+	switch {
+	case state.Backend == "local":
+		if state.Options.StateFile == "" {
+			log.Debugf("The stateFile has not been set, default value %s will be used.", local.DefaultStateFile)
+			state.Options.StateFile = local.DefaultStateFile
+		}
+	case state.Backend == "s3":
+		if state.Options.Bucket == "" {
+			errs = append(errs, fmt.Errorf("state s3 Bucket is empty"))
+		}
+		if state.Options.Region == "" {
+			errs = append(errs, fmt.Errorf("state s3 Region is empty"))
+		}
+		if state.Options.Key == "" {
+			errs = append(errs, fmt.Errorf("state s3 Key is empty"))
+		}
+	case strings.ToLower(state.Backend) == "k8s" || strings.ToLower(state.Backend) == "kubernetes":
+		state.Backend = "k8s"
+		if state.Options.Namespace == "" {
+			state.Options.Namespace = defaultNamespace
+		}
+		if state.Options.ConfigMap == "" {
+			state.Options.ConfigMap = defaultConfigMapName
+		}
+	default:
+		errs = append(errs, fmt.Errorf("the backend type < %s > is illegal", state.Backend))
+	}
+
+	return errs
 }
 
 func (c *CoreConfig) ParseVarFilePath() error {

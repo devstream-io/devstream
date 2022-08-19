@@ -27,24 +27,24 @@ type Backend interface {
 }
 
 // GetBackend will return a Backend by the given name.
-func GetBackend(stateConfig configmanager.State) (Backend, error) {
-	typeName := Type(stateConfig.Backend)
+func GetBackend(state configmanager.State) (Backend, error) {
+	typeName := Type(state.Backend)
 	switch typeName {
 	case Local:
-		log.Debugf("Used the Backend: %s.", typeName)
-		return local.NewLocal(stateConfig.Options.StateFile), nil
+		log.Infof("Using local backend. State file: %s.", state.Options.StateFile)
+		return local.NewLocal(state.Options.StateFile), nil
 	case S3:
-		log.Debugf("Used the Backend: %s.", typeName)
+		log.Infof("Using s3 backend. Bucket: %s, region: %s, key: %s.", state.Options.Bucket, state.Options.Region, state.Options.Key)
 		return s3.NewS3Backend(
-			stateConfig.Options.Bucket,
-			stateConfig.Options.Region,
-			stateConfig.Options.Key,
+			state.Options.Bucket,
+			state.Options.Region,
+			state.Options.Key,
 		), nil
 	case K8s:
-		log.Debugf("Used the Backend: %s.", typeName)
+		log.Infof("Using configmap backend. Namespace: %s, ConfigMap name: %s.", state.Options.Namespace, state.Options.ConfigMap)
 		return k8s.NewBackend(
-			stateConfig.Options.Namespace,
-			stateConfig.Options.ConfigMap)
+			state.Options.Namespace,
+			state.Options.ConfigMap)
 	default:
 		return nil, fmt.Errorf("the backend type < %s > is illegal", typeName)
 	}

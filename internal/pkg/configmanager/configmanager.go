@@ -105,7 +105,7 @@ func (m *Manager) renderConfigs(coreConfigBytes, variablesConfigBytes, toolsConf
 		log.Errorf("Please verify the format of your core config. Error: %s.", err)
 		return nil, err
 	}
-	if ok, err := coreConfig.Validate(); !ok {
+	if err := coreConfig.ValidateAndDefault(); err != nil {
 		return nil, err
 	}
 	state := coreConfig.State

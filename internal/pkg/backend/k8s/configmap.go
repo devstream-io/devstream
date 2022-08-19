@@ -4,9 +4,9 @@ import (
 	"context"
 
 	v1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	corev1 "k8s.io/client-go/applyconfigurations/core/v1"
-	"k8s.io/client-go/tools/record/util"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
@@ -53,36 +53,34 @@ func (b *Backend) getOrCreateConfigMap() (*v1.ConfigMap, error) {
 	}
 
 	// if configmap not exist, create it
-	log.Info("configmap not exist, will create it")
+	log.Infof("configmap %s in namespace %s not exist, will create it", b.configMapName, b.namespace)
 	return b.applyConfigMap("")
 }
 
 func (b *Backend) getConfigMap() (cm *v1.ConfigMap, exist bool, err error) {
 	configMap, err := b.client.CoreV1().ConfigMaps(b.namespace).Get(context.Background(), b.configMapName, metav1.GetOptions{})
 	// if configmap not exist, return nil
-	if util.IsKeyNotFoundError(err) {
+	if errors.IsNotFound(err) {
 		return nil, false, nil
 	}
 	if err != nil {
 		return nil, false, err
 	}
 
-	log.Debugf("configmap %s found, detail: %s", configMap.Name, configMap.String())
+	log.Debugf("configmap %s in namespace %s found, detail: %v", configMap.Name, configMap.Namespace, configMap)
 
 	return configMap, true, nil
 }
 
 func (b *Backend) createNamespaceIfNotExist() error {
-	_, err := b.client.CoreV1().Namespaces().Get(context.Background(), b.namespace, metav1.GetOptions{})
-	// if namespace not exist, try to create it
-	if util.IsKeyNotFoundError(err) {
+	exist, err := b.client.IsNamespaceExists(b.namespace)
+	if err != nil {
+		return err
+	}
+	if !exist {
 		log.Infof("namespace %s not exist, will create it", b.namespace)
-		_, err = b.client.CoreV1().Namespaces().Create(context.Background(), &v1.Namespace{
-			ObjectMeta: metav1.ObjectMeta{
-				Name: b.namespace,
-			},
-		}, metav1.CreateOptions{})
+		return b.client.CreateNamespace(b.namespace)
 	}
 
-	return err
+	return nil
 }
