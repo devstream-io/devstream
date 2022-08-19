@@ -10,11 +10,7 @@ func (c *Client) UpsertNameSpace(nameSpace string) error {
 		return err
 	}
 	if !exist {
-		err = c.CreateNamespace(nameSpace)
-		if err != nil {
-			log.Debugf("Failed to create the namespace: %s.", nameSpace)
-			return err
-		}
+		return c.CreateNamespace(nameSpace)
 	}
 	log.Debugf("The namespace %s has been existed.", nameSpace)
 	return nil
