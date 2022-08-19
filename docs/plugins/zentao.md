@@ -16,6 +16,7 @@ This plugin installs [ZenTao](https://zentao.net/) in an existing Kubernetes clu
 # core config
 varFile: ''
 toolFile: ''
+pluginDir: ''
 state: # state config, backend can be local or s3
   backend: local
   options:

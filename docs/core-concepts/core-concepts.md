@@ -30,6 +30,7 @@ The main config file contains:
 
 - `varFile`: the file path for the var file
 - `toolFile`: the file path for the tool file
+- `pluginDir`: the directory path for the plugin directory, default: ~/.devstream/plugins, or use `-d` flag to specify a directory
 - `state`: settings related to the state. For more information, see [here](./stateconfig.md).
 
 The variable config file is a YAML file containing keys and values, which can be used in the tool config file.

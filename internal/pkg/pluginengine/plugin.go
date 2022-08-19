@@ -1,10 +1,10 @@
 package pluginengine
 
 import (
+	"github.com/spf13/viper"
+
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 )
-
-const DefaultPluginDir = ".devstream"
 
 // DevStreamPlugin is a struct, on which Create/Read/Update/Delete interfaces are defined.
 type DevStreamPlugin interface {
@@ -18,7 +18,7 @@ type DevStreamPlugin interface {
 
 // Create loads the plugin and calls the Create method of that plugin.
 func Create(tool *configmanager.Tool) (map[string]interface{}, error) {
-	pluginDir := getPluginDir()
+	pluginDir := viper.GetString("plugin-dir")
 	p, err := loadPlugin(pluginDir, tool)
 	if err != nil {
 		return nil, err
@@ -28,7 +28,7 @@ func Create(tool *configmanager.Tool) (map[string]interface{}, error) {
 
 // Update loads the plugin and calls the Update method of that plugin.
 func Update(tool *configmanager.Tool) (map[string]interface{}, error) {
-	pluginDir := getPluginDir()
+	pluginDir := viper.GetString("plugin-dir")
 	p, err := loadPlugin(pluginDir, tool)
 	if err != nil {
 		return nil, err
@@ -37,7 +37,7 @@ func Update(tool *configmanager.Tool) (map[string]interface{}, error) {
 }
 
 func Read(tool *configmanager.Tool) (map[string]interface{}, error) {
-	pluginDir := getPluginDir()
+	pluginDir := viper.GetString("plugin-dir")
 	p, err := loadPlugin(pluginDir, tool)
 	if err != nil {
 		return nil, err
@@ -47,7 +47,7 @@ func Read(tool *configmanager.Tool) (map[string]interface{}, error) {
 
 // Delete loads the plugin and calls the Delete method of that plugin.
 func Delete(tool *configmanager.Tool) (bool, error) {
-	pluginDir := getPluginDir()
+	pluginDir := viper.GetString("plugin-dir")
 	p, err := loadPlugin(pluginDir, tool)
 	if err != nil {
 		return false, err

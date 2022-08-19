@@ -16,7 +16,9 @@ type CoreConfig struct {
 	VarFile string `yaml:"varFile"`
 	// TODO(daniel-hutao): Relative path support
 	ToolFile string `yaml:"toolFile"`
-	State    *State `yaml:"state"`
+	// abs path of the plugin dir
+	PluginDir string `yaml:"pluginDir"`
+	State     *State `yaml:"state"`
 }
 
 // State is the struct for reading the state configuration in the config file.

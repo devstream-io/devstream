@@ -30,7 +30,7 @@ func applyCMDFunc(cmd *cobra.Command, args []string) {
 
 func init() {
 	applyCMD.Flags().StringVarP(&configFile, configFlagName, "f", "config.yaml", "config file")
-	applyCMD.Flags().StringVarP(&pluginDir, pluginDirFlagName, "d", pluginengine.DefaultPluginDir, "plugins directory")
+	applyCMD.Flags().StringVarP(&pluginDir, pluginDirFlagName, "d", "", "plugins directory")
 	applyCMD.Flags().BoolVarP(&continueDirectly, "yes", "y", false, "apply directly without confirmation")
 
 	completion.FlagFilenameCompletion(applyCMD, configFlagName)

@@ -4,18 +4,8 @@ import (
 	"fmt"
 	"plugin"
 
-	"github.com/spf13/viper"
-
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 )
-
-func getPluginDir() string {
-	var pluginDir string
-	if pluginDir = viper.GetString("plugin-dir"); pluginDir == "" {
-		pluginDir = DefaultPluginDir
-	}
-	return pluginDir
-}
 
 func loadPlugin(pluginDir string, tool *configmanager.Tool) (DevStreamPlugin, error) {
 	mod := fmt.Sprintf("%s/%s", pluginDir, configmanager.GetPluginFileName(tool))
