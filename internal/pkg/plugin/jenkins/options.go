@@ -28,3 +28,14 @@ func (opts *jenkinsOptions) encode() (map[string]interface{}, error) {
 	}
 	return options, nil
 }
+
+func setDefaultValue(defaultOpts *helm.Options) plugininstaller.MutableOperation {
+	return func(options plugininstaller.RawOptions) (plugininstaller.RawOptions, error) {
+		opts, err := newOptions(options)
+		if err != nil {
+			return nil, err
+		}
+		opts.FillDefaultValue(defaultOpts)
+		return opts.encode()
+	}
+}

@@ -73,7 +73,7 @@ func (c *Client) DeleteRepoSecret(secretKey string) error {
 	ctx := context.Background()
 	response, err := client.Actions.DeleteRepoSecret(ctx, c.GetRepoOwner(), c.Repo, secretKey)
 
-	if response.StatusCode == http.StatusNotFound {
+	if response != nil && response.StatusCode == http.StatusNotFound {
 		return nil
 	}
 
@@ -89,7 +89,7 @@ func (c *Client) RepoSecretExists(secretKey string) (bool, error) {
 	ctx := context.Background()
 	_, response, err := client.Actions.GetRepoSecret(ctx, c.GetRepoOwner(), c.Repo, secretKey)
 
-	if response.StatusCode == http.StatusNotFound {
+	if response != nil && response.StatusCode == http.StatusNotFound {
 		return false, nil
 	}
 

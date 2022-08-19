@@ -1,7 +1,6 @@
 package git_test
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -39,7 +38,7 @@ var _ = Describe("CommitInfo struct", func() {
 				dstPath = filepath.Join(tempDir, "dstFile")
 				testFile, err := os.CreateTemp(tempDir, "test")
 				Expect(err).Error().ShouldNot(HaveOccurred())
-				err = ioutil.WriteFile(testFile.Name(), fileContent, 0755)
+				err = os.WriteFile(testFile.Name(), fileContent, 0755)
 				Expect(err).Error().ShouldNot(HaveOccurred())
 				filePaths = []*git.GitFilePathInfo{
 					{
@@ -70,7 +69,7 @@ var _ = Describe("GenerateGitFileInfo func", func() {
 		tempFile, err := os.CreateTemp(tempDir, "test")
 		tempFileLoc = tempFile.Name()
 		Expect(err).Error().ShouldNot(HaveOccurred())
-		err = ioutil.WriteFile(tempFileLoc, testContent, 0755)
+		err = os.WriteFile(tempFileLoc, testContent, 0755)
 		Expect(err).Error().ShouldNot(HaveOccurred())
 	})
 	When("path not exist", func() {

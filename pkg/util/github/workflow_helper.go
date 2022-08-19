@@ -24,8 +24,7 @@ func (c *Client) getFileSHA(filename string) (string, error) {
 		&github.RepositoryContentGetOptions{},
 	)
 
-	// error reason is 404
-	if resp.StatusCode == http.StatusNotFound {
+	if resp != nil && resp.StatusCode == http.StatusNotFound {
 		return "", nil
 	}
 
