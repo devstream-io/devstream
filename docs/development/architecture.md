@@ -56,7 +56,7 @@ The `statemanager` stores the state in a [`backend`](https://github.com/devstrea
 
 ### 2.4 Backend Manager
 
-The [`backend`](https://github.com/devstream-io/devstream/tree/main/internal/pkg/backend) package is the backend manager, which manages the actual state. Currently, local and remote (AWS S3 compatible) state are supported.
+The [`backend`](https://github.com/devstream-io/devstream/tree/main/internal/pkg/backend) package is the backend manager, which manages the actual state. Currently, local, remote (AWS S3 compatible), and k8s(ConfigMap) state are supported.
 
 ## 3 Plugin
 

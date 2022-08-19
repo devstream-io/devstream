@@ -2,6 +2,7 @@ package statemanager
 
 import (
 	"fmt"
+	"strings"
 
 	"gopkg.in/yaml.v3"
 
@@ -53,7 +54,7 @@ func NewManager(stateConfig configmanager.State) (Manager, error) {
 		log.Infof("Using local backend. State file: %s.", stateConfig.Options.StateFile)
 	} else if stateConfig.Backend == "s3" {
 		log.Infof("Using s3 backend. Bucket: %s, region: %s, key: %s.", stateConfig.Options.Bucket, stateConfig.Options.Region, stateConfig.Options.Key)
-	} else if stateConfig.Backend == "configmap" {
+	} else if strings.ToLower(stateConfig.Backend) == "k8s" || strings.ToLower(stateConfig.Backend) == "kubernetes" {
 		log.Infof("Using configmap backend. Namespace: %s, ConfigMap name: %s.", stateConfig.Options.Namespace, stateConfig.Options.ConfigMap)
 	} else {
 		return nil, fmt.Errorf("the backend type < %s > is illegal", stateConfig.Backend)

@@ -3,7 +3,7 @@ package backend
 import (
 	"fmt"
 
-	"github.com/devstream-io/devstream/internal/pkg/backend/configmap"
+	"github.com/devstream-io/devstream/internal/pkg/backend/k8s"
 	"github.com/devstream-io/devstream/internal/pkg/backend/local"
 	"github.com/devstream-io/devstream/internal/pkg/backend/s3"
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
@@ -13,12 +13,12 @@ import (
 type Type string
 
 const (
-	Local     Type = "local"
-	S3        Type = "s3"
-	ConfigMap Type = "configmap"
+	Local Type = "local"
+	S3    Type = "s3"
+	K8s   Type = "k8s"
 )
 
-// Backend is used to persist data, it can be local file/etcd/s3/...
+// Backend is used to persist data, it can be local file/etcd/s3/k8s...
 type Backend interface {
 	// Read is used to read data from persistent storage.
 	Read() ([]byte, error)
@@ -40,9 +40,9 @@ func GetBackend(stateConfig configmanager.State) (Backend, error) {
 			stateConfig.Options.Region,
 			stateConfig.Options.Key,
 		), nil
-	case ConfigMap:
+	case K8s:
 		log.Debugf("Used the Backend: %s.", typeName)
-		return configmap.NewBackend(
+		return k8s.NewBackend(
 			stateConfig.Options.Namespace,
 			stateConfig.Options.ConfigMap)
 	default:

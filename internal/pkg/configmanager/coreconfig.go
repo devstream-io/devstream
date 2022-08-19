@@ -65,7 +65,7 @@ func (c *CoreConfig) Validate() (bool, error) {
 		if c.State.Options.Key == "" {
 			errors = append(errors, fmt.Errorf("state s3 Key is empty"))
 		}
-	case "configmap":
+	case "k8s":
 	default:
 		errors = append(errors, fmt.Errorf("backend type error"))
 	}
