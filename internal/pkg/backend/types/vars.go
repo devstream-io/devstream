@@ -7,8 +7,8 @@ func (t Type) String() string {
 }
 
 const (
-	Local   Type = "local"
-	S3      Type = "s3"
-	K8s     Type = "k8s"
-	K8sAlis Type = "kubernetes"
+	Local    Type = "local"
+	S3       Type = "s3"
+	K8s      Type = "k8s"
+	K8sAlias Type = "kubernetes"
 )

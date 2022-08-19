@@ -10,7 +10,7 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 )
 
-// Backend is used to persist data, it can be local file/etcd/s3/k8s...
+// Backend is used to persist data, it can be local file/s3/k8s...
 type Backend interface {
 	// Read is used to read data from persistent storage.
 	Read() ([]byte, error)
@@ -20,20 +20,15 @@ type Backend interface {
 
 // GetBackend will return a Backend by the given name.
 func GetBackend(state configmanager.State) (Backend, error) {
-	typeName := types.Type(state.Backend)
-	switch {
-	case types.Local == typeName:
+	typeName := types.Type(strings.ToLower(state.Backend))
+
+	switch typeName {
+	case types.Local:
 		return local.NewLocal(state.Options.StateFile)
-	case types.S3 == typeName:
-		return s3.NewS3Backend(
-			state.Options.Bucket,
-			state.Options.Region,
-			state.Options.Key)
-	case strings.ToLower(state.Backend) == types.K8s.String() ||
-		strings.ToLower(state.Backend) == types.K8sAlis.String():
-		return k8s.NewBackend(
-			state.Options.Namespace,
-			state.Options.ConfigMap)
+	case types.S3:
+		return s3.NewS3Backend(state.Options.Bucket, state.Options.Region, state.Options.Key)
+	case types.K8s, types.K8sAlias:
+		return k8s.NewBackend(state.Options.Namespace, state.Options.ConfigMap)
 	default:
 		return nil, types.NewInvalidBackendErr(state.Backend)
 	}

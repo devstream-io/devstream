@@ -9,7 +9,7 @@ import (
 
 const (
 	defaultNamespace     = "devstream"
-	defaultConfigMapName = "devstream-state"
+	defaultConfigMapName = "state"
 	stateKey             = "state"
 )
 

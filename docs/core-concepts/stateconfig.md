@@ -36,7 +36,7 @@ state:
   backend: k8s
   options:
     namespace: devstream        # optional, default is "devstream", will be created if not exists
-    configmap: devstream-state  # optional, default is "devstream-state", will be created if not exists
+    configmap: state  # optional, default is "state", will be created if not exists
 ```
 
 ## S3 Backend
