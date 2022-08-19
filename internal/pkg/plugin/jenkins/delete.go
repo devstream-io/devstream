@@ -15,7 +15,6 @@ func Delete(options map[string]interface{}) (bool, error) {
 		},
 		ExecuteOperations: plugininstaller.ExecuteOperations{
 			helm.Delete,
-			helm.DealWithNsWhenInterruption,
 			postDelete,
 		},
 	}

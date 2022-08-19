@@ -80,6 +80,6 @@ This plugin support `Ingress`, `ClusterIP`, `NodePort`, `LoadBalancer` , You can
 | chart.namespace    | harbor                   | namespace where helm to deploy                     |
 | repo.url           | https://helm.goharbor.io | helm official repo address                         |
 | repo.name          | harbor                   | helm repo name                                     |
-| create_namespace   | false                    | whether to create namespace if namespace not eixst |
+| create_namespace   | true                     | make sure namespace exist                          |
 
 Currently, except for `values_yaml` and default configs, all the parameters in the example above are mandatory.

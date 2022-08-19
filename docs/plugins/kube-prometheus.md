@@ -20,6 +20,7 @@ This plugin installs [kube-prometheus](https://github.com/prometheus-operator/ku
 | chart.namespace    | prometheus                                         | namespace where helm to deploy                     |
 | repo.url           | https://prometheus-community.github.io/helm-charts | helm official repo address                         |
 | repo.name          | prometheus-community                               | helm repo name                                     |
-| create_namespace   | false                                              | whether to create namespace if namespace not eixst |
+| create_namespace   | true                                               | make sure namespace exist                          |
+
 
 Currently, except for `values_yaml` and default configs, all the parameters in the example above are mandatory.

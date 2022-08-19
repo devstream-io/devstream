@@ -19,7 +19,7 @@ This plugin installs [tekton](https://tekton.dev/) in an existing Kubernetes clu
 | chart.namespace    | tekton                                          | namespace where helm to deploy                     |
 | repo.url           | https://steinliber.github.io/tekton-helm-chart/ | helm community repo address                        |
 | repo.name          | tekton                                          | helm repo name                                     |
-| create_namespace   | false                                           | whether to create namespace if namespace not eixst |
+| create_namespace   | true                                            | make sure namespace exist                          |
 
 
 Currently, except for `values_yaml` and default configs, all the parameters in the example above are mandatory.

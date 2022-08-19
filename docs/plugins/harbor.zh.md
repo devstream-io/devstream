@@ -78,6 +78,6 @@ Harbor的大部分组件都是无状态的。因此我们可以通过增加 `Pod
 | chart.namespace    | harbor                   | helm 部署的命名空间名称                            |
 | repo.url           | https://helm.goharbor.io | helm 官方仓库地址                                  |
 | repo.name          | harbor                   | helm 仓库名                                        |
-| create_namespace   | false                    | 是否需要新建命名空间                               |
+| create_namespace   | true                     | 确保命名空间存在                                   |
 
 目前除了 `values_yaml` 字段和默认配置，其它所有示例参数均为必填项。

@@ -17,11 +17,9 @@ var (
 	}
 	DefaultDeleteOperations = plugininstaller.ExecuteOperations{
 		Delete,
-		DealWithNsWhenInterruption,
 	}
 	DefaultTerminateOperations = plugininstaller.TerminateOperations{
 		Delete,
-		DealWithNsWhenInterruption,
 	}
 )
 
@@ -61,43 +59,7 @@ func DealWithNsWhenInstall(options plugininstaller.RawOptions) error {
 	if err != nil {
 		return err
 	}
-
-	err = kubeClient.CreateNamespace(opts.Chart.Namespace)
-	if err != nil {
-		log.Debugf("Failed to create the namespace: %s.", opts.Chart.Namespace)
-		return err
-	}
-
-	log.Debugf("The namespace %s has been created.", opts.Chart.Namespace)
-	return nil
-}
-
-// DealWithNsWhenInterruption will Delete namespace by input options
-func DealWithNsWhenInterruption(options plugininstaller.RawOptions) error {
-	opts, err := NewOptions(options)
-	if err != nil {
-		return err
-	}
-
-	if !opts.CheckIfCreateNamespace() {
-		return err
-	}
-
-	log.Debugf("Prepare to delete the namespace: %s.", opts.Chart.Namespace)
-
-	kubeClient, err := k8s.NewClient()
-	if err != nil {
-		return err
-	}
-
-	err = kubeClient.DeleteNamespace(opts.Chart.Namespace)
-	if err != nil {
-		log.Debugf("Failed to delete the namespace: %s.", opts.Chart.Namespace)
-		return err
-	}
-
-	log.Debugf("The namespace %s has been deleted.", opts.Chart.Namespace)
-	return err
+	return kubeClient.UpsertNameSpace(opts.Chart.Namespace)
 }
 
 // Delete will delete service base on input options

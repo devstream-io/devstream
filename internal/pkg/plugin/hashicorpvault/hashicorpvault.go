@@ -15,7 +15,7 @@ var defaultHelmConfig = helm.Options{
 		ReleaseName: "vault",
 		Namespace:   "vault",
 	},
-	CreateNamespace: types.Bool(false),
+	CreateNamespace: types.Bool(true),
 	Repo: helmCommon.Repo{
 		URL:  "https://helm.releases.hashicorp.com",
 		Name: "hashicorp",

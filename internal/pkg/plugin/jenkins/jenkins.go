@@ -17,7 +17,7 @@ var defaultHelmConfig = helm.Options{
 		ReleaseName: "jenkins",
 		Namespace:   "jenkins",
 	},
-	CreateNamespace: types.Bool(false),
+	CreateNamespace: types.Bool(true),
 	Repo: helmCommon.Repo{
 		URL:  "https://charts.jenkins.io",
 		Name: "jenkins",
