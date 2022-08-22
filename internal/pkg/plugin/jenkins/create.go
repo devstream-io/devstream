@@ -19,8 +19,6 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 			helm.InstallOrUpdate,
 			// show how to get pwd of the admin user
 			howToGetPasswdOfAdmin,
-			// show jenkins url
-			showJenkinsUrl,
 		},
 		TerminateOperations: helm.DefaultTerminateOperations,
 		GetStateOperation:   getHelmResourceAndCustomResource,
