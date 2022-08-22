@@ -3,8 +3,6 @@ tools:
     # id of the tool instance
     instanceID: default
     options:
-      # need to create the namespace or not, default: false
-      create_namespace: true
       repo:
         # name of the Helm repo
         name: hashicorp

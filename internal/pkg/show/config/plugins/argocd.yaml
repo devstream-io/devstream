@@ -7,8 +7,6 @@ tools:
     dependsOn: [ ]
     # options for the plugin
     options:
-      # need to create the namespace or not, default: false
-      create_namespace: true
       # Helm repo information, this section is optional
       repo:
         # name of the Helm repo

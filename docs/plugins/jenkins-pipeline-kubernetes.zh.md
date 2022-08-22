@@ -39,8 +39,6 @@ tools:
       # if true, the plugin will use hostpath to create a pv named `jenkins-pv`
       # and you should create the volumes directory manually, see plugin doc for details.
       test_env: false
-      # need to create the namespace or not, default: false
-      create_namespace: false
       # Helm repo information
       repo:
         # name of the Helm repo
