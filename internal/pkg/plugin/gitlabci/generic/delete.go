@@ -1,40 +1,26 @@
 package generic
 
 import (
-	"fmt"
-
-	"github.com/mitchellh/mapstructure"
-
-	"github.com/devstream-io/devstream/pkg/util/git"
-	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/gitlabci"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
 )
 
 func Delete(options map[string]interface{}) (bool, error) {
-	var opts Options
-	if err := mapstructure.Decode(options, &opts); err != nil {
-		return false, err
+	operator := &plugininstaller.Operator{
+		PreExecuteOperations: plugininstaller.PreExecuteOperations{
+			ci.SetDefaultConfig(gitlabci.DefaultCIOptions),
+			ci.Validate,
+		},
+		ExecuteOperations: plugininstaller.ExecuteOperations{
+			ci.DeleteCIFiles,
+		},
 	}
 
-	if errs := validate(&opts); len(errs) != 0 {
-		for _, e := range errs {
-			log.Errorf("Options error: %s.", e)
-		}
-		return false, fmt.Errorf("opts are illegal")
-	}
-
-	client, err := opts.newGitlabClient()
+	// Execute all Operations in Operator
+	_, err := operator.Execute(plugininstaller.RawOptions(options))
 	if err != nil {
 		return false, err
 	}
-	commitInfo := &git.CommitInfo{
-		CommitMsg:    commitMessage,
-		CommitBranch: opts.Branch,
-		GitFileMap:   git.GitFileContentMap{ciFileName: []byte("")},
-	}
-
-	if err = client.DeleteFiles(commitInfo); err != nil {
-		return false, err
-	}
-
 	return true, nil
 }

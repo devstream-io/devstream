@@ -22,5 +22,4 @@ func Delete(options map[string]interface{}) (bool, error) {
 		return false, err
 	}
 	return true, nil
-
 }
