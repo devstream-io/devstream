@@ -128,7 +128,7 @@ standard (default)   k8s.io/minikube-hostpath   Delete          Immediate       
 
 `jenkins` 插件的配置项多数都有默认值，具体默认值信息如下表：
 
-| 键                 | 默认值                     | 描述                                |
+| 配置项              | 默认值                     | 描述                                |
 | ----               | ----                      | ----                               |
 | chart.chart_name   | jenkins/jenkins           | helm chart 包名称                   |
 | chart.timeout      | 5m                        | helm install 的超时时间              |

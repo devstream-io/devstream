@@ -159,7 +159,7 @@ kubectl port-forward -n harbor service/harbor --address=${ip} 80
 
 `harbor` 插件的配置项多数都有默认值，具体默认值信息如下表：
 
-| 键                 | 默认值                    | 描述                                 |
+| 配置项              | 默认值                    | 描述                                 |
 | ----               | ----                     | ----                                |
 | chart.chart_name   | harbor/harbor            | helm chart 包名称                    |
 | chart.timeout      | 10m                      | helm install 的超时时间               |
