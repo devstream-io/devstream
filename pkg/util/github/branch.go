@@ -5,6 +5,7 @@ import (
 
 	"github.com/google/go-github/v42/github"
 
+	"github.com/devstream-io/devstream/pkg/util/git"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -34,8 +35,8 @@ func (c *Client) DeleteBranch(branch string) error {
 	return err
 }
 
-func (c *Client) MergeCommits(mergeBranch string) error {
-	number, err := c.NewPullRequest(mergeBranch)
+func (c *Client) MergeCommits(commitInfo *git.CommitInfo) error {
+	number, err := c.NewPullRequest(commitInfo)
 	if err != nil {
 		return err
 	}

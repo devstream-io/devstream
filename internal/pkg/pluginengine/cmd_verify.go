@@ -4,6 +4,7 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/pluginmanager"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
+	"github.com/devstream-io/devstream/pkg/util/file"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -18,6 +19,8 @@ func Verify(configFile string) bool {
 	if cfg == nil {
 		return false
 	}
+
+	file.SetPluginDir(cfg.PluginDir)
 
 	// 2. according to the config, all needed plugins exist
 	err = pluginmanager.CheckLocalPlugins(cfg)

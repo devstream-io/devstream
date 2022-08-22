@@ -75,7 +75,7 @@ var _ = Describe("commit method", func() {
 			))
 		})
 		It("should work normal", func() {
-			needRollBack, err := gitlabClient.PushLocalFileToRepo(commitInfo)
+			needRollBack, err := gitlabClient.PushLocalFileToRepo(commitInfo, false)
 			Expect(err).Error().ShouldNot(HaveOccurred())
 			Expect(needRollBack).Should(BeFalse())
 			err = gitlabClient.DeleteFiles(commitInfo)

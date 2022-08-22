@@ -4,9 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 
-	"github.com/devstream-io/devstream/internal/pkg/backend/local"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -16,7 +14,9 @@ type CoreConfig struct {
 	VarFile string `yaml:"varFile"`
 	// TODO(daniel-hutao): Relative path support
 	ToolFile string `yaml:"toolFile"`
-	State    *State `yaml:"state"`
+	// abs path of the plugin dir
+	PluginDir string `yaml:"pluginDir"`
+	State     *State `yaml:"state"`
 }
 
 // State is the struct for reading the state configuration in the config file.
@@ -34,47 +34,17 @@ type StateConfigOptions struct {
 	Key    string `yaml:"key"`
 	// for local backend
 	StateFile string `yaml:"stateFile"`
+	// for ConfigMap backend
+	Namespace string `yaml:"namespace"`
+	ConfigMap string `yaml:"configmap"`
 }
 
-func (c *CoreConfig) Validate() (bool, error) {
+func (c *CoreConfig) Validate() error {
 	if c.State == nil {
-		return false, fmt.Errorf("state config is empty")
+		return fmt.Errorf("state config is empty")
 	}
 
-	errors := make([]error, 0)
-
-	log.Infof("Got Backend from config: %s", c.State.Backend)
-	switch c.State.Backend {
-	case "local":
-		if c.State.Options.StateFile == "" {
-			log.Debugf("The stateFile has not been set, default value %s will be used.", local.DefaultStateFile)
-			c.State.Options.StateFile = local.DefaultStateFile
-		}
-	case "s3":
-		if c.State.Options.Bucket == "" {
-			errors = append(errors, fmt.Errorf("state s3 Bucket is empty"))
-		}
-		if c.State.Options.Region == "" {
-			errors = append(errors, fmt.Errorf("state s3 Region is empty"))
-		}
-		if c.State.Options.Key == "" {
-			errors = append(errors, fmt.Errorf("state s3 Key is empty"))
-		}
-	default:
-		errors = append(errors, fmt.Errorf("backend type error"))
-	}
-
-	if len(errors) != 0 {
-		var retErr []string
-		log.Error("Config file validation failed.")
-		for i, err := range errors {
-			log.Errorf("%d -> %s.", i+1, err)
-			retErr = append(retErr, err.Error())
-		}
-		return false, fmt.Errorf("%s", strings.Join(retErr, "; "))
-	}
-
-	return true, nil
+	return nil
 }
 
 func (c *CoreConfig) ParseVarFilePath() error {

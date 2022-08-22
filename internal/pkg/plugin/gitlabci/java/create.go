@@ -43,7 +43,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		GitFileMap: git.GitFileContentMap{
 			ciFileName: []byte(content),
 		},
-	})
+	}, false)
 	if err != nil {
 		return nil, err
 	}

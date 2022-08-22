@@ -20,8 +20,9 @@ var (
 
 // Config records rendered config values and is used as a general config in DevStream.
 type Config struct {
-	Tools []Tool `yaml:"tools"`
-	State *State
+	PluginDir string
+	Tools     []Tool `yaml:"tools"`
+	State     *State
 }
 
 func (c *Config) Validate() []error {
@@ -104,7 +105,7 @@ func (m *Manager) renderConfigs(coreConfigBytes, variablesConfigBytes, toolsConf
 		log.Errorf("Please verify the format of your core config. Error: %s.", err)
 		return nil, err
 	}
-	if ok, err := coreConfig.Validate(); !ok {
+	if err := coreConfig.Validate(); err != nil {
 		return nil, err
 	}
 	state := coreConfig.State
@@ -116,8 +117,9 @@ func (m *Manager) renderConfigs(coreConfigBytes, variablesConfigBytes, toolsConf
 	}
 
 	return &Config{
-		Tools: tools,
-		State: state,
+		PluginDir: coreConfig.PluginDir,
+		Tools:     tools,
+		State:     state,
 	}, nil
 }
 

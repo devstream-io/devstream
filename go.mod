@@ -18,6 +18,7 @@ require (
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/google/go-cmp v0.5.8
 	github.com/google/go-github/v42 v42.0.0
+	github.com/mitchellh/go-homedir v1.1.0
 	github.com/mitchellh/mapstructure v1.4.1
 	github.com/mittwald/go-helm-client v0.8.4
 	github.com/onsi/ginkgo/v2 v2.1.4
@@ -28,7 +29,7 @@ require (
 	github.com/spf13/viper v1.8.1
 	github.com/stretchr/testify v1.7.0
 	github.com/tcnksm/go-input v0.0.0-20180404061846-548a7d7a8ee8
-	github.com/withfig/autocomplete-tools/integrations/cobra v0.0.0-20220721102007-67b2515c5ea4
+	github.com/withfig/autocomplete-tools/integrations/cobra v0.0.0-20220812023423-ab97a51a0978
 	github.com/xanzy/go-gitlab v0.55.1
 	go.uber.org/multierr v1.6.0
 	golang.org/x/crypto v0.0.0-20211215153901-e495a2d5b3d3
@@ -146,7 +147,6 @@ require (
 	github.com/mattn/go-runewidth v0.0.9 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.2-0.20181231171920-c182affec369 // indirect
 	github.com/mitchellh/copystructure v1.1.1 // indirect
-	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/go-wordwrap v1.0.0 // indirect
 	github.com/mitchellh/reflectwalk v1.0.1 // indirect
 	github.com/moby/locker v1.0.1 // indirect

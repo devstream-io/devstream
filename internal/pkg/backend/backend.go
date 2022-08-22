@@ -1,22 +1,16 @@
 package backend
 
 import (
-	"fmt"
+	"strings"
 
+	"github.com/devstream-io/devstream/internal/pkg/backend/k8s"
 	"github.com/devstream-io/devstream/internal/pkg/backend/local"
 	"github.com/devstream-io/devstream/internal/pkg/backend/s3"
+	"github.com/devstream-io/devstream/internal/pkg/backend/types"
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
-	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-type Type string
-
-const (
-	Local Type = "local"
-	S3    Type = "s3"
-)
-
-// Backend is used to persist data, it can be local file/etcd/s3/...
+// Backend is used to persist data, it can be local file/s3/k8s...
 type Backend interface {
 	// Read is used to read data from persistent storage.
 	Read() ([]byte, error)
@@ -25,20 +19,17 @@ type Backend interface {
 }
 
 // GetBackend will return a Backend by the given name.
-func GetBackend(stateConfig configmanager.State) (Backend, error) {
-	typeName := Type(stateConfig.Backend)
+func GetBackend(state configmanager.State) (Backend, error) {
+	typeName := types.Type(strings.ToLower(state.Backend))
+
 	switch typeName {
-	case Local:
-		log.Debugf("Used the Backend: %s.", typeName)
-		return local.NewLocal(stateConfig.Options.StateFile), nil
-	case S3:
-		log.Debugf("Used the Backend: %s.", typeName)
-		return s3.NewS3Backend(
-			stateConfig.Options.Bucket,
-			stateConfig.Options.Region,
-			stateConfig.Options.Key,
-		), nil
+	case types.Local:
+		return local.NewLocal(state.Options.StateFile)
+	case types.S3:
+		return s3.NewS3Backend(state.Options.Bucket, state.Options.Region, state.Options.Key)
+	case types.K8s, types.K8sAlias:
+		return k8s.NewBackend(state.Options.Namespace, state.Options.ConfigMap)
 	default:
-		return nil, fmt.Errorf("the backend type < %s > is illegal", typeName)
+		return nil, types.NewInvalidBackendErr(state.Backend)
 	}
 }

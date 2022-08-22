@@ -1,10 +1,12 @@
-package file
+package file_test
 
 import (
 	"fmt"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+
+	"github.com/devstream-io/devstream/pkg/util/file"
 )
 
 var _ = Describe("replaceAppNameInPathStr func", func() {
@@ -22,8 +24,7 @@ var _ = Describe("replaceAppNameInPathStr func", func() {
 			filePath = "/app/dev"
 		})
 		It("should return same filePath", func() {
-			newPath, err := replaceAppNameInPathStr(filePath, placeHolder, appName)
-			Expect(err).Error().ShouldNot(HaveOccurred())
+			newPath := file.ReplaceAppNameInPathStr(filePath, placeHolder, appName)
 			Expect(newPath).Should(Equal(filePath))
 		})
 	})
@@ -32,8 +33,7 @@ var _ = Describe("replaceAppNameInPathStr func", func() {
 			filePath = fmt.Sprintf("app/%s/dev", placeHolder)
 		})
 		It("should replace placeHolder with app name", func() {
-			newPath, err := replaceAppNameInPathStr(filePath, placeHolder, appName)
-			Expect(err).Error().ShouldNot(HaveOccurred())
+			newPath := file.ReplaceAppNameInPathStr(filePath, placeHolder, appName)
 			Expect(newPath).Should(Equal(fmt.Sprintf("app/%s/dev", appName)))
 		})
 	})

@@ -63,7 +63,7 @@ func (c *Client) DescribeRepo() (*github.Repository, error) {
 
 // PushLocalPathToBranch will push local change to remote repo
 // return boolean value is for control whether to rollout if encounter error
-func (c *Client) PushLocalFileToRepo(commitInfo *git.CommitInfo) (bool, error) {
+func (c *Client) PushLocalFileToRepo(commitInfo *git.CommitInfo, checkChange bool) (bool, error) {
 	// 1. create new branch from main
 	ref, err := c.NewBranch(commitInfo.CommitBranch)
 	if err != nil {
@@ -77,7 +77,7 @@ func (c *Client) PushLocalFileToRepo(commitInfo *git.CommitInfo) (bool, error) {
 			log.Warnf("Failed to delete transit branch: %s", err)
 		}
 	}()
-	tree, err := c.BuildCommitTree(ref, commitInfo)
+	tree, err := c.BuildCommitTree(ref, commitInfo, checkChange)
 
 	// 2. push local file change to new branch
 	if err := c.PushLocalPath(ref, tree, commitInfo); err != nil {
@@ -86,7 +86,7 @@ func (c *Client) PushLocalFileToRepo(commitInfo *git.CommitInfo) (bool, error) {
 	}
 
 	// 3. merge new branch to main
-	if err = c.MergeCommits(commitInfo.CommitBranch); err != nil {
+	if err = c.MergeCommits(commitInfo); err != nil {
 		log.Debugf("Failed to merge commits: %s.", err)
 		return true, err
 	}
@@ -109,35 +109,6 @@ func (c *Client) InitRepo() error {
 	}
 	log.Debugf("Added the .placeholder file.")
 	return nil
-}
-
-func (c *Client) PushInitRepo(commitInfo *git.CommitInfo) error {
-	// 1. init repo
-	if err := c.InitRepo(); err != nil {
-		return err
-	}
-
-	// if encounter rollout error, delete repo
-	var needRollBack bool
-	defer func() {
-		if !needRollBack {
-			return
-		}
-		// need to clean the repo created when retErr != nil
-		if err := c.DeleteRepo(); err != nil {
-			log.Errorf("Failed to delete the repo %s: %s.", c.Repo, err)
-		}
-	}()
-
-	// 2. push local path to repo
-	needRollBack, err := c.PushLocalFileToRepo(commitInfo)
-	if err != nil {
-		return err
-	}
-
-	// 3. protect branch
-	err = c.ProtectBranch(c.Branch)
-	return err
 }
 
 // ProtectBranch will protect the special branch

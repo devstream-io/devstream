@@ -7,28 +7,8 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-// https://docs.gitlab.com/ee/api/commits.html
-// https://github.com/xanzy/go-gitlab/blob/master/commits.go
-func (c *Client) DeleteFiles(commitInfo *git.CommitInfo) error {
-	deleteCommitoptions := c.CreateCommitInfo(gitlab.FileDelete, commitInfo)
-	_, _, err := c.Commits.CreateCommit(c.GetRepoPath(), deleteCommitoptions)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (c *Client) UpdateFiles(commitInfo *git.CommitInfo) error {
-	updateCommitoptions := c.CreateCommitInfo(gitlab.FileUpdate, commitInfo)
-	_, _, err := c.Commits.CreateCommit(c.GetRepoPath(), updateCommitoptions)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (c *Client) PushLocalFileToRepo(commitInfo *git.CommitInfo) (bool, error) {
+// TODO(steinliber) gitlab does'nt support checkUpdate for now
+func (c *Client) PushLocalFileToRepo(commitInfo *git.CommitInfo, checkUpdate bool) (bool, error) {
 	createCommitOptions := c.CreateCommitInfo(gitlab.FileCreate, commitInfo)
 	_, response, err := c.Commits.CreateCommit(c.GetRepoPath(), createCommitOptions)
 	log.Debug(response.Body)

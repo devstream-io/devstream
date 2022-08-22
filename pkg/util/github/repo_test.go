@@ -133,7 +133,7 @@ var _ = Describe("Repo", func() {
 
 		It("1. create new branch from main", func() {
 			s.SetUnhandledRequestStatusCode(http.StatusInternalServerError)
-			r, err := rightClient.PushLocalFileToRepo(commitInfo)
+			r, err := rightClient.PushLocalFileToRepo(commitInfo, false)
 			Expect(err).NotTo(Succeed())
 			Expect(err.Error()).To(ContainSubstring(strconv.Itoa(http.StatusInternalServerError)))
 			Expect(r).To(Equal(false))
@@ -147,7 +147,7 @@ var _ = Describe("Repo", func() {
 			s.RouteToHandler("GET", u, func(w http.ResponseWriter, r *http.Request) {
 				fmt.Fprint(w, "")
 			})
-			r, err := rightClient.PushLocalFileToRepo(commitInfo)
+			r, err := rightClient.PushLocalFileToRepo(commitInfo, false)
 			Expect(err).NotTo(Succeed())
 			Expect(err.Error()).To(ContainSubstring(strconv.Itoa(http.StatusInternalServerError)))
 			Expect(r).To(Equal(false))

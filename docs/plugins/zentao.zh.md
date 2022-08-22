@@ -15,6 +15,7 @@
 # core config
 varFile: ''
 toolFile: ''
+pluginDir: ''
 state: # state config, backend can be local or s3
   backend: local
   options:
