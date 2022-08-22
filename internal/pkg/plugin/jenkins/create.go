@@ -16,7 +16,6 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		},
 		ExecuteOperations: plugininstaller.ExecuteOperations{
 			helm.DealWithNsWhenInstall,
-			preCreate,
 			helm.InstallOrUpdate,
 			// show how to get pwd of the admin user
 			howToGetPasswdOfAdmin,
