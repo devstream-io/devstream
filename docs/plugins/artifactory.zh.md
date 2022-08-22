@@ -56,6 +56,5 @@ values_yaml: |
 | chart.namespace    | artifactory             | helm 部署的命名空间名称                            |
 | repo.url           | https://charts.jfrog.io | helm 官方仓库地址                                  |
 | repo.name          | jfrog                   | helm 仓库名                                        |
-| create_namespace   | true                    | 确保命名空间存在                                   |
 
 目前除了 `values_yaml` 字段和默认配置，其它所有示例参数均为必填项。

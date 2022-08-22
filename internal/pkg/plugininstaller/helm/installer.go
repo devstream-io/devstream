@@ -48,11 +48,6 @@ func DealWithNsWhenInstall(options plugininstaller.RawOptions) error {
 	if err != nil {
 		return err
 	}
-	if !opts.CheckIfCreateNamespace() {
-		log.Debugf("There's no need to delete the namespace for the create_namespace == false in the config file.")
-		return nil
-	}
-
 	log.Debugf("Prepare to create the namespace: %s.", opts.GetNamespace())
 
 	kubeClient, err := k8s.NewClient()

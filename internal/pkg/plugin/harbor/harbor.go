@@ -15,7 +15,6 @@ var defaultHelmConfig = helm.Options{
 		ReleaseName: "harbor",
 		Namespace:   "harbor",
 	},
-	CreateNamespace: types.Bool(true),
 	Repo: helmCommon.Repo{
 		URL:  "https://helm.goharbor.io",
 		Name: "harbor",

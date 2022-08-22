@@ -58,7 +58,6 @@ chown -R 1000:1000 <your-dtm-home-dir>/data/jenkins-volume/
 | chart.namespace    | jenkins                   | namespace where helm to deploy                     |
 | repo.url           | https://charts.jenkins.io | helm official repo address                         |
 | repo.name          | jenkins                   | helm repo name                                     |
-| create_namespace   | true                      | make sure namespace exist                          |
 
 
 Currently, expect default configs all the parameters in the example above are mandatory.

@@ -15,7 +15,6 @@ var defaultHelmConfig = helm.Options{
 		ReleaseName: "argocd",
 		Namespace:   "argocd",
 	},
-	CreateNamespace: types.Bool(true),
 	Repo: helmCommon.Repo{
 		URL:  "https://argoproj.github.io/argo-helm",
 		Name: "argo",

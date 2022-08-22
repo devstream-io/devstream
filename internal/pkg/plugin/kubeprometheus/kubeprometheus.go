@@ -15,7 +15,6 @@ var defaultHelmConfig = helm.Options{
 		ReleaseName: "prometheus",
 		Namespace:   "prometheus",
 	},
-	CreateNamespace: types.Bool(true),
 	Repo: helmCommon.Repo{
 		URL:  "https://prometheus-community.github.io/helm-charts",
 		Name: "prometheus-community",

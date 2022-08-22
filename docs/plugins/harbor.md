@@ -41,7 +41,6 @@ tools:
   instanceID: default
   dependsOn: [ ]
   options:
-    create_namespace: true
     chart:
       values_yaml: |
         externalURL: http://127.0.0.1
@@ -158,7 +157,6 @@ The `harbor` plugin provides default values for many options:
 | chart.namespace    | harbor                   | namespace                       |
 | repo.url           | https://helm.goharbor.io | helm repo URL                        |
 | repo.name          | harbor                   | helm repo name                      |
-| create_namespace   | true                     | make sure namespace exist                          |
 
 A maximum config is as follows:
 
