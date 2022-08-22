@@ -11,12 +11,10 @@ func Delete(options map[string]interface{}) (bool, error) {
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			setDefaultValue(defaultHelmConfig),
 			helm.Validate,
-			replaceStroageClass,
 		},
 		ExecuteOperations: plugininstaller.ExecuteOperations{
 			helm.Delete,
 			helm.DealWithNsWhenInterruption,
-			postDelete,
 		},
 	}
 	_, err := operator.Execute(plugininstaller.RawOptions(options))

@@ -13,7 +13,6 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			setDefaultValue(defaultHelmConfig),
 			helm.Validate,
-			replaceStroageClass,
 		},
 		ExecuteOperations:   helm.DefaultUpdateOperations,
 		TerminateOperations: helm.DefaultTerminateOperations,

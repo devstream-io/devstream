@@ -7,9 +7,6 @@ tools:
     dependsOn: [ ]
     # options for the plugin
     options:
-      # if true, the plugin will use hostpath to create a pv named `jenkins-pv`
-      # and you should create the volumes directory manually, see plugin doc for details.
-      test_env: false
       # need to create the namespace or not, default: false
       create_namespace: false
       # Helm repo information
@@ -22,8 +19,6 @@ tools:
       chart:
         # name of the chart
         chart_name: jenkins/jenkins
-        # release name of the chart
-        release_name: dev
         # k8s namespace where jenkins will be installed
         namespace: jenkins
         # whether to wait for the release to be deployed or not
@@ -35,11 +30,9 @@ tools:
         # custom configuration. You can refer to [Jenkins values.yaml](https://github.com/jenkinsci/helm-charts/blob/main/charts/jenkins/values.yaml)
         values_yaml: |
           persistence:
-            # for prod env: the existent storageClass, please change it
-            # for test env: just ignore it, but don't remove it
-            storageClass: jenkins-pv
+            storageClass: default
           serviceAccount:
-            create: false
+            create: true
             name: jenkins
           controller:
             serviceType: NodePort

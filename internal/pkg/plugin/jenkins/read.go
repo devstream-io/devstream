@@ -12,7 +12,6 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			setDefaultValue(defaultHelmConfig),
 			helm.Validate,
-			replaceStroageClass,
 		},
 		GetStateOperation: getHelmResourceAndCustomResource,
 	}
