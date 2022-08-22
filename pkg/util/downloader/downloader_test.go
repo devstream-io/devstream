@@ -104,3 +104,55 @@ var _ = Describe("Downloader", func() {
 		})
 	})
 })
+
+var _ = Describe("FetchContentFromURL func", func() {
+	var (
+		server                  *ghttp.Server
+		testPath, remoteContent string
+	)
+
+	BeforeEach(func() {
+		testPath = "/testPath"
+		server = ghttp.NewServer()
+	})
+
+	When("server return error code", func() {
+		BeforeEach(func() {
+			server.AppendHandlers(
+				ghttp.CombineHandlers(
+					ghttp.VerifyRequest("GET", testPath),
+					ghttp.RespondWith(http.StatusNotFound, ""),
+				),
+			)
+
+		})
+		It("should return err", func() {
+			reqURL := fmt.Sprintf("%s%s", server.URL(), testPath)
+			_, err := downloader.FetchContentFromURL(reqURL)
+			Expect(err).Error().Should(HaveOccurred())
+		})
+	})
+
+	When("server return success", func() {
+		BeforeEach(func() {
+			remoteContent = "download content"
+			server.AppendHandlers(
+				ghttp.CombineHandlers(
+					ghttp.VerifyRequest("GET", testPath),
+					ghttp.RespondWith(http.StatusOK, remoteContent),
+				),
+			)
+		})
+
+		It("download the correct content", func() {
+			reqURL := fmt.Sprintf("%s%s", server.URL(), testPath)
+			content, err := downloader.FetchContentFromURL(reqURL)
+			Expect(err).Error().ShouldNot(HaveOccurred())
+			Expect(string(content)).Should(Equal(remoteContent))
+		})
+	})
+
+	AfterEach(func() {
+		server.Close()
+	})
+})

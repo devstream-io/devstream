@@ -12,7 +12,7 @@ import (
 )
 
 func (b *Backend) applyConfigMap(content string) (*v1.ConfigMap, error) {
-	if err := b.createNamespaceIfNotExist(); err != nil {
+	if err := b.client.UpsertNameSpace(b.namespace); err != nil {
 		return nil, err
 	}
 
@@ -70,17 +70,4 @@ func (b *Backend) getConfigMap() (cm *v1.ConfigMap, exist bool, err error) {
 	log.Debugf("configmap %s in namespace %s found, detail: %v", configMap.Name, configMap.Namespace, configMap)
 
 	return configMap, true, nil
-}
-
-func (b *Backend) createNamespaceIfNotExist() error {
-	exist, err := b.client.IsNamespaceExists(b.namespace)
-	if err != nil {
-		return err
-	}
-	if !exist {
-		log.Infof("namespace %s not exist, will create it", b.namespace)
-		return b.client.CreateNamespace(b.namespace)
-	}
-
-	return nil
 }
