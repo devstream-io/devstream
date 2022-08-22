@@ -20,7 +20,6 @@ This plugin installs [OpenLDAP](https://www.openldap.org/) in an existing Kubern
 | chart.namespace    | openldap                                  | namespace where helm to deploy                     |
 | repo.url           | https://jp-gouin.github.io/helm-openldap/ | helm repo address                                  |
 | repo.name          | helm-openldap                             | helm repo name                                     |
-| create_namespace   | false                                     | whether to create namespace if namespace not eixst |
 
 ## Description of Key Fields in `values_yaml`
 

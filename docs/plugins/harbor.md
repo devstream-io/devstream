@@ -41,7 +41,6 @@ tools:
   instanceID: default
   dependsOn: [ ]
   options:
-    create_namespace: true
     chart:
       values_yaml: |
         externalURL: http://127.0.0.1
@@ -158,12 +157,9 @@ The `harbor` plugin provides default values for many options:
 | chart.namespace    | harbor                   | namespace                       |
 | repo.url           | https://helm.goharbor.io | helm repo URL                        |
 | repo.name          | harbor                   | helm repo name                      |
-| create_namespace   | false                    | creating a new namespace with DevStream or not           |
 
 A maximum config is as follows:
 
 ```yaml
 --8<-- "harbor.yaml"
 ```
-
-Except for `values_yaml`, all options are mandatory.

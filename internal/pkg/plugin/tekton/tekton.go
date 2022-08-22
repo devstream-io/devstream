@@ -15,7 +15,6 @@ var defaultHelmConfig = helm.Options{
 		ReleaseName: "tekton",
 		Namespace:   "tekton",
 	},
-	CreateNamespace: types.Bool(false),
 	Repo: helmCommon.Repo{
 		URL:  "https://steinliber.github.io/tekton-helm-chart/",
 		Name: "tekton",

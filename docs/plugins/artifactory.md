@@ -56,6 +56,4 @@ This plugin support`Ingress`, `ClusterIP`, `NodePort` and `LoadBalancer` , You c
 | chart.namespace    | artifactory             | namespace where helm to deploy                     |
 | repo.url           | https://charts.jfrog.io | offical helm repo address                          |
 | repo.name          | jfrog                   | helm repo name                                     |
-| create_namespace   | false                   | whether to create namespace if namespace not eixst |
-
 Currently, except for `values_yaml` and default configs, all the parameters in the example above are mandatory.

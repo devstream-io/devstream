@@ -65,7 +65,6 @@ tools:
 - name: argocd
   instanceID: default
   options:
-    create_namespace: true
     repo:
       name: argo
       url: https://argoproj.github.io/argo-helm

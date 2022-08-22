@@ -15,7 +15,6 @@ var defaultHelmConfig = helm.Options{
 		ReleaseName: "openldap",
 		Namespace:   "openldap",
 	},
-	CreateNamespace: types.Bool(false),
 	Repo: helmCommon.Repo{
 		URL:  "https://jp-gouin.github.io/helm-openldap/",
 		Name: "helm-openldap",

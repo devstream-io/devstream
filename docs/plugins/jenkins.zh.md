@@ -24,7 +24,6 @@
 | chart.namespace    | jenkins                   | helm 部署的命名空间名称                            |
 | repo.url           | https://charts.jenkins.io | helm 官方仓库地址                                  |
 | repo.name          | jenkins                   | helm 仓库名                                        |
-| create_namespace   | false                     | 是否需要新建命名空间                               |
 
 当前，除了默认配置以外，所有配置项均为必填。
 

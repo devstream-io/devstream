@@ -24,7 +24,6 @@ Please be sure to change the `storageClass` in the options of the config to an e
 | chart.namespace    | jenkins                   | namespace where helm to deploy                     |
 | repo.url           | https://charts.jenkins.io | helm official repo address                         |
 | repo.name          | jenkins                   | helm repo name                                     |
-| create_namespace   | false                     | whether to create namespace if namespace not eixst |
 
 Currently, expect default configs all the parameters in the example above are mandatory.
 

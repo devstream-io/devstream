@@ -18,6 +18,5 @@
 | chart.namespace    | tekton                                          | helm 部署的命名空间名称                            |
 | repo.url           | https://steinliber.github.io/tekton-helm-chart/ | helm 官方仓库地址                                  |
 | repo.name          | tekton                                          | helm 仓库名                                        |
-| create_namespace   | false                                           | 是否需要新建命名空间                               |
 
 目前除了 `values_yaml` 和默认配置，以上其它配置项均为必填项。

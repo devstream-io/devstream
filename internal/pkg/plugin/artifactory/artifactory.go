@@ -15,7 +15,6 @@ var defaultHelmConfig = helm.Options{
 		ReleaseName: "artifactory",
 		Namespace:   "artifactory",
 	},
-	CreateNamespace: types.Bool(false),
 	Repo: helmCommon.Repo{
 		URL:  "https://charts.jfrog.io",
 		Name: "jfrog",

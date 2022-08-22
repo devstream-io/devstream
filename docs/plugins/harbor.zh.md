@@ -48,7 +48,6 @@ tools:
   instanceID: default
   dependsOn: [ ]
   options:
-    create_namespace: true
     chart:
       values_yaml: |
         externalURL: http://127.0.0.1
@@ -170,7 +169,6 @@ kubectl port-forward -n harbor service/harbor --address=${ip} 80
 | chart.namespace    | harbor                   | 部署的命名空间                         |
 | repo.url           | https://helm.goharbor.io | helm 仓库地址                         |
 | repo.name          | harbor                   | helm 仓库名                           |
-| create_namespace   | false                    | 是否需要 dtm 来新建命名空间              |
 
 因此完整的配置文件应该是这样：
 
@@ -227,7 +225,6 @@ tools:
   instanceID: default
   dependsOn: [ ]
   options:
-    create_namespace: true
     chart:
       values_yaml: |
         persistence:
@@ -260,7 +257,6 @@ tools:
   instanceID: default
   dependsOn: [ ]
   options:
-    create_namespace: true
     chart:
       values_yaml: |
         externalURL: http://127.0.0.1
@@ -276,7 +272,6 @@ tools:
   instanceID: default
   dependsOn: [ ]
   options:
-    create_namespace: true
     chart:
       values_yaml: |
         externalURL: http://core.harbor.domain
@@ -333,7 +328,6 @@ tools:
   instanceID: default
   dependsOn: [ ]
   options:
-    create_namespace: true
     chart:
       values_yaml: |
         externalURL: http://core.harbor.domain

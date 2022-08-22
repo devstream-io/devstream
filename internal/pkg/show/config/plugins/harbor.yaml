@@ -7,7 +7,6 @@ tools:
   dependsOn: [ ]
   # options for the plugin
   options:
-    create_namespace: true
     repo:
       name: harbor
       # url of the Helm repo, use self host helm config beacuse official helm does'nt support namespace config

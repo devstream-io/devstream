@@ -20,6 +20,5 @@ This plugin installs [ArgoCD](https://argoproj.github.io/cd/) in an existing Kub
 | chart.wait         | true                                 | whether to wait until installation is complete     |
 | repo.url           | https://argoproj.github.io/argo-helm | helm official repo address                         |
 | repo.name          | argo                                 | helm repo name                                     |
-| create_namespace   | false                                | whether to create namespace if namespace not eixst |
 
 Currently, except for `values_yaml` and default configs, all the parameters in the example above are mandatory.
