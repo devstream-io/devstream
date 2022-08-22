@@ -33,7 +33,6 @@ var _ = Describe("Options struct", func() {
 			},
 		}
 		expectMap = map[string]interface{}{
-			"create_namespace": emptyBool,
 			"repo": map[string]interface{}{
 				"name": "test_repo",
 				"url":  "",
