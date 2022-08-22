@@ -28,11 +28,13 @@ tools:
         # custom configuration. You can refer to [Jenkins values.yaml](https://github.com/jenkinsci/helm-charts/blob/main/charts/jenkins/values.yaml)
         values_yaml: |
           persistence:
-            storageClass: default
+            storageClass: ""
           serviceAccount:
             create: true
             name: jenkins
           controller:
+            adminUser: "admin"
+            adminPassword: "changeme"
             serviceType: NodePort
             nodePort: 32000
             additionalPlugins:
