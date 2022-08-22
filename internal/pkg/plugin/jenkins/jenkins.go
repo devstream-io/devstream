@@ -8,7 +8,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
-var defaultHelmConfig = &helm.Options{
+var defaultHelmConfig = helm.Options{
 	Chart: helmCommon.Chart{
 		ChartName:   "jenkins/jenkins",
 		Timeout:     "5m",
@@ -37,12 +37,8 @@ func getHelmResourceAndCustomResource(options plugininstaller.RawOptions) (map[s
 
 	outputs := map[string]interface{}{}
 
-	// 2 get jenkins password of admin
-	jenkinsPassword, err := getPasswdOfAdmin(options)
-	if err != nil {
-		return nil, err
-	}
-	outputs["jenkinsPasswordOfAdmin"] = jenkinsPassword
+	// TODO(daniel-hutao)
+	outputs["foo"] = "bar"
 
 	resource["outputs"] = outputs
 
