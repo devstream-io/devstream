@@ -20,3 +20,4 @@ https://pkg.go.dev/github.com/golang-standards/project-layout
 https://gitlab.com/-/profile/personal_access_tokens\?name=DevStream\+Access\+token&scopes=api
 http://core.harbor.domain/
 https://core.harbor.domain/
+http://jenkins.jenkins:8080/
