@@ -3,7 +3,7 @@ package jenkins
 import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/helm"
-
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	helmCommon "github.com/devstream-io/devstream/pkg/util/helm"
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
@@ -23,16 +23,17 @@ var defaultHelmConfig = helm.Options{
 	},
 }
 
-func genJenkinsState(options plugininstaller.RawOptions) (map[string]interface{}, error) {
-	resource, err := helm.GetPluginAllState(options)
+func genJenkinsState(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
+	resState, err := helm.GetPluginAllState(options)
 	if err != nil {
 		return nil, err
 	}
 
 	// svc_name.svc_ns:svc_port
-	resource["outputs"] = map[string]interface{}{
+	outputs := map[string]interface{}{
 		"jenkins_url": "http://jenkins.jenkins:8080",
 	}
+	resState.SetOutputs(outputs)
 
-	return resource, nil
+	return resState, nil
 }

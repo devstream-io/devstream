@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 )
 
 func ComposeUp(options plugininstaller.RawOptions) error {
@@ -22,7 +23,7 @@ func ComposeDown(options plugininstaller.RawOptions) error {
 	return nil
 }
 
-func ComposeState(options plugininstaller.RawOptions) (map[string]interface{}, error) {
+func ComposeState(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
 	state, err := op.ComposeState()
 	if err != nil {
 		return nil, fmt.Errorf("failed to get containers state: %s", err)

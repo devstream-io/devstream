@@ -100,16 +100,16 @@ var _ = Describe("Pluginengine", func() {
 	})
 
 	It("should handle outputs correctly", func() {
+		resState := &statemanager.ResourceState{}
+		resState.SetOutputs(map[string]interface{}{
+			"boardId":    expectedBoardId,
+			"todoListId": expectedTodoListId,
+		})
 		trelloState := statemanager.State{
 			InstanceID: "mytrelloboard",
 			Name:       "trello",
 			Options:    map[string]interface{}{},
-			Resource: map[string]interface{}{
-				"outputs": map[string]interface{}{
-					"boardId":    expectedBoardId,
-					"todoListId": expectedTodoListId,
-				},
-			},
+			Resource:   *resState,
 		}
 		err = smgr.AddState(trelloKey, trelloState)
 		Expect(err).NotTo(HaveOccurred())
