@@ -3,7 +3,7 @@ package jenkins
 import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/helm"
-
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	helmCommon "github.com/devstream-io/devstream/pkg/util/helm"
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
@@ -23,24 +23,26 @@ var defaultHelmConfig = helm.Options{
 	},
 }
 
-// getHelmResourceAndCustomResource wraps helm resource and custom resource,
-// this is due to the limitation of `plugininstaller`,
-// now `plugininstaller.GetStateOperation` only support one resource get function,
-// if we want to use both existing resource get function(such as helm's methods) and custom function,
-// we have to wrap them into one function.
-func getHelmResourceAndCustomResource(options plugininstaller.RawOptions) (map[string]interface{}, error) {
-	// 1. get helm resource
-	resource, err := helm.GetPluginAllState(options)
+func genJenkinsState(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
+	resState, err := helm.GetPluginAllState(options)
 	if err != nil {
 		return nil, err
 	}
 
-	outputs := map[string]interface{}{}
+	// svc_name.svc_ns:svc_port
+	outputs := map[string]interface{}{
+		"jenkins_url": "http://jenkins.jenkins:8080",
+	}
+	resState.SetOutputs(outputs)
 
-	// TODO(daniel-hutao)
-	outputs["foo"] = "bar"
+	// values.yaml
+	opt, err := helm.NewOptions(options)
+	if err != nil {
+		return nil, err
+	}
 
-	resource["outputs"] = outputs
+	valuesYaml := opt.GetHelmParam().Chart.ValuesYaml
+	resState["values_yaml"] = valuesYaml
 
-	return resource, nil
+	return resState, nil
 }

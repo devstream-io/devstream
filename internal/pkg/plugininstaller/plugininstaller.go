@@ -1,6 +1,9 @@
 package plugininstaller
 
-import "github.com/devstream-io/devstream/pkg/util/log"
+import (
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
+	"github.com/devstream-io/devstream/pkg/util/log"
+)
 
 type RawOptions map[string]interface{}
 
@@ -10,7 +13,7 @@ type (
 	// BaseOperation reads options and executes operation
 	BaseOperation func(options RawOptions) error
 	// StateOperation reads options and executes operation, then returns the state map
-	StateOperation func(options RawOptions) (map[string]interface{}, error)
+	StateOperation func(options RawOptions) (statemanager.ResourceState, error)
 )
 
 type (

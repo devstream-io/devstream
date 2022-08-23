@@ -21,6 +21,12 @@ type State struct {
 	Resource   map[string]interface{}
 }
 
+type ResourceState map[string]interface{}
+
+func (rs *ResourceState) SetOutputs(outputs map[string]interface{}) {
+	(*rs)["outputs"] = outputs
+}
+
 type StatesMap struct {
 	*concurrentmap.ConcurrentMap
 }

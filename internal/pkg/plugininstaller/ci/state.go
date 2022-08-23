@@ -2,9 +2,10 @@ package ci
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 )
 
-func GetCIFileStatus(options plugininstaller.RawOptions) (map[string]interface{}, error) {
+func GetCIFileStatus(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return nil, err

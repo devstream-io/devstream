@@ -3,6 +3,7 @@ package trello
 import (
 	"fmt"
 
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/trello"
 )
@@ -89,22 +90,22 @@ func DeleteTrelloBoard(opts *Options) error {
 	}
 	return c.CheckAndDeleteBoard(opts.Owner, opts.Repo, opts.KanbanBoardName)
 }
-func buildState(opts *Options, ti *TrelloItemId) map[string]interface{} {
-	res := make(map[string]interface{})
-	res["boardId"] = ti.boardId
-	res["todoListId"] = ti.todoListId
-	res["doingListId"] = ti.doingListId
-	res["doneListId"] = ti.doneListId
+func buildState(opts *Options, ti *TrelloItemId) statemanager.ResourceState {
+	resState := make(statemanager.ResourceState)
+	resState["boardId"] = ti.boardId
+	resState["todoListId"] = ti.todoListId
+	resState["doingListId"] = ti.doingListId
+	resState["doneListId"] = ti.doneListId
 
-	output := make(map[string]interface{})
-	output["boardId"] = ti.boardId
-	output["todoListId"] = ti.todoListId
-	output["doingListId"] = ti.doingListId
-	output["doneListId"] = ti.doneListId
+	outputs := make(map[string]interface{})
+	outputs["boardId"] = ti.boardId
+	outputs["todoListId"] = ti.todoListId
+	outputs["doingListId"] = ti.doingListId
+	outputs["doneListId"] = ti.doneListId
 
-	res["outputs"] = output
+	resState.SetOutputs(outputs)
 
-	return res
+	return resState
 }
 
 func buildReadState(opts *Options) (map[string]interface{}, error) {
@@ -117,12 +118,13 @@ func buildReadState(opts *Options) (map[string]interface{}, error) {
 		return nil, err
 	}
 
+	resState := statemanager.ResourceState(listIds)
 	output := make(map[string]interface{})
 	output["boardId"] = fmt.Sprint(listIds["boardId"])
 	output["todoListId"] = fmt.Sprint(listIds["todoListId"])
 	output["doingListId"] = fmt.Sprint(listIds["doingListId"])
 	output["doneListId"] = fmt.Sprint(listIds["doneListId"])
 
-	listIds["outputs"] = output
+	resState.SetOutputs(output)
 	return listIds, nil
 }

@@ -13,6 +13,7 @@ import (
 	"k8s.io/utils/pointer"
 
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/k8s"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
@@ -373,8 +374,8 @@ func DeleteApp(options plugininstaller.RawOptions) error {
 	return nil
 }
 
-// Check plugin status by goclient
-func GetState(options plugininstaller.RawOptions) (map[string]interface{}, error) {
+// GetState checks plugin status by goclient
+func GetState(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return nil, err
@@ -391,8 +392,12 @@ func GetState(options plugininstaller.RawOptions) (map[string]interface{}, error
 	}
 
 	if !ready {
-		return map[string]interface{}{"stopped": true}, nil
+		return statemanager.ResourceState{
+			"stopped": true,
+		}, nil
 	}
 
-	return map[string]interface{}{"running": true}, nil
+	return statemanager.ResourceState{
+		"running": true,
+	}, nil
 }

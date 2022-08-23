@@ -4,10 +4,11 @@ import (
 	"fmt"
 
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func GetStaticWorkFlowState(options plugininstaller.RawOptions) (map[string]interface{}, error) {
+func GetStaticWorkFlowState(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
 	opts, err := NewGithubActionOptions(options)
 	if err != nil {
 		return nil, err
@@ -21,7 +22,7 @@ func GetStaticWorkFlowState(options plugininstaller.RawOptions) (map[string]inte
 	return res, nil
 }
 
-func GetActionState(options plugininstaller.RawOptions) (map[string]interface{}, error) {
+func GetActionState(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
 	opts, err := NewGithubActionOptions(options)
 	if err != nil {
 		return nil, err
