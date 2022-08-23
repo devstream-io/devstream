@@ -55,5 +55,4 @@ func DeleteCIFiles(options plugininstaller.RawOptions) error {
 		CommitMsg:  deleteCommitMsg,
 	}
 	return gitClient.DeleteFiles(commitInfo)
-
 }

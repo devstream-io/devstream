@@ -13,12 +13,14 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/file"
 	"github.com/devstream-io/devstream/pkg/util/git"
 	"github.com/devstream-io/devstream/pkg/util/template"
+	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
 type CIConfig struct {
 	Type      ciRepoType             `validate:"oneof=jenkins github gitlab" mapstructure:"type"`
-	LocalPath string                 `validate:"required_without=RemoteURL" mapstructure:"localPath"`
-	RemoteURL string                 `validate:"required_without=LocalPath" mapstructure:"remoteURL"`
+	LocalPath string                 `mapstructure:"localPath"`
+	RemoteURL string                 `mapstructure:"remoteURL"`
+	Content   string                 `mapstructure:"content"`
 	Vars      map[string]interface{} `mapstructure:"vars"`
 }
 
@@ -37,12 +39,14 @@ func NewOptions(options plugininstaller.RawOptions) (*Options, error) {
 
 // getCIFile will generate ci files by config
 func (opt *Options) buildGitMap() (gitMap git.GitFileContentMap, err error) {
-	if opt.CIConfig.LocalPath != "" {
-		// get content from local if localPath is set
-		gitMap, err = opt.CIConfig.getFromLocation(opt.ProjectRepo.Repo)
-	} else {
-		// get remote content if location is not set
-		gitMap, err = opt.CIConfig.getFromURL(opt.ProjectRepo.Repo)
+	ciConfig := opt.CIConfig
+	switch {
+	case ciConfig.LocalPath != "":
+		gitMap, err = ciConfig.getFromLocation(opt.ProjectRepo.Repo)
+	case ciConfig.RemoteURL != "":
+		gitMap, err = ciConfig.getFromURL(opt.ProjectRepo.Repo)
+	case ciConfig.Content != "":
+		gitMap, err = ciConfig.getFromContent(opt.ProjectRepo.Repo)
 	}
 	if len(gitMap) == 0 {
 		return nil, errors.New("can't get valid ci files, please check your config")
@@ -85,4 +89,31 @@ func (c *CIConfig) getFromLocation(appName string) (git.GitFileContentMap, error
 	}
 	gitFileMap[gitFilePath] = content
 	return gitFileMap, nil
+}
+
+func (c *CIConfig) getFromContent(content string) (git.GitFileContentMap, error) {
+	gitFileMap := make(git.GitFileContentMap)
+	gitFileMap[getCIFilePath(c.Type)] = []byte(content)
+	return gitFileMap, nil
+}
+
+func (opts *Options) Encode() (map[string]interface{}, error) {
+	var options map[string]interface{}
+	if err := mapstructure.Decode(opts, &options); err != nil {
+		return nil, err
+	}
+	return options, nil
+}
+
+func (opts *Options) FillDefaultValue(defaultOptions *Options) {
+	if opts.CIConfig == nil {
+		opts.CIConfig = defaultOptions.CIConfig
+	} else {
+		types.FillStructDefaultValue(opts.CIConfig, defaultOptions.CIConfig)
+	}
+	if opts.ProjectRepo == nil {
+		opts.ProjectRepo = defaultOptions.ProjectRepo
+	} else {
+		types.FillStructDefaultValue(opts.ProjectRepo, defaultOptions.ProjectRepo)
+	}
 }

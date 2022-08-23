@@ -21,6 +21,7 @@ func Validate(options plugininstaller.RawOptions) (plugininstaller.RawOptions, e
 	}
 	// check CI config
 	config := opts.CIConfig
+
 	if config.RemoteURL != "" {
 		_, err := url.ParseRequestURI(config.RemoteURL)
 		if err != nil {
@@ -31,8 +32,8 @@ func Validate(options plugininstaller.RawOptions) (plugininstaller.RawOptions, e
 		if err != nil {
 			return nil, err
 		}
-	} else {
-		return nil, errors.New("ci.locaPath or ci.remoteURL can't all be empty at the same time")
+	} else if config.Content == "" {
+		return nil, errors.New("ci.locaPath, ci.remoteURL, ci.content can't all be empty at the same time")
 	}
 
 	if config.Type == ciGitHubType && opts.ProjectRepo.RepoType == "gitlab" {
@@ -42,4 +43,16 @@ func Validate(options plugininstaller.RawOptions) (plugininstaller.RawOptions, e
 		return nil, errors.New("gitlab ci doesn't support github")
 	}
 	return options, nil
+}
+
+// SetDefaultConfig will update options empty values base on import options
+func SetDefaultConfig(defaultConfig *Options) plugininstaller.MutableOperation {
+	return func(options plugininstaller.RawOptions) (plugininstaller.RawOptions, error) {
+		opts, err := NewOptions(options)
+		if err != nil {
+			return nil, err
+		}
+		opts.FillDefaultValue(defaultConfig)
+		return opts.Encode()
+	}
 }

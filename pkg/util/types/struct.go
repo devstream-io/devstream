@@ -5,6 +5,9 @@ import (
 )
 
 func FillStructDefaultValue(structData, defaultStructData any) {
+	if defaultStructData == nil {
+		return
+	}
 	defaultFalse := reflect.ValueOf(Bool(false))
 	dataStruct := reflect.ValueOf(structData)
 	structIterator := reflect.Indirect(dataStruct)
