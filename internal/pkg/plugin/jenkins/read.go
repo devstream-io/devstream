@@ -10,10 +10,10 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
-			setDefaultValue(defaultHelmConfig),
+			helm.SetDefaultConfig(&defaultHelmConfig),
 			helm.Validate,
 		},
-		GetStateOperation: getHelmResourceAndCustomResource,
+		GetStateOperation: genJenkinsState,
 	}
 
 	status, err := operator.Execute(plugininstaller.RawOptions(options))

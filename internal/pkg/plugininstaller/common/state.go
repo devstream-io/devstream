@@ -1,13 +1,13 @@
 package common
 
 import (
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/helm"
 	"github.com/devstream-io/devstream/pkg/util/k8s"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func GetPluginAllK8sState(nameSpace string, anFilter, labelFilter map[string]string) (map[string]interface{}, error) {
-
+func GetPluginAllK8sState(nameSpace string, anFilter, labelFilter map[string]string) (statemanager.ResourceState, error) {
 	// 1. init kube client
 	kubeClient, err := k8s.NewClient()
 	if err != nil {

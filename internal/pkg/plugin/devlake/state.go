@@ -3,9 +3,10 @@ package devlake
 import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/common"
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 )
 
-func getStaticState(opts plugininstaller.RawOptions) (map[string]interface{}, error) {
+func getStaticState(opts plugininstaller.RawOptions) (statemanager.ResourceState, error) {
 	res := make(map[string]interface{})
 	res["deployments"] = make(map[string]interface{})
 	res["services"] = make(map[string]interface{})
@@ -16,7 +17,7 @@ func getStaticState(opts plugininstaller.RawOptions) (map[string]interface{}, er
 	return res, nil
 }
 
-func getDynamicState(opts plugininstaller.RawOptions) (map[string]interface{}, error) {
+func getDynamicState(opts plugininstaller.RawOptions) (statemanager.ResourceState, error) {
 	labelFilter := map[string]string{
 		"app": "devlake",
 	}

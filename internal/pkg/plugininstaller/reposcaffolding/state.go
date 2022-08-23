@@ -5,12 +5,13 @@ import (
 
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/common"
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/github"
 	"github.com/devstream-io/devstream/pkg/util/gitlab"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func GetDynamicState(options plugininstaller.RawOptions) (map[string]interface{}, error) {
+func GetDynamicState(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return nil, err
@@ -24,7 +25,6 @@ func GetDynamicState(options plugininstaller.RawOptions) (map[string]interface{}
 	default:
 		return nil, fmt.Errorf("read state not support repo type: %s", dstRepo.RepoType)
 	}
-
 }
 
 func getGithubStatus(dstRepo *common.Repo) (map[string]interface{}, error) {
@@ -42,10 +42,10 @@ func getGithubStatus(dstRepo *common.Repo) (map[string]interface{}, error) {
 		return nil, nil
 	}
 
-	res := make(map[string]interface{})
-	res["owner"] = dstRepo.Owner
-	res["org"] = dstRepo.Org
-	res["repoName"] = *repo.Name
+	resState := make(statemanager.ResourceState)
+	resState["owner"] = dstRepo.Owner
+	resState["org"] = dstRepo.Org
+	resState["repoName"] = *repo.Name
 
 	outputs := make(map[string]interface{})
 
@@ -61,10 +61,9 @@ func getGithubStatus(dstRepo *common.Repo) (map[string]interface{}, error) {
 	}
 	outputs["repo"] = dstRepo.Repo
 	outputs["repoURL"] = *repo.CloneURL
-	res["outputs"] = outputs
+	resState.SetOutputs(outputs)
 
-	return res, nil
-
+	return resState, nil
 }
 
 func getGitlabStatus(dstRepo *common.Repo) (map[string]interface{}, error) {
@@ -81,27 +80,27 @@ func getGitlabStatus(dstRepo *common.Repo) (map[string]interface{}, error) {
 		return nil, nil
 	}
 
-	res := make(map[string]interface{})
+	resState := make(statemanager.ResourceState)
 	outputs := make(map[string]interface{})
 
 	log.Debugf("GitLab Project is: %#v\n", project)
 
 	if project.Owner != nil {
 		log.Debugf("GitLab project owner is: %#v.\n", project.Owner)
-		res["owner"] = project.Owner.Username
-		res["org"] = project.Owner.Organization
+		resState["owner"] = project.Owner.Username
+		resState["org"] = project.Owner.Organization
 		outputs["owner"] = project.Owner.Username
 		outputs["org"] = project.Owner.Organization
 	} else {
-		res["owner"] = dstRepo.Owner
-		res["org"] = dstRepo.Org
+		resState["owner"] = dstRepo.Owner
+		resState["org"] = dstRepo.Org
 		outputs["owner"] = dstRepo.Owner
 		outputs["org"] = dstRepo.Org
 	}
-	res["repoName"] = project.Name
+	resState["repoName"] = project.Name
 	outputs["repo"] = project.Name
 	outputs["repoURL"] = project.HTTPURLToRepo
-	res["outputs"] = outputs
+	resState.SetOutputs(outputs)
 
-	return res, nil
+	return resState, nil
 }

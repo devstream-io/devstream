@@ -6,10 +6,11 @@ import (
 	"github.com/cenkalti/backoff"
 
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/k8s"
 )
 
-func getStaticState(options plugininstaller.RawOptions) (map[string]interface{}, error) {
+func getStaticState(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return nil, err
@@ -35,7 +36,7 @@ func getStaticState(options plugininstaller.RawOptions) (map[string]interface{},
 	return res, nil
 }
 
-func getDynamicState(options plugininstaller.RawOptions) (map[string]interface{}, error) {
+func getDynamicState(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return nil, err

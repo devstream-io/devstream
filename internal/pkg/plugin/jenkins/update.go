@@ -11,12 +11,12 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
-			setDefaultValue(defaultHelmConfig),
+			helm.SetDefaultConfig(&defaultHelmConfig),
 			helm.Validate,
 		},
 		ExecuteOperations:   helm.DefaultUpdateOperations,
 		TerminateOperations: helm.DefaultTerminateOperations,
-		GetStateOperation:   getHelmResourceAndCustomResource,
+		GetStateOperation:   genJenkinsState,
 	}
 
 	// Execute all Operations in Operator
