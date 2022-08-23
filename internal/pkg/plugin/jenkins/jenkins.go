@@ -35,5 +35,14 @@ func genJenkinsState(options plugininstaller.RawOptions) (statemanager.ResourceS
 	}
 	resState.SetOutputs(outputs)
 
+	// values.yaml
+	opt, err := helm.NewOptions(options)
+	if err != nil {
+		return nil, err
+	}
+
+	valuesYaml := opt.GetHelmParam().Chart.ValuesYaml
+	resState["values_yaml"] = valuesYaml
+
 	return resState, nil
 }
