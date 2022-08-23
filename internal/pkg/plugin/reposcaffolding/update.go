@@ -16,7 +16,7 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 			reposcaffolding.DeleteRepo,
 			reposcaffolding.InstallRepo,
 		},
-		GetStateOperation: reposcaffolding.GetStaticState,
+		GetStateOperation: reposcaffolding.GetDynamicState,
 	}
 
 	// Execute all Operations in Operator
@@ -26,5 +26,4 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	}
 	log.Debugf("Return map: %v", status)
 	return status, nil
-
 }
