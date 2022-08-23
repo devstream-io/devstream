@@ -23,24 +23,16 @@ var defaultHelmConfig = helm.Options{
 	},
 }
 
-// getHelmResourceAndCustomResource wraps helm resource and custom resource,
-// this is due to the limitation of `plugininstaller`,
-// now `plugininstaller.GetStateOperation` only support one resource get function,
-// if we want to use both existing resource get function(such as helm's methods) and custom function,
-// we have to wrap them into one function.
-func getHelmResourceAndCustomResource(options plugininstaller.RawOptions) (map[string]interface{}, error) {
-	// 1. get helm resource
+func genJenkinsState(options plugininstaller.RawOptions) (map[string]interface{}, error) {
 	resource, err := helm.GetPluginAllState(options)
 	if err != nil {
 		return nil, err
 	}
 
-	outputs := map[string]interface{}{}
-
-	// TODO(daniel-hutao)
-	outputs["foo"] = "bar"
-
-	resource["outputs"] = outputs
+	// svc_name.svc_ns:svc_port
+	resource["outputs"] = map[string]interface{}{
+		"jenkins_url": "http://jenkins.jenkins:8080",
+	}
 
 	return resource, nil
 }

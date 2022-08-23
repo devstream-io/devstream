@@ -16,7 +16,7 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 		},
 		ExecuteOperations:   helm.DefaultUpdateOperations,
 		TerminateOperations: helm.DefaultTerminateOperations,
-		GetStateOperation:   getHelmResourceAndCustomResource,
+		GetStateOperation:   genJenkinsState,
 	}
 
 	// Execute all Operations in Operator

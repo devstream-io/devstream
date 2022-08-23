@@ -6,7 +6,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/helm"
 )
 
-// GetPlugAllStateWrapper will get deploy, ds, statefulset status
+// GetPluginAllState will get the State of k8s Deployment, DaemonSet and StatefulSet resources
 func GetPluginAllState(options plugininstaller.RawOptions) (map[string]interface{}, error) {
 	opts, err := NewOptions(options)
 	if err != nil {
