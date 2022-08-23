@@ -10,47 +10,6 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func GetStaticState(options plugininstaller.RawOptions) (map[string]interface{}, error) {
-	opts, err := NewOptions(options)
-	if err != nil {
-		return nil, err
-	}
-
-	dstRepo := opts.DestinationRepo
-	res := make(map[string]interface{})
-	res["owner"] = dstRepo.Owner
-	res["org"] = dstRepo.Org
-	res["repoName"] = dstRepo.Repo
-
-	outputs := make(map[string]interface{})
-	outputs["owner"] = dstRepo.Owner
-	outputs["org"] = dstRepo.Org
-	outputs["repo"] = dstRepo.Repo
-
-	switch dstRepo.RepoType {
-	case "github":
-		if dstRepo.Owner != "" {
-			outputs["repoURL"] = fmt.Sprintf("https://github.com/%s/%s.git", dstRepo.Owner, dstRepo.Repo)
-		} else {
-			outputs["repoURL"] = fmt.Sprintf("https://github.com/%s/%s.git", dstRepo.Org, dstRepo.Repo)
-		}
-	case "gitlab":
-		var gitlabURL string
-		if dstRepo.BaseURL != "" {
-			gitlabURL = dstRepo.BaseURL
-		} else {
-			gitlabURL = gitlab.DefaultGitlabHost
-		}
-		if dstRepo.Org != "" {
-			outputs["repoURL"] = fmt.Sprintf("%s/%s/%s.git", gitlabURL, dstRepo.Org, dstRepo.Repo)
-		} else {
-			outputs["repoURL"] = fmt.Sprintf("%s/%s/%s.git", gitlabURL, dstRepo.Owner, dstRepo.Repo)
-		}
-	}
-	res["outputs"] = outputs
-	return res, nil
-}
-
 func GetDynamicState(options plugininstaller.RawOptions) (map[string]interface{}, error) {
 	opts, err := NewOptions(options)
 	if err != nil {
