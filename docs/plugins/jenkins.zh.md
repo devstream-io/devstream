@@ -263,3 +263,74 @@ tools:
         JCasC:
           defaultConfig: true
 ```
+
+## 状态管理
+
+DevStream 的默认状态文件为 devstream.state，可以通过配置文件中的 state.options 字段来自定义。
+jenkins 插件会保存如下状态：
+
+```yaml
+jenkins_default:
+  name: jenkins
+  instanceid: default
+  dependson: []
+  options:
+    chart:
+      values_yaml: |
+        serviceAccount:
+          create: true
+          name: jenkins
+        controller:
+          adminUser: "admin"
+          ingress:
+            enabled: true
+            hostName: jenkins.example.com
+  resource:
+    outputs:
+      jenkins_url: http://jenkins.jenkins:8080
+    values_yaml: |
+      serviceAccount:
+        create: true
+        name: jenkins
+      controller:
+        adminUser: "admin"
+        ingress:
+          enabled: true
+          hostName: jenkins.example.com
+    workflows: |
+      statefulsets:
+        - name: jenkins
+          ready: true
+```
+
+其中 resource 部分保存的是资源实例的最新状态，也就是这部分：
+
+```yaml
+outputs:
+  jenkins_url: http://jenkins.jenkins:8080
+values_yaml: |
+  serviceAccount:
+    create: true
+    name: jenkins
+  controller:
+    adminUser: "admin"
+    ingress:
+      enabled: true
+      hostName: jenkins.example.com
+workflows: |
+  statefulsets:
+    - name: jenkins
+      ready: true
+```
+
+换言之，目前 jenkins 插件关注的状态主要是自身 StatefulSet 资源状态和 values_yaml 的配置，也就是在两种情况下会判定状态漂移，从而触发更新操作：
+
+1. StatefulSet 状态变更
+2. values_yaml 部分配置变更
+
+## 插件输出
+
+在上一小节我们看到了 jenkins 插件的状态中保存了一个 outputs 字段，内容是 `jenkins_url: http://jenkins.jenkins:8080`，
+所以其他插件的配置中可以通过`${{jenkins.default.outputs.jenkins_url}}` 的语法读取到 `http://jenkins.jenkins:8080`。
+
+更多关于"插件输出"的内容，请阅读[这个文档](../../core-concepts/output.zh)。
