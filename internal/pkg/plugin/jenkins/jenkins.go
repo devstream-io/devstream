@@ -56,22 +56,27 @@ func genJenkinsState(options plugininstaller.RawOptions) (statemanager.ResourceS
 	return resState, nil
 }
 
-// see https://github.com/devstream-io/devstream/pull/1025#discussion_r952277174 for more info.
+// See https://github.com/devstream-io/devstream/pull/1025#discussion_r952277174 and
+// https://github.com/devstream-io/devstream/pull/1027#discussion_r953415932 for more info.
 func genJenkinsSvcName(options plugininstaller.RawOptions) (string, error) {
 	opts, err := helm.NewOptions(options)
 	if err != nil {
 		return "", err
 	}
 
-	var retStr string
-	if strings.Contains(opts.Chart.ChartName, opts.Chart.ReleaseName) {
-		retStr = strings.TrimSuffix(opts.Chart.ReleaseName, "-")
-		if len(retStr) > 63 {
-			retStr = retStr[:64]
+	pipe := func(s string) string {
+		if len(s) > 63 {
+			s = s[:63]
 		}
-		return retStr, nil
+		return strings.TrimSuffix(s, "-")
 	}
-	retStr = fmt.Sprintf("%s-%s", opts.Chart.ReleaseName, opts.Chart.ChartName)
 
-	return retStr, nil
+	var tmpName string
+	if strings.Contains(opts.Chart.ChartName, opts.Chart.ReleaseName) {
+		tmpName = opts.Chart.ReleaseName
+	} else {
+		tmpName = fmt.Sprintf("%s-%s", opts.Chart.ReleaseName, opts.Chart.ChartName)
+	}
+
+	return pipe(tmpName), nil
 }
