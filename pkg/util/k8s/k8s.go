@@ -14,8 +14,8 @@ import (
 )
 
 type Client struct {
-	*kubernetes.Clientset
-	Argocd *argocdclient.Clientset
+	clientset kubernetes.Interface
+	argocd    *argocdclient.Clientset
 }
 
 func NewClient() (*Client, error) {
@@ -55,7 +55,7 @@ func NewClient() (*Client, error) {
 	}
 
 	return &Client{
-		Clientset: clientset,
-		Argocd:    argocdClientset,
+		clientset: clientset,
+		argocd:    argocdClientset,
 	}, nil
 }

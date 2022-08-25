@@ -1,12 +1,8 @@
 package k8s
 
 import (
-	"context"
-
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	corev1 "k8s.io/client-go/applyconfigurations/core/v1"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
@@ -25,16 +21,8 @@ func (b *Backend) applyConfigMap(content string) (*v1.ConfigMap, error) {
 	data := map[string]string{
 		stateKey: content,
 	}
-	configMap := corev1.ConfigMap(b.configMapName, b.namespace).
-		WithLabels(labels).
-		WithData(data).
-		WithImmutable(false)
-	applyOptions := metav1.ApplyOptions{
-		FieldManager: "DevStream",
-	}
-
 	// apply configmap
-	configMapRes, err := b.client.CoreV1().ConfigMaps(b.namespace).Apply(context.Background(), configMap, applyOptions)
+	configMapRes, err := b.client.ApplyConfigMap(b.configMapName, b.namespace, data, labels)
 	if err != nil {
 		return nil, err
 	}
@@ -58,7 +46,7 @@ func (b *Backend) getOrCreateConfigMap() (*v1.ConfigMap, error) {
 }
 
 func (b *Backend) getConfigMap() (cm *v1.ConfigMap, exist bool, err error) {
-	configMap, err := b.client.CoreV1().ConfigMaps(b.namespace).Get(context.Background(), b.configMapName, metav1.GetOptions{})
+	configMap, err := b.client.GetConfigMap(b.configMapName, b.namespace)
 	// if configmap not exist, return nil
 	if errors.IsNotFound(err) {
 		return nil, false, nil
@@ -68,6 +56,5 @@ func (b *Backend) getConfigMap() (cm *v1.ConfigMap, exist bool, err error) {
 	}
 
 	log.Debugf("configmap %s in namespace %s found, detail: %v", configMap.Name, configMap.Namespace, configMap)
-
 	return configMap, true, nil
 }

@@ -32,7 +32,7 @@ func (c *Client) GetResourceStatus(nameSpace string, anFilter, labelFilter map[s
 			continue
 		}
 		dpName := dp.GetName()
-		ready := c.IsDeploymentReady(&dp)
+		ready := isDeploymentReady(&dp)
 		stateMap.Deployment = append(stateMap.Deployment, ResourceStatus{dpName, ready})
 		log.Debugf("The deployment %s is %t.", dp.GetName(), ready)
 	}
@@ -51,7 +51,7 @@ func (c *Client) GetResourceStatus(nameSpace string, anFilter, labelFilter map[s
 			continue
 		}
 
-		ready := c.IsStatefulsetReady(&ss)
+		ready := isStatefulsetReady(&ss)
 		ssName := ss.GetName()
 		stateMap.StatefulSet = append(stateMap.StatefulSet, ResourceStatus{ssName, ready})
 		log.Debugf("The statefulset %s is %t.", ss.GetName(), ready)
@@ -71,7 +71,7 @@ func (c *Client) GetResourceStatus(nameSpace string, anFilter, labelFilter map[s
 			continue
 		}
 
-		ready := c.IsDaemonsetReady(&ds)
+		ready := isDaemonsetReady(&ds)
 		dsName := ds.GetName()
 		stateMap.DaemonSet = append(stateMap.DaemonSet, ResourceStatus{dsName, ready})
 		log.Debugf("The daemonset %s is %t.", ds.GetName(), ready)

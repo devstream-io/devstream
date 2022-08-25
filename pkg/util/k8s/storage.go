@@ -70,7 +70,7 @@ func (c *Client) CreatePersistentVolume(option *PVOption) error {
 		},
 	}
 
-	_, err = c.CoreV1().PersistentVolumes().Create(context.TODO(), pv, metav1.CreateOptions{})
+	_, err = c.clientset.CoreV1().PersistentVolumes().Create(context.TODO(), pv, metav1.CreateOptions{})
 	if err != nil {
 		log.Errorf("Failed to create PersistentVolume < %s >: %s.", pv.Name, err)
 		return err
@@ -81,7 +81,7 @@ func (c *Client) CreatePersistentVolume(option *PVOption) error {
 }
 
 func (c *Client) DeletePersistentVolume(pvName string) error {
-	if err := c.CoreV1().PersistentVolumes().
+	if err := c.clientset.CoreV1().PersistentVolumes().
 		Delete(context.TODO(), pvName, metav1.DeleteOptions{}); err != nil {
 		return err
 	}
@@ -101,7 +101,7 @@ func (c *Client) CreatePersistentVolumeClaim(opt *PVCOption) error {
 	}
 
 	log.Debugf("The PersistentVolumeCliam option for creation is %v", pvc)
-	_, err := c.CoreV1().PersistentVolumeClaims(opt.NameSpace).Create(context.TODO(), pvc, metav1.CreateOptions{})
+	_, err := c.clientset.CoreV1().PersistentVolumeClaims(opt.NameSpace).Create(context.TODO(), pvc, metav1.CreateOptions{})
 	if err != nil {
 		log.Errorf("Failed to create PersistentVolumeClaim < %s >: %s.", pvc.Name, err)
 		return err
@@ -112,7 +112,7 @@ func (c *Client) CreatePersistentVolumeClaim(opt *PVCOption) error {
 }
 
 func (c *Client) DeletePersistentVolumeClaim(namespace, pvcName string) error {
-	if err := c.CoreV1().PersistentVolumeClaims(namespace).
+	if err := c.clientset.CoreV1().PersistentVolumeClaims(namespace).
 		Delete(context.TODO(), pvcName, metav1.DeleteOptions{}); err != nil {
 		return err
 	}

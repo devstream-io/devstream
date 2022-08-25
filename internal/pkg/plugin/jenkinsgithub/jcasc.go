@@ -1,13 +1,9 @@
 package jenkinsgithub
 
 import (
-	"context"
 	_ "embed"
 	"fmt"
 	"time"
-
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	corev1 "k8s.io/client-go/applyconfigurations/core/v1"
 
 	"github.com/devstream-io/devstream/pkg/util/k8s"
 	"github.com/devstream-io/devstream/pkg/util/log"
@@ -59,16 +55,7 @@ func applyJCasC(namespace, chartReleaseName, configName, fileContent string) err
 		fmt.Sprintf("%s.yaml", configName): fileContent,
 	}
 
-	configMap := corev1.ConfigMap(configMapName, namespace).
-		WithLabels(labels).
-		WithData(data).
-		WithImmutable(false)
-
-	applyOptions := metav1.ApplyOptions{
-		FieldManager: "DevStream",
-	}
-
-	configMapRes, err := client.CoreV1().ConfigMaps(namespace).Apply(context.TODO(), configMap, applyOptions)
+	configMapRes, err := client.ApplyConfigMap(configMapName, namespace, data, labels)
 	if err != nil {
 		return err
 	}

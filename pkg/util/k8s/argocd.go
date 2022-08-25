@@ -9,7 +9,7 @@ import (
 )
 
 func (c *Client) ListArgocdApplications(namespace string) ([]argocdv1alpha1.Application, error) {
-	appList, err := c.Argocd.ArgoprojV1alpha1().Applications(namespace).
+	appList, err := c.argocd.ArgoprojV1alpha1().Applications(namespace).
 		List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
 		return nil, err
@@ -18,7 +18,7 @@ func (c *Client) ListArgocdApplications(namespace string) ([]argocdv1alpha1.Appl
 }
 
 func (c *Client) GetArgocdApplication(namespace, name string) (*argocdv1alpha1.Application, error) {
-	return c.Argocd.ArgoprojV1alpha1().Applications(namespace).
+	return c.argocd.ArgoprojV1alpha1().Applications(namespace).
 		Get(context.TODO(), name, metav1.GetOptions{})
 }
 
