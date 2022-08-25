@@ -3,6 +3,8 @@ package jenkinspipelinekubernetes
 import (
 	_ "embed"
 
+	"github.com/devstream-io/devstream/pkg/util/template"
+
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 )
 
@@ -27,4 +29,14 @@ func (res *resource) toMap() map[string]interface{} {
 		"credentialsCreated": res.CredentialsCreated,
 		"jobCreated":         res.JobCreated,
 	}
+}
+
+type JobXmlOptions struct {
+	GitHubRepoURL      string
+	CredentialsID      string
+	PipelineScriptPath string
+}
+
+func renderJobXml(jobTemplate string, opts *JobXmlOptions) (string, error) {
+	return template.Render("jenkins-job", jobTemplate, opts)
 }

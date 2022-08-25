@@ -5,6 +5,11 @@ const (
 	defaultJenkinsPipelineScriptPath = "Jenkinsfile"
 )
 
+var (
+	jenkinsPassword string
+	githubToken     string
+)
+
 // Options is the struct for configurations of the jenkins-pipeline-kubernetes plugin.
 type Options struct {
 	JenkinsURL        string `mapstructure:"jenkinsURL" validate:"required,hostname_port"`

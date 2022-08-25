@@ -3,21 +3,23 @@ package jenkinspipelinekubernetes
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/devstream-io/devstream/pkg/util/validator"
 )
 
-var jenkinsPassword string
-
-// validateAndHandleOptions validates and pre handle the options provided by the core.
-func validateAndHandleOptions(options *Options) []error {
-	validateErrs := validate(options)
-
+func ValidateAndDefaults(options *Options) []error {
 	defaults(options)
 
-	envErrs := handleEnv(options)
+	if errs := validate(options); len(errs) != 0 {
+		return errs
+	}
 
-	return append(validateErrs, envErrs...)
+	if errs := initPasswdFromEnvVars(); len(errs) != 0 {
+		return errs
+	}
+
+	return nil
 }
 
 func validate(options *Options) []error {
@@ -34,10 +36,12 @@ func defaults(options *Options) {
 		options.JenkinsUser = defaultJenkinsUser
 	}
 
-	options.JenkinsURL = "http://" + options.JenkinsURL
+	if !strings.Contains(options.JenkinsURL, "http") {
+		options.JenkinsURL = "http://" + options.JenkinsURL
+	}
 }
 
-func handleEnv(options *Options) []error {
+func initPasswdFromEnvVars() []error {
 	var errs []error
 
 	githubToken = os.Getenv("GITHUB_TOKEN")

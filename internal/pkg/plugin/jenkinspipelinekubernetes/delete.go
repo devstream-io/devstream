@@ -15,7 +15,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 		return false, err
 	}
 
-	if errs := validateAndHandleOptions(&opts); len(errs) != 0 {
+	if errs := ValidateAndDefaults(&opts); len(errs) != 0 {
 		for _, e := range errs {
 			log.Errorf("Options error: %s.", e)
 		}

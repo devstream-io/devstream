@@ -15,7 +15,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	if errs := validateAndHandleOptions(&opts); len(errs) != 0 {
+	if errs := ValidateAndDefaults(&opts); len(errs) != 0 {
 		for _, e := range errs {
 			log.Errorf("Options error: %s.", e)
 		}

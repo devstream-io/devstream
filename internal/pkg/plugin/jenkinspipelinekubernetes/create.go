@@ -8,7 +8,6 @@ import (
 	"github.com/mitchellh/mapstructure"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
-	"github.com/devstream-io/devstream/pkg/util/template"
 )
 
 const (
@@ -17,15 +16,13 @@ const (
 	jenkinsCredentialUsername = "foo-useless-username"
 )
 
-var githubToken string
-
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	var opts Options
 	if err := mapstructure.Decode(options, &opts); err != nil {
 		return nil, err
 	}
 
-	if errs := validateAndHandleOptions(&opts); len(errs) != 0 {
+	if errs := ValidateAndDefaults(&opts); len(errs) != 0 {
 		for _, e := range errs {
 			log.Errorf("Options error: %s.", e)
 		}
@@ -70,14 +67,4 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	}
 
 	return res.toMap(), nil
-}
-
-type JobXmlOptions struct {
-	GitHubRepoURL      string
-	CredentialsID      string
-	PipelineScriptPath string
-}
-
-func renderJobXml(jobTemplate string, opts *JobXmlOptions) (string, error) {
-	return template.Render("jenkins-job", jobTemplate, opts)
 }
