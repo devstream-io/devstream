@@ -18,7 +18,7 @@ var (
 
 // Options is the struct for configurations of the jenkins-pipeline-kubernetes plugin.
 type Options struct {
-	JenkinsURL        string `mapstructure:"jenkinsURL" validate:"required,hostname_port"`
+	JenkinsURL        string `mapstructure:"jenkinsURL" validate:"required,url"`
 	JenkinsUser       string `mapstructure:"jenkinsUser" validate:"required"`
 	JobName           string `mapstructure:"jobName"`
 	JenkinsfilePath   string `mapstructure:"jenkinsfilePath"`

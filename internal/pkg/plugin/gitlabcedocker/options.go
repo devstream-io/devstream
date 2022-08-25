@@ -46,7 +46,7 @@ func (opts *Options) Defaults() {
 	}
 }
 
-// gitlabURL is the access JenkinsURL of GitLab.
+// gitlabURL is the access URL of GitLab.
 var gitlabURL string
 
 func (opts *Options) setGitLabURL() {
@@ -57,7 +57,7 @@ func (opts *Options) setGitLabURL() {
 }
 
 func showHelpMsg(options plugininstaller.RawOptions) error {
-	log.Infof("GitLab access JenkinsURL: %s", gitlabURL)
+	log.Infof("GitLab access URL: %s", gitlabURL)
 	log.Infof("GitLab initial root password: execute the command -> docker exec -it gitlab grep 'Password:' /etc/gitlab/initial_root_password")
 
 	return nil
