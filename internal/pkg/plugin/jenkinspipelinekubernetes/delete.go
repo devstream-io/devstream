@@ -1,46 +1,24 @@
 package jenkinspipelinekubernetes
 
 import (
-	"context"
-	"fmt"
-
-	"github.com/mitchellh/mapstructure"
-
-	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 )
 
 func Delete(options map[string]interface{}) (bool, error) {
-	var opts Options
-	if err := mapstructure.Decode(options, &opts); err != nil {
-		return false, err
+	// Initialize Operator with Operations
+	operator := &plugininstaller.Operator{
+		PreExecuteOperations: plugininstaller.PreExecuteOperations{
+			ValidateAndDefaults,
+		},
+		ExecuteOperations: plugininstaller.ExecuteOperations{
+			DeleteJob,
+		},
 	}
-
-	if errs := ValidateAndDefaults(&opts); len(errs) != 0 {
-		for _, e := range errs {
-			log.Errorf("Options error: %s.", e)
-		}
-		return false, fmt.Errorf("opts are illegal")
-	}
-
-	// get the jenkins client and test the connection
-	client, err := NewJenkinsFromOptions(&opts)
+	_, err := operator.Execute(plugininstaller.RawOptions(options))
 	if err != nil {
 		return false, err
 	}
 
-	// delete the credentials created by devstream if exists
-	if _, err := client.GetCredentialsUsername(jenkinsCredentialID); err == nil {
-		if err := client.DeleteCredentialsUsername(jenkinsCredentialID); err != nil {
-			return false, err
-		}
-	}
-
-	// delete the job created by devstream if exists
-	if _, err = client.GetJob(context.Background(), opts.JobName); err == nil {
-		if _, err := client.DeleteJob(context.Background(), opts.JobName); err != nil {
-			return false, err
-		}
-	}
-
+	// 2. return ture if all process success
 	return true, nil
 }

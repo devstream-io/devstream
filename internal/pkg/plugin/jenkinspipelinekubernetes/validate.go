@@ -5,21 +5,33 @@ import (
 	"os"
 	"strings"
 
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/validator"
 )
 
-func ValidateAndDefaults(options *Options) []error {
-	defaults(options)
+func ValidateAndDefaults(options plugininstaller.RawOptions) (plugininstaller.RawOptions, error) {
+	opts, err := NewOptions(options)
+	if err != nil {
+		return nil, err
+	}
+	defaults(opts)
 
-	if errs := validate(options); len(errs) != 0 {
-		return errs
+	if errs := validate(opts); len(errs) != 0 {
+		for _, e := range errs {
+			log.Errorf("Validate error: %s.", e)
+		}
+		return nil, fmt.Errorf("validate failed")
 	}
 
 	if errs := initPasswdFromEnvVars(); len(errs) != 0 {
-		return errs
+		for _, e := range errs {
+			log.Errorf("Init password from env vars failed: %s.", e)
+		}
+		return nil, fmt.Errorf("init failed")
 	}
 
-	return nil
+	return opts.Encode()
 }
 
 func validate(options *Options) []error {
