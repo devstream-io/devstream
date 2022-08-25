@@ -17,6 +17,8 @@ const (
 	jenkinsCredentialUsername = "foo-useless-username"
 )
 
+var githubToken string
+
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	var opts Options
 	if err := mapstructure.Decode(options, &opts); err != nil {
@@ -39,25 +41,25 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	// create credential if not exists
 	if _, err := client.GetCredentialsUsername(jenkinsCredentialID); err != nil {
 		log.Infof("credential %s not found, creating...", jenkinsCredentialID)
-		if err := client.CreateCredentialsUsername(jenkinsCredentialUsername, opts.GitHubToken, jenkinsCredentialID, jenkinsCredentialDesc); err != nil {
+		if err := client.CreateCredentialsUsername(jenkinsCredentialUsername, githubToken, jenkinsCredentialID, jenkinsCredentialDesc); err != nil {
 			return nil, err
 		}
 	}
 
 	// create job if not exists
 	ctx := context.Background()
-	if _, err := client.GetJob(ctx, opts.J.JobName); err != nil {
-		log.Infof("job %s not found, creating...", opts.J.JobName)
+	if _, err := client.GetJob(ctx, opts.JobName); err != nil {
+		log.Infof("job %s not found, creating...", opts.JobName)
 		jobXmlOpts := &JobXmlOptions{
-			GitHubRepoURL:      opts.GitHubRepoURL,
+			GitHubRepoURL:      opts.JenkinsfileScmURL,
 			CredentialsID:      jenkinsCredentialID,
-			PipelineScriptPath: opts.J.PipelineScriptPath,
+			PipelineScriptPath: opts.JenkinsfilePath,
 		}
 		jobXmlContent, err := renderJobXml(jobTemplate, jobXmlOpts)
 		if err != nil {
 			return nil, err
 		}
-		if _, err := client.CreateJob(ctx, jobXmlContent, opts.J.JobName); err != nil {
+		if _, err := client.CreateJob(ctx, jobXmlContent, opts.JobName); err != nil {
 			return nil, fmt.Errorf("failed to create job: %s", err)
 		}
 	}

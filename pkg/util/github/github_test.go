@@ -67,9 +67,9 @@ func Setup() (mux *http.ServeMux, serverURL string, teardown func()) {
 	// mux is the HTTP request multiplexer used with the test server.
 	mux = http.NewServeMux()
 
-	// We want to ensure that tests catch mistakes where the endpoint URL is
+	// We want to ensure that tests catch mistakes where the endpoint JenkinsURL is
 	// specified as absolute rather than relative. It only makes a difference
-	// when there's a non-empty base URL path.
+	// when there's a non-empty base JenkinsURL path.
 	apiHandler := http.NewServeMux()
 	apiHandler.Handle(BaseURLPath+"/", http.StripPrefix(BaseURLPath, mux))
 

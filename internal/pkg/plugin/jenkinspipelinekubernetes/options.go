@@ -7,15 +7,9 @@ const (
 
 // Options is the struct for configurations of the jenkins-pipeline-kubernetes plugin.
 type Options struct {
-	J             *JenkinsOptions `mapstructure:"jenkins"`
-	GitHubToken   string          `mapstructure:"githubToken"`
-	GitHubRepoURL string          `mapstructure:"githubRepoUrl" validate:"required"`
-}
-
-type JenkinsOptions struct {
-	URL                string `mapstructure:"url" validate:"required,hostname_port"`
-	User               string `mapstructure:"user" validate:"required"`
-	Password           string `mapstructure:"password"`
-	JobName            string `mapstructure:"jobName"`
-	PipelineScriptPath string `mapstructure:"pipelineScriptPath"`
+	JenkinsURL        string `mapstructure:"jenkinsURL" validate:"required,hostname_port"`
+	JenkinsUser       string `mapstructure:"jenkinsUser" validate:"required"`
+	JobName           string `mapstructure:"jobName"`
+	JenkinsfilePath   string `mapstructure:"jenkinsfilePath"`
+	JenkinsfileScmURL string `mapstructure:"jenkinsfileScmURL" validate:"required"`
 }

@@ -44,7 +44,7 @@ type (
 	// JobOptions is the struct to render job xml.
 	// TODO(aFlyBird0): it seems that GitHubProjectURL and GitSCMURL could be set separately,
 	// now they are set together. Need more investigation.
-	// TODO(aFlyBird0): figure out what does diffent format of GitHub repo URL mean and handle it.
+	// TODO(aFlyBird0): figure out what does diffent format of GitHub repo JenkinsURL mean and handle it.
 	// such as https://.../, https://.../repo.git, git@......, etc.
 	JobOptions struct {
 		JobName              string

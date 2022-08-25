@@ -51,7 +51,7 @@ func (c *Client) getMainBranchRef(branch string) (*github.Reference, error) {
 		log.Debugf("Failed to get the ref for %s: %s.", refStr, err)
 		return nil, err
 	}
-	log.Debugf("Got the ref: Ref %s, URL %s, nodeId %s, Obj: %s.",
+	log.Debugf("Got the ref: Ref %s, JenkinsURL %s, nodeId %s, Obj: %s.",
 		ref.GetRef(), ref.GetURL(), ref.GetNodeID(), ref.GetObject().String())
 	return ref, nil
 }

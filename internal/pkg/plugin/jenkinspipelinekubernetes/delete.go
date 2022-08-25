@@ -36,8 +36,8 @@ func Delete(options map[string]interface{}) (bool, error) {
 	}
 
 	// delete the job created by devstream if exists
-	if _, err = client.GetJob(context.Background(), opts.J.JobName); err == nil {
-		if _, err := client.DeleteJob(context.Background(), opts.J.JobName); err != nil {
+	if _, err = client.GetJob(context.Background(), opts.JobName); err == nil {
+		if _, err := client.DeleteJob(context.Background(), opts.JobName); err != nil {
 			return false, err
 		}
 	}

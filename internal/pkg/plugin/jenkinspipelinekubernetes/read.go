@@ -34,7 +34,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 		res.CredentialsCreated = true
 	}
 
-	if _, err = client.GetJob(context.Background(), opts.J.JobName); err == nil {
+	if _, err = client.GetJob(context.Background(), opts.JobName); err == nil {
 		res.JobCreated = true
 	}
 
