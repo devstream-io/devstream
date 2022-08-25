@@ -1,5 +1,7 @@
 # jenkins-pipeline-kubernetes 插件
 
+// TODO(daniel-hutao): 下一个 pr 重写此文档。
+
 这个插件在已有的 Jenkins 上建立 Jenkins job, 将 GitHub 作为 SCM。
 
 步骤：

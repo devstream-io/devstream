@@ -1,6 +1,7 @@
 # jenkins-pipeline-kubernetes plugin
 
-TODO(aFlyBird0): Add your document here.
+// TODO(daniel-hutao): update this document after Chinese version stable.
+
 ## Usage
 
 ```yaml
