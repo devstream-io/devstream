@@ -1,42 +1,24 @@
 package jenkinspipelinekubernetes
 
 import (
-	"context"
-	"fmt"
-
-	"github.com/mitchellh/mapstructure"
-
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 func Read(options map[string]interface{}) (map[string]interface{}, error) {
-	var opts Options
-	if err := mapstructure.Decode(options, &opts); err != nil {
-		return nil, err
+	// Initialize Operator with Operations
+	operator := &plugininstaller.Operator{
+		PreExecuteOperations: plugininstaller.PreExecuteOperations{
+			ValidateAndDefaults,
+		},
+		GetStateOperation: GetState,
 	}
 
-	if errs := validateAndHandleOptions(&opts); len(errs) != 0 {
-		for _, e := range errs {
-			log.Errorf("Options error: %s.", e)
-		}
-		return nil, fmt.Errorf("opts are illegal")
-	}
-
-	// get the jenkins client and test the connection
-	client, err := NewJenkinsFromOptions(&opts)
+	status, err := operator.Execute(plugininstaller.RawOptions(options))
 	if err != nil {
 		return nil, err
 	}
 
-	res := &resource{}
-
-	if _, err = client.GetCredentialsUsername(jenkinsCredentialID); err == nil {
-		res.CredentialsCreated = true
-	}
-
-	if _, err = client.GetJob(context.Background(), opts.J.JobName); err == nil {
-		res.JobCreated = true
-	}
-
-	return res.toMap(), nil
+	log.Debugf("Return map: %v", status)
+	return status, nil
 }

@@ -7,20 +7,13 @@ tools:
   dependsOn: [ ]
   # options for the plugin
   options:
-    jenkins:
-      # jenkinsUrl, format: hostname:port, mandatory
-      url: localhost:8080
-      # jenkins user name, default: admin
-      user: admin
-      # jenkins password, you have 3 options to set the password:
-      # 1. use outputs of the `jenkins` plugin, see docs for more details
-      # 2. set the `JENKINS_PASSWORD` environment variable
-      # 3. fill in the password in this field(not recommended)
-      # if all set, devstream will read the password from the config file or outputs from jenkins plugin first, then env var.
-      password:
-      # jenkins job name, mandatory
-      jobName:
-      # path to the pipeline sript file path, relative to the git repo root directory. default: Jenkinsfile
-      pipelineScriptPath: Jenkinsfile
-    # github repo url where the pipeline script is located. mandatory
-    githubRepoUrl: https://github.com/YOUR_GITHUB_ACCOUNT/YOUR_TEST_PROJECT_NAME.git
+    # jenkinsURL
+    jenkinsURL: http://localhost:8080
+    # jenkins user name, default: admin
+    jenkinsUser: admin
+    # jenkins job name, mandatory
+    jobName: test
+    # path to the Jenkinsfile, relative to the git repo root directory. default: Jenkinsfile
+    jenkinsfilePath: Jenkinsfile
+    # github repo url where the Jenkinsfile is located. mandatory
+    jenkinsfileScmURL: https://github.com/YOUR_GITHUB_ACCOUNT/YOUR_TEST_PROJECT_NAME.git
