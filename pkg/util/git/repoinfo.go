@@ -2,6 +2,8 @@ package git
 
 import (
 	"fmt"
+
+	
 )
 
 type RepoInfo struct {
@@ -18,7 +20,15 @@ type RepoInfo struct {
 	// used for github
 	WorkPath string
 	NeedAuth bool
+
+
+	// used for gitea
+	Description string
+	Labels string
+
 }
+
+
 
 func (r *RepoInfo) GetRepoNameWithBranch() string {
 	return fmt.Sprintf("%s-%s", r.Repo, r.Branch)
