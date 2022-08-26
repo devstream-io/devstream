@@ -3,19 +3,35 @@ package jenkinspipelinekubernetes
 import (
 	"fmt"
 	"os"
+	"strings"
 
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/validator"
 )
 
-// validateAndHandleOptions validates and pre handle the options provided by the core.
-func validateAndHandleOptions(options *Options) []error {
-	validateErrs := validate(options)
+func ValidateAndDefaults(options plugininstaller.RawOptions) (plugininstaller.RawOptions, error) {
+	opts, err := NewOptions(options)
+	if err != nil {
+		return nil, err
+	}
+	defaults(opts)
 
-	defaults(options)
+	if errs := validate(opts); len(errs) != 0 {
+		for _, e := range errs {
+			log.Errorf("Validate error: %s.", e)
+		}
+		return nil, fmt.Errorf("validate failed")
+	}
 
-	envErrs := handleEnv(options)
+	if errs := initPasswdFromEnvVars(); len(errs) != 0 {
+		for _, e := range errs {
+			log.Errorf("Init password from env vars failed: %s.", e)
+		}
+		return nil, fmt.Errorf("init failed")
+	}
 
-	return append(validateErrs, envErrs...)
+	return opts.Encode()
 }
 
 func validate(options *Options) []error {
@@ -24,22 +40,24 @@ func validate(options *Options) []error {
 
 func defaults(options *Options) {
 	// pre handle the options
-	if options.J.PipelineScriptPath == "" {
-		options.J.PipelineScriptPath = defaultJenkinsPipelineScriptPath
+	if options.JenkinsfilePath == "" {
+		options.JenkinsfilePath = defaultJenkinsPipelineScriptPath
 	}
 
-	if options.J.User == "" {
-		options.J.User = defaultJenkinsUser
+	if options.JenkinsUser == "" {
+		options.JenkinsUser = defaultJenkinsUser
 	}
 
-	options.J.URL = "http://" + options.J.URL
+	if !strings.Contains(options.JenkinsURL, "http") {
+		options.JenkinsURL = "http://" + options.JenkinsURL
+	}
 }
 
-func handleEnv(options *Options) []error {
+func initPasswdFromEnvVars() []error {
 	var errs []error
 
-	options.GitHubToken = os.Getenv("GITHUB_TOKEN")
-	if options.GitHubToken == "" {
+	githubToken = os.Getenv("GITHUB_TOKEN")
+	if githubToken == "" {
 		errs = append(errs, fmt.Errorf("env GITHUB_TOKEN is required"))
 	}
 
@@ -48,17 +66,17 @@ func handleEnv(options *Options) []error {
 	// could we generate a token automatically in "jenkins" plugin?
 	// and put it into .outputs of "jenkins" plugin,
 	// so that user could run "jenkins" and "jenkins-pipeline-kubernetes"  in the same tool file.(using depends on).
-	//options.J.Token = os.Getenv("JENKINS_TOKEN")
-	//if options.J.Token == "" {
+	//options.Token = os.Getenv("JENKINS_TOKEN")
+	//if options.Token == "" {
 	//	errs = append(errs, fmt.Errorf("env JENKINS_TOKEN is required"))
 	//}
 
 	// read the password from config file(including the outputs from last plugin) first, then from env
-	if options.J.Password == "" {
-		options.J.Password = os.Getenv("JENKINS_PASSWORD")
+	if jenkinsPassword == "" {
+		jenkinsPassword = os.Getenv("JENKINS_PASSWORD")
 	}
 
-	if options.J.Password == "" {
+	if jenkinsPassword == "" {
 		errs = append(errs, fmt.Errorf("jenkins password is required"))
 	}
 

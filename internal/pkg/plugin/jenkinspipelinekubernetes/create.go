@@ -1,14 +1,10 @@
 package jenkinspipelinekubernetes
 
 import (
-	"context"
 	_ "embed"
-	"fmt"
 
-	"github.com/mitchellh/mapstructure"
-
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/pkg/util/log"
-	"github.com/devstream-io/devstream/pkg/util/template"
 )
 
 const (
@@ -18,64 +14,23 @@ const (
 )
 
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
-	var opts Options
-	if err := mapstructure.Decode(options, &opts); err != nil {
-		return nil, err
+	// Initialize Operator with Operations
+	operator := &plugininstaller.Operator{
+		PreExecuteOperations: plugininstaller.PreExecuteOperations{
+			ValidateAndDefaults,
+		},
+		ExecuteOperations: plugininstaller.ExecuteOperations{
+			CreateJob,
+		},
+		TerminateOperations: nil,
+		GetStateOperation:   GetState,
 	}
 
-	if errs := validateAndHandleOptions(&opts); len(errs) != 0 {
-		for _, e := range errs {
-			log.Errorf("Options error: %s.", e)
-		}
-		return nil, fmt.Errorf("opts are illegal")
-	}
-
-	// get the jenkins client and test the connection
-	client, err := NewJenkinsFromOptions(&opts)
+	// Execute all Operations in Operator
+	status, err := operator.Execute(plugininstaller.RawOptions(options))
 	if err != nil {
 		return nil, err
 	}
-
-	// create credential if not exists
-	if _, err := client.GetCredentialsUsername(jenkinsCredentialID); err != nil {
-		log.Infof("credential %s not found, creating...", jenkinsCredentialID)
-		if err := client.CreateCredentialsUsername(jenkinsCredentialUsername, opts.GitHubToken, jenkinsCredentialID, jenkinsCredentialDesc); err != nil {
-			return nil, err
-		}
-	}
-
-	// create job if not exists
-	ctx := context.Background()
-	if _, err := client.GetJob(ctx, opts.J.JobName); err != nil {
-		log.Infof("job %s not found, creating...", opts.J.JobName)
-		jobXmlOpts := &JobXmlOptions{
-			GitHubRepoURL:      opts.GitHubRepoURL,
-			CredentialsID:      jenkinsCredentialID,
-			PipelineScriptPath: opts.J.PipelineScriptPath,
-		}
-		jobXmlContent, err := renderJobXml(jobTemplate, jobXmlOpts)
-		if err != nil {
-			return nil, err
-		}
-		if _, err := client.CreateJob(ctx, jobXmlContent, opts.J.JobName); err != nil {
-			return nil, fmt.Errorf("failed to create job: %s", err)
-		}
-	}
-
-	res := &resource{
-		CredentialsCreated: true,
-		JobCreated:         true,
-	}
-
-	return res.toMap(), nil
-}
-
-type JobXmlOptions struct {
-	GitHubRepoURL      string
-	CredentialsID      string
-	PipelineScriptPath string
-}
-
-func renderJobXml(jobTemplate string, opts *JobXmlOptions) (string, error) {
-	return template.Render("jenkins-job", jobTemplate, opts)
+	log.Debugf("Return map: %v", status)
+	return status, nil
 }
