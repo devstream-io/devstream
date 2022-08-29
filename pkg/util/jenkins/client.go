@@ -25,6 +25,7 @@ type (
 	BasicAuth struct {
 		Username string
 		Password string
+		Token    string
 	}
 )
 
@@ -104,4 +105,12 @@ func (j *Jenkins) GetCredentialsUsername(id string) (*gojenkins.UsernameCredenti
 
 func (j *Jenkins) DeleteCredentialsUsername(id string) error {
 	return j.GetCredentialManager().Delete(context.Background(), domain, id)
+}
+
+func (a *BasicAuth) IsNameMatch(userName string) bool {
+	return userName == "" || userName == a.Username
+}
+
+func (a *BasicAuth) UsePassWordAuth() bool {
+	return len(a.Username) > 0 && len(a.Password) > 0
 }

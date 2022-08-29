@@ -21,8 +21,6 @@ The section below provides some useful links to build up this understanding.
     - [Microsoft: What is Cloud Native?](https://docs.microsoft.com/en-us/dotnet/architecture/cloud-native/definition)
     - [Cloud Native End User Tech Radar](https://radar.cncf.io/)
     - [The Twelve Factor Apps](https://12factor.net/)
-- Incident Management:
-    - [PagerDuty: What is a Runbook](https://www.pagerduty.com/resources/learn/what-is-a-runbook/)
 
 ## Learn the Basics about Docker and Kubernetes
 

@@ -38,6 +38,12 @@ func (m *mockRepoStruct) GetLocationInfo(path string) ([]*git.RepoFileStatus, er
 func (m *mockRepoStruct) DeleteFiles(commitInfo *git.CommitInfo) error {
 	return nil
 }
+func (m *mockRepoStruct) AddWebhook(webhookConfig *git.WebhookConfig) error {
+	return nil
+}
+func (m *mockRepoStruct) DeleteWebhook(webhookConfig *git.WebhookConfig) error {
+	return nil
+}
 
 var _ = Describe("PushInitRepo func", func() {
 	var (

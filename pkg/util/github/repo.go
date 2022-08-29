@@ -1,6 +1,7 @@
 package github
 
 import (
+	"errors"
 	"net/http"
 	"strings"
 
@@ -135,4 +136,14 @@ func (c *Client) ProtectBranch(branch string) error {
 
 	log.Infof("The branch \"%s\" has been protected", branch)
 	return nil
+}
+
+func (c *Client) AddWebhook(webhookConfig *git.WebhookConfig) error {
+	// TODO(steinliber) add github webhook func
+	return errors.New("gitlab add webhook is not valid for now")
+}
+
+func (c *Client) DeleteWebhook(webhookConfig *git.WebhookConfig) error {
+	// TODO(steinliber) add github webhook func
+	return errors.New("gitlab add webhook is not valid for now")
 }

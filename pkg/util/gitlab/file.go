@@ -14,7 +14,6 @@ func (c *Client) DeleteFiles(commitInfo *git.CommitInfo) error {
 	if err != nil {
 		return err
 	}
-
 	return nil
 }
 
