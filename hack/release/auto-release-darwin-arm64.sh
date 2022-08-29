@@ -26,7 +26,7 @@ echo "tag: ${tag}"
 user=devstream-io
 repo=devstream
 github_token=$GITHUB_TOKEN
-plugin_dir=.devstream
+plugin_dir=~/.devstream/plugins
 
 GOOS=$(go env GOOS)
 GOARCH=$(go env GOARCH)

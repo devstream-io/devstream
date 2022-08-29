@@ -6,7 +6,7 @@ GOOS=$3
 GOARCH=$4
 user=devstream-io
 repo=devstream
-plugin_dir=.devstream
+plugin_dir=~/.devstream/plugins
 
 # upload dtm
 echo 'Uploading 'dtm-${GOOS}-${GOARCH}' ...'
