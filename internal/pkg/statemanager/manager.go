@@ -98,7 +98,7 @@ func (m *manager) GetState(key StateKey) *State {
 // If the state already exists, update it.
 func (m *manager) AddState(key StateKey, state State) error {
 	m.statesMap.Store(key, state)
-	return m.Write(m.GetStatesMap().Format())
+	return m.Backend.Write(m.GetStatesMap().Format())
 }
 
 // UpdateState adds a new state to the manager.
@@ -106,14 +106,14 @@ func (m *manager) AddState(key StateKey, state State) error {
 // note: maybe it is duplicated with AddState
 func (m *manager) UpdateState(key StateKey, state State) error {
 	m.statesMap.Store(key, state)
-	return m.Write(m.GetStatesMap().Format())
+	return m.Backend.Write(m.GetStatesMap().Format())
 }
 
 // DeleteState deletes a state from the manager.
 // If the state does not exist, do nothing.
 func (m *manager) DeleteState(key StateKey) error {
 	m.statesMap.Delete(key)
-	return m.Write(m.GetStatesMap().Format())
+	return m.Backend.Write(m.GetStatesMap().Format())
 }
 
 // GetOutputs is used to get the origin outputs of a toolName_InstanceID

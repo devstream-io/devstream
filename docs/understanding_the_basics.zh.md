@@ -21,8 +21,6 @@
     - [微软：什么是云原生？](https://docs.microsoft.com/zh-cn/dotnet/architecture/cloud-native/definition)
     - [Cloud Native End User Tech Radar](https://radar.cncf.io/)
     - [应用的十二要素(The Twelve Factor Apps)](https://12factor.net/zh_cn/)
-- 事件管理 (Incident Management):
-    - [PagerDuty: What is a Runbook?](https://www.pagerduty.com/resources/learn/what-is-a-runbook/)
 
 ## 了解有关 Docker 和 Kubernetes 的基础知识
 

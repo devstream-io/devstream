@@ -1,18 +1,44 @@
 package gitlab
 
 import (
+	"strings"
+
 	"github.com/xanzy/go-gitlab"
 
 	"github.com/devstream-io/devstream/pkg/util/git"
-	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-// TODO(steinliber) gitlab does'nt support checkUpdate for now
 func (c *Client) PushLocalFileToRepo(commitInfo *git.CommitInfo, checkUpdate bool) (bool, error) {
+	// if checkUpdate is true, check files to update first
+	if checkUpdate {
+		updateCommitInfo := &git.CommitInfo{
+			CommitMsg:    commitInfo.CommitMsg,
+			CommitBranch: commitInfo.CommitBranch,
+		}
+		commitMap := make(git.GitFileContentMap)
+		for filePath, content := range commitInfo.GitFileMap {
+			fileExist, err := c.FileExists(filePath)
+			if err != nil {
+				return false, err
+			}
+			if fileExist {
+				commitMap[filePath] = content
+				delete(commitInfo.GitFileMap, filePath)
+			}
+		}
+		if len(commitMap) > 0 {
+			err := c.UpdateFiles(updateCommitInfo)
+			if err != nil {
+				return true, err
+			}
+		}
+	}
 	createCommitOptions := c.CreateCommitInfo(gitlab.FileCreate, commitInfo)
-	_, response, err := c.Commits.CreateCommit(c.GetRepoPath(), createCommitOptions)
-	log.Debug(response.Body)
+	_, _, err := c.Commits.CreateCommit(c.GetRepoPath(), createCommitOptions)
 	if err != nil {
+		if strings.Contains(err.Error(), "A file with this name already exists") {
+			return false, nil
+		}
 		return true, err
 	}
 	return false, nil

@@ -63,6 +63,9 @@ var (
 	//go:embed plugins/jenkins-pipeline-kubernetes.yaml
 	JenkinsPipelineKubernetesDefaultConfig string
 
+	//go:embed plugins/jenkins-pipeline.yaml
+	JenkinsPipelineDefaultConfig string
+
 	//go:embed plugins/jenkins.yaml
 	JenkinsDefaultConfig string
 
@@ -110,6 +113,7 @@ var pluginDefaultConfigs = map[string]string{
 	"helm-generic":                HelmGenericDefaultConfig,
 	"jenkins-github-integ":        JenkinsGithubIntegDefaultConfig,
 	"jenkins-pipeline-kubernetes": JenkinsPipelineKubernetesDefaultConfig,
+	"jenkins-pipeline":            JenkinsPipelineDefaultConfig,
 	"jenkins":                     JenkinsDefaultConfig,
 	"jira-github-integ":           JiraGithubIntegDefaultConfig,
 	"kube-prometheus":             KubePrometheusDefaultConfig,

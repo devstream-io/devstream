@@ -10,6 +10,8 @@ type ClientOperation interface {
 	PushLocalFileToRepo(commitInfo *CommitInfo, checkUpdate bool) (bool, error)
 	GetLocationInfo(path string) ([]*RepoFileStatus, error)
 	DeleteFiles(commitInfo *CommitInfo) error
+	AddWebhook(webhookConfig *WebhookConfig) error
+	DeleteWebhook(webhookConfig *WebhookConfig) error
 }
 
 func PushInitRepo(client ClientOperation, commitInfo *CommitInfo) error {

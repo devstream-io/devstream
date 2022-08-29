@@ -1,0 +1,23 @@
+tools:
+# name of the tool
+- name: jenkins-pipeline
+  # id of the tool instance
+  instanceID: default
+  # format: name.instanceID; If specified, dtm will make sure the dependency is applied first before handling this tool.
+  dependsOn: [ ]
+  # options for the plugin
+  options:
+    # jenkinsURL is used to config jenkins url, http://127.0.0.1:8080 for example
+    jenkinsURL: JENKINSURL
+    # jenkinsUser is jenkins's user name
+    jenkinsUser: JENKINSUSER
+    # jenkinsEnableRestart will restart jenkins if true for plugin install
+    jenkinsEnableRestart: false
+    # jobFolderName is the folderName for jenkins job
+    jobFolderName: JENKINSJOBFOLDER
+    # jobName is jenkins's job name
+    jobName: JENKINSJOBNAME
+    # jenkinsfilePath is the location describe how to get Jenkinsfile, can be remote or local
+    jenkinsfilePath: JENKINSFILESOURCELOCATION
+    # projectURL is the project repo location, like http://127.0.0.1:30080/root/project
+    projectURL: PROJECTURL

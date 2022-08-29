@@ -2,6 +2,9 @@ package common
 
 import (
 	"fmt"
+	"net/url"
+	"os"
+	"strings"
 
 	"github.com/devstream-io/devstream/pkg/util/file"
 	"github.com/devstream-io/devstream/pkg/util/git"
@@ -118,4 +121,91 @@ func (d *Repo) getRepoDownloadURL() string {
 	)
 	log.Debugf("LatestCodeZipfileDownloadUrl: %s.", latestCodeZipfileDownloadURL)
 	return latestCodeZipfileDownloadURL
+}
+
+func (d *Repo) GetRepoToken() string {
+	var envKey string
+	switch d.RepoType {
+	case "github":
+		envKey = "GITHUB_TOKEN"
+	case "gitlab":
+		envKey = "GITLAB_TOKEN"
+	default:
+		return ""
+	}
+	return os.Getenv(envKey)
+}
+
+func (d *Repo) BuildURL() string {
+	repoInfo := d.BuildRepoInfo()
+	switch d.RepoType {
+	case "github":
+		return fmt.Sprintf("https://github.com/%s/%s.git", repoInfo.GetRepoOwner(), d.Repo)
+	case "gitlab":
+		var gitlabURL string
+		if d.BaseURL != "" {
+			gitlabURL = d.BaseURL
+		} else {
+			gitlabURL = gitlab.DefaultGitlabHost
+		}
+		return fmt.Sprintf("%s/%s/%s.git", gitlabURL, repoInfo.GetRepoOwner(), d.Repo)
+	default:
+		return ""
+	}
+}
+
+func (d *Repo) AddWebHook(webhookInfo *git.WebhookConfig) error {
+	client, err := d.NewClient()
+	if err != nil {
+		return err
+	}
+	return client.AddWebhook(webhookInfo)
+}
+
+func (d *Repo) DeleteWebhook(webhookInfo *git.WebhookConfig) error {
+	client, err := d.NewClient()
+	if err != nil {
+		return err
+	}
+	return client.DeleteWebhook(webhookInfo)
+}
+
+func (d *Repo) setDefaultBranch() {
+	if d.Branch == "" {
+		switch d.RepoType {
+		case "github":
+			d.Branch = "main"
+		case "gitlab":
+			d.Branch = "master"
+		}
+	}
+}
+
+func NewRepoFromURL(repoURL, branch string) (*Repo, error) {
+	repo := &Repo{
+		Branch: branch,
+	}
+	u, err := url.Parse(repoURL)
+	if err != nil {
+		return nil, err
+	}
+	//config repo type
+	if strings.Contains(u.Host, "github") {
+		repo.RepoType = "github"
+	} else if strings.Contains(u.Host, "gitlab.com") {
+		repo.RepoType = "gitlab"
+	} else {
+		repo.RepoType = "gitlab"
+		repo.BaseURL = fmt.Sprintf("%s://%s", u.Scheme, u.Host)
+	}
+	path := u.Path
+	// config repo owner org and
+	pathPart := strings.Split(strings.TrimPrefix(path, "/"), "/")
+	if len(pathPart) != 2 {
+		return nil, fmt.Errorf("git repo path is not valid")
+	}
+	repo.Owner = pathPart[0]
+	repo.Repo = pathPart[1]
+	repo.setDefaultBranch()
+	return repo, nil
 }
