@@ -39,7 +39,7 @@ VERSION := $(shell git describe --tags --always --match='v*' | cut -c 2-)
 endif
 
 ifeq ($(origin PLUGINS_DIR),undefined)
-PLUGINS_DIR := $(ROOT_DIR)/.devstream
+PLUGINS_DIR := ~/.devstream/plugins
 $(shell mkdir -p $(PLUGINS_DIR))
 endif
 
@@ -52,7 +52,7 @@ help: ## Display this help.
 
 .PHONY: clean
 clean: ## Remove dtm and plugins. It's best to run a "clean" before "build".
-	-rm -rf .devstream
+	-rm -rf $(PLUGINS_DIR)
 	-rm -f dtm*
 
 .PHONY: build-core
@@ -67,7 +67,7 @@ build-plugin.%: generate fmt lint vet mod-tidy ## Build one dtm plugin, like "ma
 	$(eval plugin_name := $(strip $*))
 	@[ -d  $(ROOT_DIR)/cmd/plugin/$(plugin_name) ] || { echo -e "\n${RED}✘ Plugin '$(plugin_name)' not found!${RESET} The valid plugin name is as follows (Eg. You can use  ${YELLOW}make build-plugin.argocd${RESET} to build argocd plugin): \n\n$(shell ls ./cmd/plugin/)\n"; exit 1; }
 	@echo "$(YELLOW)Building plugin '$(plugin_name)'$(RESET)"
-	${GO_PLUGIN_BUILD} -o .devstream/${plugin_name}-${PLUGIN_SUFFIX}.so ${ROOT_DIR}/cmd/plugin/${plugin_name}
+	${GO_PLUGIN_BUILD} -o ${PLUGINS_DIR}/${plugin_name}-${PLUGIN_SUFFIX}.so ${ROOT_DIR}/cmd/plugin/${plugin_name}
 	@$(MAKE) md5-plugin.$(plugin_name)
 
 .PHONY: build-plugins
@@ -85,7 +85,7 @@ md5-plugins: $(addprefix md5-plugin.,$(PLUGINS))
 .PHONY: md5-plugin.%
 md5-plugin.%:
 	$(eval plugin_name := $(strip $*))
-	${MD5SUM} .devstream/${plugin_name}-${PLUGIN_SUFFIX}.so > .devstream/${plugin_name}-${PLUGIN_SUFFIX}.md5
+	${MD5SUM} $(PLUGINS_DIR)/${plugin_name}-${PLUGIN_SUFFIX}.so > $(PLUGINS_DIR)/${plugin_name}-${PLUGIN_SUFFIX}.md5
 
 .PHONY: fmt
 fmt: verify.goimports ## Run 'go fmt' & goimports against code.

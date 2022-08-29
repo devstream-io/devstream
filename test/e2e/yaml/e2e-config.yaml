@@ -1,6 +1,6 @@
 varFile: e2e-variables.yaml
 toolFile: e2e-tools.yaml
-pluginDir: .devstream
+pluginDir: ~/.devstream/plugins
 state:
   backend: local
   options:
