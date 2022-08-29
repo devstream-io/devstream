@@ -46,12 +46,15 @@ var _ = Describe("configmap methods", func() {
 				}}
 				client.clientset = fake.NewSimpleClientset(testConfigMap...)
 			})
-			It("should udpate configmap", func() {
+			It("should update configmap", func() {
 				currectConfigMap, err := client.clientset.CoreV1().ConfigMaps(
 					namespace).Get(context.Background(), configmapName, metav1.GetOptions{})
 				Expect(err).Error().ShouldNot(HaveOccurred())
 				Expect(currectConfigMap.Data).Should(Equal(data))
 				Expect(currectConfigMap.ObjectMeta.Labels).Should(Equal(labels))
+				data["field"] = "apply_config"
+				_, err = client.ApplyConfigMap(configmapName, namespace, data, labels)
+				Expect(err).Error().Should(HaveOccurred())
 			})
 		})
 	})
@@ -64,6 +67,25 @@ var _ = Describe("configmap methods", func() {
 				_, err := client.GetConfigMap(namespace, configmapName)
 				Expect(err).Error().Should(HaveOccurred())
 				Expect(errors.IsNotFound(err)).Should(BeTrue())
+			})
+		})
+		When("configmap is exist", func() {
+			BeforeEach(func() {
+				testConfigMap = []runtime.Object{&v1.ConfigMap{
+					ObjectMeta: metav1.ObjectMeta{
+						Name:      configmapName,
+						Namespace: namespace,
+						Labels:    labels,
+					},
+					Data: data,
+				}}
+				client.clientset = fake.NewSimpleClientset(testConfigMap...)
+			})
+			It("should get correct configmap", func() {
+				currentConfigMap, err := client.GetConfigMap(configmapName, namespace)
+				Expect(err).Error().ShouldNot(HaveOccurred())
+				Expect(currentConfigMap.Data).Should(Equal(data))
+				Expect(currentConfigMap.ObjectMeta.Labels).Should(Equal(labels))
 			})
 		})
 	})
