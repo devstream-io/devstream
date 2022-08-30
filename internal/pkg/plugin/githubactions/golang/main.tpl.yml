@@ -82,5 +82,5 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: [[.Docker.Registry.Username]]/[[- if not .Docker.Registry.Repository]][[.Repo]][[- else]][[.Docker.Registry.Repository]][[- end]]:${{needs.tag.outputs.new_tag}}"
+          tags: "[[.Docker.Registry.Username]]/[[- if not .Docker.Registry.Repository]][[.Repo]][[- else]][[.Docker.Registry.Repository]][[- end]]:${{needs.tag.outputs.new_tag}}"
   [[- end]]
