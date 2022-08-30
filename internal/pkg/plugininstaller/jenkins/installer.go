@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	jenkinsGitlabCredentialName = "gitlabJeninsCredential"
+	jenkinsGitlabCredentialName = "jenkinsGitlabCredential"
 )
 
 func CreateOrUpdateJob(options plugininstaller.RawOptions) error {
