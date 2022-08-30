@@ -8,16 +8,16 @@ tools:
   # options for the plugin
   options:
     # jenkinsURL is used to config jenkins url, http://127.0.0.1:8080 for example
-    jenkinsURL: JENKINSURL
+    jenkinsURL: localhost:8080
     # jenkinsUser is jenkins's user name
-    jenkinsUser: JENKINSUSER
+    jenkinsUser: admin
     # jenkinsEnableRestart will restart jenkins if true for plugin install
     jenkinsEnableRestart: false
     # jobFolderName is the folderName for jenkins job
-    jobFolderName: JENKINSJOBFOLDER
+    jobFolderName: jobs
     # jobName is jenkins's job name
-    jobName: JENKINSJOBNAME
+    jobName: test
     # jenkinsfilePath is the location describe how to get Jenkinsfile, can be remote or local
-    jenkinsfilePath: JENKINSFILESOURCELOCATION
+    jenkinsfilePath: https://raw.githubusercontent.com/YOUR_CI_FILE_LOCATION
     # projectURL is the project repo location, like http://127.0.0.1:30080/root/project
-    projectURL: PROJECTURL
+    projectURL: http://127.0.0.1:30080/root/test-project
