@@ -1,7 +1,6 @@
 package goclient
 
 import (
-	"context"
 	"errors"
 	"strings"
 
@@ -222,7 +221,7 @@ func CreateDeploymentWrapperLabelAndContainerPorts(label map[string]string, cont
 		}
 
 		log.Debugf("The Deployment %s has been created.", deployment.Name)
-		if _, err := kubeClient.AppsV1().Deployments(opts.Namespace).Create(context.TODO(), deployment, metav1.CreateOptions{}); err != nil {
+		if err := kubeClient.CreateDeployment(opts.Namespace, deployment); err != nil {
 			if !kerr.IsAlreadyExists(err) {
 				return err
 			}
@@ -262,15 +261,7 @@ func CreateServiceWrapperLabelAndPorts(label map[string]string, svcPort *corev1.
 		}
 
 		log.Debugf("The Service %s has been created.", svc.Name)
-		if _, err := kubeClient.CoreV1().Services(opts.Namespace).Create(context.TODO(), svc, metav1.CreateOptions{}); err != nil {
-			if !kerr.IsAlreadyExists(err) {
-				return err
-			}
-			log.Infof("The Service %s is already exists.", svc.Name)
-		}
-		log.Debugf("The Service %s has been created.", svc.Name)
-
-		return nil
+		return kubeClient.CreateService(opts.Namespace, svc)
 	}
 }
 

@@ -8,6 +8,8 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
+var checkRetryTime = 5
+
 // Check whether deployment is ready and service exists
 func checkDeploymentsAndServicesReady(kubeClient *k8s.Client, opts *Options) (bool, error) {
 	namespace := opts.Namespace
@@ -23,7 +25,8 @@ func checkDeploymentsAndServicesReady(kubeClient *k8s.Client, opts *Options) (bo
 		return false, err
 	}
 
-	if !kubeClient.IsDeploymentReady(dp) {
+	err = kubeClient.WaitForDeploymentReady(checkRetryTime, opts.Namespace, opts.Deployment.Name)
+	if err != nil {
 		log.Debugf("The deployment %s is not ready yet.", dp.Name)
 		return false, nil
 	}
