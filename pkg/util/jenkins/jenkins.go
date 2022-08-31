@@ -24,6 +24,7 @@ type JenkinsAPI interface {
 	DeleteJob(ctx context.Context, name string) (bool, error)
 	InstallPluginsIfNotExists(plugin []string, enableRestart bool) error
 	CreateGiltabCredential(id, token string) error
+	ConfigCasc(cascScript string) error
 }
 
 type setBearerToken struct {

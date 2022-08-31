@@ -1,6 +1,7 @@
 [[ if eq .RepoType "gitlab" ]]
 import com.dabsquared.gitlabjenkins.GitLabPushTrigger
 import com.dabsquared.gitlabjenkins.trigger.filter.BranchFilterType;
+import com.dabsquared.gitlabjenkins.connection.GitLabConnectionProperty;
 [[ end ]]
 
 import hudson.plugins.git.GitSCM;
@@ -76,6 +77,8 @@ gitlabTrigger.setSourceBranchRegex(".*")
 gitlabTrigger.setTargetBranchRegex("master")
 
 jobRef.addTrigger(gitlabTrigger)
+def gitlabConnection = new GitLabConnectionProperty("[[ .GitlabConnection ]]")
+jobRef.addProperty(gitlabConnection)
 [[ end ]]
 
 // create job

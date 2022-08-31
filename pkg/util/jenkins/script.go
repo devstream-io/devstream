@@ -1,6 +1,8 @@
 package jenkins
 
 import (
+	_ "embed"
+
 	"bytes"
 	"fmt"
 	"net/http"
@@ -12,7 +14,11 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/template"
 )
+
+//go:embed tpl/casc.tpl.groovy
+var cascGroovyScript string
 
 func (jenkins *jenkins) ExecuteScript(script string) (string, error) {
 	now := time.Now().Unix()
@@ -46,4 +52,18 @@ func (jenkins *jenkins) ExecuteScript(script string) (string, error) {
 	}
 
 	return output, nil
+}
+
+func (jenkins *jenkins) ConfigCasc(cascConfig string) error {
+	groovyCascScript, err := template.Render(
+		"jenkins casc", cascGroovyScript, map[string]string{
+			"CascConfig": cascConfig,
+		},
+	)
+	if err != nil {
+		log.Debugf("jenkins render casc failed: %s", err)
+		return err
+	}
+	_, err = jenkins.ExecuteScript(groovyCascScript)
+	return err
 }

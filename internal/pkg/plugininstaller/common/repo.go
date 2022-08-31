@@ -185,7 +185,7 @@ func NewRepoFromURL(repoURL, branch string) (*Repo, error) {
 	repo := &Repo{
 		Branch: branch,
 	}
-	u, err := url.Parse(repoURL)
+	u, err := url.ParseRequestURI(repoURL)
 	if err != nil {
 		return nil, err
 	}
@@ -194,6 +194,7 @@ func NewRepoFromURL(repoURL, branch string) (*Repo, error) {
 		repo.RepoType = "github"
 	} else if strings.Contains(u.Host, "gitlab.com") {
 		repo.RepoType = "gitlab"
+		repo.BaseURL = gitlab.DefaultGitlabHost
 	} else {
 		repo.RepoType = "gitlab"
 		repo.BaseURL = fmt.Sprintf("%s://%s", u.Scheme, u.Host)

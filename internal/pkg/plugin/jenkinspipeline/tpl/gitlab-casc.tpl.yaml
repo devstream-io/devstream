@@ -1,0 +1,11 @@
+unclassified:
+  gitLabConnectionConfig:
+    connections:
+    - apiTokenId: "[[ .CredentialName ]]"
+      clientBuilderId: "autodetect"
+      connectionTimeout: 20
+      ignoreCertificateErrors: true
+      name: "[[ .GitLabConnectionName ]]"
+      readTimeout: 20
+      url: "[[ .GitlabURL ]]"
+    useAuthenticatedEndpoint: true
