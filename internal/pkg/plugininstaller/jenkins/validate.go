@@ -2,8 +2,11 @@ package jenkins
 
 import (
 	"errors"
+	"fmt"
+	"math/rand"
 	"net/url"
 	"os"
+	"time"
 
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
@@ -20,12 +23,13 @@ const (
 	defautlAdminSecretUserPassword = "jenkins-admin-password"
 )
 
+// SetJobDefaultConfig config default fields for usage
 func SetJobDefaultConfig(options plugininstaller.RawOptions) (plugininstaller.RawOptions, error) {
 	opts, err := newJobOptions(options)
 	if err != nil {
 		return nil, err
 	}
-	// config projectRepo
+	// config default values
 	projectRepo, err := common.NewRepoFromURL(opts.ProjectURL, opts.ProjectBranch)
 	if err != nil {
 		return nil, err
@@ -34,23 +38,13 @@ func SetJobDefaultConfig(options plugininstaller.RawOptions) (plugininstaller.Ra
 	if opts.JobName == "" {
 		opts.JobName = projectRepo.Repo
 	}
-
-	ciConfig := &ci.CIConfig{
-		Type: "jenkins",
-	}
-	// config CIConfig
-	_, err = url.ParseRequestURI(opts.JenkinsfilePath)
-	// if path is url, download from remote
-	if err == nil {
-		ciConfig.RemoteURL = opts.JenkinsfilePath
-	} else {
-		ciConfig.LocalPath = opts.JenkinsfilePath
-	}
-	opts.CIConfig = ciConfig
-	err = setAdminToken(opts)
+	opts.CIConfig = buildCIConfig(opts.JenkinsfilePath)
+	basicAuth, err := buildAdminToken(opts.JenkinsUser)
 	if err != nil {
 		return nil, err
 	}
+	opts.BasicAuth = basicAuth
+	opts.SecretToken = generateRandomSecretToken()
 	return opts.encode()
 }
 
@@ -71,24 +65,21 @@ func ValidateJobConfig(options plugininstaller.RawOptions) (plugininstaller.RawO
 	return options, nil
 }
 
-func setAdminToken(opts *JobOptions) error {
+func buildAdminToken(userName string) (*jenkins.BasicAuth, error) {
 	// 1. check username is set and has env password
-	userName := opts.JenkinsUser
 	jenkinsPassword := os.Getenv("JENKINS_PASSWORD")
 	if userName != "" && jenkinsPassword != "" {
-		opts.BasicAuth = &jenkins.BasicAuth{
+		return &jenkins.BasicAuth{
 			Username: userName,
 			Password: jenkinsPassword,
-		}
-		return nil
+		}, nil
 	}
 	// 2. if not set, get user and password from secret
 	secretAuth := getAuthFromSecret()
 	if secretAuth != nil && secretAuth.IsNameMatch(userName) {
-		opts.BasicAuth = secretAuth
-		return nil
+		return secretAuth, nil
 	}
-	return errors.New("jenkins uesrname and password is required")
+	return nil, errors.New("jenkins uesrname and password is required")
 }
 
 func getAuthFromSecret() *jenkins.BasicAuth {
@@ -112,4 +103,26 @@ func getAuthFromSecret() *jenkins.BasicAuth {
 		Username: user,
 		Password: password,
 	}
+}
+
+func generateRandomSecretToken() string {
+	rand.Seed(time.Now().UnixNano())
+	b := make([]byte, 32)
+	rand.Read(b)
+	return fmt.Sprintf("%x", b)[:32]
+}
+
+func buildCIConfig(jenkinsFilePath string) *ci.CIConfig {
+	ciConfig := &ci.CIConfig{
+		Type: "jenkins",
+	}
+	// config CIConfig
+	url, err := url.ParseRequestURI(jenkinsFilePath)
+	// if path is url, download from remote
+	if err != nil || url.Host == "" {
+		ciConfig.LocalPath = jenkinsFilePath
+	} else {
+		ciConfig.RemoteURL = jenkinsFilePath
+	}
+	return ciConfig
 }

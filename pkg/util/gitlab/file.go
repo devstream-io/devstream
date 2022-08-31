@@ -2,16 +2,22 @@ package gitlab
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/xanzy/go-gitlab"
 
 	"github.com/devstream-io/devstream/pkg/util/git"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 func (c *Client) DeleteFiles(commitInfo *git.CommitInfo) error {
 	deleteCommitoptions := c.CreateCommitInfo(gitlab.FileDelete, commitInfo)
 	_, _, err := c.Commits.CreateCommit(c.GetRepoPath(), deleteCommitoptions)
 	if err != nil {
+		if strings.Contains(err.Error(), "404") {
+			log.Debugf("gitlab repo has been deleted")
+			return nil
+		}
 		return err
 	}
 	return nil
