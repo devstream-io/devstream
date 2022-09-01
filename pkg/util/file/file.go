@@ -22,19 +22,20 @@ func init() {
 }
 
 func GetPluginDir(conf string) (string, error) {
-	if flag := viper.GetString("plugin-dir"); flag != "" {
-		return flag, nil
+	pluginDir := viper.GetString("plugin-dir")
+	if pluginDir == "" {
+		pluginDir = conf
 	}
 
-	if conf == "" {
+	if pluginDir == "" {
 		return DefaultPluginDir, nil
 	}
 
-	pluginDir, err := getRealPath(conf)
+	pluginRealDir, err := getRealPath(pluginDir)
 	if err != nil {
 		return "", err
 	}
-	return pluginDir, nil
+	return pluginRealDir, nil
 }
 
 // getRealPath deal with "~" in the filePath
