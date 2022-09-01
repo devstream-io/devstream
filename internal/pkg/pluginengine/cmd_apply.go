@@ -17,7 +17,9 @@ func Apply(configFile string, continueDirectly bool) error {
 		return err
 	}
 
-	file.SetPluginDir(cfg.PluginDir)
+	if err := file.SetPluginDir(cfg.PluginDir); err != nil {
+		log.Errorf("Error: %s.", err)
+	}
 
 	err = pluginmanager.CheckLocalPlugins(cfg)
 	if err != nil {

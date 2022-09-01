@@ -3,6 +3,7 @@ package file
 import (
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
@@ -20,18 +21,46 @@ func init() {
 	DefaultPluginDir = filepath.Join(homeDir, ".devstream", "plugins")
 }
 
-func GetPluginDir(conf string) string {
-	if flag := viper.GetString("plugin-dir"); flag != "" {
-		return flag
+func GetPluginDir(conf string) (string, error) {
+	pluginDir := viper.GetString("plugin-dir")
+	if pluginDir == "" {
+		pluginDir = conf
 	}
-	if conf != "" {
-		return conf
+
+	if pluginDir == "" {
+		return DefaultPluginDir, nil
 	}
-	return DefaultPluginDir
+
+	pluginRealDir, err := getRealPath(pluginDir)
+	if err != nil {
+		return "", err
+	}
+	return pluginRealDir, nil
 }
 
-func SetPluginDir(conf string) {
-	viper.Set("plugin-dir", GetPluginDir(conf))
+// getRealPath deal with "~" in the filePath
+func getRealPath(filePath string) (string, error) {
+	if !strings.Contains(filePath, "~") {
+		return filePath, nil
+	}
+
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return "", err
+	}
+	retPath := filepath.Join(homeDir, strings.TrimPrefix(filePath, "~"))
+	log.Debugf("real path: %s.", retPath)
+
+	return retPath, nil
+}
+
+func SetPluginDir(conf string) error {
+	pluginDir, err := GetPluginDir(conf)
+	if err != nil {
+		return err
+	}
+	viper.Set("plugin-dir", pluginDir)
+	return nil
 }
 
 // CopyFile will copy file content from src to dst

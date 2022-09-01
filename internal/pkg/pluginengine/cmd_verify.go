@@ -20,7 +20,9 @@ func Verify(configFile string) bool {
 		return false
 	}
 
-	file.SetPluginDir(cfg.PluginDir)
+	if err := file.SetPluginDir(cfg.PluginDir); err != nil {
+		log.Errorf("Error: %s.", err)
+	}
 
 	// 2. according to the config, all needed plugins exist
 	err = pluginmanager.CheckLocalPlugins(cfg)
