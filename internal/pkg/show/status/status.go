@@ -36,7 +36,9 @@ func Show(configFile string) error {
 		return fmt.Errorf("failed to load the config file")
 	}
 
-	file.SetPluginDir(cfg.PluginDir)
+	if err := file.SetPluginDir(cfg.PluginDir); err != nil {
+		log.Errorf("Error: %s.", err)
+	}
 
 	smgr, err := statemanager.NewManager(*cfg.State)
 	if err != nil {

@@ -22,7 +22,9 @@ func Remove(configFile string, continueDirectly bool, isForceDelete bool) error 
 		return fmt.Errorf("failed to load the config file")
 	}
 
-	file.SetPluginDir(cfg.PluginDir)
+	if err := file.SetPluginDir(cfg.PluginDir); err != nil {
+		log.Errorf("Error: %s.", err)
+	}
 
 	err = pluginmanager.CheckLocalPlugins(cfg)
 	if err != nil {

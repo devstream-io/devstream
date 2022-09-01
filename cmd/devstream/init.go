@@ -27,7 +27,9 @@ func initCMDFunc(_ *cobra.Command, _ []string) {
 		return
 	}
 
-	file.SetPluginDir(cfg.PluginDir)
+	if err := file.SetPluginDir(cfg.PluginDir); err != nil {
+		log.Errorf("Error: %s.", err)
+	}
 
 	if version.Dev {
 		log.Errorf("Dev version plugins can't be downloaded from the remote plugin repo; please run `make build-plugin.PLUGIN_NAME` to build them locally.")
