@@ -31,7 +31,11 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	}
 
 	// 3. update and get status
-	status, err := operator.Execute(options)
+	rawOptions, err := buildDockerOptions(opts).Encode()
+	if err != nil {
+		return nil, err
+	}
+	status, err := operator.Execute(rawOptions)
 	if err != nil {
 		return nil, err
 	}
