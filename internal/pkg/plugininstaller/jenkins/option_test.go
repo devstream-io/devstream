@@ -5,10 +5,9 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/bndr/gojenkins"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
-
-	"github.com/bndr/gojenkins"
 
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/common"
