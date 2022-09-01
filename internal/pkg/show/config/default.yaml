@@ -3,6 +3,7 @@
 varFile: variables.yaml # here is a relative path. (defaults is ./variables.yaml)
 # tool file path, you can set it to absolute path or relative path.
 toolFile: tools.yaml # here is a relative path.
+pluginDir: "" # If empty, use the default value: ~/.devstream/plugins, or use -d flag to specify a directory
 # state config
 state:
   backend: local # backend can be local or s3

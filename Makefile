@@ -39,7 +39,7 @@ VERSION := $(shell git describe --tags --always --match='v*' | cut -c 2-)
 endif
 
 ifeq ($(origin PLUGINS_DIR),undefined)
-PLUGINS_DIR := ~/.devstream/plugins
+PLUGINS_DIR := ${HOME}/.devstream/plugins
 $(shell mkdir -p $(PLUGINS_DIR))
 endif
 
