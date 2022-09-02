@@ -10,9 +10,9 @@ import (
 	"github.com/tcnksm/go-input"
 
 	"github.com/devstream-io/devstream/internal/pkg/version"
-	"github.com/devstream-io/devstream/pkg/util/git"
-	"github.com/devstream-io/devstream/pkg/util/github"
 	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/scm/git"
+	"github.com/devstream-io/devstream/pkg/util/scm/github"
 )
 
 const (

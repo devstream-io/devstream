@@ -3,8 +3,10 @@ package ci
 import (
 	"errors"
 
+	"github.com/devstream-io/devstream/pkg/util/scm"
+	"github.com/devstream-io/devstream/pkg/util/scm/git"
+
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
-	"github.com/devstream-io/devstream/pkg/util/git"
 )
 
 func PushCIFiles(options plugininstaller.RawOptions) error {
@@ -18,7 +20,7 @@ func PushCIFiles(options plugininstaller.RawOptions) error {
 		return err
 	}
 	//3. init git client
-	gitClient, err := opts.ProjectRepo.NewClient()
+	gitClient, err := scm.NewClient(opts.ProjectRepo.BuildRepoInfo())
 	if err != nil {
 		return err
 	}
@@ -45,7 +47,7 @@ func DeleteCIFiles(options plugininstaller.RawOptions) error {
 		return errors.New("can't get valid ci files, please check your config")
 	}
 	//2. init git client
-	gitClient, err := opts.ProjectRepo.NewClient()
+	gitClient, err := scm.NewClient(opts.ProjectRepo.BuildRepoInfo())
 	if err != nil {
 		return err
 	}

@@ -1,8 +1,8 @@
 package trellogithub
 
 import (
-	"github.com/devstream-io/devstream/pkg/util/github"
 	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/scm/github"
 )
 
 func Read(options map[string]interface{}) (map[string]interface{}, error) {

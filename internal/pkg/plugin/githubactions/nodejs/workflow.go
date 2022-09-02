@@ -2,7 +2,7 @@ package nodejs
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/github"
-	githubCommon "github.com/devstream-io/devstream/pkg/util/github"
+	githubCommon "github.com/devstream-io/devstream/pkg/util/scm/github"
 )
 
 var workflows = []*githubCommon.Workflow{

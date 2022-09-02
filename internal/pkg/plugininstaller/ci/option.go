@@ -11,7 +11,7 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/common"
 	"github.com/devstream-io/devstream/pkg/util/file"
-	"github.com/devstream-io/devstream/pkg/util/git"
+	"github.com/devstream-io/devstream/pkg/util/scm/git"
 	"github.com/devstream-io/devstream/pkg/util/template"
 	"github.com/devstream-io/devstream/pkg/util/types"
 )

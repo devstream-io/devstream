@@ -2,7 +2,7 @@ package github
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
-	"github.com/devstream-io/devstream/pkg/util/github"
+	"github.com/devstream-io/devstream/pkg/util/scm/github"
 )
 
 func BuildWorkFlowsWrapper(workflows []*github.Workflow) plugininstaller.MutableOperation {

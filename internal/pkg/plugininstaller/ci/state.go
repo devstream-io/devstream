@@ -3,6 +3,7 @@ package ci
 import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
+	"github.com/devstream-io/devstream/pkg/util/scm"
 )
 
 func GetCIFileStatus(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
@@ -11,7 +12,7 @@ func GetCIFileStatus(options plugininstaller.RawOptions) (statemanager.ResourceS
 		return nil, err
 	}
 	fileLocation := getCIFilePath(opts.CIConfig.Type)
-	client, err := opts.ProjectRepo.NewClient()
+	client, err := scm.NewClient(opts.ProjectRepo.BuildRepoInfo())
 	if err != nil {
 		return nil, err
 	}

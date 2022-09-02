@@ -1,7 +1,7 @@
 package jiragithub
 
 import (
-	github "github.com/devstream-io/devstream/pkg/util/github"
+	"github.com/devstream-io/devstream/pkg/util/scm/github"
 )
 
 const (
