@@ -3,13 +3,12 @@ package github
 import (
 	"fmt"
 
-	"github.com/devstream-io/devstream/pkg/util/git"
-	"github.com/devstream-io/devstream/pkg/util/template"
-
 	"github.com/mitchellh/mapstructure"
 
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
-	"github.com/devstream-io/devstream/pkg/util/github"
+	"github.com/devstream-io/devstream/pkg/util/scm/git"
+	"github.com/devstream-io/devstream/pkg/util/scm/github"
+	"github.com/devstream-io/devstream/pkg/util/template"
 )
 
 const (

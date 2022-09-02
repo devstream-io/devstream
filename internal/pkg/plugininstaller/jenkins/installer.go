@@ -3,6 +3,7 @@ package jenkins
 import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/scm"
 )
 
 func CreateOrUpdateJob(options plugininstaller.RawOptions) error {
@@ -23,7 +24,11 @@ func CreateOrUpdateJob(options plugininstaller.RawOptions) error {
 		return err
 	}
 	// 3. create repo webhook
-	return opts.ProjectRepo.AddWebHook(opts.buildWebhookInfo())
+	scmClient, err := scm.NewClient(opts.ProjectRepo.BuildRepoInfo())
+	if err != nil {
+		return err
+	}
+	return scmClient.AddWebhook(opts.buildWebhookInfo())
 }
 
 func DeleteJob(options plugininstaller.RawOptions) error {
@@ -41,7 +46,11 @@ func DeleteJob(options plugininstaller.RawOptions) error {
 		return err
 	}
 	// delete repo webhook
-	return opts.ProjectRepo.DeleteWebhook(opts.buildWebhookInfo())
+	scmClient, err := scm.NewClient(opts.ProjectRepo.BuildRepoInfo())
+	if err != nil {
+		return err
+	}
+	return scmClient.DeleteWebhook(opts.buildWebhookInfo())
 }
 
 func PreInstall(plugins []string, cascTemplate string) plugininstaller.BaseOperation {

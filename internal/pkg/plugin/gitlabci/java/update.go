@@ -3,9 +3,10 @@ package java
 import (
 	"fmt"
 
+	"github.com/devstream-io/devstream/pkg/util/scm/git"
+
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/devstream-io/devstream/pkg/util/git"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 

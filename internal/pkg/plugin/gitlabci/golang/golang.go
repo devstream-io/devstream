@@ -3,7 +3,7 @@ package golang
 import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
-	"github.com/devstream-io/devstream/pkg/util/gitlab"
+	"github.com/devstream-io/devstream/pkg/util/scm/gitlab"
 )
 
 func setCIContent(options plugininstaller.RawOptions) (plugininstaller.RawOptions, error) {

@@ -2,7 +2,7 @@ package trellogithub
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/plugin/trellogithub/trello"
-	"github.com/devstream-io/devstream/pkg/util/github"
+	"github.com/devstream-io/devstream/pkg/util/scm/github"
 )
 
 const (

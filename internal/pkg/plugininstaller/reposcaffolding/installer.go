@@ -2,6 +2,8 @@ package reposcaffolding
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/pkg/util/scm"
+	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
 // InstallRepo will install repo by opts config
@@ -20,7 +22,15 @@ func InstallRepo(options plugininstaller.RawOptions) error {
 	}
 
 	// 2. Push local repo to remote
-	return opts.DestinationRepo.CreateAndPush(gitMap)
+	client, err := scm.NewClient(opts.DestinationRepo.BuildRepoInfo())
+	if err != nil {
+		return err
+	}
+	return scm.PushInitRepo(client, &git.CommitInfo{
+		CommitMsg:    scm.DefaultCommitMsg,
+		CommitBranch: scm.TransitBranch,
+		GitFileMap:   gitMap,
+	})
 }
 
 // DeleteRepo will delete repo by options
@@ -31,5 +41,9 @@ func DeleteRepo(options plugininstaller.RawOptions) error {
 		return err
 	}
 
-	return opts.DestinationRepo.Delete()
+	client, err := scm.NewClient(opts.DestinationRepo.BuildRepoInfo())
+	if err != nil {
+		return err
+	}
+	return client.DeleteRepo()
 }

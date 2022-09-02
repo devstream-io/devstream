@@ -7,16 +7,14 @@ import (
 	"strings"
 
 	"github.com/devstream-io/devstream/pkg/util/file"
-	"github.com/devstream-io/devstream/pkg/util/git"
-	"github.com/devstream-io/devstream/pkg/util/github"
-	"github.com/devstream-io/devstream/pkg/util/gitlab"
 	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/scm/git"
+	"github.com/devstream-io/devstream/pkg/util/scm/github"
+	"github.com/devstream-io/devstream/pkg/util/scm/gitlab"
 )
 
 const (
 	defaultMainBranch = "main"
-	transitBranch     = "init-with-devstream"
-	defaultCommitMsg  = "init with devstream"
 )
 
 // Repo is the repo info of github or gitlab
@@ -44,18 +42,6 @@ func (d *Repo) BuildRepoRenderConfig() map[string]interface{} {
 	return renderConfigMap
 }
 
-// CreateGithubClient build github client connection info
-func (d *Repo) NewClient() (git.ClientOperation, error) {
-	repoInfo := d.BuildRepoInfo()
-	switch d.RepoType {
-	case "github":
-		return github.NewClient(repoInfo)
-	case "gitlab":
-		return gitlab.NewClient(repoInfo)
-	}
-	return nil, fmt.Errorf("scaffolding not support repo destination: %s", d.RepoType)
-}
-
 // CreateAndRenderLocalRepo will download repo from source repo and render it locally
 func (d *Repo) CreateAndRenderLocalRepo(appName string, vars map[string]interface{}) (git.GitFileContentMap, error) {
 	//TODO(steinliber) support gtlab later
@@ -76,28 +62,6 @@ func (d *Repo) CreateAndRenderLocalRepo(appName string, vars map[string]interfac
 	)
 }
 
-// This Func will push repo to remote base on repoType
-func (d *Repo) CreateAndPush(gitMap git.GitFileContentMap) error {
-	client, err := d.NewClient()
-	if err != nil {
-		return err
-	}
-	commitInfo := &git.CommitInfo{
-		CommitMsg:    defaultCommitMsg,
-		CommitBranch: transitBranch,
-		GitFileMap:   gitMap,
-	}
-	return git.PushInitRepo(client, commitInfo)
-}
-
-func (d *Repo) Delete() error {
-	client, err := d.NewClient()
-	if err != nil {
-		return err
-	}
-	return client.DeleteRepo()
-}
-
 func (d *Repo) BuildRepoInfo() *git.RepoInfo {
 	branch := d.Branch
 	if branch == "" {
@@ -111,31 +75,22 @@ func (d *Repo) BuildRepoInfo() *git.RepoInfo {
 		NeedAuth:   true,
 		Branch:     branch,
 		BaseURL:    d.BaseURL,
+		Type:       d.RepoType,
 	}
 }
 
-func (d *Repo) getRepoDownloadURL() string {
-	repoInfo := d.BuildRepoInfo()
-	latestCodeZipfileDownloadURL := fmt.Sprintf(
-		github.DefaultLatestCodeZipfileDownloadUrlFormat, repoInfo.GetRepoOwner(), repoInfo.Repo, repoInfo.Branch,
-	)
-	log.Debugf("LatestCodeZipfileDownloadUrl: %s.", latestCodeZipfileDownloadURL)
-	return latestCodeZipfileDownloadURL
-}
-
+// GetRepoToken get repo token from env
 func (d *Repo) GetRepoToken() string {
-	var envKey string
 	switch d.RepoType {
 	case "github":
-		envKey = "GITHUB_TOKEN"
+		os.Getenv(github.TokenEnvKey)
 	case "gitlab":
-		envKey = "GITLAB_TOKEN"
-	default:
-		return ""
+		os.Getenv(gitlab.TokenEnvKey)
 	}
-	return os.Getenv(envKey)
+	return ""
 }
 
+// BuildURL return url build from repo struct
 func (d *Repo) BuildURL() string {
 	repoInfo := d.BuildRepoInfo()
 	switch d.RepoType {
@@ -154,33 +109,7 @@ func (d *Repo) BuildURL() string {
 	}
 }
 
-func (d *Repo) AddWebHook(webhookInfo *git.WebhookConfig) error {
-	client, err := d.NewClient()
-	if err != nil {
-		return err
-	}
-	return client.AddWebhook(webhookInfo)
-}
-
-func (d *Repo) DeleteWebhook(webhookInfo *git.WebhookConfig) error {
-	client, err := d.NewClient()
-	if err != nil {
-		return err
-	}
-	return client.DeleteWebhook(webhookInfo)
-}
-
-func (d *Repo) setDefaultBranch() {
-	if d.Branch == "" {
-		switch d.RepoType {
-		case "github":
-			d.Branch = "main"
-		case "gitlab":
-			d.Branch = "master"
-		}
-	}
-}
-
+// NewRepoFromURL build repo struct from scm url
 func NewRepoFromURL(repoURL, branch string) (*Repo, error) {
 	repo := &Repo{
 		Branch: branch,
@@ -207,6 +136,29 @@ func NewRepoFromURL(repoURL, branch string) (*Repo, error) {
 	}
 	repo.Owner = pathPart[0]
 	repo.Repo = pathPart[1]
-	repo.setDefaultBranch()
+	repo.Branch = repo.getBranch()
 	return repo, nil
+}
+
+func (d *Repo) getBranch() string {
+	branch := d.Branch
+	if branch != "" {
+		return branch
+	}
+	switch d.RepoType {
+	case "github":
+		branch = "main"
+	case "gitlab":
+		branch = "master"
+	}
+	return branch
+}
+
+func (d *Repo) getRepoDownloadURL() string {
+	repoInfo := d.BuildRepoInfo()
+	latestCodeZipfileDownloadURL := fmt.Sprintf(
+		github.DefaultLatestCodeZipfileDownloadUrlFormat, repoInfo.GetRepoOwner(), repoInfo.Repo, repoInfo.Branch,
+	)
+	log.Debugf("LatestCodeZipfileDownloadUrl: %s.", latestCodeZipfileDownloadURL)
+	return latestCodeZipfileDownloadURL
 }

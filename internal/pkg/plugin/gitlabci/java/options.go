@@ -6,10 +6,10 @@ import (
 	"html/template"
 	"strings"
 
-	"github.com/spf13/viper"
+	"github.com/devstream-io/devstream/pkg/util/scm/git"
+	"github.com/devstream-io/devstream/pkg/util/scm/gitlab"
 
-	"github.com/devstream-io/devstream/pkg/util/git"
-	"github.com/devstream-io/devstream/pkg/util/gitlab"
+	"github.com/spf13/viper"
 )
 
 type RegistryType string
