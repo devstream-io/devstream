@@ -100,6 +100,7 @@ nav:
   - Governance ⧉: https://github.com/devstream-io/devstream/blob/main/GOVERNANCE.md
   - Developer Guide:
     - development/architecture*.md
+    - development/dev-env-setup*.md
     - development/development-workflow*.md
     - development/commit-messages*.md
     - development/lint*.md
