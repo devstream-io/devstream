@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/devstream-io/devstream/pkg/util/scm/git"
-	"github.com/devstream-io/devstream/pkg/util/scm/gitlab"
-
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/ghttp"
 	gitlabCommon "github.com/xanzy/go-gitlab"
+
+	"github.com/devstream-io/devstream/pkg/util/scm/git"
+	"github.com/devstream-io/devstream/pkg/util/scm/gitlab"
 )
 
 var _ = Describe("repo methods", func() {

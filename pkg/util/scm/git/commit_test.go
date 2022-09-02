@@ -4,10 +4,10 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/devstream-io/devstream/pkg/util/scm/git"
-
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+
+	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
 var _ = Describe("CommitInfo struct", func() {

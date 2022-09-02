@@ -3,9 +3,9 @@ package gitlab
 import (
 	"strings"
 
-	"github.com/devstream-io/devstream/pkg/util/scm/git"
-
 	"github.com/xanzy/go-gitlab"
+
+	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
 func (c *Client) PushLocalFileToRepo(commitInfo *git.CommitInfo, checkUpdate bool) (bool, error) {

@@ -6,13 +6,12 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/devstream-io/devstream/pkg/util/scm/git"
-
 	"github.com/Masterminds/semver"
 	"github.com/tcnksm/go-input"
 
 	"github.com/devstream-io/devstream/internal/pkg/version"
 	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/scm/git"
 	"github.com/devstream-io/devstream/pkg/util/scm/github"
 )
 

@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/devstream-io/devstream/pkg/util/scm/git"
-
 	"gotest.tools/assert/cmp"
+
+	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
 type releaseTest struct {

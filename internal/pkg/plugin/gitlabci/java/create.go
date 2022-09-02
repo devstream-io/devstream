@@ -3,11 +3,10 @@ package java
 import (
 	"fmt"
 
-	"github.com/devstream-io/devstream/pkg/util/scm/git"
-
 	"github.com/mitchellh/mapstructure"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
 func Create(options map[string]interface{}) (map[string]interface{}, error) {

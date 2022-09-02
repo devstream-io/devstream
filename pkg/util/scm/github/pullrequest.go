@@ -3,11 +3,10 @@ package github
 import (
 	"fmt"
 
-	"github.com/devstream-io/devstream/pkg/util/scm/git"
+	"github.com/google/go-github/v42/github"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
-
-	"github.com/google/go-github/v42/github"
+	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
 type MergeMethod string

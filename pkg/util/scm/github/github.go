@@ -5,12 +5,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/devstream-io/devstream/pkg/util/scm/git"
-
 	"github.com/google/go-github/v42/github"
 	"golang.org/x/oauth2"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
 const (

@@ -4,9 +4,9 @@ import (
 	"errors"
 	"os"
 
-	"github.com/devstream-io/devstream/pkg/util/scm/git"
-
 	"github.com/xanzy/go-gitlab"
+
+	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
 const (

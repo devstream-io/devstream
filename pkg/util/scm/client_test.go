@@ -3,11 +3,11 @@ package scm_test
 import (
 	"errors"
 
-	"github.com/devstream-io/devstream/pkg/util/scm"
-	"github.com/devstream-io/devstream/pkg/util/scm/git"
-
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+
+	"github.com/devstream-io/devstream/pkg/util/scm"
+	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
 type mockRepoStruct struct {

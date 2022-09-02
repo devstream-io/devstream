@@ -6,13 +6,12 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/devstream-io/devstream/pkg/util/scm/git"
-
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
 	githubCommon "github.com/google/go-github/v42/github"
 
+	"github.com/devstream-io/devstream/pkg/util/scm/git"
 	"github.com/devstream-io/devstream/pkg/util/scm/github"
 	util_github "github.com/devstream-io/devstream/pkg/util/scm/github"
 )
