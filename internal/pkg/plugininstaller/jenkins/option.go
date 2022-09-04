@@ -31,6 +31,10 @@ type JobOptions struct {
 	ProjectBranch   string `mapstructure:"projectBranch"`
 	JenkinsfilePath string `mapstructure:"jenkinsfilePath" validate:"required"`
 
+	JenkinsNamespace string `mapstructure:"jenkinsNamespace"`
+	HarborURL        string `mapstructure:"harborURL" validate:"url"`
+	HarborUser       string `mapstructure:"harborUser"`
+
 	JenkinsEnableRestart bool `mapstructure:"jenkinsEnableRestart"`
 
 	// used in package

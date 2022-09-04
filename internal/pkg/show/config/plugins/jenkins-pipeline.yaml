@@ -21,3 +21,9 @@ tools:
     jenkinsfilePath: https://raw.githubusercontent.com/YOUR_CI_FILE_LOCATION
     # projectURL is the project repo location, like http://127.0.0.1:30080/root/project
     projectURL: http://127.0.0.1:30080/root/test-project
+    # jenkins namespace in k8s cluster
+    jenkinsNamespace: jenkins
+    # harbor URL for pulling/pushing
+    harborURL: http://harbor.example.com:80
+    # harbor username
+    harborUser: admin

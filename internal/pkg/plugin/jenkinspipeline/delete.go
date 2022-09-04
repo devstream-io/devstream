@@ -14,6 +14,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 			jenkins.ValidateJobConfig,
 		},
 		ExecuteOperations: plugininstaller.ExecuteOperations{
+			// TODO(daniel-hutao): delete secret: docker-config
 			ci.DeleteCIFiles,
 			jenkins.DeleteJob,
 		},
