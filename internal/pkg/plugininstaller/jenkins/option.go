@@ -59,6 +59,10 @@ func newJobOptions(options plugininstaller.RawOptions) (*JobOptions, error) {
 	if err := mapstructure.Decode(options, &opts); err != nil {
 		return nil, err
 	}
+	// TODO(daniel-hutao): wait for refactoring
+	if opts.JenkinsNamespace == "" {
+		opts.JenkinsNamespace = "jenkins"
+	}
 	return &opts, nil
 }
 
