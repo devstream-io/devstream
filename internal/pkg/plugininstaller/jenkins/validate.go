@@ -1,6 +1,7 @@
 package jenkins
 
 import (
+	"encoding/base64"
 	"errors"
 	"fmt"
 	"math/rand"
@@ -13,6 +14,7 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/common"
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 	"github.com/devstream-io/devstream/pkg/util/k8s"
+	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/validator"
 )
 
@@ -125,4 +127,55 @@ func buildCIConfig(jenkinsFilePath string) *ci.CIConfig {
 		ciConfig.RemoteURL = jenkinsFilePath
 	}
 	return ciConfig
+}
+
+func SetHarborAuth(options plugininstaller.RawOptions) (plugininstaller.RawOptions, error) {
+	opts, err := newJobOptions(options)
+	if err != nil {
+		return nil, err
+	}
+	namespace := opts.JenkinsNamespace
+	harborURL := opts.HarborURL
+	harborUser := opts.HarborUser
+
+	harborPasswd := os.Getenv("HARBOR_PASSWORD")
+	if harborPasswd == "" {
+		harborPasswd = os.Getenv("HARBOR_PASSWD")
+	}
+	if harborPasswd == "" {
+		return nil, fmt.Errorf("the environment variable HARBOR_PASSWORD is not set")
+	}
+
+	return options, createDockerSecret(namespace, harborURL, harborUser, harborPasswd)
+}
+
+func createDockerSecret(namespace, url, username, password string) error {
+	tmpStr := fmt.Sprintf("%s:%s", username, password)
+	authStr := base64.StdEncoding.EncodeToString([]byte(tmpStr))
+	log.Debugf("Auth string: %s.", authStr)
+
+	configJsonStrTpl := `{
+"auths": {
+   "%s": {
+     "auth": "%s"
+   }
+}`
+	configJsonStr := fmt.Sprintf(configJsonStrTpl, url, authStr)
+	log.Debugf("config.json: %s.", configJsonStr)
+
+	// create secret in k8s
+	client, err := k8s.NewClient()
+	if err != nil {
+		return err
+	}
+
+	data := map[string][]byte{
+		"config.json": []byte(configJsonStr),
+	}
+	_, err = client.ApplySecret("docker-config", namespace, data, nil)
+	if err != nil {
+		return err
+	}
+	log.Infof("Secret %s/%s has been created.", namespace, "docker-config")
+	return nil
 }
