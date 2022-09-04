@@ -3,7 +3,6 @@ package common
 import (
 	"fmt"
 	"net/url"
-	"os"
 	"strings"
 
 	"github.com/devstream-io/devstream/pkg/util/file"
@@ -77,17 +76,6 @@ func (d *Repo) BuildRepoInfo() *git.RepoInfo {
 		BaseURL:    d.BaseURL,
 		Type:       d.RepoType,
 	}
-}
-
-// GetRepoToken get repo token from env
-func (d *Repo) GetRepoToken() string {
-	switch d.RepoType {
-	case "github":
-		os.Getenv(github.TokenEnvKey)
-	case "gitlab":
-		os.Getenv(gitlab.TokenEnvKey)
-	}
-	return ""
 }
 
 // BuildURL return url build from repo struct

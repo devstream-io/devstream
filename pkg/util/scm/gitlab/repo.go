@@ -1,11 +1,10 @@
 package gitlab
 
 import (
-	"strings"
-
 	"github.com/xanzy/go-gitlab"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/pkgerror"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
@@ -51,11 +50,7 @@ func (c *Client) InitRepo() error {
 		p.NamespaceID = gitlab.Int(groupId)
 	}
 	_, _, err = c.Projects.CreateProject(p)
-	if err != nil {
-		if strings.Contains(err.Error(), "has already been taken") {
-			log.Debugf("gitlab repo %s already exist, not create...", c.Repo)
-			return nil
-		}
+	if err != nil && pkgerror.CheckSlientErrorByMessage(err, errRepoNotFound) {
 		return err
 	}
 
@@ -64,10 +59,9 @@ func (c *Client) InitRepo() error {
 
 func (c *Client) DeleteRepo() error {
 	_, err := c.Projects.DeleteProject(c.GetRepoPath())
-	if err != nil {
+	if err != nil && pkgerror.CheckSlientErrorByMessage(err, errRepoNotFound) {
 		return err
 	}
-
 	return nil
 }
 
@@ -76,8 +70,8 @@ func (c *Client) DescribeRepo() (*gitlab.Project, error) {
 	res, _, err := c.Projects.GetProject(c.GetRepoPath(), p)
 
 	if err != nil {
-		log.Debugf("gitlab project: get [%s] info error %s", c.GetRepoPath(), err)
-		return nil, err
+		log.Debugf("gitlab project: [%s] error %+v", c.GetRepoPath(), err)
+		return nil, c.newModuleError(err)
 	}
 
 	return res, nil
@@ -88,30 +82,35 @@ func (c *Client) AddWebhook(webhookConfig *git.WebhookConfig) error {
 	if err != nil {
 		return err
 	}
-	if projectHook == nil {
-		p := &gitlab.AddProjectHookOptions{
-			PushEvents: gitlab.Bool(true),
-			Token:      gitlab.String(webhookConfig.SecretToken),
-			URL:        gitlab.String(webhookConfig.Address),
-		}
-		_, _, err := c.Projects.AddProjectHook(c.GetRepoPath(), p)
-		return err
+	if projectHook != nil {
+		log.Debugf("gitlab AddWebhook already exist")
+		return nil
 	}
-	log.Debugf("gitlab AddWebhook already exist")
+	p := &gitlab.AddProjectHookOptions{
+		PushEvents: gitlab.Bool(true),
+		Token:      gitlab.String(webhookConfig.SecretToken),
+		URL:        gitlab.String(webhookConfig.Address),
+	}
+	_, _, err = c.Projects.AddProjectHook(c.GetRepoPath(), p)
+	if err != nil {
+		return c.newModuleError(err)
+	}
 	return nil
 }
 
 func (c *Client) DeleteWebhook(webhookConfig *git.WebhookConfig) error {
 	projectHook, err := c.getWebhook(webhookConfig)
+	if err != nil && pkgerror.CheckSlientErrorByMessage(err, errRepoExist) {
+		return err
+	}
+	if projectHook == nil {
+		log.Debugf("gitlab DeleteWebhook not found")
+		return nil
+	}
+	_, err = c.Projects.DeleteProjectHook(c.GetRepoPath(), projectHook.ID)
 	if err != nil {
-		log.Debugf("gitlab DeleteWebhook list hooks failed: %s", err)
-		return err
+		return c.newModuleError(err)
 	}
-	if projectHook != nil {
-		_, err := c.Projects.DeleteProjectHook(c.GetRepoPath(), projectHook.ID)
-		return err
-	}
-	log.Infof("gitlab DeleteWebhook not found")
 	return nil
 }
 
@@ -119,8 +118,8 @@ func (c *Client) getWebhook(webhookConfig *git.WebhookConfig) (*gitlab.ProjectHo
 	p := &gitlab.ListProjectHooksOptions{}
 	hooks, _, err := c.Projects.ListProjectHooks(c.GetRepoPath(), p)
 	if err != nil {
-		log.Debugf("gitlab DeleteWebhook lsit hooks failed: %s", err)
-		return nil, err
+		log.Debugf("gitlab DeleteWebhook list hooks failed: %s", err)
+		return nil, c.newModuleError(err)
 	}
 	for _, hook := range hooks {
 		if hook.URL == webhookConfig.Address {

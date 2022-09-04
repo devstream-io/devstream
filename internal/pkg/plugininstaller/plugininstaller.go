@@ -76,6 +76,9 @@ func (o *Operator) Execute(options RawOptions) (map[string]interface{}, error) {
 	if o.GetStateOperation != nil {
 		log.Debugf("Start to execute GetStateOperation...")
 		state, err = o.GetStateOperation(options)
+		if err != nil {
+			return nil, err
+		}
 	}
 	return state, err
 }
