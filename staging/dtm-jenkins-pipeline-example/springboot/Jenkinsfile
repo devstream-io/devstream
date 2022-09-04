@@ -1,5 +1,5 @@
 version="1.0.0"
-repository="steinsliber/maven_test"
+repository="devstream/sprintboot-test"
 tag="latest"
 image="${repository}:${version}.${env.BUILD_NUMBER}"
 
