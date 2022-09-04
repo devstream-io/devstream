@@ -2,11 +2,11 @@ package gitlab
 
 import (
 	"net/http"
-	"strings"
 
 	"github.com/xanzy/go-gitlab"
 
-	"github.com/devstream-io/devstream/pkg/util/log"
+	mapset "github.com/deckarep/golang-set/v2"
+
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
@@ -14,11 +14,7 @@ func (c *Client) DeleteFiles(commitInfo *git.CommitInfo) error {
 	deleteCommitoptions := c.CreateCommitInfo(gitlab.FileDelete, commitInfo)
 	_, _, err := c.Commits.CreateCommit(c.GetRepoPath(), deleteCommitoptions)
 	if err != nil {
-		if strings.Contains(err.Error(), "404") {
-			log.Debugf("gitlab repo has been deleted")
-			return nil
-		}
-		return err
+		return c.newModuleError(err)
 	}
 	return nil
 }
@@ -27,7 +23,7 @@ func (c *Client) UpdateFiles(commitInfo *git.CommitInfo) error {
 	updateCommitoptions := c.CreateCommitInfo(gitlab.FileUpdate, commitInfo)
 	_, _, err := c.Commits.CreateCommit(c.GetRepoPath(), updateCommitoptions)
 	if err != nil {
-		return err
+		return c.newModuleError(err)
 	}
 	return nil
 }
@@ -58,11 +54,10 @@ func (c *Client) GetLocationInfo(path string) ([]*git.RepoFileStatus, error) {
 	}
 
 	file, response, err := c.RepositoryFiles.GetFile(c.GetRepoPath(), path, getFileOptions)
+	errCodeSet := mapset.NewSet(http.StatusBadRequest, http.StatusUnauthorized, http.StatusNotFound)
 
-	for _, v := range []int{http.StatusBadRequest, http.StatusUnauthorized, http.StatusNotFound} {
-		if response.StatusCode == v {
-			return gitRepoFileStatus, nil
-		}
+	if response != nil && errCodeSet.Contains(response.StatusCode) {
+		return gitRepoFileStatus, nil
 	}
 
 	if err != nil {

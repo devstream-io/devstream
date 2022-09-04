@@ -58,9 +58,6 @@ func ValidateJobConfig(options plugininstaller.RawOptions) (plugininstaller.RawO
 	if err = validator.StructAllError(opts); err != nil {
 		return nil, err
 	}
-	if token := opts.ProjectRepo.GetRepoToken(); token == "" {
-		return nil, errors.New("git repo token is required")
-	}
 	if opts.ProjectRepo.RepoType == "github" {
 		return nil, errors.New("jenkins job not support github for now")
 	}

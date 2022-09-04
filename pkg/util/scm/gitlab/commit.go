@@ -1,10 +1,9 @@
 package gitlab
 
 import (
-	"strings"
-
 	"github.com/xanzy/go-gitlab"
 
+	"github.com/devstream-io/devstream/pkg/util/pkgerror"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
@@ -35,11 +34,8 @@ func (c *Client) PushLocalFileToRepo(commitInfo *git.CommitInfo, checkUpdate boo
 	}
 	createCommitOptions := c.CreateCommitInfo(gitlab.FileCreate, commitInfo)
 	_, _, err := c.Commits.CreateCommit(c.GetRepoPath(), createCommitOptions)
-	if err != nil {
-		if strings.Contains(err.Error(), "A file with this name already exists") {
-			return false, nil
-		}
-		return true, err
+	if err != nil && pkgerror.CheckSlientErrorByMessage(err, errFileExist) {
+		return true, c.newModuleError(err)
 	}
 	return false, nil
 }
