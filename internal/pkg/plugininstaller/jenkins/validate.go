@@ -49,7 +49,7 @@ func SetJobDefaultConfig(options plugininstaller.RawOptions) (plugininstaller.Ra
 
 	opts.ProjectRepo = projectRepo
 	if opts.Pipeline.JobName == "" {
-		opts.Pipeline.JobName = fmt.Sprintf("jobs/%s", projectRepo.Repo)
+		opts.Pipeline.JobName = projectRepo.Repo
 	}
 
 	opts.CIConfig = buildCIConfig(opts.Pipeline.JenkinsfilePath)

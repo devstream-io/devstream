@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"path"
 	"strings"
 
 	"github.com/mitchellh/mapstructure"
@@ -21,7 +20,6 @@ import (
 const (
 	jenkinsGitlabCredentialName = "jenkinsGitlabCredential"
 	jenkinsGitlabConnectionName = "jenkinsGitlabConnection"
-	jenkinsDefaultJobFolderName = "jobs"
 )
 
 type JobOptions struct {
@@ -158,22 +156,19 @@ func (j *JobOptions) deleteJob(client jenkins.JenkinsAPI) error {
 }
 
 func (j *JobOptions) getJobPath() string {
-	if strings.Contains(j.Pipeline.JobName, "/") {
-		return j.Pipeline.JobName
-	}
-	return path.Join(jenkinsDefaultJobFolderName, j.Pipeline.JobName)
+	return j.Pipeline.JobName
 }
 
 func (j *JobOptions) getJobFolder() string {
-	if !strings.Contains(j.Pipeline.JobName, "/") {
-		return jenkinsDefaultJobFolderName
+	if strings.Contains(j.Pipeline.JobName, "/") {
+		return strings.Split(j.Pipeline.JobName, "/")[0]
 	}
-	return strings.Split(j.Pipeline.JobName, "/")[0]
+	return ""
 }
 
 func (j *JobOptions) getJobName() string {
-	if !strings.Contains(j.Pipeline.JobName, "/") {
-		return j.Pipeline.JobName
+	if strings.Contains(j.Pipeline.JobName, "/") {
+		return strings.Split(j.Pipeline.JobName, "/")[1]
 	}
-	return strings.Split(j.Pipeline.JobName, "/")[1]
+	return j.Pipeline.JobName
 }
