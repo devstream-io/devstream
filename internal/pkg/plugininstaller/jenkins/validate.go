@@ -140,9 +140,6 @@ func SetHarborAuth(options plugininstaller.RawOptions) (plugininstaller.RawOptio
 
 	harborPasswd := os.Getenv("HARBOR_PASSWORD")
 	if harborPasswd == "" {
-		harborPasswd = os.Getenv("HARBOR_PASSWD")
-	}
-	if harborPasswd == "" {
 		return nil, fmt.Errorf("the environment variable HARBOR_PASSWORD is not set")
 	}
 
