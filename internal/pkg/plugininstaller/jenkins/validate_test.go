@@ -43,7 +43,7 @@ var _ = Describe("SetJobDefaultConfig func", func() {
 			opts, err := newJobOptions(newOptions)
 			Expect(err).Error().ShouldNot(HaveOccurred())
 			Expect(opts.CIConfig).ShouldNot(BeNil())
-			Expect(opts.JobName).Should(Equal("test_project"))
+			Expect(opts.Pipeline.JobName).Should(Equal("test_project"))
 			Expect(opts.BasicAuth).ShouldNot(BeNil())
 			Expect(opts.BasicAuth.Username).Should(Equal(jenkinsUser))
 			Expect(opts.BasicAuth.Password).Should(Equal(jenkinsPassword))
