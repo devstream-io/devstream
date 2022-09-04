@@ -3,6 +3,7 @@ package jenkins
 import (
 	"context"
 	"fmt"
+	"net/url"
 	"os"
 	"path"
 
@@ -148,4 +149,12 @@ func (j *JobOptions) deleteJob(client jenkins.JenkinsAPI) error {
 
 func (j *JobOptions) getJobPath() string {
 	return path.Join(j.JobFolderName, j.JobName)
+}
+
+func (j *JobOptions) getHarborHost() string {
+	harborURL, err := url.ParseRequestURI(j.HarborURL)
+	if err != nil {
+		return j.HarborURL
+	}
+	return harborURL.Host
 }

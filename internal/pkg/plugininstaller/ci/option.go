@@ -83,11 +83,11 @@ func (c *CIConfig) getFromLocation(appName string) (git.GitFileContentMap, error
 	if c.Type == ciGitHubWorkConfigLocation {
 		gitFilePath = filepath.Join(gitFilePath, filepath.Base(c.LocalPath))
 	}
-	content, err := os.ReadFile(c.LocalPath)
+	content, err := template.New().FromLocalFile(c.LocalPath).SetDefaultRender(appName, c.Vars).Render()
 	if err != nil {
 		return nil, err
 	}
-	gitFileMap[gitFilePath] = content
+	gitFileMap[gitFilePath] = []byte(content)
 	return gitFileMap, nil
 }
 

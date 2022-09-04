@@ -23,6 +23,7 @@ const (
 	defaultAdminSecretName         = "jenkins"
 	defautlAdminSecretUserName     = "jenkins-admin-user"
 	defautlAdminSecretUserPassword = "jenkins-admin-password"
+	defaultHarborProject           = "library"
 )
 
 // SetJobDefaultConfig config default fields for usage
@@ -40,7 +41,7 @@ func SetJobDefaultConfig(options plugininstaller.RawOptions) (plugininstaller.Ra
 	if opts.JobName == "" {
 		opts.JobName = projectRepo.Repo
 	}
-	opts.CIConfig = buildCIConfig(opts.JenkinsfilePath)
+	opts.CIConfig = buildCIConfig(opts)
 	basicAuth, err := buildAdminToken(opts.JenkinsUser)
 	if err != nil {
 		return nil, err
@@ -111,17 +112,24 @@ func generateRandomSecretToken() string {
 	return fmt.Sprintf("%x", b)[:32]
 }
 
-func buildCIConfig(jenkinsFilePath string) *ci.CIConfig {
+func buildCIConfig(opts *JobOptions) *ci.CIConfig {
+	jenkinsFilePath := opts.JenkinsfilePath
 	ciConfig := &ci.CIConfig{
 		Type: "jenkins",
 	}
 	// config CIConfig
-	url, err := url.ParseRequestURI(jenkinsFilePath)
+	jenkinsfileURL, err := url.ParseRequestURI(jenkinsFilePath)
 	// if path is url, download from remote
-	if err != nil || url.Host == "" {
+	if err != nil || jenkinsfileURL.Host == "" {
 		ciConfig.LocalPath = jenkinsFilePath
 	} else {
 		ciConfig.RemoteURL = jenkinsFilePath
+	}
+	harborURLHost := opts.getHarborHost() + "/"
+	ciConfig.Vars = map[string]interface{}{
+		"Project":          defaultHarborProject,
+		"ImageName":        opts.ProjectRepo.Repo,
+		"ImageRepoAddress": harborURLHost,
 	}
 	return ciConfig
 }
@@ -132,7 +140,7 @@ func SetHarborAuth(options plugininstaller.RawOptions) (plugininstaller.RawOptio
 		return nil, err
 	}
 	namespace := opts.JenkinsNamespace
-	harborURL := opts.HarborURL
+	harborURL := opts.getHarborHost()
 	harborUser := opts.HarborUser
 
 	harborPasswd := os.Getenv("HARBOR_PASSWORD")
@@ -149,10 +157,11 @@ func createDockerSecret(namespace, url, username, password string) error {
 	log.Debugf("Auth string: %s.", authStr)
 
 	configJsonStrTpl := `{
-"auths": {
-   "%s": {
-     "auth": "%s"
-   }
+  "auths": {
+    "%s": {
+      "auth": "%s"
+    }
+  }
 }`
 	configJsonStr := fmt.Sprintf(configJsonStrTpl, url, authStr)
 	log.Debugf("config.json: %s.", configJsonStr)

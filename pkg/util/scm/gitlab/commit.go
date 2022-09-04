@@ -34,7 +34,7 @@ func (c *Client) PushLocalFileToRepo(commitInfo *git.CommitInfo, checkUpdate boo
 	}
 	createCommitOptions := c.CreateCommitInfo(gitlab.FileCreate, commitInfo)
 	_, _, err := c.Commits.CreateCommit(c.GetRepoPath(), createCommitOptions)
-	if err != nil && pkgerror.CheckSlientErrorByMessage(err, errFileExist) {
+	if err != nil && !pkgerror.CheckSlientErrorByMessage(err, errFileExist) {
 		return true, c.newModuleError(err)
 	}
 	return false, nil

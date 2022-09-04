@@ -58,25 +58,29 @@ var _ = Describe("SetJobDefaultConfig func", func() {
 
 var _ = Describe("buildCIConfig func", func() {
 	var (
-		path string
+		options *JobOptions
 	)
 	When("jenkinsfilePath is local path", func() {
 		BeforeEach(func() {
-			path = "/test/path"
+			options = &JobOptions{
+				JenkinsfilePath: "/test/path",
+			}
 		})
 		It("should use localPath", func() {
-			ciConfigData := buildCIConfig(path)
-			Expect(ciConfigData.LocalPath).Should(Equal(path))
+			ciConfigData := buildCIConfig(options)
+			Expect(ciConfigData.LocalPath).Should(Equal(options.JenkinsfilePath))
 			Expect(ciConfigData.RemoteURL).Should(BeEmpty())
 		})
 	})
 	When("jenkinsfilePath is remote url", func() {
 		BeforeEach(func() {
-			path = "http://test.com/test/path"
+			options = &JobOptions{
+				JenkinsfilePath: "/test/path",
+			}
 		})
 		It("should use remote url", func() {
-			ciConfigData := buildCIConfig(path)
-			Expect(ciConfigData.RemoteURL).Should(Equal(path))
+			ciConfigData := buildCIConfig(options)
+			Expect(ciConfigData.RemoteURL).Should(Equal(options.JenkinsfilePath))
 			Expect(ciConfigData.LocalPath).Should(BeEmpty())
 			Expect(string(ciConfigData.Type)).Should(Equal("jenkins"))
 		})
