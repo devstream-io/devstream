@@ -19,16 +19,16 @@
 | projectRepo.org        | destination repo org                                                                                             |
 | projectRepo.repo       | destination repo name                                                                                            |
 | projectRepo.branch     | destination repo branch                                                                                          |
-| projectRepo.repo_type  | destination repo type, support github/gitlab for now                                                             |
-| projectRepo.base_url   | if you use self-build gitlab, you can set this field to gitlab address                                           |
+| projectRepo.repoType  | destination repo type, support github/gitlab for now                                                             |
+| projectRepo.baseURL   | if you use self-build gitlab, you can set this field to gitlab address                                           |
 | projectRepo.visibility | if you use gitlab, you can set this field for repo permission                                                    |
 
 **注意事项：**
 
 - `ci.localPath` 和 `ci.remoteURL` 不能同时为空。
 - 如果你同时设置了 `ci.localPath` 和 `ci.remoteURL`，`ci.localPath` 将会被优先使用。
-- 如果你的 `projectRepo.repo_type` 配置是 `gitlab`，`ci.type` 就不能是 `github`。
-- 如果你的 `projectRepo.repo_type` 配置是 `github`, `ci.type` 就不能是 `gitlab`。
+- 如果你的 `projectRepo.repoType` 配置是 `gitlab`，`ci.type` 就不能是 `github`。
+- 如果你的 `projectRepo.repoType` 配置是 `github`, `ci.type` 就不能是 `gitlab`。
 
 ### 示例
 
@@ -47,7 +47,7 @@ tools:
         org: ""
         repo: test-repo
         branch: main
-        repo_type: github
+        repoType: github
 ```
 
 这个配置将会把本地的 workflows 目录放置于 GitHub 的 `.github/workflows` 目录。
@@ -67,8 +67,8 @@ tools:
         org: ""
         repo: test-repo
         branch: main
-        repo_type: gitlab
-        base_url: http://127.0.0.1:30000
+        repoType: gitlab
+        baseURL: http://127.0.0.1:30000
 ```
 
 这个配置将会把[URL](https://raw.githubusercontent.com/DeekshithSN/Jenkinsfile/inputTest/Jenkinsfile) 中的 Jenkinsfile 文件置于 GitLab 的仓库。

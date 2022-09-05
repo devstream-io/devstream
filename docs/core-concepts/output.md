@@ -50,18 +50,18 @@ tools:
 - name: repo-scaffolding
   instanceID: default
   options:
-    destination_repo:
+    destinationRepo:
       owner: IronCore864
       org: ""
       repo: golang-demo
       branch: main
-      repo_type: github
+      repoType: github
     vars:
       ImageRepo: "ironcore864/golang-demo"
-    source_repo:
+    sourceRepo:
       org: devstream-io
       repo: dtm-scaffolding-golang
-      repo_type: github
+      repoType: github
 - name: argocd
   instanceID: default
   options:

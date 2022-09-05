@@ -23,9 +23,9 @@ type Repo struct {
 	Repo              string `validate:"required" mapstructure:"repo"`
 	Branch            string `mapstructure:"branch"`
 	PathWithNamespace string
-	RepoType          string `validate:"oneof=gitlab github" mapstructure:"repo_type"`
+	RepoType          string `validate:"oneof=gitlab github" mapstructure:"repoType"`
 	// This is config for gitlab
-	BaseURL    string `validate:"omitempty,url" mapstructure:"base_url"`
+	BaseURL    string `validate:"omitempty,url" mapstructure:"baseURL"`
 	Visibility string `validate:"omitempty,oneof=public private internal" mapstructure:"visibility"`
 }
 

@@ -11,7 +11,7 @@ tools:
         owner: YOUR_GITLAB_USERNAME
         repo: YOUR_GITLAB_REPO_NAME
         branch: YOUR_GITLAB_REPO_BRANCH
-        base_url: YOUR_GITLAB_HOST_ADDRESS
+        baseURL: YOUR_GITLAB_HOST_ADDRESS
       ci:
         remoteURL : https://someplace.com/to/download/your/template
         vars:

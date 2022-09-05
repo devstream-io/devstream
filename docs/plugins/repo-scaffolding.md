@@ -14,9 +14,9 @@ This plugin need fllowing config base on your repo type:
 
 - GITLAB_TOKEN: Please set the environment variable before using the plugin. If you do not know how to create the token, Can view the document [Personal access tokens](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html).
 
-- `destination_repo.baseUrl`: If you are using a self-built GitLab repository, set this configuration to the URL of the self-built GitLab.
+- `destinationRepo.baseUrl`: If you are using a self-built GitLab repository, set this configuration to the URL of the self-built GitLab.
 
-- `destination_repo.visibility`: This configuration is used to set the permissions of the new repository. The options are `public`, `private`, and `internal`.
+- `destinationRepo.visibility`: This configuration is used to set the permissions of the new repository. The options are `public`, `private`, and `internal`.
 
 *Tips:*
 
@@ -36,7 +36,7 @@ This plugin need fllowing config base on your repo type:
 
 Replace the following from the config above:
 
-### destination_repo
+### destinationRepo
 
 This configuration is used for the target repo, it includes the following config.
 
@@ -46,9 +46,9 @@ This configuration is used for the target repo, it includes the following config
 - `YOUR_DESTINATION_REPO_MAIN_BRANCH`
 - `YOUR_DESTINATION_REPO_TYPE` 
 
-Currently, `owner`, `org`, and `repo` are mandatory, `branch` has the default value "main", `repo_type` support  `gitlab` and `github` for now. 
+Currently, `owner`, `org`, and `repo` are mandatory, `branch` has the default value "main", `repoType` support  `gitlab` and `github` for now. 
 
-### source_repo
+### sourceRepo
 
 This configuration is used for the source scaffolding repoI(only supports GitHub for now). It includes the following config.
 
@@ -56,7 +56,7 @@ This configuration is used for the source scaffolding repoI(only supports GitHub
 - `YOUR_TEMPLATE_REPO_NAME`
 - `YOUR_TEMPLATE_REPO_TYPE`
 
-All the parameters in the example above are mandatory for now, `repo_type` only support `github` for now. 
+All the parameters in the example above are mandatory for now, `repoType` only support `github` for now. 
 
 ### vars
 
@@ -64,10 +64,10 @@ This configuration is used for template render, It has default variables listed 
 
 ```json
 {
-    "AppName": destination_repo.repo,
+    "AppName": destinationRepo.repo,
     "Repo": {
-        "Name": destination_repo.repo,
-        "Owner": destination_repo.owner
+        "Name": destinationRepo.repo,
+        "Owner": destinationRepo.owner
     }
 }
 ```
@@ -76,7 +76,7 @@ This configuration is used for template render, It has default variables listed 
 
 ### official scaffolding repo config
 
-These repos are official scaffolding repo to use for `source_repo` config, You can use these repo directly or just create one for yourself.
+These repos are official scaffolding repo to use for `sourceRepo` config, You can use these repo directly or just create one for yourself.
 
 | language | org | repo |
 |  ----  | ----  |----  |
@@ -91,16 +91,16 @@ tools:
   - name: repo-scaffolding
     instanceID: golang-scaffolding
     options:
-      destination_repo:
+      destinationRepo:
         owner: test_owner
         org: ""
         repo: dtm-test-golang
         branch: main
-        repo_type: github
-      source_repo:
+        repoType: github
+      sourceRepo:
         org: devstream-io
         repo: dtm-scaffolding-golang
-        repo_type: github
+        repoType: github
       vars:
         ImageRepo: dtm-test/golang-repo
 ```
@@ -114,18 +114,18 @@ tools:
   - name: repo-scaffolding
     instanceID: java-scaffolding
     options:
-      destination_repo:
+      destinationRepo:
         owner: test_owner
         org: ""
         repo: dtm-test-java
         branch: main
         baseUrl: 127.0.0.1:30001
         visibility: public
-        repo_type: gitlab
-      source_repo:
+        repoType: gitlab
+      sourceRepo:
         org: spring-guides
         repo: gs-spring-boot
-        repo_type: github
+        repoType: github
 ```
 
 this config will create `dtm-test-java` repo for user test_owner in GitHub.

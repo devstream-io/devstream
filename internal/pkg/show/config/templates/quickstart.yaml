@@ -14,16 +14,16 @@ tools:
   - name: repo-scaffolding
     instanceID: golang-github
     options:
-      destination_repo:
+      destinationRepo:
         owner: YOUR_GITHUB_USERNAME_CASE_SENSITIVE
         org: ""
         repo: go-webapp-devstream-demo
         branch: main
-        repo_type: github
-      source_repo:
+        repoType: github
+      sourceRepo:
         org: devstream-io
         repo: dtm-scaffolding-golang
-        repo_type: github
+        repoType: github
       vars:
         ImageRepo: YOUR_DOCKER_USERNAME/go-webapp-devstream-demo
   - name: githubactions-golang

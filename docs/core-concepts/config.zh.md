@@ -65,18 +65,18 @@ tools:
 - name: repo-scaffolding
   instanceID: golang-github
   options:
-    destination_repo:
+    destinationRepo:
       owner: [[ githubUsername ]]
       org: ""
       repo: [[ repoName ]]
       branch: [[ defaultBranch ]]
-      repo_type: github
+      repoType: github
     vars:
       ImageRepo: "[[ dockerhubUsername ]]/[[ repoName ]]"
-    source_repo:
+    sourceRepo:
       org: devstream-io
       repo: dtm-scaffolding-golang
-      repo_type: github
+      repoType: github
 - name: jira-github-integ
   instanceID: default
   dependsOn: [ "repo-scaffolding.golang-github" ]

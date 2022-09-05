@@ -16,11 +16,11 @@ var _ = Describe("Validate func", func() {
 				"instanceID": "test",
 				"options": map[string]interface{}{
 					"projectRepo": map[string]interface{}{
-						"owner":     "test_user",
-						"org":       "",
-						"repo":      "test",
-						"branch":    "test",
-						"repo_type": "github",
+						"owner":    "test_user",
+						"org":      "",
+						"repo":     "test",
+						"branch":   "test",
+						"repoType": "github",
 					},
 				},
 			}
@@ -33,12 +33,12 @@ var _ = Describe("Validate func", func() {
 					"type":      "jenkins",
 				},
 				"projectRepo": map[string]any{
-					"base_url":  "http://127.0.0.1:30020",
-					"branch":    "main",
-					"org":       "",
-					"owner":     "test_user",
-					"repo":      "test",
-					"repo_type": "gitlab",
+					"baseURL":  "http://127.0.0.1:30020",
+					"branch":   "main",
+					"org":      "",
+					"owner":    "test_user",
+					"repo":     "test",
+					"repoType": "gitlab",
 				},
 			}
 			_, err = ci.Validate(fileNotExistOption)
@@ -49,12 +49,12 @@ var _ = Describe("Validate func", func() {
 					"type":      "github",
 				},
 				"projectRepo": map[string]any{
-					"base_url":  "http://127.0.0.1:30020",
-					"branch":    "main",
-					"org":       "",
-					"owner":     "test_user",
-					"repo":      "test",
-					"repo_type": "gitlab",
+					"baseURL":  "http://127.0.0.1:30020",
+					"branch":   "main",
+					"org":      "",
+					"owner":    "test_user",
+					"repo":     "test",
+					"repoType": "gitlab",
 				},
 			}
 			_, err = ci.Validate(repoCiConflictOption)
@@ -70,12 +70,12 @@ var _ = Describe("Validate func", func() {
 					"type":      "jenkins",
 				},
 				"projectRepo": map[string]any{
-					"base_url":  "http://127.0.0.1:30020",
-					"branch":    "main",
-					"org":       "",
-					"owner":     "test_user",
-					"repo":      "test",
-					"repo_type": "gitlab",
+					"baseURL":  "http://127.0.0.1:30020",
+					"branch":   "main",
+					"org":      "",
+					"owner":    "test_user",
+					"repo":     "test",
+					"repoType": "gitlab",
 				},
 			}
 		})
@@ -86,12 +86,12 @@ var _ = Describe("Validate func", func() {
 					"type":      "gitlab",
 				},
 				"projectRepo": map[string]any{
-					"base_url":  "http://127.0.0.1:30020",
-					"branch":    "main",
-					"org":       "",
-					"owner":     "test_user",
-					"repo":      "test",
-					"repo_type": "gitlab",
+					"baseURL":  "http://127.0.0.1:30020",
+					"branch":   "main",
+					"org":      "",
+					"owner":    "test_user",
+					"repo":     "test",
+					"repoType": "gitlab",
 				},
 			}
 			_, err := ci.Validate(option)
