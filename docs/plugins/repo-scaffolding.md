@@ -46,7 +46,7 @@ This configuration is used for the target repo, it includes the following config
 - `YOUR_DESTINATION_REPO_MAIN_BRANCH`
 - `YOUR_DESTINATION_REPO_TYPE` 
 
-Currently, `owner`, `org`, and `repo` are mandatory, `branch` has the default value "main", `repo_type` support  `gitlab` and `github` for now. 
+Currently, `owner`, `org`, and `repo` are mandatory, `branch` has the default value "main", `repoType` support  `gitlab` and `github` for now. 
 
 ### sourceRepo
 
@@ -56,7 +56,7 @@ This configuration is used for the source scaffolding repoI(only supports GitHub
 - `YOUR_TEMPLATE_REPO_NAME`
 - `YOUR_TEMPLATE_REPO_TYPE`
 
-All the parameters in the example above are mandatory for now, `repo_type` only support `github` for now. 
+All the parameters in the example above are mandatory for now, `repoType` only support `github` for now. 
 
 ### vars
 
@@ -76,7 +76,7 @@ This configuration is used for template render, It has default variables listed 
 
 ### official scaffolding repo config
 
-These repos are official scaffolding repo to use for `source_repo` config, You can use these repo directly or just create one for yourself.
+These repos are official scaffolding repo to use for `sourceRepo` config, You can use these repo directly or just create one for yourself.
 
 | language | org | repo |
 |  ----  | ----  |----  |

@@ -15,16 +15,16 @@ tools:
   - name: repo-scaffolding
     instanceID: default
     options:
-    destination_repo:
+    destinationRepo:
       owner: [[ githubUsername ]]
       org: ""
       repo: [[ repo ]]
       branch: main
-      repo_type: github
-    source_repo:
+      repoType: github
+    sourceRepo:
       org: devstream-io
       repo: dtm-scaffolding-golang
-      repo_type: github
+      repoType: github
 
 # variables.yaml sample:
 githubUsername: daniel-hutao

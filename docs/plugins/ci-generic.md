@@ -19,16 +19,16 @@ This plugin installs ci script in GitLib/GitHub repo from local or remote url.
 | projectRepo.org        | destination repo org                                                                                             |
 | projectRepo.repo       | destination repo name                                                                                            |
 | projectRepo.branch     | destination repo branch                                                                                          |
-| projectRepo.repo_type  | destination repo type, support github/gitlab for now                                                             |
-| projectRepo.base_url   | if you use self-build gitlab, you can set this field to gitlab address                                           |
+| projectRepo.repoType  | destination repo type, support github/gitlab for now                                                             |
+| projectRepo.baseURL   | if you use self-build gitlab, you can set this field to gitlab address                                           |
 | projectRepo.visibility | if you use gitlab, you can set this field for repo permission                                                    |
 
 **Notes:**
 
 - `ci.localPath` and `ci.remoteURL` can't be empty at the same time.
 - if you set both `ci.localPath` and `ci.remoteURL`, `ci.localPath` will be used.
-- if your `projectRepo.repo_type` is `gitlab`, the `ci.type` is not allowed to be `github`.
-- if your `projectRepo.repo_type` is `github`, the `ci.type` is not allowed to be `gitlab`.
+- if your `projectRepo.repoType` is `gitlab`, the `ci.type` is not allowed to be `github`.
+- if your `projectRepo.repoType` is `github`, the `ci.type` is not allowed to be `gitlab`.
 
 ### Example
 
@@ -47,7 +47,7 @@ tools:
         org: ""
         repo: test-repo
         branch: main
-        repo_type: github
+        repoType: github
 ```
 
 This config will put local workflows directory to GitHub repo's .github/workflows directory.
@@ -67,8 +67,8 @@ tools:
         org: ""
         repo: test-repo
         branch: main
-        repo_type: gitlab
-        base_url: http://127.0.0.1:30000
+        repoType: gitlab
+        baseURL: http://127.0.0.1:30000
 ```
 
 This config will put file from [remote](https://raw.githubusercontent.com/DeekshithSN/Jenkinsfile/inputTest/Jenkinsfile)  to GitLab repo.
