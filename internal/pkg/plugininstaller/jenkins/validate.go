@@ -5,13 +5,11 @@ import (
 	"errors"
 	"fmt"
 	"math/rand"
-	"net/url"
 	"os"
 	"strings"
 	"time"
 
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/common"
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 	"github.com/devstream-io/devstream/pkg/util/k8s"
@@ -24,6 +22,7 @@ const (
 	defaultAdminSecretName         = "jenkins"
 	defautlAdminSecretUserName     = "jenkins-admin-user"
 	defautlAdminSecretUserPassword = "jenkins-admin-password"
+	defaultImageProject            = "library"
 )
 
 // SetJobDefaultConfig config default fields for usage
@@ -51,8 +50,7 @@ func SetJobDefaultConfig(options plugininstaller.RawOptions) (plugininstaller.Ra
 	if opts.Pipeline.JobName == "" {
 		opts.Pipeline.JobName = projectRepo.Repo
 	}
-
-	opts.CIConfig = buildCIConfig(opts.Pipeline.JenkinsfilePath)
+	opts.buildCIConfig()
 
 	basicAuth, err := buildAdminToken(opts.Jenkins.User)
 	if err != nil {
@@ -134,28 +132,14 @@ func generateRandomSecretToken() string {
 	return fmt.Sprintf("%x", b)[:32]
 }
 
-func buildCIConfig(jenkinsFilePath string) *ci.CIConfig {
-	ciConfig := &ci.CIConfig{
-		Type: "jenkins",
-	}
-	// config CIConfig
-	url, err := url.ParseRequestURI(jenkinsFilePath)
-	// if path is url, download from remote
-	if err != nil || url.Host == "" {
-		ciConfig.LocalPath = jenkinsFilePath
-	} else {
-		ciConfig.RemoteURL = jenkinsFilePath
-	}
-	return ciConfig
-}
-
 func SetHarborAuth(options plugininstaller.RawOptions) (plugininstaller.RawOptions, error) {
 	opts, err := newJobOptions(options)
 	if err != nil {
 		return nil, err
 	}
+
 	namespace := opts.Jenkins.Namespace
-	imageRepoUrl := opts.Pipeline.ImageRepo.URL
+	imageRepoUrl := opts.getImageHost()
 	imageRepoUser := opts.Pipeline.ImageRepo.User
 
 	imageRepoPasswd := os.Getenv("IMAGE_REPO_PASSWORD")
@@ -172,10 +156,11 @@ func createDockerSecret(namespace, url, username, password string) error {
 	log.Debugf("Auth string: %s.", authStr)
 
 	configJsonStrTpl := `{
-"auths": {
-   "%s": {
-     "auth": "%s"
-   }
+  "auths": {
+    "%s": {
+      "auth": "%s"
+    }
+  }
 }`
 	configJsonStr := fmt.Sprintf(configJsonStrTpl, url, authStr)
 	log.Debugf("config.json: %s.", configJsonStr)

@@ -8,8 +8,8 @@ import (
 )
 
 var (
-	errRepoNotFound   pkgerror.ErrorMessage = "Project Not Found"
-	errRepoExist      pkgerror.ErrorMessage = "name already exists"
+	errRepoNotFound pkgerror.ErrorMessage = "Project Not Found"
+	// errRepoExist      pkgerror.ErrorMessage = "name already exists"
 	errWebHookInvalid pkgerror.ErrorMessage = "invlid url given"
 	errFileExist      pkgerror.ErrorMessage = "A file with this name already exists"
 )

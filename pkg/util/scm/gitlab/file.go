@@ -7,13 +7,14 @@ import (
 
 	mapset "github.com/deckarep/golang-set/v2"
 
+	"github.com/devstream-io/devstream/pkg/util/pkgerror"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
 func (c *Client) DeleteFiles(commitInfo *git.CommitInfo) error {
 	deleteCommitoptions := c.CreateCommitInfo(gitlab.FileDelete, commitInfo)
 	_, _, err := c.Commits.CreateCommit(c.GetRepoPath(), deleteCommitoptions)
-	if err != nil {
+	if err != nil && !pkgerror.CheckSlientErrorByMessage(err, errRepoNotFound) {
 		return c.newModuleError(err)
 	}
 	return nil

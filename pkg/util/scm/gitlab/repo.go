@@ -50,7 +50,7 @@ func (c *Client) InitRepo() error {
 		p.NamespaceID = gitlab.Int(groupId)
 	}
 	_, _, err = c.Projects.CreateProject(p)
-	if err != nil && pkgerror.CheckSlientErrorByMessage(err, errRepoNotFound) {
+	if err != nil && !pkgerror.CheckSlientErrorByMessage(err, errRepoNotFound) {
 		return err
 	}
 
@@ -59,7 +59,7 @@ func (c *Client) InitRepo() error {
 
 func (c *Client) DeleteRepo() error {
 	_, err := c.Projects.DeleteProject(c.GetRepoPath())
-	if err != nil && pkgerror.CheckSlientErrorByMessage(err, errRepoNotFound) {
+	if err != nil && !pkgerror.CheckSlientErrorByMessage(err, errRepoNotFound) {
 		return err
 	}
 	return nil
@@ -100,7 +100,7 @@ func (c *Client) AddWebhook(webhookConfig *git.WebhookConfig) error {
 
 func (c *Client) DeleteWebhook(webhookConfig *git.WebhookConfig) error {
 	projectHook, err := c.getWebhook(webhookConfig)
-	if err != nil && pkgerror.CheckSlientErrorByMessage(err, errRepoExist) {
+	if err != nil && !pkgerror.CheckSlientErrorByMessage(err, errRepoNotFound) {
 		return err
 	}
 	if projectHook == nil {

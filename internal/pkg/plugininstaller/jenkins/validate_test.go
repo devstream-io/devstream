@@ -64,33 +64,6 @@ var _ = Describe("SetJobDefaultConfig func", func() {
 	})
 })
 
-var _ = Describe("buildCIConfig func", func() {
-	var (
-		path string
-	)
-	When("jenkinsfilePath is local path", func() {
-		BeforeEach(func() {
-			path = "/test/path"
-		})
-		It("should use localPath", func() {
-			ciConfigData := buildCIConfig(path)
-			Expect(ciConfigData.LocalPath).Should(Equal(path))
-			Expect(ciConfigData.RemoteURL).Should(BeEmpty())
-		})
-	})
-	When("jenkinsfilePath is remote url", func() {
-		BeforeEach(func() {
-			path = "http://test.com/test/path"
-		})
-		It("should use remote url", func() {
-			ciConfigData := buildCIConfig(path)
-			Expect(ciConfigData.RemoteURL).Should(Equal(path))
-			Expect(ciConfigData.LocalPath).Should(BeEmpty())
-			Expect(string(ciConfigData.Type)).Should(Equal("jenkins"))
-		})
-	})
-})
-
 var _ = Describe("generateRandomSecretToken func", func() {
 	It("should return random str", func() {
 		token := generateRandomSecretToken()

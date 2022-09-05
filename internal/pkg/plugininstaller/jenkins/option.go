@@ -3,7 +3,9 @@ package jenkins
 import (
 	"context"
 	"fmt"
+	"net/url"
 	"os"
+	"path"
 	"strings"
 
 	"github.com/mitchellh/mapstructure"
@@ -171,4 +173,40 @@ func (j *JobOptions) getJobName() string {
 		return strings.Split(j.Pipeline.JobName, "/")[1]
 	}
 	return j.Pipeline.JobName
+}
+
+func (j *JobOptions) getImageHost() string {
+	harborAddress := j.Pipeline.ImageRepo.URL
+	harborURL, err := url.ParseRequestURI(harborAddress)
+	if err != nil {
+		return harborAddress
+	}
+	return harborURL.Host
+}
+
+func (j *JobOptions) buildCIConfig() {
+	jenkinsFilePath := j.Pipeline.JenkinsfilePath
+	ciConfig := &ci.CIConfig{
+		Type: "jenkins",
+	}
+	// config CIConfig
+	jenkinsfileURL, err := url.ParseRequestURI(jenkinsFilePath)
+	// if path is url, download from remote
+	if err != nil || jenkinsfileURL.Host == "" {
+		ciConfig.LocalPath = jenkinsFilePath
+	} else {
+		ciConfig.RemoteURL = jenkinsFilePath
+	}
+	var imageName string
+	if j.ProjectRepo != nil {
+		imageName = j.ProjectRepo.Repo
+	} else {
+		imageName = j.Pipeline.JobName
+	}
+	harborURLHost := path.Join(j.getImageHost(), defaultImageProject)
+	ciConfig.Vars = map[string]interface{}{
+		"ImageName":        imageName,
+		"ImageRepoAddress": harborURLHost,
+	}
+	j.CIConfig = ciConfig
 }

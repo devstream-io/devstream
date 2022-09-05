@@ -1,7 +1,7 @@
-version="1.0.0"
-repository="devstream/sprintboot-test"
+version="1.0.${env.BUILD_NUMBER}"
+repository="[[ .ImageRepoAddress ]]/[[ .ImageName ]]"
 tag="latest"
-image="${repository}:${version}.${env.BUILD_NUMBER}"
+image="${repository}:${version}"
 
 podTemplate(containers: [
     containerTemplate(name: 'maven', image: 'maven:3.8.6-openjdk-18', command: 'sleep', args: '99d'),
@@ -27,8 +27,8 @@ podTemplate(containers: [
                 container('buildkit') {
                     stage('build a Maven project') {
                         sh """
-                          buildctl build --frontend dockerfile.v0 --local context=. --local dockerfile=. --output type=image,name=${image},push=true
-                          buildctl build --frontend dockerfile.v0 --local context=. --local dockerfile=. --output type=image,name=${repository}:${tag},push=true
+                          buildctl build --frontend dockerfile.v0 --local context=. --local dockerfile=. --output type=image,name=${image},push=true,registry.insecure=true
+                          buildctl build --frontend dockerfile.v0 --local context=. --local dockerfile=. --output type=image,name=${repository}:${tag},push=true,registry.insecure=true
                         """
                     }
                 }

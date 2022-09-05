@@ -190,4 +190,29 @@ var _ = Describe("JobOptions struct", func() {
 			})
 		})
 	})
+
+	Context("buildCIConfig method", func() {
+		When("jenkinsfilePath is local path", func() {
+			BeforeEach(func() {
+				jobOptions.Pipeline.JenkinsfilePath = "test/local"
+			})
+			It("should use localPath", func() {
+				jobOptions.buildCIConfig()
+				Expect(jobOptions.CIConfig.LocalPath).Should(Equal(jobOptions.Pipeline.JenkinsfilePath))
+				Expect(jobOptions.CIConfig.RemoteURL).Should(BeEmpty())
+			})
+		})
+		When("jenkinsfilePath is remote url", func() {
+			BeforeEach(func() {
+				jobOptions.Pipeline.JenkinsfilePath = "http://www.test.com/Jenkinsfile"
+			})
+			It("should use remote url", func() {
+				jobOptions.buildCIConfig()
+				Expect(jobOptions.CIConfig.LocalPath).Should(BeEmpty())
+				Expect(jobOptions.CIConfig.RemoteURL).Should(Equal(jobOptions.CIConfig.RemoteURL))
+				Expect(string(jobOptions.CIConfig.Type)).Should(Equal("jenkins"))
+			})
+		})
+	})
+
 })
