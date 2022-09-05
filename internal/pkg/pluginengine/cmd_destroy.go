@@ -11,7 +11,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func Destroy(configFile string, continueDirectly bool) error {
+func Destroy(configFile string, continueDirectly bool, isForceDestroy bool) error {
 	cfg, err := configmanager.NewManager(configFile).LoadConfig()
 	if err != nil {
 		return err
@@ -30,7 +30,7 @@ func Destroy(configFile string, continueDirectly bool) error {
 		return err
 	}
 
-	changes, err := GetChangesForDestroy(smgr)
+	changes, err := GetChangesForDestroy(smgr, isForceDestroy)
 	if err != nil {
 		log.Debugf("Get changes failed: %s.", err)
 		return err
