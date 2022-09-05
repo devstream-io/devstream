@@ -54,7 +54,7 @@ type Pipeline struct {
 
 type ImageRepo struct {
 	URL  string `mapstructure:"url" validate:"url"`
-	User string `mapstructure:"User"`
+	User string `mapstructure:"user"`
 }
 
 type jobScriptRenderInfo struct {

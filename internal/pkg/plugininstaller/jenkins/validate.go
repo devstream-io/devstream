@@ -96,7 +96,7 @@ func buildAdminToken(userName string) (*jenkins.BasicAuth, error) {
 			Password: jenkinsPassword,
 		}, nil
 	}
-	// 2. if not set, get User and password from secret
+	// 2. if not set, get user and password from secret
 	secretAuth := getAuthFromSecret()
 	if secretAuth != nil && secretAuth.IsNameMatch(userName) {
 		return secretAuth, nil
