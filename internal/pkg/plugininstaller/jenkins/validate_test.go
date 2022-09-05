@@ -21,15 +21,23 @@ var _ = Describe("SetJobDefaultConfig func", func() {
 		err := os.Setenv("JENKINS_PASSWORD", jenkinsPassword)
 		Expect(err).NotTo(HaveOccurred())
 		options = map[string]interface{}{
-			"jenkinsURL":      jenkinsURL,
-			"jenkinsUser":     jenkinsUser,
-			"projectURL":      projectURL,
-			"jenkinsfilePath": jenkinsFilePath,
+			"jenkins": map[string]interface{}{
+				"url":  jenkinsURL,
+				"user": jenkinsUser,
+			},
+			"scm": map[string]interface{}{
+				"projectURL": projectURL,
+			},
+			"pipeline": map[string]interface{}{
+				"jenkinsfilePath": jenkinsFilePath,
+			},
 		}
 	})
 	When("repo url is not valie", func() {
 		BeforeEach(func() {
-			options["projectURL"] = "not_valid_url/gg"
+			options["scm"] = map[string]interface{}{
+				"projectURL": "not_valid_url/gg",
+			}
 		})
 		It("should return err", func() {
 			_, err := SetJobDefaultConfig(options)
@@ -43,7 +51,7 @@ var _ = Describe("SetJobDefaultConfig func", func() {
 			opts, err := newJobOptions(newOptions)
 			Expect(err).Error().ShouldNot(HaveOccurred())
 			Expect(opts.CIConfig).ShouldNot(BeNil())
-			Expect(opts.JobName).Should(Equal("test_project"))
+			Expect(opts.Pipeline.JobName).Should(Equal("test_project"))
 			Expect(opts.BasicAuth).ShouldNot(BeNil())
 			Expect(opts.BasicAuth.Username).Should(Equal(jenkinsUser))
 			Expect(opts.BasicAuth.Password).Should(Equal(jenkinsPassword))
@@ -53,37 +61,6 @@ var _ = Describe("SetJobDefaultConfig func", func() {
 	})
 	AfterEach(func() {
 		os.Unsetenv("JENKINS_PASSWORD")
-	})
-})
-
-var _ = Describe("buildCIConfig func", func() {
-	var (
-		options *JobOptions
-	)
-	When("jenkinsfilePath is local path", func() {
-		BeforeEach(func() {
-			options = &JobOptions{
-				JenkinsfilePath: "/test/path",
-			}
-		})
-		It("should use localPath", func() {
-			ciConfigData := buildCIConfig(options)
-			Expect(ciConfigData.LocalPath).Should(Equal(options.JenkinsfilePath))
-			Expect(ciConfigData.RemoteURL).Should(BeEmpty())
-		})
-	})
-	When("jenkinsfilePath is remote url", func() {
-		BeforeEach(func() {
-			options = &JobOptions{
-				JenkinsfilePath: "/test/path",
-			}
-		})
-		It("should use remote url", func() {
-			ciConfigData := buildCIConfig(options)
-			Expect(ciConfigData.RemoteURL).Should(Equal(options.JenkinsfilePath))
-			Expect(ciConfigData.LocalPath).Should(BeEmpty())
-			Expect(string(ciConfigData.Type)).Should(Equal("jenkins"))
-		})
 	})
 })
 
@@ -105,18 +82,28 @@ var _ = Describe("ValidateJobConfig func", func() {
 		projectURL = "https://test.gitlab.com/test/test_project"
 		jenkinsFilePath = "http://raw.content.com/Jenkinsfile"
 		options = map[string]interface{}{
-			"jenkinsURL":      jenkinsURL,
-			"jenkinsUser":     jenkinsUser,
-			"projectURL":      projectURL,
-			"jenkinsfilePath": jenkinsFilePath,
+			"jenkins": map[string]interface{}{
+				"url":  jenkinsURL,
+				"user": jenkinsUser,
+			},
+			"scm": map[string]interface{}{
+				"projectURL": projectURL,
+			},
+			"pipeline": map[string]interface{}{
+				"jenkinsfilePath": jenkinsFilePath,
+			},
 		}
 	})
 	When("Input field miss", func() {
 		BeforeEach(func() {
 			options = map[string]interface{}{
-				"jenkinsURL":  jenkinsURL,
-				"jenkinsUser": jenkinsUser,
-				"projectURL":  projectURL,
+				"jenkins": map[string]interface{}{
+					"url":  jenkinsURL,
+					"user": jenkinsUser,
+				},
+				"scm": map[string]interface{}{
+					"projectURL": projectURL,
+				},
 			}
 		})
 		It("should return error", func() {

@@ -49,7 +49,7 @@ func (opt *Options) buildGitMap() (gitMap git.GitFileContentMap, err error) {
 		gitMap, err = ciConfig.getFromContent(opt.ProjectRepo.Repo)
 	}
 	if len(gitMap) == 0 {
-		return nil, errors.New("can't get valid ci files, please check your config")
+		return nil, errors.New("can't get valid Jenkinsfile, please check your config")
 	}
 	return gitMap, err
 }

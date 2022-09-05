@@ -1,5 +1,5 @@
 version="1.0.${env.BUILD_NUMBER}"
-repository="[[ .ImageRepoAddress ]][[ .Project ]]/[[ .ImageName ]]"
+repository="[[ .ImageRepoAddress ]]/[[ .ImageName ]]"
 tag="latest"
 image="${repository}:${version}"
 
