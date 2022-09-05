@@ -194,6 +194,7 @@ var _ = Describe("JobOptions struct", func() {
 	Context("buildCIConfig method", func() {
 		When("jenkinsfilePath is local path", func() {
 			BeforeEach(func() {
+				jobOptions.Pipeline.JenkinsfilePath = "test/local"
 			})
 			It("should use localPath", func() {
 				jobOptions.buildCIConfig()
