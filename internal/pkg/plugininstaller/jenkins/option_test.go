@@ -71,12 +71,12 @@ func (m *mockErrorJenkinsClient) ConfigCasc(cascScript string) error {
 
 var _ = Describe("JobOptions struct", func() {
 	var (
-		jenkinsURL, secretToken, jobName, folderName, projectURL, jenkinsFilePath, userName, password, repoOwner, repoName string
-		jobOptions                                                                                                         *JobOptions
-		basicAuth                                                                                                          *jenkins.BasicAuth
-		projectRepo                                                                                                        *common.Repo
-		ciConfig                                                                                                           *ci.CIConfig
-		mockClient                                                                                                         jenkins.JenkinsAPI
+		jenkinsURL, secretToken, jobName, projectURL, jenkinsFilePath, userName, password, repoOwner, repoName string
+		jobOptions                                                                                             *JobOptions
+		basicAuth                                                                                              *jenkins.BasicAuth
+		projectRepo                                                                                            *common.Repo
+		ciConfig                                                                                               *ci.CIConfig
+		mockClient                                                                                             jenkins.JenkinsAPI
 	)
 	BeforeEach(func() {
 		jenkinsURL = "http://test.com"
@@ -84,8 +84,7 @@ var _ = Describe("JobOptions struct", func() {
 		password = "test_password"
 		repoOwner = "owner"
 		repoName = "repo"
-		jobName = "test_job"
-		folderName = "test_folder"
+		jobName = "test_folder/test_job"
 		projectURL = "http://127.0.0.1:300/test/project"
 		jenkinsFilePath = "http://raw.content.com/Jenkinsfile"
 		basicAuth = &jenkins.BasicAuth{
@@ -104,17 +103,25 @@ var _ = Describe("JobOptions struct", func() {
 		}
 		secretToken = "secret"
 		jobOptions = &JobOptions{
-			JenkinsURL:      jenkinsURL,
-			JenkinsUser:     userName,
-			JobName:         jobName,
-			JobFolderName:   folderName,
-			ProjectURL:      projectURL,
-			ProjectBranch:   "test",
-			JenkinsfilePath: jenkinsFilePath,
-			BasicAuth:       basicAuth,
-			ProjectRepo:     projectRepo,
-			CIConfig:        ciConfig,
-			SecretToken:     secretToken,
+			Jenkins: Jenkins{
+				URL:           jenkinsURL,
+				User:          userName,
+				Namespace:     "jenkins",
+				EnableRestart: false,
+			},
+			SCM: SCM{
+				ProjectURL:    projectURL,
+				ProjectBranch: "test",
+			},
+			Pipeline: Pipeline{
+				JobName:         jobName,
+				JenkinsfilePath: jenkinsFilePath,
+				ImageRepo:       ImageRepo{},
+			},
+			BasicAuth:   basicAuth,
+			ProjectRepo: projectRepo,
+			CIConfig:    ciConfig,
+			SecretToken: secretToken,
 		}
 	})
 	Context("encode method", func() {
@@ -146,7 +153,7 @@ var _ = Describe("JobOptions struct", func() {
 	Context("buildWebhookInfo method", func() {
 		It("should work normal", func() {
 			webHookInfo := jobOptions.buildWebhookInfo()
-			Expect(webHookInfo.Address).Should(Equal(fmt.Sprintf("%s/project/%s", jobOptions.JenkinsURL, jobOptions.getJobPath())))
+			Expect(webHookInfo.Address).Should(Equal(fmt.Sprintf("%s/project/%s", jobOptions.Jenkins.URL, jobOptions.getJobPath())))
 			Expect(webHookInfo.SecretToken).Should(Equal(secretToken))
 		})
 	})

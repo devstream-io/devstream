@@ -14,12 +14,12 @@ func GetStatus(options plugininstaller.RawOptions) (statemanager.ResourceState, 
 		return nil, err
 	}
 
-	client, err := jenkins.NewClient(opts.JenkinsURL, opts.BasicAuth)
+	client, err := jenkins.NewClient(opts.Jenkins.URL, opts.BasicAuth)
 	if err != nil {
 		return nil, err
 	}
 	res := make(statemanager.ResourceState)
-	job, err := client.GetJob(context.Background(), opts.JobName)
+	job, err := client.GetJob(context.Background(), opts.getJobName())
 	if err != nil {
 		return nil, err
 	}

@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"path"
+	"strings"
 
 	"github.com/mitchellh/mapstructure"
 
@@ -23,25 +23,38 @@ const (
 )
 
 type JobOptions struct {
-	JenkinsURL      string `mapstructure:"jenkinsURL" validate:"required,url"`
-	JenkinsUser     string `mapstructure:"jenkinsUser"`
-	JobName         string `mapstructure:"jobName"`
-	JobFolderName   string `mapstructure:"jobFolderName"`
-	ProjectURL      string `mapstructure:"projectURL" validate:"required"`
-	ProjectBranch   string `mapstructure:"projectBranch"`
-	JenkinsfilePath string `mapstructure:"jenkinsfilePath" validate:"required"`
-
-	JenkinsNamespace string `mapstructure:"jenkinsNamespace"`
-	HarborURL        string `mapstructure:"harborURL" validate:"url"`
-	HarborUser       string `mapstructure:"harborUser"`
-
-	JenkinsEnableRestart bool `mapstructure:"jenkinsEnableRestart"`
+	Jenkins  Jenkins  `mapstructure:"jenkins"`
+	SCM      SCM      `mapstructure:"scm"`
+	Pipeline Pipeline `mapstructure:"pipeline"`
 
 	// used in package
 	BasicAuth   *jenkins.BasicAuth `mapstructure:"basicAuth"`
 	ProjectRepo *common.Repo       `mapstructure:"projectRepo"`
 	CIConfig    *ci.CIConfig       `mapstructure:"ci"`
 	SecretToken string             `mapstructure:"secretToken"`
+}
+
+type Jenkins struct {
+	URL           string `mapstructure:"url" validate:"required,url"`
+	User          string `mapstructure:"user"`
+	Namespace     string `mapstructure:"namespace"`
+	EnableRestart bool   `mapstructure:"enableRestart"`
+}
+
+type SCM struct {
+	ProjectURL    string `mapstructure:"projectURL" validate:"required"`
+	ProjectBranch string `mapstructure:"projectBranch"`
+}
+
+type Pipeline struct {
+	JobName         string    `mapstructure:"jobName" validate:"required"`
+	JenkinsfilePath string    `mapstructure:"jenkinsfilePath" validate:"required"`
+	ImageRepo       ImageRepo `mapstructure:"imageRepo"`
+}
+
+type ImageRepo struct {
+	URL  string `mapstructure:"url" validate:"url"`
+	User string `mapstructure:"user"`
 }
 
 type jobScriptRenderInfo struct {
@@ -59,10 +72,6 @@ func newJobOptions(options plugininstaller.RawOptions) (*JobOptions, error) {
 	if err := mapstructure.Decode(options, &opts); err != nil {
 		return nil, err
 	}
-	// TODO(daniel-hutao): wait for refactoring
-	if opts.JenkinsNamespace == "" {
-		opts.JenkinsNamespace = "jenkins"
-	}
 	return &opts, nil
 }
 
@@ -75,18 +84,18 @@ func (j *JobOptions) encode() (map[string]interface{}, error) {
 }
 
 func (j *JobOptions) newJenkinsClient() (jenkins.JenkinsAPI, error) {
-	return jenkins.NewClient(j.JenkinsURL, j.BasicAuth)
+	return jenkins.NewClient(j.Jenkins.URL, j.BasicAuth)
 }
 
 func (j *JobOptions) createOrUpdateJob(jenkinsClient jenkins.JenkinsAPI) error {
 	// 1. render groovy script
 	jobScript, err := jenkins.BuildRenderedScript(&jobScriptRenderInfo{
 		RepoType:         j.ProjectRepo.RepoType,
-		JobName:          j.JobName,
+		JobName:          j.getJobName(),
 		RepositoryURL:    j.ProjectRepo.BuildURL(),
 		Branch:           j.ProjectRepo.Branch,
 		SecretToken:      j.SecretToken,
-		FolderName:       j.JobFolderName,
+		FolderName:       j.getJobFolder(),
 		GitlabConnection: jenkinsGitlabConnectionName,
 	})
 	if err != nil {
@@ -103,7 +112,7 @@ func (j *JobOptions) createOrUpdateJob(jenkinsClient jenkins.JenkinsAPI) error {
 }
 
 func (j *JobOptions) buildWebhookInfo() *git.WebhookConfig {
-	webHookURL := fmt.Sprintf("%s/project/%s", j.JenkinsURL, j.getJobPath())
+	webHookURL := fmt.Sprintf("%s/project/%s", j.Jenkins.URL, j.getJobPath())
 	log.Debugf("jenkins config webhook is %s", webHookURL)
 	return &git.WebhookConfig{
 		Address:     webHookURL,
@@ -112,7 +121,7 @@ func (j *JobOptions) buildWebhookInfo() *git.WebhookConfig {
 }
 
 func (j *JobOptions) installPlugins(jenkinsClient jenkins.JenkinsAPI, plugins []string) error {
-	return jenkinsClient.InstallPluginsIfNotExists(plugins, j.JenkinsEnableRestart)
+	return jenkinsClient.InstallPluginsIfNotExists(plugins, j.Jenkins.EnableRestart)
 }
 
 func (j *JobOptions) createGitlabConnection(jenkinsClient jenkins.JenkinsAPI, cascTemplate string) error {
@@ -147,5 +156,19 @@ func (j *JobOptions) deleteJob(client jenkins.JenkinsAPI) error {
 }
 
 func (j *JobOptions) getJobPath() string {
-	return path.Join(j.JobFolderName, j.JobName)
+	return j.Pipeline.JobName
+}
+
+func (j *JobOptions) getJobFolder() string {
+	if strings.Contains(j.Pipeline.JobName, "/") {
+		return strings.Split(j.Pipeline.JobName, "/")[0]
+	}
+	return ""
+}
+
+func (j *JobOptions) getJobName() string {
+	if strings.Contains(j.Pipeline.JobName, "/") {
+		return strings.Split(j.Pipeline.JobName, "/")[1]
+	}
+	return j.Pipeline.JobName
 }

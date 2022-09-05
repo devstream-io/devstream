@@ -7,6 +7,7 @@ import (
 	"math/rand"
 	"net/url"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
@@ -31,20 +32,33 @@ func SetJobDefaultConfig(options plugininstaller.RawOptions) (plugininstaller.Ra
 	if err != nil {
 		return nil, err
 	}
+
 	// config default values
-	projectRepo, err := common.NewRepoFromURL(opts.ProjectURL, opts.ProjectBranch)
+	projectRepo, err := common.NewRepoFromURL(opts.SCM.ProjectURL, opts.SCM.ProjectBranch)
 	if err != nil {
 		return nil, err
 	}
+
+	if opts.Jenkins.Namespace == "" {
+		opts.Jenkins.Namespace = "jenkins"
+	}
+
+	if opts.SCM.ProjectBranch == "" {
+		opts.SCM.ProjectBranch = "master"
+	}
+
 	opts.ProjectRepo = projectRepo
-	if opts.JobName == "" {
-		opts.JobName = projectRepo.Repo
+	if opts.Pipeline.JobName == "" {
+		opts.Pipeline.JobName = projectRepo.Repo
 	}
-	opts.CIConfig = buildCIConfig(opts.JenkinsfilePath)
-	basicAuth, err := buildAdminToken(opts.JenkinsUser)
+
+	opts.CIConfig = buildCIConfig(opts.Pipeline.JenkinsfilePath)
+
+	basicAuth, err := buildAdminToken(opts.Jenkins.User)
 	if err != nil {
 		return nil, err
 	}
+
 	opts.BasicAuth = basicAuth
 	opts.SecretToken = generateRandomSecretToken()
 	return opts.encode()
@@ -55,9 +69,18 @@ func ValidateJobConfig(options plugininstaller.RawOptions) (plugininstaller.RawO
 	if err != nil {
 		return nil, err
 	}
+
 	if err = validator.StructAllError(opts); err != nil {
 		return nil, err
 	}
+
+	if strings.Contains(opts.Pipeline.JobName, "/") {
+		strs := strings.Split(opts.Pipeline.JobName, "/")
+		if len(strs) != 2 || len(strs[0]) == 0 || len(strs[1]) == 0 {
+			return nil, fmt.Errorf("jobName illegal: %s", opts.Pipeline.JobName)
+		}
+	}
+
 	if opts.ProjectRepo.RepoType == "github" {
 		return nil, errors.New("jenkins job not support github for now")
 	}
@@ -131,16 +154,16 @@ func SetHarborAuth(options plugininstaller.RawOptions) (plugininstaller.RawOptio
 	if err != nil {
 		return nil, err
 	}
-	namespace := opts.JenkinsNamespace
-	harborURL := opts.HarborURL
-	harborUser := opts.HarborUser
+	namespace := opts.Jenkins.Namespace
+	imageRepoUrl := opts.Pipeline.ImageRepo.URL
+	imageRepoUser := opts.Pipeline.ImageRepo.User
 
-	harborPasswd := os.Getenv("HARBOR_PASSWORD")
-	if harborPasswd == "" {
-		return nil, fmt.Errorf("the environment variable HARBOR_PASSWORD is not set")
+	imageRepoPasswd := os.Getenv("IMAGE_REPO_PASSWORD")
+	if imageRepoPasswd == "" {
+		return nil, fmt.Errorf("the environment variable IMAGE_REPO_PASSWORD is not set")
 	}
 
-	return options, createDockerSecret(namespace, harborURL, harborUser, harborPasswd)
+	return options, createDockerSecret(namespace, imageRepoUrl, imageRepoUser, imageRepoPasswd)
 }
 
 func createDockerSecret(namespace, url, username, password string) error {

@@ -44,7 +44,7 @@ func DeleteCIFiles(options plugininstaller.RawOptions) error {
 		return err
 	}
 	if len(gitMap) == 0 {
-		return errors.New("can't get valid ci files, please check your config")
+		return errors.New("can't get valid Jenkinsfile, please check your config")
 	}
 	//2. init git client
 	gitClient, err := scm.NewClient(opts.ProjectRepo.BuildRepoInfo())
