@@ -87,9 +87,10 @@ func (c *Client) AddWebhook(webhookConfig *git.WebhookConfig) error {
 		return nil
 	}
 	p := &gitlab.AddProjectHookOptions{
-		PushEvents: gitlab.Bool(true),
-		Token:      gitlab.String(webhookConfig.SecretToken),
-		URL:        gitlab.String(webhookConfig.Address),
+		PushEvents:          gitlab.Bool(true),
+		Token:               gitlab.String(webhookConfig.SecretToken),
+		URL:                 gitlab.String(webhookConfig.Address),
+		MergeRequestsEvents: gitlab.Bool(true),
 	}
 	_, _, err = c.Projects.AddProjectHook(c.GetRepoPath(), p)
 	if err != nil {
