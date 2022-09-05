@@ -13,8 +13,8 @@
 ### GitLab
 
 - GITLAB_TOKEN： 在使用插件之前请先设置这个环境变量，如果你不知道如何获取这个 token，可以查看文档 [Personal access tokens](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html)。
-- `destination_repo.baseUrl`：如果你使用的是自建的 GitLab 仓库，需要将该配置设置为自建 GItLab 的 URL 地址。
-- `destination_repo.visibility`：此配置用于设置新建仓库的权限，支持的选项有 `public`, `private` 和 `internal`。
+- `destinationRepo.baseUrl`：如果你使用的是自建的 GitLab 仓库，需要将该配置设置为自建 GItLab 的 URL 地址。
+- `destinationRepo.visibility`：此配置用于设置新建仓库的权限，支持的选项有 `public`, `private` 和 `internal`。
 
 *注意：*
 
@@ -34,7 +34,7 @@
 
 在配置文件中替换以下配置：
 
-### destination_repo
+### destinationRepo
 
 这个是目标仓库的配置，包括以下几个配置项：
 
@@ -46,7 +46,7 @@
 
 `owner`，`org` 和 `repo` 目前是必填的，`branch` 的默认值是  "main"，`repo_type` 配置目前支持 `gitlab` 和 `github`。
 
-### source_repo
+### sourceRepo
 
 这个是源脚手架仓库的配置（目前只支持 Github），包括以下几个配置：
 
@@ -62,10 +62,10 @@
 
 ```json
 {
-    "AppName": destination_repo.repo,
+    "AppName": destinationRepo.repo,
     "Repo": {
-        "Name": destination_repo.repo,
-        "Owner": destination_repo.owner
+        "Name": destinationRepo.repo,
+        "Owner": destinationRepo.owner
     }
 }
 ```
@@ -89,16 +89,16 @@ tools:
   - name: repo-scaffolding
     instanceID: golang-scaffolding
     options:
-      destination_repo:
+      destinationRepo:
         owner: test_owner
         org: ""
         repo: dtm-test-golang
         branch: main
-        repo_type: github
-      source_repo:
+        repoType: github
+      sourceRepo:
         org: devstream-io
         repo: dtm-scaffolding-golang
-        repo_type: github
+        repoType: github
       vars:
         ImageRepo: dtm-test/golang-repo
 ```
@@ -112,18 +112,18 @@ tools:
   - name: repo-scaffolding
     instanceID: java-scaffolding
     options:
-      destination_repo:
+      destinationRepo:
         owner: test_owner
         org: ""
         repo: dtm-test-java
         branch: main
         baseUrl: 127.0.0.1:30001
         visibility: public
-        repo_type: gitlab
-      source_repo:
+        repoType: gitlab
+      sourceRepo:
         org: spring-guides
         repo: gs-spring-boot
-        repo_type: github
+        repoType: github
 ```
 
 这个配置会在 GitLab 为用户 test_owner 创建 `dtm-test-java` 仓库，使用的是 Spring 官方的 `spring-guides/gs-spring-boot` 仓库。

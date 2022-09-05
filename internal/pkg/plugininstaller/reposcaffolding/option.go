@@ -8,8 +8,8 @@ import (
 )
 
 type Options struct {
-	SourceRepo      *common.Repo `validate:"required" mapstructure:"source_repo"`
-	DestinationRepo *common.Repo `validate:"required" mapstructure:"destination_repo"`
+	SourceRepo      *common.Repo `validate:"required" mapstructure:"sourceRepo"`
+	DestinationRepo *common.Repo `validate:"required" mapstructure:"destinationRepo"`
 	Vars            map[string]interface{}
 }
 
