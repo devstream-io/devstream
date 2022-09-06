@@ -5,11 +5,11 @@ gitlab-ce-docker_default:
   options:
     gitlab_home: /srv/gitlab
     hostname: gitlab.example.com
-    http_port: 8080
-    https_port: 443
-    image_tag: rc
-    rm_data_after_delete: false
-    ssh_port: 2022
+    httpPort: 8080
+    httpsPort: 443
+    imageTag: rc
+    rmDataAfterDelete: false
+    sshPort: 2022
   resource:
     ContainerRunning: true
     Hostname: gitlab.example.com

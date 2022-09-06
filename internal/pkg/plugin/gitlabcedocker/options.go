@@ -14,12 +14,12 @@ import (
 type Options struct {
 	Hostname string `validate:"hostname" mapstructure:"hostname"`
 	// GitLab home directory, we assume the path set by user is always correct.
-	GitLabHome        string `mapstructure:"gitlab_home"`
-	SSHPort           uint   `mapstructure:"ssh_port"`
-	HTTPPort          uint   `mapstructure:"http_port"`
-	HTTPSPort         uint   `mapstructure:"https_port"`
-	RmDataAfterDelete *bool  `mapstructure:"rm_data_after_delete"`
-	ImageTag          string `mapstructure:"image_tag"`
+	GitLabHome        string `mapstructure:"gitlabHome"`
+	SSHPort           uint   `mapstructure:"sshPort"`
+	HTTPPort          uint   `mapstructure:"httpPort"`
+	HTTPSPort         uint   `mapstructure:"httpsPort"`
+	RmDataAfterDelete *bool  `mapstructure:"rmDataAfterDelete"`
+	ImageTag          string `mapstructure:"imageTag"`
 }
 
 func (opts *Options) Defaults() {
