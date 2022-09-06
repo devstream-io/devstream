@@ -109,51 +109,51 @@ Let's continue to look at the results of the `apply` command.
 
 - The repository scaffolding we got looks like this:
 
-![](a.png)
+![](gitops/a.png)
 
 ### 5.2 Jira-Github Integration
 
 - How do Jira and Github integrate? Let's create a new issue:
 
-![](b.png)
+![](gitops/b.png)
 
 - The issue will be renamed automatically like this:
 
-![](c.png)
+![](gitops/c.png)
 
 - We can find this auto-synced `Story` in Jira:
 
-![](d.png)
+![](gitops/d.png)
 
 - If we continue to leave a comment on this issue:
 
-![](d1.png)
+![](gitops/d1.png)
 
 - The comment will also be automatically synced to Jira:
 
-![](e.png)
+![](gitops/e.png)
 
 ### 5.3 GitHub Actions CI for Golang
 
 - What does CI do here?
 
-![](f.png)
+![](gitops/f.png)
 
 - The CI processes also build an image, and this image is automatically pushed to DockerHub:
 
-![](g.png)
+![](gitops/g.png)
 
 ### 5.4 ArgoCD Deployment
 
 - Of course, the ArgoCD must have been installed as expected.
 
-![](h.png)
+![](gitops/h.png)
 
 ### 5.5 ArgoCD Application Deployment
 
 - Our code has just been built into an image, at this time the image is automatically deployed to our k8s as a Pod:
 
-![](i.png)
+![](gitops/i.png)
 
 ## 6 Clean Up
 

@@ -101,51 +101,51 @@ dtm apply -f gitops.yaml
 
 - 我们得到的仓库结构看起来如下：
 
-![](a.png)
+![](gitops/a.png)
 
 ### 5.2 Jira-Github 集成
 
 - 测试Jira和Github之间的整合，让我们新创建一个issue：
 
-![](b.png)
+![](gitops/b.png)
 
 - 上述issue将会自动地被重命名：
 
-![](c.png)
+![](gitops/c.png)
 
 - 我们可以在Jira中找到这个自动同步的`Story`：
 
-![](d.png)
+![](gitops/d.png)
 
 - 如果我们在这个issue留下评论：
 
-![](d1.png)
+![](gitops/d1.png)
 
 - 这个评论也会被自动同步到Jira中：
 
-![](e.png)
+![](gitops/e.png)
 
 ### 5.3 为Golang设置Github Actions CI
 
 - CI在这里可以做以下事情：
 
-![](f.png)
+![](gitops/f.png)
 
 - CI流程同时也会构建Docker镜像，之后该镜像会被自动推送到DockerHub中：
 
-![](g.png)
+![](gitops/g.png)
 
 ### 5.4 ArgoCD部署
 
 - ArgoCD已经被装好了：
 
-![](h.png)
+![](gitops/h.png)
 
 ### 5.5 ArgoCD应用部署
 
 - 我们的代码刚刚被构建到镜像中，此时这个镜像会作为一个Pod自动部署到我们的k8s中：
 
-![](i.png)
+![](gitops/i.png)
 
 ## 6 清理
 
