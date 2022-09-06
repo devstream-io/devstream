@@ -33,6 +33,7 @@ func (c *Client) InitRepo() error {
 		MergeRequestsEnabled: gitlab.Bool(true),
 		SnippetsEnabled:      gitlab.Bool(true),
 		DefaultBranch:        gitlab.String(c.Branch),
+		AutoDevopsEnabled:    gitlab.Bool(false),
 	}
 
 	switch c.Visibility {
