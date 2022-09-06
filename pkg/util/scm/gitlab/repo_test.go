@@ -46,7 +46,7 @@ var _ = Describe("repo methods", func() {
 	Context("InitRepo method", func() {
 		BeforeEach(func() {
 			reqPath = fmt.Sprintf("%sprojects", apiRootPath)
-			expectReqBody = []byte(fmt.Sprintf(`{"default_branch":"%s","description":"Bootstrapped by DevStream.","name":"%s","visibility":"%s","merge_requests_enabled":true,"snippets_enabled":true}`, branch, repoName, visibility))
+			expectReqBody = []byte(fmt.Sprintf(`{"auto_devops_enabled":false,"default_branch":"%s","description":"Bootstrapped by DevStream.","name":"%s","visibility":"%s","merge_requests_enabled":true,"snippets_enabled":true}`, branch, repoName, visibility))
 			server.RouteToHandler("POST", reqPath, ghttp.CombineHandlers(
 				ghttp.VerifyRequest("POST", reqPath),
 				ghttp.VerifyBody(expectReqBody),
