@@ -13,16 +13,16 @@ tools:
     # (default: /srv/gitlab)
     # 1. it should be a absolute path
     # 2. once the tool is installed, it can't be changed
-    gitlab_home: /srv/gitlab
+    gitlabHome: /srv/gitlab
     # ssh port exposed in the host machine. (default: 22)
-    ssh_port: 22
+    sshPort: 22
     # http port exposed in the host machine. (default: 80)
-    http_port: 80
+    httpPort: 80
     # https port exposed in the host machine.
     # (default: 443)
     # todo: support https, reference: https://docs.gitlab.com/omnibus/settings/nginx.html#enable-https
-    https_port: 443
-    # whether to delete the gitlab_home directory when the tool is removed. (default: false)
-    rm_data_after_delete: false
+    httpsPort: 443
+    # whether to delete the gitlabHome directory when the tool is removed. (default: false)
+    rmDataAfterDelete: false
     # gitlab-ce tag. (default: "rc")
-    image_tag: "rc"
+    imageTag: "rc"
