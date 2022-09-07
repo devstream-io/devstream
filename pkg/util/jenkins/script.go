@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"github.com/bndr/gojenkins"
-	"github.com/pkg/errors"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/template"
@@ -19,6 +18,22 @@ import (
 
 //go:embed tpl/casc.tpl.groovy
 var cascGroovyScript string
+
+type scriptError struct {
+	output   string
+	errorMsg string
+}
+
+// all jenkins client return error format is host: error detail
+// Error method wrap this type of error to only return error detail
+func (e *scriptError) Error() string {
+	errDetailMessage := e.errorMsg
+	if strings.Contains(errDetailMessage, ":") {
+		errDetailMessageArray := strings.Split(errDetailMessage, ":")
+		errDetailMessage = strings.TrimSpace(errDetailMessageArray[len(errDetailMessageArray)-1])
+	}
+	return fmt.Sprintf("execute groovy script failed: %s(%s)", errDetailMessage, e.output)
+}
 
 func (jenkins *jenkins) ExecuteScript(script string) (string, error) {
 	now := time.Now().Unix()
@@ -38,17 +53,26 @@ func (jenkins *jenkins) ExecuteScript(script string) (string, error) {
 
 	r, err := jenkins.Requester.Do(jenkins.ctx, ar, &output, nil)
 	if err != nil {
-		return "", fmt.Errorf("couldn't execute groovy script, logs '%s'", output)
+		return "", &scriptError{
+			output:   output,
+			errorMsg: err.Error(),
+		}
 	}
 	log.Debugf("------> %s\n%s", output, script)
 	defer r.Body.Close()
 
 	if r.StatusCode != http.StatusOK {
-		return output, errors.Errorf("invalid status code '%d', logs '%s'", r.StatusCode, output)
+		return output, &scriptError{
+			output:   output,
+			errorMsg: fmt.Sprintf("invalid status code '%d'", r.StatusCode),
+		}
 	}
 
 	if !strings.Contains(output, verifier) {
-		return output, fmt.Errorf("jenkins run script return error: %s", output)
+		return output, &scriptError{
+			output:   output,
+			errorMsg: "script verifier error",
+		}
 	}
 
 	return output, nil
