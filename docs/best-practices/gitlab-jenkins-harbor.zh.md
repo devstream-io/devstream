@@ -4,6 +4,10 @@
 演示如何通过 DevStream 快速创建 Java Spring Boot 项目脚手架，同时在 Jenkins 上自动创建对应的 Pipeline 实现 CI 流程，
 最终将 Pipeline 执行状态自动回写到 GitLab 上。
 
+整体工作流如下图所示：
+
+![workflow](./gitlab-jenkins-harbor/workflow.png)
+
 ## 1、相关插件
 
 当前工具链主要涉及如下插件：
