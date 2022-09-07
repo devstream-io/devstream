@@ -33,8 +33,8 @@
 而 Repo Scaffolding 和 Jenkins Pipeline 的创建属于"配置"，可能要执行多次（比如不断新增 Repo 和 Pipeline），
 所以我们分2步来完成这条工具链的搭建过程。
 
-1. 使用 `gitlab-ce-docker、jenkins 和 harbor` 三个插件完成 GitLab、Jenkins 和 Harbor 工具的部署；
-2. 使用 `repo-scaffolding 和 jenkins-pipeline` 两个插件完成 Java Spring Boot 项目脚手架的创建和 Jenkins Pipeline 的配置。
+1. 使用 `gitlab-ce-docker`、`jenkins` 和 `harbor` 三个插件完成 GitLab、Jenkins 和 Harbor 工具的部署；
+2. 使用 `repo-scaffolding` 和 `jenkins-pipeline` 两个插件完成 Java Spring Boot 项目脚手架的创建和 Jenkins Pipeline 的配置。
 
 DevStream 的配置文件分为 core config、plugins config 和 variables config，下文将详细介绍如何编写相应的配置文件，完成上述工具的部署和配置流程。
 
