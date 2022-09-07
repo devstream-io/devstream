@@ -57,7 +57,7 @@ tools:
       repoType: github
 - name: jenkins-pipeline
   instanceID: default
-  dependsOn: []
+  dependsOn: [repo-scaffolding.springboot]
   options:
     jenkins:
       url: YOUR_JENKINS_ADDR
@@ -77,7 +77,7 @@ tools:
 上述配置文件中使用的 GitLab、Jenkins 和 Harbor 访问地址需要替换成你的环境中实际地址。例如：
 
 - **YOUR_GITLAB_ADDR**: http://54.71.232.26:30080
-- **YOUR_JENKINS_ADDR**: http://54.71.232.26:30080
+- **YOUR_JENKINS_ADDR**: http://54.71.232.26:32000
 - **YOUR_HARBOR_ADDR**: http://harbor.example.com:80
 
 除了这几个必须修改的配置项外，其他配置项你可以在确保理解含义的前提下灵活决定是否调整。
