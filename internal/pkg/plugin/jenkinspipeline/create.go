@@ -17,8 +17,8 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		},
 		ExecuteOperations: plugininstaller.ExecuteOperations{
 			jenkins.PreInstall(jenkinsPlugins, gitlabConnectionCascConfig),
-			ci.PushCIFiles,
 			jenkins.CreateOrUpdateJob,
+			ci.PushCIFiles,
 		},
 		GetStateOperation: jenkins.GetStatus,
 	}
