@@ -21,7 +21,7 @@
 - jenkins-pipeline -> jenkins, gitlab-ce-docker, repo-scaffolding, harbor
 - repo-scaffolding -> gitlab-ce-docker
 
-*提示：A -> B 表示的是 A 依赖 B，也就是现有 B 才能继续部署 A*
+*提示：A -> B 表示的是 A 依赖 B，也就是先有 B 才能继续部署 A*
 
 ## 2、开始部署
 
@@ -479,13 +479,13 @@ jenkins-pipeline 插件的配置如下：
         user: admin
 ```
 
-这里需要注意的是 Jenkins 的访问地址需要使用 http://54.71.232.26:32000，而不能用域名，因为当前部署架构下 GitLab 并不能解析到 jenkins.example.com 这个域名。
-而且 GitLab 也无法直接访问到 http://54.71.232.26:32000 这个地址，这里还需要通过 kubectl port-forward 的访问转发一次流量。
+这里需要注意的是 Jenkins 的访问地址需要使用 `http://54.71.232.26:32000`，而不能用域名，因为当前部署架构下 GitLab 并不能解析到 `jenkins.example.com` 这个域名。
+而且 GitLab 也无法直接访问到 `http://54.71.232.26:32000` 这个地址，这里还需要通过 kubectl port-forward 的访问转发一次流量。
 
 在正式的企业环境里，只需要保证 GitLab 能够访问到 Jenkins 即可，如果你的企业里可以通过配置 DNS 等方式让 GitLab 能够完成 jenkins.example.com 域名的解析，
 而且对应的 IP (和端口)可以从 GitLab 访问到，那就可以在这里配置域名。
 
-接着我们执行如下命令保证 Jenkins 可以从 http://54.71.232.26:32000 访问到：
+接着我们执行如下命令保证 Jenkins 可以从 `http://54.71.232.26:32000` 访问到：
 
 ```shell
 kubectl port-forward service/jenkins --address 0.0.0.0 -n jenkins 32000:8080
