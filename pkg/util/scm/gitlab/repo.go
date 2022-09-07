@@ -51,10 +51,9 @@ func (c *Client) InitRepo() error {
 		p.NamespaceID = gitlab.Int(groupId)
 	}
 	_, _, err = c.Projects.CreateProject(p)
-	if err != nil && !pkgerror.CheckSlientErrorByMessage(err, errRepoNotFound) {
+	if err != nil && !pkgerror.CheckSlientErrorByMessage(err, errRepoNotFound, errRepoExist) {
 		return err
 	}
-
 	return nil
 }
 
