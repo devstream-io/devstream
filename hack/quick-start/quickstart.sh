@@ -27,12 +27,13 @@ function getLatestReleaseVersion() {
     AUTH_HEADER="-H Authorization: token ${GITHUB_TOKEN}"
   fi
 
+  # like "v1.2.3"
   latestVersion=$(curl ${AUTH_HEADER} -s https://api.github.com/repos/devstream-io/devstream/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
   if [ -z "$latestVersion" ]; then
     echo "Failed to get latest release version"
     exit 1
   fi
-  echo "Latest dtm release version: ${latestVersion}\n"
+  echo "Latest dtm release version: ${latestVersion}"
 }
 
 function downloadDtm() {
@@ -49,9 +50,29 @@ function downloadDtm() {
 }
 
 function downloadQuickStartConfig() {
+  # convert the latest version to a valid branch name
+  branchName=`semverToBranch $latestVersion`
+  if [ -z "$branchName" ]; then
+    echo "Failed to get branch name from version: $latestVersion"
+    exit 1
+  fi
   # config file is small so we use -s to ignore the output
-  curl -s -o quickstart.yaml https://raw.githubusercontent.com/devstream-io/devstream/main/examples/quickstart.yaml
+  quickstartConfigUrl=https://raw.githubusercontent.com/devstream-io/devstream/${branchName}/examples/quickstart.yaml
+  echo "Downloading quickstart config file from ${quickstartConfigUrl}"
+  curl -s -o quickstart.yaml ${quickstartConfigUrl}
   echo "quickstart.yaml downloaded completed"
+}
+
+# convert semver to branch name
+# e.g. v1.2.3 -> release-1.2
+# ref: https://docs.devstream.io/en/latest/development/branch-and-release/#3-correspondence-between-branch-name-and-version-number
+function semverToBranch() {
+  semver=$1
+  # remove the leading "v"
+  semver=${semver:1}
+  # remove the last ".x"
+  semver=${semver%.*}
+  echo -n "release-${semver}"
 }
 
 function showDtmHelp() {
