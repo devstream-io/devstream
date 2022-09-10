@@ -33,7 +33,10 @@ func GetPluginAllK8sState(nameSpace string, anFilter, labelFilter map[string]str
 		state.Workflows.AddDaemonset(ds.Name, ds.Ready)
 	}
 
-	retMap := state.ToStringInterfaceMap()
+	retMap, err := state.ToStringInterfaceMap()
+	if err != nil {
+		return nil, err
+	}
 	log.Debugf("Return map: %v.", retMap)
 	return retMap, nil
 }

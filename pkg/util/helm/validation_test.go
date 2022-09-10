@@ -2,6 +2,8 @@ package helm
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func Test_validate(t *testing.T) {
@@ -25,10 +27,9 @@ func Test_validate(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Validate(tt.args.param); len(got) != tt.want {
-				t.Logf("got errors' length: %d\n", len(got))
-				t.Errorf("validate() = %v, want %v", got, tt.want)
-			}
+			got := Validate(tt.args.param)
+
+			require.Lenf(t, got, tt.want, "validate() = %v, want %v", got, tt.want)
 		})
 	}
 }

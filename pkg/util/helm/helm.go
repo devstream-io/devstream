@@ -11,6 +11,12 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
+const (
+	repositoryCache  = "/tmp/.helmcache"
+	repositoryConfig = "/tmp/.helmrepo"
+)
+
+// Helm is helm implementation
 type Helm struct {
 	*repo.Entry
 	*helmclient.ChartSpec
@@ -19,12 +25,13 @@ type Helm struct {
 
 type Option func(*Helm)
 
+// NewHelm creates a new Helm
 func NewHelm(param *HelmParam, option ...Option) (*Helm, error) {
 	hClient, err := helmclient.New(
 		&helmclient.Options{
 			Namespace:        param.Chart.Namespace,
-			RepositoryCache:  "/tmp/.helmcache",
-			RepositoryConfig: "/tmp/.helmrepo",
+			RepositoryCache:  repositoryCache,
+			RepositoryConfig: repositoryConfig,
 			Debug:            true,
 		},
 	)
@@ -50,7 +57,7 @@ func NewHelm(param *HelmParam, option ...Option) (*Helm, error) {
 	if err != nil {
 		return nil, err
 	}
-	spec := &helmclient.ChartSpec{
+	chartSpec := &helmclient.ChartSpec{
 		ReleaseName:      param.Chart.ReleaseName,
 		ChartName:        param.Chart.ChartName,
 		Namespace:        param.Chart.Namespace,
@@ -78,7 +85,7 @@ func NewHelm(param *HelmParam, option ...Option) (*Helm, error) {
 	}
 	h := &Helm{
 		Entry:     entry,
-		ChartSpec: spec,
+		ChartSpec: chartSpec,
 		Client:    hClient,
 	}
 

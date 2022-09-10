@@ -3,11 +3,11 @@ package helm
 import (
 	"context"
 	"errors"
-	"reflect"
 	"testing"
 	"time"
 
 	helmclient "github.com/mittwald/go-helm-client"
+	"github.com/stretchr/testify/require"
 	"helm.sh/helm/v3/pkg/release"
 	"helm.sh/helm/v3/pkg/repo"
 
@@ -74,21 +74,46 @@ func (c *DefaultMockClient4) AddOrUpdateChartRepo(enrty repo.Entry) error {
 }
 
 func TestNewHelm(t *testing.T) {
-	got, err := NewHelm(helmParam, WithClient(&DefaultMockClient{}))
-	if err != nil {
-		t.Errorf("error: %v\n", err)
-	}
-	if got == nil {
-		t.Errorf("got: %v must not be nil\n", got)
+	tests := []struct {
+		name       string
+		wantErr    bool
+		wantHelm   bool
+		helmClient helmclient.Client
+	}{
+		{
+			name:       "base",
+			wantErr:    false,
+			wantHelm:   true,
+			helmClient: &DefaultMockClient{},
+		},
+		{
+			name:       "newHelm with NormalError",
+			wantErr:    true,
+			wantHelm:   false,
+			helmClient: &DefaultMockClient4{},
+		},
 	}
 
-	got, err = NewHelm(helmParam, WithClient(&DefaultMockClient4{}))
-	if err != NormalError {
-		t.Errorf("error: %v must be %v\n", err, NormalError)
+	for _, tt := range tests {
+
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := NewHelm(helmParam, WithClient(tt.helmClient))
+
+			if tt.wantErr {
+				require.Errorf(t, err, "error: %v must not be nil\n", err)
+			} else {
+				require.NoErrorf(t, err, "error: %v must be nil\n", err)
+			}
+
+			if tt.wantHelm {
+				require.NotNilf(t, got, "got: %v must not be nil\n", got)
+			} else {
+				require.Nilf(t, got, "got: %v must be nil\n", got)
+			}
+		})
+
 	}
-	if got != nil {
-		t.Errorf("got: %v must be nil\n", got)
-	}
+
 }
 
 func TestNewHelmWithOption(t *testing.T) {
@@ -108,9 +133,7 @@ func TestNewHelmWithOption(t *testing.T) {
 		atomic = false
 	}
 	tmout, err := time.ParseDuration(helmParam.Chart.Timeout)
-	if err != nil {
-		t.Log(err)
-	}
+	require.NoErrorf(t, err, "error: %v must be nil\n", err)
 	spec := &helmclient.ChartSpec{
 		ReleaseName:      helmParam.Chart.ReleaseName,
 		ChartName:        helmParam.Chart.ChartName,
@@ -141,16 +164,12 @@ func TestNewHelmWithOption(t *testing.T) {
 	mockClient := &DefaultMockClient{}
 
 	got, err := NewHelm(helmParam, WithClient(mockClient))
-	if err != nil {
-		t.Errorf("err: %v\n", err)
-	}
+	require.NoErrorf(t, err, "err: %v\n", err)
 
 	want := &Helm{
 		Entry:     entry,
 		ChartSpec: spec,
 		Client:    mockClient,
 	}
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("NewHelm() = \n%+v\n, want \n%+v\n", got, want)
-	}
+	require.Equalf(t, got, want, "NewHelm() = \n%+v\n, want \n%+v\n", got, want)
 }
