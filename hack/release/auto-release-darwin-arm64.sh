@@ -47,6 +47,7 @@ fi
 
 # call build core and plugins
 cd ../..
+make clean
 make build -j8
 
 # install github-release for uploading
