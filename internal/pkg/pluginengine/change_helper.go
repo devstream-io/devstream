@@ -185,7 +185,7 @@ func changesForDelete(smgr statemanager.Manager, cfg *configmanager.Config, isFo
 	return changes, nil
 }
 
-func GetChangesForDestroy(smgr statemanager.Manager) ([]*Change, error) {
+func GetChangesForDestroy(smgr statemanager.Manager, isForceDestroy bool) ([]*Change, error) {
 	changes := make([]*Change, 0)
 
 	// rebuilding tools from config
@@ -210,6 +210,12 @@ func GetChangesForDestroy(smgr statemanager.Manager) ([]*Change, error) {
 	for i := len(batchesOfTools) - 1; i >= 0; i-- {
 		batch := batchesOfTools[i]
 		for _, tool := range batch {
+			if !isForceDestroy {
+				state := smgr.GetState(statemanager.StateKeyGenerateFunc(&tool))
+				if state == nil {
+					continue
+				}
+			}
 			description := fmt.Sprintf("Tool (%s/%s) will be deleted.", tool.Name, tool.InstanceID)
 			changes = append(changes, generateDeleteAction(&tool, description))
 		}
