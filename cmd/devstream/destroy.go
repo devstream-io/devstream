@@ -29,7 +29,7 @@ func destroyCMDFunc(cmd *cobra.Command, args []string) {
 }
 
 func init() {
-	destroyCMD.Flags().BoolVarP(&isForceDestroy, "force", "", false, "force delete by config")
+	destroyCMD.Flags().BoolVarP(&isForceDestroy, "force", "", false, "force destroy by config")
 	destroyCMD.Flags().StringVarP(&configFile, configFlagName, "f", "config.yaml", "config file")
 	destroyCMD.Flags().BoolVarP(&continueDirectly, "yes", "y", false, "destroy directly without confirmation")
 
