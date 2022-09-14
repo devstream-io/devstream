@@ -5,6 +5,7 @@ import (
 	"time"
 
 	helmclient "github.com/mittwald/go-helm-client"
+	"github.com/stretchr/testify/require"
 	"helm.sh/helm/v3/pkg/repo"
 )
 
@@ -14,9 +15,7 @@ func TestInstallOrUpgradeChart(t *testing.T) {
 		atomic = false
 	}
 	tmout, err := time.ParseDuration(helmParam.Chart.Timeout)
-	if err != nil {
-		t.Log(err)
-	}
+	require.NoErrorf(t, err, "error: %v must be nil\n", err)
 	chartSpec := &helmclient.ChartSpec{
 		ReleaseName:      helmParam.Chart.ReleaseName,
 		ChartName:        helmParam.Chart.ChartName,
@@ -53,15 +52,11 @@ func TestInstallOrUpgradeChart(t *testing.T) {
 	// }
 	h, err := NewHelm(helmParam, WithChartSpec(chartSpec), WithClient(&DefaultMockClient{}))
 
-	if err != nil {
-		t.Errorf("error: %v\n", err)
-	}
+	require.NoErrorf(t, err, "error: %v\n", err)
 	// mockClient.EXPECT().InstallOrUpgradeChart(context.TODO(), chartSpec).Return(&mockedRelease, nil)
 
 	err = h.InstallOrUpgradeChart()
-	if err != nil {
-		t.Error(err)
-	}
+	require.NoError(t, err)
 }
 
 func TestAddOrUpdateChartRepo(t *testing.T) {
@@ -81,9 +76,7 @@ func TestAddOrUpdateChartRepo(t *testing.T) {
 		atomic = false
 	}
 	tmout, err := time.ParseDuration(helmParam.Chart.Timeout)
-	if err != nil {
-		t.Log(err)
-	}
+	require.NoErrorf(t, err, "error: %v must be nil\n", err)
 	chartSpec := &helmclient.ChartSpec{
 		ReleaseName:      helmParam.Chart.ReleaseName,
 		ChartName:        helmParam.Chart.ChartName,
@@ -112,14 +105,10 @@ func TestAddOrUpdateChartRepo(t *testing.T) {
 	}
 
 	h, err := NewHelm(helmParam, WithEntry(entry), WithChartSpec(chartSpec), WithClient(&DefaultMockClient{}))
-	if err != nil {
-		t.Errorf("error: %v\n", err)
-	}
+	require.NoErrorf(t, err, "error: %v\n", err)
 
 	err = h.AddOrUpdateChartRepo(*entry)
-	if err != nil {
-		t.Error(err)
-	}
+	require.NoErrorf(t, err, "error: %v\n", err)
 }
 
 func TestHelm_UninstallHelmChartRelease(t *testing.T) {
@@ -128,9 +117,7 @@ func TestHelm_UninstallHelmChartRelease(t *testing.T) {
 		atomic = false
 	}
 	tmout, err := time.ParseDuration(helmParam.Chart.Timeout)
-	if err != nil {
-		t.Log(err)
-	}
+	require.NoErrorf(t, err, "error: %v must be nil\n", err)
 	chartSpec := &helmclient.ChartSpec{
 		ReleaseName:      helmParam.Chart.ReleaseName,
 		ChartName:        helmParam.Chart.ChartName,
@@ -159,35 +146,24 @@ func TestHelm_UninstallHelmChartRelease(t *testing.T) {
 	}
 	// base
 	h, err := NewHelm(helmParam, WithChartSpec(chartSpec), WithClient(&DefaultMockClient3{}))
-	if err != nil {
-		t.Errorf("error: %v\n", err)
-	}
+	require.NoErrorf(t, err, "error: %v\n", err)
 
 	err = h.UninstallHelmChartRelease()
-	if err != nil {
-		t.Error(err)
-	}
+	require.NoError(t, err)
 
 	// mock error not found
 	h, err = NewHelm(helmParam, WithChartSpec(chartSpec), WithClient(&DefaultMockClient{}))
-	if err != nil {
-		t.Errorf("error: %v\n", err)
-	}
+	require.NoErrorf(t, err, "error: %v\n", err)
+
 	err = h.UninstallHelmChartRelease()
-	if err != nil {
-		t.Error(err)
-	}
+	require.NoError(t, err)
 
 	// mock error
 	h, err = NewHelm(helmParam, WithChartSpec(chartSpec), WithClient(&DefaultMockClient2{}))
-	if err != nil {
-		t.Errorf("error: %v\n", err)
-	}
+	require.NoErrorf(t, err, "error: %v\n", err)
+
 	err = h.UninstallHelmChartRelease()
-	if err == nil {
-		t.Error("error not found")
-	}
-	if err != NormalError {
-		t.Errorf("got: %+v\n, want %+v\n", err, NormalError)
-	}
+	require.Error(t, err, "error not found")
+
+	require.Equalf(t, err, NormalError, "got: %+v\n, want %+v\n", err, NormalError)
 }

@@ -4,29 +4,26 @@ import (
 	"bytes"
 
 	"gopkg.in/yaml.v3"
-
-	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 type InstanceState struct {
 	Workflows Workflows
 }
 
-func (is *InstanceState) ToStringInterfaceMap() map[string]interface{} {
+func (is *InstanceState) ToStringInterfaceMap() (map[string]interface{}, error) {
 	var buf bytes.Buffer
 	encoder := yaml.NewEncoder(&buf)
 	defer encoder.Close()
 	encoder.SetIndent(2)
 	err := encoder.Encode(&is.Workflows)
 	if err != nil {
-		log.Errorf("Failed to marshal the workflows. %s", err)
-		return make(map[string]interface{})
+		return nil, err
 	}
 	wfs := buf.String()
 
 	return map[string]interface{}{
 		"workflows": wfs,
-	}
+	}, nil
 }
 
 type Workflows struct {

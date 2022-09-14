@@ -2,8 +2,9 @@ package helm
 
 import (
 	"bytes"
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 
 	"gopkg.in/yaml.v3"
 )
@@ -19,9 +20,7 @@ func TestInstanceState_ToStringInterfaceMap(t *testing.T) {
 	defer encoder.Close()
 	encoder.SetIndent(2)
 	err := encoder.Encode(&wf)
-	if err != nil {
-		t.Error(err)
-	}
+	require.NoError(t, err)
 
 	wfs := buf.String()
 
@@ -39,9 +38,9 @@ func TestInstanceState_ToStringInterfaceMap(t *testing.T) {
 			is := &InstanceState{
 				Workflows: tt.Workflows,
 			}
-			if got := is.ToStringInterfaceMap(); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("InstanceState.ToStringInterfaceMap() = %v, want %v", got, tt.want)
-			}
+			got, err := is.ToStringInterfaceMap()
+			require.NoErrorf(t, err, "InstanceState.ToStringInterfaceMap() error = %v", err)
+			require.Equalf(t, got, tt.want, "InstanceState.ToStringInterfaceMap() = %v, want %v", got, tt.want)
 		})
 	}
 }
@@ -75,9 +74,7 @@ func TestWorkflows_AddDeployment(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.wfs.AddDeployment(tt.element.Name, tt.element.Ready)
 			got, want := tt.wfs.Deployments, tt.want
-			if !reflect.DeepEqual(got, want) {
-				t.Errorf("Workflows.AddDeployment() = %v, want %v", got, tt.want)
-			}
+			require.Equalf(t, got, want, "Workflows.AddDeployment() = %v, want %v", got, tt.want)
 		})
 	}
 }
@@ -111,9 +108,7 @@ func TestWorkflows_AddDaemonset(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.wfs.AddDaemonset(tt.element.Name, tt.element.Ready)
 			got, want := tt.wfs.Daemonsets, tt.want
-			if !reflect.DeepEqual(got, want) {
-				t.Errorf("Workflows.AddDaemonSet() = %v, want %v", got, tt.want)
-			}
+			require.Equalf(t, got, want, "Workflows.AddDaemonSet() = %v, want %v", got, tt.want)
 		})
 	}
 }
@@ -147,9 +142,7 @@ func TestWorkflows_AddStatefulset(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.wfs.AddStatefulset(tt.element.Name, tt.element.Ready)
 			got, want := tt.wfs.Statefulsets, tt.want
-			if !reflect.DeepEqual(got, want) {
-				t.Errorf("Workflows.AddDaemonSet() = %v, want %v", got, tt.want)
-			}
+			require.Equalf(t, got, want, "Workflows.AddDaemonSet() = %v, want %v", got, tt.want)
 		})
 	}
 }
