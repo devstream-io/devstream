@@ -69,8 +69,8 @@ tools:
       name: argo
       url: https://argoproj.github.io/argo-helm
     chart:
-      chart_name: argo/argo-cd
-      release_name: argocd
+      chartName: argo/argo-cd
+      releaseName: argocd
       namespace: argocd
       wait: true
       timeout: 10m

@@ -14,18 +14,18 @@ tools:
     # Helm chart information
     chart:
       # name of the chart
-      chart_name: jfrog/artifactory
+      chartName: jfrog/artifactory
       # k8s namespace where Harbor will be installed
       namespace: artifactory
       # release name of the chart
-      release_name: artifactory
+      releaseName: artifactory
       # whether to wait for the release to be deployed or not
       wait: true
       # the time to wait for any individual Kubernetes operation (like Jobs for hooks). This defaults to 10m
       timeout: 10m
       # whether to perform a CRD upgrade during installation
       upgradeCRDs: true
-      # values_yaml: |
+      # valuesYaml: |
         # artifactory:
           # service:
             # type: NodePort

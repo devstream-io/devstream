@@ -18,16 +18,16 @@ type Repo struct {
 // Chart is the struct containing details of a helm chart.
 // TODO(daniel-hutao): make the Chart equals to helmclient.ChartSpec
 type Chart struct {
-	ChartName   string `validate:"required" mapstructure:"chart_name"`
+	ChartName   string `validate:"required" mapstructure:"chartName"`
 	Version     string `mapstructure:"version"`
-	ReleaseName string `mapstructure:"release_name"`
+	ReleaseName string `mapstructure:"releaseName"`
 	Namespace   string `mapstructure:"namespace"`
 	Wait        *bool  `mapstructure:"wait"`
 	Timeout     string `mapstructure:"timeout"` // such as "1.5h" or "2h45m", valid time units are "s", "m", "h"
 	UpgradeCRDs *bool  `mapstructure:"upgradeCRDs"`
 	// ValuesYaml is the values.yaml content.
 	// use string instead of map[string]interface{}
-	ValuesYaml string `validate:"omitempty,yaml" mapstructure:"values_yaml"`
+	ValuesYaml string `validate:"omitempty,yaml" mapstructure:"valuesYaml"`
 }
 
 func (repo *Repo) FillDefaultValue(defaultRepo *Repo) {

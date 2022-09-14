@@ -40,7 +40,7 @@ tools:
   options:
     chart:
       # custom configuration. You can refer to [Jenkins values.yaml](https://github.com/jenkinsci/helm-charts/blob/main/charts/jenkins/values.yaml)
-      values_yaml: |
+      valuesYaml: |
         serviceAccount:
           create: true
           name: jenkins
@@ -130,10 +130,10 @@ standard (default)   k8s.io/minikube-hostpath   Delete          Immediate       
 
 | 配置项              | 默认值                     | 描述                                |
 | ----               | ----                      | ----                               |
-| chart.chart_name   | jenkins/jenkins           | helm chart 包名称                   |
+| chart.chartName   | jenkins/jenkins           | helm chart 包名称                   |
 | chart.timeout      | 5m                        | helm install 的超时时间              |
 | chart.upgradeCRDs  | true                      | 是否更新 CRDs（如果有）               |
-| chart.release_name | jenkins                   | helm 发布名称                        |
+| chart.releaseName | jenkins                   | helm 发布名称                        |
 | chart.wait         | true                      | 是否等待部署完成                      |
 | chart.namespace    | jenkins                   | 部署的命名空间                        |
 | repo.url           | https://charts.jenkins.io | helm 仓库地址                        |
@@ -145,7 +145,7 @@ standard (default)   k8s.io/minikube-hostpath   Delete          Immediate       
 --8<-- "jenkins.yaml"
 ```
 
-目前除了 `values_yaml` 字段和默认配置，其它所有示例参数均为必填项。
+目前除了 `valuesYaml` 字段和默认配置，其它所有示例参数均为必填项。
 
 ### 2.3、持久化存储
 
@@ -164,7 +164,7 @@ tools:
   options:
     chart:
       # custom configuration. You can refer to [Jenkins values.yaml](https://github.com/jenkinsci/helm-charts/blob/main/charts/jenkins/values.yaml)
-      values_yaml: |
+      valuesYaml: |
         serviceAccount:
           create: true
           name: jenkins
@@ -195,7 +195,7 @@ tools:
   options:
     chart:
       # custom configuration. You can refer to [Jenkins values.yaml](https://github.com/jenkinsci/helm-charts/blob/main/charts/jenkins/values.yaml)
-      values_yaml: |
+      valuesYaml: |
         serviceAccount:
           create: true
           name: jenkins
@@ -241,7 +241,7 @@ tools:
   options:
     chart:
       # custom configuration. You can refer to [Jenkins values.yaml](https://github.com/jenkinsci/helm-charts/blob/main/charts/jenkins/values.yaml)
-      values_yaml: |
+      valuesYaml: |
         serviceAccount:
           create: true
           name: jenkins
@@ -276,7 +276,7 @@ jenkins_default:
   dependson: []
   options:
     chart:
-      values_yaml: |
+      valuesYaml: |
         serviceAccount:
           create: true
           name: jenkins
@@ -288,7 +288,7 @@ jenkins_default:
   resource:
     outputs:
       jenkins_url: http://jenkins.jenkins:8080
-    values_yaml: |
+    valuesYaml: |
       serviceAccount:
         create: true
         name: jenkins
@@ -308,7 +308,7 @@ jenkins_default:
 ```yaml
 outputs:
   jenkins_url: http://jenkins.jenkins:8080
-values_yaml: |
+valuesYaml: |
   serviceAccount:
     create: true
     name: jenkins
@@ -323,10 +323,10 @@ workflows: |
       ready: true
 ```
 
-换言之，目前 jenkins 插件关注的状态主要是自身 StatefulSet 资源状态和 values_yaml 的配置，也就是在两种情况下会判定状态漂移，从而触发更新操作：
+换言之，目前 jenkins 插件关注的状态主要是自身 StatefulSet 资源状态和 valuesYaml 的配置，也就是在两种情况下会判定状态漂移，从而触发更新操作：
 
 1. StatefulSet 状态变更
-2. values_yaml 部分配置变更
+2. valuesYaml 部分配置变更
 
 ## 插件输出
 

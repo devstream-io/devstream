@@ -50,9 +50,9 @@ tools:
       # Helm chart information
       chart:
         # name of the chart
-        chart_name: jenkins/jenkins
+        chartName: jenkins/jenkins
         # release name of the chart
-        release_name: dev
+        releaseName: dev
         # k8s namespace where jenkins will be installed
         namespace: jenkins
         # whether to wait for the release to be deployed or not
@@ -62,7 +62,7 @@ tools:
         # whether to perform a CRD upgrade during installation
         upgradeCRDs: true
         # custom configuration. You can refer to [Jenkins values.yaml](https://github.com/jenkinsci/helm-charts/blob/main/charts/jenkins/values.yaml)
-        values_yaml: |
+        valuesYaml: |
           persistence:
             # for prod env: the existent storageClass, please change it
             # for test env: just ignore it, but don't remove it

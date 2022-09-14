@@ -16,9 +16,9 @@ tools:
       # Helm chart information
       chart:
         # name of the chart
-        chart_name: argo/argo-cd
+        chartName: argo/argo-cd
         # release name of the chart
-        release_name: argocd
+        releaseName: argocd
         # k8s namespace where ArgoCD will be installed
         namespace: argocd
         # whether to wait for the release to be deployed or not
@@ -28,7 +28,7 @@ tools:
         # whether to perform a CRD upgrade during installation
         upgradeCRDs: true
         # custom configuration (Optional). You can refer to [ArgoCD values.yaml](https://github.com/argoproj/argo-helm/blob/master/charts/argo-cd/values.yaml)
-        values_yaml: |
+        valuesYaml: |
           controller:
             service:
               port: 8080

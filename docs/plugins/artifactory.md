@@ -6,10 +6,10 @@ This plugin installs [artifactory](https://jfrog.com/artifactory/) in an existin
 
 ### Test/Local Dev Environment
 
-If you want to **test the plugin locally**， The following `values_yaml` configuration can be used
+If you want to **test the plugin locally**， The following `valuesYaml` configuration can be used
 
 ```yaml
-values_yaml: |
+valuesYaml: |
   artifactory:
     service:
       type: NodePort
@@ -48,12 +48,12 @@ This plugin support`Ingress`, `ClusterIP`, `NodePort` and `LoadBalancer` , You c
 
 | key                | default value           | description                                        |
 | ----               | ----                    | ----                                               |
-| chart.chart_name   | jfrog/artifactory       | chart name                                         |
+| chart.chartName   | jfrog/artifactory       | chart name                                         |
 | chart.timeout      | 10m                     | this config will wait 10 minutes to deploy         |
-| chart.release_name | artifactory             | helm release name                                  |
+| chart.releaseName | artifactory             | helm release name                                  |
 | chart.upgradeCRDs  | true                    | default update CRD config                          |
 | chart.wait         | true                    | whether to wait until installation is complete     |
 | chart.namespace    | artifactory             | namespace where helm to deploy                     |
 | repo.url           | https://charts.jfrog.io | offical helm repo address                          |
 | repo.name          | jfrog                   | helm repo name                                     |
-Currently, except for `values_yaml` and default configs, all the parameters in the example above are mandatory.
+Currently, except for `valuesYaml` and default configs, all the parameters in the example above are mandatory.

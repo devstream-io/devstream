@@ -14,9 +14,9 @@ This plugin installs hashicorp-vault with replicas:3 by default value.
 
 | key                | default value                       | description                                        |
 | ----               | ----                                | ----                                               |
-| chart.chart_name   | hashicorp/vault                     | chart name                                         |
+| chart.chartName   | hashicorp/vault                     | chart name                                         |
 | chart.timeout      | 5m                                  | this config will wait 5 minutes to deploy          |
-| chart.release_name | vault                               | helm release name                                  |
+| chart.releaseName | vault                               | helm release name                                  |
 | chart.upgradeCRDs  | true                                | default update CRD config                          |
 | chart.wait         | true                                | whether to wait until installation is complete     |
 | chart.namespace    | vault                               | namespace where helm to deploy                     |

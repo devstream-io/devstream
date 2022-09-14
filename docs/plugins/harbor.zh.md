@@ -49,7 +49,7 @@ tools:
   dependsOn: [ ]
   options:
     chart:
-      values_yaml: |
+      valuesYaml: |
         externalURL: http://127.0.0.1
         expose:
           type: nodePort
@@ -161,10 +161,10 @@ kubectl port-forward -n harbor service/harbor --address=${ip} 80
 
 | 配置项              | 默认值                    | 描述                                 |
 | ----               | ----                     | ----                                |
-| chart.chart_name   | harbor/harbor            | helm chart 包名称                    |
+| chart.chartName   | harbor/harbor            | helm chart 包名称                    |
 | chart.timeout      | 10m                      | helm install 的超时时间               |
 | chart.upgradeCRDs  | true                     | 是否更新 CRDs（如果有）                 |
-| chart.release_name | harbor                   | helm 发布名称                         |
+| chart.releaseName | harbor                   | helm 发布名称                         |
 | chart.wait         | true                     | 是否等待部署完成                       |
 | chart.namespace    | harbor                   | 部署的命名空间                         |
 | repo.url           | https://helm.goharbor.io | helm 仓库地址                         |
@@ -176,7 +176,7 @@ kubectl port-forward -n harbor service/harbor --address=${ip} 80
 --8<-- "harbor.yaml"
 ```
 
-目前除了 `values_yaml` 字段和默认配置，其它所有示例参数均为必填项。
+目前除了 `valuesYaml` 字段和默认配置，其它所有示例参数均为必填项。
 
 ### 3.3、持久化存储数据
 
@@ -226,7 +226,7 @@ tools:
   dependsOn: [ ]
   options:
     chart:
-      values_yaml: |
+      valuesYaml: |
         persistence:
           persistentVolumeClaim:
             registry:
@@ -258,7 +258,7 @@ tools:
   dependsOn: [ ]
   options:
     chart:
-      values_yaml: |
+      valuesYaml: |
         externalURL: http://127.0.0.1
         expose:
           type: nodePort
@@ -273,7 +273,7 @@ tools:
   dependsOn: [ ]
   options:
     chart:
-      values_yaml: |
+      valuesYaml: |
         externalURL: http://core.harbor.domain
         expose:
           type: ingress
@@ -329,7 +329,7 @@ tools:
   dependsOn: [ ]
   options:
     chart:
-      values_yaml: |
+      valuesYaml: |
         externalURL: http://core.harbor.domain
         expose:
           type: ingress
