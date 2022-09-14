@@ -21,7 +21,7 @@ type Repo struct {
 type Chart struct {
 	// if ChartPath equals to "", then Repo.Name and Repo.URL must be set
 	ChartPath   string `mapstructure:"chartPath"`
-	ChartName   string `validate:"required" mapstructure:"chartName"`
+	ChartName   string `mapstructure:"chartName"`
 	Version     string `mapstructure:"version"`
 	ReleaseName string `mapstructure:"releaseName"`
 	Namespace   string `mapstructure:"namespace"`

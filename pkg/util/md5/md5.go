@@ -24,3 +24,17 @@ func FileMatchesMD5(fileName, md5FileName string) (bool, error) {
 
 	return currentPlugInMD5 == md5Content, nil
 }
+
+func FilesMD5Equal(file1, file2 string) (bool, error) {
+	file1MD5, err := CalcFileMD5(file1)
+	if err != nil {
+		return false, err
+	}
+
+	file2MD5, err := CalcFileMD5(file1)
+	if err != nil {
+		return false, err
+	}
+
+	return file1MD5 == file2MD5, nil
+}
