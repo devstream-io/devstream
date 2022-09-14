@@ -12,10 +12,11 @@ This plugin installs [ArgoCD](https://argoproj.github.io/cd/) in an existing Kub
 
 | key                | default value                        | description                                        |
 | ----------------   | ------------------------------------ | ------------------------------------------------   |
-| chart.chartName   | argo/argo-cd                         | chart name                                         |
+| chart.chartPath    | ""                                   | local chart path                                   |
+| chart.chartName    | argo/argo-cd                         | chart name                                         |
 | chart.timeout      | 5m                                   | this config will wait 5 minutes to deploy argocd   |
 | chart.upgradeCRDs  | true                                 | default update CRD config                          |
-| chart.releaseName | argocd                               | helm release name                                  |
+| chart.releaseName  | argocd                               | helm release name                                  |
 | chart.namespace    | argocd                               | namespace where helm to deploy                     |
 | chart.wait         | true                                 | whether to wait until installation is complete     |
 | repo.url           | https://argoproj.github.io/argo-helm | helm official repo address                         |

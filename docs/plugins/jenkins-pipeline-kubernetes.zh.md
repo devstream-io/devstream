@@ -49,6 +49,8 @@ tools:
         url: https://charts.jenkins.io
       # Helm chart information
       chart:
+        # local path of the chart; if chartPath != "", repo.name and repo.url will be ignored. e.g. "foo.tgz", "./foo.tgz", "/tmp/foo.tgz"
+        chartPath: ""
         # name of the chart
         chartName: jenkins/jenkins
         # release name of the chart

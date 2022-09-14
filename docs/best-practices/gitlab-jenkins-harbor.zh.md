@@ -91,6 +91,7 @@ jenkins 插件的配置如下：
       name: jenkins
       url: https://charts.jenkins.io
     chart:
+      chartPath: ""
       chartName: jenkins/jenkins
       namespace: jenkins
       wait: true
@@ -204,6 +205,7 @@ tools:
       name: jenkins
       url: https://charts.jenkins.io
     chart:
+      chartPath: ""
       chartName: jenkins/jenkins
       namespace: jenkins
       wait: true

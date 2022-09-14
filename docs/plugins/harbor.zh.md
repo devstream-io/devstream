@@ -161,10 +161,11 @@ kubectl port-forward -n harbor service/harbor --address=${ip} 80
 
 | 配置项              | 默认值                    | 描述                                 |
 | ----               | ----                     | ----                                |
-| chart.chartName   | harbor/harbor            | helm chart 包名称                    |
+| chart.chartPath    | ""                      | 本地 chart 包路径                      |
+| chart.chartName    | harbor/harbor            | helm chart 包名称                    |
 | chart.timeout      | 10m                      | helm install 的超时时间               |
-| chart.upgradeCRDs  | true                     | 是否更新 CRDs（如果有）                 |
-| chart.releaseName | harbor                   | helm 发布名称                         |
+| chart.upgradeCRDs  | true                     | 是否更新 CRDs（如果有）                |
+| chart.releaseName  | harbor                   | helm 发布名称                         |
 | chart.wait         | true                     | 是否等待部署完成                       |
 | chart.namespace    | harbor                   | 部署的命名空间                         |
 | repo.url           | https://helm.goharbor.io | helm 仓库地址                         |

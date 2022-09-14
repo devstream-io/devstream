@@ -12,9 +12,10 @@ This plugin installs [OpenLDAP](https://www.openldap.org/) in an existing Kubern
 
 | key                | default value                             | description                                        |
 | ----               | ----                                      | ----                                               |
-| chart.chartName   | helm-openldap/openldap-stack-ha           | community chart name                               |
+| chart.chartPath    | ""                                        | local chart path                                   |
+| chart.chartName    | helm-openldap/openldap-stack-ha           | community chart name                               |
 | chart.timeout      | 5m                                        | this config will wait 5 minutes to deploy          |
-| chart.releaseName | openldap                                  | helm release name                                  |
+| chart.releaseName  | openldap                                  | helm release name                                  |
 | chart.upgradeCRDs  | true                                      | default update CRD config                          |
 | chart.wait         | true                                      | whether to wait until installation is complete     |
 | chart.namespace    | openldap                                  | namespace where helm to deploy                     |

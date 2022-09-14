@@ -41,6 +41,7 @@ var _ = Describe("Options struct", func() {
 				"version":     "",
 				"releaseName": "",
 				"wait":        emptyBool,
+				"chartPath":   "",
 				"chartName":   "test_chart",
 				"namespace":   "test_nameSpace",
 				"timeout":     "",

@@ -13,6 +13,8 @@ tools:
       url: https://helm.goharbor.io
     # Helm chart information
     chart:
+      # local path of the chart; if chartPath != "", repo.name and repo.url will be ignored. e.g. "foo.tgz", "./foo.tgz", "/tmp/foo.tgz"
+      chartPath: ""
       # name of the chart
       chartName: harbor/harbor
       # k8s namespace where Harbor will be installed

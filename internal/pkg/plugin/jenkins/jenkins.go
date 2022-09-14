@@ -13,6 +13,7 @@ import (
 
 var defaultHelmConfig = helm.Options{
 	Chart: helmCommon.Chart{
+		ChartPath:   "",
 		ChartName:   "jenkins/jenkins",
 		Timeout:     "5m",
 		UpgradeCRDs: types.Bool(true),

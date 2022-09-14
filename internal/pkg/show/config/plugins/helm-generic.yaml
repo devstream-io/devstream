@@ -14,6 +14,8 @@ tools:
         url: YOUR_CHART_REPO
       # Helm chart information
       chart:
+        # local path of the chart; if chartPath != "", repo.name and repo.url will be ignored. e.g. "foo.tgz", "./foo.tgz", "/tmp/foo.tgz"
+        chartPath: ""
         # name of the chart, e.g. argo/argo-cd
         chartName: CHART_NAME
         # release name of the chart, e.g. argocd

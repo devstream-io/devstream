@@ -69,6 +69,7 @@ tools:
       name: argo
       url: https://argoproj.github.io/argo-helm
     chart:
+      chartPath: ""
       chartName: argo/argo-cd
       releaseName: argocd
       namespace: argocd

@@ -14,6 +14,8 @@ tools:
         url: https://steinliber.github.io/tekton-helm-chart/
       # Helm chart information
       chart:
+        # local path of the chart; if chartPath != "", repo.name and repo.url will be ignored. e.g. "foo.tgz", "./foo.tgz", "/tmp/foo.tgz"
+        chartPath: ""
         # name of the chart
         chartName: tekton/tekton-pipeline
         # k8s namespace where Tekton will be installed

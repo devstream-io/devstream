@@ -11,6 +11,7 @@ This plugin installs [tekton](https://tekton.dev/) in an existing Kubernetes clu
 
 | key                | default value                                   | description                                        |
 | ----               | ----                                            | ----                                               |
+| chart.chartPath    | ""                                              | local chart path                                   |
 | chart.chartName    | tekton/tekton-pipeline                          | chart name                                         |
 | chart.timeout      | 5m                                              | this config will wait 5 minutes to deploy          |
 | chart.upgradeCRDs  | true                                            | default update CRD config                          |

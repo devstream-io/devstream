@@ -10,6 +10,8 @@ tools:
         url: https://helm.releases.hashicorp.com
       # Helm chart information
       chart:
+        # local path of the chart; if chartPath != "", repo.name and repo.url will be ignored. e.g. "foo.tgz", "./foo.tgz", "/tmp/foo.tgz"
+        chartPath: ""
         # name of the chart
         chartName: hashicorp/vault
         # release name of the chart

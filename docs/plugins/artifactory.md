@@ -48,9 +48,10 @@ This plugin support`Ingress`, `ClusterIP`, `NodePort` and `LoadBalancer` , You c
 
 | key                | default value           | description                                        |
 | ----               | ----                    | ----                                               |
-| chart.chartName   | jfrog/artifactory       | chart name                                         |
+| chart.chartPath    | ""                      | local chart path                                   |
+| chart.chartName    | jfrog/artifactory       | chart name                                         |
 | chart.timeout      | 10m                     | this config will wait 10 minutes to deploy         |
-| chart.releaseName | artifactory             | helm release name                                  |
+| chart.releaseName  | artifactory             | helm release name                                  |
 | chart.upgradeCRDs  | true                    | default update CRD config                          |
 | chart.wait         | true                    | whether to wait until installation is complete     |
 | chart.namespace    | artifactory             | namespace where helm to deploy                     |

@@ -149,13 +149,14 @@ The `harbor` plugin provides default values for many options:
 
 | key                | default value            | description                         |
 | ----               | ----                     | ----                                |
-| chart.chartName   | harbor/harbor            | helm chart name                    |
-| chart.timeout      | 10m                      | timeout for helm install               |
-| chart.upgradeCRDs  | true                     | update CRDs or not (if any)                |
-| chart.releaseName | harbor                   | helm release name                       |
-| chart.wait         | true                     | wait till deployment finishes                       |
-| chart.namespace    | harbor                   | namespace                       |
-| repo.url           | https://helm.goharbor.io | helm repo URL                        |
+| chart.chartPath    | ""                       | local chart path                    |
+| chart.chartName    | harbor/harbor            | helm chart name                     |
+| chart.timeout      | 10m                      | timeout for helm install            |
+| chart.upgradeCRDs  | true                     | update CRDs or not (if any)         |
+| chart.releaseName  | harbor                   | helm release name                   |
+| chart.wait         | true                     | wait till deployment finishes       |
+| chart.namespace    | harbor                   | namespace                           |
+| repo.url           | https://helm.goharbor.io | helm repo URL                       |
 | repo.name          | harbor                   | helm repo name                      |
 
 A maximum config is as follows:

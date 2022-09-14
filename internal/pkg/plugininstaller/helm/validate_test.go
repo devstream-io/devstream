@@ -78,6 +78,7 @@ var _ = Describe("SetDefaultConfig func", func() {
 			},
 		}
 		expectChart = map[string]interface{}{
+			"chartPath":   "",
 			"chartName":   testChartName,
 			"wait":        testBool,
 			"namespace":   "",
