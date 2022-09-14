@@ -1,24 +1,26 @@
-package argocd
+package sonarqube
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/helm"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func Delete(options map[string]interface{}) (bool, error) {
+func Read(options map[string]interface{}) (map[string]interface{}, error) {
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			helm.SetDefaultConfig(&defaultHelmConfig),
 			helm.Validate,
 		},
-		ExecuteOperations: helm.DefaultDeleteOperations,
-	}
-	_, err := operator.Execute(plugininstaller.RawOptions(options))
-	if err != nil {
-		return false, err
+		GetStateOperation: helm.GetPluginAllState,
 	}
 
-	// 2. return ture if all process success
-	return true, nil
+	// 2. get plugin status
+	status, err := operator.Execute(plugininstaller.RawOptions(options))
+	if err != nil {
+		return nil, err
+	}
+	log.Debugf("Return map: %v", status)
+	return status, nil
 }

@@ -81,6 +81,9 @@ var (
 	//go:embed plugins/repo-scaffolding.yaml
 	RepoScaffoldingDefaultConfig string
 
+	//go:embed plugins/sonarqube.yaml
+	SonarqubeDefaultConfig string
+
 	//go:embed plugins/tekton.yaml
 	TektonDefaultConfig string
 
@@ -119,6 +122,7 @@ var pluginDefaultConfigs = map[string]string{
 	"kube-prometheus":             KubePrometheusDefaultConfig,
 	"openldap":                    OpenldapDefaultConfig,
 	"repo-scaffolding":            RepoScaffoldingDefaultConfig,
+	"sonarqube":                   SonarqubeDefaultConfig,
 	"tekton":                      TektonDefaultConfig,
 	"trello-github-integ":         TrelloGithubIntegDefaultConfig,
 	"trello":                      TrelloDefaultConfig,
