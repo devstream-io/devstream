@@ -2,9 +2,10 @@ package helm
 
 import (
 	"fmt"
-	"io"
 	"os"
 	"path/filepath"
+
+	"github.com/devstream-io/devstream/pkg/util/file"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/md5"
@@ -61,41 +62,5 @@ func cacheChartPackage(chartPath string) error {
 	if err = os.MkdirAll(repositoryCache, 0755); err != nil {
 		return err
 	}
-	return copyFile(chartPath, dFilePath)
-}
-
-func copyFile(srcFile, dstFile string) (err error) {
-	// prepare source file
-	sFile, err := os.Open(srcFile)
-	if err != nil {
-		return err
-	}
-	defer func() {
-		if closeErr := sFile.Close(); closeErr != nil {
-			log.Errorf("Failed to close file %s: %s", srcFile, closeErr)
-			if err == nil {
-				err = closeErr
-			}
-		}
-	}()
-
-	// create destination file
-	dFile, err := os.Create(dstFile)
-	if err != nil {
-		return err
-	}
-	defer func() {
-		if closeErr := dFile.Close(); closeErr != nil {
-			log.Errorf("Failed to close file %s: %s", dstFile, closeErr)
-			if err == nil {
-				err = closeErr
-			}
-		}
-	}()
-
-	// copy and sync
-	if _, err = io.Copy(dFile, sFile); err != nil {
-		return nil
-	}
-	return dFile.Sync()
+	return file.CopyFile(chartPath, dFilePath)
 }

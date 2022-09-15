@@ -1,6 +1,7 @@
 package file
 
 import (
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
@@ -63,11 +64,38 @@ func SetPluginDir(conf string) error {
 	return nil
 }
 
-// CopyFile will copy file content from src to dst
-func CopyFile(src, dest string) error {
-	bytesRead, err := os.ReadFile(src)
+func CopyFile(srcFile, dstFile string) (err error) {
+	// prepare source file
+	sFile, err := os.Open(srcFile)
 	if err != nil {
 		return err
 	}
-	return os.WriteFile(dest, bytesRead, 0644)
+	defer func() {
+		if closeErr := sFile.Close(); closeErr != nil {
+			log.Errorf("Failed to close file %s: %s", srcFile, closeErr)
+			if err == nil {
+				err = closeErr
+			}
+		}
+	}()
+
+	// create destination file
+	dFile, err := os.Create(dstFile)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		if closeErr := dFile.Close(); closeErr != nil {
+			log.Errorf("Failed to close file %s: %s", dstFile, closeErr)
+			if err == nil {
+				err = closeErr
+			}
+		}
+	}()
+
+	// copy and sync
+	if _, err = io.Copy(dFile, sFile); err != nil {
+		return nil
+	}
+	return dFile.Sync()
 }
