@@ -59,7 +59,7 @@ clean: ## Remove dtm and plugins. It's best to run a "clean" before "build".
 build-core: generate fmt lint vet mod-tidy ## Build dtm core only, without plugins, locally.
 	go build -trimpath -gcflags="all=-N -l" -ldflags "$(GO_LDFLAGS)" -o dtm-${GOOS}-${GOARCH} ./cmd/devstream/
 	@-rm -f dtm
-	@mv dtm-${GOOS}-${GOARCH} dtm
+	@cp dtm-${GOOS}-${GOARCH} dtm
 	@echo "${GREEN}✔'dtm' has been generated in the current directory($(PWD))!${RESET}"
 
 .PHONY: build-plugin.%
