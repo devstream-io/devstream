@@ -8,6 +8,7 @@ import (
 
 var defaultHelmConfig = helm.Options{
 	Chart: helmCommon.Chart{
+		ChartPath:   "",
 		ChartName:   "tekton/tekton-pipeline",
 		Timeout:     "5m",
 		UpgradeCRDs: types.Bool(true),

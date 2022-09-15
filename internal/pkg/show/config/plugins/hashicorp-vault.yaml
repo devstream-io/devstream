@@ -10,17 +10,19 @@ tools:
         url: https://helm.releases.hashicorp.com
       # Helm chart information
       chart:
+        # local path of the chart; if chartPath != "", repo.name and repo.url will be ignored. e.g. "foo.tgz", "./foo.tgz", "/tmp/foo.tgz"
+        chartPath: ""
         # name of the chart
-        chart_name: hashicorp/vault
+        chartName: hashicorp/vault
         # release name of the chart
-        release_name: vault
+        releaseName: vault
         # k8s namespace where Vault will be installed
         namespace: vault
         # whether to wait for the release to be deployed or not
         wait: true
         # the time to wait for any individual Kubernetes operation (like Jobs for hooks). This defaults to 5m
         timeout: 5m
-        values_yaml: |
+        valuesYaml: |
           global:
             enabled: true
           server:

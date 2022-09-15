@@ -8,6 +8,7 @@ import (
 
 var defaultHelmConfig = helm.Options{
 	Chart: helmCommon.Chart{
+		ChartPath:   "",
 		ChartName:   "prometheus-community/kube-prometheus-stack",
 		Timeout:     "5m",
 		UpgradeCRDs: types.Bool(true),

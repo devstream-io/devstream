@@ -2,6 +2,8 @@ package helm
 
 import (
 	"context"
+	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -11,9 +13,9 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-const (
-	repositoryCache  = "/tmp/.helmcache"
-	repositoryConfig = "/tmp/.helmrepo"
+var (
+	repositoryCache  = filepath.Join(os.TempDir(), ".helmcache")
+	repositoryConfig = filepath.Join(os.TempDir(), ".helmrepo")
 )
 
 // Helm is helm implementation
@@ -38,6 +40,7 @@ func NewHelm(param *HelmParam, option ...Option) (*Helm, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	entry := &repo.Entry{
 		Name:                  param.Repo.Name,
 		URL:                   param.Repo.URL,
@@ -83,6 +86,13 @@ func NewHelm(param *HelmParam, option ...Option) (*Helm, error) {
 		CleanupOnFail:    false,
 		DryRun:           false,
 	}
+	if param.Chart.ChartPath != "" {
+		chartSpec.ChartName = param.Chart.ChartPath
+		if err = cacheChartPackage(param.Chart.ChartPath); err != nil {
+			return nil, err
+		}
+	}
+
 	h := &Helm{
 		Entry:     entry,
 		ChartSpec: chartSpec,
@@ -93,9 +103,12 @@ func NewHelm(param *HelmParam, option ...Option) (*Helm, error) {
 		op(h)
 	}
 
-	if err = h.AddOrUpdateChartRepo(*entry); err != nil {
-		return nil, err
+	if param.Chart.ChartPath == "" {
+		if err = h.AddOrUpdateChartRepo(*entry); err != nil {
+			return nil, err
+		}
 	}
+
 	return h, nil
 }
 

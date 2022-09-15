@@ -38,14 +38,15 @@ var _ = Describe("Options struct", func() {
 				"url":  "",
 			},
 			"chart": map[string]interface{}{
-				"version":      "",
-				"release_name": "",
-				"wait":         emptyBool,
-				"chart_name":   "test_chart",
-				"namespace":    "test_nameSpace",
-				"timeout":      "",
-				"upgradeCRDs":  emptyBool,
-				"values_yaml":  "",
+				"version":     "",
+				"releaseName": "",
+				"wait":        emptyBool,
+				"chartPath":   "",
+				"chartName":   "test_chart",
+				"namespace":   "test_nameSpace",
+				"timeout":     "",
+				"upgradeCRDs": emptyBool,
+				"valuesYaml":  "",
 			},
 		}
 	})
@@ -95,7 +96,7 @@ var _ = Describe("NewOptions func", func() {
 				"name": testRepoName,
 			},
 			"chart": map[string]interface{}{
-				"chart_name": testChartName,
+				"chartName": testChartName,
 			},
 		}
 	})

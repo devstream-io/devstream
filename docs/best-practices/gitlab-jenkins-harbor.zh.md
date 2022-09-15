@@ -91,12 +91,13 @@ jenkins 插件的配置如下：
       name: jenkins
       url: https://charts.jenkins.io
     chart:
-      chart_name: jenkins/jenkins
+      chartPath: ""
+      chartName: jenkins/jenkins
       namespace: jenkins
       wait: true
       timeout: 5m
       upgradeCRDs: true
-      values_yaml: |
+      valuesYaml: |
         serviceAccount:
           create: true
           name: jenkins
@@ -131,7 +132,7 @@ harbor 插件的配置如下：
   dependsOn: [ ]
   options:
     chart:
-      values_yaml: |
+      valuesYaml: |
         externalURL: http://harbor.example.com
         expose:
           type: ingress
@@ -204,12 +205,13 @@ tools:
       name: jenkins
       url: https://charts.jenkins.io
     chart:
-      chart_name: jenkins/jenkins
+      chartPath: ""
+      chartName: jenkins/jenkins
       namespace: jenkins
       wait: true
       timeout: 5m
       upgradeCRDs: true
-      values_yaml: |
+      valuesYaml: |
         serviceAccount:
           create: true
           name: jenkins
@@ -235,7 +237,7 @@ tools:
   dependsOn: [ ]
   options:
     chart:
-      values_yaml: |
+      valuesYaml: |
         externalURL: http://harbor.example.com
         expose:
           type: ingress
