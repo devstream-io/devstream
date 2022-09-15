@@ -395,3 +395,98 @@ harbor-ingress   nginx   core.harbor.domain   192.168.49.2   80      2m8s
 #### 4.1.2 HTTPS + Registry + Chartmuseum + Internal Database + Internal Redis
 
 #### 4.1.3 HTTPS + Registry + Chartmuseum + External Database + External Redis
+
+## 5、离线环境部署
+
+// TODO(daniel-hutao): 本节内容近期将持续补充完善
+
+### 5.1、容器镜像
+
+`harbor` 插件支持使用自定义容器镜像，你需要先在 valuesYaml 部分加上如下配置：
+
+```yaml
+valuesYaml: |
+  nginx:
+    image:
+      repository: [[ imageRepo ]]/goharbor/nginx-photon
+      tag: v2.5.3
+  portal:
+    image:
+      repository: [[ imageRepo ]]/goharbor/harbor-portal
+      tag: v2.5.3
+  core:
+    image:
+      repository: [[ imageRepo ]]/goharbor/harbor-core
+      tag: v2.5.3
+  jobservice:
+    image:
+      repository: [[ imageRepo ]]/goharbor/harbor-jobservice
+      tag: v2.5.3
+  registry:
+    registry:
+      image:
+        repository: [[ imageRepo ]]/goharbor/registry-photon
+        tag: v2.5.3
+    controller:
+      image:
+        repository: [[ imageRepo ]]/goharbor/harbor-registryctl
+        tag: v2.5.3
+  chartmuseum:
+    image:
+      repository: [[ imageRepo ]]/goharbor/chartmuseum-photon
+      tag: v2.5.3
+  trivy:
+    image:
+      repository: [[ imageRepo ]]/goharbor/trivy-adapter-photon
+      tag: v2.5.3
+  notary:
+    server:
+      image:
+        repository: [[ imageRepo ]]/goharbor/notary-server-photon
+        tag: v2.5.3
+    signer:
+      image:
+        repository: [[ imageRepo ]]/goharbor/notary-signer-photon
+        tag: v2.5.3
+  database:
+    internal:
+      image:
+        repository: [[ imageRepo ]]/goharbor/harbor-db
+        tag: v2.5.3
+  redis:
+    internal:
+      image:
+        repository: [[ imageRepo ]]/goharbor/redis-photon
+        tag: v2.5.3
+  exporter:
+    image:
+      repository: [[ imageRepo ]]/goharbor/harbor-exporter
+      tag: v2.5.3
+```
+
+这段配置中留了一个变量 `[[ imageRepo ]]`，你可以在[变量配置](../../core-concepts/variables.zh)中定义这个变量，变量值设置成你的镜像仓库地址，例如：
+
+```yaml
+imageRepo: harbor.example.com:9000
+```
+
+当然，你需要保证需要的镜像都在你的镜像仓库中存在。
+
+你可以下载[镜像列表文件](./harbor/harbor-images.txt)，
+然后借助["Image Pull Push"](https://raw.githubusercontent.com/devstream-io/devstream/main/hack/image-pull-push.sh)工具脚本来准备镜像。
+
+```shell
+curl -o harbor-images.txt https://docs.devstream.io/en/latest/plugins/harbor/harbor-images.txt
+curl -o image-pull-push.sh https://raw.githubusercontent.com/devstream-io/devstream/main/hack/image-pull-push.sh
+chmod +x image-pull-push.sh
+# 查看工具脚本的使用方法和注意事项等
+./image-pull-push.sh -h
+# 设置镜像仓库地址，按需修改
+export IMAGE_REPO_ADDR=harbor.devstream.io
+# 下载 harbor-images.txt 中所有镜像并保存到本地压缩包中
+./image-pull-push.sh -f harbor-images.txt -r ${IMAGE_REPO_ADDR} -s
+# 从压缩包中 load 镜像并 push 到私有镜像仓库（如果镜像仓库需要登录，则需要先手动执行 docker login）
+./image-pull-push.sh -f harbor-images.txt -r ${IMAGE_REPO_ADDR} -l -u
+```
+
+如果你还没有一个私有镜像仓库，可以参考[这篇文章](../best-practices/image-registry.zh.md)快速部署一个 Docker Registry。
