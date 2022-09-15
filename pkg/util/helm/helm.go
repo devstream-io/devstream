@@ -2,6 +2,8 @@ package helm
 
 import (
 	"context"
+	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -11,9 +13,9 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-const (
-	repositoryCache  = "/tmp/.helmcache"
-	repositoryConfig = "/tmp/.helmrepo"
+var (
+	repositoryCache  = filepath.Join(os.TempDir(), ".helmcache")
+	repositoryConfig = filepath.Join(os.TempDir(), ".helmrepo")
 )
 
 // Helm is helm implementation
