@@ -12,6 +12,20 @@ When you run `dtm init`, `dtm` will decide which plugins exist and which do not 
 
 After v0.5.0 (feature work in progress now), `dtm` will release plugins to an AWS S3 bucket. When running `dtm init`, it will download plugins from the AWS S3 bucket instead (through Cloudflare CDN.)
 
+## Flags
+
+`dtm init` has the following flags:
+
+| Short | Long          | Default              | Description                                            |
+|-------|---------------|----------------------|--------------------------------------------------------|
+| -f    | --config-file | `"config.yaml"`      | The config file to use                                 |
+| -d    | --plugin-dir  | `"~/.dtm/plugins"`   | The directory to store plugins                         |
+| -a    | --all         | `false`              | Download all plugins rather than from the config file. |
+|       | --os          | OS of this machine   | The OS to download plugins for.                        |
+|       | --arch        | Arch of this machine | The architecture to download plugins for.              |
+
+_Note: You could use `dtm init --all --os=DestinyOS --arch=DestinyArch -d=PLUGIN_DIR` to download all plugins and use dtm offline._
+
 ## Init Logic
 
 - Based on the config file and the tool file, decide which plugins are required.
