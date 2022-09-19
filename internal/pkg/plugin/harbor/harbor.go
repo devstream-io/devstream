@@ -8,6 +8,7 @@ import (
 
 var defaultHelmConfig = helm.Options{
 	Chart: helmCommon.Chart{
+		ChartPath:   "",
 		ChartName:   "harbor/harbor",
 		Timeout:     "10m",
 		UpgradeCRDs: types.Bool(true),

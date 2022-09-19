@@ -30,7 +30,7 @@ var _ = Describe("Validate func", func() {
 		BeforeEach(func() {
 			testOption = map[string]interface{}{
 				"chart": map[string]string{
-					"chart_name": "test",
+					"chartName": "test",
 				},
 				"repo": map[string]string{
 					"url":  "http://test.com",
@@ -78,14 +78,15 @@ var _ = Describe("SetDefaultConfig func", func() {
 			},
 		}
 		expectChart = map[string]interface{}{
-			"chart_name":   testChartName,
-			"wait":         testBool,
-			"namespace":    "",
-			"version":      "",
-			"release_name": "",
-			"values_yaml":  "",
-			"timeout":      "",
-			"upgradeCRDs":  testBool,
+			"chartPath":   "",
+			"chartName":   testChartName,
+			"wait":        testBool,
+			"namespace":   "",
+			"version":     "",
+			"releaseName": "",
+			"valuesYaml":  "",
+			"timeout":     "",
+			"upgradeCRDs": testBool,
 		}
 		expectRepo = map[string]interface{}{
 			"url":  testRepoURL,

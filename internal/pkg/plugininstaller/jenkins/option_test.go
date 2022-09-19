@@ -12,6 +12,7 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/common"
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
+	"github.com/devstream-io/devstream/pkg/util/jenkins/dingtalk"
 )
 
 // create mock client
@@ -20,23 +21,23 @@ var testError = errors.New("test")
 type mockSuccessJenkinsClient struct {
 }
 
-func (m *mockSuccessJenkinsClient) CreateOrUpdateJob(config, jobName string) (job *gojenkins.Job, created bool, err error) {
+func (m *mockSuccessJenkinsClient) CreateOrUpdateJob(string, string) (job *gojenkins.Job, created bool, err error) {
 	return nil, true, nil
 }
 
-func (m *mockSuccessJenkinsClient) ExecuteScript(script string) (string, error) {
+func (m *mockSuccessJenkinsClient) ExecuteScript(string) (string, error) {
 	return "", nil
 }
-func (m *mockSuccessJenkinsClient) GetJob(ctx context.Context, id string, parentIDs ...string) (*gojenkins.Job, error) {
+func (m *mockSuccessJenkinsClient) GetJob(context.Context, string, ...string) (*gojenkins.Job, error) {
 	return nil, nil
 }
-func (m *mockSuccessJenkinsClient) DeleteJob(ctx context.Context, name string) (bool, error) {
+func (m *mockSuccessJenkinsClient) DeleteJob(context.Context, string) (bool, error) {
 	return true, nil
 }
-func (m *mockSuccessJenkinsClient) InstallPluginsIfNotExists(plugin []string, enableRestart bool) error {
+func (m *mockSuccessJenkinsClient) InstallPluginsIfNotExists([]string, bool) error {
 	return nil
 }
-func (m *mockSuccessJenkinsClient) CreateGiltabCredential(id, token string) error {
+func (m *mockSuccessJenkinsClient) CreateGiltabCredential(string, string) error {
 	return nil
 }
 
@@ -48,29 +49,37 @@ func (m *mockSuccessJenkinsClient) ConfigCasc(cascScript string) error {
 	return nil
 }
 
+func (m *mockSuccessJenkinsClient) ApplyDingTalkBot(dingtalk.BotConfig) error {
+	return nil
+}
+
 type mockErrorJenkinsClient struct {
 }
 
-func (m *mockErrorJenkinsClient) CreateOrUpdateJob(config, jobName string) (job *gojenkins.Job, created bool, err error) {
+func (m *mockErrorJenkinsClient) CreateOrUpdateJob(string, string) (job *gojenkins.Job, created bool, err error) {
 	return nil, true, testError
 }
 
-func (m *mockErrorJenkinsClient) ExecuteScript(script string) (string, error) {
+func (m *mockErrorJenkinsClient) ExecuteScript(string) (string, error) {
 	return "", testError
 }
-func (m *mockErrorJenkinsClient) GetJob(ctx context.Context, id string, parentIDs ...string) (*gojenkins.Job, error) {
+func (m *mockErrorJenkinsClient) GetJob(context.Context, string, ...string) (*gojenkins.Job, error) {
 	return nil, testError
 }
-func (m *mockErrorJenkinsClient) DeleteJob(ctx context.Context, name string) (bool, error) {
+func (m *mockErrorJenkinsClient) DeleteJob(context.Context, string) (bool, error) {
 	return false, testError
 }
-func (m *mockErrorJenkinsClient) InstallPluginsIfNotExists(plugin []string, enableRestart bool) error {
+func (m *mockErrorJenkinsClient) InstallPluginsIfNotExists([]string, bool) error {
 	return testError
 }
-func (m *mockErrorJenkinsClient) CreateGiltabCredential(id, token string) error {
+func (m *mockErrorJenkinsClient) CreateGiltabCredential(string, string) error {
 	return testError
 }
-func (m *mockErrorJenkinsClient) ConfigCasc(cascScript string) error {
+func (m *mockErrorJenkinsClient) ConfigCasc(string) error {
+	return testError
+}
+
+func (m *mockErrorJenkinsClient) ApplyDingTalkBot(dingtalk.BotConfig) error {
 	return testError
 }
 

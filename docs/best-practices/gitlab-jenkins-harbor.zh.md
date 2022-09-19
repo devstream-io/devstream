@@ -91,12 +91,13 @@ jenkins 插件的配置如下：
       name: jenkins
       url: https://charts.jenkins.io
     chart:
-      chart_name: jenkins/jenkins
+      chartPath: ""
+      chartName: jenkins/jenkins
       namespace: jenkins
       wait: true
       timeout: 5m
       upgradeCRDs: true
-      values_yaml: |
+      valuesYaml: |
         serviceAccount:
           create: true
           name: jenkins
@@ -106,11 +107,16 @@ jenkins 插件的配置如下：
           ingress:
             enabled: true
             hostName: jenkins.example.com
-        additionalPlugins:
-          # install "GitHub Pull Request Builder" plugin, see https://plugins.jenkins.io/ghprb/ for more details
-          - ghprb
-          # install "OWASP Markup Formatter" plugin, see https://plugins.jenkins.io/antisamy-markup-formatter/ for more details
-          - antisamy-markup-formatter
+          installPlugins:
+            - kubernetes:3600.v144b_cd192ca_a_
+            - workflow-aggregator:581.v0c46fa_697ffd
+            - git:4.11.3
+            - configuration-as-code:1512.vb_79d418d5fc8
+          additionalPlugins:
+            # install "GitHub Pull Request Builder" plugin, see https://plugins.jenkins.io/ghprb/ for more details
+            - ghprb
+            # install "OWASP Markup Formatter" plugin, see https://plugins.jenkins.io/antisamy-markup-formatter/ for more details
+            - antisamy-markup-formatter
         # Enable HTML parsing using OWASP Markup Formatter Plugin (antisamy-markup-formatter), useful with ghprb plugin.
         enableRawHtmlMarkupFormatter: true
         # Jenkins Configuraction as Code, refer to https://plugins.jenkins.io/configuration-as-code/ for more details
@@ -131,7 +137,7 @@ harbor 插件的配置如下：
   dependsOn: [ ]
   options:
     chart:
-      values_yaml: |
+      valuesYaml: |
         externalURL: http://harbor.example.com
         expose:
           type: ingress
@@ -204,12 +210,13 @@ tools:
       name: jenkins
       url: https://charts.jenkins.io
     chart:
-      chart_name: jenkins/jenkins
+      chartPath: ""
+      chartName: jenkins/jenkins
       namespace: jenkins
       wait: true
       timeout: 5m
       upgradeCRDs: true
-      values_yaml: |
+      valuesYaml: |
         serviceAccount:
           create: true
           name: jenkins
@@ -219,11 +226,16 @@ tools:
           ingress:
             enabled: true
             hostName: jenkins.example.com
-        additionalPlugins:
-          # install "GitHub Pull Request Builder" plugin, see https://plugins.jenkins.io/ghprb/ for more details
-          - ghprb
-          # install "OWASP Markup Formatter" plugin, see https://plugins.jenkins.io/antisamy-markup-formatter/ for more details
-          - antisamy-markup-formatter
+          installPlugins:
+            - kubernetes:3600.v144b_cd192ca_a_
+            - workflow-aggregator:581.v0c46fa_697ffd
+            - git:4.11.3
+            - configuration-as-code:1512.vb_79d418d5fc8
+          additionalPlugins:
+            # install "GitHub Pull Request Builder" plugin, see https://plugins.jenkins.io/ghprb/ for more details
+            - ghprb
+            # install "OWASP Markup Formatter" plugin, see https://plugins.jenkins.io/antisamy-markup-formatter/ for more details
+            - antisamy-markup-formatter
         # Enable HTML parsing using OWASP Markup Formatter Plugin (antisamy-markup-formatter), useful with ghprb plugin.
         enableRawHtmlMarkupFormatter: true
         # Jenkins Configuraction as Code, refer to https://plugins.jenkins.io/configuration-as-code/ for more details
@@ -235,7 +247,7 @@ tools:
   dependsOn: [ ]
   options:
     chart:
-      values_yaml: |
+      valuesYaml: |
         externalURL: http://harbor.example.com
         expose:
           type: ingress

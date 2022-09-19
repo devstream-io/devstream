@@ -37,7 +37,7 @@ jobs:
       - name: upload core
         run: bash -e ./hack/release/upload_assets.sh ${{ secrets.GITHUB_TOKEN }} ${{ env.TAG }} ${{ env.GOOS }} ${{ env.GOARCH }}
       - name: upload plugin
-        run: aws s3 cp .devstream/ s3://download.devstream.io/${{ env.TAG }}/ --recursive --acl public-read
+        run: aws s3 cp ~/.devstream/plugins/ s3://download.devstream.io/${{ env.TAG }}/ --recursive --acl public-read
 
   # release for darwin-amd64
   build-and-release-on-darwin-amd64:
@@ -73,5 +73,5 @@ jobs:
       - name: upload
         run: bash -e ./hack/release/upload_assets.sh ${{ secrets.GITHUB_TOKEN }} ${{ env.TAG }} ${{ env.GOOS }} ${{ env.GOARCH }}
       - name: upload plugin
-        run: aws s3 cp .devstream/  s3://download.devstream.io/${{ env.TAG }}/ --recursive --acl public-read
+        run: aws s3 cp ~/.devstream/plugins/ s3://download.devstream.io/${{ env.TAG }}/ --recursive --acl public-read
 

@@ -8,6 +8,7 @@ import (
 
 var defaultHelmConfig = helm.Options{
 	Chart: helmCommon.Chart{
+		ChartPath:   "",
 		ChartName:   "helm-openldap/openldap-stack-ha",
 		Timeout:     "5m",
 		UpgradeCRDs: types.Bool(true),

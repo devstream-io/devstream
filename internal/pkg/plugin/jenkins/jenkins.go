@@ -13,6 +13,7 @@ import (
 
 var defaultHelmConfig = helm.Options{
 	Chart: helmCommon.Chart{
+		ChartPath:   "",
 		ChartName:   "jenkins/jenkins",
 		Timeout:     "5m",
 		UpgradeCRDs: types.Bool(true),
@@ -38,7 +39,7 @@ func genJenkinsState(options plugininstaller.RawOptions) (statemanager.ResourceS
 		return nil, err
 	}
 	valuesYaml := opt.GetHelmParam().Chart.ValuesYaml
-	resState["values_yaml"] = valuesYaml
+	resState["valuesYaml"] = valuesYaml
 
 	svcName, err := genJenkinsSvcName(options)
 	if err != nil {

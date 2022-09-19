@@ -8,6 +8,7 @@ import (
 
 var defaultHelmConfig = helm.Options{
 	Chart: helmCommon.Chart{
+		ChartPath:   "",
 		ChartName:   "argo/argo-cd",
 		Timeout:     "5m",
 		Wait:        types.Bool(true),

@@ -10,6 +10,8 @@ import (
 
 	"github.com/bndr/gojenkins"
 	"github.com/pkg/errors"
+
+	"github.com/devstream-io/devstream/pkg/util/jenkins/dingtalk"
 )
 
 type jenkins struct {
@@ -26,6 +28,7 @@ type JenkinsAPI interface {
 	CreateGiltabCredential(id, token string) error
 	CreateSSHKeyCredential(id, userName, privateKey string) error
 	ConfigCasc(cascScript string) error
+	ApplyDingTalkBot(config dingtalk.BotConfig) error
 }
 
 type setBearerToken struct {

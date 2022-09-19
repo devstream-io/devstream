@@ -12,16 +12,17 @@ This plugin installs [OpenLDAP](https://www.openldap.org/) in an existing Kubern
 
 | key                | default value                             | description                                        |
 | ----               | ----                                      | ----                                               |
-| chart.chart_name   | helm-openldap/openldap-stack-ha           | community chart name                               |
+| chart.chartPath    | ""                                        | local chart path                                   |
+| chart.chartName    | helm-openldap/openldap-stack-ha           | community chart name                               |
 | chart.timeout      | 5m                                        | this config will wait 5 minutes to deploy          |
-| chart.release_name | openldap                                  | helm release name                                  |
+| chart.releaseName  | openldap                                  | helm release name                                  |
 | chart.upgradeCRDs  | true                                      | default update CRD config                          |
 | chart.wait         | true                                      | whether to wait until installation is complete     |
 | chart.namespace    | openldap                                  | namespace where helm to deploy                     |
 | repo.url           | https://jp-gouin.github.io/helm-openldap/ | helm repo address                                  |
 | repo.name          | helm-openldap                             | helm repo name                                     |
 
-## Description of Key Fields in `values_yaml`
+## Description of Key Fields in `valuesYaml`
 
 - `replicaCount`: The default value is 3, for the convenience of local testing, the above example is set to 1
 - `service.type`: The default value is `ClusterIP`, if you have services outside the Kubernetes cluster that require ldap integration, the value preferably be set to `NodePort`, so that services outside the Kubernetes cluster can access the ldap service via `ldap://ip:389` instead of `ldap://openldap.openldap-openldap-stack-ha:389`
@@ -162,4 +163,4 @@ result: 0 Success
 # numEntries: 1
 ```
 
-If your command output is as above, your ldap service is fine. The above `values_yaml` is only to facilitate your local testing, if you want production available, you also have to configure `replicaCount`, data persistence, etc., refer to [OpenLDAP values.yaml](https://github.com/jp-gouin/helm-openldap/blob/master/values.yaml)
+If your command output is as above, your ldap service is fine. The above `valuesYaml` is only to facilitate your local testing, if you want production available, you also have to configure `replicaCount`, data persistence, etc., refer to [OpenLDAP values.yaml](https://github.com/jp-gouin/helm-openldap/blob/master/values.yaml)
