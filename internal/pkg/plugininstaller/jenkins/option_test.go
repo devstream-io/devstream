@@ -34,7 +34,7 @@ func (m *mockSuccessJenkinsClient) GetJob(context.Context, string, ...string) (*
 func (m *mockSuccessJenkinsClient) DeleteJob(context.Context, string) (bool, error) {
 	return true, nil
 }
-func (m *mockSuccessJenkinsClient) InstallPluginsIfNotExists([]string, bool) error {
+func (m *mockSuccessJenkinsClient) InstallPluginsIfNotExists(plugin []*jenkins.JenkinsPlugin, enableRestart bool) error {
 	return nil
 }
 func (m *mockSuccessJenkinsClient) CreateGiltabCredential(string, string) error {
@@ -64,7 +64,7 @@ func (m *mockErrorJenkinsClient) GetJob(context.Context, string, ...string) (*go
 func (m *mockErrorJenkinsClient) DeleteJob(context.Context, string) (bool, error) {
 	return false, testError
 }
-func (m *mockErrorJenkinsClient) InstallPluginsIfNotExists([]string, bool) error {
+func (m *mockErrorJenkinsClient) InstallPluginsIfNotExists(plugin []*jenkins.JenkinsPlugin, enableRestart bool) error {
 	return testError
 }
 func (m *mockErrorJenkinsClient) CreateGiltabCredential(string, string) error {
@@ -172,7 +172,9 @@ var _ = Describe("JobOptions struct", func() {
 				mockClient = &mockErrorJenkinsClient{}
 			})
 			It("should return error", func() {
-				err := jobOptions.installPlugins(mockClient, []string{"test_plugin"})
+				err := jobOptions.installPlugins(mockClient, []*jenkins.JenkinsPlugin{
+					{Name: "test_plugin", Version: "123"},
+				})
 				Expect(err).Error().Should(HaveOccurred())
 			})
 		})

@@ -3,6 +3,7 @@ package jenkins
 import (
 	"context"
 	_ "embed"
+	"fmt"
 	"net/http"
 	"regexp"
 	"strings"
@@ -20,17 +21,42 @@ var (
 	jenkinsRestartRetryTime = 6
 )
 
+type JenkinsPlugin struct {
+	Name    string
+	Version string
+}
+
+var basicPlugins = []*JenkinsPlugin{
+	{
+		Name:    "kubernetes",
+		Version: "3600.v144b_cd192ca_a_",
+	},
+	{
+		Name:    "git",
+		Version: "4.11.3",
+	},
+	{
+		Name:    "configuration-as-code",
+		Version: "1512.vb_79d418d5fc8",
+	},
+	{
+		Name:    "workflow-aggregator",
+		Version: "581.v0c46fa_697ffd",
+	},
+}
+
 //go:embed tpl/plugins.tpl.groovy
 var pluginsGroovyScript string
 
-func (j *jenkins) InstallPluginsIfNotExists(plugins []string, enableRestart bool) error {
+func (j *jenkins) InstallPluginsIfNotExists(installPlugins []*JenkinsPlugin, enableRestart bool) error {
+	plugins := append(installPlugins, basicPlugins...)
 	toInstallPlugins := j.getToInstallPluginList(plugins)
 	if len(toInstallPlugins) == 0 {
 		return nil
 	}
 
 	pluginInstallScript, err := template.Render("jenkins-plugins-template", pluginsGroovyScript, map[string]interface{}{
-		"JenkinsPlugins": strings.Join(toInstallPlugins, ","),
+		"JenkinsPlugins": transferPluginSliceToTplString(toInstallPlugins),
 		"EnableRestart":  enableRestart,
 	})
 	if err != nil {
@@ -54,7 +80,7 @@ func (j *jenkins) InstallPluginsIfNotExists(plugins []string, enableRestart bool
 	}
 }
 
-func (j *jenkins) waitJenkinsRestart(toInstallPlugins []string) error {
+func (j *jenkins) waitJenkinsRestart(toInstallPlugins []*JenkinsPlugin) error {
 	tryTime := 1
 	for {
 		waitTime := tryTime * 20
@@ -72,27 +98,35 @@ func (j *jenkins) waitJenkinsRestart(toInstallPlugins []string) error {
 	}
 }
 
-func (j *jenkins) getToInstallPluginList(pluginList []string) []string {
-	toInstallPlugins := make([]string, 0)
-	for _, pluginName := range pluginList {
+func (j *jenkins) getToInstallPluginList(pluginList []*JenkinsPlugin) []*JenkinsPlugin {
+	toInstallPlugins := make([]*JenkinsPlugin, 0)
+	for _, plugin := range pluginList {
 		// check plugin name
-		if ok := namePattern.MatchString(pluginName); !ok {
-			log.Warnf("invalid plugin name '%s', must follow pattern '%s'", pluginName, namePattern.String())
+		if ok := namePattern.MatchString(plugin.Name); !ok {
+			log.Warnf("invalid plugin name '%s', must follow pattern '%s'", plugin.Name, namePattern.String())
 			continue
 		}
 		// check jenkins has this plugin
-		plugin, err := j.HasPlugin(j.ctx, pluginName)
+		installedPlugin, err := j.HasPlugin(j.ctx, plugin.Name)
 		if err != nil {
-			log.Warnf("jenkins plugin failed to check plugin %s: %s", pluginName, err)
+			log.Warnf("jenkins plugin failed to check plugin %s: %s", plugin.Name, err)
 			continue
 		}
 
-		if plugin == nil {
-			log.Debugf("jenkins plugin %s wait to be installed", pluginName)
-			toInstallPlugins = append(toInstallPlugins, pluginName)
+		if installedPlugin == nil {
+			log.Debugf("jenkins plugin %s wait to be installed", plugin.Name)
+			toInstallPlugins = append(toInstallPlugins, plugin)
 		} else {
-			log.Debugf("jenkins plugin %s has installed", pluginName)
+			log.Debugf("jenkins plugin %s has installed", installedPlugin.ShortName)
 		}
 	}
 	return toInstallPlugins
+}
+
+func transferPluginSliceToTplString(plugins []*JenkinsPlugin) string {
+	pluginNames := make([]string, 0)
+	for _, pluginDetail := range plugins {
+		pluginNames = append(pluginNames, fmt.Sprintf("%s:%s", pluginDetail.Name, pluginDetail.Version))
+	}
+	return strings.Join(pluginNames, ",")
 }

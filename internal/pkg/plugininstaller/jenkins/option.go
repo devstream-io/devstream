@@ -122,7 +122,7 @@ func (j *JobOptions) buildWebhookInfo() *git.WebhookConfig {
 	}
 }
 
-func (j *JobOptions) installPlugins(jenkinsClient jenkins.JenkinsAPI, plugins []string) error {
+func (j *JobOptions) installPlugins(jenkinsClient jenkins.JenkinsAPI, plugins []*jenkins.JenkinsPlugin) error {
 	return jenkinsClient.InstallPluginsIfNotExists(plugins, j.Jenkins.EnableRestart)
 }
 
