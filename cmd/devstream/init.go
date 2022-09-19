@@ -43,13 +43,12 @@ func initCMDFunc(_ *cobra.Command, _ []string) {
 		err           error
 	)
 
-	switch downloadOnly {
-	// download plugins according to the config file
-	case false:
-		tools, realPluginDir, err = GetPluginsAndPluginDirFromConfig()
-	// download plugins from flags
-	case true:
+	if downloadOnly {
+		// download plugins from flags
 		tools, realPluginDir, err = GetPluginsAndPluginDirFromFlags()
+	} else {
+		// download plugins according to the config file
+		tools, realPluginDir, err = GetPluginsAndPluginDirFromConfig()
 	}
 
 	if err != nil {
@@ -132,7 +131,7 @@ func init() {
 
 	// downloading specific plugins from flags
 	initCMD.Flags().BoolVar(&downloadOnly, "download-only", false, "download plugins only")
-	initCMD.Flags().StringSliceVarP(&pluginsToDownload, "plugins", "p", []string{}, "plugins to download")
+	initCMD.Flags().StringSliceVarP(&pluginsToDownload, "plugins", "p", []string{}, "the plugins to be downloaded")
 	initCMD.Flags().BoolVarP(&downloadAll, "all", "a", false, "download all plugins")
 	initCMD.Flags().StringVar(&initOS, "os", runtime.GOOS, "download plugins for specific os")
 	initCMD.Flags().StringVar(&initArch, "arch", runtime.GOARCH, "download plugins for specific arch")
