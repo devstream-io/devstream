@@ -22,6 +22,7 @@ import (
 const (
 	jenkinsGitlabCredentialName = "jenkinsGitlabCredential"
 	jenkinsGitlabConnectionName = "jenkinsGitlabConnection"
+	jenkinsSSHkeyCredentialName = "jenkinsSSHKeyCredential"
 )
 
 type JobOptions struct {
@@ -44,8 +45,11 @@ type Jenkins struct {
 }
 
 type SCM struct {
-	ProjectURL    string `mapstructure:"projectURL" validate:"required"`
-	ProjectBranch string `mapstructure:"projectBranch"`
+	CloneURL      string `mapstructure:"cloneURL" validate:"required"`
+	APIURL        string `mapstructure:"apiURL"`
+	Branch        string `mapstructure:"branch"`
+	Type          string `mapstructure:"type"`
+	SSHprivateKey string `mapstructure:"sshPrivateKey"`
 }
 
 type Pipeline struct {
@@ -60,13 +64,14 @@ type ImageRepo struct {
 }
 
 type jobScriptRenderInfo struct {
-	RepoType         string
-	JobName          string
-	RepositoryURL    string
-	Branch           string
-	SecretToken      string
-	FolderName       string
-	GitlabConnection string
+	RepoType          string
+	JobName           string
+	RepositoryURL     string
+	Branch            string
+	SecretToken       string
+	FolderName        string
+	GitlabConnection  string
+	RepoCredentialsId string
 }
 
 func newJobOptions(options plugininstaller.RawOptions) (*JobOptions, error) {
@@ -91,15 +96,19 @@ func (j *JobOptions) newJenkinsClient() (jenkins.JenkinsAPI, error) {
 
 func (j *JobOptions) createOrUpdateJob(jenkinsClient jenkins.JenkinsAPI) error {
 	// 1. render groovy script
-	jobScript, err := jenkins.BuildRenderedScript(&jobScriptRenderInfo{
+	jobRenderInfo := &jobScriptRenderInfo{
 		RepoType:         j.ProjectRepo.RepoType,
 		JobName:          j.getJobName(),
-		RepositoryURL:    j.ProjectRepo.BuildURL(),
+		RepositoryURL:    j.SCM.CloneURL,
 		Branch:           j.ProjectRepo.Branch,
 		SecretToken:      j.SecretToken,
 		FolderName:       j.getJobFolder(),
 		GitlabConnection: jenkinsGitlabConnectionName,
-	})
+	}
+	if j.SCM.SSHprivateKey != "" {
+		jobRenderInfo.RepoCredentialsId = jenkinsSSHkeyCredentialName
+	}
+	jobScript, err := jenkins.BuildRenderedScript(jobRenderInfo)
 	if err != nil {
 		log.Debugf("jenkins redner template failed: %s", err)
 		return err
@@ -209,4 +218,14 @@ func (j *JobOptions) buildCIConfig() {
 		"ImageRepoAddress": harborURLHost,
 	}
 	j.CIConfig = ciConfig
+}
+
+func (j *JobOptions) createGitlabSSHPrivateKey(jenkinsClient jenkins.JenkinsAPI) error {
+	if j.SCM.SSHprivateKey == "" {
+		log.Warnf("jenkins gittlab ssh key not config, private repo can't be clone")
+		return nil
+	}
+	return jenkinsClient.CreateSSHKeyCredential(
+		jenkinsSSHkeyCredentialName, j.ProjectRepo.Owner, j.SCM.SSHprivateKey,
+	)
 }

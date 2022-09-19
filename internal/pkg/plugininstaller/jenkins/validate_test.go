@@ -26,7 +26,7 @@ var _ = Describe("SetJobDefaultConfig func", func() {
 				"user": jenkinsUser,
 			},
 			"scm": map[string]interface{}{
-				"projectURL": projectURL,
+				"cloneURL": projectURL,
 			},
 			"pipeline": map[string]interface{}{
 				"jenkinsfilePath": jenkinsFilePath,
@@ -36,7 +36,7 @@ var _ = Describe("SetJobDefaultConfig func", func() {
 	When("repo url is not valie", func() {
 		BeforeEach(func() {
 			options["scm"] = map[string]interface{}{
-				"projectURL": "not_valid_url/gg",
+				"cloneURL": "not_valid_url/gg",
 			}
 		})
 		It("should return err", func() {
@@ -45,18 +45,24 @@ var _ = Describe("SetJobDefaultConfig func", func() {
 		})
 	})
 	When("all input is valid", func() {
+		BeforeEach(func() {
+			options["scm"] = map[string]interface{}{
+				"cloneURL": "git@54.71.232.26:30022:root/spring-demo.git",
+				"apiURL":   "http://www.app.com",
+			}
+		})
 		It("should set default value", func() {
 			newOptions, err := SetJobDefaultConfig(options)
 			Expect(err).Error().ShouldNot(HaveOccurred())
 			opts, err := newJobOptions(newOptions)
 			Expect(err).Error().ShouldNot(HaveOccurred())
 			Expect(opts.CIConfig).ShouldNot(BeNil())
-			Expect(opts.Pipeline.JobName).Should(Equal("test_project"))
+			Expect(opts.Pipeline.JobName).Should(Equal("spring-demo"))
 			Expect(opts.BasicAuth).ShouldNot(BeNil())
 			Expect(opts.BasicAuth.Username).Should(Equal(jenkinsUser))
 			Expect(opts.BasicAuth.Password).Should(Equal(jenkinsPassword))
 			Expect(opts.ProjectRepo).ShouldNot(BeNil())
-			Expect(opts.ProjectRepo.Repo).Should(Equal("test_project"))
+			Expect(opts.ProjectRepo.Repo).Should(Equal("spring-demo"))
 		})
 	})
 	AfterEach(func() {
@@ -87,7 +93,7 @@ var _ = Describe("ValidateJobConfig func", func() {
 				"user": jenkinsUser,
 			},
 			"scm": map[string]interface{}{
-				"projectURL": projectURL,
+				"cloneURL": projectURL,
 			},
 			"pipeline": map[string]interface{}{
 				"jenkinsfilePath": jenkinsFilePath,
@@ -102,7 +108,7 @@ var _ = Describe("ValidateJobConfig func", func() {
 					"user": jenkinsUser,
 				},
 				"scm": map[string]interface{}{
-					"projectURL": projectURL,
+					"cloneURL": projectURL,
 				},
 			}
 		})

@@ -33,7 +33,7 @@ func SetJobDefaultConfig(options plugininstaller.RawOptions) (plugininstaller.Ra
 	}
 
 	// config default values
-	projectRepo, err := common.NewRepoFromURL(opts.SCM.ProjectURL, opts.SCM.ProjectBranch)
+	projectRepo, err := common.NewRepoFromURL(opts.SCM.Type, opts.SCM.APIURL, opts.SCM.CloneURL, opts.SCM.Branch)
 	if err != nil {
 		return nil, err
 	}
@@ -42,8 +42,12 @@ func SetJobDefaultConfig(options plugininstaller.RawOptions) (plugininstaller.Ra
 		opts.Jenkins.Namespace = "jenkins"
 	}
 
-	if opts.SCM.ProjectBranch == "" {
-		opts.SCM.ProjectBranch = "master"
+	if opts.SCM.Branch == "" {
+		opts.SCM.Branch = projectRepo.Branch
+	}
+	sshKey := os.Getenv("GITLAB_SSHKEY")
+	if sshKey != "" && opts.SCM.SSHprivateKey == "" {
+		opts.SCM.SSHprivateKey = sshKey
 	}
 
 	opts.ProjectRepo = projectRepo
@@ -56,7 +60,6 @@ func SetJobDefaultConfig(options plugininstaller.RawOptions) (plugininstaller.Ra
 	if err != nil {
 		return nil, err
 	}
-
 	opts.BasicAuth = basicAuth
 	opts.SecretToken = generateRandomSecretToken()
 	return opts.encode()

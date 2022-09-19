@@ -39,6 +39,11 @@ func (m *mockSuccessJenkinsClient) InstallPluginsIfNotExists(plugin []string, en
 func (m *mockSuccessJenkinsClient) CreateGiltabCredential(id, token string) error {
 	return nil
 }
+
+func (m *mockSuccessJenkinsClient) CreateSSHKeyCredential(id, userName, privateKey string) error {
+	return nil
+}
+
 func (m *mockSuccessJenkinsClient) ConfigCasc(cascScript string) error {
 	return nil
 }
@@ -66,6 +71,10 @@ func (m *mockErrorJenkinsClient) CreateGiltabCredential(id, token string) error 
 	return testError
 }
 func (m *mockErrorJenkinsClient) ConfigCasc(cascScript string) error {
+	return testError
+}
+
+func (m *mockErrorJenkinsClient) CreateSSHKeyCredential(id, userName, privateKey string) error {
 	return testError
 }
 
@@ -110,8 +119,8 @@ var _ = Describe("JobOptions struct", func() {
 				EnableRestart: false,
 			},
 			SCM: SCM{
-				ProjectURL:    projectURL,
-				ProjectBranch: "test",
+				CloneURL: projectURL,
+				Branch:   "test",
 			},
 			Pipeline: Pipeline{
 				JobName:         jobName,

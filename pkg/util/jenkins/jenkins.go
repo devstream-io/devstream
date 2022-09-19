@@ -24,6 +24,7 @@ type JenkinsAPI interface {
 	DeleteJob(ctx context.Context, name string) (bool, error)
 	InstallPluginsIfNotExists(plugin []string, enableRestart bool) error
 	CreateGiltabCredential(id, token string) error
+	CreateSSHKeyCredential(id, userName, privateKey string) error
 	ConfigCasc(cascScript string) error
 }
 
