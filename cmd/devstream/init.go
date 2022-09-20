@@ -80,13 +80,11 @@ func GetPluginsAndPluginDirFromConfig() (tools []configmanager.Tool, pluginName 
 func GetPluginsAndPluginDirFromFlags() (tools []configmanager.Tool, pluginName string, err error) {
 	// 1. get plugins from flags
 	var pluginsName []string
-	switch downloadAll {
-	// download all plugins
-	case true:
+	if downloadAll {
+		// download all plugins
 		pluginsName = list.PluginsNameSlice()
-	// download specific plugins
-	case false:
-		log.Info(pluginsToDownload)
+	} else {
+		// download specific plugins
 		for _, pluginName := range pluginsToDownload {
 			if p := strings.ToLower(strings.TrimSpace(pluginName)); p != "" {
 				pluginsName = append(pluginsName, p)
@@ -95,7 +93,7 @@ func GetPluginsAndPluginDirFromFlags() (tools []configmanager.Tool, pluginName s
 		// check if plugins to download are supported by dtm
 		for _, plugin := range pluginsToDownload {
 			if _, ok := list.PluginNamesMap()[plugin]; !ok {
-				return nil, "", fmt.Errorf("plugin %s is not supported by dtm", plugin)
+				return nil, "", fmt.Errorf("Plugin %s is not supported by dtm", plugin)
 			}
 		}
 	}
@@ -106,8 +104,10 @@ func GetPluginsAndPluginDirFromFlags() (tools []configmanager.Tool, pluginName s
 	log.Debugf("plugins to download: %v", pluginsName)
 
 	if initOS == "" || initArch == "" {
-		return nil, "", fmt.Errorf("once you use the --all flag, you must specify the --os and --arch flags")
+		return nil, "", fmt.Errorf("Once you use the --all flag, you must specify the --os and --arch flags")
 	}
+
+	log.Infof("Plugins to download: %v", pluginsName)
 
 	// build the plugin list
 	for _, pluginName := range pluginsName {
