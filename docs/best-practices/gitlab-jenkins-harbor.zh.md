@@ -286,9 +286,11 @@ tools:
 
 你可以将这个配置文件放到服务器上任意一个合适的目录，比如 `~/devstream-test/`，然后在该目录下执行：
 
-- `dtm apply -f config.yaml -y`
+- `dtm init -f config.yaml`
 
-// TODO(daniel-hutao): 0.9.0 版本发布后补充 dtm init 等相关文档
+这个命令用于下载所需插件。接着你就可以执行 apply 命令了：
+
+- `dtm apply -f config.yaml -y`
 
 这个命令执行成功的话，你可以看到大致如下日志：
 
@@ -573,9 +575,12 @@ export IMAGE_REPO_PASSWORD=Harbor12345
 
 你可以将这个配置文件放到服务器上同一个目录，比如 ~/devstream-test/，然后在该目录下执行：
 
-- `dtm apply -f config-pipeline.yaml -y`
+```shell
+dtm init -f config-pipeline.yaml
+dtm apply -f config-pipeline.yaml -y
+```
 
-这个命令执行成功的话，你可以看到大致如下日志：
+如果 apply 命令执行成功的话，你可以看到大致如下日志：
 
 ```shell
 2022-09-06 13:19:27 ℹ [INFO]  Apply started.
