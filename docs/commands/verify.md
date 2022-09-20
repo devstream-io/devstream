@@ -31,10 +31,7 @@ If all the above checks are successful, `dtm verify` finishes with a success log
 
 ## 5 Flags
 
-verifyCMD.Flags().StringVarP(&configFile, configFlagName, "f", "config.yaml", "config file")
-verifyCMD.Flags().StringVarP(&pluginDir, pluginDirFlagName, "d", "", "plugins directory")
-
-| Short | Long          | Default   | Description                            |
-|-------|---------------|-----------|----------------------------------------|
-| -f    | --config-file | `"config.yaml"` | The path to the config file.           |
-| -d    | --plugin-dir  | `""`      | The path to plugins.                   |
+| Short | Long          | Default         | Description                  |
+|-------|---------------|-----------------|------------------------------|
+| -f    | --config-file | `"config.yaml"` | The path to the config file. |
+| -d    | --plugin-dir  | `""`            | The path to plugins.         |

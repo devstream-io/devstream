@@ -2,7 +2,7 @@
 
 ## 1 Normal (Non-Force) Delete
 
-When _deleting_ using `dtm`, here's what happens:
+When _deleting_ using `dtm delete`, here's what happens:
 
 - Read the _Config_
 - For each _Tool_ defined in the _Config_, if there is a corresponding _State_, the `Delete` interface will be called.
