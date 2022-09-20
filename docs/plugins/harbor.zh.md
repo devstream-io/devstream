@@ -464,7 +464,7 @@ valuesYaml: |
       tag: v2.5.3
 ```
 
-这段配置中留了一个变量 `[[ imageRepo ]]`，你可以在[变量配置](../../core-concepts/variables.zh)中定义这个变量，变量值设置成你的镜像仓库地址，例如：
+这段配置中留了一个变量 `[[ imageRepo ]]`，你可以在[变量配置](../../core-concepts/variables.zh.md)中定义这个变量，变量值设置成你的镜像仓库地址，例如：
 
 ```yaml
 imageRepo: harbor.example.com:9000
@@ -476,7 +476,7 @@ imageRepo: harbor.example.com:9000
 然后借助["Image Pull Push"](https://raw.githubusercontent.com/devstream-io/devstream/main/hack/image-pull-push.sh)工具脚本来准备镜像。
 
 ```shell
-curl -o harbor-images.txt https://docs.devstream.io/en/latest/plugins/harbor/harbor-images.txt
+curl -o harbor-images.txt https://raw.githubusercontent.com/devstream-io/devstream/main/docs/plugins/harbor/harbor-images.txt
 curl -o image-pull-push.sh https://raw.githubusercontent.com/devstream-io/devstream/main/hack/image-pull-push.sh
 chmod +x image-pull-push.sh
 # 查看工具脚本的使用方法和注意事项等
