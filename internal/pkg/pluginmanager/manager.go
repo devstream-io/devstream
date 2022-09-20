@@ -14,9 +14,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/md5"
 )
 
-func DownloadPlugins(conf *configmanager.Config) error {
-	// create plugins dir if not exist
-	pluginDir := viper.GetString("plugin-dir")
+func DownloadPlugins(tools []configmanager.Tool, pluginDir, osName, arch string) error {
 	if pluginDir == "" {
 		return fmt.Errorf(`plugins directory should not be ""`)
 	}
@@ -26,10 +24,10 @@ func DownloadPlugins(conf *configmanager.Config) error {
 	// download all plugins that don't exist locally
 	dc := NewPbDownloadClient(defaultReleaseUrl)
 
-	for _, tool := range conf.Tools {
-		pluginName := configmanager.GetPluginName(&tool)
-		pluginFileName := configmanager.GetPluginFileName(&tool)
-		pluginMD5FileName := configmanager.GetPluginMD5FileName(&tool)
+	for _, tool := range tools {
+		pluginName := configmanager.GetPluginNameWithOSAndArch(&tool, osName, arch)
+		pluginFileName := configmanager.GetPluginFileNameWithOSAndArch(&tool, osName, arch)
+		pluginMD5FileName := configmanager.GetPluginMD5FileNameWithOSAndArch(&tool, osName, arch)
 
 		// a new line to make outputs more beautiful
 		fmt.Println()
