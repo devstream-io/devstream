@@ -51,7 +51,7 @@ tools:
           nodePort: 32000
 ```
 
-*注意：这个配置示例仅是 tool config，完整的 DevStream 配置文件还需要补充 core config 等内容，具体参考[这个文档](../../core-concepts/config.zh)。*
+*注意：这个配置示例仅是 tool config，完整的 DevStream 配置文件还需要补充 core config 等内容，具体参考[这个文档](../core-concepts/config.zh.md)。*
 
 在成功执行 `dtm apply` 命令后，我们可以在 jenkins 命名空间下看到下述主要资源：
 
@@ -339,7 +339,7 @@ workflows: |
 在上一小节我们看到了 jenkins 插件的状态中保存了一个 outputs 字段，内容是 `jenkins_url: http://jenkins.jenkins:8080`，
 所以其他插件的配置中可以通过`${{jenkins.default.outputs.jenkins_url}}` 的语法读取到 `http://jenkins.jenkins:8080`。
 
-更多关于"插件输出"的内容，请阅读[这个文档](../../core-concepts/output.zh)。
+更多关于"插件输出"的内容，请阅读[这个文档](../core-concepts/output.zh.md)。
 
 ## 5、离线环境部署
 
@@ -367,7 +367,7 @@ valuesYaml: |
       tag: 0.2.0
 ```
 
-这段配置中留了一个变量 `[[ imageRepo ]]`，你可以在[变量配置](../../core-concepts/variables.zh.md)中定义这个变量，变量值设置成你的镜像仓库地址，例如：
+这段配置中留了一个变量 `[[ imageRepo ]]`，你可以在[变量配置](../core-concepts/variables.zh.md)中定义这个变量，变量值设置成你的镜像仓库地址，例如：
 
 ```yaml
 imageRepo: harbor.example.com:9000
