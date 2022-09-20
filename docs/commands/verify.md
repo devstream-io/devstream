@@ -28,3 +28,13 @@ For definitions of _Config_, _State_, and _Resource_, see [Core Concepts](../cor
 `dtm verify` tries to see if the _Config_ matches the _State_ and the _Resource_ or not. If not, it tells you what exactly is not the same, and what would happen if you run `dtm apply`.
 
 If all the above checks are successful, `dtm verify` finishes with a success log "Verify succeeded."
+
+## 5 Flags
+
+verifyCMD.Flags().StringVarP(&configFile, configFlagName, "f", "config.yaml", "config file")
+verifyCMD.Flags().StringVarP(&pluginDir, pluginDirFlagName, "d", "", "plugins directory")
+
+| Short | Long          | Default   | Description                            |
+|-------|---------------|-----------|----------------------------------------|
+| -f    | --config-file | `"config.yaml"` | The path to the config file.           |
+| -d    | --plugin-dir  | `""`      | The path to plugins.                   |
