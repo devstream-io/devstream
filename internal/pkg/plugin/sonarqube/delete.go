@@ -1,4 +1,4 @@
-package argocd
+package sonarqube
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
