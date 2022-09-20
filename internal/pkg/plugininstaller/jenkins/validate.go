@@ -32,7 +32,7 @@ func SetJobDefaultConfig(options plugininstaller.RawOptions) (plugininstaller.Ra
 		return nil, err
 	}
 
-	// config default values
+	// config scm and projectRepo values
 	projectRepo, err := common.NewRepoFromURL(opts.SCM.Type, opts.SCM.APIURL, opts.SCM.CloneURL, opts.SCM.Branch)
 	if err != nil {
 		return nil, err
@@ -54,6 +54,8 @@ func SetJobDefaultConfig(options plugininstaller.RawOptions) (plugininstaller.Ra
 	if opts.Pipeline.JobName == "" {
 		opts.Pipeline.JobName = projectRepo.Repo
 	}
+
+	// config ci related values
 	opts.buildCIConfig()
 
 	basicAuth, err := buildAdminToken(opts.Jenkins.User)
@@ -75,6 +77,7 @@ func ValidateJobConfig(options plugininstaller.RawOptions) (plugininstaller.RawO
 		return nil, err
 	}
 
+	// check jenkins job name
 	if strings.Contains(opts.Pipeline.JobName, "/") {
 		strs := strings.Split(opts.Pipeline.JobName, "/")
 		if len(strs) != 2 || len(strs[0]) == 0 || len(strs[1]) == 0 {
@@ -82,9 +85,11 @@ func ValidateJobConfig(options plugininstaller.RawOptions) (plugininstaller.RawO
 		}
 	}
 
+	// check projectRepo name
 	if opts.ProjectRepo.RepoType == "github" {
-		return nil, errors.New("jenkins job not support github for now")
+		return nil, fmt.Errorf("jenkins job not support github for now")
 	}
+
 	return options, nil
 }
 

@@ -222,7 +222,7 @@ func (j *JobOptions) buildCIConfig() {
 
 func (j *JobOptions) createGitlabSSHPrivateKey(jenkinsClient jenkins.JenkinsAPI) error {
 	if j.SCM.SSHprivateKey == "" {
-		log.Warnf("jenkins gittlab ssh key not config, private repo can't be clone")
+		log.Warnf("jenkins gitlab ssh key not config, private repo can't be clone")
 		return nil
 	}
 	return jenkinsClient.CreateSSHKeyCredential(
