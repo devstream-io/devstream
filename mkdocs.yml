@@ -1,6 +1,9 @@
 site_name: "DevStream - Your DevOps Toolchain Manager"
 theme:
   name: material
+  features:
+    - content.tabs.link
+    - content.code.annotate
   palette:
     - scheme: default
       primary: indigo
@@ -30,6 +33,12 @@ markdown_extensions:
       anchor_linenums: true
       auto_title: true
   - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - attr_list
+  - md_in_html
+  - admonition
+  - pymdownx.details
 extra_css:
 - assets/versions.css
 extra_javascript:

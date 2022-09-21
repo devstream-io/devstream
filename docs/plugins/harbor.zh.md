@@ -6,8 +6,6 @@ Harbor 的主流部署方式有2种：**docker compose** 和 **helm**。
 现在 DevStream 有2个插件 `harbor-docker` 和 `harbor` 来分别支持这2种部署方式，但是目前以 helm 方式为主。
 在不久的将来，这两个插件将会被合并成一个。
 
-*注意：当前插件仅支持在 Linux/amd64 上使用*
-
 ## 1、前置要求
 
 **必须满足**
@@ -32,7 +30,8 @@ Harbor 部署架构整体如下图所示(图片来自 Harbor 官网)：
 
 下文将介绍如何配置 `harbor` 插件，完成 Harbor 应用的部署。
 
-说明：本文所使用的演示环境为一台 Linux 云主机，上面装有以 minikube 方式部署的单节点 k8s 集群。
+> 说明：本文所使用的演示环境为一台 Linux 云主机，上面装有以 minikube 方式部署的单节点 k8s 集群。
+
 minikube 方式部署的 k8s 集群自带一个默认的 StorageClass，另外部署 Ingress 控制器只需要执行 `minikube addons enable ingress` 命令即可。
 其他方式部署的 k8s 集群中如何配置 StorageClass 和 Ingress Controller，请查阅[ k8s 官方文档](https://kubernetes.io)。
 
@@ -42,8 +41,8 @@ minikube 方式部署的 k8s 集群自带一个默认的 StorageClass，另外�
 
 如果仅是用于开发、测试等目的，希望快速完成 Harbor 的部署，可以使用如下配置快速开始：
 
-```yaml
-tools:
+```yaml title="config.yaml"
+tools: # (1)
 - name: harbor
   instanceID: default
   dependsOn: [ ]
@@ -63,7 +62,7 @@ tools:
           enabled: false
 ```
 
-*注意：这个配置示例仅是 tool config，完整的 DevStream 配置文件还需要补充 core config 等内容，具体参考[这个文档](../../core-concepts/config.zh)。*
+1. 注意：这个配置示例仅是 tool config，完整的 DevStream 配置文件还需要补充 core config 等内容，具体参考[这个文档](../core-concepts/config.zh.md)。
 
 在成功执行 `dtm apply` 命令后，我们可以在 harbor 命名空间下看到下述主要资源：
 
@@ -464,7 +463,7 @@ valuesYaml: |
       tag: v2.5.3
 ```
 
-这段配置中留了一个变量 `[[ imageRepo ]]`，你可以在[变量配置](../../core-concepts/variables.zh.md)中定义这个变量，变量值设置成你的镜像仓库地址，例如：
+这段配置中留了一个变量 `[[ imageRepo ]]`，你可以在[变量配置](../core-concepts/variables.zh.md)中定义这个变量，变量值设置成你的镜像仓库地址，例如：
 
 ```yaml
 imageRepo: harbor.example.com:9000
