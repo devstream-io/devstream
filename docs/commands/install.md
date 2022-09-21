@@ -1,6 +1,6 @@
 # Install
 
-## Install dtm binary with curl
+## 1 Install dtm binary with curl
 
 In your working directory, run:
 
@@ -12,7 +12,7 @@ This will download the `dtm` binary to your working directory, and grant the bin
 
 > Optional: you can then move `dtm` to a place which is in your PATH. For example: `mv dtm /usr/local/bin/`.
 
-## Install with [asdf](https://asdf-vm.com/)
+## 2 Install with [asdf](https://asdf-vm.com/)
 
 ```shell
 # Plugin

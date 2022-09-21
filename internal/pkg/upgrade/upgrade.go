@@ -27,7 +27,7 @@ const (
 // Upgrade updates dtm binary file to the latest release version
 func Upgrade(continueDirectly bool) error {
 	if version.Dev {
-		log.Info("Dtm upgrade: do not support to upgrade dtm in develpment version.")
+		log.Info("Dtm upgrade: do not support to upgrade dtm in development version.")
 		os.Exit(0)
 	}
 	workDir, err := os.Getwd()
