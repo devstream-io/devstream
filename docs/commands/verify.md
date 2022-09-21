@@ -31,7 +31,7 @@ If all the above checks are successful, `dtm verify` finishes with a success log
 
 ## 5 Flags
 
-| Short | Long          | Default         | Description                  |
-|-------|---------------|-----------------|------------------------------|
-| -f    | --config-file | `"config.yaml"` | The path to the config file. |
-| -d    | --plugin-dir  | `""`            | The path to plugins.         |
+| Short | Long          | Default                  | Description                  |
+|-------|---------------|--------------------------|------------------------------|
+| -f    | --config-file | `"config.yaml"`          | The path to the config file. |
+| -d    | --plugin-dir  | `"~/.devstream/plugins"` | The path to plugins.         |

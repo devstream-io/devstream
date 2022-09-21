@@ -6,9 +6,9 @@ The purpose of `destroy` is that in case you accidentally deleted your config fi
 
 ## 1 Flags
 
-| Short | Long          | Default         | Description                            |
-|-------|---------------|-----------------|----------------------------------------|
-|       | --force       | `false`         | Force destroy by config.               |
-| -d    | --plugin-dir  | `"~/.dtm"`      | The path to plugins.                   |
+| Short | Long          | Default | Description                            |
+|-------|---------------|---------|----------------------------------------|
+|       | --force       | `false` | Force destroy by config.               |
+| -d    | --plugin-dir  | `"~/.devstream/plugins"`      | The path to plugins.                   |
 | -f    | --config-file | `"config.yaml"` | The path to the config file.           |
-| -y    | --yes         | `false`         | Destroy directly without confirmation. |
+| -y    | --yes         | `false` | Destroy directly without confirmation. |
