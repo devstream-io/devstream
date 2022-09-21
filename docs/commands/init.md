@@ -35,13 +35,13 @@ command:
 
 ## Flags
 
-| Short | Long            | Default              | Description                                                                       |
-|-------|-----------------|----------------------|-----------------------------------------------------------------------------------|
-| -f    | --config-file   | `"config.yaml"`      | The config file to use                                                            |
-| -d    | --plugin-dir    | `"~/.dtm/plugins"`   | The directory to store plugins                                                    |
-|       | --download-only | `false`              | Download plugins only, generally used for using dtm offline                       |
-| -p    | --plugins       | `""`                 | Plugins to be downloaded, seperated with ",", should be used with --download-only |
-| -a    | --all           | `false`              | Download all plugins, should be used with --download-only                         |
-|       | --os            | OS of this machine   | The OS to download plugins for.                                                   |
-|       | --arch          | Arch of this machine | The architecture to download plugins for.                                         |
+| Short | Long            | Default                  | Description                                                                       |
+|-------|-----------------|--------------------------|-----------------------------------------------------------------------------------|
+| -f    | --config-file   | `"config.yaml"`          | The config file to use                                                            |
+| -d    | --plugin-dir    | `"~/.devstream/plugins"` | The directory to store plugins                                                    |
+|       | --download-only | `false`                  | Download plugins only, generally used for using dtm offline                       |
+| -p    | --plugins       | `""`                     | Plugins to be downloaded, seperated with ",", should be used with --download-only |
+| -a    | --all           | `false`                  | Download all plugins, should be used with --download-only                         |
+|       | --os            | OS of this machine       | The OS to download plugins for.                                                   |
+|       | --arch          | Arch of this machine     | The architecture to download plugins for.                                         |
 
