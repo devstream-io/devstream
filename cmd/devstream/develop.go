@@ -52,7 +52,8 @@ func init() {
 	developCMD.AddCommand(developCreatePluginCMD)
 	developCMD.AddCommand(developValidatePluginCMD)
 
-	developCreatePluginCMD.PersistentFlags().StringVarP(&name, "name", "n", "", "specify name with the new plugin")
-	developValidatePluginCMD.PersistentFlags().StringVarP(&name, "name", "n", "", "specify name with the new plugin")
+	developCreatePluginCMD.PersistentFlags().StringVarP(&name, "name", "n", "", "specify name of the plugin to be created")
+
+	developValidatePluginCMD.PersistentFlags().StringVarP(&name, "name", "n", "", "specify name of the plugin to be validated")
 	developValidatePluginCMD.PersistentFlags().BoolVarP(&all, "all", "a", false, "validate all plugins")
 }

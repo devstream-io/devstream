@@ -18,3 +18,12 @@ We generate a plan of changes according to the comparison result:
 ## 2 For Each _State_ That Doesn't Have a _Tool_ in the _Config_
 
 We generate a "Delete" change to delete the _Resource_. Since there isn't a _Tool_ in the config but there is a _State_, it means maybe the _Resource_ had been created previously then the user removed the _Tool_ from the _Config_, which means the user doesn't want the _Resource_ any more.
+
+## 3 Flags
+
+| Short | Long          | Default                  | Description                          |
+|-------|---------------|--------------------------|--------------------------------------|
+| -f    | --config-file | `"config.yaml"`          | The path to the config file.         |
+| -d    | --plugin-dir  | `"~/.devstream/plugins"` | The path to store plugins.           |
+| -y    | --yes         | `false`                  | Apply directly without confirmation. |
+
