@@ -17,10 +17,12 @@ tools:
       # restart jenkins if true for plugin install
       enableRestart: true
     scm:
-      # projectURL is the project repo location
-      projectURL: http://gitlab.example.com:30080/root/test-project
+      # cloneURL is the project repo location, this can be http address or git address
+      cloneURL: git@gitlab.com/root/test-project.git
+      # apiURL is the api address of gitlab, if you use github, this field can be empty
+      apiURL: http://gitlab.com
       # project branch, master as default
-      projectBranch: master
+      branch: master
     pipeline:
       # jobName is jenkins's job name; <jobFolder/jobName> or <jobName>; e.g. jobs/test-job, test-job, jobs2/test-job
       jobName: test-job

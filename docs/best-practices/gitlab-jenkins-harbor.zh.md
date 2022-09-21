@@ -487,8 +487,8 @@ jenkins-pipeline 插件的配置如下：
       user: admin
       enableRestart: true
     scm:
-      projectURL: http://gitlab.example.com:30080/root/spring-demo
-      projectBranch: master
+      cloneURL: http://gitlab.example.com:30080/root/spring-demo
+      branch: master
     pipeline:
       jobName: test-job
       jenkinsfilePath: https://raw.githubusercontent.com/devstream-io/dtm-jenkins-pipeline-example/main/springboot/Jenkinsfile
@@ -549,8 +549,8 @@ tools:
       user: admin
       enableRestart: true
     scm:
-      projectURL: http://gitlab.example.com:30080/root/spring-demo
-      projectBranch: master
+      cloneURL: http://gitlab.example.com:30080/root/spring-demo
+      branch: master
     pipeline:
       jobName: test-job
       jenkinsfilePath: https://raw.githubusercontent.com/devstream-io/dtm-jenkins-pipeline-example/main/springboot/Jenkinsfile

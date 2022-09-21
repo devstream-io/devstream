@@ -26,6 +26,7 @@ type JenkinsAPI interface {
 	DeleteJob(ctx context.Context, name string) (bool, error)
 	InstallPluginsIfNotExists(plugin []*JenkinsPlugin, enableRestart bool) error
 	CreateGiltabCredential(id, token string) error
+	CreateSSHKeyCredential(id, userName, privateKey string) error
 	ConfigCasc(cascScript string) error
 	ApplyDingTalkBot(config dingtalk.BotConfig) error
 }

@@ -76,6 +76,10 @@ func PreInstall(plugins []*jenkins.JenkinsPlugin, cascTemplate string) pluginins
 		switch opts.ProjectRepo.RepoType {
 		case "gitlab":
 			// 3. create gitlab connection for gitlab
+			err := opts.createGitlabSSHPrivateKey(jenkinsClient)
+			if err != nil {
+				return err
+			}
 			return opts.createGitlabConnection(jenkinsClient, cascTemplate)
 		default:
 			log.Debugf("jenkins preinstall only support gitlab for now")

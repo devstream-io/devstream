@@ -29,7 +29,6 @@ var _ = Describe("Repo Struct", func() {
 			Visibility:        visibility,
 		}
 	})
-
 	Context("BuildRepoRenderConfig method", func() {
 		It("should return map", func() {
 			config := repo.BuildRepoRenderConfig()
@@ -45,6 +44,84 @@ var _ = Describe("Repo Struct", func() {
 			owner, ok := repoInfoMap["Owner"]
 			Expect(ok).Should(BeTrue())
 			Expect(owner).Should(Equal(org))
+		})
+	})
+})
+
+var _ = Describe("NewRepoFromURL func", func() {
+	var (
+		repoType, apiURL, cloneURL, branch string
+	)
+	When("is github repo", func() {
+		BeforeEach(func() {
+			cloneURL = "git@github.com:test/dtm-test.git"
+			branch = "test"
+		})
+		It("should return github repo info", func() {
+			repo, err := NewRepoFromURL(repoType, apiURL, cloneURL, branch)
+			Expect(err).Error().ShouldNot(HaveOccurred())
+			Expect(repo).ShouldNot(BeNil())
+			Expect(repo.Repo).Should(Equal("dtm-test"))
+			Expect(repo.Owner).Should(Equal("test"))
+			Expect(repo.RepoType).Should(Equal("github"))
+			Expect(repo.Branch).Should(Equal("test"))
+		})
+	})
+	When("clone url is not valid", func() {
+		BeforeEach(func() {
+			cloneURL = "git@github.comtest/dtm-test.git"
+			branch = "test"
+		})
+		It("should return error", func() {
+			_, err := NewRepoFromURL(repoType, apiURL, cloneURL, branch)
+			Expect(err).Error().Should(HaveOccurred())
+		})
+	})
+	When("is gitlab repo", func() {
+		BeforeEach(func() {
+			repoType = "gitlab"
+		})
+		When("apiURL is not set, cloneURL is ssh format", func() {
+			BeforeEach(func() {
+				cloneURL = "git@gitlab.test.com:root/test-demo.git"
+				apiURL = ""
+				branch = "test"
+			})
+			It("should return error", func() {
+				_, err := NewRepoFromURL(repoType, apiURL, cloneURL, branch)
+				Expect(err).Error().Should(HaveOccurred())
+			})
+		})
+		When("apiURL is not set, cloneURL is http format", func() {
+			BeforeEach(func() {
+				cloneURL = "http://gitlab.test.com:3000/root/test-demo.git"
+				apiURL = ""
+				branch = "test"
+			})
+			It("should return error", func() {
+				repo, err := NewRepoFromURL(repoType, apiURL, cloneURL, branch)
+				Expect(err).Error().ShouldNot(HaveOccurred())
+				Expect(repo.BaseURL).Should(Equal("http://gitlab.test.com:3000"))
+				Expect(repo.Owner).Should(Equal("root"))
+				Expect(repo.Repo).Should(Equal("test-demo"))
+				Expect(repo.Branch).Should(Equal("test"))
+			})
+		})
+		When("apiURL is set", func() {
+			BeforeEach(func() {
+				cloneURL = "git@gitlab.test.com:root/test-demo.git"
+				apiURL = "http://gitlab.http.com"
+				branch = "test"
+			})
+			It("should set apiURL as BaseURL", func() {
+				repo, err := NewRepoFromURL(repoType, apiURL, cloneURL, branch)
+				Expect(err).Error().ShouldNot(HaveOccurred())
+				Expect(repo.BaseURL).Should(Equal("http://gitlab.http.com"))
+				Expect(repo.Owner).Should(Equal("root"))
+				Expect(repo.Repo).Should(Equal("test-demo"))
+				Expect(repo.Branch).Should(Equal("test"))
+			})
+
 		})
 	})
 })
