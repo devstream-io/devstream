@@ -1,0 +1,19 @@
+unclassified:
+[[- if eq .RepoType "gitlab" ]]
+  gitLabConnectionConfig:
+    connections:
+    - apiTokenId: "[[ .CredentialID ]]"
+      clientBuilderId: "autodetect"
+      connectionTimeout: 20
+      ignoreCertificateErrors: true
+      name: "[[ .GitLabConnectionName ]]"
+      readTimeout: 20
+      url: "[[ .GitlabURL ]]"
+    useAuthenticatedEndpoint: true
+[[ end ]]
+[[- if eq .RepoType "github" ]]
+  gitHubPluginConfig:
+      configs:
+      - credentialsId: "[[ .CredentialID ]]"
+      hookUrl: "[[ .JenkinsURL ]]/github-webhook/"
+[[ end -]]

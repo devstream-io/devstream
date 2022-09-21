@@ -14,6 +14,8 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 	"github.com/devstream-io/devstream/pkg/util/k8s"
 	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/scm/github"
+	"github.com/devstream-io/devstream/pkg/util/scm/gitlab"
 	"github.com/devstream-io/devstream/pkg/util/validator"
 )
 
@@ -37,20 +39,28 @@ func SetJobDefaultConfig(options plugininstaller.RawOptions) (plugininstaller.Ra
 	if err != nil {
 		return nil, err
 	}
-
-	if opts.Jenkins.Namespace == "" {
-		opts.Jenkins.Namespace = "jenkins"
-	}
+	opts.ProjectRepo = projectRepo
 
 	if opts.SCM.Branch == "" {
 		opts.SCM.Branch = projectRepo.Branch
 	}
-	sshKey := os.Getenv("GITLAB_SSHKEY")
-	if sshKey != "" && opts.SCM.SSHprivateKey == "" {
-		opts.SCM.SSHprivateKey = sshKey
+	switch projectRepo.RepoType {
+	case "gitlab":
+		// set secretToken for gitlab webhook
+		sshKey := os.Getenv("GITLAB_SSHKEY")
+		if sshKey != "" && opts.SCM.SSHprivateKey == "" {
+			opts.SCM.SSHprivateKey = sshKey
+		}
+	case "github":
+		log.Debug("jenkins pipeline repo type is github")
+	}
+	opts.SecretToken = generateRandomSecretToken()
+
+	// config jenkins and job
+	if opts.Jenkins.Namespace == "" {
+		opts.Jenkins.Namespace = "jenkins"
 	}
 
-	opts.ProjectRepo = projectRepo
 	if opts.Pipeline.JobName == "" {
 		opts.Pipeline.JobName = projectRepo.Repo
 	}
@@ -58,12 +68,12 @@ func SetJobDefaultConfig(options plugininstaller.RawOptions) (plugininstaller.Ra
 	// config ci related values
 	opts.buildCIConfig()
 
+	// config jenkins connection info
 	basicAuth, err := buildAdminToken(opts.Jenkins.User)
 	if err != nil {
 		return nil, err
 	}
 	opts.BasicAuth = basicAuth
-	opts.SecretToken = generateRandomSecretToken()
 	return opts.encode()
 }
 
@@ -77,17 +87,25 @@ func ValidateJobConfig(options plugininstaller.RawOptions) (plugininstaller.RawO
 		return nil, err
 	}
 
+	switch opts.ProjectRepo.RepoType {
+	case "gitlab":
+		if os.Getenv(gitlab.TokenEnvKey) == "" {
+			return nil, fmt.Errorf("jenkins-pipeline github should set env %s", gitlab.TokenEnvKey)
+		}
+	case "github":
+		if os.Getenv(github.TokenEnvKey) == "" {
+			return nil, fmt.Errorf("jenkins-pipeline github should set env %s", github.TokenEnvKey)
+		}
+	default:
+		return nil, fmt.Errorf("jenkins-pipeline doesn't support repo type %s", opts.ProjectRepo.RepoType)
+	}
+
 	// check jenkins job name
 	if strings.Contains(opts.Pipeline.JobName, "/") {
 		strs := strings.Split(opts.Pipeline.JobName, "/")
 		if len(strs) != 2 || len(strs[0]) == 0 || len(strs[1]) == 0 {
 			return nil, fmt.Errorf("jobName illegal: %s", opts.Pipeline.JobName)
 		}
-	}
-
-	// check projectRepo name
-	if opts.ProjectRepo.RepoType == "github" {
-		return nil, fmt.Errorf("jenkins job not support github for now")
 	}
 
 	return options, nil
@@ -147,7 +165,7 @@ func SetHarborAuth(options plugininstaller.RawOptions) (plugininstaller.RawOptio
 	}
 
 	namespace := opts.Jenkins.Namespace
-	imageRepoUrl := opts.getImageHost()
+	imageRepoUrl := opts.Pipeline.getImageHost()
 	imageRepoUser := opts.Pipeline.ImageRepo.User
 
 	imageRepoPasswd := os.Getenv("IMAGE_REPO_PASSWORD")

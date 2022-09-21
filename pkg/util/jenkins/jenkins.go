@@ -20,14 +20,15 @@ type jenkins struct {
 }
 
 type JenkinsAPI interface {
-	CreateOrUpdateJob(config, jobName string) (job *gojenkins.Job, created bool, err error)
 	ExecuteScript(script string) (string, error)
-	GetJob(ctx context.Context, id string, parentIDs ...string) (*gojenkins.Job, error)
+	GetFolderJob(jobName, jobFolder string) (*gojenkins.Job, error)
 	DeleteJob(ctx context.Context, name string) (bool, error)
 	InstallPluginsIfNotExists(plugin []*JenkinsPlugin, enableRestart bool) error
 	CreateGiltabCredential(id, token string) error
 	CreateSSHKeyCredential(id, userName, privateKey string) error
-	ConfigCasc(cascScript string) error
+	CreateSecretCredential(id, secretText string) error
+	CreatePasswordCredential(id, userName, password string) error
+	ConfigCascForRepo(repoCascConfig *RepoCascConfig) error
 	ApplyDingTalkBot(config dingtalk.BotConfig) error
 }
 

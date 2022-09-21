@@ -2,7 +2,6 @@ package jenkins
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
-	"github.com/devstream-io/devstream/pkg/util/jenkins"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm"
 )
@@ -19,12 +18,14 @@ func CreateOrUpdateJob(options plugininstaller.RawOptions) error {
 		return err
 	}
 	// 2. create or update jenkins job
-	err = opts.createOrUpdateJob(jenkinsClient)
+	return opts.createOrUpdateJob(jenkinsClient)
+}
+
+func ConfigRepo(options plugininstaller.RawOptions) error {
+	opts, err := newJobOptions(options)
 	if err != nil {
-		log.Debugf("jenkins execute script failed: %s", err)
 		return err
 	}
-	// 3. create repo webhook
 	scmClient, err := scm.NewClient(opts.ProjectRepo.BuildRepoInfo())
 	if err != nil {
 		return err
@@ -37,6 +38,7 @@ func DeleteJob(options plugininstaller.RawOptions) error {
 	if err != nil {
 		return err
 	}
+	// 1. delete jenkins job
 	client, err := opts.newJenkinsClient()
 	if err != nil {
 		log.Debugf("jenkins init client failed: %s", err)
@@ -46,7 +48,7 @@ func DeleteJob(options plugininstaller.RawOptions) error {
 	if err != nil {
 		return err
 	}
-	// delete repo webhook
+	// 2. delete repo webhook
 	scmClient, err := scm.NewClient(opts.ProjectRepo.BuildRepoInfo())
 	if err != nil {
 		return err
@@ -54,36 +56,28 @@ func DeleteJob(options plugininstaller.RawOptions) error {
 	return scmClient.DeleteWebhook(opts.buildWebhookInfo())
 }
 
-func PreInstall(plugins []*jenkins.JenkinsPlugin, cascTemplate string) plugininstaller.BaseOperation {
-	return func(options plugininstaller.RawOptions) error {
-		opts, err := newJobOptions(options)
-		if err != nil {
-			return err
-		}
-		// 1. init jenkins client
-		jenkinsClient, err := opts.newJenkinsClient()
-		if err != nil {
-			log.Debugf("jenkins init client failed: %s", err)
-			return err
-		}
-		// 2. install plugins
-		err = opts.installPlugins(jenkinsClient, plugins)
-		if err != nil {
-			log.Debugf("jenkins preinstall plugins failed: %s", err)
-			return err
-		}
-
-		switch opts.ProjectRepo.RepoType {
-		case "gitlab":
-			// 3. create gitlab connection for gitlab
-			err := opts.createGitlabSSHPrivateKey(jenkinsClient)
-			if err != nil {
-				return err
-			}
-			return opts.createGitlabConnection(jenkinsClient, cascTemplate)
-		default:
-			log.Debugf("jenkins preinstall only support gitlab for now")
-			return nil
-		}
+func PreInstall(options plugininstaller.RawOptions) error {
+	opts, err := newJobOptions(options)
+	if err != nil {
+		return err
 	}
+	// 1. init jenkins client
+	jenkinsClient, err := opts.newJenkinsClient()
+	if err != nil {
+		log.Debugf("jenkins init client failed: %s", err)
+		return err
+	}
+
+	// 2. get all plugins need to preConfig
+	pluginsConfigs := opts.extractJenkinsPlugins()
+
+	// 3. install all plugins
+	err = installPlugins(jenkinsClient, pluginsConfigs, opts.Jenkins.EnableRestart)
+	if err != nil {
+		log.Debugf("jenkins preinstall plugins failed: %s", err)
+		return err
+	}
+
+	// 4. config repo related config in jenkins
+	return preConfigPlugins(jenkinsClient, pluginsConfigs)
 }
