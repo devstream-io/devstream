@@ -6,7 +6,7 @@ def logger = Logger.getLogger("")
 def installed = false
 def initialized = false
 def pluginParameter="[[ .JenkinsPlugins ]]"
-def plugins = pluginParameter.split()
+def plugins = pluginParameter.split(",")
 def instance = Jenkins.getInstance()
 def pm = instance.getPluginManager()
 def uc = instance.getUpdateCenter()
@@ -30,13 +30,13 @@ plugins.each {
       logger.info("Installing " + pluginName)
       def installFuture = plugin.deploy()
       while(!installFuture.isDone()) {
-        logger.info("Waiting for plugin install: " + pluginName)
+        logger.info("Waiting for plugin install: " + pluginString)
         // wait 1 second for plugin installtion
         sleep(1000)
       }
       installed = true
     } else {
-      logger.warn("Plugin version not exist")
+      logger.info("Plugin version not exist" + pluginString)
     }
   }
 }

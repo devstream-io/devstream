@@ -154,3 +154,22 @@ func (d *Repo) updateRepoPathByCloneURL(cloneURL string) error {
 	d.Repo = strings.TrimSuffix(projectPaths[1], ".git")
 	return nil
 }
+
+// BuildURL return url build from repo struct
+func (d *Repo) BuildURL() string {
+	repoInfo := d.BuildRepoInfo()
+	switch d.RepoType {
+	case "github":
+		return fmt.Sprintf("https://github.com/%s/%s", repoInfo.GetRepoOwner(), d.Repo)
+	case "gitlab":
+		var gitlabURL string
+		if d.BaseURL != "" {
+			gitlabURL = d.BaseURL
+		} else {
+			gitlabURL = gitlab.DefaultGitlabHost
+		}
+		return fmt.Sprintf("%s/%s/%s.git", gitlabURL, repoInfo.GetRepoOwner(), d.Repo)
+	default:
+		return ""
+	}
+}

@@ -63,7 +63,7 @@ func (j *jenkins) InstallPluginsIfNotExists(installPlugins []*JenkinsPlugin, ena
 		log.Debugf("jenkins render plugins failed:%s", err)
 		return err
 	}
-	log.Debug("jenkins start to install plugins...")
+	log.Info("jenkins start to install plugins...")
 	_, err = j.ExecuteScript(pluginInstallScript)
 
 	// this execute will restart jenkins, so it will return error
@@ -86,7 +86,7 @@ func (j *jenkins) waitJenkinsRestart(toInstallPlugins []*JenkinsPlugin) error {
 		waitTime := tryTime * 20
 		// wait 20, 40, 60, 80, 100 seconds for jenkins to restart
 		time.Sleep(time.Duration(waitTime) * time.Second)
-		log.Debugf("wait %d seconds for jenkins plugin install...", waitTime)
+		log.Infof("wait %d seconds for jenkins plugin install...", waitTime)
 		status, err := j.Poll(context.TODO())
 		if err == nil && status == http.StatusOK && len(j.getToInstallPluginList(toInstallPlugins)) == 0 {
 			return nil

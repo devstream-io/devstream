@@ -21,7 +21,9 @@ const (
 	TokenEnvKey                               = "GITHUB_TOKEN"
 )
 
-var client *Client
+var (
+	client *Client
+)
 
 type Client struct {
 	*git.RepoInfo

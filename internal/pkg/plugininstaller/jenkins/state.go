@@ -1,8 +1,6 @@
 package jenkins
 
 import (
-	"context"
-
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
@@ -19,7 +17,9 @@ func GetStatus(options plugininstaller.RawOptions) (statemanager.ResourceState, 
 		return nil, err
 	}
 	res := make(statemanager.ResourceState)
-	job, err := client.GetJob(context.Background(), opts.getJobName())
+	job, err := client.GetFolderJob(
+		opts.Pipeline.getJobName(), opts.Pipeline.getJobFolder(),
+	)
 	if err != nil {
 		return nil, err
 	}
