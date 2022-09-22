@@ -2,13 +2,27 @@
 
 `dtm develop` is used to develop a new plugin for anything.
 
-## Brief
+## 1 Brief
 
 `dtm develop create-plugin` generates plugin scaffolding based on dtm [pre-built templates](https://github.com/devstream-io/devstream/tree/main/internal/pkg/develop/plugin/template).
 
-`dtm develop validate-plugin` is used for validating an existing plugin or all plugins.
+`dtm develop validate-plugin` is used for verifying whether all the necessary files required for the plugin exist
 
-## Full Process Guide
+## 2 Full Process Guide
 
-A detailed guide to the plugin development process can be found in [creating a plugin](https://docs.devstream.io/en/latest/development/creating-a-plugin/).
+A detailed guide to the plugin development process can be found in [creating a plugin](../creating-a-plugin.md).
 
+## 3 Flags
+
+`dtm develop create-plugin`:
+
+| Short | Long   | Default | Description                              |
+|-------|--------|---------|------------------------------------------|
+| -n    | --name | `""`    | specify name of the plugin to be created |
+
+`dtm develop validate-plugin`:
+
+| Short | Long   | Default | Description                                |
+|-------|--------|---------|--------------------------------------------|
+| -n    | --name | `""`    | specify name of the plugin to be validated |
+| -a    | --all  | `false` | validate all plugins                       |

@@ -1,6 +1,6 @@
 # dtm init
 
-`dtm` release plugins to an AWS S3 bucket. 
+`dtm` releases plugins to an AWS S3 bucket. 
 
 When running `dtm init`, it will download plugins from the AWS S3 bucket(through Cloudflare CDN.)
 

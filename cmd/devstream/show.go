@@ -16,7 +16,7 @@ var template string
 
 var showCMD = &cobra.Command{
 	Use:   "show",
-	Short: "Show is used to print some useful information",
+	Short: "Show is used to print plugins' configuration templates or status.",
 }
 
 var showConfigCMD = &cobra.Command{
@@ -25,7 +25,8 @@ var showConfigCMD = &cobra.Command{
 	Long: `Show config is used for showing plugins' template configuration information.
 Examples:
   dtm show config --plugin=A-PLUGIN-NAME,
-  dtm show config --template=quickstart`,
+  dtm show config --template=quickstart,
+  dtm show config --template=gitops`,
 	Run: showConfigCMDFunc,
 }
 

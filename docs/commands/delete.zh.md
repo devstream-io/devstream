@@ -7,7 +7,7 @@
 - 读取 _Config_
 - 对于 _Config_ 中定义的每一个 _Tool_，如果有对应的 _State_，就会调用 `Delete` 接口。
 
-_Note: the `Delete` change will be executed only if the _State_ exists._
+_注意：`Delete` 操作只会在 _State_ 存在时执行。_
 
 ## 2 强制删除
 
