@@ -399,7 +399,30 @@ harbor-ingress   nginx   core.harbor.domain   192.168.49.2   80      2m8s
 
 // TODO(daniel-hutao): 本节内容近期将持续补充完善
 
-### 5.1、容器镜像
+### 5.1、Helm Chart 包
+
+如果需要在离线环境部署 Harbor，你需要下载对应的 helm chart 包：
+
+```shell
+helm repo add harbor https://helm.goharbor.io
+helm repo update
+helm search repo harbor -l
+helm pull harbor/harbor	--version=1.10.0
+```
+
+这时你会得到一个 `harbor-1.10.0.tgz` 文件，你可以将其存放到一个合适的目录，比如 `~/devstream-test/harbor-1.10.0.tgz`，然后在配置文件就可以这样引用这个 chart 包了：
+
+```yaml
+tools:
+- name: harbor
+  instanceID: default
+  dependsOn: [ ]
+  options:
+    chart:
+      chartPath: "~/devstream-test/harbor-1.10.0.tgz"
+```
+
+### 5.2、容器镜像
 
 `harbor` 插件支持使用自定义容器镜像，你需要先在 valuesYaml 部分加上如下配置：
 
@@ -489,3 +512,113 @@ export IMAGE_REPO_ADDR=harbor.devstream.io
 ```
 
 如果你还没有一个私有镜像仓库，可以参考[这篇文章](../best-practices/image-registry.zh.md)快速部署一个 Docker Registry。
+
+### 5.3、参考配置
+
+这时候我们需要指定本地 helm chart 包以及私有镜像仓库的镜像，所以整体的参考配置大致如下：
+
+```yaml
+---
+# variable config
+imageRepo: harbor.example.com:9000
+
+---
+# plugin config
+tools:
+- name: harbor
+  instanceID: default
+  dependsOn: [ ]
+  options:
+    chart:
+      valuesYaml: |
+        externalURL: http://core.harbor.domain
+        expose:
+          type: ingress
+          tls:
+            enabled: false
+          ingress:
+            hosts:
+              core: core.harbor.domain
+        nginx:
+          image:
+            repository: [[ imageRepo ]]/goharbor/nginx-photon
+            tag: v2.5.3
+        portal:
+          image:
+            repository: [[ imageRepo ]]/goharbor/harbor-portal
+            tag: v2.5.3
+        core:
+          image:
+            repository: [[ imageRepo ]]/goharbor/harbor-core
+            tag: v2.5.3
+        jobservice:
+          image:
+            repository: [[ imageRepo ]]/goharbor/harbor-jobservice
+            tag: v2.5.3
+        registry:
+          registry:
+            image:
+              repository: [[ imageRepo ]]/goharbor/registry-photon
+              tag: v2.5.3
+        controller:
+          image:
+            repository: [[ imageRepo ]]/goharbor/harbor-registryctl
+            tag: v2.5.3
+        chartmuseum:
+          image:
+            repository: [[ imageRepo ]]/goharbor/chartmuseum-photon
+            tag: v2.5.3
+        trivy:
+          image:
+            repository: [[ imageRepo ]]/goharbor/trivy-adapter-photon
+            tag: v2.5.3
+        notary:
+          server:
+            image:
+              repository: [[ imageRepo ]]/goharbor/notary-server-photon
+              tag: v2.5.3
+          signer:
+            image:
+              repository: [[ imageRepo ]]/goharbor/notary-signer-photon
+              tag: v2.5.3
+        database:
+          internal:
+            image:
+              repository: [[ imageRepo ]]/goharbor/harbor-db
+              tag: v2.5.3
+        redis:
+          internal:
+              image:
+                repository: [[ imageRepo ]]/goharbor/redis-photon
+                tag: v2.5.3
+        exporter:
+          image:
+            repository: [[ imageRepo ]]/goharbor/harbor-exporter
+            tag: v2.5.3
+        chartmuseum:
+          enabled: false
+        notary:
+          enabled: false
+        trivy:
+          enabled: false
+        persistence:
+          persistentVolumeClaim:
+            registry:
+              storageClass: "nfs"
+              accessMode: ReadWriteOnce
+              size: 5Gi
+            jobservice:
+              storageClass: "nfs"
+              accessMode: ReadWriteOnce
+              size: 1Gi
+            database:
+              storageClass: "nfs"
+              accessMode: ReadWriteOnce
+              size: 1Gi
+            redis:
+              storageClass: "nfs"
+              accessMode: ReadWriteOnce
+              size: 1Gi
+```
+
+在这个参考配置里包含了全部可能用到的镜像，在部分组件不启用的情况下你完全可以移除相关的镜像配置项。不过保留在这里也不会有什么影响。
