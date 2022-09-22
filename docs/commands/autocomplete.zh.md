@@ -99,7 +99,7 @@ source ~/.bash_profile
 
 在重新加载 shell 后，dtm 自动补全应该就可以正常使用了！
 
-### Zsh Autocompletion
+### Zsh 自动补全
 
 你可以用 `dtm completion zsh` 命令为 Zsh 生成自动补全脚本。 执行以下命令，以将相应内容添加到 `~/.zshrc` 中：
 
@@ -110,7 +110,7 @@ source ~/.zshrc
 
 在重新加载 shell 后，dtm 自动补全应该就可以正常使用了！
 
-### Fish Autocompletion
+### Fish 自动补全
 
 你可以用 `dtm completion fish` 命令为 Fish 生成自动补全脚本。然后将以下行添加到 `~/.config/fish/config.fish` 文件中：
 
