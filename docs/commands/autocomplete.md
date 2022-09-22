@@ -58,10 +58,11 @@ source /usr/share/bash-completion/bash_completion
 
 Reload your shell and verify that bash-completion is correctly installed by typing `type _init_completion`.
 
-Then You can generate completion script for Bash with the command `dtm completion bash` and add the following line to your `~/.bashrc` file:
+Then You can generate completion script for Bash with the command `dtm completion bash` and add the following line to your `~/.bashrc` file. You can execute the following command to add it automatically.
 
 ```bash
 echo 'source <(dtm completion bash)' >>~/.bashrc
+source ~/.bashrc
 ```
 
 After reloading your shell, dtm autocompletion should be working!
@@ -81,13 +82,14 @@ brew install bash-completion@2
 As stated in the output of this command, add the following to your `~/.bash_profile` file:
 
 ```bash
-export BASH_COMPLETION_COMPAT_DIR="/usr/local/etc/bash_completion.d"
-[[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
+brew_etc="$(brew --prefix)/etc"
+echo "[[ -r \"${brew_etc}/profile.d/bash_completion.sh\" ]] && . \"${brew_etc}/profile.d/bash_completion.sh\"" >>~/.bash_profile
+source ~/.bash_profile
 ```
 
 Reload your shell and verify that bash-completion v2 is correctly installed with `type _init_completion`.
 
-Then You can generate completion script for Bash with the command `dtm completion bash` and add the following line to your `~/.bashrc` file:
+Then You can generate completion script for Bash with the command `dtm completion bash` and add the following to your `~/.bash_profile` file. You can execute the following command to add it automatically.
 
 ```bash
 echo 'source <(dtm completion bash)' >>~/.bash_profile
@@ -97,10 +99,10 @@ After reloading your shell, dtm autocompletion should be working!
 
 ### Zsh Autocompletion
 
-You can generate completion script for Zsh with the command `dtm completion zsh`. Then add the following line to your `~/.zshrc` file:
+You can generate completion script for Zsh with the command `dtm completion zsh`. Then add the following line to your `~/.zshrc` file. You can execute the following command to add it automatically.
 
 ```zsh
-source <(dtm completion zsh)
+echo 'source <(dtm completion zsh)' >>~/.zshrc
 ```
 
 After reloading your shell, dtm autocompletion should be working!
