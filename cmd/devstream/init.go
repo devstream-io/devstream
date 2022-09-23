@@ -63,7 +63,7 @@ func initCMDFunc(_ *cobra.Command, _ []string) {
 	log.Success("Initialize finished.")
 }
 
-func GetPluginsAndPluginDirFromConfig() (tools []configmanager.Tool, pluginName string, err error) {
+func GetPluginsAndPluginDirFromConfig() (tools []configmanager.Tool, pluginDir string, err error) {
 	cfg, err := configmanager.NewManager(configFile).LoadConfig()
 	if err != nil {
 		return nil, "", err
@@ -77,7 +77,7 @@ func GetPluginsAndPluginDirFromConfig() (tools []configmanager.Tool, pluginName 
 	return cfg.Tools, viper.GetString(pluginDirFlagName), nil
 }
 
-func GetPluginsAndPluginDirFromFlags() (tools []configmanager.Tool, pluginName string, err error) {
+func GetPluginsAndPluginDirFromFlags() (tools []configmanager.Tool, pluginDir string, err error) {
 	// 1. get plugins from flags
 	var pluginsName []string
 	if downloadAll {
@@ -91,7 +91,7 @@ func GetPluginsAndPluginDirFromFlags() (tools []configmanager.Tool, pluginName s
 			}
 		}
 		// check if plugins to download are supported by dtm
-		for _, plugin := range pluginsToDownload {
+		for _, plugin := range pluginsName {
 			if _, ok := list.PluginNamesMap()[plugin]; !ok {
 				return nil, "", fmt.Errorf("Plugin %s is not supported by dtm", plugin)
 			}
@@ -115,13 +115,11 @@ func GetPluginsAndPluginDirFromFlags() (tools []configmanager.Tool, pluginName s
 	}
 
 	// 2. handle plugin dir
-	pluginDir = viper.GetString(pluginDirFlagName)
-	pluginDir, err = file.HandlePathWithHome(pluginDir)
-	if err != nil {
+	if err := file.SetPluginDir(""); err != nil {
 		return nil, "", err
 	}
 
-	return tools, pluginDir, nil
+	return tools, viper.GetString(pluginDirFlagName), nil
 }
 
 func init() {
