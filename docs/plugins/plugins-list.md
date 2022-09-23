@@ -7,7 +7,6 @@
 | Issue Tracking                 | jira-github-integ           | Jira/GitHub integration        | [doc](jira-github-integ.md)           |
 | Source Code Management         | repo-scaffolding            | App scaffolding                | [doc](repo-scaffolding.md)            |
 | CI                             | jenkins                     | Jenkins installation           | [doc](jenkins.md)                     |
-| CI                             | jenkins-pipeline-kubernetes | Create Jenkins Pipeline        | [doc](jenkins-pipeline-kubernetes.md) |
 | CI                             | jenkins-github-integ        | Jenkins/GitHub integration     | [doc](jenkins-github-integ.md)        |
 | CI                             | githubactions-golang        | GitHub Actions CI for Golang   | [doc](githubactions-golang.md)        |
 | CI                             | githubactions-python        | GitHub Actions CI for Python   | [doc](githubactions-python.md)        |
