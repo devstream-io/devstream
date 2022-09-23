@@ -345,15 +345,38 @@ workflows: |
 
 // TODO(daniel-hutao): 本节内容近期将持续补充完善
 
-### 5.1、容器镜像
+### 5.1、Helm Chart 包
+
+如果需要在离线环境部署 Jenkins，你需要下载对应的 helm chart 包：
+
+```shell
+helm repo add jenkins https://charts.jenkins.io
+helm repo update
+helm search repo jenkins -l
+helm pull jenkins/jenkins --version=4.2.5
+```
+
+这时你会得到一个 `jenkins-4.2.5.tgz` 文件，你可以将其存放到一个合适的目录，比如 `~/devstream-test/jenkins-4.2.5.tgz`，然后在配置文件就可以这样引用这个 chart 包了：
+
+```yaml
+tools:
+- name: jenkins
+  instanceID: default
+  dependsOn: [ ]
+  options:
+    chart:
+      chartPath: "~/devstream-test/jenkins-4.2.5.tgz"
+```
+
+### 5.2、容器镜像
 
 `jenkins` 插件支持使用自定义容器镜像，你需要先在 valuesYaml 部分加上如下配置：
 
 ```yaml
 valuesYaml: |
   controller:
-    image: [[ imageRepo ]]/jenkins/jenkins
-    tag: 2.346.3-jdk11
+    image: [[ imageRepo ]]/devstreamdev/jenkins
+    tag: 2.361.1-jdk11-dtm-0.1
     imagePullPolicy: "IfNotPresent"
     sidecars:
       configAutoReload:
@@ -393,3 +416,58 @@ export IMAGE_REPO_ADDR=harbor.devstream.io
 ```
 
 如果你还没有一个私有镜像仓库，可以参考[这篇文章](../best-practices/image-registry.zh.md)快速部署一个 Docker Registry。
+
+### 5.3、参考配置
+
+可能你已经注意到前面的[镜像列表](./jenkins/jenkins-images.txt)里有一个 DevStream 自定义镜像 `devstreamdev/jenkins:2.361.1-jdk11-dtm-0.1`，
+在这个镜像里 DevStream 为离线部署场景做了增强，所以对应的配置文件我们也需要做一些调整，如下：
+
+```yaml
+---
+# variable config
+imageRepo: harbor.example.com:9000
+
+---
+# plugin config
+tools:
+# name of the tool
+- name: jenkins
+  # id of the tool instance
+  instanceID: default
+  # format: name.instanceID; If specified, dtm will make sure the dependency is applied first before handling this tool.
+  dependsOn: [ ]
+  # options for the plugin
+  options:
+    chart:
+      chartPath: "~/devstream-test/jenkins-4.2.5.tgz"
+      # custom configuration. You can refer to [Jenkins values.yaml](https://github.com/jenkinsci/helm-charts/blob/main/charts/jenkins/values.yaml)
+      valuesYaml: |
+        serviceAccount:
+          create: true
+          name: jenkins
+        controller:
+          image: [[ imageRepo ]]/devstreamdev/jenkins
+          tag: 2.361.1-jdk11-dtm-0.1
+          imagePullPolicy: "IfNotPresent"
+          sidecars:
+            configAutoReload:
+              image: [[ imageRepo ]]/kiwigrid/k8s-sidecar:1.15.0
+          adminUser: "admin"
+          adminPassword: "changeme"
+          ingress:
+            enabled: true
+            hostName: jenkins.example.com
+        # Enable HTML parsing using OWASP Markup Formatter Plugin (antisamy-markup-formatter), useful with ghprb plugin.
+        enableRawHtmlMarkupFormatter: true
+        # Jenkins Configuraction as Code, refer to https://plugins.jenkins.io/configuration-as-code/ for more details
+        # notice: All configuration files that are discovered MUST be supplementary. They cannot overwrite each other's configuration values. This creates a conflict and raises a ConfiguratorException.
+        JCasC:
+          defaultConfig: true
+        agent:
+          image: [[ imageRepo ]]/jenkins/inbound-agent
+          tag: 4.11.2-4
+        backup:
+          image:
+            repository: [[ imageRepo ]]/maorfr/kube-tasks
+            tag: 0.2.0
+```
