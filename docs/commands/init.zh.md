@@ -23,7 +23,7 @@
 
 **命令：**
 
-- 下载指定插件，如：`dtm init --download-only --plugins=repo-scaffolding,githubactions-golang -d=.devstream/plugins`。 
+- 下载指定插件，如：`dtm init --download-only --plugins="repo-scaffolding, githubactions-golang" -d=.devstream/plugins`。 
 - 下载所有插件，如：`dtm init --download-only --all -d=.devstream/plugins`。
 
 
