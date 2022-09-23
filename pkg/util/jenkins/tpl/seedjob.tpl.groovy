@@ -53,7 +53,7 @@ if (jobRef == null) {
 jobRef.setDisplayName("[[ .JobName ]]")
 
 // --> 2. this module is used to init jenkinsfile config
-UserRemoteConfig userRemoteConfig = new UserRemoteConfig("[[ .RepositoryURL ]]", "[[ .JobName ]]", null, "")
+UserRemoteConfig userRemoteConfig = new UserRemoteConfig("[[ .RepositoryURL ]]", "[[ .JobName ]]", null, "[[ .RepoCredentialsId ]]")
 
 branches = newArrayList(new BranchSpec("*/[[ .Branch ]]"))
 doGenerateSubmoduleConfigurations = false

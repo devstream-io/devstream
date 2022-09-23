@@ -10,6 +10,8 @@ import (
 
 	"github.com/bndr/gojenkins"
 	"github.com/pkg/errors"
+
+	"github.com/devstream-io/devstream/pkg/util/jenkins/dingtalk"
 )
 
 type jenkins struct {
@@ -22,9 +24,11 @@ type JenkinsAPI interface {
 	ExecuteScript(script string) (string, error)
 	GetJob(ctx context.Context, id string, parentIDs ...string) (*gojenkins.Job, error)
 	DeleteJob(ctx context.Context, name string) (bool, error)
-	InstallPluginsIfNotExists(plugin []string, enableRestart bool) error
+	InstallPluginsIfNotExists(plugin []*JenkinsPlugin, enableRestart bool) error
 	CreateGiltabCredential(id, token string) error
+	CreateSSHKeyCredential(id, userName, privateKey string) error
 	ConfigCasc(cascScript string) error
+	ApplyDingTalkBot(config dingtalk.BotConfig) error
 }
 
 type setBearerToken struct {

@@ -16,10 +16,8 @@ var PluginsName string
 
 // List all plugins name
 func List(pluginFilter string) {
-	listPluginsName := strings.Fields(PluginsName)
 	r, _ := regexp.Compile(pluginFilter)
-	sort.Strings(listPluginsName)
-	for _, pluginName := range listPluginsName {
+	for _, pluginName := range PluginsNameSlice() {
 		if r.Match([]byte(pluginName)) {
 			fmt.Println(pluginName)
 		}

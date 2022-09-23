@@ -32,15 +32,15 @@ func GetPluginDir(conf string) (string, error) {
 		return DefaultPluginDir, nil
 	}
 
-	pluginRealDir, err := getRealPath(pluginDir)
+	pluginRealDir, err := HandlePathWithHome(pluginDir)
 	if err != nil {
 		return "", err
 	}
 	return pluginRealDir, nil
 }
 
-// getRealPath deal with "~" in the filePath
-func getRealPath(filePath string) (string, error) {
+// HandlePathWithHome deal with "~" in the filePath
+func HandlePathWithHome(filePath string) (string, error) {
 	if !strings.Contains(filePath, "~") {
 		return filePath, nil
 	}

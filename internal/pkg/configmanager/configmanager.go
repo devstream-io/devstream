@@ -264,14 +264,23 @@ func (m *Manager) checkConfigType(bytes []byte, configType string) (bool, error)
 func GetPluginName(t *Tool) string {
 	return fmt.Sprintf("%s-%s-%s_%s", t.Name, GOOS, GOARCH, version.Version)
 }
+func GetPluginNameWithOSAndArch(t *Tool, os, arch string) string {
+	return fmt.Sprintf("%s-%s-%s_%s", t.Name, os, arch, version.Version)
+}
 
 // GetPluginFileName creates the file name based on the tool's name and version
 // If the plugin {githubactions 0.0.1}, the generated name will be "githubactions_0.0.1.so"
 func GetPluginFileName(t *Tool) string {
 	return GetPluginName(t) + ".so"
 }
+func GetPluginFileNameWithOSAndArch(t *Tool, os, arch string) string {
+	return GetPluginNameWithOSAndArch(t, os, arch) + ".so"
+}
 
 // GetPluginMD5FileName  If the plugin {githubactions 0.0.1}, the generated name will be "githubactions_0.0.1.md5"
 func GetPluginMD5FileName(t *Tool) string {
 	return GetPluginName(t) + ".md5"
+}
+func GetPluginMD5FileNameWithOSAndArch(t *Tool, os, arch string) string {
+	return GetPluginNameWithOSAndArch(t, os, arch) + ".md5"
 }

@@ -2,6 +2,7 @@ package scm
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
@@ -55,4 +56,8 @@ func PushInitRepo(client ClientOperation, commitInfo *git.CommitInfo) error {
 	// 2. push local path to repo
 	needRollBack, err := client.PushLocalFileToRepo(commitInfo, false)
 	return err
+}
+
+func IsGithubRepo(repoType, url string) bool {
+	return repoType == "github" || strings.Contains(url, "github")
 }

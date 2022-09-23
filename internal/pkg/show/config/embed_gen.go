@@ -60,9 +60,6 @@ var (
 	//go:embed plugins/jenkins-github-integ.yaml
 	JenkinsGithubIntegDefaultConfig string
 
-	//go:embed plugins/jenkins-pipeline-kubernetes.yaml
-	JenkinsPipelineKubernetesDefaultConfig string
-
 	//go:embed plugins/jenkins-pipeline.yaml
 	JenkinsPipelineDefaultConfig string
 
@@ -81,6 +78,9 @@ var (
 	//go:embed plugins/repo-scaffolding.yaml
 	RepoScaffoldingDefaultConfig string
 
+	//go:embed plugins/sonarqube.yaml
+	SonarqubeDefaultConfig string
+
 	//go:embed plugins/tekton.yaml
 	TektonDefaultConfig string
 
@@ -95,34 +95,34 @@ var (
 )
 
 var pluginDefaultConfigs = map[string]string{
-	"argocd":                      ArgocdDefaultConfig,
-	"argocdapp":                   ArgocdappDefaultConfig,
-	"artifactory":                 ArtifactoryDefaultConfig,
-	"ci-generic":                  CiGenericDefaultConfig,
-	"devlake":                     DevlakeDefaultConfig,
-	"githubactions-golang":        GithubactionsGolangDefaultConfig,
-	"githubactions-nodejs":        GithubactionsNodejsDefaultConfig,
-	"githubactions-python":        GithubactionsPythonDefaultConfig,
-	"gitlab-ce-docker":            GitlabCeDockerDefaultConfig,
-	"gitlabci-generic":            GitlabciGenericDefaultConfig,
-	"gitlabci-golang":             GitlabciGolangDefaultConfig,
-	"gitlabci-java":               GitlabciJavaDefaultConfig,
-	"harbor-docker":               HarborDockerDefaultConfig,
-	"harbor":                      HarborDefaultConfig,
-	"hashicorp-vault":             HashicorpVaultDefaultConfig,
-	"helm-generic":                HelmGenericDefaultConfig,
-	"jenkins-github-integ":        JenkinsGithubIntegDefaultConfig,
-	"jenkins-pipeline-kubernetes": JenkinsPipelineKubernetesDefaultConfig,
-	"jenkins-pipeline":            JenkinsPipelineDefaultConfig,
-	"jenkins":                     JenkinsDefaultConfig,
-	"jira-github-integ":           JiraGithubIntegDefaultConfig,
-	"kube-prometheus":             KubePrometheusDefaultConfig,
-	"openldap":                    OpenldapDefaultConfig,
-	"repo-scaffolding":            RepoScaffoldingDefaultConfig,
-	"tekton":                      TektonDefaultConfig,
-	"trello-github-integ":         TrelloGithubIntegDefaultConfig,
-	"trello":                      TrelloDefaultConfig,
-	"zentao":                      ZentaoDefaultConfig,
+	"argocd":               ArgocdDefaultConfig,
+	"argocdapp":            ArgocdappDefaultConfig,
+	"artifactory":          ArtifactoryDefaultConfig,
+	"ci-generic":           CiGenericDefaultConfig,
+	"devlake":              DevlakeDefaultConfig,
+	"githubactions-golang": GithubactionsGolangDefaultConfig,
+	"githubactions-nodejs": GithubactionsNodejsDefaultConfig,
+	"githubactions-python": GithubactionsPythonDefaultConfig,
+	"gitlab-ce-docker":     GitlabCeDockerDefaultConfig,
+	"gitlabci-generic":     GitlabciGenericDefaultConfig,
+	"gitlabci-golang":      GitlabciGolangDefaultConfig,
+	"gitlabci-java":        GitlabciJavaDefaultConfig,
+	"harbor-docker":        HarborDockerDefaultConfig,
+	"harbor":               HarborDefaultConfig,
+	"hashicorp-vault":      HashicorpVaultDefaultConfig,
+	"helm-generic":         HelmGenericDefaultConfig,
+	"jenkins-github-integ": JenkinsGithubIntegDefaultConfig,
+	"jenkins-pipeline":     JenkinsPipelineDefaultConfig,
+	"jenkins":              JenkinsDefaultConfig,
+	"jira-github-integ":    JiraGithubIntegDefaultConfig,
+	"kube-prometheus":      KubePrometheusDefaultConfig,
+	"openldap":             OpenldapDefaultConfig,
+	"repo-scaffolding":     RepoScaffoldingDefaultConfig,
+	"sonarqube":            SonarqubeDefaultConfig,
+	"tekton":               TektonDefaultConfig,
+	"trello-github-integ":  TrelloGithubIntegDefaultConfig,
+	"trello":               TrelloDefaultConfig,
+	"zentao":               ZentaoDefaultConfig,
 }
 
 //go:embed templates/quickstart.yaml

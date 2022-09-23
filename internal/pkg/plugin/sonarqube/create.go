@@ -1,29 +1,21 @@
-package jenkinspipelinekubernetes
+package sonarqube
 
 import (
-	_ "embed"
-
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/helm"
 	"github.com/devstream-io/devstream/pkg/util/log"
-)
-
-const (
-	jenkinsCredentialID       = "credential-jenkins-pipeline-kubernetes-by-devstream"
-	jenkinsCredentialDesc     = "Jenkins Pipeline secret, created by devstream/jenkins-pipeline-kubernetes"
-	jenkinsCredentialUsername = "foo-useless-username"
 )
 
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
-			ValidateAndDefaults,
+			helm.SetDefaultConfig(&defaultHelmConfig),
+			helm.Validate,
 		},
-		ExecuteOperations: plugininstaller.ExecuteOperations{
-			CreateJob,
-		},
-		TerminateOperations: nil,
-		GetStateOperation:   GetState,
+		ExecuteOperations:   helm.DefaultCreateOperations,
+		TerminateOperations: helm.DefaultTerminateOperations,
+		GetStateOperation:   helm.GetPluginAllState,
 	}
 
 	// Execute all Operations in Operator

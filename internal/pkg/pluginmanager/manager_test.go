@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"runtime"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -168,7 +169,8 @@ var _ = Describe("MD5", func() {
 		When("pluginDir is Empty", func() {
 			It("should return err", func() {
 				viper.Set("plugin-dir", "")
-				err = DownloadPlugins(config)
+				pluginDir := viper.GetString("plugin-dir")
+				err = DownloadPlugins(config.Tools, pluginDir, runtime.GOOS, runtime.GOARCH)
 				Expect(err).Error().Should(HaveOccurred())
 				Expect(err.Error()).Should(ContainSubstring("plugins directory should not be "))
 			})

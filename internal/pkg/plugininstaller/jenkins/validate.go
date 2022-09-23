@@ -32,8 +32,8 @@ func SetJobDefaultConfig(options plugininstaller.RawOptions) (plugininstaller.Ra
 		return nil, err
 	}
 
-	// config default values
-	projectRepo, err := common.NewRepoFromURL(opts.SCM.ProjectURL, opts.SCM.ProjectBranch)
+	// config scm and projectRepo values
+	projectRepo, err := common.NewRepoFromURL(opts.SCM.Type, opts.SCM.APIURL, opts.SCM.CloneURL, opts.SCM.Branch)
 	if err != nil {
 		return nil, err
 	}
@@ -42,21 +42,26 @@ func SetJobDefaultConfig(options plugininstaller.RawOptions) (plugininstaller.Ra
 		opts.Jenkins.Namespace = "jenkins"
 	}
 
-	if opts.SCM.ProjectBranch == "" {
-		opts.SCM.ProjectBranch = "master"
+	if opts.SCM.Branch == "" {
+		opts.SCM.Branch = projectRepo.Branch
+	}
+	sshKey := os.Getenv("GITLAB_SSHKEY")
+	if sshKey != "" && opts.SCM.SSHprivateKey == "" {
+		opts.SCM.SSHprivateKey = sshKey
 	}
 
 	opts.ProjectRepo = projectRepo
 	if opts.Pipeline.JobName == "" {
 		opts.Pipeline.JobName = projectRepo.Repo
 	}
+
+	// config ci related values
 	opts.buildCIConfig()
 
 	basicAuth, err := buildAdminToken(opts.Jenkins.User)
 	if err != nil {
 		return nil, err
 	}
-
 	opts.BasicAuth = basicAuth
 	opts.SecretToken = generateRandomSecretToken()
 	return opts.encode()
@@ -72,6 +77,7 @@ func ValidateJobConfig(options plugininstaller.RawOptions) (plugininstaller.RawO
 		return nil, err
 	}
 
+	// check jenkins job name
 	if strings.Contains(opts.Pipeline.JobName, "/") {
 		strs := strings.Split(opts.Pipeline.JobName, "/")
 		if len(strs) != 2 || len(strs[0]) == 0 || len(strs[1]) == 0 {
@@ -79,9 +85,11 @@ func ValidateJobConfig(options plugininstaller.RawOptions) (plugininstaller.RawO
 		}
 	}
 
+	// check projectRepo name
 	if opts.ProjectRepo.RepoType == "github" {
-		return nil, errors.New("jenkins job not support github for now")
+		return nil, fmt.Errorf("jenkins job not support github for now")
 	}
+
 	return options, nil
 }
 

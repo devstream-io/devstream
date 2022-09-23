@@ -35,6 +35,7 @@
 ```shell
 export IMAGE_REPO_PASSWORD=YOUR_IMAGE_REPO_PASSWORD
 export GITLAB_TOKEN=YOUR_GITLAB_TOKEN
+export GITLAB_SSHKEY=YOUR_REPO_PRIVATE_KEY
 ```
 
 然后准备 DevStream 插件配置：
@@ -64,8 +65,9 @@ tools:
       user: admin
       enableRestart: true
     scm:
-      projectURL: YOUR_JENKINS_ADDR/root/spring-demo
-      projectBranch: master
+      cloneURL: git@YOUR_REPO_CLONE_ADDRESS/root/spring-demo
+      branch: master
+      apiURL: YOUR_JENKINS_ADDR
     pipeline:
       jobName: test-job
       jenkinsfilePath: https://raw.githubusercontent.com/devstream-io/dtm-jenkins-pipeline-example/main/springboot/Jenkinsfile
@@ -77,6 +79,7 @@ tools:
 上述配置文件中使用的 GitLab、Jenkins 和 Harbor 访问地址需要替换成你的环境中实际地址。例如：
 
 - **YOUR_GITLAB_ADDR**: http://54.71.232.26:30080
+- **YOUR_REPO_CLONE_ADDRESS**: http://54.71.232.26:30022
 - **YOUR_JENKINS_ADDR**: http://54.71.232.26:32000
 - **YOUR_HARBOR_ADDR**: http://harbor.example.com:80
 

@@ -21,5 +21,4 @@ func Delete(options map[string]interface{}) (bool, error) {
 
 	// 2. return ture if all process success
 	return true, nil
-
 }

@@ -2,6 +2,7 @@ package jenkins
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/pkg/util/jenkins"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm"
 )
@@ -53,7 +54,7 @@ func DeleteJob(options plugininstaller.RawOptions) error {
 	return scmClient.DeleteWebhook(opts.buildWebhookInfo())
 }
 
-func PreInstall(plugins []string, cascTemplate string) plugininstaller.BaseOperation {
+func PreInstall(plugins []*jenkins.JenkinsPlugin, cascTemplate string) plugininstaller.BaseOperation {
 	return func(options plugininstaller.RawOptions) error {
 		opts, err := newJobOptions(options)
 		if err != nil {
@@ -75,6 +76,10 @@ func PreInstall(plugins []string, cascTemplate string) plugininstaller.BaseOpera
 		switch opts.ProjectRepo.RepoType {
 		case "gitlab":
 			// 3. create gitlab connection for gitlab
+			err := opts.createGitlabSSHPrivateKey(jenkinsClient)
+			if err != nil {
+				return err
+			}
 			return opts.createGitlabConnection(jenkinsClient, cascTemplate)
 		default:
 			log.Debugf("jenkins preinstall only support gitlab for now")

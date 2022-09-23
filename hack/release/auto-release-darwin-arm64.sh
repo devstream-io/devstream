@@ -1,6 +1,8 @@
 #! /bin/bash -e
 # usage: `sh auto-release-darwin-arm64.sh -t v0.6.0`
 set -o nounset
+# exit when any command fails
+set -e
 
 tag="invalid"
 

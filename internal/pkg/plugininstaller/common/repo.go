@@ -7,6 +7,7 @@ import (
 
 	"github.com/devstream-io/devstream/pkg/util/file"
 	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/scm"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 	"github.com/devstream-io/devstream/pkg/util/scm/github"
 	"github.com/devstream-io/devstream/pkg/util/scm/gitlab"
@@ -78,52 +79,30 @@ func (d *Repo) BuildRepoInfo() *git.RepoInfo {
 	}
 }
 
-// BuildURL return url build from repo struct
-func (d *Repo) BuildURL() string {
-	repoInfo := d.BuildRepoInfo()
-	switch d.RepoType {
-	case "github":
-		return fmt.Sprintf("https://github.com/%s/%s.git", repoInfo.GetRepoOwner(), d.Repo)
-	case "gitlab":
-		var gitlabURL string
-		if d.BaseURL != "" {
-			gitlabURL = d.BaseURL
-		} else {
-			gitlabURL = gitlab.DefaultGitlabHost
-		}
-		return fmt.Sprintf("%s/%s/%s.git", gitlabURL, repoInfo.GetRepoOwner(), d.Repo)
-	default:
-		return ""
-	}
-}
-
 // NewRepoFromURL build repo struct from scm url
-func NewRepoFromURL(repoURL, branch string) (*Repo, error) {
+func NewRepoFromURL(repoType, apiURL, cloneURL, branch string) (*Repo, error) {
 	repo := &Repo{
 		Branch: branch,
 	}
-	u, err := url.ParseRequestURI(repoURL)
-	if err != nil {
-		return nil, err
-	}
-	//config repo type
-	if strings.Contains(u.Host, "github") {
+
+	if scm.IsGithubRepo(repoType, cloneURL) {
 		repo.RepoType = "github"
-	} else if strings.Contains(u.Host, "gitlab.com") {
-		repo.RepoType = "gitlab"
-		repo.BaseURL = gitlab.DefaultGitlabHost
 	} else {
 		repo.RepoType = "gitlab"
-		repo.BaseURL = fmt.Sprintf("%s://%s", u.Scheme, u.Host)
+		// extract gitlab baseURL from url string
+		if apiURL == "" {
+			apiURL = cloneURL
+		}
+		gitlabBaseURL, err := gitlab.ExtractBaseURLfromRaw(apiURL)
+		if err != nil {
+			return nil, fmt.Errorf("gitlab repo extract baseURL failed: %w", err)
+		}
+		repo.BaseURL = gitlabBaseURL
 	}
-	path := u.Path
-	// config repo owner org and
-	pathPart := strings.Split(strings.TrimPrefix(path, "/"), "/")
-	if len(pathPart) != 2 {
-		return nil, fmt.Errorf("git repo path is not valid")
+
+	if err := repo.updateRepoPathByCloneURL(cloneURL); err != nil {
+		return nil, fmt.Errorf("git extract repo info failed: %w", err)
 	}
-	repo.Owner = pathPart[0]
-	repo.Repo = pathPart[1]
 	repo.Branch = repo.getBranch()
 	return repo, nil
 }
@@ -149,4 +128,29 @@ func (d *Repo) getRepoDownloadURL() string {
 	)
 	log.Debugf("LatestCodeZipfileDownloadUrl: %s.", latestCodeZipfileDownloadURL)
 	return latestCodeZipfileDownloadURL
+}
+
+func (d *Repo) updateRepoPathByCloneURL(cloneURL string) error {
+	var paths string
+	c, err := url.ParseRequestURI(cloneURL)
+	if err != nil {
+		if strings.Contains(cloneURL, "git@") {
+			gitSSHLastIndex := strings.LastIndex(cloneURL, ":")
+			if gitSSHLastIndex == -1 {
+				return fmt.Errorf("git ssh repo not valid")
+			}
+			paths = strings.Trim(cloneURL[gitSSHLastIndex:], ":")
+		} else {
+			return fmt.Errorf("git repo transport not support for now")
+		}
+	} else {
+		paths = c.Path
+	}
+	projectPaths := strings.Split(strings.Trim(paths, "/"), "/")
+	if len(projectPaths) != 2 {
+		return fmt.Errorf("git repo path is not valid")
+	}
+	d.Owner = projectPaths[0]
+	d.Repo = strings.TrimSuffix(projectPaths[1], ".git")
+	return nil
 }

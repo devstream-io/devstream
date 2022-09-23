@@ -1,6 +1,6 @@
 # 安装
 
-## 用 curl 安装
+## 1 用 curl 安装
 
 进入你的工作目录，运行：
 
@@ -12,7 +12,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/devstream-io/devstream/mai
 
 > 可选：建议你将 dtm 移动到包含于 PATH 的目录下，比如 `mv dtm /usr/local/bin/`。
 
-## 用 [asdf](https://asdf-vm.com/) 安装
+## 2 用 [asdf](https://asdf-vm.com/) 安装
 
 ```shell
 # Plugin

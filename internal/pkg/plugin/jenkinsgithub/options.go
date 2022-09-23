@@ -5,7 +5,7 @@ const (
 	defaultJenkinsPipelineScriptPath = "Jenkinsfile-pr"
 )
 
-// Options is the struct for configurations of the jenkins-pipeline-kubernetes plugin.
+// Options is the struct for configurations of the jenkins-github plugin.
 type (
 	Options struct {
 		J    *JenkinsOptions `mapstructure:"jenkins"`

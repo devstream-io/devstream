@@ -1,5 +1,7 @@
 import jenkins.model.*
 import java.util.logging.Logger
+import hudson.util.VersionNumber
+
 def logger = Logger.getLogger("")
 def installed = false
 def initialized = false
@@ -10,22 +12,31 @@ def pm = instance.getPluginManager()
 def uc = instance.getUpdateCenter()
 // install plugins
 plugins.each {
-  logger.info("Checking " + it)
-  if (!pm.getPlugin(it)) {
-    logger.info("Looking UpdateCenter for " + it)
+  // get plugin name and version
+  String[] pluginString = it.split(":")
+  String pluginName = pluginString[0]
+  String pluginVersion = pluginString[1]
+  logger.info("Checking " + pluginName)
+  if (!pm.getPlugin(pluginName)) {
+    logger.info("Looking UpdateCenter for " + pluginName)
     if (!initialized) {
+      // update jenkins update center
       uc.updateAllSites()
       initialized = true
     }
-    def plugin = uc.getPlugin(it)
+    def plugin = uc.getPlugin(pluginName, new VersionNumber(pluginVersion))
     if (plugin) {
-      logger.info("Installing " + it)
+      // install plugin
+      logger.info("Installing " + pluginName)
       def installFuture = plugin.deploy()
       while(!installFuture.isDone()) {
-        logger.info("Waiting for plugin install: " + it)
-        sleep(3000)
+        logger.info("Waiting for plugin install: " + pluginName)
+        // wait 1 second for plugin installtion
+        sleep(1000)
       }
       installed = true
+    } else {
+      logger.warn("Plugin version not exist")
     }
   }
 }

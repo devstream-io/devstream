@@ -1,34 +1,34 @@
 package main
 
 import (
-	"github.com/devstream-io/devstream/internal/pkg/plugin/jenkinspipelinekubernetes"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/sonarqube"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 // NAME is the name of this DevStream plugin.
-const NAME = "jenkins-pipeline-kubernetes"
+const NAME = "sonarqube"
 
 // Plugin is the type used by DevStream core. It's a string.
 type Plugin string
 
-// Create implements the create of jenkins-pipeline-kubernetes.
+// Create implements the create of sonar.
 func (p Plugin) Create(options map[string]interface{}) (map[string]interface{}, error) {
-	return jenkinspipelinekubernetes.Create(options)
+	return sonarqube.Create(options)
 }
 
-// Update implements the update of jenkins-pipeline-kubernetes.
+// Update implements the update of sonar.
 func (p Plugin) Update(options map[string]interface{}) (map[string]interface{}, error) {
-	return jenkinspipelinekubernetes.Update(options)
+	return sonarqube.Update(options)
 }
 
-// Delete implements the delete of jenkins-pipeline-kubernetes.
+// Delete implements the delete of sonar.
 func (p Plugin) Delete(options map[string]interface{}) (bool, error) {
-	return jenkinspipelinekubernetes.Delete(options)
+	return sonarqube.Delete(options)
 }
 
-// Read implements the read of jenkins-pipeline-kubernetes.
+// Read implements the read of sonar.
 func (p Plugin) Read(options map[string]interface{}) (map[string]interface{}, error) {
-	return jenkinspipelinekubernetes.Read(options)
+	return sonarqube.Read(options)
 }
 
 // DevStreamPlugin is the exported variable used by the DevStream core.
