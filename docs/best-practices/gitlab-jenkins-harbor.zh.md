@@ -54,7 +54,7 @@
 1. 使用 `gitlab-ce-docker`、`jenkins` 和 `harbor` 三个插件完成 GitLab、Jenkins 和 Harbor 工具的部署；
 2. 使用 `repo-scaffolding` 和 `jenkins-pipeline` 两个插件完成 Java Spring Boot 项目脚手架的创建和 Jenkins Pipeline 的配置。
 
-!!! note
+!!! note "注意"
 
     DevStream 的配置文件分为 core config、plugins config 和 variables config，下文将详细介绍如何编写相应的配置文件，完成上述工具的部署和配置流程。
 
@@ -89,7 +89,7 @@
 
 下文将以 `local` Backend 为例演示。
 
-## 4、准备工具链插件的配置（plugin config）
+## 4、准备工具链相关插件的配置（plugin config）
 
 本节继续介绍 gitlab-ce-docker、jenkins 和 harbor 三个插件对应的 plugin configs。你可以点击下方 tag 按钮进行切换：
 
@@ -504,7 +504,7 @@ Harbor 的 admin 用户初始登录密码是 `Harbor12345`，你可以尝试用 
 
 // TODO(daniel-hutao): Harbor dashboard 截图
 
-## 7、准备 repo-scaffolding 和 jenkins-pipeline 插件的配置（plugin config）
+## 7、准备流水线相关插件的配置（plugin config）
 
 本节继续介绍 repo-scaffolding 和 jenkins-pipeline 两个插件对应的 plugin configs。你可以点击下方 tag 按钮进行切换：
 
@@ -565,7 +565,7 @@ Harbor 的 admin 用户初始登录密码是 `Harbor12345`，你可以尝试用 
     kubectl port-forward service/jenkins --address 0.0.0.0 -n jenkins 32000:8080
     ```
 
-## 8、开始执行 repo-scaffolding 和 jenkins-pipeline
+## 8、开始应用 repo-scaffolding 和 jenkins-pipeline 插件
 
 上文分别介绍了 repo-scaffolding 和 jenkins-pipeline 两个插件对应的 plugin configs，将其和 core config 串在一起后完整的配置文件如下：
 
@@ -654,7 +654,7 @@ dtm apply -f config-pipeline.yaml -y
 2022-09-06 13:19:32 ✔ [SUCCESS]  Apply finished.
 ```
 
-## 9、验证执行结果
+## 9、验证 repo-scaffolding 和 jenkins-pipeline 两个插件的执行结果
 
 这时候你可以在 GitLab 上看到 dtm 为你准备的 Java Spring Boot 项目脚手架：
 
