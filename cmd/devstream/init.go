@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"runtime"
 	"strings"
@@ -99,7 +100,7 @@ func GetPluginsAndPluginDirFromFlags() (tools []configmanager.Tool, pluginDir st
 	}
 
 	if len(pluginsName) == 0 {
-		log.Errorf("Please use --plugins to specify plugins to download or use --all to download all plugins.")
+		return nil, "", errors.New("Please use --plugins to specify plugins to download or use --all to download all plugins.")
 	}
 	log.Debugf("plugins to download: %v", pluginsName)
 
