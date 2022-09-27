@@ -80,6 +80,7 @@
     ```yaml title="k8s Backend"
     varFile: "" # If not empty, use the specified external variables config file
     toolFile: "" # If not empty, use the specified external tools config file
+    pluginDir: "" # If empty, use the default value: ~/.devstream/plugins, or use -d flag to specify a directory
     state: # state config, backend can be local, s3 or k8s
       backend: k8s
       options:

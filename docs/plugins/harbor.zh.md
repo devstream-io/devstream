@@ -530,6 +530,7 @@ tools:
   dependsOn: [ ]
   options:
     chart:
+      chartPath: "~/devstream-test/harbor-1.10.0.tgz"
       valuesYaml: |
         externalURL: http://core.harbor.domain
         expose:
@@ -560,19 +561,22 @@ tools:
             image:
               repository: [[ imageRepo ]]/goharbor/registry-photon
               tag: v2.5.3
-        controller:
-          image:
-            repository: [[ imageRepo ]]/goharbor/harbor-registryctl
-            tag: v2.5.3
+          controller:
+            image:
+              repository: [[ imageRepo ]]/goharbor/harbor-registryctl
+              tag: v2.5.3
         chartmuseum:
+          enabled: false
           image:
             repository: [[ imageRepo ]]/goharbor/chartmuseum-photon
             tag: v2.5.3
         trivy:
+          enabled: false
           image:
             repository: [[ imageRepo ]]/goharbor/trivy-adapter-photon
             tag: v2.5.3
         notary:
+          enabled: false
           server:
             image:
               repository: [[ imageRepo ]]/goharbor/notary-server-photon
@@ -588,19 +592,13 @@ tools:
               tag: v2.5.3
         redis:
           internal:
-              image:
-                repository: [[ imageRepo ]]/goharbor/redis-photon
-                tag: v2.5.3
+            image:
+              repository: [[ imageRepo ]]/goharbor/redis-photon
+              tag: v2.5.3
         exporter:
           image:
             repository: [[ imageRepo ]]/goharbor/harbor-exporter
             tag: v2.5.3
-        chartmuseum:
-          enabled: false
-        notary:
-          enabled: false
-        trivy:
-          enabled: false
         persistence:
           persistentVolumeClaim:
             registry:
