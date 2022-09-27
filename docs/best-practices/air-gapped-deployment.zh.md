@@ -9,7 +9,7 @@
 
 ## 1、下载 dtm 和 DevStream Plugins
 
-首先我们需要下载 DevStream 的命令行（CLI）工具 `dtm` 和所需的 DevStream 插件（plugins）。
+首先你需要下载 DevStream 的命令行（CLI）工具 `dtm` 和所需的 DevStream 插件（plugins）。
 
 ### 1.1、下载 dtm
 
@@ -87,7 +87,7 @@ export IMAGE_REPO_ADDR=harbor.devstream.io
 
 1. 强烈建议你先看下本脚本的使用说明和示例
 
-!!! note
+!!! note "注意"
 
     如果你下载镜像的机器和内部私有镜像仓库之间网络隔离，那么你可以在镜像下载到本地压缩包后，先将该压缩包复制到能够访问镜像仓库的机器上，然后再执行 load 和 push 等操作。
 
@@ -118,7 +118,7 @@ harbor-1.10.0.tgz jenkins-4.2.5.tgz
 
 ## 4、准备配置文件
 
-这时候部署 Jenkins 和 Harbor 所需要的"物料"就准备好了，你可以准备配置文件，开始部署 Jenkins 和 Harbor。
+这时候部署 Jenkins 和 Harbor 所需要的"物料"就准备好了。你可以准备配置文件，开始部署 Jenkins 和 Harbor。
 
 ### 4.1、编写插件配置（plugin config）
 
@@ -318,7 +318,7 @@ jenkinsURL: jenkins.example.com
 harborURL: harbor.example.com
 ```
 
-### 4.3、组装配置文件
+### 4.3、组装完整的配置文件
 
 这时候"主配置"、"变量配置"和"插件配置"都有了，你可以选择将其分别保存到三个不同的文件中，在"主配置"里通过`varFile`和`toolFile`去引用另外两个配置文件，
 也可以选择直接将三个配置写入一个文件，就像这样：
@@ -483,7 +483,7 @@ tools:
 dtm apply -f config.yaml -y
 ```
 
-!!! note
+!!! note "注意"
 
     你的 k8s 环境需要有一个 default StorageClass 和一个可用的 Ingress 控制器。
 
@@ -533,13 +533,18 @@ dtm apply -f config.yaml -y
 
 ### 6.1、DNS 配置
 
-如果你执行 `kubectl get ingress -A` 命令，可以看到 Ingress 用的 IP 地址：
+如果你执行 `kubectl get ingress -A` 命令，可以看到 Ingress 信息：
 
 ```shell
-NAMESPACE   NAME             CLASS   HOSTS                 ADDRESS        PORTS   AGE
-harbor      harbor-ingress   nginx   harbor.example.com    34.221.37.246  80      10m
-jenkins     jenkins          nginx   jenkins.example.com   34.221.37.246  80      10m
+NAMESPACE   NAME             CLASS   HOSTS                 ADDRESS      PORTS   AGE
+harbor      harbor-ingress   nginx   harbor.example.com    10.18.7.29   80      40s
+jenkins     jenkins          nginx   jenkins.example.com   10.18.7.29   80      5m
 ```
+
+!!! Tip "说明"
+
+    演示环境是一台云主机，其内部 IP 是 10.18.7.29，公网 IP 是 34.221.37.246，
+    所以下面很多地方也可以成内部 IP，但是为了方便，下文一律以公网 IP 为例。
 
 前面 Jenkins 和 Harbor 三个工具的配置文件里我们都设置了域名，你可以直接将这些域名与 IP 的映射关系配置到 DNS 服务器里。
 
@@ -554,28 +559,54 @@ jenkins     jenkins          nginx   jenkins.example.com   34.221.37.246  80    
 2. 修改 `CoreDNS` 的配置，在 ConfigMap `kube-system/coredns` 中添加静态解析记录：
 
     1. 执行命令：`kubectl edit cm coredns -n kube-system`；
-    2. 在 hosts(第20行左右) 部分添加和 /etc/hosts 一样的记录。
+    2. 在 hosts 部分添加和 /etc/hosts 一样的记录。下面 Corefile 配置供参考：
+    ```json
+    .:53 {
+        errors
+        health {
+           lameduck 5s
+        }
+        ready
+        kubernetes cluster.local in-addr.arpa ip6.arpa {
+           pods insecure
+           fallthrough in-addr.arpa ip6.arpa
+           ttl 30
+        }
+        prometheus :9153
+        hosts {
+           34.221.37.246 jenkins.example.com harbor.example.com
+           fallthrough
+        }
+        forward . /etc/resolv.conf {
+           max_concurrent 1000
+        }
+        cache 30
+        loop
+        reload
+        loadbalance
+    }
+    ```
 
 这时候在当前主机上，就可以分别通过如下地址访问到 Jenkins 和 Harbor 了：
 
 - `Jenkins`: http://jenkins.example.com
 - `Harbor`: http://harbor.example.com
 
-最后大概率你使用的主机上并没有浏览器，这时候你可以通过 curl 初步先验证 GitLab、Jenkins 和 Harbor 是否可访问。
+你使用的主机上可能没有浏览器，这时候你可以通过 curl 初步先验证 GitLab、Jenkins 和 Harbor 是否可访问。
 
 ### 6.3、访问 Jenkins
 
 你需要在自己的 PC 里配置 `34.221.37.246 jenkins.example.com` 静态域名解析记录，接着在浏览器里通过 `http://jenkins.example.com` 访问到 Jenkins：
 
 <figure markdown>
-  ![Jenkins login](){ width="1000" }
+  ![Jenkins login](./air-gapped-deployment/jenkins-login.png){ width="1000" }
   <figcaption>Jenkins login page</figcaption>
 </figure>
 
 Jenkins 的 admin 用户初始登录密码是 `changeme`，如果你仔细看了前面 dtm 使用的配置文件，可以发现这是在配置文件里指定的。你可以尝试用 `admin/changeme` 登录 Jenkins 检查功能是否正常，不过你不需要在 Jenkins 上进行任何额外的操作。
 
 <figure markdown>
-  ![Jenkins dashboard](){ width="1000" }
+  ![Jenkins dashboard](./air-gapped-deployment/jenkins-dashboard.png){ width="1000" }
   <figcaption>Jenkins dashboard</figcaption>
 </figure>
 
@@ -586,10 +617,13 @@ Jenkins 的 admin 用户初始登录密码是 `changeme`，如果你仔细看了
 如果需要在本地浏览器里访问 Harbor 页面，你需要在自己的 PC 里配置 `34.221.37.246 harbor.example.com` 静态域名解析记录，接着在浏览器里通过 `http://harbor.example.com` 访问到 Harbor：
 
 <figure markdown>
-  ![Harbor login](){ width="1000" }
+  ![Harbor login](./air-gapped-deployment/harbor-login.png){ width="1000" }
   <figcaption>Harbor login page</figcaption>
 </figure>
 
 Harbor 的 admin 用户初始登录密码是 `Harbor12345`，你可以尝试用 `admin/Harbor12345` 登录 Harbor 检查功能是否正常，不过你同样不需要在 Harbor 上进行任何额外的操作。
 
-// TODO(daniel-hutao): Harbor dashboard 截图；补偿 6.3，6.4 截图
+<figure markdown>
+  ![Harbor login](./air-gapped-deployment/harbor-dashboard.png){ width="1000" }
+  <figcaption>Harbor login page</figcaption>
+</figure>
