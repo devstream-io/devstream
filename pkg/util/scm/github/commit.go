@@ -1,7 +1,6 @@
 package github
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
@@ -43,8 +42,7 @@ func (c *Client) BuildCommitTree(ref *github.Reference, commitInfo *git.CommitIn
 		})
 	}
 	if len(entries) == 0 {
-		log.Successf("Github file all not change, pass...")
-		return nil, errors.New("Github file are all uptodate")
+		return nil, nil
 	}
 	tree, _, err := client.Git.CreateTree(c.Context, c.GetRepoOwner(), c.Repo, *ref.Object.SHA, entries)
 	return tree, err

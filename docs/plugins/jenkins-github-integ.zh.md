@@ -122,17 +122,16 @@ tools:
         # if all set, devstream will read the password from the config file first.
         password: ${{jenkins.default.outputs.jenkinsPasswordOfAdmin}}
         # jenkins job name, mandatory
-        jobName: 
+        jobName:
         # path to the pipeline file, relative to the git repo root directory. default: Jenkinsfile-pr
         pipelineScriptPath: Jenkinsfile-pr
       helm:
         # namespace of the jenkins, default: jenkins
         namespace: jenkins
         # release name of the jenkins helm chart, mandatory
-        releaseName: 
+        releaseName:
       # GitHub repo where to put the pipeline script and project. mandatory
       githubRepoUrl: https://github.com/YOUR_GITHUB_ACCOUNT/YOUR_TEST_PROJECT_NAME
       adminList:
         - YOUR_GITHUB_USERNAME
 ```
-

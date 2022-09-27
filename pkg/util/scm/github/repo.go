@@ -1,14 +1,18 @@
 package github
 
 import (
-	"errors"
 	"net/http"
 	"strings"
 
 	"github.com/google/go-github/v42/github"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/pkgerror"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
+)
+
+const (
+	webhookName = "devstream_webhook"
 )
 
 func (c *Client) CreateRepo(org, defaultBranch string) error {
@@ -79,6 +83,15 @@ func (c *Client) PushLocalFileToRepo(commitInfo *git.CommitInfo, checkChange boo
 		}
 	}()
 	tree, err := c.BuildCommitTree(ref, commitInfo, checkChange)
+	if err != nil {
+		log.Debugf("Failed to build commit tree: %s.", err)
+		return true, err
+	}
+	// if no new files to commit, just return
+	if tree == nil {
+		log.Successf("Github file all not change, pass...")
+		return false, nil
+	}
 
 	// 2. push local file change to new branch
 	if err := c.PushLocalPath(ref, tree, commitInfo); err != nil {
@@ -149,11 +162,36 @@ func (c *Client) ProtectBranch(branch string) error {
 }
 
 func (c *Client) AddWebhook(webhookConfig *git.WebhookConfig) error {
-	// TODO(steinliber) add github webhook func
-	return errors.New("gitlab add webhook is not valid for now")
+	hook := new(github.Hook)
+	hook.Name = github.String(webhookName)
+	hook.Events = []string{"pull_request", "push"}
+	hook.Config = map[string]interface{}{}
+	hook.Config["url"] = webhookConfig.Address
+	hook.Config["content_type"] = "json"
+	_, _, err := client.Repositories.CreateHook(c.Context, c.Owner, c.Repo, hook)
+	if err != nil && !pkgerror.CheckSlientErrorByMessage(err, errHookAlreadyExist) {
+		return err
+	}
+	return nil
 }
 
 func (c *Client) DeleteWebhook(webhookConfig *git.WebhookConfig) error {
-	// TODO(steinliber) add github webhook func
-	return errors.New("gitlab add webhook is not valid for now")
+	// list 100 webhooks of this repo
+	allHooks, _, err := client.Repositories.ListHooks(
+		c.Context, c.Owner, c.Repo, &github.ListOptions{
+			PerPage: 100,
+		},
+	)
+	if err != nil {
+		log.Debugf("github list webhook failed: %v", err)
+		return err
+	}
+	for _, hook := range allHooks {
+		if *hook.Name == webhookName {
+			_, err := client.Repositories.DeleteHook(c.Context, c.Owner, c.Repo, *hook.ID)
+			return err
+		}
+	}
+	log.Debugf("github webhook is already deleted")
+	return nil
 }

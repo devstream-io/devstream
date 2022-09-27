@@ -4,25 +4,17 @@ import (
 	"context"
 	"fmt"
 	"net/url"
-	"os"
 	"path"
-	"strings"
 
 	"github.com/mitchellh/mapstructure"
 
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/common"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/jenkins/plugins"
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
-	"github.com/devstream-io/devstream/pkg/util/template"
-)
-
-const (
-	jenkinsGitlabCredentialName = "jenkinsGitlabCredential"
-	jenkinsGitlabConnectionName = "jenkinsGitlabConnection"
-	jenkinsSSHkeyCredentialName = "jenkinsSSHKeyCredential"
 )
 
 type JobOptions struct {
@@ -45,22 +37,13 @@ type Jenkins struct {
 }
 
 type SCM struct {
-	CloneURL      string `mapstructure:"cloneURL" validate:"required"`
-	APIURL        string `mapstructure:"apiURL"`
-	Branch        string `mapstructure:"branch"`
-	Type          string `mapstructure:"type"`
+	CloneURL string `mapstructure:"cloneURL" validate:"required"`
+	APIURL   string `mapstructure:"apiURL"`
+	Branch   string `mapstructure:"branch"`
+	Type     string `mapstructure:"type"`
+
+	// used in package
 	SSHprivateKey string `mapstructure:"sshPrivateKey"`
-}
-
-type Pipeline struct {
-	JobName         string    `mapstructure:"jobName" validate:"required"`
-	JenkinsfilePath string    `mapstructure:"jenkinsfilePath" validate:"required"`
-	ImageRepo       ImageRepo `mapstructure:"imageRepo"`
-}
-
-type ImageRepo struct {
-	URL  string `mapstructure:"url" validate:"url"`
-	User string `mapstructure:"user"`
 }
 
 type jobScriptRenderInfo struct {
@@ -72,6 +55,9 @@ type jobScriptRenderInfo struct {
 	FolderName        string
 	GitlabConnection  string
 	RepoCredentialsId string
+	RepoURL           string
+	RepoName          string
+	RepoOwner         string
 }
 
 func newJobOptions(options plugininstaller.RawOptions) (*JobOptions, error) {
@@ -94,36 +80,14 @@ func (j *JobOptions) newJenkinsClient() (jenkins.JenkinsAPI, error) {
 	return jenkins.NewClient(j.Jenkins.URL, j.BasicAuth)
 }
 
-func (j *JobOptions) createOrUpdateJob(jenkinsClient jenkins.JenkinsAPI) error {
-	// 1. render groovy script
-	jobRenderInfo := &jobScriptRenderInfo{
-		RepoType:         j.ProjectRepo.RepoType,
-		JobName:          j.getJobName(),
-		RepositoryURL:    j.SCM.CloneURL,
-		Branch:           j.ProjectRepo.Branch,
-		SecretToken:      j.SecretToken,
-		FolderName:       j.getJobFolder(),
-		GitlabConnection: jenkinsGitlabConnectionName,
-	}
-	if j.SCM.SSHprivateKey != "" {
-		jobRenderInfo.RepoCredentialsId = jenkinsSSHkeyCredentialName
-	}
-	jobScript, err := jenkins.BuildRenderedScript(jobRenderInfo)
-	if err != nil {
-		log.Debugf("jenkins redner template failed: %s", err)
-		return err
-	}
-	// 2. execute script to create jenkins job
-	_, err = jenkinsClient.ExecuteScript(jobScript)
-	if err != nil {
-		log.Debugf("jenkins execute script failed: %s", err)
-		return err
-	}
-	return nil
-}
-
 func (j *JobOptions) buildWebhookInfo() *git.WebhookConfig {
-	webHookURL := fmt.Sprintf("%s/project/%s", j.Jenkins.URL, j.getJobPath())
+	var webHookURL string
+	switch j.ProjectRepo.RepoType {
+	case "gitlab":
+		webHookURL = fmt.Sprintf("%s/project/%s", j.Jenkins.URL, j.Pipeline.getJobPath())
+	case "github":
+		webHookURL = fmt.Sprintf("%s/github-webhook/", j.Jenkins.URL)
+	}
 	log.Debugf("jenkins config webhook is %s", webHookURL)
 	return &git.WebhookConfig{
 		Address:     webHookURL,
@@ -131,66 +95,22 @@ func (j *JobOptions) buildWebhookInfo() *git.WebhookConfig {
 	}
 }
 
-func (j *JobOptions) installPlugins(jenkinsClient jenkins.JenkinsAPI, plugins []*jenkins.JenkinsPlugin) error {
-	return jenkinsClient.InstallPluginsIfNotExists(plugins, j.Jenkins.EnableRestart)
-}
-
-func (j *JobOptions) createGitlabConnection(jenkinsClient jenkins.JenkinsAPI, cascTemplate string) error {
-	err := jenkinsClient.CreateGiltabCredential(jenkinsGitlabCredentialName, os.Getenv("GITLAB_TOKEN"))
-	if err != nil {
-		log.Debugf("jenkins preinstall credentials failed: %s", err)
-		return err
-	}
-	// 3. config gitlab casc
-	cascConfig, err := template.Render(
-		"jenkins-casc", cascTemplate, map[string]string{
-			"CredentialName":       jenkinsGitlabCredentialName,
-			"GitLabConnectionName": jenkinsGitlabConnectionName,
-			"GitlabURL":            j.ProjectRepo.BaseURL,
-		},
-	)
-	if err != nil {
-		log.Debugf("jenkins preinstall credentials failed: %s", err)
-		return err
-	}
-	return jenkinsClient.ConfigCasc(cascConfig)
-}
-
 func (j *JobOptions) deleteJob(client jenkins.JenkinsAPI) error {
-	jobPath := j.getJobPath()
-	if _, err := client.GetJob(context.Background(), jobPath); err == nil {
-		if _, err := client.DeleteJob(context.Background(), jobPath); err != nil {
+	job, err := client.GetFolderJob(j.Pipeline.getJobName(), j.Pipeline.getJobFolder())
+	if err != nil {
+		// check job is already been deleted
+		if jenkins.IsNotFoundError(err) {
 			return err
 		}
+		return nil
 	}
-	return nil
-}
-
-func (j *JobOptions) getJobPath() string {
-	return j.Pipeline.JobName
-}
-
-func (j *JobOptions) getJobFolder() string {
-	if strings.Contains(j.Pipeline.JobName, "/") {
-		return strings.Split(j.Pipeline.JobName, "/")[0]
-	}
-	return ""
-}
-
-func (j *JobOptions) getJobName() string {
-	if strings.Contains(j.Pipeline.JobName, "/") {
-		return strings.Split(j.Pipeline.JobName, "/")[1]
-	}
-	return j.Pipeline.JobName
-}
-
-func (j *JobOptions) getImageHost() string {
-	harborAddress := j.Pipeline.ImageRepo.URL
-	harborURL, err := url.ParseRequestURI(harborAddress)
+	isDeleted, err := job.Delete(context.Background())
 	if err != nil {
-		return harborAddress
+		log.Debugf("jenkins delete job %s failed: %s", j.Pipeline.getJobPath(), err)
+		return err
 	}
-	return harborURL.Host
+	log.Debugf("jenkins delete job %s status: %v", j.Pipeline.getJobPath(), isDeleted)
+	return nil
 }
 
 func (j *JobOptions) buildCIConfig() {
@@ -212,7 +132,7 @@ func (j *JobOptions) buildCIConfig() {
 	} else {
 		imageName = j.Pipeline.JobName
 	}
-	harborURLHost := path.Join(j.getImageHost(), defaultImageProject)
+	harborURLHost := path.Join(j.Pipeline.getImageHost(), defaultImageProject)
 	ciConfig.Vars = map[string]interface{}{
 		"ImageName":        imageName,
 		"ImageRepoAddress": harborURLHost,
@@ -220,12 +140,56 @@ func (j *JobOptions) buildCIConfig() {
 	j.CIConfig = ciConfig
 }
 
-func (j *JobOptions) createGitlabSSHPrivateKey(jenkinsClient jenkins.JenkinsAPI) error {
-	if j.SCM.SSHprivateKey == "" {
-		log.Warnf("jenkins gitlab ssh key not config, private repo can't be clone")
-		return nil
+func (j *JobOptions) extractJenkinsPlugins() []pluginConfigAPI {
+	var pluginsConfigs []pluginConfigAPI
+	switch j.ProjectRepo.RepoType {
+	case "gitlab":
+		pluginsConfigs = append(pluginsConfigs, &plugins.GitlabJenkinsConfig{
+			SSHPrivateKey: j.SCM.SSHprivateKey,
+			RepoOwner:     j.ProjectRepo.Owner,
+			BaseURL:       j.ProjectRepo.BaseURL,
+		})
+	case "github":
+		pluginsConfigs = append(pluginsConfigs, &plugins.GithubJenkinsConfig{
+			JenkinsURL: j.Jenkins.URL,
+		})
 	}
-	return jenkinsClient.CreateSSHKeyCredential(
-		jenkinsSSHkeyCredentialName, j.ProjectRepo.Owner, j.SCM.SSHprivateKey,
-	)
+	return pluginsConfigs
+}
+
+func (j *JobOptions) createOrUpdateJob(jenkinsClient jenkins.JenkinsAPI) error {
+	// 1. render groovy script
+	jobRenderInfo := &jobScriptRenderInfo{
+		RepoType:         j.ProjectRepo.RepoType,
+		JobName:          j.Pipeline.getJobName(),
+		RepositoryURL:    j.SCM.CloneURL,
+		Branch:           j.ProjectRepo.Branch,
+		SecretToken:      j.SecretToken,
+		FolderName:       j.Pipeline.getJobFolder(),
+		GitlabConnection: plugins.GitlabConnectionName,
+		RepoURL:          j.ProjectRepo.BuildURL(),
+		RepoOwner:        j.ProjectRepo.Owner,
+		RepoName:         j.ProjectRepo.Repo,
+	}
+	// config credential for different repo type
+	switch j.ProjectRepo.RepoType {
+	case "gitlab":
+		if j.SCM.SSHprivateKey != "" {
+			jobRenderInfo.RepoCredentialsId = plugins.SSHKeyCredentialName
+		}
+	case "github":
+		jobRenderInfo.RepoCredentialsId = plugins.GithubCredentialName
+	}
+	jobScript, err := jenkins.BuildRenderedScript(jobRenderInfo)
+	if err != nil {
+		log.Debugf("jenkins redner template failed: %s", err)
+		return err
+	}
+	// 2. execute script to create jenkins job
+	_, err = jenkinsClient.ExecuteScript(jobScript)
+	if err != nil {
+		log.Debugf("jenkins execute script failed: %s", err)
+		return err
+	}
+	return nil
 }

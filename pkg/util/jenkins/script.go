@@ -19,9 +19,24 @@ import (
 //go:embed tpl/casc.tpl.groovy
 var cascGroovyScript string
 
+//go:embed tpl/repo-casc.tpl.yaml
+var repoCascScript string
+
 type scriptError struct {
 	output   string
 	errorMsg string
+}
+
+type RepoCascConfig struct {
+	// common variables
+	RepoType     string
+	CredentialID string
+	// gitlab variables
+	GitLabConnectionName string
+	GitlabURL            string
+	// github variables
+	JenkinsURL  string
+	SecretToken string
 }
 
 // all jenkins client return error format is host: error detail
@@ -78,9 +93,16 @@ func (jenkins *jenkins) ExecuteScript(script string) (string, error) {
 	return output, nil
 }
 
-func (jenkins *jenkins) ConfigCasc(cascConfig string) error {
+func (jenkins *jenkins) ConfigCascForRepo(repoCascConfig *RepoCascConfig) error {
+	cascConfig, err := template.Render(
+		"jenkins-repo-casc", repoCascScript, repoCascConfig,
+	)
+	if err != nil {
+		log.Debugf("jenkins preinstall credentials failed: %s", err)
+		return err
+	}
 	groovyCascScript, err := template.Render(
-		"jenkins casc", cascGroovyScript, map[string]string{
+		"jenkins-casc", cascGroovyScript, map[string]string{
 			"CascConfig": cascConfig,
 		},
 	)

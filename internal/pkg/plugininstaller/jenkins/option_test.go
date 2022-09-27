@@ -21,31 +21,31 @@ var testError = errors.New("test")
 type mockSuccessJenkinsClient struct {
 }
 
-func (m *mockSuccessJenkinsClient) CreateOrUpdateJob(string, string) (job *gojenkins.Job, created bool, err error) {
-	return nil, true, nil
-}
-
 func (m *mockSuccessJenkinsClient) ExecuteScript(string) (string, error) {
 	return "", nil
 }
-func (m *mockSuccessJenkinsClient) GetJob(context.Context, string, ...string) (*gojenkins.Job, error) {
+func (m *mockSuccessJenkinsClient) GetFolderJob(string, string) (*gojenkins.Job, error) {
 	return nil, nil
 }
 func (m *mockSuccessJenkinsClient) DeleteJob(context.Context, string) (bool, error) {
 	return true, nil
 }
-func (m *mockSuccessJenkinsClient) InstallPluginsIfNotExists(plugin []*jenkins.JenkinsPlugin, enableRestart bool) error {
+func (m *mockSuccessJenkinsClient) InstallPluginsIfNotExists([]*jenkins.JenkinsPlugin, bool) error {
 	return nil
 }
 func (m *mockSuccessJenkinsClient) CreateGiltabCredential(string, string) error {
 	return nil
 }
-
 func (m *mockSuccessJenkinsClient) CreateSSHKeyCredential(id, userName, privateKey string) error {
 	return nil
 }
-
-func (m *mockSuccessJenkinsClient) ConfigCasc(cascScript string) error {
+func (m *mockSuccessJenkinsClient) CreatePasswordCredential(id, userName, privateKey string) error {
+	return nil
+}
+func (m *mockSuccessJenkinsClient) CreateSecretCredential(id, secret string) error {
+	return nil
+}
+func (m *mockSuccessJenkinsClient) ConfigCascForRepo(*jenkins.RepoCascConfig) error {
 	return nil
 }
 
@@ -56,34 +56,34 @@ func (m *mockSuccessJenkinsClient) ApplyDingTalkBot(dingtalk.BotConfig) error {
 type mockErrorJenkinsClient struct {
 }
 
-func (m *mockErrorJenkinsClient) CreateOrUpdateJob(string, string) (job *gojenkins.Job, created bool, err error) {
-	return nil, true, testError
-}
-
 func (m *mockErrorJenkinsClient) ExecuteScript(string) (string, error) {
 	return "", testError
 }
-func (m *mockErrorJenkinsClient) GetJob(context.Context, string, ...string) (*gojenkins.Job, error) {
+func (m *mockErrorJenkinsClient) GetFolderJob(string, string) (*gojenkins.Job, error) {
 	return nil, testError
 }
 func (m *mockErrorJenkinsClient) DeleteJob(context.Context, string) (bool, error) {
 	return false, testError
 }
-func (m *mockErrorJenkinsClient) InstallPluginsIfNotExists(plugin []*jenkins.JenkinsPlugin, enableRestart bool) error {
+func (m *mockErrorJenkinsClient) InstallPluginsIfNotExists([]*jenkins.JenkinsPlugin, bool) error {
 	return testError
 }
 func (m *mockErrorJenkinsClient) CreateGiltabCredential(string, string) error {
 	return testError
 }
-func (m *mockErrorJenkinsClient) ConfigCasc(string) error {
+func (m *mockErrorJenkinsClient) CreateSecretCredential(string, string) error {
 	return testError
 }
-
+func (m *mockErrorJenkinsClient) ConfigCascForRepo(*jenkins.RepoCascConfig) error {
+	return testError
+}
 func (m *mockErrorJenkinsClient) ApplyDingTalkBot(dingtalk.BotConfig) error {
 	return testError
 }
-
 func (m *mockErrorJenkinsClient) CreateSSHKeyCredential(id, userName, privateKey string) error {
+	return testError
+}
+func (m *mockErrorJenkinsClient) CreatePasswordCredential(id, userName, privateKey string) error {
 	return testError
 }
 
@@ -110,10 +110,11 @@ var _ = Describe("JobOptions struct", func() {
 			Username: userName,
 		}
 		projectRepo = &common.Repo{
-			Owner:   repoOwner,
-			Repo:    repoName,
-			Branch:  "test",
-			BaseURL: "http://127.0.0.1:300",
+			Owner:    repoOwner,
+			Repo:     repoName,
+			Branch:   "test",
+			BaseURL:  "http://127.0.0.1:300",
+			RepoType: "gitlab",
 		}
 		ciConfig = &ci.CIConfig{
 			Type:      "jenkins",
@@ -171,7 +172,7 @@ var _ = Describe("JobOptions struct", func() {
 	Context("buildWebhookInfo method", func() {
 		It("should work normal", func() {
 			webHookInfo := jobOptions.buildWebhookInfo()
-			Expect(webHookInfo.Address).Should(Equal(fmt.Sprintf("%s/project/%s", jobOptions.Jenkins.URL, jobOptions.getJobPath())))
+			Expect(webHookInfo.Address).Should(Equal(fmt.Sprintf("%s/project/%s", jobOptions.Jenkins.URL, jobOptions.Pipeline.getJobPath())))
 			Expect(webHookInfo.SecretToken).Should(Equal(secretToken))
 		})
 	})
@@ -181,20 +182,8 @@ var _ = Describe("JobOptions struct", func() {
 				mockClient = &mockErrorJenkinsClient{}
 			})
 			It("should return error", func() {
-				err := jobOptions.installPlugins(mockClient, []*jenkins.JenkinsPlugin{
-					{Name: "test_plugin", Version: "123"},
-				})
-				Expect(err).Error().Should(HaveOccurred())
-			})
-		})
-	})
-	Context("createGitlabConnection method", func() {
-		When("jenkins client return error", func() {
-			BeforeEach(func() {
-				mockClient = &mockErrorJenkinsClient{}
-			})
-			It("should return error", func() {
-				err := jobOptions.createGitlabConnection(mockClient, "casc")
+				var pluginConfigs []pluginConfigAPI
+				err := installPlugins(mockClient, pluginConfigs, false)
 				Expect(err).Error().Should(HaveOccurred())
 			})
 		})
