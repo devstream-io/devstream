@@ -246,6 +246,8 @@ tools:
         serviceAccount:
           create: true
           name: jenkins
+        persistence:
+          storageClass: ""
         controller:
           adminUser: "admin"
           adminPassword: "changeme"

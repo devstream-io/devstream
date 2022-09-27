@@ -168,15 +168,15 @@ func (m *Manager) loadOriginalConfigFile() ([]byte, error) {
 
 // splitConfigFileBytes take the original config file and split it to:
 // 1. core config
-// 2. variables config
-// 3. tools config
+// 2. variable config
+// 3. tool config
 // Original config should be like below:
 // ---
 // # core config
 // varFile: "" # If not empty, use the specified external variables config file
 // toolFile: "" # If not empty, use the specified external tools config file
+// pluginDir: "" # If empty, use the default value: ~/.devstream/plugins, or use -d flag to specify a directory
 // state:
-//
 //	backend: local
 //	options:
 //	  stateFile: devstream.state
@@ -188,9 +188,9 @@ func (m *Manager) loadOriginalConfigFile() ([]byte, error) {
 // ---
 // # plugins config
 // tools:
-//   - name: A-PLUGIN-NAME
-//     instanceID: default
-//     options:
+// - name: A-PLUGIN-NAME
+//   instanceID: default
+//   options:
 //     foo: bar
 //
 // See https://github.com/devstream-io/devstream/issues/596 for more details.
@@ -244,7 +244,8 @@ func (m *Manager) splitConfigFileBytes(fileBytes []byte) (coreConfig []byte, var
 func (m *Manager) checkConfigType(bytes []byte, configType string) (bool, error) {
 	result := make(map[string]interface{})
 	if err := yaml.Unmarshal(bytes, &result); err != nil {
-		log.Errorf("Please verify the format of your core config. Error: %s.", err)
+		log.Debugf("Config type checked: %s", configType)
+		log.Errorf("Please verify the format of your config file. Error: %s.", err)
 		return false, err
 	}
 	switch configType {
