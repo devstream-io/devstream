@@ -47,7 +47,7 @@ var _ = Describe("SetJobDefaultConfig func", func() {
 	When("all input is valid", func() {
 		BeforeEach(func() {
 			options["scm"] = map[string]interface{}{
-				"cloneURL": "git@54.71.232.26:30022:root/spring-demo.git",
+				"cloneURL": "git@44.33.22.11:30022:root/spring-demo.git",
 				"apiURL":   "http://www.app.com",
 			}
 		})

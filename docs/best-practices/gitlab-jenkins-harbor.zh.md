@@ -393,7 +393,7 @@ Stdout: 53e30ad85faf7e9d6d18764450bb8458db46b388b690b7c8b7a7cc6d0deb283a
 1. 修改 `/etc/hosts` 文件，添加这条记录：
 
     ```shell title="dns record"
-    54.71.232.26 gitlab.example.com jenkins.example.com harbor.example.com
+    44.33.22.11 gitlab.example.com jenkins.example.com harbor.example.com
     ```
 
 2. 修改 `CoreDNS` 的配置，在 ConfigMap `kube-system/coredns` 中添加静态解析记录：
@@ -416,12 +416,12 @@ harbor      harbor-ingress   nginx   harbor.example.com    192.168.49.2   80    
 jenkins     jenkins          nginx   jenkins.example.com   192.168.49.2   80      130m
 ```
 
-然而主机 IP 并不是192.168.49.2，比如演示环境里是 54.71.232.26。因此想要访问到 GitLab、Jenkins、Harbor 几个服务并不是太容易。
+然而主机 IP 并不是192.168.49.2，比如演示环境里是 44.33.22.11。因此想要访问到 GitLab、Jenkins、Harbor 几个服务并不是太容易。
 
 你需要在 `/etc/hosts` 里添加如下配置：
 
 ```shell title="dns records"
-54.71.232.26 gitlab.example.com
+44.33.22.11 gitlab.example.com
 192.168.49.2 jenkins.example.com harbor.example.com
 ```
 
@@ -436,7 +436,7 @@ jenkins     jenkins          nginx   jenkins.example.com   192.168.49.2   80    
 接着你还需要修改 `CoreDNS` 的配置，在 ConfigMap `kube-system/coredns` 中添加静态解析记录：
 
 1. 执行命令：`kubectl edit cm coredns -n kube-system`；
-2. 在 hosts(第20行左右) 部分添加 `54.71.232.26 gitlab.example.com` 和 `192.168.49.2 harbor.example.com` 这两条静态域名解析记录。这样 Jenkins 才能顺利通过域名访问到 GitLab 和 Harbor。
+2. 在 hosts(第20行左右) 部分添加 `44.33.22.11 gitlab.example.com` 和 `192.168.49.2 harbor.example.com` 这两条静态域名解析记录。这样 Jenkins 才能顺利通过域名访问到 GitLab 和 Harbor。
 
 这样 Jenkins 才能通过域名访问到 GitLab。
 
@@ -444,7 +444,7 @@ jenkins     jenkins          nginx   jenkins.example.com   192.168.49.2   80    
 
 ### 6.2、访问 GitLab
 
-你可以在自己的 PC 里配置 `54.71.232.26 gitlab.example.com` 静态域名解析记录，然后在浏览器里通过 `http://gitlab.example.com:30080` 访问到 GitLab：
+你可以在自己的 PC 里配置 `44.33.22.11 gitlab.example.com` 静态域名解析记录，然后在浏览器里通过 `http://gitlab.example.com:30080` 访问到 GitLab：
 
 <figure markdown>
   ![GitLab login](./gitlab-jenkins-harbor/gitlab-login.png){ width="1000" }
@@ -472,7 +472,7 @@ docker exec gitlab cat /etc/gitlab/initial_root_password | grep Password:
 kubectl port-forward service/jenkins --address 0.0.0.0 -n jenkins 32000:8080
 ```
 
-然后在自己的 PC 里配置 `54.71.232.26 jenkins.example.com` 静态域名解析记录，接着在浏览器里通过 `http://jenkins.example.com:32000` 访问到 Jenkins：
+然后在自己的 PC 里配置 `44.33.22.11 jenkins.example.com` 静态域名解析记录，接着在浏览器里通过 `http://jenkins.example.com:32000` 访问到 Jenkins：
 
 <figure markdown>
   ![Jenkins login](./gitlab-jenkins-harbor/jenkins-login.png){ width="1000" }
@@ -494,7 +494,7 @@ Jenkins 的 admin 用户初始登录密码是 `changeme`，如果你仔细看了
 kubectl port-forward service/harbor-portal --address 0.0.0.0 -n harbor 30180:80
 ```
 
-然后在自己的 PC 里配置 `54.71.232.26 harbor.example.com` 静态域名解析记录，接着在浏览器里通过 `http://harbor.example.com:30180` 访问到 Harbor：
+然后在自己的 PC 里配置 `44.33.22.11 harbor.example.com` 静态域名解析记录，接着在浏览器里通过 `http://harbor.example.com:30180` 访问到 Harbor：
 
 <figure markdown>
   ![Harbor login](./gitlab-jenkins-harbor/harbor-login.png){ width="1000" }
@@ -540,7 +540,7 @@ Harbor 的 admin 用户初始登录密码是 `Harbor12345`，你可以尝试用 
       dependsOn: [ ]
       options:
         jenkins:
-          url: http://54.71.232.26:32000
+          url: http://44.33.22.11:32000
           user: admin
           enableRestart: true
         scm:
@@ -554,13 +554,13 @@ Harbor 的 admin 用户初始登录密码是 `Harbor12345`，你可以尝试用 
             user: admin
     ```
 
-    这里需要注意的是 Jenkins 的访问地址需要使用 `http://54.71.232.26:32000`，而不能用域名，因为当前部署架构下 GitLab 并不能解析到 `jenkins.example.com` 这个域名。
-    而且 GitLab 也无法直接访问到 `http://54.71.232.26:32000` 这个地址，这里还需要通过 kubectl port-forward 的访问转发一次流量。
+    这里需要注意的是 Jenkins 的访问地址需要使用 `http://44.33.22.11:32000`，而不能用域名，因为当前部署架构下 GitLab 并不能解析到 `jenkins.example.com` 这个域名。
+    而且 GitLab 也无法直接访问到 `http://44.33.22.11:32000` 这个地址，这里还需要通过 kubectl port-forward 的访问转发一次流量。
     
     在正式的企业环境里，只需要保证 GitLab 能够访问到 Jenkins 即可，如果你的企业里可以通过配置 DNS 等方式让 GitLab 能够完成 jenkins.example.com 域名的解析，
     而且对应的 IP (和端口)可以从 GitLab 访问到，那就可以在这里配置域名。
     
-    接着我们执行如下命令保证 Jenkins 可以从 `http://54.71.232.26:32000` 访问到：
+    接着我们执行如下命令保证 Jenkins 可以从 `http://44.33.22.11:32000` 访问到：
     
     ```shell title="Port Forward"
     kubectl port-forward service/jenkins --address 0.0.0.0 -n jenkins 32000:8080
@@ -600,7 +600,7 @@ tools:
   dependsOn: [repo-scaffolding.springboot]
   options:
     jenkins:
-      url: http://54.71.232.26:32000
+      url: http://44.33.22.11:32000
       user: admin
       enableRestart: true
     scm:
