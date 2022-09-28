@@ -543,7 +543,7 @@ jenkins     jenkins          nginx   jenkins.example.com   10.18.7.29   80      
 
 !!! Tip "说明"
 
-    演示环境是一台云主机，其内部 IP 是 10.18.7.29，公网 IP 是 34.221.37.246，
+    演示环境是一台云主机，其内部 IP 是 10.18.7.29，公网 IP 是 11.22.33.44，
     所以下面很多地方也可以成内部 IP，但是为了方便，下文一律以公网 IP 为例。
 
 前面 Jenkins 和 Harbor 三个工具的配置文件里我们都设置了域名，你可以直接将这些域名与 IP 的映射关系配置到 DNS 服务器里。
@@ -553,7 +553,7 @@ jenkins     jenkins          nginx   jenkins.example.com   10.18.7.29   80      
 1. 修改 `/etc/hosts` 文件，添加这条记录：
 
     ```shell title="dns record"
-    34.221.37.246 jenkins.example.com harbor.example.com
+    11.22.33.44 jenkins.example.com harbor.example.com
     ```
 
 2. 修改 `CoreDNS` 的配置，在 ConfigMap `kube-system/coredns` 中添加静态解析记录：
@@ -574,7 +574,7 @@ jenkins     jenkins          nginx   jenkins.example.com   10.18.7.29   80      
         }
         prometheus :9153
         hosts {
-           34.221.37.246 jenkins.example.com harbor.example.com
+           11.22.33.44 jenkins.example.com harbor.example.com
            fallthrough
         }
         forward . /etc/resolv.conf {
@@ -596,7 +596,7 @@ jenkins     jenkins          nginx   jenkins.example.com   10.18.7.29   80      
 
 ### 6.3、访问 Jenkins
 
-你需要在自己的 PC 里配置 `34.221.37.246 jenkins.example.com` 静态域名解析记录，接着在浏览器里通过 `http://jenkins.example.com` 访问到 Jenkins：
+你需要在自己的 PC 里配置 `11.22.33.44 jenkins.example.com` 静态域名解析记录，接着在浏览器里通过 `http://jenkins.example.com` 访问到 Jenkins：
 
 <figure markdown>
   ![Jenkins login](./air-gapped-deployment/jenkins-login.png){ width="1000" }
@@ -614,7 +614,7 @@ Jenkins 的 admin 用户初始登录密码是 `changeme`，如果你仔细看了
 
 你可以通过 `docker login harbor.example.com:80` 命令来尝试登录 Harbor。
 
-如果需要在本地浏览器里访问 Harbor 页面，你需要在自己的 PC 里配置 `34.221.37.246 harbor.example.com` 静态域名解析记录，接着在浏览器里通过 `http://harbor.example.com` 访问到 Harbor：
+如果需要在本地浏览器里访问 Harbor 页面，你需要在自己的 PC 里配置 `11.22.33.44 harbor.example.com` 静态域名解析记录，接着在浏览器里通过 `http://harbor.example.com` 访问到 Harbor：
 
 <figure markdown>
   ![Harbor login](./air-gapped-deployment/harbor-login.png){ width="1000" }
