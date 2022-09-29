@@ -151,12 +151,12 @@ func applyUpgrade(workDir string) error {
 	if err := os.Rename(dtmTmpFilePath, dtmFilePath); err != nil {
 		return err
 	}
-	log.Debug("Dtm upgrade: rename dtm-tmp to %s successfully.", dtmFileName)
+	log.Debugf("Dtm upgrade: rename dtm-tmp to %s successfully.", dtmFileName)
 
 	if err := os.Chmod(dtmFilePath, 0755); err != nil {
 		return err
 	}
-	log.Debug("Dtm upgrade: grant %s execute permission successfully.", dtmFileName)
+	log.Debugf("Dtm upgrade: grant %s execute permission successfully.", dtmFileName)
 
 	if err := os.Remove(dtmBakFilePath); err != nil {
 		return err
