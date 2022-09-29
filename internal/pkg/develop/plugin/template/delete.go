@@ -18,12 +18,13 @@ func Delete(options map[string]interface{}) (bool, error) {
 			// TODO(dtm): Add your ExecuteOperations here.
 		},
 	}
+
+	// Execute all Operations in Operator
 	_, err := operator.Execute(plugininstaller.RawOptions(options))
 	if err != nil {
 		return false, err
 	}
 
-	// 2. return ture if all process success
 	return true, nil
 }
 `
