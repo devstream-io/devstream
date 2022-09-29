@@ -1,6 +1,6 @@
 # apache-devlake plugin
 
-TODO(dtm): Add your document here.
+//TODO(daniel-hutao): add document here after Chinese version be ready.
 
 ## Usage
 

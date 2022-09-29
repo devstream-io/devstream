@@ -9,6 +9,9 @@ var DefaultConfig string
 // plugin default config
 var (
 
+	//go:embed plugins/apache-devlake.yaml
+	ApacheDevlakeDefaultConfig string
+
 	//go:embed plugins/argocd.yaml
 	ArgocdDefaultConfig string
 
@@ -95,6 +98,7 @@ var (
 )
 
 var pluginDefaultConfigs = map[string]string{
+	"apache-devlake":       ApacheDevlakeDefaultConfig,
 	"argocd":               ArgocdDefaultConfig,
 	"argocdapp":            ArgocdappDefaultConfig,
 	"artifactory":          ArtifactoryDefaultConfig,

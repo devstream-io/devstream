@@ -7,4 +7,28 @@ tools:
   dependsOn: [ ]
   # options for the plugin
   options:
-  # TODO(dtm): Add your default config here.
+    # Helm repo information, this section is optional
+    repo:
+      # name of the Helm repo
+      name: apache-devlake
+      # url of the Helm repo
+      url: ""
+    # Helm chart information
+    chart:
+      # local path of the chart; if chartPath != "", repo.name and repo.url will be ignored. e.g. "foo.tgz", "./foo.tgz", "/tmp/foo.tgz"
+      chartPath: ""
+      # name of the chart
+      chartName: apache-devlake/devlake
+      # release name of the chart
+      releaseName: devlake
+      # k8s namespace where Apache DevLake will be installed
+      namespace: devlake
+      # whether to wait for the release to be deployed or not
+      wait: true
+      # the time to wait for any individual Kubernetes operation (like Jobs for hooks). This defaults to 5m0s
+      timeout: 5m
+      # whether to perform a CRD upgrade during installation
+      upgradeCRDs: true
+      # custom configuration (Optional)
+      valuesYaml: |
+        foo: bar
