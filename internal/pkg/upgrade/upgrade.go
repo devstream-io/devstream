@@ -17,12 +17,14 @@ import (
 
 const (
 	assetName      = "dtm-" + runtime.GOOS + "-" + runtime.GOARCH
-	dtmFileName    = "dtm"
 	dtmTmpFileName = "dtm-tmp"
 	dtmBakFileName = "dtm-bak"
 	dtmOrg         = "devstream-io"
 	dtmRepo        = "devstream"
 )
+
+// since dtm file name can be changeable by user,so it should be a variable to get current dtm file name
+var dtmFileName string
 
 // Upgrade updates dtm binary file to the latest release version
 func Upgrade(continueDirectly bool) error {
@@ -35,6 +37,16 @@ func Upgrade(continueDirectly bool) error {
 		return err
 	}
 	log.Debugf("Dtm upgrade: work path is : %v", workDir)
+
+	// get dtm bin file path like `/usr/local/bin/dtm-linux-amd64`
+	binFilePath, err := os.Executable()
+	if err != nil {
+		return err
+	}
+	// get dtm bin file name like `dtm-linux-amd64`
+	_, dtmFileName = filepath.Split(binFilePath)
+
+	log.Debugf("Dtm upgrade: dtm file name is : %v", dtmFileName)
 
 	// 1. Get the latest release version
 	ghOptions := &git.RepoInfo{
@@ -55,7 +67,7 @@ func Upgrade(continueDirectly bool) error {
 	}
 	log.Debugf("Dtm upgrade: got latest release version: %v", ltstReleaseTagName)
 
-	// 2. Chech whether Upgrade is needed
+	// 2. Check whether Upgrade is needed
 	// Use Semantic Version to judge. "https://semver.org/"
 	ok, err := checkUpgrade(version.Version, ltstReleaseTagName)
 	if err != nil {
@@ -121,9 +133,9 @@ func parseVersion(old, new string) (*semver.Version, *semver.Version, error) {
 }
 
 // applyUpgrade use os.Rename replace old version dtm with the latest one
-// (1) rename `dtm` to `dtm-bak`.
-// (2) rename `dtm-tmp` to `dtm`.
-// (3) grant new `dtm` execute permission.
+// (1) rename current dtm file name to `dtm-bak`.
+// (2) rename `dtm-tmp` to current dtm file name.
+// (3) grant new dtm file execute permission.
 // (4) remove `dtm-bak` binary file.
 // TODO(hxcGit): Support for rollback in case of error in intermediate steps
 func applyUpgrade(workDir string) error {
@@ -134,17 +146,17 @@ func applyUpgrade(workDir string) error {
 	if err := os.Rename(dtmFilePath, dtmBakFilePath); err != nil {
 		return err
 	}
-	log.Debug("Dtm upgrade: rename dtm to dtm-bak successfully.")
+	log.Debugf("Dtm upgrade: rename %s to dtm-bak successfully.", dtmFileName)
 
 	if err := os.Rename(dtmTmpFilePath, dtmFilePath); err != nil {
 		return err
 	}
-	log.Debug("Dtm upgrade: rename dtm-tmp to dtm successfully.")
+	log.Debugf("Dtm upgrade: rename dtm-tmp to %s successfully.", dtmFileName)
 
 	if err := os.Chmod(dtmFilePath, 0755); err != nil {
 		return err
 	}
-	log.Debug("Dtm upgrade: grant dtm execute permission successfully.")
+	log.Debugf("Dtm upgrade: grant %s execute permission successfully.", dtmFileName)
 
 	if err := os.Remove(dtmBakFilePath); err != nil {
 		return err
