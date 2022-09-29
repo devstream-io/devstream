@@ -39,12 +39,12 @@ func Upgrade(continueDirectly bool) error {
 	log.Debugf("Dtm upgrade: work path is : %v", workDir)
 
 	// get dtm bin file path like `/usr/local/bin/dtm-linux-amd64`
-	binFileDir, err := os.Executable()
+	binFilePath, err := os.Executable()
 	if err != nil {
 		return err
 	}
 	// get dtm bin file name like `dtm-linux-amd64`
-	_, dtmFileName = filepath.Split(binFileDir)
+	_, dtmFileName = filepath.Split(binFilePath)
 
 	log.Debugf("Dtm upgrade: dtm file name is : %v", dtmFileName)
 
