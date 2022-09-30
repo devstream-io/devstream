@@ -19,6 +19,8 @@ tools:
       chartPath: ""
       # name of the chart
       chartName: jenkins/jenkins
+      # version of the chart
+      version: ""
       # k8s namespace where jenkins will be installed
       namespace: jenkins
       # whether to wait for the release to be deployed or not
