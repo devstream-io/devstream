@@ -24,9 +24,6 @@ var (
 	//go:embed plugins/ci-generic.yaml
 	CiGenericDefaultConfig string
 
-	//go:embed plugins/devlake.yaml
-	DevlakeDefaultConfig string
-
 	//go:embed plugins/githubactions-golang.yaml
 	GithubactionsGolangDefaultConfig string
 
@@ -103,7 +100,6 @@ var pluginDefaultConfigs = map[string]string{
 	"argocdapp":            ArgocdappDefaultConfig,
 	"artifactory":          ArtifactoryDefaultConfig,
 	"ci-generic":           CiGenericDefaultConfig,
-	"devlake":              DevlakeDefaultConfig,
 	"githubactions-golang": GithubactionsGolangDefaultConfig,
 	"githubactions-nodejs": GithubactionsNodejsDefaultConfig,
 	"githubactions-python": GithubactionsPythonDefaultConfig,
