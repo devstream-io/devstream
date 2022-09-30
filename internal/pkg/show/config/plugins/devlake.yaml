@@ -1,6 +1,6 @@
 tools:
 # name of the tool
-- name: apache-devlake
+- name: devlake
   # id of the tool instance
   instanceID: default
   # format: name.instanceID; If specified, dtm will make sure the dependency is applied first before handling this tool.
@@ -10,18 +10,18 @@ tools:
     # Helm repo information, this section is optional
     repo:
       # name of the Helm repo
-      name: apache-devlake
+      name: devlake
       # url of the Helm repo
-      url: ""
+      url: https://merico-dev.github.io/devlake-helm-chart
     # Helm chart information
     chart:
       # local path of the chart; if chartPath != "", repo.name and repo.url will be ignored. e.g. "foo.tgz", "./foo.tgz", "/tmp/foo.tgz"
       chartPath: ""
       # name of the chart
-      chartName: apache-devlake/devlake
+      chartName: devlake/devlake
       # release name of the chart
       releaseName: devlake
-      # k8s namespace where Apache DevLake will be installed
+      # k8s namespace where DevLake will be installed
       namespace: devlake
       # whether to wait for the release to be deployed or not
       wait: true
@@ -31,4 +31,4 @@ tools:
       upgradeCRDs: true
       # custom configuration (Optional)
       valuesYaml: |
-        foo: bar
+        replicaCount: 1

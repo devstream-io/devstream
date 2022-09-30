@@ -1,4 +1,4 @@
-package apachedevlake
+package devlake
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
@@ -6,16 +6,14 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func Create(options map[string]interface{}) (map[string]interface{}, error) {
+func Read(options map[string]interface{}) (map[string]interface{}, error) {
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			helm.SetDefaultConfig(&defaultHelmConfig),
 			helm.Validate,
 		},
-		ExecuteOperations:   helm.DefaultCreateOperations,
-		TerminateOperations: helm.DefaultTerminateOperations,
-		GetStateOperation:   helm.GetPluginAllState,
+		GetStateOperation: helm.GetPluginAllState,
 	}
 
 	// Execute all Operations in Operator

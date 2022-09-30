@@ -1,34 +1,34 @@
 package main
 
 import (
-	"github.com/devstream-io/devstream/internal/pkg/plugin/apachedevlake"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/devlake"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 // NAME is the name of this DevStream plugin.
-const NAME = "apache-devlake"
+const NAME = "devlake"
 
 // Plugin is the type used by DevStream core. It's a string.
 type Plugin string
 
-// Create implements the create of apache-devlake.
+// Create implements the create of devlake.
 func (p Plugin) Create(options map[string]interface{}) (map[string]interface{}, error) {
-	return apachedevlake.Create(options)
+	return devlake.Create(options)
 }
 
-// Update implements the update of apache-devlake.
+// Update implements the update of devlake.
 func (p Plugin) Update(options map[string]interface{}) (map[string]interface{}, error) {
-	return apachedevlake.Update(options)
+	return devlake.Update(options)
 }
 
-// Delete implements the delete of apache-devlake.
+// Delete implements the delete of devlake.
 func (p Plugin) Delete(options map[string]interface{}) (bool, error) {
-	return apachedevlake.Delete(options)
+	return devlake.Delete(options)
 }
 
-// Read implements the read of apache-devlake.
+// Read implements the read of devlake.
 func (p Plugin) Read(options map[string]interface{}) (map[string]interface{}, error) {
-	return apachedevlake.Read(options)
+	return devlake.Read(options)
 }
 
 // DevStreamPlugin is the exported variable used by the DevStream core.

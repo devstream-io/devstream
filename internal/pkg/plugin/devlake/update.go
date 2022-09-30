@@ -1,25 +1,27 @@
-package apachedevlake
+package devlake
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/helm"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func Delete(options map[string]interface{}) (bool, error) {
+func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			helm.SetDefaultConfig(&defaultHelmConfig),
 			helm.Validate,
 		},
-		ExecuteOperations: helm.DefaultDeleteOperations,
+		ExecuteOperations: helm.DefaultUpdateOperations,
+		GetStateOperation: helm.GetPluginAllState,
 	}
 
 	// Execute all Operations in Operator
-	_, err := operator.Execute(plugininstaller.RawOptions(options))
+	status, err := operator.Execute(plugininstaller.RawOptions(options))
 	if err != nil {
-		return false, err
+		return nil, err
 	}
-
-	return true, nil
+	log.Debugf("Return map: %v", status)
+	return status, nil
 }

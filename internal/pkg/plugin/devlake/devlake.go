@@ -1,4 +1,4 @@
-package apachedevlake
+package devlake
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/helm"
@@ -10,7 +10,7 @@ import (
 var defaultHelmConfig = helm.Options{
 	Chart: helmCommon.Chart{
 		ChartPath:   "",
-		ChartName:   "apache-devlake/devlake",
+		ChartName:   "devlake/devlake",
 		Timeout:     "5m",
 		Wait:        types.Bool(true),
 		UpgradeCRDs: types.Bool(true),
@@ -18,7 +18,7 @@ var defaultHelmConfig = helm.Options{
 		Namespace:   "devlake",
 	},
 	Repo: helmCommon.Repo{
-		URL:  "https://apache-devlake.github.io/apache-devlake-helm",
-		Name: "apache-devlake",
+		URL:  "https://merico-dev.github.io/devlake-helm-chart",
+		Name: "devlake",
 	},
 }
