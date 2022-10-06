@@ -30,14 +30,14 @@
 
 !!! hint "提示"
 
-    上述插件不是必选集，你可以根据实际情况灵活调整。比如你本地已经有 GitLab 环境了，那么你可以果断 `gitlab-ce-docker` 插件。
+    上述插件不是必选集，你可以根据实际情况灵活调整。比如你本地已经有 GitLab 环境了，那么你可以果断忽略 `gitlab-ce-docker` 插件。
 
 上述插件的依赖关系为：
 
 - jenkins-pipeline -> jenkins, gitlab-ce-docker, repo-scaffolding, harbor
 - repo-scaffolding -> gitlab-ce-docker
 
-!!! note "注意"
+!!! note "说明"
 
     A -> B 表示的是 A 依赖 B。
 
@@ -96,7 +96,7 @@
 
 === "gitlab-ce-docker 插件"
 
-    gitlab-ce-docker 插件的配置如下：
+    gitlab-ce-docker 插件的配置如下（该插件的详细文档参见[ gitlab-ce-docker 插件文档](../plugins/gitlab-ce-docker.zh.md)）：
     
     ```yaml title="Plugin Config with gitlab-ce-docker"
     - name: gitlab-ce-docker
@@ -111,12 +111,10 @@
         rmDataAfterDelete: false
         imageTag: "rc"
     ```
-    
-    关于 gitlab-ce-docker 插件的详细文档可以看[ gitlab-ce-docker 插件文档](../plugins/gitlab-ce-docker.zh.md)。
 
 === "jenkins 插件"
 
-    jenkins 插件的配置如下：
+    jenkins 插件的配置如下（该插件的详细文档参见[ jenkins 插件文档](../plugins/jenkins.zh.md)）：
     
     ```yaml title="Plugin Config with jenkins"
     - name: jenkins
@@ -160,12 +158,10 @@
             JCasC:
               defaultConfig: true
     ```
-    
-    关于 jenkins 插件的详细文档可以看[ jenkins 插件文档](../plugins/jenkins.zh.md)。
 
 === "harbor 插件"
 
-    harbor 插件的配置如下：
+    harbor 插件的配置如下（该插件的详细文档参见[ harbor 插件文档](../plugins/harbor.zh.md)）：
     
     ```yaml title="Plugin Config with harbor"
     - name: harbor
@@ -207,8 +203,6 @@
                   accessMode: ReadWriteOnce
                   size: 1Gi
     ```
-    
-    关于 harbor 插件的详细文档可以看[ harbor 插件文档](../plugins/harbor.zh.md)。
 
 ## 5、开始部署 GitLab + Jenkins + Harbor 工具链
 
@@ -401,42 +395,44 @@ Stdout: 53e30ad85faf7e9d6d18764450bb8458db46b388b690b7c8b7a7cc6d0deb283a
     1. 执行命令：`kubectl edit cm coredns -n kube-system`；
     2. 在 hosts(第20行左右) 部分添加和 /etc/hosts 一样的记录。
 
-由于演示环境是 minikube 方式部署的 k8s 单节点集群，所以 DNS 问题相对复杂一些。首先你需要获取 minikube ip：
+??? tip "minikube 环境额外配置内容"
 
-```shell
-$ minikube ip
-192.168.49.2
-```
+    如果你的环境是 docker-in-docker 的方式部署的 k8s 集群，比如用了 minikube，这时候 DNS 问题就会相对复杂一些。首先你需要获取 minikube ip：
 
-如果你执行 `kubectl get ingress -A` 命令，可以看到 Ingress 用的 IP 地址就是这个：
+    ```shell
+    $ minikube ip
+    192.168.49.2
+    ```
 
-```shell
-NAMESPACE   NAME             CLASS   HOSTS                 ADDRESS        PORTS   AGE
-harbor      harbor-ingress   nginx   harbor.example.com    192.168.49.2   80      129m
-jenkins     jenkins          nginx   jenkins.example.com   192.168.49.2   80      130m
-```
+    如果你执行 `kubectl get ingress -A` 命令，可以看到 Ingress 用的 IP 地址就是这个：
+    
+    ```shell
+    NAMESPACE   NAME             CLASS   HOSTS                 ADDRESS        PORTS   AGE
+    harbor      harbor-ingress   nginx   harbor.example.com    192.168.49.2   80      129m
+    jenkins     jenkins          nginx   jenkins.example.com   192.168.49.2   80      130m
+    ```
 
-然而主机 IP 并不是192.168.49.2，比如演示环境里是 44.33.22.11。因此想要访问到 GitLab、Jenkins、Harbor 几个服务并不是太容易。
+    然而主机 IP 并不是192.168.49.2，比如是 44.33.22.11。因此想要访问到 GitLab、Jenkins、Harbor 几个服务并不是太容易。
 
-你需要在 `/etc/hosts` 里添加如下配置：
+    你需要在 `/etc/hosts` 里添加如下配置：
+    
+    ```shell title="dns records"
+    44.33.22.11 gitlab.example.com
+    192.168.49.2 jenkins.example.com harbor.example.com
+    ```
 
-```shell title="dns records"
-44.33.22.11 gitlab.example.com
-192.168.49.2 jenkins.example.com harbor.example.com
-```
+    因为 GitLab 是使用 docker 方式部署的，而 Jenkins 和 Harbor 是通过 k8s 方式部署，然后通过 Ingress 方式暴露服务，所以这里的 IP 并不一样。
 
-因为 GitLab 是使用 docker 方式部署的，而 Jenkins 和 Harbor 是通过 k8s 方式部署，然后通过 Ingress 方式暴露服务，所以这里的 IP 并不一样。
+    这时候在当前主机上，就可以分别通过如下地址访问到 GitLab、Jenkins 和 Harbor 了：
 
-这时候在当前主机上，就可以分别通过如下地址访问到 GitLab、Jenkins 和 Harbor 了：
+    - `GitLab`: http://gitlab.example.com:30080
+    - `Jenkins`: http://jenkins.example.com
+    - `Harbor`: http://harbor.example.com
 
-- `GitLab`: http://gitlab.example.com:30080
-- `Jenkins`: http://jenkins.example.com
-- `Harbor`: http://harbor.example.com
+    接着你还需要修改 `CoreDNS` 的配置，在 ConfigMap `kube-system/coredns` 中添加静态解析记录：
 
-接着你还需要修改 `CoreDNS` 的配置，在 ConfigMap `kube-system/coredns` 中添加静态解析记录：
-
-1. 执行命令：`kubectl edit cm coredns -n kube-system`；
-2. 在 hosts(第20行左右) 部分添加 `44.33.22.11 gitlab.example.com` 和 `192.168.49.2 harbor.example.com` 这两条静态域名解析记录。这样 Jenkins 才能顺利通过域名访问到 GitLab 和 Harbor。
+    1. 执行命令：`kubectl edit cm coredns -n kube-system`；
+    2. 在 hosts(第20行左右) 部分添加 `44.33.22.11 gitlab.example.com` 和 `192.168.49.2 harbor.example.com` 这两条静态域名解析记录。这样 Jenkins 才能顺利通过域名访问到 GitLab 和 Harbor。
 
 这样 Jenkins 才能通过域名访问到 GitLab。
 
@@ -466,13 +462,17 @@ docker exec gitlab cat /etc/gitlab/initial_root_password | grep Password:
 
 ### 6.3、访问 Jenkins
 
-前面你可能已经通过 `curl http://jenkins.example.com` 在主机内验证了 Jenkins 的网络连通性，但是远程想通过域名访问 Jenkins 并不容易。这时候你可以通过执行如下命令暴露 Jenkins 服务：
+前面你可能已经通过 `curl http://jenkins.example.com` 在主机内验证了 Jenkins 的网络连通性，想要远程通过域名访问 Jenkins，你需要在自己的 PC 里配置 `44.33.22.11 jenkins.example.com` 静态域名解析记录。
 
-```shell title="Port Forward"
-kubectl port-forward service/jenkins --address 0.0.0.0 -n jenkins 32000:8080
-```
+??? tip "minikube 环境额外配置内容"
 
-然后在自己的 PC 里配置 `44.33.22.11 jenkins.example.com` 静态域名解析记录，接着在浏览器里通过 `http://jenkins.example.com:32000` 访问到 Jenkins：
+    minikube 环境想要远程通过域名访问 Jenkins 并不容易。这时候你可以通过执行如下命令暴露 Jenkins 服务：
+    
+    ```shell title="Port Forward"
+    kubectl port-forward service/jenkins --address 0.0.0.0 -n jenkins 32000:8080
+    ```
+
+接着在浏览器里通过 `http://jenkins.example.com:32000` 就可以访问到 Jenkins 了：
 
 <figure markdown>
   ![Jenkins login](./gitlab-jenkins-harbor/jenkins-login.png){ width="1000" }
@@ -488,13 +488,18 @@ Jenkins 的 admin 用户初始登录密码是 `changeme`，如果你仔细看了
 
 ### 6.4、访问 Harbor
 
-前面你可能已经通过 `curl http://harbor.example.com` 在主机内验证了 Harbor 的网络连通性，同样你可以通过 `docker login harbor.example.com:80` 命令来尝试登录 Harbor。不过远程通过域名访问 Harbor 同样不容易。这时候你可以通过执行如下命令暴露 Harbor 服务：
+前面你可能已经通过 `curl http://harbor.example.com` 在主机内验证了 Harbor 的网络连通性，同样你可以通过 `docker login harbor.example.com:80` 命令来尝试登录 Harbor。
+然后在自己的 PC 里配置 `44.33.22.11 harbor.example.com` 静态域名解析记录。
 
-```shell title="Port Forward"
-kubectl port-forward service/harbor-portal --address 0.0.0.0 -n harbor 30180:80
-```
+??? tip "minikube 环境额外配置内容"
 
-然后在自己的 PC 里配置 `44.33.22.11 harbor.example.com` 静态域名解析记录，接着在浏览器里通过 `http://harbor.example.com:30180` 访问到 Harbor：
+    minikube 环境想要远程通过域名访问 Harbor 同样不容易。这时候你可以通过执行如下命令暴露 Harbor 服务：
+
+    ```shell title="Port Forward"
+    kubectl port-forward service/harbor-portal --address 0.0.0.0 -n harbor 30180:80
+    ```
+
+接着你可以在浏览器里通过 `http://harbor.example.com:30180` 访问到 Harbor：
 
 <figure markdown>
   ![Harbor login](./gitlab-jenkins-harbor/harbor-login.png){ width="1000" }
@@ -503,7 +508,10 @@ kubectl port-forward service/harbor-portal --address 0.0.0.0 -n harbor 30180:80
 
 Harbor 的 admin 用户初始登录密码是 `Harbor12345`，你可以尝试用 `admin/Harbor12345` 登录 Harbor 检查功能是否正常，不过你同样不需要在 Harbor 上进行任何额外的操作。
 
-// TODO(daniel-hutao): Harbor dashboard 截图
+<figure markdown>
+  ![Harbor dashboard](./gitlab-jenkins-harbor/harbor-dashboard.png){ width="1000" }
+  <figcaption>Harbor dashboard</figcaption>
+</figure>
 
 ## 7、准备流水线相关插件的配置（plugin config）
 
@@ -511,7 +519,7 @@ Harbor 的 admin 用户初始登录密码是 `Harbor12345`，你可以尝试用 
 
 === "repo-scaffolding 插件"
 
-    repo-scaffolding 插件的配置如下：
+    repo-scaffolding 插件的配置如下（该插件的详细文档参见[ repo-scaffolding 插件文档](../plugins/repo-scaffolding.zh.md)）：
     
     ```yaml
     - name: repo-scaffolding
@@ -529,10 +537,10 @@ Harbor 的 admin 用户初始登录密码是 `Harbor12345`，你可以尝试用 
           repo: dtm-repo-scaffolding-java-springboot
           repoType: github
     ```
-    
-    关于 repo-scaffolding 插件的详细文档可以看[ repo-scaffolding 插件文档](../plugins/repo-scaffolding.zh.md)。
 
 === "jenkins-pipeline 插件"
+
+    jenkins-pipeline 插件的配置如下（该插件的详细文档参见[ jenkins-pipeline 插件文档](../plugins/jenkins-pipeline.zh.md)）：
 
     ```yaml
     - name: jenkins-pipeline
@@ -554,14 +562,18 @@ Harbor 的 admin 用户初始登录密码是 `Harbor12345`，你可以尝试用 
             user: admin
     ```
 
+!!! Warning "注意"
+
     这里需要注意的是 Jenkins 的访问地址需要使用 `http://44.33.22.11:32000`，而不能用域名，因为当前部署架构下 GitLab 并不能解析到 `jenkins.example.com` 这个域名。
-    而且 GitLab 也无法直接访问到 `http://44.33.22.11:32000` 这个地址，这里还需要通过 kubectl port-forward 的访问转发一次流量。
-    
+    另外 minikube 环境里 GitLab 也无法直接访问到 `http://44.33.22.11:32000` 这个地址，这里还需要通过 kubectl port-forward 的访问转发一次流量。
+
     在正式的企业环境里，只需要保证 GitLab 能够访问到 Jenkins 即可，如果你的企业里可以通过配置 DNS 等方式让 GitLab 能够完成 jenkins.example.com 域名的解析，
     而且对应的 IP (和端口)可以从 GitLab 访问到，那就可以在这里配置域名。
+
+??? tip "minikube 环境额外配置内容"
     
-    接着我们执行如下命令保证 Jenkins 可以从 `http://44.33.22.11:32000` 访问到：
-    
+    你可以执行如下命令保证 Jenkins 可以从 `http://44.33.22.11:32000` 访问到：
+
     ```shell title="Port Forward"
     kubectl port-forward service/jenkins --address 0.0.0.0 -n jenkins 32000:8080
     ```
