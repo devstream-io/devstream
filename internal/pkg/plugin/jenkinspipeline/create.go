@@ -12,7 +12,6 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			jenkins.SetJobDefaultConfig,
-			jenkins.SetHarborAuth,
 			jenkins.ValidateJobConfig,
 		},
 		ExecuteOperations: plugininstaller.ExecuteOperations{

@@ -43,6 +43,10 @@ var basicPlugins = []*JenkinsPlugin{
 		Name:    "workflow-aggregator",
 		Version: "581.v0c46fa_697ffd",
 	},
+	{
+		Name:    "build-user-vars-plugin",
+		Version: "1.9",
+	},
 }
 
 //go:embed tpl/plugins.tpl.groovy

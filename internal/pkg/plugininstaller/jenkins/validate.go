@@ -1,7 +1,6 @@
 package jenkins
 
 import (
-	"encoding/base64"
 	"errors"
 	"fmt"
 	"math/rand"
@@ -24,7 +23,6 @@ const (
 	defaultAdminSecretName         = "jenkins"
 	defautlAdminSecretUserName     = "jenkins-admin-user"
 	defautlAdminSecretUserPassword = "jenkins-admin-password"
-	defaultImageProject            = "library"
 )
 
 // SetJobDefaultConfig config default fields for usage
@@ -61,12 +59,15 @@ func SetJobDefaultConfig(options plugininstaller.RawOptions) (plugininstaller.Ra
 		opts.Jenkins.Namespace = "jenkins"
 	}
 
-	if opts.Pipeline.JobName == "" {
-		opts.Pipeline.JobName = projectRepo.Repo
-	}
+	// config pipeline default value
+	opts.Pipeline.setDefaultValue(projectRepo.Repo, opts.Jenkins.Namespace)
 
 	// config ci related values
-	opts.buildCIConfig()
+	ciConfig, err := opts.buildCIConfig()
+	if err != nil {
+		return nil, err
+	}
+	opts.CIConfig = ciConfig
 
 	// config jenkins connection info
 	basicAuth, err := buildAdminToken(opts.Jenkins.User)
@@ -90,7 +91,7 @@ func ValidateJobConfig(options plugininstaller.RawOptions) (plugininstaller.RawO
 	switch opts.ProjectRepo.RepoType {
 	case "gitlab":
 		if os.Getenv(gitlab.TokenEnvKey) == "" {
-			return nil, fmt.Errorf("jenkins-pipeline github should set env %s", gitlab.TokenEnvKey)
+			return nil, fmt.Errorf("jenkins-pipeline gitlab should set env %s", gitlab.TokenEnvKey)
 		}
 	case "github":
 		if os.Getenv(github.TokenEnvKey) == "" {
@@ -156,54 +157,4 @@ func generateRandomSecretToken() string {
 	b := make([]byte, 32)
 	rand.Read(b)
 	return fmt.Sprintf("%x", b)[:32]
-}
-
-func SetHarborAuth(options plugininstaller.RawOptions) (plugininstaller.RawOptions, error) {
-	opts, err := newJobOptions(options)
-	if err != nil {
-		return nil, err
-	}
-
-	namespace := opts.Jenkins.Namespace
-	imageRepoUrl := opts.Pipeline.getImageHost()
-	imageRepoUser := opts.Pipeline.ImageRepo.User
-
-	imageRepoPasswd := os.Getenv("IMAGE_REPO_PASSWORD")
-	if imageRepoPasswd == "" {
-		return nil, fmt.Errorf("the environment variable IMAGE_REPO_PASSWORD is not set")
-	}
-
-	return options, createDockerSecret(namespace, imageRepoUrl, imageRepoUser, imageRepoPasswd)
-}
-
-func createDockerSecret(namespace, url, username, password string) error {
-	tmpStr := fmt.Sprintf("%s:%s", username, password)
-	authStr := base64.StdEncoding.EncodeToString([]byte(tmpStr))
-	log.Debugf("Auth string: %s.", authStr)
-
-	configJsonStrTpl := `{
-  "auths": {
-    "%s": {
-      "auth": "%s"
-    }
-  }
-}`
-	configJsonStr := fmt.Sprintf(configJsonStrTpl, url, authStr)
-	log.Debugf("config.json: %s.", configJsonStr)
-
-	// create secret in k8s
-	client, err := k8s.NewClient()
-	if err != nil {
-		return err
-	}
-
-	data := map[string][]byte{
-		"config.json": []byte(configJsonStr),
-	}
-	_, err = client.ApplySecret("docker-config", namespace, data, nil)
-	if err != nil {
-		return err
-	}
-	log.Infof("Secret %s/%s has been created.", namespace, "docker-config")
-	return nil
 }

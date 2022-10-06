@@ -16,4 +16,28 @@ unclassified:
       configs:
       - credentialsId: "[[ .CredentialID ]]"
       hookUrl: "[[ .JenkinsURL ]]/github-webhook/"
-[[ end -]]
+[[- end ]]
+[[ if .SonarqubeURL ]]
+  sonarGlobalConfiguration:
+    buildWrapperEnabled: true
+    installations:
+    - credentialsId: "[[ .SonarTokenCredentialID ]]"
+      name: "[[ .SonarqubeName ]]"
+      serverUrl: "[[ .SonarqubeURL ]]"
+      triggers:
+        skipScmCause: false
+        skipUpstreamCause: false
+[[- end ]]
+  globalLibraries:
+    libraries:
+    - defaultVersion: "main"
+      implicit: true
+      name: "devstreamShareLib"
+      retriever:
+        modernSCM:
+          scm:
+            git:
+              id: "56904e9b-d14b-4932-b3b3-21bc11c2cb86"
+              remote: "https://github.com/devstream-io/jenkins-share-library.git"
+              traits:
+              - "gitBranchDiscovery"

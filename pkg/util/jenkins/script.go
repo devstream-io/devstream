@@ -43,6 +43,10 @@ type RepoCascConfig struct {
 	// github variables
 	JenkinsURL  string
 	SecretToken string
+	// sonarqube variables
+	SonarqubeURL           string
+	SonarqubeName          string
+	SonarTokenCredentialID string
 }
 
 // all jenkins client return error format is host: error detail

@@ -11,6 +11,7 @@ import (
 
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/common"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/jenkins/plugins"
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 	"github.com/devstream-io/devstream/pkg/util/jenkins/dingtalk"
 )
@@ -135,7 +136,7 @@ var _ = Describe("JobOptions struct", func() {
 			Pipeline: Pipeline{
 				JobName:         jobName,
 				JenkinsfilePath: jenkinsFilePath,
-				ImageRepo:       ImageRepo{},
+				ImageRepo:       &plugins.ImageRepoJenkinsConfig{},
 			},
 			BasicAuth:   basicAuth,
 			ProjectRepo: projectRepo,
@@ -172,7 +173,7 @@ var _ = Describe("JobOptions struct", func() {
 	Context("buildWebhookInfo method", func() {
 		It("should work normal", func() {
 			webHookInfo := jobOptions.buildWebhookInfo()
-			Expect(webHookInfo.Address).Should(Equal(fmt.Sprintf("%s/project/%s", jobOptions.Jenkins.URL, jobOptions.Pipeline.getJobPath())))
+			Expect(webHookInfo.Address).Should(Equal(fmt.Sprintf("%s/project/%s", jobOptions.Jenkins.URL, jobOptions.Pipeline.JobName)))
 			Expect(webHookInfo.SecretToken).Should(Equal(secretToken))
 		})
 	})
@@ -206,9 +207,10 @@ var _ = Describe("JobOptions struct", func() {
 				jobOptions.Pipeline.JenkinsfilePath = "test/local"
 			})
 			It("should use localPath", func() {
-				jobOptions.buildCIConfig()
-				Expect(jobOptions.CIConfig.LocalPath).Should(Equal(jobOptions.Pipeline.JenkinsfilePath))
-				Expect(jobOptions.CIConfig.RemoteURL).Should(BeEmpty())
+				ciConfig, err := jobOptions.buildCIConfig()
+				Expect(err).Error().ShouldNot(HaveOccurred())
+				Expect(ciConfig.LocalPath).Should(Equal(jobOptions.Pipeline.JenkinsfilePath))
+				Expect(ciConfig.RemoteURL).Should(BeEmpty())
 			})
 		})
 		When("jenkinsfilePath is remote url", func() {
@@ -216,12 +218,28 @@ var _ = Describe("JobOptions struct", func() {
 				jobOptions.Pipeline.JenkinsfilePath = "http://www.test.com/Jenkinsfile"
 			})
 			It("should use remote url", func() {
-				jobOptions.buildCIConfig()
-				Expect(jobOptions.CIConfig.LocalPath).Should(BeEmpty())
-				Expect(jobOptions.CIConfig.RemoteURL).Should(Equal(jobOptions.CIConfig.RemoteURL))
-				Expect(string(jobOptions.CIConfig.Type)).Should(Equal("jenkins"))
+				ciConfig, err := jobOptions.buildCIConfig()
+				Expect(err).Error().ShouldNot(HaveOccurred())
+				Expect(ciConfig.LocalPath).Should(BeEmpty())
+				Expect(ciConfig.RemoteURL).Should(Equal(jobOptions.Pipeline.JenkinsfilePath))
+				Expect(string(ciConfig.Type)).Should(Equal("jenkins"))
 			})
 		})
 	})
 
+	Context("extractJenkinsPlugins method", func() {
+		When("params is right", func() {
+			BeforeEach(func() {
+				jobOptions.ProjectRepo.RepoType = "gitlab"
+				jobOptions.Pipeline = Pipeline{
+					JobName:         jobName,
+					JenkinsfilePath: jenkinsFilePath,
+				}
+			})
+			It("should return pluginConfig", func() {
+				configs := jobOptions.extractJenkinsPlugins()
+				Expect(len(configs)).Should(Equal(1))
+			})
+		})
+	})
 })

@@ -1,0 +1,14 @@
+setting.configNotifyDingtalk([
+    'robot_id': "[[ .DingtalkRobotID ]]",
+    'at_user': "[[ .DingtalkAtUser ]]"
+])
+setting.configImageRepo([
+    'image_repo': "[[ .ImageRepositoryURL ]]",
+    'image_auth_secret_name': "[[ .ImageAuthSecretName ]]",
+])
+
+runPipeline([
+    'test_enable': true,
+    'name': "[[ .AppName ]]",
+    'sonarqube_enable': [[ .SonarqubeEnable ]],
+])
