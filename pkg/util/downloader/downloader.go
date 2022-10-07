@@ -42,7 +42,7 @@ func Download(url, filename, targetDir string) (int64, error) {
 			log.Debugf("download create file failed: %s", err)
 		}
 	}()
-	return FetchContentFromURLAndSetUpProgressBar(url, f)
+	return downloadProgress(url, f)
 }
 
 func FetchContentFromURL(url string) ([]byte, error) {
@@ -86,7 +86,8 @@ func SetUpProgressBar(resp *http.Response, downFile io.Writer) (int64, error) {
 	return io.Copy(writer, source)
 }
 
-func FetchContentFromURLAndSetUpProgressBar(url string, dst io.Writer) (int64, error) {
+// download from the URL to the dst and watch the progress
+func downloadProgress(url string, dst io.Writer) (int64, error) {
 	resp, err := http.Get(url)
 
 	// check response error
