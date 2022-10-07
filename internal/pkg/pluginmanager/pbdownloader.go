@@ -5,14 +5,12 @@ package pluginmanager
 
 import (
 	"fmt"
-	"io"
 	"net/http"
 	"os"
 	"path/filepath"
-	"strconv"
 	"time"
 
-	"github.com/cheggaaa/pb"
+	"github.com/devstream-io/devstream/pkg/util/downloader"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
@@ -60,7 +58,7 @@ func (pd *PbDownloadClient) download(pluginsDir, pluginFilename, version string)
 
 		defer downFile.Close()
 		// create progress bar when reading response body
-		errSetup := setUpProgressBar(resp, downFile)
+		_, errSetup := downloader.SetUpProgressBar(resp, downFile)
 		if errSetup != nil {
 			log.Error(errSetup)
 			return errSetup
@@ -78,31 +76,6 @@ func (pd *PbDownloadClient) download(pluginsDir, pluginFilename, version string)
 		log.Error(err)
 		return err
 	}
-	return nil
-}
-
-// setUpProgressBar create bar and setup
-func setUpProgressBar(resp *http.Response, downFile *os.File) error {
-	//get size
-	i, _ := strconv.Atoi(resp.Header.Get("Content-Length"))
-	sourceSiz := int64(i)
-	source := resp.Body
-
-	//create a bar and set param
-	bar := pb.New(int(sourceSiz)).SetRefreshRate(time.Millisecond * 10).SetUnits(pb.U_BYTES).SetWidth(100)
-	bar.ShowSpeed = true
-	bar.ShowTimeLeft = true
-	bar.ShowFinalTime = true
-	bar.SetWidth(80)
-	bar.Start()
-
-	writer := io.MultiWriter(downFile, bar)
-	_, err := io.Copy(writer, source)
-	if err != nil {
-		log.Error(err)
-		return err
-	}
-	bar.Finish()
 	return nil
 }
 
