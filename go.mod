@@ -23,7 +23,6 @@ require (
 	github.com/mittwald/go-helm-client v0.8.4
 	github.com/onsi/ginkgo/v2 v2.1.4
 	github.com/onsi/gomega v1.19.0
-	github.com/parnurzeal/gorequest v0.2.16
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/cobra v1.4.0
@@ -213,7 +212,6 @@ require (
 	k8s.io/kube-openapi v0.0.0-20211115234752-e816edb12b65 // indirect
 	k8s.io/kubectl v0.22.4 // indirect
 	k8s.io/kubernetes v1.22.4 // indirect
-	moul.io/http2curl v1.0.0 // indirect
 	oras.land/oras-go v0.4.0 // indirect
 	sigs.k8s.io/kustomize/api v0.8.11 // indirect
 	sigs.k8s.io/kustomize/kyaml v0.11.0 // indirect
