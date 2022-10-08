@@ -57,9 +57,6 @@ var (
 	//go:embed plugins/helm-generic.yaml
 	HelmGenericDefaultConfig string
 
-	//go:embed plugins/jenkins-github-integ.yaml
-	JenkinsGithubIntegDefaultConfig string
-
 	//go:embed plugins/jenkins-pipeline.yaml
 	JenkinsPipelineDefaultConfig string
 
@@ -111,7 +108,6 @@ var pluginDefaultConfigs = map[string]string{
 	"harbor":               HarborDefaultConfig,
 	"hashicorp-vault":      HashicorpVaultDefaultConfig,
 	"helm-generic":         HelmGenericDefaultConfig,
-	"jenkins-github-integ": JenkinsGithubIntegDefaultConfig,
 	"jenkins-pipeline":     JenkinsPipelineDefaultConfig,
 	"jenkins":              JenkinsDefaultConfig,
 	"jira-github-integ":    JiraGithubIntegDefaultConfig,

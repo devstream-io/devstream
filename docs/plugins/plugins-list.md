@@ -10,7 +10,6 @@
 | Source Code Management         | gitlab-ce-docker            | GitLab CE version installation | [doc](gitlab-ce-docker.md)            |
 | CI                             | jenkins                     | Jenkins installation           | [doc](jenkins.md)                     |
 | CI                             | jenkins-pipeline            | Jenkins pipeline creation      | [doc](jenkins-pipeline.md)            |
-| CI                             | jenkins-github-integ        | Jenkins/GitHub integration     | [doc](jenkins-github-integ.md)        |
 | CI                             | githubactions-golang        | GitHub Actions CI for Golang   | [doc](githubactions-golang.md)        |
 | CI                             | githubactions-python        | GitHub Actions CI for Python   | [doc](githubactions-python.md)        |
 | CI                             | githubactions-nodejs        | GitHub Actions CI for Nodejs   | [doc](githubactions-nodejs.md)        |
@@ -52,7 +51,6 @@ harbor-docker
 hashicorp-vault
 helm-generic
 jenkins
-jenkins-github-integ
 jenkins-pipeline
 jira-github-integ
 kube-prometheus

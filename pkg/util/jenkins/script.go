@@ -22,6 +22,12 @@ var cascGroovyScript string
 //go:embed tpl/repo-casc.tpl.yaml
 var repoCascScript string
 
+type BasicAuth struct {
+	Username string
+	Password string
+	Token    string
+}
+
 type scriptError struct {
 	output   string
 	errorMsg string
