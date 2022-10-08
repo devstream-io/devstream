@@ -19,6 +19,8 @@ tools:
       chartName: sonarqube/sonarqube
       # release name of the chart
       releaseName: sonarqube
+      # version of the chart
+      version: ""
       # k8s namespace where SonarQube will be installed
       namespace: sonarqube
       # whether to wait for the release to be deployed or not

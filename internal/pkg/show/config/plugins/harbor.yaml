@@ -17,6 +17,8 @@ tools:
       chartPath: ""
       # name of the chart
       chartName: harbor/harbor
+      # version of the chart
+      version: ""
       # k8s namespace where Harbor will be installed
       namespace: harbor
       # release name of the chart

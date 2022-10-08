@@ -1,19 +1,19 @@
 tools:
-  # name of the tool
-  - name: gitlabci-generic
-    # id of the tool instance
-    instanceID: default
-    # format: name.instanceID; If specified, dtm will make sure the dependency is applied first before handling this tool.
-    dependsOn: [ ]
-    # options for the plugin
-    options:
-      projectRepo:
-        owner: YOUR_GITLAB_USERNAME
-        repo: YOUR_GITLAB_REPO_NAME
-        branch: YOUR_GITLAB_REPO_BRANCH
-        baseURL: YOUR_GITLAB_HOST_ADDRESS
-      ci:
-        remoteURL : https://someplace.com/to/download/your/template
-        vars:
-          key1: value1
-          key2: value2
+# name of the tool
+- name: gitlabci-generic
+  # id of the tool instance
+  instanceID: default
+  # format: name.instanceID; If specified, dtm will make sure the dependency is applied first before handling this tool.
+  dependsOn: [ ]
+  # options for the plugin
+  options:
+    projectRepo:
+      owner: YOUR_GITLAB_USERNAME
+      repo: YOUR_GITLAB_REPO_NAME
+      branch: YOUR_GITLAB_REPO_BRANCH
+      baseURL: YOUR_GITLAB_HOST_ADDRESS
+    ci:
+      remoteURL : https://someplace.com/to/download/your/template
+      vars:
+        key1: value1
+        key2: value2
