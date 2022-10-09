@@ -2,13 +2,15 @@
 
 `jenkins-pipeline` 插件用于打通 GitHub/GitLab 和 Jenkins，实现自动化创建 Jenkins Pipeline 的功能。
 
-*注意：当前只支持 GitLab，GitHub 将在近期被支持。*
-
 本文将演示：
 
 1. 通过 [`repo-scaffolding`](../repo-scaffolding.zh) 插件在 GitLab 上创建一个 Java Sprint Boot 项目脚手架；
 2. 通过 `jenkins-pipeline` 插件在 Jenkins 上创建一条 Java Spring Boot 的 CI 流水线；
 3. 通过 `jenkins-pipeline` 插件实现在 GitLab 和 Jenkins 上分别配置相应参数，实现当 GitLab 上的代码库有 push 或者 merge 事件时，自动触发 Jenkins 上的流水线运行，同时流水线的执行结果自动回写到 GitLab 上。
+
+!!! tip "提示"
+
+    GitHub 与 GitLab 的主要区别在于 DevStream tool config 的 options.scm.cloneURL 以及所需要的 token 等不同。
 
 ## 1、前置要求
 
@@ -20,7 +22,9 @@
 - Jenkins 与 GitLab、Harbor 网络互通
 - 执行 dtm 的主机与 Jenkins、GitLab 网络互通
 
-*注意：当前插件暂时只支持对接使用 dtm 部署的 Jenkins。*
+!!! warning "注意"
+
+    当前插件暂时只支持对接使用 dtm 部署的 Jenkins。
 
 本文基于如下环境编写：
 
@@ -37,6 +41,16 @@ export IMAGE_REPO_PASSWORD=YOUR_IMAGE_REPO_PASSWORD
 export GITLAB_TOKEN=YOUR_GITLAB_TOKEN
 export GITLAB_SSHKEY=YOUR_REPO_PRIVATE_KEY
 ```
+
+!!! tip "提示"
+
+    如果是 GitHub，则这里的环境变量改成：
+
+    ```shell
+    export IMAGE_REPO_PASSWORD=YOUR_IMAGE_REPO_PASSWORD
+    export GITHUB_TOKEN=YOUR_GITHUB_TOKEN
+    export GITHUB_SSHKEY=YOUR_REPO_PRIVATE_KEY
+    ```
 
 然后准备 DevStream 插件配置：
 
@@ -123,35 +137,53 @@ tools:
 
 首先你可以在 GitLab 上可以看 repo scaffolding 的效果，dtm 为你创建了一个 Java Spring Boot 项目脚手架：
 
-![repo-scaffolding](./jenkins-pipeline/repo-scaffolding.png)
+<figure markdown>
+  ![Repo scaffolding](./jenkins-pipeline/repo-scaffolding.png){ width="1000" }
+  <figcaption>Repo scaffolding</figcaption>
+</figure>
 
 - **Pipeline**
 
 接着你可以在 Jenkins 上看到刚才 dtm 为你创建的 Pipeline：
 
-![pipeline](./jenkins-pipeline/pipeline.png)
+<figure markdown>
+  ![Pipeline](./jenkins-pipeline/pipeline.png){ width="1000" }
+  <figcaption>Pipeline</figcaption>
+</figure>
 
 如果你点开这个 test-job，就能看到它已经被触发了一次，执行结果如下：
 
-![pipeline](./jenkins-pipeline/pipeline-console.png)
+<figure markdown>
+  ![Pipeline console](./jenkins-pipeline/pipeline-console.png){ width="1000" }
+  <figcaption>Pipeline console</figcaption>
+</figure>
 
 - **状态回写**
 
 然后你可以回到 GitLab，看一下 Jenkins Pipeline 的执行结果有没有被成功回写：
 
-![gitlab status](./jenkins-pipeline/gitlab-status.png)
+<figure markdown>
+  ![GitLab status](./jenkins-pipeline/gitlab-status.png){ width="1000" }
+  <figcaption>GitLab status</figcaption>
+</figure>
 
 - **检查镜像**
 
 通过 Jenkins 的日志你可以找到刚才 push 的镜像地址为 `harbor.example.com:80/library/spring-demo:latest`：
 
-![jenkins logs](./jenkins-pipeline/jenkins-logs.png)
+<figure markdown>
+  ![Jenkins' logs](./jenkins-pipeline/jenkins-logs.png){ width="1000" }
+  <figcaption>Jenkins' logs</figcaption>
+</figure>
 
 // TODO(daniel-hutao): 补充 Harbor 截图
 
 最后你可以通过 `docker pull` 下载该镜像：
 
-![docker pull](./jenkins-pipeline/docker-pull.png)
+<figure markdown>
+  ![Docker pulling](./jenkins-pipeline/docker-pull.png){ width="1000" }
+  <figcaption>Docker pulling</figcaption>
+</figure>
 
 ## 配置详解
 

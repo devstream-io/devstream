@@ -2,7 +2,7 @@
 
 ## What is DevStream?
 
-DevStream is an open-source DevOps toolchain manager that is of the develoeprs, by the develoeprs, for the develoeprs.
+DevStream is an open-source DevOps toolchain manager that is of the developers, by the developers, for the developers.
 
 Discover the DevOps practice that suits you best. DevStream will take care of the rest.
 

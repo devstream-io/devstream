@@ -14,6 +14,11 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/jenkins/dingtalk"
 )
 
+const (
+	domain          = "_"
+	credentialScope = "GLOBAL"
+)
+
 type jenkins struct {
 	gojenkins.Jenkins
 	ctx context.Context
@@ -65,7 +70,7 @@ func NewClient(url string, basicAuthInfo *BasicAuth) (JenkinsAPI, error) {
 		Timeout: 10 * time.Second,
 	}
 
-	if basicAuthInfo.UsePassWordAuth() {
+	if basicAuthInfo.usePassWordAuth() {
 		basicAuth = &gojenkins.BasicAuth{
 			Username: basicAuthInfo.Username, Password: basicAuthInfo.Password,
 		}
@@ -92,4 +97,12 @@ func NewClient(url string, basicAuthInfo *BasicAuth) (JenkinsAPI, error) {
 	}
 	jenkinsClient.ctx = context.TODO()
 	return jenkinsClient, nil
+}
+
+func (a *BasicAuth) IsNameMatch(userName string) bool {
+	return userName == "" || userName == a.Username
+}
+
+func (a *BasicAuth) usePassWordAuth() bool {
+	return len(a.Username) > 0 && len(a.Password) > 0
 }
