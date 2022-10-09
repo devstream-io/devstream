@@ -1,4 +1,4 @@
-# repo-scaffolding plugin
+# repo-scaffolding Plugin
 
 This plugin bootstraps a GitHub or GitLab repo with scaffolding code for a web application.
 

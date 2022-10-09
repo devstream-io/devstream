@@ -1,4 +1,4 @@
-# ci-generic plugin
+# ci-generic Plugin
 
 This plugin installs ci script in GitLib/GitHub repo from local or remote url.
 

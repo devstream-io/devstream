@@ -1,4 +1,4 @@
-# devlake plugin
+# devlake Plugin
 
 //TODO(daniel-hutao): add document here after Chinese version be ready.
 

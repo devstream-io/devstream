@@ -1,4 +1,4 @@
-# helm-generic plugin
+# helm-generic Plugin
 
 // TODO
 

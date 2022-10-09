@@ -1,4 +1,4 @@
-# jenkins-pipeline plugin
+# jenkins-pipeline Plugin
 
 TODO(dtm): Add your document here.
 

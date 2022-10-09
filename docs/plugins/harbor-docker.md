@@ -1,4 +1,4 @@
-# harbor-docker plugin
+# harbor-docker Plugin
 
 // TODO(daniel-hutao): I'll add the docs here after Chinese docs be stable.
 

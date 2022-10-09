@@ -1,4 +1,4 @@
-# sonarqube plugin
+# sonarqube Plugin
 
 TODO(jiafeng meng): I will add this document later.
 

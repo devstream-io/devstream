@@ -1,4 +1,4 @@
-# gitlabci-java plugin
+# gitlabci-java Plugin
 
 This plugin set up Gitlab Pipeline in an existing Gitlab Java repository.
 
