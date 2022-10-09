@@ -2,18 +2,20 @@ package devlake
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/kubectl"
-	kubectlUtil "github.com/devstream-io/devstream/pkg/util/kubectl"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/helm"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
-		ExecuteOperations: plugininstaller.ExecuteOperations{
-			kubectl.ProcessByURL(kubectlUtil.Create, devLakeInstallYAMLDownloadURL),
+		PreExecuteOperations: plugininstaller.PreExecuteOperations{
+			helm.SetDefaultConfig(&defaultHelmConfig),
+			helm.Validate,
 		},
-		GetStateOperation: getStaticState,
+		ExecuteOperations:   helm.DefaultCreateOperations,
+		TerminateOperations: helm.DefaultTerminateOperations,
+		GetStateOperation:   helm.GetPluginAllState,
 	}
 
 	// Execute all Operations in Operator

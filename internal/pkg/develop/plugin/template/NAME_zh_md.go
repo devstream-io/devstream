@@ -5,7 +5,7 @@ import _ "embed"
 var NamePluginZhMdNameTpl = "[[ .Name ]].zh.md"
 var NamePluginZhMdDirTpl = "docs/plugins/"
 
-//go:embed NAME_plugin.zh.md.tpl
+//go:embed NAME.zh.md.tpl
 var NamePluginZhMdContentTpl string
 
 func init() {

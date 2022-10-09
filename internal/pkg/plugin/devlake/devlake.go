@@ -1,17 +1,24 @@
 package devlake
 
-const (
-	devLakeInstallYAMLDownloadURL = "https://raw.githubusercontent.com/merico-dev/lake/main/k8s-deploy.yaml"
-	/// TODO(ironcore864): now the namespace is hard-coded instead of parsed from the YAML file
-	defaultNamespace = "devlake"
+import (
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/helm"
+	helmCommon "github.com/devstream-io/devstream/pkg/util/helm"
+	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
-// according to devLakeInstallYAMLDownloadURL
-// a successful DevLake installation should have the following deployments
-// (and corresponding services as well)
-var devLakeDeployments = []string{
-	"mysql",
-	"grafana",
-	"config-ui",
-	"devlake",
+// TODO(daniel-hutao): update the config below after devlake chart released.
+var defaultHelmConfig = helm.Options{
+	Chart: helmCommon.Chart{
+		ChartPath:   "",
+		ChartName:   "devlake/devlake",
+		Timeout:     "5m",
+		Wait:        types.Bool(true),
+		UpgradeCRDs: types.Bool(true),
+		ReleaseName: "devlake",
+		Namespace:   "devlake",
+	},
+	Repo: helmCommon.Repo{
+		URL:  "https://merico-dev.github.io/devlake-helm-chart",
+		Name: "devlake",
+	},
 }
