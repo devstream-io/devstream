@@ -22,23 +22,29 @@
 
 **注意**：依赖并不是必须指定的，我们可以用依赖确保某个工具可以先于另外一个工具安装。我们应该根据实际的使用场景来使用`dependsOn`。
 
-## 1 下载DevStream（`dtm`）
+## 1 下载 DevStream（`dtm`）
 
-在[DevStream Releases](https://github.com/devstream-io/devstream/releases)页面下载适合你操作系统和CPU架构的`dtm`。
+进入你的工作目录，运行：
 
-> 将二进制文件改名为`dtm`，以便易于使用。例如，执行：`mv dtm-drawin-arm64 dtm`。
+```shell
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/devstream-io/devstream/main/hack/install/download.sh)"
+```
 
-> 下载之后，你可以在任意地方执行这个二进制文件。你可以将它加入到你的PATH中（例如`/usr/local/bin`）。
+这个命令会根据你的操作系统和芯片架构下载对应的 `dtm` 二进制文件到你的工作目录中，并赋予二进制文件执行权限。
+
+> 可选：建议你将 dtm 移动到包含于 PATH 的目录下，比如 `mv dtm /usr/local/bin/`。
+
+_更多安装方式详见[安装dtm](../install.zh.md)。_
 
 ## 2 准备配置文件
 
-将`gitops.yaml`下载到你的工作目录下：
+运行以下命令来生成 gitops 的模板配置文件 `gitops.yaml` 。
 
 ```shell
-curl -o gitops.yaml https://raw.githubusercontent.com/devstream-io/devstream/main/examples/gitops.yaml
+./dtm show config -t gitops > gitops.yaml
 ```
 
-然后对`gitops.yaml`文件做相应的修改。
+然后对 `gitops.yaml` 文件做相应的修改。
 
 配置文件中用到的变量的解释和示例值如下：
 

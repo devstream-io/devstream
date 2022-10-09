@@ -23,12 +23,17 @@ function init() {
 }
 
 function getLatestReleaseVersion() {
-  latestVersion=$(curl -s https://api.github.com/repos/devstream-io/devstream/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+  if [ -n "${GITHUB_TOKEN}" ]; then
+    AUTH_HEADER="-H Authorization: token ${GITHUB_TOKEN}"
+  fi
+
+  # like "v1.2.3"
+  latestVersion=$(curl ${AUTH_HEADER} -s https://api.github.com/repos/devstream-io/devstream/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
   if [ -z "$latestVersion" ]; then
     echo "Failed to get latest release version"
     exit 1
   fi
-  echo "Latest dtm release version: ${latestVersion}\n"
+  echo "Latest dtm release version: ${latestVersion}"
 }
 
 function downloadDtm() {

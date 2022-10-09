@@ -12,15 +12,24 @@
 ## 1 下载
 
 进入你的工作目录，运行：
+
 ```shell
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/devstream-io/devstream/main/hack/quick-start/quickstart.sh)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/devstream-io/devstream/main/hack/install/download.sh)"
 ```
 
-这个命令会下载 `dtm` 二进制文件和 `quickstart.yaml` 的配置文件到你的工作目录中，并赋予二进制文件执行权限。
+这个命令会根据你的操作系统和芯片架构下载对应的 `dtm` 二进制文件到你的工作目录中，并赋予二进制文件执行权限。
 
 > 可选：建议你将 dtm 移动到包含于 PATH 的目录下，比如 `mv dtm /usr/local/bin/`。
 
+_更多安装方式详见[安装dtm](./install.zh.md)。_
+
 ## 2 配置
+
+运行以下命令来生成 quickstart 的模板配置文件 `config.yaml` 。
+
+```shell
+./dtm show config -t quickstart > config.yaml
+```
 
 正如前文所述，我们将在 GitHub Actions 中操作 GitHub 仓库的脚手架和 CI 工作流。所以，我们需要设置以下环境变量：
 
