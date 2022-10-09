@@ -9,43 +9,43 @@ tools:
   options:
     jenkins:
       # url is used to config jenkins url
-      url: http://jenkins.example.com:8080
+      url: YOUR_JENKINS_ADDRESS
       # jenkins' user name
-      user: admin
+      user: YOUR_JENKINS_USER
       # jenkins namespace in k8s cluster
-      namespace: jenkins
+      namespace: YOUR_JENKINS_NAMESPACE
       # restart jenkins if true for plugin install
       enableRestart: true
     scm:
       # cloneURL is the project repo location, this can be http address or git address
-      cloneURL: git@gitlab.com/root/test-project.git
+      cloneURL: YOUR_PROJECT_SCM_ADDRESS
       # apiURL is the api address of gitlab, if you use github, this field can be empty
-      apiURL: http://gitlab.com
+      apiURL: YOUR_SCM_API_ADDRESS
       # project branch, master as default
-      branch: master
+      branch: YOUR_PROJECT_BRANCH
     pipeline:
       # jobName is jenkins's job name; <jobFolder/jobName> or <jobName>; e.g. jobs/test-job, test-job, jobs2/test-job
-      jobName: test-job
+      jobName: YOUR_JENKINS_JOB_NAME
       # jenkinsfilePath is the location describe how to get Jenkinsfile, it can be remote or local
-      jenkinsfilePath: https://raw.githubusercontent.com/dtm-jenkins-pipeline-example/main/springboot/Jenkinsfile
+      jenkinsfilePath: YOUR_JENKINSFILE_PATH
       imageRepo:
         # image repo URL for pulling/pushing
-        url: http://harbor.example.com:80
+        url: YOUR_IMAGE_REPO_ADDRESS
         # image repo user name
-        user: admin
+        user: YOUR_IMAGE_REPO_OWNER
       dingTalk:
         # dingtalk robot name
-        name: dingtalk
+        name: YOUR_DINGTALK_ROBOT_NAME
         # dingtalk webhook
-        webhook: https://oapi.dingtalk.com/robot/send?access_token=test
+        webhook: YOUR_DINGTALK_WEBHOOK_ADDRESS
         # dingtalk securityType
-        securityType: "SECRET"
+        securityType: YOUR_DINGTALK_SECRET_TYPE
         # dingtalk securityValue
-        securityValue: SECRET_VALUE
+        securityValue: YOUR_DINGTALK_SECRET_VALUE
       sonarqube:
         # sonarqube address
-        url: http://sonar.com
+        url: YOUR_SONAR_ADDRESS
         # sonarqube token
-        token: squ_test
+        token: YOUR_SONAR_TOKEN
         # sonarqube name
-        name: sonar_test
+        name: YOUR_SONAR_NAME
