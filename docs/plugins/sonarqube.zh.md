@@ -35,7 +35,7 @@ Sonarqube 内部会使用 Elastcisearch 来做搜索的索引，所以生产环�
 
 下面的配置文件展示的是"tool file"的内容。
 
-关于更多关于DevStream的主配置、tool file、var file的信息，请阅读[核心概念概览](../core-concepts/core-concepts.md.zh)和[evStream配置](../core-concepts/config.zh.md).
+关于更多关于DevStream的主配置、tool file、var file的信息，请阅读[核心概念概览](../core-concepts/core-concepts.zh.md)和[DevStream配置](../core-concepts/config.zh.md).
 
 因此完整的配置文件应该是这样：
 
