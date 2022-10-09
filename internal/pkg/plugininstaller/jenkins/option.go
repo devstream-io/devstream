@@ -3,8 +3,6 @@ package jenkins
 import (
 	"context"
 	"fmt"
-	"net/url"
-	"path"
 
 	"github.com/mitchellh/mapstructure"
 
@@ -14,6 +12,7 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/jenkins/plugins"
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/mapz"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
@@ -23,9 +22,9 @@ type JobOptions struct {
 	Pipeline Pipeline `mapstructure:"pipeline"`
 
 	// used in package
+	CIConfig    *ci.CIConfig       `mapstructure:"ci"`
 	BasicAuth   *jenkins.BasicAuth `mapstructure:"basicAuth"`
 	ProjectRepo *common.Repo       `mapstructure:"projectRepo"`
-	CIConfig    *ci.CIConfig       `mapstructure:"ci"`
 	SecretToken string             `mapstructure:"secretToken"`
 }
 
@@ -44,20 +43,6 @@ type SCM struct {
 
 	// used in package
 	SSHprivateKey string `mapstructure:"sshPrivateKey"`
-}
-
-type jobScriptRenderInfo struct {
-	RepoType          string
-	JobName           string
-	RepositoryURL     string
-	Branch            string
-	SecretToken       string
-	FolderName        string
-	GitlabConnection  string
-	RepoCredentialsId string
-	RepoURL           string
-	RepoName          string
-	RepoOwner         string
 }
 
 func newJobOptions(options plugininstaller.RawOptions) (*JobOptions, error) {
@@ -84,7 +69,7 @@ func (j *JobOptions) buildWebhookInfo() *git.WebhookConfig {
 	var webHookURL string
 	switch j.ProjectRepo.RepoType {
 	case "gitlab":
-		webHookURL = fmt.Sprintf("%s/project/%s", j.Jenkins.URL, j.Pipeline.getJobPath())
+		webHookURL = fmt.Sprintf("%s/project/%s", j.Jenkins.URL, j.Pipeline.JobName)
 	case "github":
 		webHookURL = fmt.Sprintf("%s/github-webhook/", j.Jenkins.URL)
 	}
@@ -106,38 +91,11 @@ func (j *JobOptions) deleteJob(client jenkins.JenkinsAPI) error {
 	}
 	isDeleted, err := job.Delete(context.Background())
 	if err != nil {
-		log.Debugf("jenkins delete job %s failed: %s", j.Pipeline.getJobPath(), err)
+		log.Debugf("jenkins delete job %s failed: %s", j.Pipeline.JobName, err)
 		return err
 	}
-	log.Debugf("jenkins delete job %s status: %v", j.Pipeline.getJobPath(), isDeleted)
+	log.Debugf("jenkins delete job %s status: %v", j.Pipeline.JobName, isDeleted)
 	return nil
-}
-
-func (j *JobOptions) buildCIConfig() {
-	jenkinsFilePath := j.Pipeline.JenkinsfilePath
-	ciConfig := &ci.CIConfig{
-		Type: "jenkins",
-	}
-	// config CIConfig
-	jenkinsfileURL, err := url.ParseRequestURI(jenkinsFilePath)
-	// if path is url, download from remote
-	if err != nil || jenkinsfileURL.Host == "" {
-		ciConfig.LocalPath = jenkinsFilePath
-	} else {
-		ciConfig.RemoteURL = jenkinsFilePath
-	}
-	var imageName string
-	if j.ProjectRepo != nil {
-		imageName = j.ProjectRepo.Repo
-	} else {
-		imageName = j.Pipeline.JobName
-	}
-	harborURLHost := path.Join(j.Pipeline.getImageHost(), defaultImageProject)
-	ciConfig.Vars = map[string]interface{}{
-		"ImageName":        imageName,
-		"ImageRepoAddress": harborURLHost,
-	}
-	j.CIConfig = ciConfig
 }
 
 func (j *JobOptions) extractJenkinsPlugins() []pluginConfigAPI {
@@ -152,14 +110,16 @@ func (j *JobOptions) extractJenkinsPlugins() []pluginConfigAPI {
 	case "github":
 		pluginsConfigs = append(pluginsConfigs, &plugins.GithubJenkinsConfig{
 			JenkinsURL: j.Jenkins.URL,
+			RepoOwner:  j.ProjectRepo.Owner,
 		})
 	}
+	pluginsConfigs = append(pluginsConfigs, j.Pipeline.extractPipelinePlugins()...)
 	return pluginsConfigs
 }
 
 func (j *JobOptions) createOrUpdateJob(jenkinsClient jenkins.JenkinsAPI) error {
 	// 1. render groovy script
-	jobRenderInfo := &jobScriptRenderInfo{
+	jobRenderInfo := &jenkins.JobScriptRenderInfo{
 		RepoType:         j.ProjectRepo.RepoType,
 		JobName:          j.Pipeline.getJobName(),
 		RepositoryURL:    j.SCM.CloneURL,
@@ -192,4 +152,23 @@ func (j *JobOptions) createOrUpdateJob(jenkinsClient jenkins.JenkinsAPI) error {
 		return err
 	}
 	return nil
+}
+
+func (j *JobOptions) buildCIConfig() (*ci.CIConfig, error) {
+	ciConfig := j.Pipeline.buildCIConfig()
+	// get render variables
+	plugins := j.extractJenkinsPlugins()
+	configVars := &jenkins.JenkinsFileRenderInfo{
+		AppName: j.Pipeline.JobName,
+	}
+	for _, p := range plugins {
+		p.UpdateJenkinsFileRenderVars(configVars)
+	}
+	rawConfigVars, err := mapz.DecodeStructToMap(configVars)
+	if err != nil {
+		log.Debugf("jenkins config Jenkinsfile variables failed => %+v", err)
+		return nil, err
+	}
+	ciConfig.Vars = rawConfigVars
+	return ciConfig, nil
 }

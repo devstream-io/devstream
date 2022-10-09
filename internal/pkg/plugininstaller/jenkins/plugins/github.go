@@ -9,12 +9,12 @@ import (
 )
 
 const (
-	GithubCredentialName     = "jenkinsGithubCredential"
-	githubCredentialUserName = "jenkinsGithubDevstreamUser"
+	GithubCredentialName = "jenkinsGithubCredential"
 )
 
 type GithubJenkinsConfig struct {
 	JenkinsURL string
+	RepoOwner  string
 }
 
 func (g *GithubJenkinsConfig) GetDependentPlugins() []*jenkins.JenkinsPlugin {
@@ -26,21 +26,24 @@ func (g *GithubJenkinsConfig) GetDependentPlugins() []*jenkins.JenkinsPlugin {
 	}
 }
 
-func (g *GithubJenkinsConfig) PreConfig(jenkinsClient jenkins.JenkinsAPI) error {
+func (g *GithubJenkinsConfig) PreConfig(jenkinsClient jenkins.JenkinsAPI) (*jenkins.RepoCascConfig, error) {
 	// 1. create github credentials by github token
 	err := jenkinsClient.CreatePasswordCredential(
 		GithubCredentialName,
-		githubCredentialUserName,
+		g.RepoOwner,
 		os.Getenv(github.TokenEnvKey),
 	)
 	if err != nil {
 		log.Debugf("jenkins preinstall github credentials failed: %s", err)
-		return err
+		return nil, err
 	}
 	// 2. config github plugin casc
-	return jenkinsClient.ConfigCascForRepo(&jenkins.RepoCascConfig{
+	return &jenkins.RepoCascConfig{
 		RepoType:     "github",
 		CredentialID: GithubCredentialName,
 		JenkinsURL:   g.JenkinsURL,
-	})
+	}, nil
+}
+
+func (g *GithubJenkinsConfig) UpdateJenkinsFileRenderVars(vars *jenkins.JenkinsFileRenderInfo) {
 }

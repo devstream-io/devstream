@@ -33,3 +33,19 @@ tools:
         url: http://harbor.example.com:80
         # image repo user name
         user: admin
+      dingTalk:
+        # dingtalk robot name
+        name: dingtalk
+        # dingtalk webhook
+        webhook: https://oapi.dingtalk.com/robot/send?access_token=test
+        # dingtalk securityType
+        securityType: "SECRET"
+        # dingtalk securityValue
+        securityValue: SECRET_VALUE
+      sonarqube:
+        # sonarqube address
+        url: http://sonar.com
+        # sonarqube token
+        token: squ_test
+        # sonarqube name
+        name: sonar_test
