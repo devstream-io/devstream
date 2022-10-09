@@ -14,7 +14,7 @@ In this quickstart, we will do the following automatically with DevStream:
 In your working directory, run:
 
 ```shell
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/devstream-io/devstream/main/hack/quick-start/quickstart.sh)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/devstream-io/devstream/release-0.9/hack/quick-start/quickstart.sh)"
 ```
 
 This will download the `dtm` binary and a `quickstart.yaml` config file to your working directory, and grant the binary execution permission.
