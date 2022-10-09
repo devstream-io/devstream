@@ -1,6 +1,8 @@
 package common
 
 import (
+	"fmt"
+
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
@@ -44,6 +46,68 @@ var _ = Describe("Repo Struct", func() {
 			owner, ok := repoInfoMap["Owner"]
 			Expect(ok).Should(BeTrue())
 			Expect(owner).Should(Equal(org))
+		})
+	})
+
+	Context("getBranch method", func() {
+		When("repo is gitlab and branch is empty", func() {
+			BeforeEach(func() {
+				repo.Branch = ""
+				repo.RepoType = "gitlab"
+			})
+			It("should return master branch", func() {
+				branch := repo.getBranch()
+				Expect(branch).Should(Equal("master"))
+			})
+		})
+		When("repo is github and branch is empty", func() {
+			BeforeEach(func() {
+				repo.Branch = ""
+				repo.RepoType = "github"
+			})
+			It("should return main branch", func() {
+				branch := repo.getBranch()
+				Expect(branch).Should(Equal("main"))
+			})
+		})
+	})
+
+	Context("getRepoDownloadURL method", func() {
+		It("should return url", func() {
+			githubURL := repo.getRepoDownloadURL()
+			Expect(githubURL).Should(Equal("https://codeload.github.com/test_org/test_repo/zip/refs/heads/test_branch"))
+		})
+	})
+
+	Context("BuildURL method", func() {
+		When("repo is empty", func() {
+			BeforeEach(func() {
+				repo.RepoType = "not_exist"
+			})
+			It("should return empty url", func() {
+				url := repo.BuildURL()
+				Expect(url).Should(BeEmpty())
+			})
+		})
+		When("repo is github", func() {
+			BeforeEach(func() {
+				repo.RepoType = "github"
+			})
+			It("should return github url", func() {
+				url := repo.BuildURL()
+				Expect(url).Should(Equal(fmt.Sprintf("https://github.com/%s/%s", repo.Org, repo.Repo)))
+			})
+		})
+		When("repo is gitlab", func() {
+			BeforeEach(func() {
+				repo.RepoType = "gitlab"
+				repo.BaseURL = "http://test.com"
+				repo.Org = ""
+			})
+			It("should return gitlab url", func() {
+				url := repo.BuildURL()
+				Expect(url).Should(Equal(fmt.Sprintf("%s/%s/%s.git", repo.BaseURL, repo.Owner, repo.Repo)))
+			})
 		})
 	})
 })

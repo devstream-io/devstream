@@ -97,15 +97,13 @@ func ValidateJobConfig(options plugininstaller.RawOptions) (plugininstaller.RawO
 		if os.Getenv(github.TokenEnvKey) == "" {
 			return nil, fmt.Errorf("jenkins-pipeline github should set env %s", github.TokenEnvKey)
 		}
-	default:
-		return nil, fmt.Errorf("jenkins-pipeline doesn't support repo type %s", opts.ProjectRepo.RepoType)
 	}
 
 	// check jenkins job name
 	if strings.Contains(opts.Pipeline.JobName, "/") {
 		strs := strings.Split(opts.Pipeline.JobName, "/")
 		if len(strs) != 2 || len(strs[0]) == 0 || len(strs[1]) == 0 {
-			return nil, fmt.Errorf("jobName illegal: %s", opts.Pipeline.JobName)
+			return nil, fmt.Errorf("jenkins jobName illegal: %s", opts.Pipeline.JobName)
 		}
 	}
 
