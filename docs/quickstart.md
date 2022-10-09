@@ -14,14 +14,22 @@ In this quickstart, we will do the following automatically with DevStream:
 In your working directory, run:
 
 ```shell
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/devstream-io/devstream/main/hack/quick-start/quickstart.sh)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/devstream-io/devstream/main/hack/install/download.sh)"
 ```
 
-This will download the `dtm` binary and a `quickstart.yaml` config file to your working directory, and grant the binary execution permission.
+This will download the corresponding `dtm` binary to your working directory according to your OS and chip architecture, and grant the binary execution permission.
 
 > Optional: you can then move `dtm` to a place which is in your PATH. For example: `mv dtm /usr/local/bin/`.
 
+_For more details on how to install, see [install dtm](./install.md)._
+
 ## 2 Configuration
+
+Run the following command to generate the template configuration file `config.yaml` for quickstart.
+
+```shell
+./dtm show config -t quickstart > config.yaml
+```
 
 As aforementioned, we will handle GitHub repo scaffolding and CI workflows in GitHub Actions, so, we will need the following environment variables (env vars) to be set:
 

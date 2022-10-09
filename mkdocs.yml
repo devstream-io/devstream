@@ -89,6 +89,7 @@ nav:
   - Overview: .
   - understanding_the_basics*.md
   - quickstart*.md
+  - install*.md
   - Core Concepts:
     - core-concepts/core-concepts*.md
     - core-concepts/config*.md
@@ -97,7 +98,6 @@ nav:
     - core-concepts/dependencies*.md
     - core-concepts/output*.md
   - Commands:
-    - commands/install*.md
     - commands/autocomplete*.md
     - commands/*.md
   - Plugins:

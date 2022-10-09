@@ -32,18 +32,24 @@ Note: These dependencies are optional; you can use dependency to make sure a cer
 
 ## 1 Download DevStream (`dtm`)
 
-Download the appropriate `dtm` version for your platform from [DevStream Releases](https://github.com/devstream-io/devstream/releases).
+In your working directory, run:
 
-> Remember to rename the binary file to `dtm` so that it's easier to use. For example: `mv dtm-darwin-arm64 dtm`.
+```shell
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/devstream-io/devstream/main/hack/install/download.sh)"
+```
 
-> Once downloaded, you can run the binary from anywhere. Ideally, you want to put it in a place that is in your PATH (e.g., `/usr/local/bin`).
+This will download the corresponding `dtm` binary to your working directory according to your OS and chip architecture, and grant the binary execution permission.
+
+> Optional: you can then move `dtm` to a place which is in your PATH. For example: `mv dtm /usr/local/bin/`.
+
+_For more details on how to install, see [install dtm](../install.md)._
 
 ## 2 Prepare the Config File
 
-Download the `gitops.yaml` to your working directory:
+Run the following command to generate a template configuration file for gitops `gitops.yaml`.
 
-```bash
-curl -o gitops.yaml https://raw.githubusercontent.com/devstream-io/devstream/main/examples/gitops.yaml
+```shell
+./dtm show config -t gitops > gitops.yaml
 ```
 
 Then modify the `gitops.yaml` file accordingly.
