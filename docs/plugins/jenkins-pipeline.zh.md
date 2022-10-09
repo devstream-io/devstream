@@ -54,6 +54,10 @@ export GITLAB_SSHKEY=YOUR_REPO_PRIVATE_KEY
 
 然后准备 DevStream 插件配置：
 
+下面的配置文件展示的是"tool file"的内容。
+
+关于更多关于DevStream的主配置、tool file、var file的信息，请阅读[核心概念概览](../core-concepts/core-concepts.md.zh)和[evStream配置](../core-concepts/config.zh.md).
+
 ```yaml
 tools:
 - name: repo-scaffolding

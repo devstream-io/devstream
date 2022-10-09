@@ -6,7 +6,9 @@ It also installs [GitHub Pull Request Builder(ghprb)](https://plugins.jenkins.io
 
 ## Config
 
-Please be sure to change the `storageClass` in the options of the config to an existing StorageClass.
+The following content is an example of the "tool file".
+
+For more information on the main config, the tool file and the var file of DevStream, see [Core Concepts Overview](../core-concepts/core-concepts.md#1-config) and [DevStream Configuration](../core-concepts/config.md).
 
 ```yaml
 --8<-- "jenkins.yaml"
@@ -25,6 +27,8 @@ Please be sure to change the `storageClass` in the options of the config to an e
 | chart.namespace    | jenkins                   | namespace where helm to deploy                     |
 | repo.url           | https://charts.jenkins.io | helm official repo address                         |
 | repo.name          | jenkins                   | helm repo name                                     |
+
+Please be sure to change the `storageClass` in the options of the config to an existing StorageClass.
 
 Currently, expect default configs all the parameters in the example above are mandatory.
 

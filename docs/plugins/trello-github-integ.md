@@ -6,6 +6,10 @@ This plugin creates a new GitHub Actions workflow(trello-github-integration) and
 
 This plugin depends on and can be used together with the `trello` plugin (see document [here](./trello.md)).
 
+The following content is an example of the "tool file".
+
+For more information on the main config, the tool file and the var file of DevStream, see [Core Concepts Overview](../core-concepts/core-concepts.md#1-config) and [DevStream Configuration](../core-concepts/config.md).
+
 `trello-github-integ` plugin can also use `trello` plugin's outputs as input. See the example below:
 
 ```yaml
