@@ -26,11 +26,15 @@
 
 ## 使用方法
 
-**请注意这里的设置参数都是大小写敏感的**
+下面的配置文件展示的是"tool file"的内容。
+
+关于更多关于DevStream的主配置、tool file、var file的信息，请阅读[核心概念概览](../core-concepts/core-concepts.zh.md)和[DevStream配置](../core-concepts/config.zh.md).
 
 ```yaml
 --8<-- "repo-scaffolding.yaml"
 ```
+
+**请注意这里的设置参数都是大小写敏感的**
 
 在配置文件中替换以下配置：
 

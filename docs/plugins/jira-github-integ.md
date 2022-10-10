@@ -20,6 +20,10 @@ If you don't know how to create these tokens, check out:
 - [Creating a personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
 - [Manage API tokens for your Atlassian account](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/).
 
+The following content is an example of the "tool file".
+
+For more information on the main config, the tool file and the var file of DevStream, see [Core Concepts Overview](../core-concepts/core-concepts.md#1-config) and [DevStream Configuration](../core-concepts/config.md).
+
 ```yaml
 --8<-- "jira-github-integ.yaml"
 ```

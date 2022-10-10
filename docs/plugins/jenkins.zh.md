@@ -26,6 +26,10 @@ Jenkins 的部署方式有很多种，比如 Docker、Kubernetes、Jar 包等等
 
 ## 2.1、快速开始
 
+下面的配置文件展示的是"tool file"的内容。
+
+关于更多关于DevStream的主配置、tool file、var file的信息，请阅读[核心概念概览](../core-concepts/core-concepts.zh.md)和[DevStream配置](../core-concepts/config.zh.md).
+
 如果仅是用于开发、测试等目的，希望快速完成 Jenkins 的部署，可以使用如下配置快速开始：
 
 ```yaml

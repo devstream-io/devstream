@@ -4,7 +4,7 @@
 
 本文将演示：
 
-1. 通过 [`repo-scaffolding`](../repo-scaffolding.zh) 插件在 GitLab 上创建一个 Java Sprint Boot 项目脚手架；
+1. 通过 [`repo-scaffolding`](./repo-scaffolding.zh.md) 插件在 GitLab 上创建一个 Java Sprint Boot 项目脚手架；
 2. 通过 `jenkins-pipeline` 插件在 Jenkins 上创建一条 Java Spring Boot 的 CI 流水线；
 3. 通过 `jenkins-pipeline` 插件实现在 GitLab 和 Jenkins 上分别配置相应参数，实现当 GitLab 上的代码库有 push 或者 merge 事件时，自动触发 Jenkins 上的流水线运行，同时流水线的执行结果自动回写到 GitLab 上。
 
@@ -54,6 +54,10 @@ export GITLAB_SSHKEY=YOUR_REPO_PRIVATE_KEY
 
 然后准备 DevStream 插件配置：
 
+下面的配置文件展示的是"tool file"的内容。
+
+关于更多关于DevStream的主配置、tool file、var file的信息，请阅读[核心概念概览](../core-concepts/core-concepts.zh.md)和[DevStream配置](../core-concepts/config.zh.md).
+
 ```yaml
 tools:
 - name: repo-scaffolding
@@ -99,7 +103,7 @@ tools:
 
 除了这几个必须修改的配置项外，其他配置项你可以在确保理解含义的前提下灵活决定是否调整。
 
-*注意：这个配置示例仅是 tool config，完整的 DevStream 配置文件还需要补充 core config 等内容，具体参考[这个文档](../../core-concepts/config.zh)。*
+*注意：这个配置示例仅是 tool config，完整的 DevStream 配置文件还需要补充 core config 等内容，具体参考[这个文档](../core-concepts/config.zh.md)。*
 
 ## 3、开始执行
 

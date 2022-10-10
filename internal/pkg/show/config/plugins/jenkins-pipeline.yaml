@@ -18,16 +18,16 @@ tools:
       enableRestart: true
     scm:
       # cloneURL is the project repo location, this can be http address or git address
-      cloneURL: git@gitlab.com/root/test-project.git
+      cloneURL: git@gitlab.com/root/test-exmaple.git
       # apiURL is the api address of gitlab, if you use github, this field can be empty
-      apiURL: http://gitlab.com
-      # project branch, master as default
-      branch: master
+      apiURL: http://gitlab.example.com
+      # project branch, if your repo type is github, default branch will be main. if your repo type is gitlab, default branch will be master
+      branch: YOUR_PROJECT_BRANCH
     pipeline:
       # jobName is jenkins's job name; <jobFolder/jobName> or <jobName>; e.g. jobs/test-job, test-job, jobs2/test-job
       jobName: test-job
       # jenkinsfilePath is the location describe how to get Jenkinsfile, it can be remote or local
-      jenkinsfilePath: https://raw.githubusercontent.com/dtm-jenkins-pipeline-example/main/springboot/Jenkinsfile
+      jenkinsfilePath: https://raw.githubusercontent.com/devstream-io/devstream/main/staging/dtm-jenkins-pipeline-example/general/Jenkinsfile
       imageRepo:
         # image repo URL for pulling/pushing
         url: http://harbor.example.com:80
@@ -35,17 +35,17 @@ tools:
         user: admin
       dingTalk:
         # dingtalk robot name
-        name: dingtalk
+        name: YOUR_DINGTALK_ROBOT_NAME
         # dingtalk webhook
-        webhook: https://oapi.dingtalk.com/robot/send?access_token=test
-        # dingtalk securityType
-        securityType: "SECRET"
+        webhook: https://oapi.dingtalk.com/robot/send?access_token=changemeByConfig
+        # dingtalk securityType, we support "SECRET" and "KEY"
+        securityType: YOUR_DINGTALK_SECRET_TYPE
         # dingtalk securityValue
-        securityValue: SECRET_VALUE
+        securityValue: YOUR_DINGTALK_SECRET_VALUE
       sonarqube:
         # sonarqube address
-        url: http://sonar.com
+        url: http://sonar.example.com
         # sonarqube token
-        token: squ_test
-        # sonarqube name
+        token: YOUR_SONAR_TOKEN
+        # sonarqube name in jenkins
         name: sonar_test

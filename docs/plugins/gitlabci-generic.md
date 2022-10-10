@@ -14,6 +14,10 @@ If you are using self-hosted GitLab, refer to the [official doc here](https://do
 
 _Note: when creating the token, make sure you select "API" in the "scopes" section, as DevStream uses GitLab API to add CI workflow files._
 
+The following content is an example of the "tool file".
+
+For more information on the main config, the tool file and the var file of DevStream, see [Core Concepts Overview](../core-concepts/core-concepts.md#1-config) and [DevStream Configuration](../core-concepts/config.md).
+
 Plugin config example:
 
 ```yaml

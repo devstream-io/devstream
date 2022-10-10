@@ -1,4 +1,4 @@
-# repo-scaffolding plugin
+# repo-scaffolding Plugin
 
 This plugin bootstraps a GitHub or GitLab repo with scaffolding code for a web application.
 
@@ -28,7 +28,9 @@ This plugin need fllowing config base on your repo type:
 
 ## Usage
 
-**Please note that all parameter is case-sensitive.**
+The following content is an example of the "tool file".
+
+For more information on the main config, the tool file and the var file of DevStream, see [Core Concepts Overview](../core-concepts/core-concepts.md#1-config) and [DevStream Configuration](../core-concepts/config.md).
 
 ```yaml
 --8<-- "repo-scaffolding.yaml"
@@ -45,6 +47,8 @@ This configuration is used for the target repo, it includes the following config
 - `YOUR_DESTINATION_REPO_NAME`
 - `YOUR_DESTINATION_REPO_MAIN_BRANCH`
 - `YOUR_DESTINATION_REPO_TYPE` 
+
+**Please note that all parameter is case-sensitive.**
 
 Currently, `owner`, `org`, and `repo` are mandatory, `branch` has the default value "main", `repoType` support  `gitlab` and `github` for now. 
 
