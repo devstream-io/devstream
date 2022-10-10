@@ -1,5 +1,5 @@
 # Commit 信息
-我们尽最大的努力遵守[conventional commits](https://www.conventionalcommits.org/en/v1.0.0/#summary)规范。
+我们尽最大的努力遵守[conventional commits](https://www.conventionalcommits.org/zh-hans/v1.0.0/#概述)规范。
 
 TL;DR：提交信息应当结构如下：
 

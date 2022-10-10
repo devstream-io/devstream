@@ -1,6 +1,6 @@
 # 快速开始
 
-如果你更喜欢看 DevStream 的实际操作，请先观看[演示视频](./index.md)。
+如果你更喜欢看 DevStream 的实际操作，请先观看[演示视频](./index.zh.md)。
 
 > 注意：DevStream 目前只有 Linux 和 macOS 版本，Windows 将在以后支持。 
 
