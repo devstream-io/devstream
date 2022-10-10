@@ -1,6 +1,6 @@
 # 项目组织结构
 
-参见 [`标准 Go 项目布局`](https://github.com/golang-standards/project-layout) 以了解更多背景信息。
+参见 [`标准 Go 项目布局`](https://github.com/golang-standards/project-layout/blob/master/README_zh.md) 以了解更多背景信息。
 
 更多关于命名、包的组织，以及其他代码结构的建议如下:
 

@@ -24,7 +24,7 @@
 
 请在这里编写插件的主要逻辑。
 
-可以查看我们的[Standard Go Project Layout](project-layout.md)文件，了解关于项目布局的详细说明。
+可以查看我们的[Standard Go Project Layout](project-layout.zh.md)文件，了解关于项目布局的详细说明。
 
 ## 2 接口
 
