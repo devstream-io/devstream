@@ -11,7 +11,7 @@ func GetCIFileStatus(options plugininstaller.RawOptions) (statemanager.ResourceS
 	if err != nil {
 		return nil, err
 	}
-	fileLocation := getCIFilePath(opts.CIConfig.Type)
+	fileLocation := opts.CIConfig.CIClient().CIFilePath()
 	client, err := scm.NewClient(opts.ProjectRepo.BuildRepoInfo())
 	if err != nil {
 		return nil, err

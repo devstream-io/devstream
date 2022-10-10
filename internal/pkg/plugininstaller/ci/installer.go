@@ -9,6 +9,12 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 )
 
+const (
+	defaultBranch    = "feat-repo-ci-update"
+	defaultCommitMsg = "update ci config"
+	deleteCommitMsg  = "delete ci files"
+)
+
 func PushCIFiles(options plugininstaller.RawOptions) error {
 	opts, err := NewOptions(options)
 	if err != nil {
@@ -25,7 +31,7 @@ func PushCIFiles(options plugininstaller.RawOptions) error {
 		return err
 	}
 	//4. push ci files to git repo
-	_, err = gitClient.PushLocalFileToRepo(&git.CommitInfo{
+	_, err = gitClient.PushLocalFilesToRepo(&git.CommitInfo{
 		CommitMsg:    defaultCommitMsg,
 		CommitBranch: defaultBranch,
 		GitFileMap:   gitMap,
@@ -53,8 +59,9 @@ func DeleteCIFiles(options plugininstaller.RawOptions) error {
 	}
 	//3. delete ci files from git repo
 	commitInfo := &git.CommitInfo{
-		GitFileMap: gitMap,
-		CommitMsg:  deleteCommitMsg,
+		CommitMsg:    deleteCommitMsg,
+		CommitBranch: defaultBranch,
+		GitFileMap:   gitMap,
 	}
 	return gitClient.DeleteFiles(commitInfo)
 }

@@ -37,6 +37,6 @@ var _ = Describe("CaluateBlobSHA func", func() {
 	var content string
 	It("should return as expect", func() {
 		content = "test Content"
-		Expect(git.CaluateGitHubBlobSHA(content)).Should(Equal("d9c012c6ecfcc8ce04a6538cc43490b1d5401241"))
+		Expect(git.CalculateGitHubBlobSHA(content)).Should(Equal("d9c012c6ecfcc8ce04a6538cc43490b1d5401241"))
 	})
 })

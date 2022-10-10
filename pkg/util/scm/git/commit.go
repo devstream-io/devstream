@@ -16,12 +16,13 @@ type CommitInfo struct {
 	GitFileMap   GitFileContentMap
 }
 
-// GitFileInfo contains file local path and remote git path
+// GitFilePathInfo contains file local path and remote git path
 type GitFilePathInfo struct {
-	SourcePath       string
-	DestionationPath string
+	SourcePath      string
+	DestinationPath string
 }
 
+// unused
 func GetFileContent(files []*GitFilePathInfo) GitFileContentMap {
 	gitFileMap := make(map[string][]byte)
 	for _, f := range files {
@@ -30,15 +31,16 @@ func GetFileContent(files []*GitFilePathInfo) GitFileContentMap {
 			log.Warnf("Repo Process file content error: %s", err)
 			continue
 		}
-		if f.DestionationPath == "" {
+		if f.DestinationPath == "" {
 			log.Warnf("Repo file destination path is not set")
 			continue
 		}
-		gitFileMap[f.DestionationPath] = content
+		gitFileMap[f.DestinationPath] = content
 	}
 	return gitFileMap
 }
 
+// unused
 func GenerateGitFileInfo(filePaths []string, gitDirPath string) ([]*GitFilePathInfo, error) {
 	gitFileInfos := make([]*GitFilePathInfo, 0)
 	for _, filePath := range filePaths {
@@ -48,8 +50,8 @@ func GenerateGitFileInfo(filePaths []string, gitDirPath string) ([]*GitFilePathI
 		}
 		if !info.IsDir() {
 			gitFileInfos = append(gitFileInfos, &GitFilePathInfo{
-				SourcePath:       filePath,
-				DestionationPath: filepath.Join(gitDirPath, filePath),
+				SourcePath:      filePath,
+				DestinationPath: filepath.Join(gitDirPath, filePath),
 			})
 			continue
 		}
@@ -70,8 +72,8 @@ func GenerateGitFileInfo(filePaths []string, gitDirPath string) ([]*GitFilePathI
 				repoPath = filepath.Join(gitDirPath, repoPath)
 			}
 			gitFileInfos = append(gitFileInfos, &GitFilePathInfo{
-				SourcePath:       path,
-				DestionationPath: repoPath,
+				SourcePath:      path,
+				DestinationPath: repoPath,
 			})
 			return nil
 		})

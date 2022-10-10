@@ -23,7 +23,7 @@ func (m *mockRepoStruct) InitRepo() error {
 	}
 	return nil
 }
-func (m *mockRepoStruct) PushLocalFileToRepo(commitInfo *git.CommitInfo, checkUpdate bool) (bool, error) {
+func (m *mockRepoStruct) PushLocalFilesToRepo(commitInfo *git.CommitInfo, checkUpdate bool) (bool, error) {
 	if m.pushRaiseError {
 		return m.needRollBack, errors.New("push error")
 	}

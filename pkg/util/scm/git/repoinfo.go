@@ -16,11 +16,12 @@ type RepoInfo struct {
 	Namespace  string
 	BaseURL    string
 
-	// used for github
+	// used for GitHub
 	WorkPath string
 	NeedAuth bool
 }
 
+// unused
 func (r *RepoInfo) GetRepoNameWithBranch() string {
 	return fmt.Sprintf("%s-%s", r.Repo, r.Branch)
 }
