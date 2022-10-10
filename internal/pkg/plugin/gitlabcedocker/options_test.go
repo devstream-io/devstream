@@ -47,6 +47,5 @@ var _ = Describe("Options", func() {
 
 			Expect(OptsBuild).To(Equal(OptsExpect))
 		})
-
 	})
 })
