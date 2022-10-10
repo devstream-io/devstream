@@ -8,11 +8,11 @@
 
 ## 所需插件
 
-1. [repo-scaffolding](../plugins/repo-scaffolding.md)
-2. [jira-github](../plugins/jira-github-integ.md)
-3. [githubactions-golang](../plugins/githubactions-golang.md)
-4. [argocd](../plugins/argocd.md)
-5. [argocdapp](../plugins/argocdapp.md)
+1. [repo-scaffolding](../plugins/repo-scaffolding.zh.md)
+2. [jira-github](../plugins/jira-github-integ.zh.md)
+3. [githubactions-golang](../plugins/githubactions-golang.zh.md)
+4. [argocd](../plugins/argocd.zh.md)
+5. [argocdapp](../plugins/argocdapp.zh.md)
 
 这些插件的依赖关系如下（`a -> b`意味着`a依赖b`）：
 
