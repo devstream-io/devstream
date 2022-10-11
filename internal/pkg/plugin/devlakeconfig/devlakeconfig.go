@@ -53,8 +53,8 @@ func ApplyConfig(options plugininstaller.RawOptions) error {
 }
 
 func createConnections(host string, pluginName string, connections []Connection) error {
-	for _, c := range connections {
-		log.Infof("(%s)", c.Name)
+	for i, c := range connections {
+		log.Infof("Connection %d: %s", i, c.Name)
 		configs, err := json.Marshal(c)
 		if err != nil {
 			return err
@@ -74,7 +74,7 @@ func createConnections(host string, pluginName string, connections []Connection)
 }
 
 func createConnection(url string, bodyWithJson []byte) error {
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(bodyWithJson))
+	req, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(bodyWithJson))
 	if err != nil {
 		return err
 	}
