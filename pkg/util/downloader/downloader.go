@@ -70,6 +70,10 @@ func (d *Downloader) Download(url, filename, targetDir string) (size int64, err 
 		if err != nil {
 			log.Debugf("download create file failed: %s", err)
 		}
+		err = removeFileIfExists(pluginTmpLocation)
+		if err != nil {
+			log.Debugf("download create file failed: %s", err)
+		}
 	}()
 
 	if d.EnableProgressBar {
@@ -169,4 +173,11 @@ func FetchContentFromURL(url string) ([]byte, error) {
 	}
 
 	return io.ReadAll(resp.Body)
+}
+
+func removeFileIfExists(filename string) error {
+	if _, err := os.Stat(filename); os.IsNotExist(err) {
+		return nil
+	}
+	return os.Remove(filename)
 }
