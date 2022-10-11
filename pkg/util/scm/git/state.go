@@ -2,6 +2,7 @@ package git
 
 import (
 	"crypto/sha1"
+	"encoding/base64"
 	"encoding/hex"
 	"fmt"
 
@@ -22,10 +23,14 @@ func (f *RepoFileStatus) EncodeToGitHubContentOption(commitMsg string) *github.R
 	}
 }
 
-func CalculateGitHubBlobSHA(fileContent string) string {
+func CalculateGitHubBlobSHA(fileContent []byte) string {
 	p := fmt.Sprintf("blob %d\x00", len(fileContent))
 	h := sha1.New()
 	h.Write([]byte(p))
 	h.Write([]byte(fileContent))
 	return hex.EncodeToString(h.Sum(nil))
+}
+
+func CalculateLocalFileSHA(fileContent []byte) string {
+	return base64.StdEncoding.EncodeToString(fileContent)
 }

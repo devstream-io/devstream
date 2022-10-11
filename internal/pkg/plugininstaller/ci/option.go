@@ -9,6 +9,7 @@ import (
 	"github.com/mitchellh/mapstructure"
 
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/server"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/common"
 	"github.com/devstream-io/devstream/pkg/util/file"
 	"github.com/devstream-io/devstream/pkg/util/log"
@@ -18,7 +19,7 @@ import (
 )
 
 type CIConfig struct {
-	Type      ciRepoType             `validate:"oneof=jenkins github gitlab" mapstructure:"type"`
+	Type      server.CIServerType    `validate:"oneof=jenkins github gitlab" mapstructure:"type"`
 	LocalPath string                 `mapstructure:"localPath"`
 	RemoteURL string                 `mapstructure:"remoteURL"`
 	Content   string                 `mapstructure:"content"`
@@ -38,8 +39,8 @@ func NewOptions(options plugininstaller.RawOptions) (*Options, error) {
 	return &opts, nil
 }
 
-func (c *CIConfig) CIClient() (ciClient CI) {
-	return NewCI(c.Type)
+func (c *CIConfig) CIClient() (ciClient server.CIServerOptions) {
+	return server.NewCIServer(c.Type)
 }
 
 // getCIFile will generate ci files by config
@@ -68,7 +69,7 @@ func (c *CIConfig) getFromURL(appName string) (git.GitFileContentMap, error) {
 	if err != nil {
 		return nil, err
 	}
-	fileName := c.CIClient().getGitNameFunc()("", path.Base(c.RemoteURL))
+	fileName := c.CIClient().GetGitNameFunc()("", path.Base(c.RemoteURL))
 	gitFileMap[fileName] = []byte(content)
 	return gitFileMap, nil
 }
@@ -84,8 +85,8 @@ func (c *CIConfig) getFromLocal(appName string) (git.GitFileContentMap, error) {
 	// process dir
 	if info.IsDir() {
 		return file.WalkDir(
-			c.LocalPath, ciClient.filterCIFilesFunc(),
-			ciClient.getGitNameFunc(), processCIFilesFunc(appName, c.Vars),
+			c.LocalPath, ciClient.FilterCIFilesFunc(),
+			ciClient.GetGitNameFunc(), processCIFilesFunc(appName, c.Vars),
 		)
 	}
 	// process file

@@ -23,7 +23,7 @@ func (m *mockRepoStruct) InitRepo() error {
 	}
 	return nil
 }
-func (m *mockRepoStruct) PushLocalFilesToRepo(commitInfo *git.CommitInfo, checkUpdate bool) (bool, error) {
+func (m *mockRepoStruct) PushFiles(commitInfo *git.CommitInfo, checkUpdate bool) (bool, error) {
 	if m.pushRaiseError {
 		return m.needRollBack, errors.New("push error")
 	}
@@ -33,7 +33,7 @@ func (m *mockRepoStruct) DeleteRepo() error {
 	m.deleteFuncIsRun = true
 	return nil
 }
-func (m *mockRepoStruct) GetLocationInfo(path string) ([]*git.RepoFileStatus, error) {
+func (m *mockRepoStruct) GetPathInfo(path string) ([]*git.RepoFileStatus, error) {
 	return nil, nil
 }
 func (m *mockRepoStruct) DeleteFiles(commitInfo *git.CommitInfo) error {

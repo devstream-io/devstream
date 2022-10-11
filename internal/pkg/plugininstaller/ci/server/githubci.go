@@ -1,4 +1,4 @@
-package ci
+package server
 
 import (
 	"path/filepath"
@@ -8,14 +8,14 @@ import (
 )
 
 const (
-	ciGitHubType               ciRepoType = "github"
-	ciGitHubWorkConfigLocation string     = ".github/workflows"
+	ciGitHubType               CIServerType = "github"
+	ciGitHubWorkConfigLocation string       = ".github/workflows"
 )
 
 type GitHubCI struct {
 }
 
-func (g *GitHubCI) Type() ciRepoType {
+func (g *GitHubCI) Type() CIServerType {
 	return ciGitHubType
 }
 
@@ -28,7 +28,7 @@ func (g *GitHubCI) CIFilePath(subFilename ...string) string {
 	return filepath.Join(ciGitHubWorkConfigLocation, filepath.Base(subFilename[0]))
 }
 
-func (g *GitHubCI) filterCIFilesFunc() file.DirFIleFilterFunc {
+func (g *GitHubCI) FilterCIFilesFunc() file.DirFIleFilterFunc {
 	return func(filePath string, isDir bool) bool {
 		// not process dir
 		if isDir {
@@ -38,7 +38,7 @@ func (g *GitHubCI) filterCIFilesFunc() file.DirFIleFilterFunc {
 	}
 }
 
-func (g *GitHubCI) getGitNameFunc() file.DirFileNameFunc {
+func (g *GitHubCI) GetGitNameFunc() file.DirFileNameFunc {
 	return func(filePath, walkDir string) string {
 		return g.CIFilePath(filePath)
 	}

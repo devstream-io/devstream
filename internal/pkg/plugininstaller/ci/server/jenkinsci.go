@@ -1,16 +1,16 @@
-package ci
+package server
 
 import "github.com/devstream-io/devstream/pkg/util/file"
 
 const (
-	ciJenkinsType           ciRepoType = "jenkins"
-	ciJenkinsConfigLocation string     = "Jenkinsfile"
+	ciJenkinsType           CIServerType = "jenkins"
+	ciJenkinsConfigLocation string       = "Jenkinsfile"
 )
 
 type JenkinsCI struct {
 }
 
-func (j *JenkinsCI) Type() ciRepoType {
+func (j *JenkinsCI) Type() CIServerType {
 	return ciJenkinsType
 }
 
@@ -18,7 +18,7 @@ func (j *JenkinsCI) CIFilePath(_ ...string) string {
 	return ciJenkinsConfigLocation
 }
 
-func (j *JenkinsCI) filterCIFilesFunc() file.DirFIleFilterFunc {
+func (j *JenkinsCI) FilterCIFilesFunc() file.DirFIleFilterFunc {
 	return func(filePath string, isDir bool) bool {
 		// not process dir
 		if isDir {
@@ -28,7 +28,7 @@ func (j *JenkinsCI) filterCIFilesFunc() file.DirFIleFilterFunc {
 	}
 }
 
-func (j *JenkinsCI) getGitNameFunc() file.DirFileNameFunc {
+func (j *JenkinsCI) GetGitNameFunc() file.DirFileNameFunc {
 	return func(filePath, walkDir string) string {
 		return j.CIFilePath()
 	}
