@@ -14,6 +14,98 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
+type Downloader struct {
+	EnableProgressBar bool
+}
+
+func NewDownloader() *Downloader {
+	return &Downloader{}
+}
+
+func (d *Downloader) WithProgressBar() *Downloader {
+	d.EnableProgressBar = true
+	return d
+}
+
+// Download a file from the URL to the target path
+// if filename is "", use the remote filename at local.
+func (d *Downloader) Download(url, filename, targetDir string) (int64, error) {
+	// handle filename and target dir
+	targetFile, err := handleFilenameAndTargetDir(url, filename, targetDir)
+	if err != nil {
+		return 0, err
+	}
+
+	defer func() {
+		err := targetFile.Close()
+		if err != nil {
+			log.Debugf("download create file failed: %s", err)
+		}
+	}()
+
+	// get http response
+	resp, err := getHttpResponse(url)
+	if err != nil {
+		return 0, err
+	}
+
+	defer func(body io.ReadCloser) {
+		err := body.Close()
+		if err != nil {
+			log.Errorf("Close response body failed: %s", err)
+		}
+	}(resp.Body)
+
+	// handle progress bar
+	if d.EnableProgressBar {
+		return SetUpProgressBar(resp, targetFile)
+	} else {
+		return io.Copy(targetFile, resp.Body)
+	}
+}
+
+func handleFilenameAndTargetDir(url, filename, targetDir string) (targetFile io.WriteCloser, err error) {
+	log.Debugf("Target dir: %s.", targetDir)
+	if url == "" {
+		return nil, fmt.Errorf("url must not be empty: %s", url)
+	}
+	if filename == "" {
+		// when url is empty filepath.Base(url) will return "."
+		filename = filepath.Base(url)
+	}
+	if filename == "." {
+		return nil, fmt.Errorf("failed to get the filename from url: %s", url)
+	}
+
+	if err := os.MkdirAll(targetDir, 0755); err != nil {
+		return nil, err
+	}
+
+	f, err := os.Create(filepath.Join(targetDir, filename))
+	if err != nil {
+		return nil, err
+	}
+
+	return f, nil
+}
+
+func getHttpResponse(url string) (*http.Response, error) {
+	resp, err := http.Get(url)
+
+	// check response error
+	if err != nil {
+		log.Debugf("Download from url failed: %s", err)
+		return nil, err
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("Download file from url failed: %+v", resp)
+	}
+
+	return resp, nil
+}
+
+// Download a file from the URL to the target path
 // if filename is "", use the remote filename at local.
 func Download(url, filename, targetDir string) (int64, error) {
 	log.Debugf("Target dir: %s.", targetDir)

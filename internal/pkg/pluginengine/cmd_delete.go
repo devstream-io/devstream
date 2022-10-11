@@ -9,6 +9,7 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/pluginmanager"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/file"
+	"github.com/devstream-io/devstream/pkg/util/interact"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -52,8 +53,8 @@ func Remove(configFile string, continueDirectly bool, isForceDelete bool) error 
 	}
 
 	if !continueDirectly {
-		userInput := readUserInput()
-		if userInput == "n" {
+		continued := interact.AskUserIfContinue(askUserIfContinue)
+		if !continued {
 			os.Exit(0)
 		}
 	}

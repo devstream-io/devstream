@@ -30,13 +30,6 @@ func (c *Change) String() string {
 		c.ActionName, c.Tool.Name, c.Tool.InstanceID)
 }
 
-type CommandType string
-
-const (
-	CommandApply  CommandType = "apply"
-	CommandDelete CommandType = "delete"
-)
-
 // GetChangesForApply takes "State Manager" & "Config" then do some calculate and return a Plan.
 // All actions should be executed is included in this Plan.changes.
 func GetChangesForApply(smgr statemanager.Manager, cfg *configmanager.Config) ([]*Change, error) {
