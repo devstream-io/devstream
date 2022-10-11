@@ -66,57 +66,6 @@ func (c *Client) DescribeRepo() (*github.Repository, error) {
 	return repo, nil
 }
 
-// PushLocalFilesToRepo will push local change to remote repo
-// return boolean value is for control whether to roll out if encounter error
-func (c *Client) PushLocalFilesToRepo(commitInfo *git.CommitInfo, checkChange bool) (bool, error) {
-	// 1. create new branch from main
-	ref, err := c.NewBranch(commitInfo.CommitBranch)
-	if err != nil {
-		log.Warnf("Failed to create transit branch: %s", err)
-		return false, err
-	}
-	// delete new branch after func exit
-	defer func() {
-		err = c.DeleteBranch(commitInfo.CommitBranch)
-		if err != nil {
-			log.Warnf("Failed to delete transit branch: %s", err)
-		}
-	}()
-	tree, err := c.BuildCommitTree(ref, commitInfo, checkChange)
-	if err != nil {
-		log.Debugf("Failed to build commit tree: %s.", err)
-		return true, err
-	}
-	// if no new files to commit, just return
-	if tree == nil {
-		log.Successf("Github file all not change, pass...")
-		return false, nil
-	}
-
-	// 2. push local file change to new branch
-	if err := c.PushLocalPath(ref, tree, commitInfo); err != nil {
-		log.Debugf("Failed to walk local repo-path: %s.", err)
-		return true, err
-	}
-
-	// 3. merge new branch to main
-	if err = c.MergeCommits(commitInfo); err != nil {
-		log.Debugf("Failed to merge commits: %s.", err)
-		return true, err
-	}
-	// 4. delete placeholder file
-	if err = c.DeleteFiles(&git.CommitInfo{
-		CommitMsg:    "delete placeholder file",
-		CommitBranch: c.Branch,
-		GitFileMap: git.GitFileContentMap{
-			repoPlaceHolderFileName: []byte{},
-		},
-	}); err != nil {
-		log.Debugf("github delete init file failed: %s", err)
-	}
-	return false, nil
-}
-
 func (c *Client) InitRepo() error {
 	// It's ok to give the opts.Org to CreateRepo() when create a repository for an authenticated user.
 	if err := c.CreateRepo(c.Org, c.Branch); err != nil {

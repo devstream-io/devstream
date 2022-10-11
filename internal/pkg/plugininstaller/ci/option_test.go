@@ -11,6 +11,7 @@ import (
 	"github.com/onsi/gomega/ghttp"
 
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/server"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/common"
 )
 
@@ -66,7 +67,7 @@ var _ = Describe("Options struct", func() {
 			)
 			BeforeEach(func() {
 				tempDir := GinkgoT().TempDir()
-				localDir = fmt.Sprintf("%s/%s", tempDir, ciGitHubWorkConfigLocation)
+				localDir = fmt.Sprintf("%s/%s", tempDir, ".github/workflows")
 				err := os.MkdirAll(localDir, os.ModePerm)
 				Expect(err).Error().ShouldNot(HaveOccurred())
 				tempFile, err := os.CreateTemp(localDir, "testFile")
@@ -79,7 +80,7 @@ var _ = Describe("Options struct", func() {
 			When("LocalPath is directory", func() {
 				BeforeEach(func() {
 					opts.CIConfig = &CIConfig{
-						Type:      ciGitHubType,
+						Type:      "github",
 						LocalPath: localDir,
 					}
 				})
@@ -87,7 +88,7 @@ var _ = Describe("Options struct", func() {
 					gitMap, err := opts.buildGitMap()
 					Expect(err).Error().ShouldNot(HaveOccurred())
 					Expect(gitMap).ShouldNot(BeEmpty())
-					expectedKey := fmt.Sprintf("%s/%s", ciGitHubWorkConfigLocation, path.Base(localFile))
+					expectedKey := fmt.Sprintf("%s/%s", ".github/workflows", path.Base(localFile))
 					v, ok := gitMap[expectedKey]
 					Expect(ok).Should(BeTrue())
 					Expect(v).Should(Equal(testContent))
@@ -96,7 +97,7 @@ var _ = Describe("Options struct", func() {
 			When("localPath is file", func() {
 				BeforeEach(func() {
 					opts.CIConfig = &CIConfig{
-						Type:      ciGitHubType,
+						Type:      "github",
 						LocalPath: localFile,
 					}
 				})
@@ -104,7 +105,7 @@ var _ = Describe("Options struct", func() {
 					gitMap, err := opts.buildGitMap()
 					Expect(err).Error().ShouldNot(HaveOccurred())
 					Expect(gitMap).ShouldNot(BeEmpty())
-					expectedKey := fmt.Sprintf("%s/%s", ciGitHubWorkConfigLocation, path.Base(localFile))
+					expectedKey := fmt.Sprintf("%s/%s", ".github/workflows", path.Base(localFile))
 					v, ok := gitMap[expectedKey]
 					Expect(ok).Should(BeTrue())
 					Expect(v).Should(Equal(testContent))
@@ -118,7 +119,7 @@ var _ = Describe("Options struct", func() {
 			BeforeEach(func() {
 				testContent = "testJenkins"
 				opts.CIConfig = &CIConfig{
-					Type:    ciJenkinsType,
+					Type:    "jenkins",
 					Content: testContent,
 				}
 			})
@@ -126,7 +127,7 @@ var _ = Describe("Options struct", func() {
 				gitMap, err := opts.buildGitMap()
 				Expect(err).Error().ShouldNot(HaveOccurred())
 				Expect(len(gitMap)).Should(Equal(1))
-				v, ok := gitMap[ciJenkinsConfigLocation]
+				v, ok := gitMap["Jenkinsfile"]
 				Expect(ok).Should(BeTrue())
 				Expect(v).Should(Equal([]byte(testContent)))
 			})
@@ -145,7 +146,7 @@ var _ = Describe("Options struct", func() {
 					fmt.Fprint(w, testContent)
 				})
 				opts.CIConfig = &CIConfig{
-					Type:      ciGitLabType,
+					Type:      "gitlab",
 					RemoteURL: s.URL(),
 					Vars: map[string]interface{}{
 						"App": templateVal,
@@ -159,7 +160,7 @@ var _ = Describe("Options struct", func() {
 				gitMap, err := opts.buildGitMap()
 				Expect(err).Error().ShouldNot(HaveOccurred())
 				Expect(len(gitMap)).Should(Equal(1))
-				v, ok := gitMap[ciGitLabConfigLocation]
+				v, ok := gitMap[".gitlab-ci.yml"]
 				Expect(ok).Should(BeTrue())
 				Expect(string(v)).Should(Equal(fmt.Sprintf("testGitlabCI %s", templateVal)))
 			})
@@ -173,7 +174,7 @@ var _ = Describe("Options struct", func() {
 		BeforeEach(func() {
 			opts = &Options{}
 			defaultCIConfig := &CIConfig{
-				Type:      ciGitHubType,
+				Type:      "github",
 				RemoteURL: "http://www.test.com",
 			}
 			defaultRepo := &common.Repo{
@@ -210,7 +211,7 @@ var _ = Describe("Options struct", func() {
 				Expect(opts.CIConfig).ShouldNot(BeNil())
 				Expect(opts.ProjectRepo).ShouldNot(BeNil())
 				Expect(opts.CIConfig.RemoteURL).Should(Equal("http://exist.com"))
-				Expect(opts.CIConfig.Type).Should(Equal(ciGitHubType))
+				Expect(opts.CIConfig.Type).Should(Equal(server.CIServerType("github")))
 				Expect(opts.ProjectRepo.Branch).Should(Equal("new_branch"))
 				Expect(opts.ProjectRepo.Repo).Should(Equal("test_repo"))
 			})

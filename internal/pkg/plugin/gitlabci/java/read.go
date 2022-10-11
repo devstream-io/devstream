@@ -26,12 +26,12 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	exists, err := client.FileExists(ciFileName)
+	pathInfo, err := client.GetPathInfo(ciFileName)
 	if err != nil {
 		return nil, err
 	}
 
-	if !exists {
+	if len(pathInfo) == 0 {
 		return nil, nil
 	}
 

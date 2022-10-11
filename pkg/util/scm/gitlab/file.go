@@ -11,25 +11,42 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
+func (c *Client) PushFiles(commitInfo *git.CommitInfo, checkUpdate bool) (bool, error) {
+	// if checkUpdate is true, check files to update first
+	tree := newCommitTree(commitInfo.CommitMsg, c.Branch)
+	if checkUpdate {
+		for scmPath, content := range commitInfo.GitFileMap {
+			fileExist, err := c.checkFileExist(scmPath)
+			if err != nil {
+				return false, err
+			}
+			if fileExist {
+				tree.addCommitFile(gitlab.FileUpdate, scmPath, content)
+			} else {
+				tree.addCommitFile(gitlab.FileCreate, scmPath, content)
+			}
+		}
+	} else {
+		tree.addCommitFilesFromMap(gitlab.FileCreate, commitInfo.GitFileMap)
+	}
+	_, _, err := c.Commits.CreateCommit(c.GetRepoPath(), tree.createCommitInfo())
+	if err != nil && !pkgerror.CheckSlientErrorByMessage(err, errFileExist) {
+		return true, c.newModuleError(err)
+	}
+	return false, nil
+}
+
 func (c *Client) DeleteFiles(commitInfo *git.CommitInfo) error {
-	deleteCommitOptions := c.CreateCommitInfo(gitlab.FileDelete, commitInfo)
-	_, _, err := c.Commits.CreateCommit(c.GetRepoPath(), deleteCommitOptions)
+	tree := newCommitTree(commitInfo.CommitMsg, c.Branch)
+	tree.addCommitFilesFromMap(gitlab.FileDelete, commitInfo.GitFileMap)
+	_, _, err := c.Commits.CreateCommit(c.GetRepoPath(), tree.createCommitInfo())
 	if err != nil && !pkgerror.CheckSlientErrorByMessage(err, errRepoNotFound) {
 		return c.newModuleError(err)
 	}
 	return nil
 }
 
-func (c *Client) UpdateFiles(commitInfo *git.CommitInfo) error {
-	updateCommitOptions := c.CreateCommitInfo(gitlab.FileUpdate, commitInfo)
-	_, _, err := c.Commits.CreateCommit(c.GetRepoPath(), updateCommitOptions)
-	if err != nil {
-		return c.newModuleError(err)
-	}
-	return nil
-}
-
-func (c *Client) FileExists(filename string) (bool, error) {
+func (c *Client) checkFileExist(filename string) (bool, error) {
 	getFileOptions := &gitlab.GetFileOptions{
 		Ref: gitlab.String(c.Branch),
 	}
@@ -48,7 +65,7 @@ func (c *Client) FileExists(filename string) (bool, error) {
 	return true, nil
 }
 
-func (c *Client) GetLocationInfo(path string) ([]*git.RepoFileStatus, error) {
+func (c *Client) GetPathInfo(path string) ([]*git.RepoFileStatus, error) {
 	gitRepoFileStatus := make([]*git.RepoFileStatus, 0)
 	getFileOptions := &gitlab.GetFileOptions{
 		Ref: gitlab.String(c.Branch),

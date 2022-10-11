@@ -37,7 +37,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	_, err = client.PushLocalFilesToRepo(&git.CommitInfo{
+	_, err = client.PushFiles(&git.CommitInfo{
 		CommitMsg:    commitMessage,
 		CommitBranch: opts.Branch,
 		GitFileMap: git.GitFileContentMap{

@@ -46,7 +46,7 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	}
 
 	// the only difference between "Create" and "Update"
-	if err = client.UpdateFiles(commitInfo); err != nil {
+	if _, err = client.PushFiles(commitInfo, true); err != nil {
 		return nil, err
 	}
 

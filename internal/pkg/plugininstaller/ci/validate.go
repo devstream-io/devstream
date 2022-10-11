@@ -35,13 +35,6 @@ func Validate(options plugininstaller.RawOptions) (plugininstaller.RawOptions, e
 	} else if config.Content == "" {
 		return nil, errors.New("ci.locaPath, ci.remoteURL, ci.content can't all be empty at the same time")
 	}
-
-	if config.Type == ciGitHubType && opts.ProjectRepo.RepoType == "gitlab" {
-		return nil, errors.New("github ci doesn't support gitlab")
-	}
-	if config.Type == ciGitLabType && opts.ProjectRepo.RepoType == "github" {
-		return nil, errors.New("gitlab ci doesn't support github")
-	}
 	return options, nil
 }
 

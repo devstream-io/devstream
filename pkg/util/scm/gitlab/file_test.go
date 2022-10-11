@@ -39,35 +39,7 @@ var _ = Describe("CreateCommitInfo method", func() {
 		}
 		server.SetAllowUnhandledRequests(true)
 	})
-	Context("FileExists method", func() {
-		BeforeEach(func() {
-			reqPath = fmt.Sprintf("%sprojects/%s/%s/repository/files/%s", apiRootPath, owner, repoName, testFile)
-		})
-		When("get files url return err", func() {
-			BeforeEach(func() {
-				server.SetUnhandledRequestStatusCode(http.StatusNotFound)
-			})
-			It("should return false", func() {
-				exist, err := gitlabClient.FileExists(testFile)
-				Expect(err).Error().ShouldNot(HaveOccurred())
-				Expect(exist).Should(BeFalse())
-			})
-		})
-		When("git files return normal", func() {
-			BeforeEach(func() {
-				server.RouteToHandler("GET", reqPath, ghttp.CombineHandlers(
-					ghttp.VerifyRequest("GET", reqPath),
-					ghttp.RespondWithJSONEncoded(http.StatusOK, nil),
-				))
-			})
-			It("should return true", func() {
-				exist, err := gitlabClient.FileExists(testFile)
-				Expect(err).Error().ShouldNot(HaveOccurred())
-				Expect(exist).Should(BeTrue())
-			})
-		})
-	})
-	Context("GetLocationInfo method", func() {
+	Context("GetPathInfo method", func() {
 		When("gitlab return normal", func() {
 			BeforeEach(func() {
 				reqPath = fmt.Sprintf("%sprojects/%s/%s/repository/files/%s", apiRootPath, owner, repoName, testFile)
@@ -77,7 +49,7 @@ var _ = Describe("CreateCommitInfo method", func() {
 				))
 			})
 			It("should work", func() {
-				fileInfo, err := gitlabClient.GetLocationInfo(testFile)
+				fileInfo, err := gitlabClient.GetPathInfo(testFile)
 				Expect(err).Error().ShouldNot(HaveOccurred())
 				Expect(fileInfo).ShouldNot(BeNil())
 				Expect(fileInfo[0].Branch).Should(BeEmpty())
@@ -92,7 +64,7 @@ var _ = Describe("CreateCommitInfo method", func() {
 				))
 			})
 			It("should return err", func() {
-				_, err := gitlabClient.GetLocationInfo(testFile)
+				_, err := gitlabClient.GetPathInfo(testFile)
 				Expect(err).Error().Should(HaveOccurred())
 			})
 		})
@@ -106,7 +78,7 @@ var _ = Describe("CreateCommitInfo method", func() {
 			))
 		})
 		It("should work normal", func() {
-			_, err := gitlabClient.GetLocationInfo(testFile)
+			_, err := gitlabClient.GetPathInfo(testFile)
 			Expect(err).Error().Should(HaveOccurred())
 		})
 
