@@ -8,10 +8,10 @@ func Delete(options map[string]interface{}) (bool, error) {
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
-			// TODO(dtm): Add your PreExecuteOperations here.
+			validate,
 		},
 		ExecuteOperations: plugininstaller.ExecuteOperations{
-			// TODO(dtm): Add your ExecuteOperations here.
+			DeleteConfig,
 		},
 	}
 

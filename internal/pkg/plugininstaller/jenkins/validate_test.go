@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/devstream-io/devstream/pkg/util/scm/github"
-	"github.com/devstream-io/devstream/pkg/util/scm/gitlab"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+
+	"github.com/devstream-io/devstream/pkg/util/scm/github"
+	"github.com/devstream-io/devstream/pkg/util/scm/gitlab"
 )
 
 var _ = Describe("SetJobDefaultConfig func", func() {

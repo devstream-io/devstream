@@ -10,10 +10,10 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
-			// TODO(dtm): Add your PreExecuteOperations here.
+			validate,
 		},
 		ExecuteOperations: plugininstaller.ExecuteOperations{
-			// TODO(dtm): Add your ExecuteOperations here.
+			UpdateConfig,
 		},
 		TerminateOperations: plugininstaller.TerminateOperations{
 			// TODO(dtm): Add your TerminateOperations here.
