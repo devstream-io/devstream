@@ -60,7 +60,7 @@ func (d *Downloader) Download(url, filename, targetDir string) (size int64, err 
 	pluginLocation := filepath.Join(targetDir, filename)
 
 	// download to tmp file
-	log.Infof("Downloading: [%s] ...", targetDir)
+	log.Infof("Downloading: [%s] ...", filename)
 	downFile, err := os.Create(pluginTmpLocation)
 	if err != nil {
 		return 0, err
@@ -103,19 +103,28 @@ func parseFilenameAndCreateTargetDir(url, filename, targetDir string) (finalFile
 	if url == "" {
 		return "", fmt.Errorf("url must not be empty: %s", url)
 	}
-	if filename == "" {
+	// get filename from local or remote
+	if filename != "" {
+		// use local filename
+		// when filename is "/", ".", "..", the filepath.Base will return "/", ".", ".."
+		finalFilename = filepath.Base(filename)
+		if finalFilename == "/" || finalFilename == "." || finalFilename == ".." {
+			return "", fmt.Errorf("filename must not be dir")
+		}
+	} else {
+		// use remote filename
 		// when url is empty filepath.Base(url) will return "."
-		filename = filepath.Base(url)
-	}
-	if filename == "." {
-		return "", fmt.Errorf("failed to get the filename from url: %s", url)
+		finalFilename = filepath.Base(url)
+		if finalFilename == "." {
+			return "", fmt.Errorf("failed to get the filename from url: %s", url)
+		}
 	}
 
 	if err := os.MkdirAll(targetDir, 0755); err != nil {
 		return "", err
 	}
 
-	return filename, nil
+	return finalFilename, nil
 }
 
 func (d *Downloader) getHttpResponse(url string) (*http.Response, error) {
