@@ -12,8 +12,8 @@ import (
 )
 
 func (c *Client) DeleteFiles(commitInfo *git.CommitInfo) error {
-	deleteCommitoptions := c.CreateCommitInfo(gitlab.FileDelete, commitInfo)
-	_, _, err := c.Commits.CreateCommit(c.GetRepoPath(), deleteCommitoptions)
+	deleteCommitOptions := c.CreateCommitInfo(gitlab.FileDelete, commitInfo)
+	_, _, err := c.Commits.CreateCommit(c.GetRepoPath(), deleteCommitOptions)
 	if err != nil && !pkgerror.CheckSlientErrorByMessage(err, errRepoNotFound) {
 		return c.newModuleError(err)
 	}
@@ -21,8 +21,8 @@ func (c *Client) DeleteFiles(commitInfo *git.CommitInfo) error {
 }
 
 func (c *Client) UpdateFiles(commitInfo *git.CommitInfo) error {
-	updateCommitoptions := c.CreateCommitInfo(gitlab.FileUpdate, commitInfo)
-	_, _, err := c.Commits.CreateCommit(c.GetRepoPath(), updateCommitoptions)
+	updateCommitOptions := c.CreateCommitInfo(gitlab.FileUpdate, commitInfo)
+	_, _, err := c.Commits.CreateCommit(c.GetRepoPath(), updateCommitOptions)
 	if err != nil {
 		return c.newModuleError(err)
 	}

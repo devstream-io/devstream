@@ -38,6 +38,10 @@ func NewOptions(options plugininstaller.RawOptions) (*Options, error) {
 	return &opts, nil
 }
 
+func (c *CIConfig) CIClient() (ciClient CI) {
+	return NewCI(c.Type)
+}
+
 // getCIFile will generate ci files by config
 func (opt *Options) buildGitMap() (gitMap git.GitFileContentMap, err error) {
 	ciConfig := opt.CIConfig
@@ -64,7 +68,7 @@ func (c *CIConfig) getFromURL(appName string) (git.GitFileContentMap, error) {
 	if err != nil {
 		return nil, err
 	}
-	fileName := getGitNameFunc(c.Type)("", path.Base(c.RemoteURL))
+	fileName := c.CIClient().getGitNameFunc()("", path.Base(c.RemoteURL))
 	gitFileMap[fileName] = []byte(content)
 	return gitFileMap, nil
 }
@@ -75,18 +79,17 @@ func (c *CIConfig) getFromLocal(appName string) (git.GitFileContentMap, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	ciClient := c.CIClient()
 	// process dir
 	if info.IsDir() {
 		return file.WalkDir(
-			c.LocalPath, filterCIFilesFunc(c.Type),
-			getGitNameFunc(c.Type), processCIFilesFunc(appName, c.Vars),
+			c.LocalPath, ciClient.filterCIFilesFunc(),
+			ciClient.getGitNameFunc(), processCIFilesFunc(appName, c.Vars),
 		)
 	}
 	// process file
-	gitFilePath := getCIFilePath(c.Type)
-	if c.Type == ciGitHubType {
-		gitFilePath = filepath.Join(gitFilePath, filepath.Base(c.LocalPath))
-	}
+	gitFilePath := ciClient.CIFilePath(filepath.Base(c.LocalPath))
 	content, err := template.New().FromLocalFile(c.LocalPath).SetDefaultRender(appName, c.Vars).Render()
 	if err != nil {
 		return nil, err
@@ -101,7 +104,7 @@ func (c *CIConfig) getFromContent(appName string) (git.GitFileContentMap, error)
 	if err != nil {
 		return nil, err
 	}
-	gitFileMap[getCIFilePath(c.Type)] = []byte(content)
+	gitFileMap[c.CIClient().CIFilePath(appName)] = []byte(content)
 	return gitFileMap, nil
 }
 

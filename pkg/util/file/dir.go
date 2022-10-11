@@ -22,7 +22,6 @@ func WalkDir(
 	srcPath string, filterFunc DirFIleFilterFunc, fileNameFunc DirFileNameFunc, processFunc DirFileProcessFunc,
 ) (map[string][]byte, error) {
 	contentMap := make(map[string][]byte)
-	// 1. create temp dir for destination
 	if err := filepath.Walk(srcPath, func(path string, info fs.FileInfo, err error) error {
 		if err != nil {
 			log.Debugf("Walk error: %s.", err)
@@ -33,7 +32,7 @@ func WalkDir(
 			return nil
 		}
 
-		// if file endswith tpl, render this file, else copy this file directly
+		// if file ends-with tpl, render this file, else copy this file directly
 		dstFileName := fileNameFunc(path, srcPath)
 		content, err := processFunc(path)
 		if err != nil {

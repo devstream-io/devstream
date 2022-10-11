@@ -66,13 +66,13 @@ func (c *Client) DescribeRepo() (*github.Repository, error) {
 	return repo, nil
 }
 
-// PushLocalPathToBranch will push local change to remote repo
-// return boolean value is for control whether to rollout if encounter error
-func (c *Client) PushLocalFileToRepo(commitInfo *git.CommitInfo, checkChange bool) (bool, error) {
+// PushLocalFilesToRepo will push local change to remote repo
+// return boolean value is for control whether to roll out if encounter error
+func (c *Client) PushLocalFilesToRepo(commitInfo *git.CommitInfo, checkChange bool) (bool, error) {
 	// 1. create new branch from main
 	ref, err := c.NewBranch(commitInfo.CommitBranch)
 	if err != nil {
-		log.Debugf("Failed to create transit branch: %s", err)
+		log.Warnf("Failed to create transit branch: %s", err)
 		return false, err
 	}
 	// delete new branch after func exit
@@ -118,7 +118,7 @@ func (c *Client) PushLocalFileToRepo(commitInfo *git.CommitInfo, checkChange boo
 }
 
 func (c *Client) InitRepo() error {
-	// It's ok to give the opts.Org to CreateRepo() when create a repository for a authenticated user.
+	// It's ok to give the opts.Org to CreateRepo() when create a repository for an authenticated user.
 	if err := c.CreateRepo(c.Org, c.Branch); err != nil {
 		// recreate if set tryTime
 		log.Errorf("Failed to create repo: %s.", err)

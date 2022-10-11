@@ -7,7 +7,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
-func (c *Client) PushLocalFileToRepo(commitInfo *git.CommitInfo, checkUpdate bool) (bool, error) {
+func (c *Client) PushLocalFilesToRepo(commitInfo *git.CommitInfo, checkUpdate bool) (bool, error) {
 	// if checkUpdate is true, check files to update first
 	if checkUpdate {
 		updateCommitInfo := &git.CommitInfo{

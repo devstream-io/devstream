@@ -29,7 +29,7 @@ var _ = Describe("ci walkDir methods", func() {
 			})
 			It("should return false", func() {
 				for _, tt := range testCases {
-					Expect(filterCIFilesFunc(tt.ciType)(tt.filePath, tt.isDir)).Should(BeFalse())
+					Expect(NewCI(tt.ciType).filterCIFilesFunc()(tt.filePath, tt.isDir)).Should(BeFalse())
 				}
 			})
 		})
@@ -44,7 +44,7 @@ var _ = Describe("ci walkDir methods", func() {
 			})
 			It("should return true", func() {
 				for _, tt := range testCases {
-					Expect(filterCIFilesFunc(tt.ciType)(tt.filePath, tt.isDir)).Should(BeTrue())
+					Expect(NewCI(tt.ciType).filterCIFilesFunc()(tt.filePath, tt.isDir)).Should(BeTrue())
 				}
 			})
 		})
@@ -89,7 +89,7 @@ var _ = Describe("ci walkDir methods", func() {
 				testCaseData = &testCase{"workflows/pr.yaml", ciRepoType("github"), false}
 			})
 			It("should return github workflows path", func() {
-				result := getGitNameFunc(testCaseData.ciType)(testCaseData.filePath, "workflows")
+				result := NewCI(testCaseData.ciType).getGitNameFunc()(testCaseData.filePath, "workflows")
 				Expect(result).Should(Equal(".github/workflows/pr.yaml"))
 			})
 		})
@@ -98,7 +98,7 @@ var _ = Describe("ci walkDir methods", func() {
 				testCaseData = &testCase{"work/Jenkinsfile", ciRepoType("jenkins"), false}
 			})
 			It("should return github workflows path", func() {
-				result := getGitNameFunc(testCaseData.ciType)(testCaseData.filePath, "")
+				result := NewCI(testCaseData.ciType).getGitNameFunc()(testCaseData.filePath, "")
 				Expect(result).Should(Equal("Jenkinsfile"))
 			})
 		})

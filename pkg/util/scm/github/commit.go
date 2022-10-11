@@ -27,7 +27,7 @@ func (c *Client) GetLastCommit() (*github.RepositoryCommit, error) {
 }
 
 func (c *Client) BuildCommitTree(ref *github.Reference, commitInfo *git.CommitInfo, checkChange bool) (*github.Tree, error) {
-	entries := []*github.TreeEntry{}
+	var entries []*github.TreeEntry
 	for githubPath, content := range commitInfo.GitFileMap {
 		contentString := string(content)
 		if checkChange && !c.checkFileChange(githubPath, contentString) {

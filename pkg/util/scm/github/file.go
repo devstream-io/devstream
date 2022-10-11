@@ -74,7 +74,7 @@ func (c *Client) checkFileChange(location string, content string) bool {
 		log.Debugf("Github request check file SHA failed: %s", err)
 		return true
 	}
-	contentSHA := git.CaluateGitHubBlobSHA(content)
+	contentSHA := git.CalculateGitHubBlobSHA(content)
 	for _, f := range fileInfos {
 		if f.SHA == contentSHA {
 			return false

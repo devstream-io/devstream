@@ -22,8 +22,8 @@ var _ = Describe("CommitInfo struct", func() {
 			BeforeEach(func() {
 				filePaths = []*git.GitFilePathInfo{
 					{
-						SourcePath:       "not_exist_file",
-						DestionationPath: dstPath,
+						SourcePath:      "not_exist_file",
+						DestinationPath: dstPath,
 					}}
 			})
 			It("should return empty map", func() {
@@ -42,8 +42,8 @@ var _ = Describe("CommitInfo struct", func() {
 				Expect(err).Error().ShouldNot(HaveOccurred())
 				filePaths = []*git.GitFilePathInfo{
 					{
-						SourcePath:       testFile.Name(),
-						DestionationPath: dstPath,
+						SourcePath:      testFile.Name(),
+						DestinationPath: dstPath,
 					}}
 			})
 			It("should return empty map", func() {
@@ -83,7 +83,7 @@ var _ = Describe("GenerateGitFileInfo func", func() {
 			fileInfo, err := git.GenerateGitFileInfo([]string{tempFileLoc}, gitDir)
 			Expect(err).ShouldNot(HaveOccurred())
 			Expect(len(fileInfo)).Should(Equal(1))
-			Expect(fileInfo[0].DestionationPath).Should(Equal(filepath.Join(gitDir, tempFileLoc)))
+			Expect(fileInfo[0].DestinationPath).Should(Equal(filepath.Join(gitDir, tempFileLoc)))
 		})
 	})
 	When("filePath type is dir", func() {
@@ -92,7 +92,7 @@ var _ = Describe("GenerateGitFileInfo func", func() {
 			Expect(err).ShouldNot(HaveOccurred())
 			Expect(len(fileInfo)).Should(Equal(1))
 			fileName := filepath.Base(tempFileLoc)
-			Expect(fileInfo[0].DestionationPath).Should(Equal(filepath.Join(gitDir, fileName)))
+			Expect(fileInfo[0].DestinationPath).Should(Equal(filepath.Join(gitDir, fileName)))
 		})
 	})
 })
