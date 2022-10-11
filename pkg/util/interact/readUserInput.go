@@ -1,4 +1,4 @@
-package pluginengine
+package interact
 
 import (
 	"fmt"
@@ -9,13 +9,14 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func readUserInput() string {
+// AskUserIfContinue asks the user if he wants to continue
+// default is false
+func AskUserIfContinue(query string) (continued bool) {
 	ui := &input.UI{
 		Writer: os.Stdout,
 		Reader: os.Stdin,
 	}
 
-	query := "Continue? [y/n]"
 	userInput, err := ui.Ask(query, &input.Options{
 		Required: true,
 		Default:  "n",
@@ -30,5 +31,5 @@ func readUserInput() string {
 	if err != nil {
 		log.Fatal(err)
 	}
-	return userInput
+	return userInput == "y"
 }
