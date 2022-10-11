@@ -85,13 +85,11 @@ func (d *Downloader) Download(url, filename, targetDir string) (size int64, err 
 	}
 
 	if err != nil {
-		log.Error(err)
 		return 0, err
 	}
 
 	// rename, tmp file to real file
 	if err = os.Rename(pluginTmpLocation, pluginLocation); err != nil {
-		log.Error(err)
 		return 0, err
 	}
 	return size, nil
