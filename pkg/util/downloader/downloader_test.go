@@ -38,25 +38,25 @@ var _ = Describe("Downloader", func() {
 	Context("Downloader test", func() {
 		When("input params is wrong", func() {
 			It("returns an error when url is empty", func() {
-				size, err := downloader.Download("", ".", tempDir)
+				size, err := downloader.New().Download("", ".", tempDir)
 				Expect(err).To(HaveOccurred())
 				Expect(size).To(Equal(int64(0)))
 			})
 
 			It("returns an error when filename is [.]", func() {
-				size, err := downloader.Download(url, ".", tempDir)
+				size, err := downloader.New().Download(url, ".", tempDir)
 				Expect(err).To(HaveOccurred())
 				Expect(size).To(Equal(int64(0)))
 			})
 
 			It("returns an error when filename is dir", func() {
-				size, err := downloader.Download(url, "/", tempDir)
+				size, err := downloader.New().Download(url, "/", tempDir)
 				Expect(err).To(HaveOccurred())
 				Expect(size).To(Equal(int64(0)))
 			})
 
 			It("returns an error when the targetDir is empty", func() {
-				size, err := downloader.Download(url, "download.txt", "")
+				size, err := downloader.New().Download(url, "download.txt", "")
 				Expect(err).To(HaveOccurred())
 				Expect(size).To(Equal(int64(0)))
 			})
@@ -71,7 +71,7 @@ var _ = Describe("Downloader", func() {
 			})
 			It("returns an error when the url is not right", func() {
 				errorURL := path.Join(s.URL(), failReqPath)
-				size, err := downloader.Download(errorURL, "download.txt", tempDir)
+				size, err := downloader.New().Download(errorURL, "download.txt", tempDir)
 				Expect(err).To(HaveOccurred())
 				Expect(size).To(Equal(int64(0)))
 			})
@@ -85,7 +85,7 @@ var _ = Describe("Downloader", func() {
 			})
 			When("filename is empty", func() {
 				It("should returns an error ", func() {
-					size, err := downloader.Download(url, "", tempDir)
+					size, err := downloader.New().Download(url, "", tempDir)
 					Expect(err).NotTo(HaveOccurred())
 					Expect(size).NotTo(Equal(int64(0)))
 				})
@@ -93,7 +93,7 @@ var _ = Describe("Downloader", func() {
 			When("fileName is right", func() {
 				It("should get fileName with content", func() {
 					fileName := "testFile"
-					size, err := downloader.Download(url, fileName, tempDir)
+					size, err := downloader.New().Download(url, fileName, tempDir)
 					Expect(err).NotTo(HaveOccurred())
 					Expect(size).NotTo(Equal(int64(0)))
 					fileContent, err := os.ReadFile(filepath.Join(tempDir, fileName))

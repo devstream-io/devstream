@@ -60,7 +60,7 @@ func (c *Client) DownloadAsset(tagName, assetName, fileName string) error {
 	}
 
 	// 4. download
-	n, err := downloader.Download(downloadUrl, fileName, c.WorkPath)
+	n, err := downloader.New().WithProgressBar().Download(downloadUrl, fileName, c.WorkPath)
 	if err != nil {
 		log.Debugf("Failed to download asset from %s.", downloadUrl)
 		return err

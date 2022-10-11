@@ -177,6 +177,7 @@ func (m *Manager) loadOriginalConfigFile() ([]byte, error) {
 // toolFile: "" # If not empty, use the specified external tools config file
 // pluginDir: "" # If empty, use the default value: ~/.devstream/plugins, or use -d flag to specify a directory
 // state:
+//
 //	backend: local
 //	options:
 //	  stateFile: devstream.state
@@ -188,9 +189,9 @@ func (m *Manager) loadOriginalConfigFile() ([]byte, error) {
 // ---
 // # plugins config
 // tools:
-// - name: A-PLUGIN-NAME
-//   instanceID: default
-//   options:
+//   - name: A-PLUGIN-NAME
+//     instanceID: default
+//     options:
 //     foo: bar
 //
 // See https://github.com/devstream-io/devstream/issues/596 for more details.
