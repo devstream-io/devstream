@@ -15,7 +15,6 @@ require (
 	github.com/cheggaaa/pb v1.0.29
 	github.com/deckarep/golang-set/v2 v2.1.0
 	github.com/go-playground/validator/v10 v10.11.0
-	github.com/go-resty/resty/v2 v2.7.0
 	github.com/google/go-cmp v0.5.8
 	github.com/google/go-github/v42 v42.0.0
 	github.com/imdario/mergo v0.3.12

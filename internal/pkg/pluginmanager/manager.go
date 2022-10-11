@@ -14,6 +14,8 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/md5"
 )
 
+const defaultReleaseUrl = "https://download.devstream.io"
+
 func DownloadPlugins(tools []configmanager.Tool, pluginDir, osName, arch string) error {
 	if pluginDir == "" {
 		return fmt.Errorf(`plugins directory should not be ""`)
@@ -22,7 +24,7 @@ func DownloadPlugins(tools []configmanager.Tool, pluginDir, osName, arch string)
 	log.Infof("Using dir <%s> to store plugins.", pluginDir)
 
 	// download all plugins that don't exist locally
-	dc := NewPbDownloadClient(defaultReleaseUrl)
+	dc := NewPluginDownloadClient(defaultReleaseUrl)
 
 	for _, tool := range tools {
 		pluginName := configmanager.GetPluginNameWithOSAndArch(&tool, osName, arch)
@@ -127,7 +129,7 @@ func pluginAndMD5Matches(pluginDir, soFileName, md5FileName, tooName string) err
 }
 
 // redownloadPlugins re-download from remote
-func redownloadPlugins(dc *PbDownloadClient, pluginDir, pluginFileName, pluginMD5FileName, version string) error {
+func redownloadPlugins(dc *PluginDownloadClient, pluginDir, pluginFileName, pluginMD5FileName, version string) error {
 	if err := os.Remove(filepath.Join(pluginDir, pluginFileName)); err != nil {
 		return err
 	}

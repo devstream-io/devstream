@@ -102,12 +102,12 @@ var _ = Describe("MD5", func() {
 
 	Describe("redownloadPlugins func", func() {
 		var (
-			pbDownloadClient *PbDownloadClient
+			pbDownloadClient *PluginDownloadClient
 			pluginVersion    string
 		)
 
 		BeforeEach(func() {
-			pbDownloadClient = NewPbDownloadClient("not_exist_url")
+			pbDownloadClient = NewPluginDownloadClient("not_exist_url")
 		})
 
 		When("pluginFile not exist", func() {
@@ -135,7 +135,7 @@ var _ = Describe("MD5", func() {
 				reqPath := fmt.Sprintf("/v%s/%s", pluginVersion, file)
 				md5Path := fmt.Sprintf("/v%s/%s", pluginVersion, fileMD5)
 				server = ghttp.NewServer()
-				pbDownloadClient = NewPbDownloadClient(server.URL())
+				pbDownloadClient = NewPluginDownloadClient(server.URL())
 				rspContent = "reDownload Content"
 				server.AppendHandlers(
 					ghttp.CombineHandlers(
