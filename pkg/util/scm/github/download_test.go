@@ -158,7 +158,7 @@ var _ = Describe("DownloadAsset", func() {
 			Expect(ghClient).NotTo(Equal(nil))
 			err = ghClient.DownloadAsset(tagName, assetName, ".")
 			Expect(err).To(HaveOccurred())
-			Expect(err.Error()).To(ContainSubstring(fmt.Sprintf("failed to get the filename from url: %s", downloadUrl)))
+			Expect(err.Error()).To(ContainSubstring("filename must not be dir"))
 		})
 	})
 
