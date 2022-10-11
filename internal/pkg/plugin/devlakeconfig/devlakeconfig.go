@@ -9,11 +9,31 @@ import (
 	"time"
 
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 var httpClient = &http.Client{
 	Timeout: 5 * time.Second,
+}
+
+func RenderAuthConfig(options plugininstaller.RawOptions) (plugininstaller.RawOptions, error) {
+	opts, err := NewOptions(options)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, p := range opts.Plugins {
+		for _, c := range p.Connections {
+			c.Token = c.Authx.Token
+			c.Username = c.Authx.Username
+			c.Password = c.Authx.Password
+			c.AppId = c.Authx.AppId
+			c.SecretKey = c.Authx.SecretKey
+		}
+	}
+
+	return opts.Encode()
 }
 
 func ApplyConfig(options plugininstaller.RawOptions) error {
@@ -35,7 +55,6 @@ func ApplyConfig(options plugininstaller.RawOptions) error {
 func createConnections(host string, pluginName string, connections []Connection) error {
 	for _, c := range connections {
 		log.Infof("(%s)", c.Name)
-		renderAuthConfig(&c)
 		configs, err := json.Marshal(c)
 		if err != nil {
 			return err
@@ -74,15 +93,6 @@ func createConnection(url string, bodyWithJson []byte) error {
 	return fmt.Errorf(resp.Status)
 }
 
-func renderAuthConfig(connection *Connection) {
-	connection.Token = connection.Authx.Token
-	connection.Username = connection.Authx.Username
-	connection.Password = connection.Authx.Password
-	connection.AppId = connection.Authx.AppId
-	connection.SecretKey = connection.Authx.SecretKey
-	connection.Authx = Auth{}
-}
-
 func DeleteConfig(options plugininstaller.RawOptions) error {
 	// TODO(daniel-hutao): implement later
 	return nil
@@ -91,4 +101,9 @@ func DeleteConfig(options plugininstaller.RawOptions) error {
 func UpdateConfig(options plugininstaller.RawOptions) error {
 	// TODO(daniel-hutao): implement later
 	return nil
+}
+
+func GetState(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
+	resState := statemanager.ResourceState(options)
+	return resState, nil
 }

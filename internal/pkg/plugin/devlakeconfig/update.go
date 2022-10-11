@@ -2,7 +2,6 @@ package devlakeconfig
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
-	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -11,6 +10,7 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			validate,
+			RenderAuthConfig,
 		},
 		ExecuteOperations: plugininstaller.ExecuteOperations{
 			UpdateConfig,
@@ -18,10 +18,7 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 		TerminateOperations: plugininstaller.TerminateOperations{
 			// TODO(dtm): Add your TerminateOperations here.
 		},
-		GetStateOperation: func(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
-			// TODO(dtm): Add your GetStateOperation here.
-			return nil, nil
-		},
+		GetStateOperation: GetState,
 	}
 
 	// Execute all Operations in Operator

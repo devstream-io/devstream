@@ -9,6 +9,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			validate,
+			RenderAuthConfig,
 		},
 		ExecuteOperations: plugininstaller.ExecuteOperations{
 			DeleteConfig,
