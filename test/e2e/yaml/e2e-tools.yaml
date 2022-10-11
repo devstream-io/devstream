@@ -47,7 +47,10 @@ tools:
         namespace: [[ argocdNameSpace ]]
         wait: true
         timeout: [[ argocdDeployTimeout ]]
-        upgradeCRDs: true
+        upgradeCRDs: false
+        valuesYaml: |
+          crds:
+            keep: false
   - name: argocdapp
     instanceID: default
     dependsOn: ["argocd.default", "repo-scaffolding.golang-github"]
