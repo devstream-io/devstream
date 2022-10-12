@@ -60,8 +60,9 @@ func DeleteCIFiles(options plugininstaller.RawOptions) error {
 	}
 	//3. delete ci files from git repo
 	commitInfo := &git.CommitInfo{
-		CommitMsg:  deleteCommitMsg,
-		GitFileMap: gitMap,
+		CommitMsg:    deleteCommitMsg,
+		GitFileMap:   gitMap,
+		CommitBranch: opts.ProjectRepo.Branch,
 	}
 	return gitClient.DeleteFiles(commitInfo)
 }

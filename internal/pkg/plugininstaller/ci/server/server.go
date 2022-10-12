@@ -13,9 +13,9 @@ type CIServerOptions interface {
 	// for GitHub: return ".github/workflows" or ".github/workflows/subFilename"
 	// for gitlab, jenkins: will ignore subFilename param
 	CIFilePath(subFilename ...string) string
-	// filterCIFilesFunc returns a filter function to select ci config file
+	// FilterCIFilesFunc returns a filter function to select ci config file
 	FilterCIFilesFunc() file.DirFIleFilterFunc
-	// getGitNameFunc returns a function to transform file path to git name of ci config file
+	// GetGitNameFunc returns a function to transform file path to git name of ci config file
 	GetGitNameFunc() file.DirFileNameFunc
 }
 
