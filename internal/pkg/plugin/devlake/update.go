@@ -14,7 +14,7 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 			helm.Validate,
 		},
 		ExecuteOperations: helm.DefaultUpdateOperations,
-		GetStateOperation: helm.GetPluginAllState,
+		GetStateOperation: genDevLakeState,
 	}
 
 	// Execute all Operations in Operator

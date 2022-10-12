@@ -13,7 +13,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 			helm.SetDefaultConfig(&defaultHelmConfig),
 			helm.Validate,
 		},
-		GetStateOperation: helm.GetPluginAllState,
+		GetStateOperation: genDevLakeState,
 	}
 
 	// Execute all Operations in Operator
