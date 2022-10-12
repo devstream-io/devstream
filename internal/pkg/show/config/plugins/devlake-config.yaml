@@ -1,0 +1,28 @@
+tools:
+# name of the tool
+- name: devlake-config
+  # id of the tool instance
+  instanceID: default
+  # format: name.instanceID; If specified, dtm will make sure the dependency is applied first before handling this tool.
+  dependsOn: [ ]
+  # options for the plugin
+  options:
+    devlakeAddr: http://127.0.0.1:1234
+    plugins:
+    - name: github
+      connections:
+      - name: "default"
+        endpoint: "https://github.com/changeme/changeme"
+        proxy: ""
+        rateLimitPerHour: 0
+        auth:
+          token: "xxx"
+    - name: jira
+      connections:
+      - name: "default"
+        endpoint: "https://changeme.atlassian.net"
+        proxy: ""
+        rateLimitPerHour: 0
+        auth:
+          username: "changeme"
+          password: "changeme"
