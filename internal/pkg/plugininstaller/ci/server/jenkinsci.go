@@ -1,35 +1,37 @@
 package server
 
-import "github.com/devstream-io/devstream/pkg/util/file"
+import (
+	"path/filepath"
+
+	"github.com/devstream-io/devstream/pkg/util/file"
+)
 
 const (
-	ciJenkinsType           CIServerType = "jenkins"
+	CIJenkinsType           CIServerType = "jenkins"
 	ciJenkinsConfigLocation string       = "Jenkinsfile"
 )
 
-type JenkinsCI struct {
+type JenkinsPipeline struct {
 }
 
-func (j *JenkinsCI) Type() CIServerType {
-	return ciJenkinsType
-}
-
-func (j *JenkinsCI) CIFilePath(_ ...string) string {
+// CIFilePath return Jenkinsfile
+func (j *JenkinsPipeline) CIFilePath() string {
 	return ciJenkinsConfigLocation
 }
 
-func (j *JenkinsCI) FilterCIFilesFunc() file.DirFIleFilterFunc {
+// FilterCIFilesFunc only get file with name Jenkinsfile
+func (j *JenkinsPipeline) FilterCIFilesFunc() file.DirFIleFilterFunc {
 	return func(filePath string, isDir bool) bool {
 		// not process dir
 		if isDir {
 			return false
 		}
-		return filePath == ciJenkinsConfigLocation
+		return filepath.Base(filePath) == ciJenkinsConfigLocation
 	}
 }
 
-func (j *JenkinsCI) GetGitNameFunc() file.DirFileNameFunc {
-	return func(filePath, walkDir string) string {
+func (j *JenkinsPipeline) GetGitNameFunc() file.DirFileNameFunc {
+	return func(filePath, _ string) string {
 		return j.CIFilePath()
 	}
 }

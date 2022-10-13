@@ -5,6 +5,7 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/devstream-io/devstream/pkg/util/downloader"
 	"github.com/devstream-io/devstream/pkg/util/file"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm"
@@ -50,12 +51,15 @@ func (d *Repo) CreateAndRenderLocalRepo(appName string, vars map[string]interfac
 	}
 	// 1. download zip file and unzip this file then render folders
 	downloadURL := d.getRepoDownloadURL()
-	zipFilesDir, err := file.DownloadAndUnzipFile(downloadURL)
+	getterClient := downloader.ResourceClient{
+		Source: downloadURL,
+	}
+	zipFilesDir, err := getterClient.GetWithGoGetter()
 	if err != nil {
 		log.Debugf("reposcaffolding process files error: %s", err)
 		return nil, err
 	}
-	return file.WalkDir(
+	return file.GetFileMapByWalkDir(
 		zipFilesDir, filterGitFiles,
 		getRepoFileNameFunc(appName, d.BuildRepoInfo().GetRepoNameWithBranch()),
 		processRepoFileFunc(appName, vars),

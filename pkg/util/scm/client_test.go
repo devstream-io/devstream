@@ -10,45 +10,9 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
-type mockRepoStruct struct {
-	initRaiseError  bool
-	pushRaiseError  bool
-	needRollBack    bool
-	deleteFuncIsRun bool
-}
-
-func (m *mockRepoStruct) InitRepo() error {
-	if m.initRaiseError {
-		return errors.New("init error")
-	}
-	return nil
-}
-func (m *mockRepoStruct) PushFiles(commitInfo *git.CommitInfo, checkUpdate bool) (bool, error) {
-	if m.pushRaiseError {
-		return m.needRollBack, errors.New("push error")
-	}
-	return m.needRollBack, nil
-}
-func (m *mockRepoStruct) DeleteRepo() error {
-	m.deleteFuncIsRun = true
-	return nil
-}
-func (m *mockRepoStruct) GetPathInfo(path string) ([]*git.RepoFileStatus, error) {
-	return nil, nil
-}
-func (m *mockRepoStruct) DeleteFiles(commitInfo *git.CommitInfo) error {
-	return nil
-}
-func (m *mockRepoStruct) AddWebhook(webhookConfig *git.WebhookConfig) error {
-	return nil
-}
-func (m *mockRepoStruct) DeleteWebhook(webhookConfig *git.WebhookConfig) error {
-	return nil
-}
-
 var _ = Describe("PushInitRepo func", func() {
 	var (
-		mockRepo   *mockRepoStruct
+		mockRepo   *scm.MockScmClient
 		commitInfo *git.CommitInfo
 		err        error
 	)
@@ -60,9 +24,8 @@ var _ = Describe("PushInitRepo func", func() {
 	})
 	When("init method return err", func() {
 		BeforeEach(func() {
-			mockRepo = &mockRepoStruct{
-				initRaiseError: true,
-				pushRaiseError: false,
+			mockRepo = &scm.MockScmClient{
+				InitRaiseError: errors.New("init error"),
 			}
 		})
 		It("should return err", func() {
@@ -74,32 +37,30 @@ var _ = Describe("PushInitRepo func", func() {
 
 	When("push method failed", func() {
 		BeforeEach(func() {
-			mockRepo = &mockRepoStruct{
-				initRaiseError: false,
-				pushRaiseError: true,
-				needRollBack:   false,
+			mockRepo = &scm.MockScmClient{
+				PushRaiseError: errors.New("push error"),
+				NeedRollBack:   false,
 			}
 		})
 		It("should return err", func() {
 			err = scm.PushInitRepo(mockRepo, commitInfo)
 			Expect(err).Error().Should(HaveOccurred())
 			Expect(err.Error()).Should(Equal("push error"))
-			Expect(mockRepo.deleteFuncIsRun).Should(BeFalse())
+			Expect(mockRepo.DeleteFuncIsRun).Should(BeFalse())
 		})
 
 		When("push method return needRollBack", func() {
 			BeforeEach(func() {
-				mockRepo = &mockRepoStruct{
-					initRaiseError: false,
-					pushRaiseError: true,
-					needRollBack:   true,
+				mockRepo = &scm.MockScmClient{
+					PushRaiseError: errors.New("push error"),
+					NeedRollBack:   true,
 				}
 			})
 			It("should run DeleteRepo method", func() {
 				err = scm.PushInitRepo(mockRepo, commitInfo)
 				Expect(err).Error().Should(HaveOccurred())
 				Expect(err.Error()).Should(Equal("push error"))
-				Expect(mockRepo.deleteFuncIsRun).Should(BeTrue())
+				Expect(mockRepo.DeleteFuncIsRun).Should(BeTrue())
 			})
 		})
 	})

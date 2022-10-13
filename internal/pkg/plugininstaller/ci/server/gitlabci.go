@@ -7,18 +7,15 @@ import (
 )
 
 const (
-	ciGitLabType           CIServerType = "gitlab"
+	CIGitLabType           CIServerType = "gitlab"
 	ciGitLabConfigLocation string       = ".gitlab-ci.yml"
 )
 
 type GitLabCI struct {
 }
 
-func (g *GitLabCI) Type() CIServerType {
-	return ciGitLabType
-}
-
-func (g *GitLabCI) CIFilePath(_ ...string) string {
+// CIFilePath return .gitlab-ci.yml
+func (g *GitLabCI) CIFilePath() string {
 	return ciGitLabConfigLocation
 }
 
@@ -28,12 +25,12 @@ func (g *GitLabCI) FilterCIFilesFunc() file.DirFIleFilterFunc {
 		if isDir {
 			return false
 		}
-		return filepath.Base(filePath) == g.CIFilePath()
+		return filepath.Base(filePath) == ciGitLabConfigLocation
 	}
 }
 
 func (g *GitLabCI) GetGitNameFunc() file.DirFileNameFunc {
-	return func(filePath, walkDir string) string {
+	return func(filePath, _ string) string {
 		return g.CIFilePath()
 	}
 }

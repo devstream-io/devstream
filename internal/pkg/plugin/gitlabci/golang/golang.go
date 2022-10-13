@@ -24,7 +24,7 @@ func setCIContent(options plugininstaller.RawOptions) (plugininstaller.RawOption
 	if ciConfig == nil {
 		ciConfig = &ci.CIConfig{}
 	}
-	ciConfig.Content = ciContent
+	ciConfig.SetContent(ciContent)
 	opts.CIConfig = ciConfig
 	return opts.Encode()
 }

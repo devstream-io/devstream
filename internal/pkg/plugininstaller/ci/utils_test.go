@@ -25,7 +25,7 @@ var _ = Describe("processCIFilesFunc func", func() {
 			Expect(err).Error().ShouldNot(HaveOccurred())
 		})
 		It("should work as expected", func() {
-			result, err := processCIFilesFunc("test", map[string]interface{}{
+			result, err := processCIFilesFunc(map[string]interface{}{
 				"Name": "devstream",
 			})(tempFileLoc)
 			Expect(err).Error().ShouldNot(HaveOccurred())
@@ -34,7 +34,7 @@ var _ = Describe("processCIFilesFunc func", func() {
 	})
 	When("file is not exist", func() {
 		It("should return error", func() {
-			_, err := processCIFilesFunc("test", map[string]interface{}{
+			_, err := processCIFilesFunc(map[string]interface{}{
 				"Name": "devstream",
 			})("not_exist_file")
 			Expect(err).Error().Should(HaveOccurred())

@@ -17,7 +17,7 @@ const (
 	defaultCommitAuthor                       = "devstream"
 	defaultCommitAuthorEmail                  = "devstream@merico.dev"
 	repoPlaceHolderFileName                   = ".placeholder"
-	DefaultLatestCodeZipfileDownloadUrlFormat = "https://codeload.github.com/%s/%s/zip/refs/heads/%s"
+	DefaultLatestCodeZipfileDownloadUrlFormat = "https://codeload.github.com/%s/%s/zip/refs/heads/%s?archive=zip"
 	TokenEnvKey                               = "GITHUB_TOKEN"
 )
 

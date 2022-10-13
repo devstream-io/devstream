@@ -1,7 +1,6 @@
 package jenkins
 
 import (
-	"net/url"
 	"reflect"
 	"strings"
 
@@ -60,17 +59,9 @@ func (p *Pipeline) setDefaultValue(repoName, jenkinsNamespace string) {
 }
 
 func (p *Pipeline) buildCIConfig() *ci.CIConfig {
-	// config CIConfig
-	jenkinsFilePath := p.JenkinsfilePath
 	ciConfig := &ci.CIConfig{
 		Type: "jenkins",
 	}
-	jenkinsfileURL, err := url.ParseRequestURI(jenkinsFilePath)
-	// if path is url, download from remote
-	if err != nil || jenkinsfileURL.Host == "" {
-		ciConfig.LocalPath = jenkinsFilePath
-	} else {
-		ciConfig.RemoteURL = jenkinsFilePath
-	}
+	ciConfig.ConfigLocation = p.JenkinsfilePath
 	return ciConfig
 }

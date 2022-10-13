@@ -1,6 +1,7 @@
 package server
 
 import (
+	"path"
 	"path/filepath"
 	"strings"
 
@@ -8,27 +9,20 @@ import (
 )
 
 const (
-	ciGitHubType               CIServerType = "github"
+	CIGithubType               CIServerType = "github"
 	ciGitHubWorkConfigLocation string       = ".github/workflows"
+	ciGithubTempName           string       = "app.yaml"
 )
 
-type GitHubCI struct {
+type GitHubWorkflow struct {
 }
 
-func (g *GitHubCI) Type() CIServerType {
-	return ciGitHubType
+// CIFilePath return .github/workflows/app.yml
+func (g *GitHubWorkflow) CIFilePath() string {
+	return filepath.Join(ciGitHubWorkConfigLocation, ciGithubTempName)
 }
 
-func (g *GitHubCI) CIFilePath(subFilename ...string) string {
-	// if subFilename is empty, return dir(.github/workflows)
-	if len(subFilename) == 0 {
-		return ciGitHubWorkConfigLocation
-	}
-	// else return dir + subFilename
-	return filepath.Join(ciGitHubWorkConfigLocation, filepath.Base(subFilename[0]))
-}
-
-func (g *GitHubCI) FilterCIFilesFunc() file.DirFIleFilterFunc {
+func (g *GitHubWorkflow) FilterCIFilesFunc() file.DirFIleFilterFunc {
 	return func(filePath string, isDir bool) bool {
 		// not process dir
 		if isDir {
@@ -38,8 +32,9 @@ func (g *GitHubCI) FilterCIFilesFunc() file.DirFIleFilterFunc {
 	}
 }
 
-func (g *GitHubCI) GetGitNameFunc() file.DirFileNameFunc {
-	return func(filePath, walkDir string) string {
-		return g.CIFilePath(filePath)
+func (g *GitHubWorkflow) GetGitNameFunc() file.DirFileNameFunc {
+	return func(filePath, _ string) string {
+		basePath := filepath.Base(filePath)
+		return path.Join(ciGitHubWorkConfigLocation, basePath)
 	}
 }

@@ -16,8 +16,8 @@
 
 | key                    | description                                                                                                      |
 | ----                   | ----                                                                                                             |
-| ci.localPath           | If your ci file is local, you can set the this field to the ci file location, which can be a directory or a file |
-| ci.remoteURL           | If your ci file is remote, you can set this field to url address                                                 |
+| ci.configLocation      | If your ci file is local or remote, you can set the this field to get ci file                                    |
+| ci.configContents      | If you want to config ci in devstream, you can config configContents directly                                    |
 | ci.type                | ci type, support gitlab, github, jenkins for now                                                                 |
 | projectRepo.owner      | destination repo owner                                                                                           |
 | projectRepo.org        | destination repo org                                                                                             |
@@ -29,14 +29,12 @@
 
 **注意事项：**
 
-- `ci.localPath` 和 `ci.remoteURL` 不能同时为空。
-- 如果你同时设置了 `ci.localPath` 和 `ci.remoteURL`，`ci.localPath` 将会被优先使用。
-- 如果你的 `projectRepo.repoType` 配置是 `gitlab`，`ci.type` 就不能是 `github`。
-- 如果你的 `projectRepo.repoType` 配置是 `github`, `ci.type` 就不能是 `gitlab`。
+- `ci.configContents` 和 `ci.configLocation` 不能同时为空。
+- 如果你同时设置了 `ci.configLocation` 和 `ci.configContents`，`ci.configContents` 将会被优先使用。
 
 ### 示例
 
-#### 本地的 Workflows 目录部署到 GitHub 仓库
+#### 使用本地的 Workflows 目录
 
 ```yaml
 tools:
@@ -44,7 +42,7 @@ tools:
     instanceID: test-github
     options:
       ci:
-        localPath: workflows
+        configLocation: workflows
         type: github
       projectRepo:
         owner: devstream
@@ -54,9 +52,9 @@ tools:
         repoType: github
 ```
 
-这个配置将会把本地的 workflows 目录放置于 GitHub 的 `.github/workflows` 目录。
+这个配置将会把本地当前运行环境下的 workflows 目录放置于 GitHub 的 `.github/workflows` 目录。
 
-#### Remote Jenkinsfile With Gitlab
+#### 使用 HTTP 获取远程的CI文件
 
 ```yaml
 tools:
@@ -64,7 +62,7 @@ tools:
     instanceID: test-gitlab
     options:
       ci:
-        remoteURL : https://raw.githubusercontent.com/DeekshithSN/Jenkinsfile/inputTest/Jenkinsfile
+        configLocation : https://raw.githubusercontent.com/DeekshithSN/Jenkinsfile/inputTest/Jenkinsfile
         type: jenkins
       projectRepo:
         owner: root
@@ -76,3 +74,53 @@ tools:
 ```
 
 这个配置将会把[URL](https://raw.githubusercontent.com/DeekshithSN/Jenkinsfile/inputTest/Jenkinsfile) 中的 Jenkinsfile 文件置于 GitLab 的仓库。
+
+
+
+#### 使用Github仓库中的CI文件
+```yaml
+tools:
+  - name: ci-generic
+    instanceID: test-gitlab
+    options:
+      ci:
+        configLocation : git@github.com:devstream-io/devstream.git//staging/dtm-jenkins-pipeline-example/general
+        type: jenkins
+      projectRepo:
+        owner: root
+        org: ""
+        repo: test-repo
+        branch: main
+        repoType: gitlab
+        baseURL: http://127.0.0.1:30000
+```
+
+这个配置将会搜索[devstream 仓库](https://github.com/devstream-io/devstream)下的staging/dtm-jenkins-pipeline-example/general 目录，获取到目录下的 Jenkinsfile，置于 gitlab 仓库内。
+
+
+#### 在Devstream中直接配置CI文件
+```yaml
+tools:
+  - name: ci-generic
+    instanceID: test-gitlab
+    options:
+      ci:
+        configContents:
+          pr.yaml: |
+name: GitHub Actions Demo
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+on: [push]
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      projectRepo:
+        owner: test-user
+        org: ""
+        repo: test-repo
+        branch: main
+        repoType: github
+```
+
+这个配置将会在用户的Github仓库`test-user/test-repo`下创建`.github/workflows/pr.yaml`文件。

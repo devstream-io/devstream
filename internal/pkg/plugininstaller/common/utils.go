@@ -43,7 +43,7 @@ func getRepoFileNameFunc(appName, repoName string) file.DirFileNameFunc {
 	}
 }
 
-func processRepoFileFunc(appName string, vars map[string]interface{}) file.DirFileProcessFunc {
+func processRepoFileFunc(appName string, vars map[string]interface{}) file.DirFileContentFunc {
 	return func(filePath string) ([]byte, error) {
 		var fileContent []byte
 		log.Debugf("Walk: found file: %s.", filePath)

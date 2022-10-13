@@ -1,25 +1,27 @@
 package file
 
 import (
-	"bytes"
-	"io"
 	"io/fs"
 	"os"
 	"path/filepath"
 
-	"github.com/devstream-io/devstream/pkg/util/downloader"
 	"github.com/devstream-io/devstream/pkg/util/log"
-	"github.com/devstream-io/devstream/pkg/util/zip"
 )
 
-const dirTempName = "dir_temp"
-
+// DirFIleFilterFunc is used to filter files when walk directory
+// if this func return false, this file's content will not return
 type DirFIleFilterFunc func(filePath string, isDir bool) bool
-type DirFileProcessFunc func(filePath string) ([]byte, error)
+
+// DirFileContentFunc is used to get file content then return this content
+type DirFileContentFunc func(filePath string) ([]byte, error)
+
+// DirFileNameFunc is used to make current filename to become map key
+// srcPath is the basePath of file, for sometimes you may want to get relativePath of filePath
 type DirFileNameFunc func(filePath, srcPath string) string
 
-func WalkDir(
-	srcPath string, filterFunc DirFIleFilterFunc, fileNameFunc DirFileNameFunc, processFunc DirFileProcessFunc,
+// GetFileMapByWalkDir will walk in directory return contentMap
+func GetFileMapByWalkDir(
+	srcPath string, filterFunc DirFIleFilterFunc, fileNameFunc DirFileNameFunc, processFunc DirFileContentFunc,
 ) (map[string][]byte, error) {
 	contentMap := make(map[string][]byte)
 	if err := filepath.Walk(srcPath, func(path string, info fs.FileInfo, err error) error {
@@ -46,44 +48,30 @@ func WalkDir(
 	return contentMap, nil
 }
 
-// DownloadAndUnzipAndRenderGitHubRepo will download/unzip/render git repo files and return unzip files dir path
-
-func DownloadAndUnzipFile(url string) (string, error) {
-	zipFileContent, err := downloader.FetchContentFromURL(url)
+// GetFileMap return map of fileName and content
+// if srcPath is a directory, it will invoke GetFileMapByWalkDir to get content map
+// if srcPath is a file, it will use fileNameFunc and fileContentFunc to create a map
+func GetFileMap(
+	srcPath string, filterFunc DirFIleFilterFunc, fileNameFunc DirFileNameFunc, fileContentFunc DirFileContentFunc,
+) (map[string][]byte, error) {
+	pathInfo, err := os.Stat(srcPath)
 	if err != nil {
-		log.Debugf("unzip download file copy content failed: %s", err)
-		return "", err
+		log.Debugf("dir: get path info failed: %+v", err)
+		return nil, err
 	}
-	zipFile, err := os.CreateTemp("", dirTempName)
+	if pathInfo.IsDir() {
+		return GetFileMapByWalkDir(
+			srcPath, filterFunc,
+			fileNameFunc, fileContentFunc,
+		)
+	}
+	content, err := fileContentFunc(srcPath)
 	if err != nil {
-		log.Debugf("unzip create temp file error: %s", err)
-		return "", err
+		log.Debugf("dir: process file content failed: %+v", err)
+		return nil, err
 	}
-	defer zipFile.Close()
-	_, err = io.Copy(zipFile, bytes.NewBuffer(zipFileContent))
-	if err != nil {
-		log.Debugf("unzip copy file error: %s", err)
-		return "", err
-	}
-
-	unZipDir, err := Unzip(zipFile.Name())
-	if err != nil {
-		return "", err
-	}
-	return unZipDir, nil
-}
-
-// Unzip will unzip zip file and return unzip files dir path
-func Unzip(zipFilePath string) (string, error) {
-	// 1. create tempDir to save unzip files
-	dirName := filepath.Dir(zipFilePath)
-	tempDirName, err := os.MkdirTemp(dirName, dirTempName)
-	if err != nil {
-		return "", err
-	}
-	err = zip.UnZip(zipFilePath, tempDirName)
-	if err != nil {
-		return "", err
-	}
-	return tempDirName, nil
+	fileName := fileNameFunc(srcPath, filepath.Dir(srcPath))
+	return map[string][]byte{
+		fileName: []byte(content),
+	}, nil
 }

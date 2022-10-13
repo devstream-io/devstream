@@ -7,4 +7,13 @@ tools:
   dependsOn: [ ]
   # options for the plugin
   options:
-  # TODO(dtm): Add your default config here.
+    ci:
+      configLocation : Jenkinsfile
+      # support jenkins/gitlab/github for now
+      type: jenkins
+    projectRepo:
+      owner: YOUR_REPO_OWNER
+      repo: YOUR_REPO_NAME
+      branch: YOUR_REPO_BRANCH
+      # support github/gitlab for now
+      repoType: github
