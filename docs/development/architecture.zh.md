@@ -38,7 +38,7 @@ Plugin engine通过调用以下模块来实现目标：
 
 ### 2.1 配置管理器
 
-[`configmanager`包](https://github.com/devstream-io/devstream/blob/main/internal/pkg/configmanager/config.go#L23)中的模型结构体用来表示顶级配置的结构。
+[`configmanager`包](https://github.com/devstream-io/devstream/blob/main/internal/pkg/configmanager/configmanager.go#L23)中的模型结构体用来表示顶级配置的结构。
 
 ### 2.2 插件管理器
 
