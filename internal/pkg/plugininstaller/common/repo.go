@@ -14,10 +14,6 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/scm/gitlab"
 )
 
-const (
-	defaultMainBranch = "main"
-)
-
 // Repo is the repo info of github or gitlab
 type Repo struct {
 	Owner             string `validate:"required_without=Org" mapstructure:"owner"`
@@ -67,17 +63,13 @@ func (d *Repo) CreateAndRenderLocalRepo(appName string, vars map[string]interfac
 }
 
 func (d *Repo) BuildRepoInfo() *git.RepoInfo {
-	branch := d.Branch
-	if branch == "" {
-		branch = defaultMainBranch
-	}
 	return &git.RepoInfo{
 		Repo:       d.Repo,
 		Owner:      d.Owner,
 		Org:        d.Org,
 		Visibility: d.Visibility,
 		NeedAuth:   true,
-		Branch:     branch,
+		Branch:     d.getBranch(),
 		BaseURL:    d.BaseURL,
 		Type:       d.RepoType,
 	}

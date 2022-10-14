@@ -2,7 +2,6 @@ package downloader_test
 
 import (
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"path"
@@ -75,7 +74,7 @@ var _ = Describe("ResourceClient struct", func() {
 					It("should create temp dir and download file", func() {
 						dstPath, err := c.GetWithGoGetter()
 						Expect(err).Error().ShouldNot(HaveOccurred())
-						files, err := ioutil.ReadDir(dstPath)
+						files, err := os.ReadDir(dstPath)
 						Expect(err).Error().ShouldNot(HaveOccurred())
 						Expect(len(files)).Should(Equal(1))
 						file := files[0]
