@@ -22,16 +22,16 @@ func PushCIFiles(options plugininstaller.RawOptions) error {
 		return err
 	}
 	// 1. get git content by config
-	gitMap, err := opts.buildGitMap()
+	gitMap, err := opts.CIConfig.getGitfileMap()
 	if err != nil {
 		return err
 	}
-	//3. init git client
+	//2. init git client
 	gitClient, err := scm.NewClient(opts.ProjectRepo.BuildRepoInfo())
 	if err != nil {
 		return err
 	}
-	//4. push ci files to git repo
+	//3. push ci files to git repo
 	_, err = gitClient.PushFiles(&git.CommitInfo{
 		CommitMsg:    createCommitMsg,
 		GitFileMap:   gitMap,
@@ -46,7 +46,7 @@ func DeleteCIFiles(options plugininstaller.RawOptions) error {
 		return err
 	}
 	// 1. get git content by config
-	gitMap, err := opts.buildGitMap()
+	gitMap, err := opts.CIConfig.getGitfileMap()
 	if err != nil {
 		return err
 	}

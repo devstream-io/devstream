@@ -118,8 +118,8 @@ var _ = Describe("JobOptions struct", func() {
 			RepoType: "gitlab",
 		}
 		ciConfig = &ci.CIConfig{
-			Type:      "jenkins",
-			RemoteURL: jenkinsFilePath,
+			Type:           "jenkins",
+			ConfigLocation: jenkinsFilePath,
 		}
 		secretToken = "secret"
 		jobOptions = &JobOptions{
@@ -209,20 +209,7 @@ var _ = Describe("JobOptions struct", func() {
 			It("should use localPath", func() {
 				ciConfig, err := jobOptions.buildCIConfig()
 				Expect(err).Error().ShouldNot(HaveOccurred())
-				Expect(ciConfig.LocalPath).Should(Equal(jobOptions.Pipeline.JenkinsfilePath))
-				Expect(ciConfig.RemoteURL).Should(BeEmpty())
-			})
-		})
-		When("jenkinsfilePath is remote url", func() {
-			BeforeEach(func() {
-				jobOptions.Pipeline.JenkinsfilePath = "http://www.test.com/Jenkinsfile"
-			})
-			It("should use remote url", func() {
-				ciConfig, err := jobOptions.buildCIConfig()
-				Expect(err).Error().ShouldNot(HaveOccurred())
-				Expect(ciConfig.LocalPath).Should(BeEmpty())
-				Expect(ciConfig.RemoteURL).Should(Equal(jobOptions.Pipeline.JenkinsfilePath))
-				Expect(string(ciConfig.Type)).Should(Equal("jenkins"))
+				Expect(ciConfig.ConfigLocation).Should(Equal(jobOptions.Pipeline.JenkinsfilePath))
 			})
 		})
 	})

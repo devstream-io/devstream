@@ -40,7 +40,7 @@ It achieves the goal by calling the following modules:
 
 ### 2.1 Config Manager
 
-Model types in package [`configmanager`](https://github.com/devstream-io/devstream/blob/main/internal/pkg/configmanager/config.go#L23) represent the top-level configuration structure.
+Model types in package [`configmanager`](https://github.com/devstream-io/devstream/blob/main/internal/pkg/configmanager/configmanager.go#L23) represent the top-level configuration structure.
 
 ### 2.2 Plugin Manager
 

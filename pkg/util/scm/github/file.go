@@ -144,7 +144,7 @@ func (c *Client) DeleteFiles(commitInfo *git.CommitInfo) error {
 		opts := fileInfos[0].EncodeToGitHubContentOption(
 			commitInfo.CommitMsg,
 		)
-		log.Infof("Deleting GitHub  file %s ...", fileLoc)
+		log.Debugf("Deleting GitHub file %s ...", fileLoc)
 		_, _, err = c.Client.Repositories.DeleteFile(
 			c.Context,
 			c.GetRepoOwner(),

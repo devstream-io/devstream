@@ -5,16 +5,13 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/devstream-io/devstream/pkg/util/downloader"
 	"github.com/devstream-io/devstream/pkg/util/file"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 	"github.com/devstream-io/devstream/pkg/util/scm/github"
 	"github.com/devstream-io/devstream/pkg/util/scm/gitlab"
-)
-
-const (
-	defaultMainBranch = "main"
 )
 
 // Repo is the repo info of github or gitlab
@@ -50,12 +47,15 @@ func (d *Repo) CreateAndRenderLocalRepo(appName string, vars map[string]interfac
 	}
 	// 1. download zip file and unzip this file then render folders
 	downloadURL := d.getRepoDownloadURL()
-	zipFilesDir, err := file.DownloadAndUnzipFile(downloadURL)
+	getterClient := downloader.ResourceClient{
+		Source: downloadURL,
+	}
+	zipFilesDir, err := getterClient.GetWithGoGetter()
 	if err != nil {
 		log.Debugf("reposcaffolding process files error: %s", err)
 		return nil, err
 	}
-	return file.WalkDir(
+	return file.GetFileMapByWalkDir(
 		zipFilesDir, filterGitFiles,
 		getRepoFileNameFunc(appName, d.BuildRepoInfo().GetRepoNameWithBranch()),
 		processRepoFileFunc(appName, vars),
@@ -63,17 +63,13 @@ func (d *Repo) CreateAndRenderLocalRepo(appName string, vars map[string]interfac
 }
 
 func (d *Repo) BuildRepoInfo() *git.RepoInfo {
-	branch := d.Branch
-	if branch == "" {
-		branch = defaultMainBranch
-	}
 	return &git.RepoInfo{
 		Repo:       d.Repo,
 		Owner:      d.Owner,
 		Org:        d.Org,
 		Visibility: d.Visibility,
 		NeedAuth:   true,
-		Branch:     branch,
+		Branch:     d.getBranch(),
 		BaseURL:    d.BaseURL,
 		Type:       d.RepoType,
 	}

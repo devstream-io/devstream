@@ -75,7 +75,7 @@ var _ = Describe("Repo Struct", func() {
 	Context("getRepoDownloadURL method", func() {
 		It("should return url", func() {
 			githubURL := repo.getRepoDownloadURL()
-			Expect(githubURL).Should(Equal("https://codeload.github.com/test_org/test_repo/zip/refs/heads/test_branch"))
+			Expect(githubURL).Should(Equal("https://codeload.github.com/test_org/test_repo/zip/refs/heads/test_branch?archive=zip"))
 		})
 	})
 

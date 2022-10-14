@@ -15,8 +15,8 @@ tools:
       branch: YOUR_DESTINATION_REPO_MAIN_BRANCH
       # repoType is the type of repo to push, support github|gitlab
       repoType: YOUR_DESTINATION_REPO_TYPE
-    # sourceTepo is the template repo location, support github only
-    sourceTepo:
+    # sourceRepo is the template repo location, support github only
+    sourceRepo:
       org: YOUR_TEMPLATE_REPO_ORG
       repo: YOUR_TEMPLATE_REPO_NAME
       # repoType is the type of repo to get template, support github only
