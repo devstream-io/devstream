@@ -43,8 +43,8 @@ type DevLakePlugin struct {
 
 type Connection struct {
 	staging.RestConnection `mapstructure:",squash"`
-	Authx                  Auth `mapstructure:"auth" validate:"required"`
-	Auth                   `mapstructure:",squash"`
+	//Authx                  Auth `mapstructure:"auth" validate:"required"`
+	Auth `mapstructure:",squash"`
 }
 
 type Auth struct {
