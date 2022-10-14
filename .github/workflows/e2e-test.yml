@@ -36,7 +36,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         go: [1.18.x]
-    runs-on: ${{ matrix.os }}
+    runs-on: [self-hosted, linux, X64]
     name: e2e-test-${{ matrix.os }}
     steps:
       - run: echo "🐧 This job is now running on a ${{ runner.os }}-${{ runner.arch }} server hosted by GitHub!"
