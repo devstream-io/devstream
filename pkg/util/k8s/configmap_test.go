@@ -47,11 +47,11 @@ var _ = Describe("configmap methods", func() {
 				client.clientset = fake.NewSimpleClientset(testConfigMap...)
 			})
 			It("should update configmap", func() {
-				currectConfigMap, err := client.clientset.CoreV1().ConfigMaps(
+				currentConfigMap, err := client.clientset.CoreV1().ConfigMaps(
 					namespace).Get(context.Background(), configmapName, metav1.GetOptions{})
 				Expect(err).Error().ShouldNot(HaveOccurred())
-				Expect(currectConfigMap.Data).Should(Equal(data))
-				Expect(currectConfigMap.ObjectMeta.Labels).Should(Equal(labels))
+				Expect(currentConfigMap.Data).Should(Equal(data))
+				Expect(currentConfigMap.ObjectMeta.Labels).Should(Equal(labels))
 				data["field"] = "apply_config"
 				_, err = client.ApplyConfigMap(configmapName, namespace, data, labels)
 				Expect(err).Error().Should(HaveOccurred())
