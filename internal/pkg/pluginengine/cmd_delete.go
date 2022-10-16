@@ -2,7 +2,6 @@ package pluginengine
 
 import (
 	"errors"
-	"fmt"
 	"os"
 
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
@@ -17,10 +16,6 @@ func Remove(configFile string, continueDirectly bool, isForceDelete bool) error 
 	cfg, err := configmanager.NewManager(configFile).LoadConfig()
 	if err != nil {
 		return err
-	}
-
-	if cfg == nil {
-		return fmt.Errorf("failed to load the config file")
 	}
 
 	if err := file.SetPluginDir(cfg.PluginDir); err != nil {

@@ -30,46 +30,6 @@ func (c *Change) String() string {
 		c.ActionName, c.Tool.Name, c.Tool.InstanceID)
 }
 
-// GetChangesForApply takes "State Manager" & "Config" then do some calculate and return a Plan.
-// All actions should be executed is included in this Plan.changes.
-func GetChangesForApply(smgr statemanager.Manager, cfg *configmanager.Config) ([]*Change, error) {
-	return getChanges(smgr, cfg, CommandApply, false)
-}
-
-// GetChangesForDelete takes "State Manager" & "Config" then do some calculation and return a Plan to delete all plugins in the Config.
-// All actions should be executed is included in this Plan.changes.
-func GetChangesForDelete(smgr statemanager.Manager, cfg *configmanager.Config, isForceDelete bool) ([]*Change, error) {
-	return getChanges(smgr, cfg, CommandDelete, isForceDelete)
-}
-
-func getChanges(smgr statemanager.Manager, cfg *configmanager.Config, commandType CommandType, isForceDelete bool) ([]*Change, error) {
-	if cfg == nil {
-		return make([]*Change, 0), nil
-	}
-	log.Debug("isForce:", isForceDelete)
-	// calculate changes from config and state
-	var changes []*Change
-	var err error
-	if commandType == CommandApply {
-		changes, err = changesForApply(smgr, cfg)
-	} else if commandType == CommandDelete {
-		changes, err = changesForDelete(smgr, cfg, isForceDelete)
-	} else {
-		log.Fatalf("That's impossible!")
-	}
-
-	if err != nil {
-		return nil, err
-	}
-
-	log.Debugf("Changes for the plan:")
-	for i, c := range changes {
-		log.Debugf("Change - %d/%d -> %s", i+1, len(changes), c.String())
-	}
-
-	return changes, nil
-}
-
 // execute changes in the plan in batch.
 // If any error occurs, it will stop executing the next batches and return the error.
 func execute(smgr statemanager.Manager, changes []*Change, reverse bool) map[string]error {

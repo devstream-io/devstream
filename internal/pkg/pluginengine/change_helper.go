@@ -74,13 +74,13 @@ func drifted(a, b map[string]interface{}) bool {
 	return !cmp.Equal(a, b)
 }
 
-// changesForApply generates "changes" according to:
+// GetChangesForApply takes "State Manager" & "Config" then do some calculate and return a Plan.
+// All actions should be executed is included in this Plan.changes.
+// It generates "changes" according to:
 // - config
 // - state
 // - resource status (by calling the Read() interface of the plugin)
-func changesForApply(smgr statemanager.Manager, cfg *configmanager.Config) ([]*Change, error) {
-	changes := make([]*Change, 0)
-
+func GetChangesForApply(smgr statemanager.Manager, cfg *configmanager.Config) (changes []*Change, err error) {
 	// 1. create a temporary state map used to store unprocessed tools.
 	tmpStatesMap := smgr.GetStatesMap().DeepCopy()
 
@@ -89,7 +89,7 @@ func changesForApply(smgr statemanager.Manager, cfg *configmanager.Config) ([]*C
 	// the elements in batchesOfTools are sorted "batches"
 	// and each element/batch is a list of tools that, in theory, can run in parallel
 	// that is to say, the tools in the same batch won't depend on each other
-	batchesOfTools, err := topologicalSort(cfg.Tools)
+	batchesOfTools, err = topologicalSort(cfg.Tools)
 	if err != nil {
 		return changes, err
 	}
@@ -156,17 +156,23 @@ func changesForApply(smgr statemanager.Manager, cfg *configmanager.Config) ([]*C
 		return true
 	})
 
+	log.Debugf("Changes for the plan:")
+	for i, c := range changes {
+		log.Debugf("Change - %d/%d -> %s", i+1, len(changes), c.String())
+	}
+
 	return changes, nil
 }
 
-// changesForDelete is to create a plan that deletes all the Tools in cfg
-func changesForDelete(smgr statemanager.Manager, cfg *configmanager.Config, isForceDelete bool) ([]*Change, error) {
-	changes := make([]*Change, 0)
+// GetChangesForDelete takes "State Manager" & "Config" then do some calculation and return a Plan to delete all plugins in the Config.
+// All actions should be executed is included in this Plan.changes.
+func GetChangesForDelete(smgr statemanager.Manager, cfg *configmanager.Config, isForceDelete bool) (changes []*Change, err error) {
 	batchesOfTools, err := topologicalSort(cfg.Tools)
 	if err != nil {
 		return changes, err
 	}
 
+	log.Debug("isForce:", isForceDelete)
 	for i := len(batchesOfTools) - 1; i >= 0; i-- {
 		batch := batchesOfTools[i]
 		for _, tool := range batch {
@@ -182,12 +188,15 @@ func changesForDelete(smgr statemanager.Manager, cfg *configmanager.Config, isFo
 		}
 	}
 
+	log.Debugf("Changes for the plan:")
+	for i, c := range changes {
+		log.Debugf("Change - %d/%d -> %s", i+1, len(changes), c.String())
+	}
+
 	return changes, nil
 }
 
-func GetChangesForDestroy(smgr statemanager.Manager, isForceDestroy bool) ([]*Change, error) {
-	changes := make([]*Change, 0)
-
+func GetChangesForDestroy(smgr statemanager.Manager, isForceDestroy bool) (changes []*Change, err error) {
 	// rebuilding tools from config
 	// because destroy will only be used when the config file is missing
 	var tools []configmanager.Tool
@@ -219,6 +228,11 @@ func GetChangesForDestroy(smgr statemanager.Manager, isForceDestroy bool) ([]*Ch
 			description := fmt.Sprintf("Tool (%s/%s) will be deleted.", tool.Name, tool.InstanceID)
 			changes = append(changes, generateDeleteAction(&tool, description))
 		}
+	}
+
+	log.Debugf("Changes for the plan:")
+	for i, c := range changes {
+		log.Debugf("Change - %d/%d -> %s", i+1, len(changes), c.String())
 	}
 
 	return changes, nil
