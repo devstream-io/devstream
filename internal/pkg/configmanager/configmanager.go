@@ -82,6 +82,7 @@ func NewManager(configFileName string) *Manager {
 }
 
 // LoadConfig reads an input file as a general config.
+// It will return "non-nil, err" or "nil, err".
 func (m *Manager) LoadConfig() (*Config, error) {
 	// 1. read the original config file
 	originalConfigFileBytes, err := m.loadOriginalConfigFile()
@@ -98,6 +99,8 @@ func (m *Manager) LoadConfig() (*Config, error) {
 	return m.renderConfigs(coreConfigBytes, variablesConfigBytes, toolsConfigBytes)
 }
 
+// renderConfigs renders the config file bytes into a Config struct.
+// It will return "non-nil, err" or "nil, err".
 func (m *Manager) renderConfigs(coreConfigBytes, variablesConfigBytes, toolsConfigBytes []byte) (*Config, error) {
 	// 1. unmarshal core config file
 	var coreConfig CoreConfig
