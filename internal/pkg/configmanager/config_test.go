@@ -7,7 +7,55 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("Config", func() {
+var _ = Describe("LoadConfig", func() {
+	var (
+		configFilePath string
+		config         *Config
+		err            error
+	)
+	const (
+		quickStartConfigPath = "../../../examples/quickstart.yaml"
+		invalidConfigPath    = "not_exist.yaml"
+	)
+
+	JustBeforeEach(func() {
+		config, err = NewManager(configFilePath).LoadConfig()
+	})
+
+	Context("when config file is valid", func() {
+		BeforeEach(func() {
+			configFilePath = quickStartConfigPath
+		})
+
+		Specify("the error should be nil", func() {
+			Expect(config).NotTo(BeNil())
+			Expect(err).To(BeNil())
+		})
+		It("should state filed correctly", func() {
+			Expect(config.State.Backend).To(Or(Equal("local"), Equal("s3")))
+			Expect(config.State.Options.StateFile).To(Equal("devstream.state"))
+		})
+		Specify("Tools Options cannot be empty", func() {
+			Expect(len(config.Tools)).Should(BeNumerically(">", 0))
+			Expect(config.Tools[0].Name).ShouldNot(BeEmpty())
+			Expect(config.Tools[0].InstanceID).ShouldNot(BeEmpty())
+			Expect(config.Tools[0].Options).ShouldNot(BeEmpty())
+			Expect(len(config.Tools[0].DependsOn)).ShouldNot(BeNil())
+		})
+	})
+
+	Context("when config file is invalid", func() {
+		BeforeEach(func() {
+			configFilePath = invalidConfigPath
+		})
+		It("should error", func() {
+			Expect(err).To(HaveOccurred())
+			Expect(config).To(BeNil())
+		})
+	})
+})
+
+var _ = Describe("config renders", func() {
 	var (
 		emptyVariable     []byte
 		validToolBytes    []byte
@@ -38,30 +86,9 @@ state:
   options:
     stateFile: devstream.state`)
 	})
-	Describe("LoadConfig yaml", func() {
-		configStateObj, err := NewManager("../../../examples/quickstart.yaml").LoadConfig()
-		Context("when the Yaml parses successfully", func() {
-			It("should state filed correctly", func() {
-				Expect(configStateObj.State.Backend).To(Or(Equal("local"), Equal("s3")))
-				Expect(configStateObj.State.Options.StateFile).To(Equal("devstream.state"))
-			})
-			Specify("Tools Options cannot be empty", func() {
-				Expect(len(configStateObj.Tools)).ShouldNot(BeNil())
-				Expect(configStateObj.Tools[0].Name).ShouldNot(BeEmpty())
-				Expect(configStateObj.Tools[0].InstanceID).ShouldNot(BeEmpty())
-				Expect(configStateObj.Tools[0].Options).ShouldNot(BeEmpty())
-				Expect(len(configStateObj.Tools[0].DependsOn)).ShouldNot(BeNil())
-			})
-		})
-		Context("when the Yaml parses fails", func() {
-			It("should not error", func() {
-				Expect(err).NotTo(HaveOccurred())
-			})
-		})
-	})
 
 	Describe("renderConfigs func", func() {
-		Context("when config wrong", func() {
+		When("config is wrong", func() {
 			It("should return error if data is not valid yaml string", func() {
 				notValidStr := "this is not valid yaml"
 				notValidBytes := []byte(notValidStr)
@@ -78,7 +105,7 @@ state:
 
 		})
 
-		Context("when config all valid", func() {
+		When("config is valid", func() {
 			It("should generate config", func() {
 				config, err := NewManager("").renderConfigs(validCoreBytes, emptyVariable, validToolBytes)
 				Expect(err).Error().ShouldNot(HaveOccurred())
@@ -88,7 +115,7 @@ state:
 	})
 
 	Describe("renderToolsFromCoreConfigAndConfigBytes func", func() {
-		Context("when config error", func() {
+		When("config error", func() {
 			It("should return error if tool file is empty and tools config file is empty", func() {
 				config := CoreConfig{}
 				tools, err := NewManager("").renderToolsFromCoreConfigAndConfigBytes(&config, emptyVariable, emptyVariable)
@@ -98,7 +125,7 @@ state:
 
 			})
 		})
-		Context("when tool config valid", func() {
+		When("tool config valid", func() {
 			It("should generate tools array", func() {
 				config := CoreConfig{}
 				tools, err := NewManager("").renderToolsFromCoreConfigAndConfigBytes(&config, validToolBytes, emptyVariable)
@@ -109,7 +136,7 @@ state:
 	})
 
 	Describe("loadOriginalConfigFile func", func() {
-		Context("when file name error", func() {
+		When("file name error", func() {
 			It("should return error", func() {
 				errorFileName := "error_file_name.yaml"
 				_, err := NewManager(errorFileName).loadOriginalConfigFile()
@@ -119,7 +146,7 @@ state:
 	})
 
 	Describe("splitConfigFileBytes func", func() {
-		Context("when input text not valid", func() {
+		When("input text not valid", func() {
 			It("should return error if fomat not valid", func() {
 				notValidContent := []byte(`
 				---
@@ -145,7 +172,7 @@ tools:
 				Expect(err.Error()).Should(ContainSubstring("multiple sections"))
 			})
 		})
-		Context("when input text is valid", func() {
+		When("input text is valid", func() {
 
 			It("should return config bytes", func() {
 				validArray := [][]byte{
@@ -164,7 +191,7 @@ tools:
 	})
 
 	Describe("checkConfigType func", func() {
-		Context("when input not valid", func() {
+		When("input is invalid", func() {
 			It("should return false if config type not valid", func() {
 				notValidType := []byte(`
 test:
@@ -183,7 +210,7 @@ test:
 				Expect(isValid).Should(BeFalse())
 			})
 		})
-		Context("when input is right", func() {
+		When("input is right", func() {
 			It("should return true and error is nil", func() {
 				isValid, err := NewManager("").checkConfigType(validCoreBytes, "core")
 				Expect(err).Error().ShouldNot(HaveOccurred())
