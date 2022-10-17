@@ -6,7 +6,7 @@ import (
 )
 
 // return empty
-func getEmptyState(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
-	retMap := make(statemanager.ResourceStatus)
-	return retMap, nil
+func getEmptyStatus(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
+	retStatus := make(statemanager.ResourceStatus)
+	return retStatus, nil
 }

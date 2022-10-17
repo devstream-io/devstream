@@ -23,7 +23,7 @@ func ComposeDown(options plugininstaller.RawOptions) error {
 	return nil
 }
 
-func ComposeState(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
+func ComposeStatus(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
 	state, err := op.ComposeState()
 	if err != nil {
 		return nil, fmt.Errorf("failed to get containers state: %s", err)

@@ -17,7 +17,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 			helm.SetDefaultConfig(&defaultHelmConfig),
 			helm.Validate,
 		},
-		GetStateOperation: helm.GetPluginAllState,
+		GetStatusOperation: helm.GetAllResourcesStatus,
 	}
 
 	// 2. get plugin status

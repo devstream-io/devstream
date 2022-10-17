@@ -13,8 +13,8 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 			helm.SetDefaultConfig(&defaultHelmConfig),
 			helm.Validate,
 		},
-		ExecuteOperations: helm.DefaultUpdateOperations,
-		GetStateOperation: helm.GetPluginAllState,
+		ExecuteOperations:  helm.DefaultUpdateOperations,
+		GetStatusOperation: helm.GetAllResourcesStatus,
 	}
 
 	// 2. update by helm config and get status

@@ -7,7 +7,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/scm/github"
 )
 
-func GetDynamicState(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
+func GetDynamicStatus(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return nil, err

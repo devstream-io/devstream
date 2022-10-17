@@ -9,9 +9,9 @@
 
 ## 工作流程
 
-![config state resource workflow](../images/config_state_resource.png)
+![config state resource-status workflow](../images/config_state_resource.png)
 
-## 配置，工具，状态和资源
+## 配置，工具，状态和资源状态
 
 构架文档阐述了 DevStream 的基本工作原理。请确保你在阅读文档其他部分之前完成此部分的阅读。
 
@@ -60,4 +60,4 @@ _State_ 记录了当下开发运维工具链的状况，包括了每个工具的
 
 配置-状态-资源状态 工作流：
 
-![config state resource workflow](../images/config_state_resource.png)
+![config state resource-status workflow](../images/config_state_resource.png)

@@ -30,8 +30,8 @@ var defaultHelmConfig = helm.Options{
 	},
 }
 
-func genDevLakeState(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
-	resStatus, err := helm.GetPluginAllState(options)
+func genDevLakeStatus(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
+	resStatus, err := helm.GetAllResourcesStatus(options)
 	if err != nil {
 		return nil, err
 	}

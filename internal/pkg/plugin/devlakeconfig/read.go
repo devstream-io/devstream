@@ -12,7 +12,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 			validate,
 			RenderAuthConfig,
 		},
-		GetStateOperation: GetState,
+		GetStatusOperation: GetStatus,
 	}
 
 	// Execute all Operations in Operator

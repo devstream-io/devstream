@@ -12,8 +12,8 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			helm.Validate,
 		},
-		ExecuteOperations: helm.DefaultUpdateOperations,
-		GetStateOperation: getEmptyState,
+		ExecuteOperations:  helm.DefaultUpdateOperations,
+		GetStatusOperation: getEmptyStatus,
 	}
 
 	// Execute all Operations in Operator

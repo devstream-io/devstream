@@ -14,7 +14,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 			setCIContent,
 			ci.Validate,
 		},
-		GetStateOperation: ci.GetCIFileStatus,
+		GetStatusOperation: ci.GetCIFileStatus,
 	}
 
 	status, err := operator.Execute(plugininstaller.RawOptions(options))

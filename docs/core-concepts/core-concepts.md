@@ -10,7 +10,7 @@ The architecture image below shows how DevStream works in general:
 
 ## Workflow
 
-![config state resource workflow](../images/config_state_resource.png)
+![config state resource-status workflow](../images/config_state_resource.png)
 
 ## Config, Tool, State and Resource
 
@@ -61,4 +61,4 @@ The _State_ records the current status of your DevOps toolchain. It contains the
 
 Config-State-ResourceStatus workflow:
 
-![config state resource workflow](../images/config_state_resource.png)
+![config state resource-status workflow](../images/config_state_resource.png)

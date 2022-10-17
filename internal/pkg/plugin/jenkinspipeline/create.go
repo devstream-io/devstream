@@ -20,7 +20,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 			jenkins.CreateRepoWebhook,
 			ci.PushCIFiles,
 		},
-		GetStateOperation: jenkins.GetStatus,
+		GetStatusOperation: jenkins.GetStatus,
 	}
 
 	// Execute all Operations in Operator

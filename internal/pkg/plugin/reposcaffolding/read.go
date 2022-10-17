@@ -11,7 +11,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			reposcaffolding.Validate,
 		},
-		GetStateOperation: reposcaffolding.GetDynamicState,
+		GetStatusOperation: reposcaffolding.GetDynamicStatus,
 	}
 
 	status, err := operator.Execute(plugininstaller.RawOptions(options))

@@ -18,7 +18,7 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 			createDockerHubInfoForPush,
 			github.ProcessAction(github.ActionUpdate),
 		},
-		GetStateOperation: github.GetActionState,
+		GetStatusOperation: github.GetActionStatus,
 	}
 
 	status, err := operator.Execute(plugininstaller.RawOptions(options))

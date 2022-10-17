@@ -12,7 +12,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 			jenkins.SetJobDefaultConfig,
 			jenkins.ValidateJobConfig,
 		},
-		GetStateOperation: jenkins.GetStatus,
+		GetStatusOperation: jenkins.GetStatus,
 	}
 
 	status, err := operator.Execute(plugininstaller.RawOptions(options))

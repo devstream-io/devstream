@@ -16,7 +16,7 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 		ExecuteOperations: plugininstaller.ExecuteOperations{
 			github.ProcessAction(github.ActionUpdate),
 		},
-		GetStateOperation: github.GetActionState,
+		GetStatusOperation: github.GetActionStatus,
 	}
 
 	status, err := operator.Execute(plugininstaller.RawOptions(options))

@@ -12,7 +12,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			helm.Validate,
 		},
-		GetStateOperation: getEmptyState,
+		GetStatusOperation: getEmptyStatus,
 	}
 
 	status, err := operator.Execute(plugininstaller.RawOptions(options))

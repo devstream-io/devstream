@@ -8,7 +8,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func GetStaticWorkFlowState(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
+func GetStaticWorkFlowStatus(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
 	opts, err := NewGithubActionOptions(options)
 	if err != nil {
 		return nil, err
@@ -22,7 +22,7 @@ func GetStaticWorkFlowState(options plugininstaller.RawOptions) (statemanager.Re
 	return res, nil
 }
 
-func GetActionState(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
+func GetActionStatus(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
 	opts, err := NewGithubActionOptions(options)
 	if err != nil {
 		return nil, err
@@ -43,11 +43,8 @@ func GetActionState(options plugininstaller.RawOptions) (statemanager.ResourceSt
 		log.Debug("Github action file not found")
 		return nil, nil
 	}
-	return buildReadState(path), nil
-}
 
-func buildReadState(path string) map[string]interface{} {
-	res := make(map[string]interface{})
-	res["workflowDir"] = path
-	return res
+	resStatus := make(statemanager.ResourceStatus)
+	resStatus["workflowDir"] = path
+	return resStatus, nil
 }

@@ -365,8 +365,8 @@ func DeleteApp(options plugininstaller.RawOptions) error {
 	return nil
 }
 
-// GetState checks plugin status by goclient
-func GetState(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
+// GetStatus checks plugin status by goclient
+func GetStatus(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return nil, err

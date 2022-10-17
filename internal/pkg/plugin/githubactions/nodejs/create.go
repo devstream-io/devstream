@@ -17,7 +17,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		ExecuteOperations: plugininstaller.ExecuteOperations{
 			github.ProcessAction(github.ActionCreate),
 		},
-		GetStateOperation: github.GetStaticWorkFlowState,
+		GetStatusOperation: github.GetStaticWorkFlowStatus,
 	}
 
 	// Execute all Operations in Operator

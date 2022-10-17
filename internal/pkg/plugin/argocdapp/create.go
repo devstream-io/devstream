@@ -17,7 +17,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		ExecuteOperations: plugininstaller.ExecuteOperations{
 			kubectl.ProcessByContent(kubectlUtil.Create, templateFileLoc),
 		},
-		GetStateOperation: getStaticState,
+		GetStatusOperation: getStaticStatus,
 	}
 
 	// Execute all Operations in Operator

@@ -18,7 +18,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 			createDockerHubInfoForPush,
 			github.ProcessAction(github.ActionCreate),
 		},
-		GetStateOperation: github.GetStaticWorkFlowState,
+		GetStatusOperation: github.GetStaticWorkFlowStatus,
 	}
 
 	// Execute all Operations in Operator

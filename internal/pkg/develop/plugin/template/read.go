@@ -16,8 +16,8 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			// TODO(dtm): Add your PreExecuteOperations here.
 		},
-		GetStateOperation: func(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
-			// TODO(dtm): Add your GetStateOperation here.
+		GetStatusOperation: func(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
+			// TODO(dtm): Add your GetStatusOperation here.
 			return nil, nil
 		},
 	}

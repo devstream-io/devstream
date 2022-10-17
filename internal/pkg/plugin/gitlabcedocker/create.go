@@ -26,7 +26,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		TerminateOperations: plugininstaller.TerminateOperations{
 			dockerInstaller.ClearWhenInterruption,
 		},
-		GetStateOperation: dockerInstaller.GetStaticStateFromOptions,
+		GetStatusOperation: dockerInstaller.GetStaticStatus,
 	}
 
 	// 3. execute installer get status and error

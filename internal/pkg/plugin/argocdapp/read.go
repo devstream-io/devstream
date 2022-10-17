@@ -10,7 +10,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			validate,
 		},
-		GetStateOperation: getDynamicState,
+		GetStatusOperation: getDynamicStatus,
 	}
 
 	// Execute all Operations in Operator

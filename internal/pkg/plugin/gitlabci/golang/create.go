@@ -17,7 +17,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		ExecuteOperations: plugininstaller.ExecuteOperations{
 			ci.PushCIFiles,
 		},
-		GetStateOperation: ci.GetCIFileStatus,
+		GetStatusOperation: ci.GetCIFileStatus,
 	}
 
 	// Execute all Operations in Operator

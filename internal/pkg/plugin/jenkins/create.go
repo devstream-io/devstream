@@ -19,7 +19,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 			helm.InstallOrUpdate,
 		},
 		TerminateOperations: helm.DefaultTerminateOperations,
-		GetStateOperation:   genJenkinsState,
+		GetStatusOperation:  genJenkinsStatus,
 	}
 
 	// Execute all Operations in Operator

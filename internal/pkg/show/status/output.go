@@ -21,8 +21,8 @@ type Status struct {
 	// if ResourceStatusInState == ResourceStatusFromRead,
 	// then InlineStatus is set to equals ResourceStatusInState and ResourceStatusFromRead.
 	InlineStatus           statemanager.ResourceStatus `yaml:",inline,omitempty"`
-	ResourceStatusInState  statemanager.ResourceStatus `yaml:"ResourceStatusInState,omitempty"`
-	ResourceStatusFromRead statemanager.ResourceStatus `yaml:"ResourceStatusFromRead,omitempty"`
+	ResourceStatusInState  statemanager.ResourceStatus `yaml:"statusInState,omitempty"`
+	ResourceStatusFromRead statemanager.ResourceStatus `yaml:"statusNow,omitempty"`
 }
 
 // If the resource has drifted, status.ResourceStatusInState & status.ResourceStatusFromRead must NOT be nil and status.InlineStatus should be nil.

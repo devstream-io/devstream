@@ -11,7 +11,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			goclient.Validate,
 		},
-		GetStateOperation: goclient.GetState,
+		GetStatusOperation: goclient.GetStatus,
 	}
 
 	// Execute all Operations in Operator

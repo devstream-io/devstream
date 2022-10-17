@@ -15,7 +15,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		ExecuteOperations: plugininstaller.ExecuteOperations{
 			reposcaffolding.InstallRepo,
 		},
-		GetStateOperation: reposcaffolding.GetDynamicState,
+		GetStatusOperation: reposcaffolding.GetDynamicStatus,
 	}
 
 	// Execute all Operations in Operator

@@ -14,7 +14,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 		ExecuteOperations: plugininstaller.ExecuteOperations{
 			dockerInstaller.ComposeDown,
 		},
-		GetStateOperation: dockerInstaller.ComposeState,
+		GetStatusOperation: dockerInstaller.ComposeStatus,
 	}
 
 	// Execute all Operations in Operator
