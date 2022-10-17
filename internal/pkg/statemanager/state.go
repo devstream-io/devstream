@@ -11,18 +11,19 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/mapz/concurrentmap"
 )
 
+// We call what the plugin created a ResourceStatus, and which is stored as part of the state.
+type ResourceStatus map[string]interface{}
+
 // State is the single component's state.
 type State struct {
-	Name       string
-	InstanceID string
-	DependsOn  []string
-	Options    map[string]interface{}
-	Resource   map[string]interface{}
+	Name           string
+	InstanceID     string
+	DependsOn      []string
+	Options        map[string]interface{}
+	ResourceStatus ResourceStatus
 }
 
-type ResourceState map[string]interface{}
-
-func (rs *ResourceState) SetOutputs(outputs map[string]interface{}) {
+func (rs *ResourceStatus) SetOutputs(outputs map[string]interface{}) {
 	(*rs)["outputs"] = outputs
 }
 

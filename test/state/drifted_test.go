@@ -40,7 +40,7 @@ func resourceFromFile() map[string]interface{} {
 
 	state := smgr.GetState(statemanager.GenerateStateKeyByToolNameAndInstanceID(tool.Name, tool.InstanceID))
 
-	return state.Resource
+	return state.ResourceStatus
 }
 
 func resourceFromPluginRead() (map[string]interface{}, error) {

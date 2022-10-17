@@ -8,7 +8,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func GetStaticWorkFlowState(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
+func GetStaticWorkFlowState(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
 	opts, err := NewGithubActionOptions(options)
 	if err != nil {
 		return nil, err
@@ -22,7 +22,7 @@ func GetStaticWorkFlowState(options plugininstaller.RawOptions) (statemanager.Re
 	return res, nil
 }
 
-func GetActionState(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
+func GetActionState(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
 	opts, err := NewGithubActionOptions(options)
 	if err != nil {
 		return nil, err

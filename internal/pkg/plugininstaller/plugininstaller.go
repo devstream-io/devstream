@@ -13,7 +13,7 @@ type (
 	// BaseOperation reads options and executes operation
 	BaseOperation func(options RawOptions) error
 	// StateOperation reads options and executes operation, then returns the state map
-	StateOperation func(options RawOptions) (statemanager.ResourceState, error)
+	StateOperation func(options RawOptions) (statemanager.ResourceStatus, error)
 )
 
 type (

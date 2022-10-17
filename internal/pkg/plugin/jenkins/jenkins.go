@@ -27,7 +27,7 @@ var defaultHelmConfig = helm.Options{
 	},
 }
 
-func genJenkinsState(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
+func genJenkinsState(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
 	resState, err := helm.GetPluginAllState(options)
 	if err != nil {
 		return nil, err

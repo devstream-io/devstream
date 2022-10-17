@@ -127,7 +127,7 @@ func GetChangesForApply(smgr statemanager.Manager, cfg *configmanager.Config) (c
 						// tool exists in the state, but resource doesn't exist, Create
 						description := fmt.Sprintf("Tool (%s/%s) state found but it seems the tool isn't created, will be created.", tool.Name, tool.InstanceID)
 						changes = append(changes, generateCreateAction(&tool, description))
-					} else if drifted, err := ResourceDrifted(state.Resource, resource); drifted || err != nil {
+					} else if drifted, err := ResourceDrifted(state.ResourceStatus, resource); drifted || err != nil {
 						if err != nil {
 							return nil, err
 						}

@@ -28,7 +28,7 @@ func (s *State) ToMap() (map[string]interface{}, error) {
 	return m, nil
 }
 
-func GetStaticStateFromOptions(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
+func GetStaticStateFromOptions(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return nil, err
@@ -44,7 +44,7 @@ func GetStaticStateFromOptions(options plugininstaller.RawOptions) (statemanager
 	return staticState.ToMap()
 }
 
-func GetRunningState(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
+func GetRunningState(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return nil, err

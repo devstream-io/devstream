@@ -90,8 +90,8 @@ func DeleteTrelloBoard(opts *Options) error {
 	}
 	return c.CheckAndDeleteBoard(opts.Owner, opts.Repo, opts.KanbanBoardName)
 }
-func buildState(opts *Options, ti *TrelloItemId) statemanager.ResourceState {
-	resState := make(statemanager.ResourceState)
+func buildState(opts *Options, ti *TrelloItemId) statemanager.ResourceStatus {
+	resState := make(statemanager.ResourceStatus)
 	resState["boardId"] = ti.boardId
 	resState["todoListId"] = ti.todoListId
 	resState["doingListId"] = ti.doingListId
@@ -118,7 +118,7 @@ func buildReadState(opts *Options) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	resState := statemanager.ResourceState(listIds)
+	resState := statemanager.ResourceStatus(listIds)
 	output := make(map[string]interface{})
 	output["boardId"] = fmt.Sprint(listIds["boardId"])
 	output["todoListId"] = fmt.Sprint(listIds["todoListId"])

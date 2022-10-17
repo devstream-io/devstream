@@ -18,11 +18,11 @@ type Output struct {
 type Status struct {
 	InlineStatus map[string]interface{} `yaml:",inline,omitempty"`
 	State        map[string]interface{} `yaml:"State,omitempty"`
-	Resource     map[string]interface{} `yaml:"Resource,omitempty"`
+	Resource     map[string]interface{} `yaml:"ResourceStatus,omitempty"`
 }
 
-// If the resource has drifted, status.State & status.Resource must NOT be nil and status.InlineStatus should be nil.
-// If the resource hasn't drifted, status.State & status.Resource should be nil and status.InlineStatus must NOT be nil.
+// If the resource has drifted, status.State & status.ResourceStatus must NOT be nil and status.InlineStatus should be nil.
+// If the resource hasn't drifted, status.State & status.ResourceStatus should be nil and status.InlineStatus must NOT be nil.
 func NewOutput(instanceID, plugin string, options map[string]interface{}, status *Status) (*Output, error) {
 	if ok, err := validateParams(instanceID, plugin, options, status); !ok {
 		return nil, err

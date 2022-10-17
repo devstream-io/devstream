@@ -6,7 +6,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 )
 
-func GetStatus(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
+func GetStatus(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
 	opts, err := newJobOptions(options)
 	if err != nil {
 		return nil, err
@@ -16,7 +16,8 @@ func GetStatus(options plugininstaller.RawOptions) (statemanager.ResourceState, 
 	if err != nil {
 		return nil, err
 	}
-	res := make(statemanager.ResourceState)
+
+	res := make(statemanager.ResourceStatus)
 	jobRes, err := getJobState(client, opts.Pipeline.getJobName(), opts.Pipeline.getJobFolder())
 	if err != nil {
 		return nil, err

@@ -10,7 +10,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/k8s"
 )
 
-func getStaticState(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
+func getStaticState(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return nil, err
@@ -36,7 +36,7 @@ func getStaticState(options plugininstaller.RawOptions) (statemanager.ResourceSt
 	return res, nil
 }
 
-func getDynamicState(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
+func getDynamicState(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return nil, err

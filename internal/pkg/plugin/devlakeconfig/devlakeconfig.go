@@ -103,7 +103,7 @@ func UpdateConfig(options plugininstaller.RawOptions) error {
 	return nil
 }
 
-func GetState(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
-	resState := statemanager.ResourceState(options)
+func GetState(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
+	resState := statemanager.ResourceStatus(options)
 	return resState, nil
 }

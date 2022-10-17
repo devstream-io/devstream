@@ -8,7 +8,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
-func GetCIFileStatus(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
+func GetCIFileStatus(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return nil, err

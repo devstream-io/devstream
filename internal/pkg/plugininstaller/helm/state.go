@@ -9,7 +9,7 @@ import (
 )
 
 // GetPluginAllState will get the State of k8s Deployment, DaemonSet and StatefulSet resources
-func GetPluginAllState(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
+func GetPluginAllState(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return nil, err
