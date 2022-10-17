@@ -15,8 +15,6 @@ var _ = Describe("Options struct", func() {
 		testChartName string
 		testRepoName  string
 		testNameSpace string
-		expectMap     map[string]interface{}
-		emptyBool     *bool
 	)
 
 	BeforeEach(func() {
@@ -30,23 +28,6 @@ var _ = Describe("Options struct", func() {
 			},
 			Repo: helmCommon.Repo{
 				Name: testRepoName,
-			},
-		}
-		expectMap = map[string]interface{}{
-			"repo": map[string]interface{}{
-				"name": "test_repo",
-				"url":  "",
-			},
-			"chart": map[string]interface{}{
-				"version":     "",
-				"releaseName": "",
-				"wait":        emptyBool,
-				"chartPath":   "",
-				"chartName":   "test_chart",
-				"namespace":   "test_nameSpace",
-				"timeout":     "",
-				"upgradeCRDs": emptyBool,
-				"valuesYaml":  "",
 			},
 		}
 	})
@@ -68,14 +49,6 @@ var _ = Describe("Options struct", func() {
 	Context("GetReleaseName method", func() {
 		It("should return chart's ReleaseName", func() {
 			Expect(testOpts.GetReleaseName()).Should(Equal(testOpts.Chart.ReleaseName))
-		})
-	})
-
-	Context("Encode method", func() {
-		It("should return opts map", func() {
-			result, err := testOpts.Encode()
-			Expect(err).Error().ShouldNot(HaveOccurred())
-			Expect(result).Should(Equal(expectMap))
 		})
 	})
 })

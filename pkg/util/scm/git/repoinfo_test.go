@@ -26,12 +26,6 @@ var _ = Describe("RepoInfo struct", func() {
 			Org:    org,
 		}
 	})
-	Context("GetRepoNameWithBranch method", func() {
-		It("should return repo-with-branch", func() {
-			result := repoInfo.GetRepoNameWithBranch()
-			Expect(result).Should(Equal(fmt.Sprintf("%s-%s", repoName, branch)))
-		})
-	})
 	Context("GetRepoOwner method", func() {
 		It("should return owner", func() {
 			result := repoInfo.GetRepoOwner()

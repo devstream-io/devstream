@@ -9,8 +9,9 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/devstream-io/devstream/pkg/util/downloader"
 	"github.com/onsi/gomega/ghttp"
+
+	"github.com/devstream-io/devstream/pkg/util/downloader"
 )
 
 var _ = Describe("ResourceClient struct", func() {

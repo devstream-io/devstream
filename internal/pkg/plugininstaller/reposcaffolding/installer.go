@@ -13,20 +13,22 @@ func InstallRepo(options plugininstaller.RawOptions) error {
 		return err
 	}
 
-	// 1. Create and render repo get from given url
-	gitMap, err := opts.SourceRepo.CreateAndRenderLocalRepo(
-		opts.DestinationRepo.Repo, opts.renderTplConfig(),
-	)
+	// 1. Download and render repo by SourceRepo
+	sourceClient, err := scm.NewClient(opts.SourceRepo.BuildRepoInfo())
+	if err != nil {
+		return err
+	}
+	gitMap, err := opts.downloadAndRenderScmRepo(sourceClient)
 	if err != nil {
 		return err
 	}
 
-	// 2. Push local repo to remote
-	client, err := scm.NewClient(opts.DestinationRepo.BuildRepoInfo())
+	// 2. push repo to DestinationRepo
+	dstClient, err := scm.NewClient(opts.DestinationRepo.BuildRepoInfo())
 	if err != nil {
 		return err
 	}
-	return scm.PushInitRepo(client, &git.CommitInfo{
+	return scm.PushInitRepo(dstClient, &git.CommitInfo{
 		CommitMsg:    scm.DefaultCommitMsg,
 		CommitBranch: scm.TransitBranch,
 		GitFileMap:   gitMap,

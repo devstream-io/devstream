@@ -13,12 +13,11 @@ import (
 )
 
 const (
-	defaultWorkPath                           = ".github-workpath"
-	defaultCommitAuthor                       = "devstream"
-	defaultCommitAuthorEmail                  = "devstream@merico.dev"
-	repoPlaceHolderFileName                   = ".placeholder"
-	DefaultLatestCodeZipfileDownloadUrlFormat = "https://codeload.github.com/%s/%s/zip/refs/heads/%s?archive=zip"
-	TokenEnvKey                               = "GITHUB_TOKEN"
+	defaultWorkPath          = ".github-workpath"
+	defaultCommitAuthor      = "devstream"
+	defaultCommitAuthorEmail = "devstream@merico.dev"
+	repoPlaceHolderFileName  = ".placeholder"
+	TokenEnvKey              = "GITHUB_TOKEN"
 )
 
 var (

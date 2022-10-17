@@ -4,6 +4,7 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
 	"github.com/devstream-io/devstream/pkg/util/scm/gitlab"
+	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
 func setCIContent(options plugininstaller.RawOptions) (plugininstaller.RawOptions, error) {
@@ -26,5 +27,5 @@ func setCIContent(options plugininstaller.RawOptions) (plugininstaller.RawOption
 	}
 	ciConfig.SetContent(ciContent)
 	opts.CIConfig = ciConfig
-	return opts.Encode()
+	return types.EncodeStruct(opts)
 }

@@ -5,11 +5,12 @@ import (
 )
 
 type RepoInfo struct {
-	Repo   string
-	Branch string
-	Owner  string
-	Org    string
-	Type   string
+	Repo     string
+	Branch   string
+	Owner    string
+	Org      string
+	Type     string
+	CloneURL string
 
 	// used for gitlab
 	Visibility string
@@ -22,10 +23,6 @@ type RepoInfo struct {
 }
 
 // unused
-func (r *RepoInfo) GetRepoNameWithBranch() string {
-	return fmt.Sprintf("%s-%s", r.Repo, r.Branch)
-}
-
 func (r *RepoInfo) GetRepoOwner() string {
 	if r.Org != "" {
 		return r.Org

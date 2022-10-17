@@ -3,6 +3,7 @@ package github
 import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/pkg/util/scm/github"
+	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
 func BuildWorkFlowsWrapper(workflows []*github.Workflow) plugininstaller.MutableOperation {
@@ -19,6 +20,6 @@ func BuildWorkFlowsWrapper(workflows []*github.Workflow) plugininstaller.Mutable
 			w.WorkflowContent = content
 			opts.Workflows = append(opts.Workflows, w)
 		}
-		return opts.Encode()
+		return types.EncodeStruct(opts)
 	}
 }

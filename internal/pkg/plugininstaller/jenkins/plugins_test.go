@@ -34,11 +34,11 @@ func (m *mockErrorPluginsConfig) UpdateJenkinsFileRenderVars(*jenkins.JenkinsFil
 
 var _ = Describe("installPlugins func", func() {
 	var (
-		mockClient *mockSuccessJenkinsClient
+		mockClient *jenkins.MockClient
 		s          *mockSuccessPluginsConfig
 	)
 	BeforeEach(func() {
-		mockClient = &mockSuccessJenkinsClient{}
+		mockClient = &jenkins.MockClient{}
 		s = &mockSuccessPluginsConfig{}
 	})
 	It("should work normal", func() {
@@ -49,13 +49,13 @@ var _ = Describe("installPlugins func", func() {
 
 var _ = Describe("preConfigPlugins func", func() {
 	var (
-		mockClient *mockSuccessJenkinsClient
+		mockClient *jenkins.MockClient
 		s          *mockSuccessPluginsConfig
 		f          *mockErrorPluginsConfig
 	)
 	When("cascConfig is valid", func() {
 		BeforeEach(func() {
-			mockClient = &mockSuccessJenkinsClient{}
+			mockClient = &jenkins.MockClient{}
 			s = &mockSuccessPluginsConfig{}
 		})
 		It("should work normal", func() {
@@ -65,7 +65,7 @@ var _ = Describe("preConfigPlugins func", func() {
 	})
 	When("cascConfig is not valid", func() {
 		BeforeEach(func() {
-			mockClient = &mockSuccessJenkinsClient{}
+			mockClient = &jenkins.MockClient{}
 			f = &mockErrorPluginsConfig{}
 		})
 		It("should return error", func() {

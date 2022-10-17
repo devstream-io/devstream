@@ -8,23 +8,23 @@ import (
 
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/common"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/jenkins/plugins"
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/mapz"
+	"github.com/devstream-io/devstream/pkg/util/scm"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
 type JobOptions struct {
-	Jenkins  Jenkins  `mapstructure:"jenkins"`
-	SCM      SCM      `mapstructure:"scm"`
-	Pipeline Pipeline `mapstructure:"pipeline"`
+	Jenkins  Jenkins     `mapstructure:"jenkins"`
+	SCM      scm.SCMInfo `mapstructure:"scm"`
+	Pipeline Pipeline    `mapstructure:"pipeline"`
 
 	// used in package
 	CIConfig    *ci.CIConfig       `mapstructure:"ci"`
 	BasicAuth   *jenkins.BasicAuth `mapstructure:"basicAuth"`
-	ProjectRepo *common.Repo       `mapstructure:"projectRepo"`
+	ProjectRepo *scm.Repo          `mapstructure:"projectRepo"`
 	SecretToken string             `mapstructure:"secretToken"`
 }
 
@@ -35,30 +35,12 @@ type Jenkins struct {
 	EnableRestart bool   `mapstructure:"enableRestart"`
 }
 
-type SCM struct {
-	CloneURL string `mapstructure:"cloneURL" validate:"required"`
-	APIURL   string `mapstructure:"apiURL"`
-	Branch   string `mapstructure:"branch"`
-	Type     string `mapstructure:"type"`
-
-	// used in package
-	SSHprivateKey string `mapstructure:"sshPrivateKey"`
-}
-
 func newJobOptions(options plugininstaller.RawOptions) (*JobOptions, error) {
 	var opts JobOptions
 	if err := mapstructure.Decode(options, &opts); err != nil {
 		return nil, err
 	}
 	return &opts, nil
-}
-
-func (j *JobOptions) encode() (map[string]interface{}, error) {
-	var options map[string]interface{}
-	if err := mapstructure.Decode(j, &options); err != nil {
-		return nil, err
-	}
-	return options, nil
 }
 
 func (j *JobOptions) newJenkinsClient() (jenkins.JenkinsAPI, error) {
@@ -85,17 +67,13 @@ func (j *JobOptions) deleteJob(client jenkins.JenkinsAPI) error {
 	if err != nil {
 		// check job is already been deleted
 		if jenkins.IsNotFoundError(err) {
-			return err
+			return nil
 		}
-		return nil
-	}
-	isDeleted, err := job.Delete(context.Background())
-	if err != nil {
-		log.Debugf("jenkins delete job %s failed: %s", j.Pipeline.JobName, err)
 		return err
 	}
-	log.Debugf("jenkins delete job %s status: %v", j.Pipeline.JobName, isDeleted)
-	return nil
+	_, err = job.Delete(context.Background())
+	log.Debugf("jenkins delete job %s status: %v", j.Pipeline.JobName, err)
+	return err
 }
 
 func (j *JobOptions) extractJenkinsPlugins() []pluginConfigAPI {
@@ -127,7 +105,7 @@ func (j *JobOptions) createOrUpdateJob(jenkinsClient jenkins.JenkinsAPI) error {
 		SecretToken:      j.SecretToken,
 		FolderName:       j.Pipeline.getJobFolder(),
 		GitlabConnection: plugins.GitlabConnectionName,
-		RepoURL:          j.ProjectRepo.BuildURL(),
+		RepoURL:          j.ProjectRepo.BuildScmURL(),
 		RepoOwner:        j.ProjectRepo.Owner,
 		RepoName:         j.ProjectRepo.Repo,
 	}

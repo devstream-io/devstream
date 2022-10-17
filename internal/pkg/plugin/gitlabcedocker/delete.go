@@ -3,6 +3,7 @@ package gitlabcedocker
 import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	dockerInstaller "github.com/devstream-io/devstream/internal/pkg/plugininstaller/docker"
+	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
 func Delete(options map[string]interface{}) (bool, error) {
@@ -23,7 +24,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 	}
 
 	// 3. delete and get status
-	rawOptions, err := buildDockerOptions(opts).Encode()
+	rawOptions, err := types.EncodeStruct(buildDockerOptions(opts))
 	if err != nil {
 		return false, err
 	}

@@ -31,7 +31,7 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	}
 
 	// 3. update and get status
-	rawOptions, err := buildDockerOptions(opts).Encode()
+	rawOptions, err := types.EncodeStruct(buildDockerOptions(opts))
 	if err != nil {
 		return nil, err
 	}

@@ -48,15 +48,6 @@ func (opts *Options) GetRunOpts() *docker.RunOptions {
 		RestartAlways: opts.RestartAlways,
 	}
 }
-
-func (opts *Options) Encode() (map[string]interface{}, error) {
-	var options map[string]interface{}
-	if err := mapstructure.Decode(opts, &options); err != nil {
-		return nil, err
-	}
-	return options, nil
-}
-
 func Validate(options plugininstaller.RawOptions) (plugininstaller.RawOptions, error) {
 	opts, err := NewOptions(options)
 	if err != nil {

@@ -17,18 +17,24 @@ func GetStatus(options plugininstaller.RawOptions) (statemanager.ResourceState, 
 		return nil, err
 	}
 	res := make(statemanager.ResourceState)
-	job, err := client.GetFolderJob(
-		opts.Pipeline.getJobName(), opts.Pipeline.getJobFolder(),
-	)
+	jobRes, err := getJobState(client, opts.Pipeline.getJobName(), opts.Pipeline.getJobFolder())
+	if err != nil {
+		return nil, err
+	}
+	res["JobCreated"] = true
+	res["Job"] = jobRes
+	return res, nil
+}
+
+func getJobState(jenkinsClient jenkins.JenkinsAPI, jobName, jobFolder string) (map[string]interface{}, error) {
+	job, err := jenkinsClient.GetFolderJob(jobName, jobFolder)
 	if err != nil {
 		return nil, err
 	}
 	rawJob := job.Raw
-	res["JobCreated"] = true
-	res["Job"] = map[string]interface{}{
+	return map[string]interface{}{
 		"Created": true,
 		"Class":   rawJob.Class,
 		"URL":     rawJob.URL,
-	}
-	return res, nil
+	}, nil
 }

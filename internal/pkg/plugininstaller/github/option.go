@@ -66,14 +66,6 @@ func (opts *GithubActionOptions) RenderWorkFlow(content string) (string, error) 
 	return template.Render("githubactions", content, opts)
 }
 
-func (opts *GithubActionOptions) Encode() (map[string]interface{}, error) {
-	var options map[string]interface{}
-	if err := mapstructure.Decode(opts, &options); err != nil {
-		return nil, err
-	}
-	return options, nil
-}
-
 func (opts *GithubActionOptions) CheckAddDockerHubToken() bool {
 	if opts.Docker != nil && opts.Docker.Registry.Type == "dockerhub" {
 		return true

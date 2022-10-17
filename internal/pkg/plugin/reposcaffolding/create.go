@@ -11,7 +11,6 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			reposcaffolding.Validate,
-			reposcaffolding.SetDefaultTemplateRepo,
 		},
 		ExecuteOperations: plugininstaller.ExecuteOperations{
 			reposcaffolding.InstallRepo,

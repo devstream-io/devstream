@@ -8,6 +8,8 @@ type MockScmClient struct {
 	InitRaiseError         error
 	PushRaiseError         error
 	GetPathInfoError       error
+	DownloadRepoError      error
+	DownloadRepoValue      string
 	NeedRollBack           bool
 	DeleteFuncIsRun        bool
 	GetPathInfoReturnValue []*git.RepoFileStatus
@@ -46,4 +48,14 @@ func (m *MockScmClient) AddWebhook(webhookConfig *git.WebhookConfig) error {
 }
 func (m *MockScmClient) DeleteWebhook(webhookConfig *git.WebhookConfig) error {
 	return nil
+}
+func (m *MockScmClient) DownloadRepo() (string, error) {
+	if m.DownloadRepoError != nil {
+		return "", m.DownloadRepoError
+	}
+	return m.DownloadRepoValue, nil
+}
+
+func (m *MockScmClient) DescribeRepo() (*git.RepoInfo, error) {
+	return nil, nil
 }

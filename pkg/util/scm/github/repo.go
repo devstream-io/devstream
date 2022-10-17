@@ -1,19 +1,34 @@
 package github
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
 	"github.com/google/go-github/v42/github"
 
+	"github.com/devstream-io/devstream/pkg/util/downloader"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/pkgerror"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
 const (
-	webhookName = "devstream_webhook"
+	webhookName                               = "devstream_webhook"
+	defaultLatestCodeZipfileDownloadUrlFormat = "https://codeload.github.com/%s/%s/zip/refs/heads/%s?archive=zip"
 )
+
+// DownloadRepo will download repo, return repo local path and error
+func (c *Client) DownloadRepo() (string, error) {
+	latestCodeZipfileDownloadURL := fmt.Sprintf(
+		defaultLatestCodeZipfileDownloadUrlFormat, c.Owner, c.Repo, c.Branch,
+	)
+	log.Debugf("github get repo download url: %s.", latestCodeZipfileDownloadURL)
+	getterClient := downloader.ResourceClient{
+		Source: latestCodeZipfileDownloadURL,
+	}
+	return getterClient.GetWithGoGetter()
+}
 
 func (c *Client) CreateRepo(org, defaultBranch string) error {
 	repo := &github.Repository{
@@ -49,7 +64,7 @@ func (c *Client) DeleteRepo() error {
 	return nil
 }
 
-func (c *Client) DescribeRepo() (*github.Repository, error) {
+func (c *Client) DescribeRepo() (*git.RepoInfo, error) {
 	repo, resp, err := c.Client.Repositories.Get(
 		c.Context,
 		c.GetRepoOwner(),
@@ -62,8 +77,13 @@ func (c *Client) DescribeRepo() (*github.Repository, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	return repo, nil
+	return &git.RepoInfo{
+		Repo:     repo.GetName(),
+		Owner:    repo.GetOwner().GetLogin(),
+		Org:      repo.GetOrganization().GetLogin(),
+		CloneURL: repo.GetCloneURL(),
+		Type:     "github",
+	}, nil
 }
 
 func (c *Client) InitRepo() error {
@@ -101,7 +121,7 @@ func (c *Client) ProtectBranch(branch string) error {
 		return err
 	}
 
-	_, _, err = c.Repositories.UpdateBranchProtection(c.Context, repo.GetOwner().GetLogin(), repo.GetName(), branch, req)
+	_, _, err = c.Repositories.UpdateBranchProtection(c.Context, repo.Owner, repo.Repo, branch, req)
 	if err != nil {
 		return err
 	}

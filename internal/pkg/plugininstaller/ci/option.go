@@ -4,13 +4,13 @@ import (
 	"github.com/mitchellh/mapstructure"
 
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/common"
+	"github.com/devstream-io/devstream/pkg/util/scm"
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
 type Options struct {
-	CIConfig    *CIConfig    `mapstructure:"ci" validate:"required"`
-	ProjectRepo *common.Repo `mapstructure:"projectRepo" validate:"required"`
+	CIConfig    *CIConfig `mapstructure:"ci" validate:"required"`
+	ProjectRepo *scm.Repo `mapstructure:"projectRepo" validate:"required"`
 }
 
 func NewOptions(options plugininstaller.RawOptions) (*Options, error) {
@@ -22,7 +22,7 @@ func NewOptions(options plugininstaller.RawOptions) (*Options, error) {
 }
 
 // FillDefaultValue config options default values by input defaultOptions
-func (opts *Options) FillDefaultValue(defaultOptions *Options) {
+func (opts *Options) fillDefaultValue(defaultOptions *Options) {
 	if opts.CIConfig == nil {
 		opts.CIConfig = defaultOptions.CIConfig
 	} else {
@@ -33,12 +33,4 @@ func (opts *Options) FillDefaultValue(defaultOptions *Options) {
 	} else {
 		types.FillStructDefaultValue(opts.ProjectRepo, defaultOptions.ProjectRepo)
 	}
-}
-
-func (opts *Options) Encode() (map[string]interface{}, error) {
-	var options map[string]interface{}
-	if err := mapstructure.Decode(opts, &options); err != nil {
-		return nil, err
-	}
-	return options, nil
 }

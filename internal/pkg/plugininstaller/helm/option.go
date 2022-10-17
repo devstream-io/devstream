@@ -28,15 +28,7 @@ func (opts *Options) GetReleaseName() string {
 	return opts.Chart.ReleaseName
 }
 
-func (opts *Options) Encode() (map[string]interface{}, error) {
-	var options map[string]interface{}
-	if err := mapstructure.Decode(opts, &options); err != nil {
-		return nil, err
-	}
-	return options, nil
-}
-
-func (opts *Options) FillDefaultValue(defaultOpts *Options) {
+func (opts *Options) fillDefaultValue(defaultOpts *Options) {
 	chart := &opts.Chart
 	chart.FillDefaultValue(&defaultOpts.Chart)
 	repo := &opts.Repo
