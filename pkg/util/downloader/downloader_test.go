@@ -14,10 +14,6 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/downloader"
 )
 
-func CreateFile(dir, filename string) (*os.File, error) {
-	return os.Create(filepath.Join(dir, filename))
-}
-
 var _ = Describe("Downloader", func() {
 	var (
 		s                                  *ghttp.Server

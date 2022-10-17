@@ -25,7 +25,7 @@ func Verify(configFile string) bool {
 	}
 
 	// 2. according to the config, all needed plugins exist
-	err = pluginmanager.CheckLocalPlugins(cfg)
+	err = pluginmanager.CheckLocalPlugins(cfg.Tools)
 	if err != nil {
 		log.Info(err)
 		log.Info(`Maybe you forgot to run "dtm init" first?`)
