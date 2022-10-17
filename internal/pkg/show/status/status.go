@@ -97,7 +97,7 @@ func showOne(smgr statemanager.Manager, id, plugin string) error {
 		DependsOn:  state.DependsOn,
 		Options:    state.Options,
 	}
-	stateFromRead, err := pluginengine.Read(tool)
+	resourceStatusFromRead, err := pluginengine.Read(tool)
 	if err != nil {
 		log.Debugf("Failed to get the resource state with %s.%s. Error: %s.", id, plugin, err)
 		return err
@@ -105,15 +105,15 @@ func showOne(smgr statemanager.Manager, id, plugin string) error {
 
 	// assemble the status
 	var status = &Status{}
-	if reflect.DeepEqual(state.ResourceStatus, stateFromRead) {
+	if reflect.DeepEqual(state.ResourceStatus, resourceStatusFromRead) {
 		status.InlineStatus = state.ResourceStatus
 		// set-to-nil has no effect, but make the logic more readable. Same as below.
-		status.State = nil
-		status.Resource = nil
+		status.ResourceStatusInState = nil
+		status.ResourceStatusFromRead = nil
 	} else {
 		status.InlineStatus = nil
-		status.State = state.ResourceStatus
-		status.Resource = stateFromRead
+		status.ResourceStatusInState = state.ResourceStatus
+		status.ResourceStatusFromRead = resourceStatusFromRead
 	}
 
 	// get the output
