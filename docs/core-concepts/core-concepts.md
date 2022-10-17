@@ -55,10 +55,10 @@ The _State_ records the current status of your DevOps toolchain. It contains the
 - The _State_ is actually a map of states, as defined [here](https://github.com/devstream-io/devstream/blob/main/internal/pkg/statemanager/state.go#L24).
 - Each state in the map is a struct containing Name, Plugin, Options, and Resource, as defined [here](https://github.com/devstream-io/devstream/blob/main/internal/pkg/statemanager/state.go#L16).
 
-### 4. Resource
+### 4. ResourceStatus
 
-- We call what the plugin created a _Resource_, and the `Read()` interface of that plugin returns a description of that resource, which is in turn stored as part of the state.
+- We call what the plugin created a _Resource_, and the `Read()` interface of that plugin returns a description of that resource status, which is in turn stored as part of the state.
 
-Config-State-Resource workflow:
+Config-State-ResourceStatus workflow:
 
 ![config state resource workflow](../images/config_state_resource.png)
