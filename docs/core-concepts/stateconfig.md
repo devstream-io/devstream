@@ -109,7 +109,7 @@ tools:
     org: ""
     repo: [[ repoName ]]
     branch: [[ defaultBranch ]]
-    image_repo: [[ dockerhubUsername ]]/[[ repoName ]]
+    imageRepo: [[ dockerhubUsername ]]/[[ repoName ]]
 ```
 
 ### Using the S3 Backend
@@ -161,15 +161,15 @@ And if we open the downloaded file, we will see something similar to the followi
 ```yaml
 repo-scaffolding_default:
   name: repo-scaffolding
-  instanceid: default
-  dependson: []
+  instanceID: default
+  dependsOn: []
   options:
     branch: main
-    image_repo: ironcore864/dtm-test-go
+    imageRepo: ironcore864/dtm-test-go
     org: ""
     owner: IronCore864
     repo: dtm-test-go
-  resource:
+  resourceStatus:
     org: ""
     outputs:
       org: ""

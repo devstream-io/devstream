@@ -29,5 +29,5 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, nil
 	}
 
-	return tg.buildReadState()
+	return tg.buildReadStatus()
 }

@@ -1,4 +1,3 @@
-
 SELF_DIR=$(dir $(lastword $(MAKEFILE_LIST)))
 GOOS=$(shell go env GOOS)
 GOPATH=$(shell go env GOPATH)

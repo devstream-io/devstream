@@ -12,7 +12,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			renderConfig,
 		},
-		GetStateOperation: dockerInstaller.ComposeState,
+		GetStatusOperation: dockerInstaller.ComposeStatus,
 	}
 
 	// Execute all Operations in Operator

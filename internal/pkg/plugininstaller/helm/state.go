@@ -8,8 +8,8 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-// GetPluginAllState will get the State of k8s Deployment, DaemonSet and StatefulSet resources
-func GetPluginAllState(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
+// GetAllResourcesStatus will get the State of k8s Deployment, DaemonSet and StatefulSet resources
+func GetAllResourcesStatus(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return nil, err

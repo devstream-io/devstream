@@ -43,25 +43,36 @@ func generateAction(tool *configmanager.Tool, action statemanager.ComponentActio
 	}
 }
 
-func ResourceDrifted(fromStateFile, fromRead map[string]interface{}) (bool, error) {
+func ResourceDrifted(resourceStatusFromState, resourceStatusFromRead statemanager.ResourceStatus) (bool, error) {
 	// nil vs empty map
-	if cmp.Equal(fromStateFile, fromRead, cmpopts.EquateEmpty()) {
+	if cmp.Equal(resourceStatusFromState, resourceStatusFromRead, cmpopts.EquateEmpty()) {
 		return false, nil
 	}
 
 	// use marshal and unmarshal to remove type details
-	fromReadBytes, err := yaml.Marshal(fromRead)
+	resourceStatusFromStateBytes, err := yaml.Marshal(resourceStatusFromState)
 	if err != nil {
 		return true, err
 	}
-	fromReadWithoutType := map[string]interface{}{}
-	err = yaml.Unmarshal(fromReadBytes, &fromReadWithoutType)
+	resourceStatusFromStateWithoutType := map[string]interface{}{}
+	err = yaml.Unmarshal(resourceStatusFromStateBytes, &resourceStatusFromStateWithoutType)
 	if err != nil {
 		return true, err
 	}
-	log.Debug(cmp.Diff(fromStateFile, fromReadWithoutType))
 
-	return !cmp.Equal(fromStateFile, fromReadWithoutType), nil
+	resourceStatusFromReadBytes, err := yaml.Marshal(resourceStatusFromRead)
+	if err != nil {
+		return true, err
+	}
+	resourceStatusFromReadWithoutType := map[string]interface{}{}
+	err = yaml.Unmarshal(resourceStatusFromReadBytes, &resourceStatusFromReadWithoutType)
+	if err != nil {
+		return true, err
+	}
+
+	log.Debug(cmp.Diff(resourceStatusFromStateWithoutType, resourceStatusFromReadWithoutType))
+
+	return !cmp.Equal(resourceStatusFromStateWithoutType, resourceStatusFromReadWithoutType), nil
 }
 
 func drifted(a, b map[string]interface{}) bool {
@@ -127,7 +138,7 @@ func GetChangesForApply(smgr statemanager.Manager, cfg *configmanager.Config) (c
 						// tool exists in the state, but resource doesn't exist, Create
 						description := fmt.Sprintf("Tool (%s/%s) state found but it seems the tool isn't created, will be created.", tool.Name, tool.InstanceID)
 						changes = append(changes, generateCreateAction(&tool, description))
-					} else if drifted, err := ResourceDrifted(state.Resource, resource); drifted || err != nil {
+					} else if drifted, err := ResourceDrifted(state.ResourceStatus, resource); drifted || err != nil {
 						if err != nil {
 							return nil, err
 						}

@@ -13,8 +13,8 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 			helm.SetDefaultConfig(&defaultHelmConfig),
 			helm.Validate,
 		},
-		ExecuteOperations: helm.DefaultUpdateOperations,
-		GetStateOperation: genDevLakeState,
+		ExecuteOperations:  helm.DefaultUpdateOperations,
+		GetStatusOperation: genDevLakeStatus,
 	}
 
 	// Execute all Operations in Operator

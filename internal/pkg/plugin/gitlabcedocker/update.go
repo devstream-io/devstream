@@ -27,7 +27,7 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 			dockerInstaller.Install,
 			showHelpMsg,
 		},
-		GetStateOperation: dockerInstaller.GetRunningState,
+		GetStatusOperation: dockerInstaller.GetRunningStatus,
 	}
 
 	// 3. update and get status

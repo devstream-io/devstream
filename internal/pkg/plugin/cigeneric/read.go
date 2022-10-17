@@ -11,7 +11,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			ci.Validate,
 		},
-		GetStateOperation: ci.GetCIFileStatus,
+		GetStatusOperation: ci.GetCIFileStatus,
 	}
 
 	status, err := operator.Execute(plugininstaller.RawOptions(options))

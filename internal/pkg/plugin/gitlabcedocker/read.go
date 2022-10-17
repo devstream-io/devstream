@@ -19,7 +19,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			dockerInstaller.Validate,
 		},
-		GetStateOperation: dockerInstaller.GetRunningState,
+		GetStatusOperation: dockerInstaller.GetRunningStatus,
 	}
 
 	// 3. get status

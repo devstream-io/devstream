@@ -18,7 +18,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		TerminateOperations: plugininstaller.TerminateOperations{
 			// TODO(dtm): Add your TerminateOperations here.
 		},
-		GetStateOperation: GetState,
+		GetStatusOperation: GetStatus,
 	}
 
 	// Execute all Operations in Operator

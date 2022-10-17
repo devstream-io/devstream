@@ -10,7 +10,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/k8s"
 )
 
-func getStaticState(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
+func getStaticStatus(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return nil, err
@@ -36,15 +36,15 @@ func getStaticState(options plugininstaller.RawOptions) (statemanager.ResourceSt
 	return res, nil
 }
 
-func getDynamicState(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
+func getDynamicStatus(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return nil, err
 	}
 
-	state := make(map[string]interface{})
+	retStatus := make(statemanager.ResourceStatus)
 	operation := func() error {
-		err := getArgoCDAppFromK8sAndSetState(state, opts.App.Name, opts.App.Namespace)
+		err := getArgoCDAppFromK8sAndSetState(retStatus, opts.App.Name, opts.App.Namespace)
 		if err != nil {
 			return err
 		}
@@ -56,7 +56,7 @@ func getDynamicState(options plugininstaller.RawOptions) (statemanager.ResourceS
 	if err != nil {
 		return nil, err
 	}
-	return state, nil
+	return retStatus, nil
 }
 
 func getArgoCDAppFromK8sAndSetState(state map[string]interface{}, name, namespace string) error {

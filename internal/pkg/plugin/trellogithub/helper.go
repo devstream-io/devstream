@@ -2,16 +2,18 @@ package trellogithub
 
 import (
 	"fmt"
+
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 )
 
-func buildState(tg *TrelloGithub) map[string]interface{} {
-	res := make(map[string]interface{})
-	res["workflowDir"] = fmt.Sprintf("/repos/%s/%s/contents/.github/workflows", tg.options.Owner, tg.options.Repo)
-	return res
+func buildStatus(tg *TrelloGithub) statemanager.ResourceStatus {
+	resStatus := make(statemanager.ResourceStatus)
+	resStatus["workflowDir"] = fmt.Sprintf("/repos/%s/%s/contents/.github/workflows", tg.options.Owner, tg.options.Repo)
+	return resStatus
 }
 
-func (tg *TrelloGithub) buildReadState() (map[string]interface{}, error) {
-	listIds := make(map[string]interface{})
+func (tg *TrelloGithub) buildReadStatus() (statemanager.ResourceStatus, error) {
+	listIds := make(statemanager.ResourceStatus)
 
 	path, err := tg.client.GetWorkflowPath()
 	if err != nil {

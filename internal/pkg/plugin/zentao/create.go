@@ -22,7 +22,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		TerminateOperations: plugininstaller.TerminateOperations{
 			goclient.DealWithErrWhenInstall,
 		},
-		GetStateOperation: goclient.GetState,
+		GetStatusOperation: goclient.GetStatus,
 	}
 
 	// Execute all Operations in Operator

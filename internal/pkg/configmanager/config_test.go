@@ -72,7 +72,7 @@ tools:
       owner: YOUR_GITHUB_USERNAME_CASE_SENSITIVE
       repo: go-webapp-devstream-demo
       branch: main
-      image_repo: YOUR_DOCKER_USERNAME/go-webapp-devstream-demo`)
+      imageRepo: YOUR_DOCKER_USERNAME/go-webapp-devstream-demo`)
 		notValidCoreBytes = []byte(`
 varFile: tests
 toolFile: test

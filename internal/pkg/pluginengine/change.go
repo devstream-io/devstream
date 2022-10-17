@@ -156,11 +156,11 @@ func handleResult(smgr statemanager.Manager, change *Change) error {
 
 	key := statemanager.GenerateStateKeyByToolNameAndInstanceID(change.Tool.Name, change.Tool.InstanceID)
 	state := statemanager.State{
-		Name:       change.Tool.Name,
-		InstanceID: change.Tool.InstanceID,
-		DependsOn:  change.Tool.DependsOn,
-		Options:    change.Tool.Options,
-		Resource:   change.Result.ReturnValue,
+		Name:           change.Tool.Name,
+		InstanceID:     change.Tool.InstanceID,
+		DependsOn:      change.Tool.DependsOn,
+		Options:        change.Tool.Options,
+		ResourceStatus: change.Result.ReturnValue,
 	}
 	err := smgr.AddState(key, state)
 	if err != nil {

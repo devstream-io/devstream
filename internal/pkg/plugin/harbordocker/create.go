@@ -15,7 +15,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		ExecuteOperations: plugininstaller.ExecuteOperations{
 			Install,
 		},
-		GetStateOperation: dockerInstaller.ComposeState,
+		GetStatusOperation: dockerInstaller.ComposeStatus,
 	}
 
 	// Execute all Operations in Operator

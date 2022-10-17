@@ -284,8 +284,8 @@ jenkins 插件会保存如下状态：
 ```yaml
 jenkins_default:
   name: jenkins
-  instanceid: default
-  dependson: []
+  instanceID: default
+  dependsOn: []
   options:
     chart:
       valuesYaml: |
@@ -297,7 +297,7 @@ jenkins_default:
           ingress:
             enabled: true
             hostName: jenkins.example.com
-  resource:
+  resourceStatus:
     outputs:
       jenkins_url: http://jenkins.jenkins:8080
     valuesYaml: |

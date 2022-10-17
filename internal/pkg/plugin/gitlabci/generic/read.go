@@ -13,7 +13,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 			ci.SetDefaultConfig(gitlabci.DefaultCIOptions),
 			ci.Validate,
 		},
-		GetStateOperation: ci.GetCIFileStatus,
+		GetStatusOperation: ci.GetCIFileStatus,
 	}
 
 	status, err := operator.Execute(plugininstaller.RawOptions(options))

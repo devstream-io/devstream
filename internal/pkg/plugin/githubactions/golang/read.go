@@ -11,7 +11,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 			validate,
 			github.BuildWorkFlowsWrapper(workflows),
 		},
-		GetStateOperation: github.GetActionState,
+		GetStatusOperation: github.GetActionStatus,
 	}
 
 	status, err := operator.Execute(plugininstaller.RawOptions(options))

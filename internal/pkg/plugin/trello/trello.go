@@ -90,12 +90,12 @@ func DeleteTrelloBoard(opts *Options) error {
 	}
 	return c.CheckAndDeleteBoard(opts.Owner, opts.Repo, opts.KanbanBoardName)
 }
-func buildState(opts *Options, ti *TrelloItemId) statemanager.ResourceState {
-	resState := make(statemanager.ResourceState)
-	resState["boardId"] = ti.boardId
-	resState["todoListId"] = ti.todoListId
-	resState["doingListId"] = ti.doingListId
-	resState["doneListId"] = ti.doneListId
+func buildStatus(opts *Options, ti *TrelloItemId) statemanager.ResourceStatus {
+	resStatus := make(statemanager.ResourceStatus)
+	resStatus["boardId"] = ti.boardId
+	resStatus["todoListId"] = ti.todoListId
+	resStatus["doingListId"] = ti.doingListId
+	resStatus["doneListId"] = ti.doneListId
 
 	outputs := make(map[string]interface{})
 	outputs["boardId"] = ti.boardId
@@ -103,9 +103,9 @@ func buildState(opts *Options, ti *TrelloItemId) statemanager.ResourceState {
 	outputs["doingListId"] = ti.doingListId
 	outputs["doneListId"] = ti.doneListId
 
-	resState.SetOutputs(outputs)
+	resStatus.SetOutputs(outputs)
 
-	return resState
+	return resStatus
 }
 
 func buildReadState(opts *Options) (map[string]interface{}, error) {
@@ -118,13 +118,13 @@ func buildReadState(opts *Options) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	resState := statemanager.ResourceState(listIds)
+	resStatus := statemanager.ResourceStatus(listIds)
 	output := make(map[string]interface{})
 	output["boardId"] = fmt.Sprint(listIds["boardId"])
 	output["todoListId"] = fmt.Sprint(listIds["todoListId"])
 	output["doingListId"] = fmt.Sprint(listIds["doingListId"])
 	output["doneListId"] = fmt.Sprint(listIds["doneListId"])
 
-	resState.SetOutputs(output)
+	resStatus.SetOutputs(output)
 	return listIds, nil
 }

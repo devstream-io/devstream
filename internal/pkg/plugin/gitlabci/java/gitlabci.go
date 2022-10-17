@@ -1,5 +1,7 @@
 package java
 
+import "github.com/devstream-io/devstream/internal/pkg/statemanager"
+
 const (
 	ciFileName    string = ".gitlab-ci.yml"
 	commitMessage string = "managed by DevStream"
@@ -16,9 +18,9 @@ var (
 	defaultK8sDeployJobImg = "bitnami/kubectl:latest"
 )
 
-func buildState(opts *Options) map[string]interface{} {
-	return map[string]interface{}{
-		"pathWithNamespace": opts.PathWithNamespace,
-		"branch":            opts.Branch,
-	}
+func buildStatus(opts *Options) statemanager.ResourceStatus {
+	resStatus := make(statemanager.ResourceStatus)
+	resStatus["pathWithNamespace"] = opts.PathWithNamespace
+	resStatus["branch"] = opts.Branch
+	return resStatus
 }

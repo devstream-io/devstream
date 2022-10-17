@@ -15,7 +15,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		},
 		ExecuteOperations:   helm.DefaultCreateOperations,
 		TerminateOperations: helm.DefaultTerminateOperations,
-		GetStateOperation:   getEmptyState,
+		GetStatusOperation:  getEmptyStatus,
 	}
 
 	// Execute all Operations in Operator

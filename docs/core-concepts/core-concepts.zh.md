@@ -9,9 +9,9 @@
 
 ## 工作流程
 
-![config state resource workflow](../images/config_state_resource.png)
+![config state resource-status workflow](../images/config_state_resource.png)
 
-## 配置，工具，状态和资源
+## 配置，工具，状态和资源状态
 
 构架文档阐述了 DevStream 的基本工作原理。请确保你在阅读文档其他部分之前完成此部分的阅读。
 
@@ -49,15 +49,15 @@ _注意: 你可以将多个YAML文件合并为同一个并用三个短横线(`--
 
 ### 3. 状态(State)
 
-_State_ 记录了当下开发运维工具链的状况，包括了每个工具的配置以及当下状态。
+_State_ 记录了当前 DevOps 工具链的状态，包括了每个工具的配置以及当下状态。
 
 - _State_ 实际上是一个记录了状态的 Map, 定义在[这里](https://github.com/devstream-io/devstream/blob/main/internal/pkg/statemanager/state.go#L24)。
 - Map 中的每一个状态都是一个包含了名称、插件、选项和资源的结构体，定义在[这里](https://github.com/devstream-io/devstream/blob/main/internal/pkg/statemanager/state.go#L16)。
 
-### 4. 资源(Resource)
+### 4. 资源状态(ResourceStatus)
 
-- 我们称插件创建了 _资源(Resource)_，而插件的 `Read()` 接口返回了此资源的描述，该描述也作为状态（Stat）的一部分保存。
+- 我们称插件创建了 _资源(Resource)_，而插件的 `Read()` 接口返回了此资源的描述，该描述也作为资源的状态（State）的一部分保存。
 
-配置-状态-资源 工作流：
+配置-状态-资源状态 工作流：
 
-![config state resource workflow](../images/config_state_resource.png)
+![config state resource-status workflow](../images/config_state_resource.png)

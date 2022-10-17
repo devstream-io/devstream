@@ -7,7 +7,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/scm/github"
 )
 
-func GetDynamicState(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
+func GetDynamicStatus(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return nil, err
@@ -25,7 +25,7 @@ func GetDynamicState(options plugininstaller.RawOptions) (statemanager.ResourceS
 		return nil, err
 	}
 
-	resState := statemanager.ResourceState{
+	resStatus := statemanager.ResourceStatus{
 		"repo":     repoInfo.Repo,
 		"owner":    repoInfo.Owner,
 		"org":      repoInfo.Org,
@@ -33,5 +33,5 @@ func GetDynamicState(options plugininstaller.RawOptions) (statemanager.ResourceS
 		"repoType": repoInfo.Type,
 		"source":   opts.SourceRepo.BuildScmURL(),
 	}
-	return resState, nil
+	return resStatus, nil
 }

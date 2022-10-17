@@ -16,7 +16,7 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 			dockerInstaller.ComposeDown,
 			dockerInstaller.ComposeUp,
 		},
-		GetStateOperation: dockerInstaller.ComposeState,
+		GetStatusOperation: dockerInstaller.ComposeStatus,
 	}
 
 	// Execute all Operations in Operator

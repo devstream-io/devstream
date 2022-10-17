@@ -12,15 +12,15 @@ type (
 	MutableOperation func(options RawOptions) (RawOptions, error)
 	// BaseOperation reads options and executes operation
 	BaseOperation func(options RawOptions) error
-	// StateOperation reads options and executes operation, then returns the state map
-	StateOperation func(options RawOptions) (statemanager.ResourceState, error)
+	// StatusOperation reads options and executes operation, then returns the status map
+	StatusOperation func(options RawOptions) (statemanager.ResourceStatus, error)
 )
 
 type (
 	PreExecuteOperations []MutableOperation
 	ExecuteOperations    []BaseOperation
 	TerminateOperations  []BaseOperation
-	GetStateOperation    StateOperation
+	GetStatusOperation   StatusOperation
 )
 
 type Installer interface {
@@ -32,7 +32,7 @@ type Operator struct {
 	PreExecuteOperations PreExecuteOperations
 	ExecuteOperations    ExecuteOperations
 	TerminateOperations  TerminateOperations
-	GetStateOperation    GetStateOperation
+	GetStatusOperation   GetStatusOperation
 }
 
 // Execute will sequentially execute all operations in Operator
@@ -71,11 +71,11 @@ func (o *Operator) Execute(options RawOptions) (map[string]interface{}, error) {
 		}
 	}
 
-	// 4. Execute GetStateOperation.
+	// 4. Execute GetStatusOperation.
 	var state map[string]interface{}
-	if o.GetStateOperation != nil {
-		log.Debugf("Start to execute GetStateOperation...")
-		state, err = o.GetStateOperation(options)
+	if o.GetStatusOperation != nil {
+		log.Debugf("Start to execute GetStatusOperation...")
+		state, err = o.GetStatusOperation(options)
 		if err != nil {
 			return nil, err
 		}

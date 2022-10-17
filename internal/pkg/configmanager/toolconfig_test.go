@@ -52,7 +52,7 @@ tools:
       owner: [[ owner ]]
       repo: go-webapp-devstream-demo
       branch: main
-      image_repo: YOUR_DOCKER_USERNAME/go-webapp-devstream-demo`)
+      imageRepo: YOUR_DOCKER_USERNAME/go-webapp-devstream-demo`)
 
 		It("should return error if yaml not valid", func() {
 			varBytes := []byte(`ownertest_owner`)

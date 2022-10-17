@@ -123,7 +123,7 @@ func (m *manager) GetOutputs(key StateKey) (interface{}, error) {
 		return nil, fmt.Errorf(`key (%s) not in state, it may be failed when "Create"`, key)
 	}
 
-	if value, ok := state.Resource["outputs"]; ok {
+	if value, ok := state.ResourceStatus["outputs"]; ok {
 		return value, nil
 	}
 

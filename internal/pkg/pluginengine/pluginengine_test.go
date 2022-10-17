@@ -100,16 +100,16 @@ var _ = Describe("Pluginengine", func() {
 	})
 
 	It("should handle outputs correctly", func() {
-		resState := &statemanager.ResourceState{}
-		resState.SetOutputs(map[string]interface{}{
+		resStatus := &statemanager.ResourceStatus{}
+		resStatus.SetOutputs(map[string]interface{}{
 			"boardId":    expectedBoardId,
 			"todoListId": expectedTodoListId,
 		})
 		trelloState := statemanager.State{
-			InstanceID: "mytrelloboard",
-			Name:       "trello",
-			Options:    map[string]interface{}{},
-			Resource:   *resState,
+			InstanceID:     "mytrelloboard",
+			Name:           "trello",
+			Options:        map[string]interface{}{},
+			ResourceStatus: *resStatus,
 		}
 		err = smgr.AddState(trelloKey, trelloState)
 		Expect(err).NotTo(HaveOccurred())
@@ -132,7 +132,7 @@ var _ = Describe("Pluginengine", func() {
 			InstanceID: "mytrelloboard",
 			Name:       "trello",
 			Options:    map[string]interface{}{},
-			Resource: map[string]interface{}{
+			ResourceStatus: map[string]interface{}{
 				"outputs": map[string]interface{}{
 					"boardId": expectedBoardId,
 				},
@@ -154,10 +154,10 @@ var _ = Describe("Pluginengine", func() {
 
 	It("should give an error when output doesn't exist in the state", func() {
 		trelloState := statemanager.State{
-			Name:       "trello",
-			InstanceID: "mytrelloboard",
-			Options:    map[string]interface{}{},
-			Resource:   map[string]interface{}{},
+			Name:           "trello",
+			InstanceID:     "mytrelloboard",
+			Options:        map[string]interface{}{},
+			ResourceStatus: map[string]interface{}{},
 		}
 		err = smgr.AddState(trelloKey, trelloState)
 		Expect(err).NotTo(HaveOccurred())
@@ -178,7 +178,7 @@ var _ = Describe("Pluginengine", func() {
 			Name:       "trello",
 			InstanceID: "mytrelloboard",
 			Options:    map[string]interface{}{},
-			Resource: map[string]interface{}{
+			ResourceStatus: map[string]interface{}{
 				"outputs": map[string]interface{}{
 					"boardId":    expectedBoardId,
 					"todoListId": expectedTodoListId,
@@ -208,7 +208,7 @@ var _ = Describe("Pluginengine", func() {
 			Name:       "trello",
 			InstanceID: "mytrelloboard",
 			Options:    map[string]interface{}{},
-			Resource: map[string]interface{}{
+			ResourceStatus: map[string]interface{}{
 				"outputs": map[string]interface{}{
 					"boardId": expectedBoardId,
 				},
