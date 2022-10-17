@@ -40,7 +40,7 @@ func (t *Tool) DeepCopy() *Tool {
 	return &retTool
 }
 
-func (t *Tool) Key() string {
+func (t *Tool) KeyWithNameAndInstanceID() string {
 	return fmt.Sprintf("%s.%s", t.Name, t.InstanceID)
 }
 

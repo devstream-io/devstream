@@ -32,7 +32,7 @@ func topologicalSort(tools []configmanager.Tool) ([][]configmanager.Tool, error)
 	// a "graph", which contains "nodes" that haven't been processed yet
 	unprocessedNodeSet := make(map[string]bool)
 	for _, tool := range tools {
-		unprocessedNodeSet[tool.Key()] = true
+		unprocessedNodeSet[tool.KeyWithNameAndInstanceID()] = true
 	}
 
 	// while there is still a node in the graph left to be processed:
@@ -42,7 +42,7 @@ func topologicalSort(tools []configmanager.Tool) ([][]configmanager.Tool, error)
 
 		for _, tool := range tools {
 			// if the tool has already been processed (not in the unprocessedNodeSet anymore), pass
-			if _, ok := unprocessedNodeSet[tool.Key()]; !ok {
+			if _, ok := unprocessedNodeSet[tool.KeyWithNameAndInstanceID()]; !ok {
 				continue
 			}
 
@@ -68,7 +68,7 @@ func topologicalSort(tools []configmanager.Tool) ([][]configmanager.Tool, error)
 
 		// remove tools from the unprocessedNodeSet because they have been added to the batch
 		for _, tool := range batch {
-			delete(unprocessedNodeSet, tool.Key())
+			delete(unprocessedNodeSet, tool.KeyWithNameAndInstanceID())
 		}
 
 		// add the batch to the final result

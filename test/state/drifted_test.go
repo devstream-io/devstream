@@ -38,7 +38,7 @@ func resourceFromFile() map[string]interface{} {
 
 	tool := cfg.Tools[0]
 
-	state := smgr.GetState(statemanager.StateKeyGenerateFunc(&tool))
+	state := smgr.GetState(statemanager.GenerateStateKeyByToolNameAndInstanceID(tool.Name, tool.InstanceID))
 
 	return state.Resource
 }

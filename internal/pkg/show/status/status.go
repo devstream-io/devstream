@@ -84,7 +84,7 @@ func showAll(smgr statemanager.Manager) error {
 func showOne(smgr statemanager.Manager, id, plugin string) error {
 	// get state from statemanager
 	state := smgr.GetState(
-		statemanager.GenerateStateKeyByToolNameAndPluginKind(plugin, id),
+		statemanager.GenerateStateKeyByToolNameAndInstanceID(plugin, id),
 	)
 	if state == nil {
 		return fmt.Errorf("state with (id: %s, plugin: %s) not found", id, plugin)

@@ -24,12 +24,12 @@ var _ = Describe("Tool Config", func() {
 		})
 	})
 
-	Context("Key method", func() {
+	Context("KeyWithNameAndInstanceID method", func() {
 		It("should return joined key", func() {
 			toolName := "test_tool"
 			toolInstance := "0"
 			tool := configmanager.Tool{Name: toolName, InstanceID: toolInstance}
-			key := tool.Key()
+			key := tool.KeyWithNameAndInstanceID()
 			Expect(key).Should(Equal(fmt.Sprintf("%s.%s", toolName, toolInstance)))
 		})
 	})
