@@ -22,7 +22,6 @@ type RepoInfo struct {
 	NeedAuth bool
 }
 
-// unused
 func (r *RepoInfo) GetRepoOwner() string {
 	if r.Org != "" {
 		return r.Org
