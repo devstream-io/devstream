@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"strconv"
 
-	githubCommon "github.com/google/go-github/v42/github"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/ghttp"
@@ -98,7 +97,7 @@ var _ = Describe("Repo", func() {
 			r, err := rightClient.DescribeRepo()
 			Expect(err).NotTo(Succeed())
 			Expect(err.Error()).To(ContainSubstring(strconv.Itoa(http.StatusInternalServerError)))
-			var wantR *githubCommon.Repository
+			var wantR *git.RepoInfo
 			Expect(r).To(Equal(wantR))
 		})
 		It("GetRepoDescription with no error and status 200", func() {
@@ -109,7 +108,9 @@ var _ = Describe("Repo", func() {
 			})
 			r, err := rightClient.DescribeRepo()
 			Expect(err).To(Succeed())
-			var wantR *githubCommon.Repository = &githubCommon.Repository{}
+			wantR := &git.RepoInfo{
+				Type: "github",
+			}
 			Expect(r).To(Equal(wantR))
 		})
 	})

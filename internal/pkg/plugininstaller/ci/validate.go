@@ -2,6 +2,7 @@ package ci
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/pkg/util/types"
 	"github.com/devstream-io/devstream/pkg/util/validator"
 )
 
@@ -25,7 +26,7 @@ func SetDefaultConfig(defaultConfig *Options) plugininstaller.MutableOperation {
 		if err != nil {
 			return nil, err
 		}
-		opts.FillDefaultValue(defaultConfig)
-		return opts.Encode()
+		opts.fillDefaultValue(defaultConfig)
+		return types.EncodeStruct(opts)
 	}
 }

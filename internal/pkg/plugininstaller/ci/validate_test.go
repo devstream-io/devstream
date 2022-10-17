@@ -5,7 +5,7 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/common"
+	"github.com/devstream-io/devstream/pkg/util/scm"
 )
 
 var _ = Describe("Validate func", func() {
@@ -75,7 +75,7 @@ var _ = Describe("SetDefaultConfig func", func() {
 			Type:           "github",
 			ConfigLocation: "http://www.test.com",
 		}
-		defaultRepo := &common.Repo{
+		defaultRepo := &scm.Repo{
 			Owner:    "test",
 			Repo:     "test_repo",
 			Branch:   "test_branch",

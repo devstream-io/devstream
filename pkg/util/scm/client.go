@@ -28,6 +28,8 @@ func NewClient(repoInfo *git.RepoInfo) (ClientOperation, error) {
 type ClientOperation interface {
 	InitRepo() error
 	DeleteRepo() error
+	DownloadRepo() (string, error)
+	DescribeRepo() (*git.RepoInfo, error)
 	PushFiles(commitInfo *git.CommitInfo, checkUpdate bool) (bool, error)
 	DeleteFiles(commitInfo *git.CommitInfo) error
 	GetPathInfo(path string) ([]*git.RepoFileStatus, error)
@@ -61,6 +63,6 @@ func PushInitRepo(client ClientOperation, commitInfo *git.CommitInfo) error {
 	return err
 }
 
-func IsGithubRepo(repoType, url string) bool {
+func isGithubRepo(repoType, url string) bool {
 	return repoType == "github" || strings.Contains(url, "github")
 }

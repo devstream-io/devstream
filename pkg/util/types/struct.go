@@ -2,6 +2,8 @@ package types
 
 import (
 	"reflect"
+
+	"github.com/mitchellh/mapstructure"
 )
 
 func FillStructDefaultValue(structData, defaultStructData any) {
@@ -29,4 +31,13 @@ func FillStructDefaultValue(structData, defaultStructData any) {
 			}
 		}
 	}
+}
+
+// EncodeStruct will get structData and encode this data to map
+func EncodeStruct(structData any) (map[string]interface{}, error) {
+	var options map[string]interface{}
+	if err := mapstructure.Decode(structData, &options); err != nil {
+		return nil, err
+	}
+	return options, nil
 }

@@ -1,99 +1,28 @@
 package jenkins
 
 import (
-	"context"
 	"errors"
 	"fmt"
 
-	"github.com/bndr/gojenkins"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/common"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/jenkins/plugins"
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
-	"github.com/devstream-io/devstream/pkg/util/jenkins/dingtalk"
+	"github.com/devstream-io/devstream/pkg/util/scm"
 )
 
-// create mock client
-var testError = errors.New("test")
-
-type mockSuccessJenkinsClient struct {
-}
-
-func (m *mockSuccessJenkinsClient) ExecuteScript(string) (string, error) {
-	return "", nil
-}
-func (m *mockSuccessJenkinsClient) GetFolderJob(string, string) (*gojenkins.Job, error) {
-	return nil, nil
-}
-func (m *mockSuccessJenkinsClient) DeleteJob(context.Context, string) (bool, error) {
-	return true, nil
-}
-func (m *mockSuccessJenkinsClient) InstallPluginsIfNotExists([]*jenkins.JenkinsPlugin, bool) error {
-	return nil
-}
-func (m *mockSuccessJenkinsClient) CreateGiltabCredential(string, string) error {
-	return nil
-}
-func (m *mockSuccessJenkinsClient) CreateSSHKeyCredential(id, userName, privateKey string) error {
-	return nil
-}
-func (m *mockSuccessJenkinsClient) CreatePasswordCredential(id, userName, privateKey string) error {
-	return nil
-}
-func (m *mockSuccessJenkinsClient) CreateSecretCredential(id, secret string) error {
-	return nil
-}
-func (m *mockSuccessJenkinsClient) ConfigCascForRepo(*jenkins.RepoCascConfig) error {
-	return nil
-}
-
-func (m *mockSuccessJenkinsClient) ApplyDingTalkBot(dingtalk.BotConfig) error {
-	return nil
-}
-
-type mockErrorJenkinsClient struct {
-}
-
-func (m *mockErrorJenkinsClient) ExecuteScript(string) (string, error) {
-	return "", testError
-}
-func (m *mockErrorJenkinsClient) GetFolderJob(string, string) (*gojenkins.Job, error) {
-	return nil, testError
-}
-func (m *mockErrorJenkinsClient) DeleteJob(context.Context, string) (bool, error) {
-	return false, testError
-}
-func (m *mockErrorJenkinsClient) InstallPluginsIfNotExists([]*jenkins.JenkinsPlugin, bool) error {
-	return testError
-}
-func (m *mockErrorJenkinsClient) CreateGiltabCredential(string, string) error {
-	return testError
-}
-func (m *mockErrorJenkinsClient) CreateSecretCredential(string, string) error {
-	return testError
-}
-func (m *mockErrorJenkinsClient) ConfigCascForRepo(*jenkins.RepoCascConfig) error {
-	return testError
-}
-func (m *mockErrorJenkinsClient) ApplyDingTalkBot(dingtalk.BotConfig) error {
-	return testError
-}
-func (m *mockErrorJenkinsClient) CreateSSHKeyCredential(id, userName, privateKey string) error {
-	return testError
-}
-func (m *mockErrorJenkinsClient) CreatePasswordCredential(id, userName, privateKey string) error {
-	return testError
-}
+var (
+	testError = errors.New("test error")
+)
 
 var _ = Describe("JobOptions struct", func() {
 	var (
 		jenkinsURL, secretToken, jobName, projectURL, jenkinsFilePath, userName, password, repoOwner, repoName string
 		jobOptions                                                                                             *JobOptions
 		basicAuth                                                                                              *jenkins.BasicAuth
-		projectRepo                                                                                            *common.Repo
+		projectRepo                                                                                            *scm.Repo
 		ciConfig                                                                                               *ci.CIConfig
 		mockClient                                                                                             jenkins.JenkinsAPI
 	)
@@ -110,7 +39,7 @@ var _ = Describe("JobOptions struct", func() {
 			Password: password,
 			Username: userName,
 		}
-		projectRepo = &common.Repo{
+		projectRepo = &scm.Repo{
 			Owner:    repoOwner,
 			Repo:     repoName,
 			Branch:   "test",
@@ -129,7 +58,7 @@ var _ = Describe("JobOptions struct", func() {
 				Namespace:     "jenkins",
 				EnableRestart: false,
 			},
-			SCM: SCM{
+			SCM: scm.SCMInfo{
 				CloneURL: projectURL,
 				Branch:   "test",
 			},
@@ -144,16 +73,11 @@ var _ = Describe("JobOptions struct", func() {
 			SecretToken: secretToken,
 		}
 	})
-	Context("encode method", func() {
-		It("should work noraml", func() {
-			_, err := jobOptions.encode()
-			Expect(err).ShouldNot(HaveOccurred())
-		})
-	})
 	Context("createOrUpdateJob method", func() {
 		When("jenkins client return normal", func() {
 			BeforeEach(func() {
-				mockClient = &mockSuccessJenkinsClient{}
+				jobOptions.SCM.SSHprivateKey = "test"
+				mockClient = &jenkins.MockClient{}
 			})
 			It("should work noraml", func() {
 				err := jobOptions.createOrUpdateJob(mockClient)
@@ -162,7 +86,9 @@ var _ = Describe("JobOptions struct", func() {
 		})
 		When("jenkins client return error", func() {
 			BeforeEach(func() {
-				mockClient = &mockErrorJenkinsClient{}
+				mockClient = &jenkins.MockClient{
+					ExecuteScriptError: testError,
+				}
 			})
 			It("should return error", func() {
 				err := jobOptions.createOrUpdateJob(mockClient)
@@ -171,16 +97,30 @@ var _ = Describe("JobOptions struct", func() {
 		})
 	})
 	Context("buildWebhookInfo method", func() {
-		It("should work normal", func() {
-			webHookInfo := jobOptions.buildWebhookInfo()
-			Expect(webHookInfo.Address).Should(Equal(fmt.Sprintf("%s/project/%s", jobOptions.Jenkins.URL, jobOptions.Pipeline.JobName)))
-			Expect(webHookInfo.SecretToken).Should(Equal(secretToken))
+		When("repo is gitlab", func() {
+			It("should work for gitlab", func() {
+				webHookInfo := jobOptions.buildWebhookInfo()
+				Expect(webHookInfo.Address).Should(Equal(fmt.Sprintf("%s/project/%s", jobOptions.Jenkins.URL, jobOptions.Pipeline.JobName)))
+				Expect(webHookInfo.SecretToken).Should(Equal(secretToken))
+			})
+		})
+		When("repo is github", func() {
+			BeforeEach(func() {
+				jobOptions.ProjectRepo.RepoType = "github"
+			})
+			It("should work for github", func() {
+				webHookInfo := jobOptions.buildWebhookInfo()
+				Expect(webHookInfo.Address).Should(Equal(fmt.Sprintf("%s/github-webhook/", jobOptions.Jenkins.URL)))
+				Expect(webHookInfo.SecretToken).Should(Equal(secretToken))
+			})
 		})
 	})
 	Context("installPlugins method", func() {
 		When("jenkins client return error", func() {
 			BeforeEach(func() {
-				mockClient = &mockErrorJenkinsClient{}
+				mockClient = &jenkins.MockClient{
+					InstallPluginsIfNotExistsError: testError,
+				}
 			})
 			It("should return error", func() {
 				var pluginConfigs []pluginConfigAPI
@@ -190,11 +130,26 @@ var _ = Describe("JobOptions struct", func() {
 		})
 	})
 	Context("deleteJob method", func() {
-		When("jenkins client get job error", func() {
+		When("jenkins job get error", func() {
 			BeforeEach(func() {
-				mockClient = &mockErrorJenkinsClient{}
+				mockClient = &jenkins.MockClient{
+					GetFolderJobError: fmt.Errorf("job error"),
+				}
 			})
 			It("should return error", func() {
+				err := jobOptions.deleteJob(mockClient)
+				Expect(err).Error().Should(HaveOccurred())
+			})
+		})
+		When("jenkins job is not exist", func() {
+			var errMsg string
+			BeforeEach(func() {
+				errMsg = "404"
+				mockClient = &jenkins.MockClient{
+					GetFolderJobError: fmt.Errorf(errMsg),
+				}
+			})
+			It("should return delete error", func() {
 				err := jobOptions.deleteJob(mockClient)
 				Expect(err).Error().ShouldNot(HaveOccurred())
 			})
@@ -215,9 +170,22 @@ var _ = Describe("JobOptions struct", func() {
 	})
 
 	Context("extractJenkinsPlugins method", func() {
-		When("params is right", func() {
+		When("repo is gitlab", func() {
 			BeforeEach(func() {
 				jobOptions.ProjectRepo.RepoType = "gitlab"
+				jobOptions.Pipeline = Pipeline{
+					JobName:         jobName,
+					JenkinsfilePath: jenkinsFilePath,
+				}
+			})
+			It("should return pluginConfig", func() {
+				configs := jobOptions.extractJenkinsPlugins()
+				Expect(len(configs)).Should(Equal(1))
+			})
+		})
+		When("repo is github", func() {
+			BeforeEach(func() {
+				jobOptions.ProjectRepo.RepoType = "github"
 				jobOptions.Pipeline = Pipeline{
 					JobName:         jobName,
 					JenkinsfilePath: jenkinsFilePath,

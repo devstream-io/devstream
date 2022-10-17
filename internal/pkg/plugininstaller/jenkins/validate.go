@@ -9,12 +9,12 @@ import (
 	"time"
 
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/common"
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 	"github.com/devstream-io/devstream/pkg/util/k8s"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm/github"
 	"github.com/devstream-io/devstream/pkg/util/scm/gitlab"
+	"github.com/devstream-io/devstream/pkg/util/types"
 	"github.com/devstream-io/devstream/pkg/util/validator"
 )
 
@@ -33,15 +33,12 @@ func SetJobDefaultConfig(options plugininstaller.RawOptions) (plugininstaller.Ra
 	}
 
 	// config scm and projectRepo values
-	projectRepo, err := common.NewRepoFromURL(opts.SCM.Type, opts.SCM.APIURL, opts.SCM.CloneURL, opts.SCM.Branch)
+	projectRepo, err := opts.SCM.NewRepo()
 	if err != nil {
 		return nil, err
 	}
 	opts.ProjectRepo = projectRepo
 
-	if opts.SCM.Branch == "" {
-		opts.SCM.Branch = projectRepo.Branch
-	}
 	switch projectRepo.RepoType {
 	case "gitlab":
 		// set secretToken for gitlab webhook
@@ -75,7 +72,7 @@ func SetJobDefaultConfig(options plugininstaller.RawOptions) (plugininstaller.Ra
 		return nil, err
 	}
 	opts.BasicAuth = basicAuth
-	return opts.encode()
+	return types.EncodeStruct(opts)
 }
 
 func ValidateJobConfig(options plugininstaller.RawOptions) (plugininstaller.RawOptions, error) {

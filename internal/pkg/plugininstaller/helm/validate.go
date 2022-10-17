@@ -6,6 +6,7 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/pkg/util/helm"
 	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
 // Validate validates the options provided by the dtm-core.
@@ -31,7 +32,7 @@ func SetDefaultConfig(defaultConfig *Options) plugininstaller.MutableOperation {
 		if err != nil {
 			return nil, err
 		}
-		opts.FillDefaultValue(defaultConfig)
-		return opts.Encode()
+		opts.fillDefaultValue(defaultConfig)
+		return types.EncodeStruct(opts)
 	}
 }

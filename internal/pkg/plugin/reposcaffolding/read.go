@@ -10,7 +10,6 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			reposcaffolding.Validate,
-			reposcaffolding.SetDefaultTemplateRepo,
 		},
 		GetStateOperation: reposcaffolding.GetDynamicState,
 	}

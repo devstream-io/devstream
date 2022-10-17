@@ -24,13 +24,21 @@ var _ = Describe("Pipeline struct", func() {
 	})
 
 	Context("getJobName method", func() {
-		When("jobName has Slash", func() {
+		When("jobName has slash", func() {
 			BeforeEach(func() {
 				jobName = "testFolderJob"
 				pipeline.JobName = fmt.Sprintf("folder/%s", jobName)
 			})
 			It("should return later item", func() {
 				Expect(pipeline.getJobName()).Should(Equal(jobName))
+			})
+		})
+		When("jobName does'nt have slash", func() {
+			BeforeEach(func() {
+				pipeline.JobName = "testJob"
+			})
+			It("should return jobName", func() {
+				Expect(pipeline.getJobName()).Should(Equal("testJob"))
 			})
 		})
 	})

@@ -1,6 +1,8 @@
 package gitlab
 
 import (
+	"fmt"
+
 	"github.com/xanzy/go-gitlab"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
@@ -65,16 +67,26 @@ func (c *Client) DeleteRepo() error {
 	return nil
 }
 
-func (c *Client) DescribeRepo() (*gitlab.Project, error) {
+func (c *Client) DescribeRepo() (*git.RepoInfo, error) {
 	p := &gitlab.GetProjectOptions{}
-	res, _, err := c.Projects.GetProject(c.GetRepoPath(), p)
+	project, _, err := c.Projects.GetProject(c.GetRepoPath(), p)
 
 	if err != nil {
 		log.Debugf("gitlab project: [%s] error %+v", c.GetRepoPath(), err)
 		return nil, c.newModuleError(err)
 	}
 
-	return res, nil
+	log.Debugf("GitLab Project is: %#v\n", project)
+	repoInfo := &git.RepoInfo{
+		Repo:     project.Name,
+		CloneURL: project.HTTPURLToRepo,
+	}
+	if project.Owner != nil {
+		log.Debugf("GitLab project owner is: %#v.\n", project.Owner)
+		repoInfo.Owner = project.Owner.Username
+		repoInfo.Org = project.Owner.Organization
+	}
+	return repoInfo, nil
 }
 
 func (c *Client) AddWebhook(webhookConfig *git.WebhookConfig) error {
@@ -128,4 +140,9 @@ func (c *Client) getWebhook(webhookConfig *git.WebhookConfig) (*gitlab.ProjectHo
 		}
 	}
 	return nil, nil
+}
+
+// TODO(steinliber): support gtlab later
+func (c *Client) DownloadRepo() (string, error) {
+	return "", fmt.Errorf("gitlab doesn't support download repo for now")
 }

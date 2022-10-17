@@ -21,7 +21,7 @@ func CreateOrUpdateJob(options plugininstaller.RawOptions) error {
 	return opts.createOrUpdateJob(jenkinsClient)
 }
 
-func ConfigRepo(options plugininstaller.RawOptions) error {
+func CreateRepoWebhook(options plugininstaller.RawOptions) error {
 	opts, err := newJobOptions(options)
 	if err != nil {
 		return err
@@ -56,6 +56,7 @@ func DeleteJob(options plugininstaller.RawOptions) error {
 	return scmClient.DeleteWebhook(opts.buildWebhookInfo())
 }
 
+// PreInstall will download jenkins plugins and config jenkins casc
 func PreInstall(options plugininstaller.RawOptions) error {
 	opts, err := newJobOptions(options)
 	if err != nil {

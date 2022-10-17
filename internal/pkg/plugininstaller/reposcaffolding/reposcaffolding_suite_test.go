@@ -1,4 +1,4 @@
-package common_test
+package reposcaffolding_test
 
 import (
 	"testing"
@@ -9,5 +9,5 @@ import (
 
 func TestCommon(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "PluginInstaller Common Suite")
+	RunSpecs(t, "PluginInstaller Reposcaffolding Suite")
 }

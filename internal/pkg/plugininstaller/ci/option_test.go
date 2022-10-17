@@ -6,7 +6,7 @@ import (
 
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/server"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/common"
+	"github.com/devstream-io/devstream/pkg/util/scm"
 )
 
 var _ = Describe("Options struct", func() {
@@ -20,7 +20,7 @@ var _ = Describe("Options struct", func() {
 			Type:           "github",
 			ConfigLocation: "http://www.test.com",
 		}
-		defaultRepo := &common.Repo{
+		defaultRepo := &scm.Repo{
 			Owner:    "test",
 			Repo:     "test_repo",
 			Branch:   "test_branch",
@@ -49,10 +49,10 @@ var _ = Describe("Options struct", func() {
 		})
 	})
 
-	Context("FillDefaultValue method", func() {
+	Context("fillDefaultValue method", func() {
 		When("ci config and repo are all empty", func() {
 			It("should set default value", func() {
-				opts.FillDefaultValue(defaultOpts)
+				opts.fillDefaultValue(defaultOpts)
 				Expect(opts.CIConfig).ShouldNot(BeNil())
 				Expect(opts.ProjectRepo).ShouldNot(BeNil())
 				Expect(opts.CIConfig.ConfigLocation).Should(Equal("http://www.test.com"))
@@ -64,12 +64,12 @@ var _ = Describe("Options struct", func() {
 				opts.CIConfig = &CIConfig{
 					ConfigLocation: "http://exist.com",
 				}
-				opts.ProjectRepo = &common.Repo{
+				opts.ProjectRepo = &scm.Repo{
 					Branch: "new_branch",
 				}
 			})
 			It("should update empty value", func() {
-				opts.FillDefaultValue(defaultOpts)
+				opts.fillDefaultValue(defaultOpts)
 				Expect(opts.CIConfig).ShouldNot(BeNil())
 				Expect(opts.ProjectRepo).ShouldNot(BeNil())
 				Expect(opts.CIConfig.ConfigLocation).Should(Equal("http://exist.com"))
@@ -77,13 +77,6 @@ var _ = Describe("Options struct", func() {
 				Expect(opts.ProjectRepo.Branch).Should(Equal("new_branch"))
 				Expect(opts.ProjectRepo.Repo).Should(Equal("test_repo"))
 			})
-		})
-	})
-
-	Context("Encode method", func() {
-		It("should return map", func() {
-			_, err := opts.Encode()
-			Expect(err).Error().ShouldNot(HaveOccurred())
 		})
 	})
 })

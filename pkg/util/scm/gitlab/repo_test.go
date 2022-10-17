@@ -80,9 +80,8 @@ var _ = Describe("repo methods", func() {
 			))
 		})
 		It("should return repo info", func() {
-			result, err := gitlabClient.DescribeRepo()
+			_, err := gitlabClient.DescribeRepo()
 			Expect(err).ShouldNot(HaveOccurred())
-			Expect(result.BuildTimeout).Should(BeZero())
 		})
 	})
 

@@ -4,6 +4,7 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	dockerInstaller "github.com/devstream-io/devstream/internal/pkg/plugininstaller/docker"
 	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
 func Create(options map[string]interface{}) (map[string]interface{}, error) {
@@ -29,7 +30,7 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	}
 
 	// 3. execute installer get status and error
-	rawOptions, err := buildDockerOptions(opts).Encode()
+	rawOptions, err := types.EncodeStruct(buildDockerOptions(opts))
 	if err != nil {
 		return nil, err
 	}
