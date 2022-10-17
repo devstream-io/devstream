@@ -44,7 +44,7 @@ func (c *Config) ValidateDependency() []error {
 	toolMap := make(map[string]bool)
 	// creating the set
 	for _, tool := range c.Tools {
-		toolMap[tool.Key()] = true
+		toolMap[tool.KeyWithNameAndInstanceID()] = true
 	}
 
 	for _, tool := range c.Tools {

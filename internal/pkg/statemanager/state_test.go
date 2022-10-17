@@ -11,7 +11,7 @@ import (
 )
 
 var _ = Describe("Statemanager.state", func() {
-	Describe("GenerateStateKeyByToolNameAndPluginKind func", func() {
+	Describe("GenerateStateKeyByToolNameAndInstanceID func", func() {
 		It("should ouput state key base on toolName and plugin kind", func() {
 			var testCases = []struct {
 				toolName       string
@@ -22,7 +22,7 @@ var _ = Describe("Statemanager.state", func() {
 				{"123", "1", "123_1"},
 			}
 			for _, t := range testCases {
-				funcResult := GenerateStateKeyByToolNameAndPluginKind(t.toolName, t.plugKind)
+				funcResult := GenerateStateKeyByToolNameAndInstanceID(t.toolName, t.plugKind)
 				Expect(funcResult).Should(Equal(t.expectStateKey))
 			}
 		})

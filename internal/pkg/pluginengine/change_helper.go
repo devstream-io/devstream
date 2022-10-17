@@ -97,7 +97,7 @@ func GetChangesForApply(smgr statemanager.Manager, cfg *configmanager.Config) (c
 	// 3. generate changes for each tool
 	for _, batch := range batchesOfTools {
 		for _, tool := range batch {
-			state := smgr.GetState(statemanager.StateKeyGenerateFunc(&tool))
+			state := smgr.GetState(statemanager.GenerateStateKeyByToolNameAndInstanceID(tool.Name, tool.InstanceID))
 
 			if state == nil {
 				// tool not in the state, create, no need to Read resource before Create
@@ -142,7 +142,7 @@ func GetChangesForApply(smgr statemanager.Manager, cfg *configmanager.Config) (c
 			}
 
 			// delete the tool from the temporary state map since it's already been processed above
-			tmpStatesMap.Delete(statemanager.StateKeyGenerateFunc(&tool))
+			tmpStatesMap.Delete(statemanager.GenerateStateKeyByToolNameAndInstanceID(tool.Name, tool.InstanceID))
 		}
 	}
 
@@ -177,7 +177,7 @@ func GetChangesForDelete(smgr statemanager.Manager, cfg *configmanager.Config, i
 		batch := batchesOfTools[i]
 		for _, tool := range batch {
 			if !isForceDelete {
-				state := smgr.GetState(statemanager.StateKeyGenerateFunc(&tool))
+				state := smgr.GetState(statemanager.GenerateStateKeyByToolNameAndInstanceID(tool.Name, tool.InstanceID))
 				if state == nil {
 					continue
 				}
@@ -220,7 +220,7 @@ func GetChangesForDestroy(smgr statemanager.Manager, isForceDestroy bool) (chang
 		batch := batchesOfTools[i]
 		for _, tool := range batch {
 			if !isForceDestroy {
-				state := smgr.GetState(statemanager.StateKeyGenerateFunc(&tool))
+				state := smgr.GetState(statemanager.GenerateStateKeyByToolNameAndInstanceID(tool.Name, tool.InstanceID))
 				if state == nil {
 					continue
 				}
@@ -264,7 +264,7 @@ func topologicalSortChangesInBatch(changes []*Change) ([][]*Change, error) {
 		// for each tool in the batch, find the change that matches it
 		for _, tool := range batch {
 			// only add the change that has the tool match with it
-			if change, ok := changesKeyMap[tool.Key()]; ok {
+			if change, ok := changesKeyMap[tool.KeyWithNameAndInstanceID()]; ok {
 				changesOneBatch = append(changesOneBatch, change)
 			}
 		}
@@ -285,9 +285,9 @@ func getToolsFromChanges(changes []*Change) []configmanager.Tool {
 
 	// get tools from changes avoiding duplicated tools
 	for _, change := range changes {
-		if _, ok := toolsKeyMap[change.Tool.Key()]; !ok {
+		if _, ok := toolsKeyMap[change.Tool.KeyWithNameAndInstanceID()]; !ok {
 			tools = append(tools, *change.Tool)
-			toolsKeyMap[change.Tool.Key()] = struct{}{}
+			toolsKeyMap[change.Tool.KeyWithNameAndInstanceID()] = struct{}{}
 		}
 	}
 
@@ -297,7 +297,7 @@ func getToolsFromChanges(changes []*Change) []configmanager.Tool {
 func getChangesKeyMap(changes []*Change) map[string]*Change {
 	changesKeyMap := make(map[string]*Change)
 	for _, change := range changes {
-		changesKeyMap[change.Tool.Key()] = change
+		changesKeyMap[change.Tool.KeyWithNameAndInstanceID()] = change
 	}
 	return changesKeyMap
 }

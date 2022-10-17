@@ -22,7 +22,7 @@ func HandleOutputsReferences(smgr statemanager.Manager, options map[string]inter
 				continue
 			}
 
-			outputs, err := smgr.GetOutputs(statemanager.GenerateStateKeyByToolNameAndPluginKind(toolName, instanceID))
+			outputs, err := smgr.GetOutputs(statemanager.GenerateStateKeyByToolNameAndInstanceID(toolName, instanceID))
 			if err != nil {
 				errorsList = append(errorsList, err)
 				continue
