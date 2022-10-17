@@ -8,7 +8,7 @@ import (
 )
 
 func loadPlugin(pluginDir string, tool *configmanager.Tool) (DevStreamPlugin, error) {
-	mod := fmt.Sprintf("%s/%s", pluginDir, configmanager.GetPluginFileName(tool))
+	mod := fmt.Sprintf("%s/%s", pluginDir, tool.GetPluginFileName())
 	plug, err := plugin.Open(mod)
 	if err != nil {
 		return nil, err
