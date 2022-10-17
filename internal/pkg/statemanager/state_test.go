@@ -81,7 +81,7 @@ var _ = Describe("Statemanager.state", func() {
 				testMap.Store(testStateKey, testStateVal)
 				formatedInfo := testMap.Format()
 				formatResult := fmt.Sprintf(
-					"test_key:\n  name: %s\n  instanceid: %s\n  dependson: []\n  options: {}\n  resource: {}\n",
+					"test_key:\n  name: %s\n  instanceID: %s\n  dependsOn: []\n  options: {}\n  resourceStatus: {}\n",
 					testStateVal.Name, testStateVal.InstanceID,
 				)
 				Expect(string(formatedInfo)).Should(Equal(formatResult))

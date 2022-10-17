@@ -49,7 +49,7 @@ tools:
     owner: IronCore864
     repo: go-webapp-devstream-demo
     branch: main
-    image_repo: ironcore864/go-webapp-devstream-demo
+    imageRepo: ironcore864/go-webapp-devstream-demo
 - name: githubactions-golang
   instanceID: default
   dependsOn: ["repo-scaffolding.golang-github"]

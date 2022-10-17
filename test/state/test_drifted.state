@@ -1,16 +1,16 @@
 gitlab-ce-docker_default:
   name: gitlab-ce-docker
-  instanceid: default
-  dependson: []
+  instanceID: default
+  dependsOn: []
   options:
-    gitlab_home: /srv/gitlab
+    gitlabHome: /srv/gitlab
     hostname: gitlab.example.com
     httpPort: 8080
     httpsPort: 443
     imageTag: rc
     rmDataAfterDelete: false
     sshPort: 2022
-  resource:
+  resourceStatus:
     ContainerRunning: true
     Hostname: gitlab.example.com
     PortPublishes:
