@@ -28,7 +28,7 @@ var defaultHelmConfig = helm.Options{
 }
 
 func genJenkinsState(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
-	resState, err := helm.GetPluginAllState(options)
+	resStatus, err := helm.GetPluginAllState(options)
 	if err != nil {
 		return nil, err
 	}
@@ -39,7 +39,7 @@ func genJenkinsState(options plugininstaller.RawOptions) (statemanager.ResourceS
 		return nil, err
 	}
 	valuesYaml := opt.GetHelmParam().Chart.ValuesYaml
-	resState["valuesYaml"] = valuesYaml
+	resStatus["valuesYaml"] = valuesYaml
 
 	svcName, err := genJenkinsSvcName(options)
 	if err != nil {
@@ -52,9 +52,9 @@ func genJenkinsState(options plugininstaller.RawOptions) (statemanager.ResourceS
 		"jenkins_url": url,
 	}
 
-	resState.SetOutputs(outputs)
+	resStatus.SetOutputs(outputs)
 
-	return resState, nil
+	return resStatus, nil
 }
 
 // See https://github.com/devstream-io/devstream/pull/1025#discussion_r952277174 and

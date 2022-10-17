@@ -35,5 +35,5 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, nil
 	}
 
-	return buildState(&opts), nil
+	return buildStatus(&opts), nil
 }

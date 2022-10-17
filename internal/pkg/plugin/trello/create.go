@@ -30,5 +30,5 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 	}
 	log.Success("Creating trello board succeeded.")
 
-	return buildState(&opts, trelloIds), nil
+	return buildStatus(&opts, trelloIds), nil
 }

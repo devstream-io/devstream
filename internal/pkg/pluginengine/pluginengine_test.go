@@ -100,8 +100,8 @@ var _ = Describe("Pluginengine", func() {
 	})
 
 	It("should handle outputs correctly", func() {
-		resState := &statemanager.ResourceStatus{}
-		resState.SetOutputs(map[string]interface{}{
+		resStatus := &statemanager.ResourceStatus{}
+		resStatus.SetOutputs(map[string]interface{}{
 			"boardId":    expectedBoardId,
 			"todoListId": expectedTodoListId,
 		})
@@ -109,7 +109,7 @@ var _ = Describe("Pluginengine", func() {
 			InstanceID:     "mytrelloboard",
 			Name:           "trello",
 			Options:        map[string]interface{}{},
-			ResourceStatus: *resState,
+			ResourceStatus: *resStatus,
 		}
 		err = smgr.AddState(trelloKey, trelloState)
 		Expect(err).NotTo(HaveOccurred())

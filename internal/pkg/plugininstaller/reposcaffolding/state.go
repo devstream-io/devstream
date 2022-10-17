@@ -25,7 +25,7 @@ func GetDynamicState(options plugininstaller.RawOptions) (statemanager.ResourceS
 		return nil, err
 	}
 
-	resState := statemanager.ResourceStatus{
+	resStatus := statemanager.ResourceStatus{
 		"repo":     repoInfo.Repo,
 		"owner":    repoInfo.Owner,
 		"org":      repoInfo.Org,
@@ -33,5 +33,5 @@ func GetDynamicState(options plugininstaller.RawOptions) (statemanager.ResourceS
 		"repoType": repoInfo.Type,
 		"source":   opts.SourceRepo.BuildScmURL(),
 	}
-	return resState, nil
+	return resStatus, nil
 }

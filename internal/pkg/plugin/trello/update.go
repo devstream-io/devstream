@@ -31,5 +31,5 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	return buildState(&opts, trelloIds), nil
+	return buildStatus(&opts, trelloIds), nil
 }

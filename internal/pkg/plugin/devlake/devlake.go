@@ -31,7 +31,7 @@ var defaultHelmConfig = helm.Options{
 }
 
 func genDevLakeState(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
-	resState, err := helm.GetPluginAllState(options)
+	resStatus, err := helm.GetPluginAllState(options)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +42,7 @@ func genDevLakeState(options plugininstaller.RawOptions) (statemanager.ResourceS
 		return nil, err
 	}
 	valuesYaml := opt.GetHelmParam().Chart.ValuesYaml
-	resState["valuesYaml"] = valuesYaml
+	resStatus["valuesYaml"] = valuesYaml
 
 	// TODO(daniel-hutao): Use Ingress later.
 	ip, err := getDevLakeClusterIP(opt.Chart.Namespace, DevLakeSvcName)
@@ -53,9 +53,9 @@ func genDevLakeState(options plugininstaller.RawOptions) (statemanager.ResourceS
 	outputs := map[string]interface{}{
 		"devlake_url": url,
 	}
-	resState.SetOutputs(outputs)
+	resStatus.SetOutputs(outputs)
 
-	return resState, nil
+	return resStatus, nil
 }
 
 func getDevLakeClusterIP(namespace, name string) (string, error) {

@@ -50,5 +50,5 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	return buildState(&opts), nil
+	return buildStatus(&opts), nil
 }

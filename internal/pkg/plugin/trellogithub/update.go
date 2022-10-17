@@ -35,5 +35,5 @@ func Update(options map[string]interface{}) (map[string]interface{}, error) {
 	}
 	log.Success("Adding secret keys for trello succeeded.")
 
-	return buildState(tg), nil
+	return buildStatus(tg), nil
 }
