@@ -1,7 +1,9 @@
 package main
 
 import (
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/trellogithub"
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -12,22 +14,22 @@ const NAME = "trello-github-integ"
 type Plugin string
 
 // Create implements the installation of some trello-github-integ workflows.
-func (p Plugin) Create(options map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Create(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return trellogithub.Create(options)
 }
 
 // Update implements the installation of some trello-github-integ workflows.
-func (p Plugin) Update(options map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Update(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return trellogithub.Update(options)
 }
 
 // Read implements the healthy check of trello-github-integ workflows.
-func (p Plugin) Read(options map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return trellogithub.Read(options)
 }
 
 // Delete implements the installation of some trello-github-integ workflows.
-func (p Plugin) Delete(options map[string]interface{}) (bool, error) {
+func (p Plugin) Delete(options configmanager.RawOptions) (bool, error) {
 	return trellogithub.Delete(options)
 }
 

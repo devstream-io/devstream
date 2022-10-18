@@ -1,13 +1,13 @@
 package golang
 
 import (
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
 	"github.com/devstream-io/devstream/pkg/util/scm/gitlab"
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
-func setCIContent(options plugininstaller.RawOptions) (plugininstaller.RawOptions, error) {
+func setCIContent(options configmanager.RawOptions) (configmanager.RawOptions, error) {
 	opts, err := ci.NewOptions(options)
 	if err != nil {
 		return nil, err

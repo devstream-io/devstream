@@ -1,12 +1,14 @@
 package cigeneric
 
 import (
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func Read(options map[string]interface{}) (map[string]interface{}, error) {
+func Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			ci.Validate,
@@ -14,7 +16,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 		GetStatusOperation: ci.GetCIFileStatus,
 	}
 
-	status, err := operator.Execute(plugininstaller.RawOptions(options))
+	status, err := operator.Execute(options)
 	if err != nil {
 		return nil, err
 	}

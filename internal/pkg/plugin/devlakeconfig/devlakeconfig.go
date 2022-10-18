@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
@@ -17,7 +17,7 @@ var httpClient = &http.Client{
 	Timeout: 5 * time.Second,
 }
 
-func RenderAuthConfig(options plugininstaller.RawOptions) (plugininstaller.RawOptions, error) {
+func RenderAuthConfig(options configmanager.RawOptions) (configmanager.RawOptions, error) {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return nil, err
@@ -36,7 +36,7 @@ func RenderAuthConfig(options plugininstaller.RawOptions) (plugininstaller.RawOp
 	return opts.Encode()
 }
 
-func ApplyConfig(options plugininstaller.RawOptions) error {
+func ApplyConfig(options configmanager.RawOptions) error {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return err
@@ -93,17 +93,17 @@ func createConnection(url string, bodyWithJson []byte) error {
 	return fmt.Errorf(resp.Status)
 }
 
-func DeleteConfig(options plugininstaller.RawOptions) error {
+func DeleteConfig(options configmanager.RawOptions) error {
 	// TODO(daniel-hutao): implement later
 	return nil
 }
 
-func UpdateConfig(options plugininstaller.RawOptions) error {
+func UpdateConfig(options configmanager.RawOptions) error {
 	// TODO(daniel-hutao): implement later
 	return nil
 }
 
-func GetStatus(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
+func GetStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	resStatus := statemanager.ResourceStatus(options)
 	return resStatus, nil
 }

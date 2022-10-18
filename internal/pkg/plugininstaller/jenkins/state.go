@@ -1,12 +1,12 @@
 package jenkins
 
 import (
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 )
 
-func GetStatus(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
+func GetStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	opts, err := newJobOptions(options)
 	if err != nil {
 		return nil, err

@@ -41,7 +41,7 @@
 
 ### 2.2 返回值
 
-`create`、`read`和`update`方法返回两个值`(map[string]interface{}, error)`；第一个是 "状态"。
+`create`、`read`和`update`方法返回两个值`(statemanager.ResourceStatus, error)`；第一个是 "状态"。
 
 `delete'接口返回两个值`(bool, error)`。如果没有错误，它返回`(true, nil)`；否则将返回`(false, error)`。
 

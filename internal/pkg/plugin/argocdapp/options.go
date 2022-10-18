@@ -3,7 +3,7 @@ package argocdapp
 import (
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 )
 
 // Param is the struct for parameters used by the argocdapp package.
@@ -33,7 +33,7 @@ type Source struct {
 }
 
 // / NewOptions create options by raw options
-func NewOptions(options plugininstaller.RawOptions) (Options, error) {
+func NewOptions(options configmanager.RawOptions) (Options, error) {
 	var opts Options
 	if err := mapstructure.Decode(options, &opts); err != nil {
 		return opts, err

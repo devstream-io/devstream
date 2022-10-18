@@ -31,8 +31,8 @@ var _ = Describe("Statemanager", func() {
 		testState = statemanager.State{
 			InstanceID:     "name",
 			Name:           "githubactions",
-			Options:        map[string]interface{}{"a": "value"},
-			ResourceStatus: map[string]interface{}{"a": "value"},
+			Options:        configmanager.RawOptions{"a": "value"},
+			ResourceStatus: statemanager.ResourceStatus{"a": "value"},
 		}
 	})
 
@@ -68,8 +68,8 @@ var _ = Describe("Statemanager", func() {
 			stateC := statemanager.State{
 				InstanceID:     "c",
 				Name:           "githubactions",
-				Options:        map[string]interface{}{"c": "value"},
-				ResourceStatus: map[string]interface{}{"c": "value"},
+				Options:        configmanager.RawOptions{"c": "value"},
+				ResourceStatus: statemanager.ResourceStatus{"c": "value"},
 			}
 			err = smgr.AddState(key, stateC)
 			Expect(err).NotTo(HaveOccurred())
@@ -78,8 +78,8 @@ var _ = Describe("Statemanager", func() {
 			stateB := statemanager.State{
 				InstanceID:     "b",
 				Name:           "githubactions",
-				Options:        map[string]interface{}{"b": "value"},
-				ResourceStatus: map[string]interface{}{"b": "value"},
+				Options:        configmanager.RawOptions{"b": "value"},
+				ResourceStatus: statemanager.ResourceStatus{"b": "value"},
 			}
 			err = smgr.AddState(key, stateB)
 			Expect(err).NotTo(HaveOccurred())

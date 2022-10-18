@@ -5,7 +5,7 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/docker"
 	"github.com/devstream-io/devstream/pkg/util/log"
@@ -28,7 +28,7 @@ func (s *State) ToMap() (map[string]interface{}, error) {
 	return m, nil
 }
 
-func GetStaticStatus(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
+func GetStaticStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return nil, err
@@ -44,7 +44,7 @@ func GetStaticStatus(options plugininstaller.RawOptions) (statemanager.ResourceS
 	return staticState.ToMap()
 }
 
-func GetRunningStatus(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
+func GetRunningStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return nil, err

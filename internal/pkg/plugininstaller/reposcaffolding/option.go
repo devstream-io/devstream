@@ -3,7 +3,7 @@ package reposcaffolding
 import (
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/pkg/util/file"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm"
@@ -16,7 +16,7 @@ type Options struct {
 	Vars            map[string]interface{}
 }
 
-func NewOptions(options plugininstaller.RawOptions) (*Options, error) {
+func NewOptions(options configmanager.RawOptions) (*Options, error) {
 	var opts Options
 	if err := mapstructure.Decode(options, &opts); err != nil {
 		return nil, err

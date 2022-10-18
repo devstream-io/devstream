@@ -4,7 +4,7 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/helm"
 	helmCommon "github.com/devstream-io/devstream/pkg/util/helm"
 )
@@ -56,7 +56,7 @@ var _ = Describe("Options struct", func() {
 var _ = Describe("NewOptions func", func() {
 
 	var (
-		inputOptions  plugininstaller.RawOptions
+		inputOptions  configmanager.RawOptions
 		testRepoName  string
 		testChartName string
 	)

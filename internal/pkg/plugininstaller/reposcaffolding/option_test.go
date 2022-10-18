@@ -6,7 +6,7 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/pkg/util/scm"
 )
 
@@ -30,10 +30,10 @@ var _ = Describe("Options struct", func() {
 	})
 	Context("NewOptions method", func() {
 		var (
-			rawOptions plugininstaller.RawOptions
+			rawOptions configmanager.RawOptions
 		)
 		BeforeEach(func() {
-			rawOptions = plugininstaller.RawOptions{
+			rawOptions = configmanager.RawOptions{
 				"sourceRepo": map[string]string{
 					"owner":    "test_user",
 					"repo":     "test_repo",

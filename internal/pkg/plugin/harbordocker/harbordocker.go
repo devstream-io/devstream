@@ -6,7 +6,7 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/pkg/util/docker/dockersh"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/template"
@@ -37,7 +37,7 @@ var scripts = map[string]string{
 	HarborScriptPrepareFileName: ScriptPrepare,
 }
 
-func Install(options plugininstaller.RawOptions) error {
+func Install(options configmanager.RawOptions) error {
 	if err := writeScripts(); err != nil {
 		return err
 	}
@@ -51,7 +51,7 @@ func Install(options plugininstaller.RawOptions) error {
 }
 
 // renderConfig will render HarborConfigTemplate and then write it to disk.
-func renderConfig(options plugininstaller.RawOptions) (plugininstaller.RawOptions, error) {
+func renderConfig(options configmanager.RawOptions) (configmanager.RawOptions, error) {
 	opts := Options{}
 	if err := mapstructure.Decode(options, &opts); err != nil {
 		return nil, err

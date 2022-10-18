@@ -4,14 +4,14 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/helm"
 	helmCommon "github.com/devstream-io/devstream/pkg/util/helm"
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
 var _ = Describe("Validate func", func() {
-	var testOption plugininstaller.RawOptions
+	var testOption configmanager.RawOptions
 
 	When("options is not valid", func() {
 		BeforeEach(func() {
@@ -53,7 +53,7 @@ var _ = Describe("SetDefaultConfig func", func() {
 		testRepoName  string
 		testBool      *bool
 		defaultConfig helm.Options
-		testOptions   plugininstaller.RawOptions
+		testOptions   configmanager.RawOptions
 		expectChart   map[string]interface{}
 		expectRepo    map[string]interface{}
 	)

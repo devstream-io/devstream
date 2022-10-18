@@ -1,12 +1,12 @@
 package jenkins
 
 import (
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm"
 )
 
-func CreateOrUpdateJob(options plugininstaller.RawOptions) error {
+func CreateOrUpdateJob(options configmanager.RawOptions) error {
 	opts, err := newJobOptions(options)
 	if err != nil {
 		return err
@@ -21,7 +21,7 @@ func CreateOrUpdateJob(options plugininstaller.RawOptions) error {
 	return opts.createOrUpdateJob(jenkinsClient)
 }
 
-func CreateRepoWebhook(options plugininstaller.RawOptions) error {
+func CreateRepoWebhook(options configmanager.RawOptions) error {
 	opts, err := newJobOptions(options)
 	if err != nil {
 		return err
@@ -33,7 +33,7 @@ func CreateRepoWebhook(options plugininstaller.RawOptions) error {
 	return scmClient.AddWebhook(opts.buildWebhookInfo())
 }
 
-func DeleteJob(options plugininstaller.RawOptions) error {
+func DeleteJob(options configmanager.RawOptions) error {
 	opts, err := newJobOptions(options)
 	if err != nil {
 		return err
@@ -57,7 +57,7 @@ func DeleteJob(options plugininstaller.RawOptions) error {
 }
 
 // PreInstall will download jenkins plugins and config jenkins casc
-func PreInstall(options plugininstaller.RawOptions) error {
+func PreInstall(options configmanager.RawOptions) error {
 	opts, err := newJobOptions(options)
 	if err != nil {
 		return err

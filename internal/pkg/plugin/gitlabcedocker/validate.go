@@ -5,13 +5,15 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
+
 	"github.com/mitchellh/mapstructure"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/validator"
 )
 
-func validateAndDefault(options map[string]interface{}) (*Options, error) {
+func validateAndDefault(options configmanager.RawOptions) (*Options, error) {
 	var opts *Options
 	if err := mapstructure.Decode(options, &opts); err != nil {
 		return nil, err

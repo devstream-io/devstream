@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
+
 	mapset "github.com/deckarep/golang-set/v2"
 	"github.com/mitchellh/mapstructure"
 
@@ -26,7 +28,7 @@ type TrelloItemId struct {
 	doneListId  string
 }
 
-func NewTrelloGithub(options map[string]interface{}) (*TrelloGithub, error) {
+func NewTrelloGithub(options configmanager.RawOptions) (*TrelloGithub, error) {
 	ctx := context.Background()
 
 	var opts Options

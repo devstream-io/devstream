@@ -1,12 +1,13 @@
 package golang
 
 import (
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/github"
 )
 
 // Delete remove GitHub Actions workflows.
-func Delete(options map[string]interface{}) (bool, error) {
+func Delete(options configmanager.RawOptions) (bool, error) {
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			validate,
@@ -18,7 +19,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 		},
 	}
 
-	_, err := operator.Execute(plugininstaller.RawOptions(options))
+	_, err := operator.Execute(options)
 	if err != nil {
 		return false, err
 	}

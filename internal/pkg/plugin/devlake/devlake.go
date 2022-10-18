@@ -3,7 +3,7 @@ package devlake
 import (
 	"fmt"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/helm"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	helmCommon "github.com/devstream-io/devstream/pkg/util/helm"
@@ -30,7 +30,7 @@ var defaultHelmConfig = helm.Options{
 	},
 }
 
-func genDevLakeStatus(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
+func genDevLakeStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	resStatus, err := helm.GetAllResourcesStatus(options)
 	if err != nil {
 		return nil, err
@@ -50,7 +50,7 @@ func genDevLakeStatus(options plugininstaller.RawOptions) (statemanager.Resource
 		return nil, err
 	}
 	url := fmt.Sprintf("http://%s:8080", ip)
-	outputs := map[string]interface{}{
+	outputs := statemanager.ResourceOutputs{
 		"devlake_url": url,
 	}
 	resStatus.SetOutputs(outputs)

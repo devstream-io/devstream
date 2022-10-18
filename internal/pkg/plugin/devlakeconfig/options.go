@@ -3,8 +3,8 @@ package devlakeconfig
 import (
 	"github.com/mitchellh/mapstructure"
 
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/devlakeconfig/staging"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 )
 
 // Options is the struct for configurations of the devlake-config plugin.
@@ -14,7 +14,7 @@ type Options struct {
 }
 
 // NewOptions create options by raw options
-func NewOptions(options plugininstaller.RawOptions) (Options, error) {
+func NewOptions(options configmanager.RawOptions) (Options, error) {
 	var opts Options
 	if err := mapstructure.Decode(options, &opts); err != nil {
 		return opts, err
@@ -53,8 +53,8 @@ type Auth struct {
 	staging.AppKey      `mapstructure:",squash"`
 }
 
-func (o *Options) Encode() (map[string]interface{}, error) {
-	var options map[string]interface{}
+func (o *Options) Encode() (configmanager.RawOptions, error) {
+	var options configmanager.RawOptions
 	if err := mapstructure.Decode(o, &options); err != nil {
 		return nil, err
 	}

@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"sort"
 
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
+
 	"gopkg.in/yaml.v3"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
@@ -14,17 +16,28 @@ import (
 // We call what the plugin created a ResourceStatus, and which is stored as part of the state.
 type ResourceStatus map[string]interface{}
 
+type ResourceOutputs map[string]interface{}
+
 // State is the single component's state.
 type State struct {
-	Name           string                 `yaml:"name"`
-	InstanceID     string                 `yaml:"instanceID"`
-	DependsOn      []string               `yaml:"dependsOn"`
-	Options        map[string]interface{} `yaml:"options"`
-	ResourceStatus ResourceStatus         `yaml:"resourceStatus"`
+	Name           string                   `yaml:"name"`
+	InstanceID     string                   `yaml:"instanceID"`
+	DependsOn      []string                 `yaml:"dependsOn"`
+	Options        configmanager.RawOptions `yaml:"options"`
+	ResourceStatus ResourceStatus           `yaml:"resourceStatus"`
 }
 
-func (rs *ResourceStatus) SetOutputs(outputs map[string]interface{}) {
-	(*rs)["outputs"] = outputs
+func (rs ResourceStatus) SetOutputs(outputs ResourceOutputs) {
+	(rs)["outputs"] = outputs
+}
+
+func (rs ResourceStatus) GetOutputs() ResourceOutputs {
+	outputs, ok := (rs)["outputs"]
+	if !ok {
+		return nil
+	}
+
+	return outputs.(ResourceOutputs)
 }
 
 type StatesMap struct {

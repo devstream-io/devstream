@@ -1,13 +1,13 @@
 package reposcaffolding
 
 import (
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm/github"
 )
 
-func GetDynamicStatus(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
+func GetDynamicStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return nil, err

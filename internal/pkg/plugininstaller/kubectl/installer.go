@@ -5,13 +5,14 @@ import (
 	"io"
 	"strings"
 
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/pkg/util/kubectl"
 	"github.com/devstream-io/devstream/pkg/util/template"
 )
 
 func ProcessByContent(action, content string) plugininstaller.BaseOperation {
-	return func(options plugininstaller.RawOptions) error {
+	return func(options configmanager.RawOptions) error {
 		reader, err := renderKubectlContent(content, options)
 		if err != nil {
 			return err
@@ -21,7 +22,7 @@ func ProcessByContent(action, content string) plugininstaller.BaseOperation {
 	}
 }
 
-func renderKubectlContent(content string, options plugininstaller.RawOptions) (io.Reader, error) {
+func renderKubectlContent(content string, options configmanager.RawOptions) (io.Reader, error) {
 	content, err := template.New().FromContent(content).SetDefaultRender("kubectl", options).Render()
 	if err != nil {
 		return nil, err
@@ -34,7 +35,7 @@ func renderKubectlContent(content string, options plugininstaller.RawOptions) (i
 }
 
 func ProcessByURL(action, url string) plugininstaller.BaseOperation {
-	return func(options plugininstaller.RawOptions) error {
+	return func(options configmanager.RawOptions) error {
 		content, err := template.New().FromURL(url).SetDefaultRender("kubectl", options).Render()
 		if err != nil {
 			return err

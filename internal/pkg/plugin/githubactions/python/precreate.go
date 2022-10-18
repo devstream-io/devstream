@@ -5,11 +5,11 @@ import (
 
 	"github.com/spf13/viper"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/github"
 )
 
-func createDockerHubInfoForPush(options plugininstaller.RawOptions) error {
+func createDockerHubInfoForPush(options configmanager.RawOptions) error {
 	opts, err := github.NewGithubActionOptions(options)
 	if err != nil {
 		return err
@@ -33,7 +33,7 @@ func createDockerHubInfoForPush(options plugininstaller.RawOptions) error {
 	return nil
 }
 
-func deleteDockerHubInfoForPush(options plugininstaller.RawOptions) error {
+func deleteDockerHubInfoForPush(options configmanager.RawOptions) error {
 	opts, err := github.NewGithubActionOptions(options)
 	if err != nil {
 		return err

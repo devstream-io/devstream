@@ -10,7 +10,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func Create(options map[string]interface{}) (map[string]interface{}, error) {
+func Create(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
@@ -22,14 +22,14 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		TerminateOperations: plugininstaller.TerminateOperations{
 			// TODO(dtm): Add your TerminateOperations here.
 		},
-		GetStatusOperation: func(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
+		GetStatusOperation: func(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 			// TODO(dtm): Add your GetStatusOperation here.
 			return nil, nil
 		},
 	}
 
 	// Execute all Operations in Operator
-	status, err := operator.Execute(plugininstaller.RawOptions(options))
+	status, err := operator.Execute(options)
 	if err != nil {
 		return nil, err
 	}

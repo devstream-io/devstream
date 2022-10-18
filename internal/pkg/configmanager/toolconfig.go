@@ -10,6 +10,8 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/validator"
 )
 
+type RawOptions map[string]interface{}
+
 // Tool is the struct for one section of the DevStream tool file (part of the config.)
 type Tool struct {
 	Name string `yaml:"name" validate:"required"`
@@ -18,9 +20,9 @@ type Tool struct {
 	// contain only lowercase alphanumeric characters, '-' or '.'
 	// start with an alphanumeric character
 	// end with an alphanumeric character
-	InstanceID string                 `yaml:"instanceID" validate:"required,dns1123subdomain"`
-	DependsOn  []string               `yaml:"dependsOn"`
-	Options    map[string]interface{} `yaml:"options"`
+	InstanceID string     `yaml:"instanceID" validate:"required,dns1123subdomain"`
+	DependsOn  []string   `yaml:"dependsOn"`
+	Options    RawOptions `yaml:"options"`
 }
 
 func (t *Tool) Validate() []error {
@@ -32,7 +34,7 @@ func (t *Tool) DeepCopy() *Tool {
 		Name:       t.Name,
 		InstanceID: t.InstanceID,
 		DependsOn:  t.DependsOn,
-		Options:    map[string]interface{}{},
+		Options:    RawOptions{},
 	}
 	for k, v := range t.Options {
 		retTool.Options[k] = v

@@ -3,6 +3,7 @@ package helm
 import (
 	"fmt"
 
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/pkg/util/helm"
 	"github.com/devstream-io/devstream/pkg/util/log"
@@ -10,7 +11,7 @@ import (
 )
 
 // Validate validates the options provided by the dtm-core.
-func Validate(options plugininstaller.RawOptions) (plugininstaller.RawOptions, error) {
+func Validate(options configmanager.RawOptions) (configmanager.RawOptions, error) {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return nil, err
@@ -27,7 +28,7 @@ func Validate(options plugininstaller.RawOptions) (plugininstaller.RawOptions, e
 
 // SetDefaultConfig will update options empty values base on import options
 func SetDefaultConfig(defaultConfig *Options) plugininstaller.MutableOperation {
-	return func(options plugininstaller.RawOptions) (plugininstaller.RawOptions, error) {
+	return func(options configmanager.RawOptions) (configmanager.RawOptions, error) {
 		opts, err := NewOptions(options)
 		if err != nil {
 			return nil, err

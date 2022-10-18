@@ -41,7 +41,7 @@ At the moment, there are 4 interfaces, which might be subject to change. Current
 
 ### 2.2 Return Value
 
-`Create`, `Read`, and `Update` interfaces return two values `(map[string]interface{}, error)`; the first being the "state".
+`Create`, `Read`, and `Update` interfaces return two values `(statemanager.ResourceStatus, error)`; the first being the "state".
 
 `Delete` interface returns two values `(bool, error)`. It returns `(true, nil)` if there is no error; otherwise `(false, error)` will be returned.
 

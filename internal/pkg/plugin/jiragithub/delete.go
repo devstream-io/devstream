@@ -5,13 +5,14 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 	"github.com/devstream-io/devstream/pkg/util/scm/github"
 )
 
 // Delete remove jira-github-integ workflows.
-func Delete(options map[string]interface{}) (bool, error) {
+func Delete(options configmanager.RawOptions) (bool, error) {
 	var opts Options
 	err := mapstructure.Decode(options, &opts)
 	if err != nil {

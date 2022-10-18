@@ -1,13 +1,13 @@
 package reposcaffolding
 
 import (
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/pkg/util/scm"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
 // InstallRepo will install repo by opts config
-func InstallRepo(options plugininstaller.RawOptions) error {
+func InstallRepo(options configmanager.RawOptions) error {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return err
@@ -36,7 +36,7 @@ func InstallRepo(options plugininstaller.RawOptions) error {
 }
 
 // DeleteRepo will delete repo by options
-func DeleteRepo(options plugininstaller.RawOptions) error {
+func DeleteRepo(options configmanager.RawOptions) error {
 	var err error
 	opts, err := NewOptions(options)
 	if err != nil {

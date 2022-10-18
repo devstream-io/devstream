@@ -13,7 +13,7 @@ import (
 )
 
 // validate validates the options provided by the core.
-func validate(options plugininstaller.RawOptions) (plugininstaller.RawOptions, error) {
+func validate(options configmanager.RawOptions) (configmanager.RawOptions, error) {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return nil, err

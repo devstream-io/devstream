@@ -9,14 +9,14 @@ import (
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/ghttp"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	utilKubectl "github.com/devstream-io/devstream/pkg/util/kubectl"
 )
 
 var _ = Describe("renderKubectlContent", func() {
 	var (
 		content string
-		options plugininstaller.RawOptions
+		options configmanager.RawOptions
 	)
 
 	BeforeEach(func() {
@@ -54,7 +54,7 @@ var _ = Describe("renderKubectlContent", func() {
 })
 
 var _ = Describe("ProcessByContent", Ordered, func() {
-	var options plugininstaller.RawOptions
+	var options configmanager.RawOptions
 	var s *ghttp.Server
 
 	BeforeAll(func() {

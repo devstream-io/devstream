@@ -5,13 +5,15 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 	"github.com/devstream-io/devstream/pkg/util/scm/github"
 )
 
 // Create sets up jira-github-integ workflows.
-func Create(options map[string]interface{}) (map[string]interface{}, error) {
+func Create(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	var opts Options
 	err := mapstructure.Decode(options, &opts)
 	if err != nil {
@@ -50,11 +52,11 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	return BuildState(opts.Owner, opts.Repo), nil
+	return BuildStatus(opts.Owner, opts.Repo), nil
 }
 
-func BuildState(owner, repo string) map[string]interface{} {
-	res := make(map[string]interface{})
-	res["workflowDir"] = fmt.Sprintf("/repos/%s/%s/contents/.github/workflows", owner, repo)
-	return res
+func BuildStatus(owner, repo string) statemanager.ResourceStatus {
+	resStatus := make(statemanager.ResourceStatus)
+	resStatus["workflowDir"] = fmt.Sprintf("/repos/%s/%s/contents/.github/workflows", owner, repo)
+	return resStatus
 }
