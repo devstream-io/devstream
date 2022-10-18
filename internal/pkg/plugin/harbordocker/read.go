@@ -3,10 +3,11 @@ package harbordocker
 import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	dockerInstaller "github.com/devstream-io/devstream/internal/pkg/plugininstaller/docker"
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func Read(options map[string]interface{}) (map[string]interface{}, error) {
+func Read(options map[string]interface{}) (statemanager.ResourceStatus, error) {
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{

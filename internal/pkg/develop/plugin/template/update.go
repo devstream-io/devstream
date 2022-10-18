@@ -10,7 +10,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func Update(options map[string]interface{}) (map[string]interface{}, error) {
+func Update(options map[string]interface{}) (statemanager.ResourceStatus, error) {
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{

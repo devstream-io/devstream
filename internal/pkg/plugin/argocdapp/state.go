@@ -44,7 +44,7 @@ func getDynamicStatus(options plugininstaller.RawOptions) (statemanager.Resource
 
 	retStatus := make(statemanager.ResourceStatus)
 	operation := func() error {
-		err := getArgoCDAppFromK8sAndSetState(retStatus, opts.App.Name, opts.App.Namespace)
+		err := getArgoCDAppFromK8sAndSetStatus(retStatus, opts.App.Name, opts.App.Namespace)
 		if err != nil {
 			return err
 		}
@@ -59,7 +59,7 @@ func getDynamicStatus(options plugininstaller.RawOptions) (statemanager.Resource
 	return retStatus, nil
 }
 
-func getArgoCDAppFromK8sAndSetState(state map[string]interface{}, name, namespace string) error {
+func getArgoCDAppFromK8sAndSetStatus(status statemanager.ResourceStatus, name, namespace string) error {
 	kubeClient, err := k8s.NewClient()
 	if err != nil {
 		return err
@@ -71,9 +71,9 @@ func getArgoCDAppFromK8sAndSetState(state map[string]interface{}, name, namespac
 	}
 
 	d := kubeClient.DescribeArgocdApp(app)
-	state["app"] = d["app"]
-	state["src"] = d["src"]
-	state["dest"] = d["dest"]
+	status["app"] = d["app"]
+	status["src"] = d["src"]
+	status["dest"] = d["dest"]
 
 	return nil
 }

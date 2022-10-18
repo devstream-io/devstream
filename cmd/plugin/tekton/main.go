@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/plugin/tekton"
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -12,12 +13,12 @@ const NAME = "tekton"
 type Plugin string
 
 // Create implements the create of tekton.
-func (p Plugin) Create(options map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Create(options map[string]interface{}) (statemanager.ResourceStatus, error) {
 	return tekton.Create(options)
 }
 
 // Update implements the update of tekton.
-func (p Plugin) Update(options map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Update(options map[string]interface{}) (statemanager.ResourceStatus, error) {
 	return tekton.Update(options)
 }
 
@@ -27,7 +28,7 @@ func (p Plugin) Delete(options map[string]interface{}) (bool, error) {
 }
 
 // Read implements the read of tekton.
-func (p Plugin) Read(options map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Read(options map[string]interface{}) (statemanager.ResourceStatus, error) {
 	return tekton.Read(options)
 }
 

@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/plugin/gitlabci/generic"
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -12,12 +13,12 @@ const NAME = "gitlabci-generic"
 type Plugin string
 
 // Create implements the create of gitlabci-generic.
-func (p Plugin) Create(options map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Create(options map[string]interface{}) (statemanager.ResourceStatus, error) {
 	return generic.Create(options)
 }
 
 // Update implements the update of gitlabci-generic.
-func (p Plugin) Update(options map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Update(options map[string]interface{}) (statemanager.ResourceStatus, error) {
 	return generic.Update(options)
 }
 
@@ -27,7 +28,7 @@ func (p Plugin) Delete(options map[string]interface{}) (bool, error) {
 }
 
 // Read implements the read of gitlabci-generic.
-func (p Plugin) Read(options map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Read(options map[string]interface{}) (statemanager.ResourceStatus, error) {
 	return generic.Read(options)
 }
 

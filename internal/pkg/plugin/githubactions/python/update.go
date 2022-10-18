@@ -3,11 +3,12 @@ package python
 import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/github"
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 // Update remove and set up GitHub Actions workflows.
-func Update(options map[string]interface{}) (map[string]interface{}, error) {
+func Update(options map[string]interface{}) (statemanager.ResourceStatus, error) {
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			github.Validate,

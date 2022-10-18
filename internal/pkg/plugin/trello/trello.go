@@ -108,7 +108,7 @@ func buildStatus(opts *Options, ti *TrelloItemId) statemanager.ResourceStatus {
 	return resStatus
 }
 
-func buildReadState(opts *Options) (map[string]interface{}, error) {
+func buildReadStatus(opts *Options) (statemanager.ResourceStatus, error) {
 	c, err := trello.NewClient()
 	if err != nil {
 		return nil, err

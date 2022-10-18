@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/plugin/githubactions/nodejs"
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -12,17 +13,17 @@ const NAME = "githubactions-nodejs"
 type Plugin string
 
 // Create implements the installation of some GitHub Actions workflows.
-func (p Plugin) Create(options map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Create(options map[string]interface{}) (statemanager.ResourceStatus, error) {
 	return nodejs.Create(options)
 }
 
 // Update implements the installation of some GitHub Actions workflows.
-func (p Plugin) Update(options map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Update(options map[string]interface{}) (statemanager.ResourceStatus, error) {
 	return nodejs.Update(options)
 }
 
 // Read implements the healthy check of GitHub Actions workflows.
-func (p Plugin) Read(options map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Read(options map[string]interface{}) (statemanager.ResourceStatus, error) {
 	return nodejs.Read(options)
 }
 

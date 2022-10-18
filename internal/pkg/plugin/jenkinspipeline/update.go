@@ -1,5 +1,7 @@
 package jenkinspipeline
 
-func Update(options map[string]interface{}) (map[string]interface{}, error) {
+import "github.com/devstream-io/devstream/internal/pkg/statemanager"
+
+func Update(options map[string]interface{}) (statemanager.ResourceStatus, error) {
 	return Create(options)
 }

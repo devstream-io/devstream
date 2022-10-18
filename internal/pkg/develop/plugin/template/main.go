@@ -16,12 +16,12 @@ const NAME = "[[ .Name ]]"
 type Plugin string
 
 // Create implements the create of [[ .Name ]].
-func (p Plugin) Create(options map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Create(options map[string]interface{}) (statemanager.ResourceStatus, error) {
 	return [[ .Name | format ]].Create(options)
 }
 
 // Update implements the update of [[ .Name ]].
-func (p Plugin) Update(options map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Update(options map[string]interface{}) (statemanager.ResourceStatus, error) {
 	return [[ .Name | format ]].Update(options)
 }
 
@@ -31,7 +31,7 @@ func (p Plugin) Delete(options map[string]interface{}) (bool, error) {
 }
 
 // Read implements the read of [[ .Name ]].
-func (p Plugin) Read(options map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Read(options map[string]interface{}) (statemanager.ResourceStatus, error) {
 	return [[ .Name | format ]].Read(options)
 }
 

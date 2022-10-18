@@ -5,13 +5,14 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 	"github.com/devstream-io/devstream/pkg/util/scm/github"
 )
 
 // Read get jira-github-integ workflows.
-func Read(options map[string]interface{}) (map[string]interface{}, error) {
+func Read(options map[string]interface{}) (statemanager.ResourceStatus, error) {
 	var opts Options
 	err := mapstructure.Decode(options, &opts)
 	if err != nil {
@@ -41,11 +42,7 @@ func Read(options map[string]interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	return BuildReadState(path), nil
-}
-
-func BuildReadState(path string) map[string]interface{} {
-	res := make(map[string]interface{})
-	res["workflowDir"] = path
-	return res
+	resStatus := make(statemanager.ResourceStatus)
+	resStatus["workflowDir"] = path
+	return resStatus, nil
 }
