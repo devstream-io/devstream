@@ -53,8 +53,8 @@ type Auth struct {
 	staging.AppKey      `mapstructure:",squash"`
 }
 
-func (o *Options) Encode() (map[string]interface{}, error) {
-	var options map[string]interface{}
+func (o *Options) Encode() (plugininstaller.RawOptions, error) {
+	var options plugininstaller.RawOptions
 	if err := mapstructure.Decode(o, &options); err != nil {
 		return nil, err
 	}

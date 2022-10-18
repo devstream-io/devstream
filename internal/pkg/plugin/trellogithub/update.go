@@ -1,12 +1,13 @@
 package trellogithub
 
 import (
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 // Update remove and set up trello-github-integ workflows.
-func Update(options map[string]interface{}) (statemanager.ResourceStatus, error) {
+func Update(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
 	tg, err := NewTrelloGithub(options)
 	if err != nil {
 		return nil, err

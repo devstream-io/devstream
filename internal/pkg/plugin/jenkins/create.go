@@ -1,6 +1,7 @@
 package jenkins
 
 import (
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/helm"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
@@ -8,7 +9,7 @@ import (
 )
 
 // Create creates jenkins with provided options.
-func Create(options map[string]interface{}) (statemanager.ResourceStatus, error) {
+func Create(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{

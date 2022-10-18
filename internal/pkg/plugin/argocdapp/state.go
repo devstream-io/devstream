@@ -15,25 +15,25 @@ func getStaticStatus(options plugininstaller.RawOptions) (statemanager.ResourceS
 	if err != nil {
 		return nil, err
 	}
-	res := make(map[string]interface{})
+	resStatus := make(statemanager.ResourceStatus)
 
-	res["app"] = map[string]interface{}{
+	resStatus["app"] = map[string]interface{}{
 		"name":      opts.App.Name,
 		"namespace": opts.App.Namespace,
 	}
 
-	res["src"] = map[string]interface{}{
+	resStatus["src"] = map[string]interface{}{
 		"repoURL":   opts.Source.RepoURL,
 		"path":      opts.Source.Path,
 		"valueFile": opts.Source.Valuefile,
 	}
 
-	res["dest"] = map[string]interface{}{
+	resStatus["dest"] = map[string]interface{}{
 		"server":    opts.Destination.Server,
 		"namespace": opts.Destination.Namespace,
 	}
 
-	return res, nil
+	return resStatus, nil
 }
 
 func getDynamicStatus(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {

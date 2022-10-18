@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/cigeneric"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
@@ -13,22 +14,22 @@ const NAME = "ci-generic"
 type Plugin string
 
 // Create implements the create of ci-generic.
-func (p Plugin) Create(options map[string]interface{}) (statemanager.ResourceStatus, error) {
+func (p Plugin) Create(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
 	return cigeneric.Create(options)
 }
 
 // Update implements the update of ci-generic.
-func (p Plugin) Update(options map[string]interface{}) (statemanager.ResourceStatus, error) {
+func (p Plugin) Update(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
 	return cigeneric.Update(options)
 }
 
 // Delete implements the delete of ci-generic.
-func (p Plugin) Delete(options map[string]interface{}) (bool, error) {
+func (p Plugin) Delete(options configmanager.RawOption) (bool, error) {
 	return cigeneric.Delete(options)
 }
 
 // Read implements the read of ci-generic.
-func (p Plugin) Read(options map[string]interface{}) (statemanager.ResourceStatus, error) {
+func (p Plugin) Read(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
 	return cigeneric.Read(options)
 }
 

@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"sort"
 
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
+
 	"gopkg.in/yaml.v3"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
@@ -16,11 +18,11 @@ type ResourceStatus map[string]interface{}
 
 // State is the single component's state.
 type State struct {
-	Name           string                 `yaml:"name"`
-	InstanceID     string                 `yaml:"instanceID"`
-	DependsOn      []string               `yaml:"dependsOn"`
-	Options        map[string]interface{} `yaml:"options"`
-	ResourceStatus ResourceStatus         `yaml:"resourceStatus"`
+	Name           string                  `yaml:"name"`
+	InstanceID     string                  `yaml:"instanceID"`
+	DependsOn      []string                `yaml:"dependsOn"`
+	Options        configmanager.RawOption `yaml:"options"`
+	ResourceStatus ResourceStatus          `yaml:"resourceStatus"`
 }
 
 func (rs *ResourceStatus) SetOutputs(outputs map[string]interface{}) {

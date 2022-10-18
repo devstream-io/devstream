@@ -1,6 +1,7 @@
 package nodejs
 
 import (
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/github"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
@@ -8,7 +9,7 @@ import (
 )
 
 // Update remove and set up GitHub Actions workflows.
-func Update(options map[string]interface{}) (statemanager.ResourceStatus, error) {
+func Update(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			github.Validate,

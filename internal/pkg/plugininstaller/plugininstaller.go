@@ -24,7 +24,7 @@ type (
 )
 
 type Installer interface {
-	Execute(options RawOptions) (map[string]interface{}, error)
+	Execute(options RawOptions) (statemanager.ResourceStatus, error)
 }
 
 // Operator knows all the operations and can execute them in order
@@ -36,7 +36,7 @@ type Operator struct {
 }
 
 // Execute will sequentially execute all operations in Operator
-func (o *Operator) Execute(options RawOptions) (map[string]interface{}, error) {
+func (o *Operator) Execute(options RawOptions) (statemanager.ResourceStatus, error) {
 	var err error
 	// 1. Execute PreExecuteOperations. It may changes the options.
 	log.Debugf("Start to execute PreExecuteOperations...")

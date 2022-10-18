@@ -5,12 +5,13 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
-func Update(options map[string]interface{}) (statemanager.ResourceStatus, error) {
+func Update(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
 	var opts Options
 	if err := mapstructure.Decode(options, &opts); err != nil {
 		return nil, err

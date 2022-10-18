@@ -1,6 +1,7 @@
 package gitlabcedocker
 
 import (
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	dockerInstaller "github.com/devstream-io/devstream/internal/pkg/plugininstaller/docker"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
@@ -8,7 +9,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
-func Update(options map[string]interface{}) (statemanager.ResourceStatus, error) {
+func Update(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
 	// 1. create config and pre-handle operations
 	opts, err := validateAndDefault(options)
 	if err != nil {

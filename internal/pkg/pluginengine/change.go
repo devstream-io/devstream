@@ -22,7 +22,7 @@ type ChangeResult struct {
 	Succeeded   bool
 	Error       error
 	Time        string
-	ReturnValue map[string]interface{}
+	ReturnValue statemanager.ResourceStatus
 }
 
 func (c *Change) String() string {
@@ -67,7 +67,7 @@ func execute(smgr statemanager.Manager, changes []*Change, reverse bool) map[str
 
 			var succeeded bool
 			var err error
-			var returnValue map[string]interface{}
+			var returnValue statemanager.ResourceStatus
 
 			log.Debugf("Tool's raw changes are: %v.", c.Tool.Options)
 

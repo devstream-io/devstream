@@ -1,12 +1,13 @@
 package golang
 
 import (
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/github"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 )
 
-func Read(options map[string]interface{}) (statemanager.ResourceStatus, error) {
+func Read(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			validate,

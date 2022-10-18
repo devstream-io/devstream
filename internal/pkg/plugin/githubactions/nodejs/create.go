@@ -1,6 +1,7 @@
 package nodejs
 
 import (
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/github"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
@@ -8,7 +9,7 @@ import (
 )
 
 // Create sets up GitHub Actions workflow(s).
-func Create(options map[string]interface{}) (statemanager.ResourceStatus, error) {
+func Create(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{

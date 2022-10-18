@@ -1,12 +1,13 @@
 package trellogithub
 
 import (
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm/github"
 )
 
-func Read(options map[string]interface{}) (statemanager.ResourceStatus, error) {
+func Read(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
 	tg, err := NewTrelloGithub(options)
 	if err != nil {
 		return nil, err

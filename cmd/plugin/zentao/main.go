@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/zentao"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
@@ -13,22 +14,22 @@ const NAME = "zentao"
 type Plugin string
 
 // Create implements the create of zentao.
-func (p Plugin) Create(options map[string]interface{}) (statemanager.ResourceStatus, error) {
+func (p Plugin) Create(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
 	return zentao.Create(options)
 }
 
 // Update implements the update of zentao.
-func (p Plugin) Update(options map[string]interface{}) (statemanager.ResourceStatus, error) {
+func (p Plugin) Update(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
 	return zentao.Update(options)
 }
 
 // Delete implements the delete of zentao.
-func (p Plugin) Delete(options map[string]interface{}) (bool, error) {
+func (p Plugin) Delete(options configmanager.RawOption) (bool, error) {
 	return zentao.Delete(options)
 }
 
 // Read implements the read of zentao.
-func (p Plugin) Read(options map[string]interface{}) (statemanager.ResourceStatus, error) {
+func (p Plugin) Read(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
 	return zentao.Read(options)
 }
 

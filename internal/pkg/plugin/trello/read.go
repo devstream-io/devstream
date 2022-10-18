@@ -5,11 +5,12 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func Read(options map[string]interface{}) (statemanager.ResourceStatus, error) {
+func Read(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
 
 	var opts Options
 	if err := mapstructure.Decode(options, &opts); err != nil {

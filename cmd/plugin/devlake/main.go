@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/devlake"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
@@ -13,22 +14,22 @@ const NAME = "devlake"
 type Plugin string
 
 // Create implements the create of devlake.
-func (p Plugin) Create(options map[string]interface{}) (statemanager.ResourceStatus, error) {
+func (p Plugin) Create(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
 	return devlake.Create(options)
 }
 
 // Update implements the update of devlake.
-func (p Plugin) Update(options map[string]interface{}) (statemanager.ResourceStatus, error) {
+func (p Plugin) Update(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
 	return devlake.Update(options)
 }
 
 // Delete implements the delete of devlake.
-func (p Plugin) Delete(options map[string]interface{}) (bool, error) {
+func (p Plugin) Delete(options configmanager.RawOption) (bool, error) {
 	return devlake.Delete(options)
 }
 
 // Read implements the read of devlake.
-func (p Plugin) Read(options map[string]interface{}) (statemanager.ResourceStatus, error) {
+func (p Plugin) Read(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
 	return devlake.Read(options)
 }
 
