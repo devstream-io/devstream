@@ -9,7 +9,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
-func Update(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func Update(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	// 1. create config and pre-handle operations
 	opts, err := validateAndDefault(options)
 	if err != nil {

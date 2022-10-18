@@ -1,7 +1,7 @@
 package helm
 
 import (
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/helm"
 	"github.com/devstream-io/devstream/pkg/util/k8s"
@@ -9,7 +9,7 @@ import (
 )
 
 // GetAllResourcesStatus will get the State of k8s Deployment, DaemonSet and StatefulSet resources
-func GetAllResourcesStatus(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
+func GetAllResourcesStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return nil, err

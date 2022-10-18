@@ -5,6 +5,6 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 )
 
-func Update(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func Update(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return Create(options)
 }

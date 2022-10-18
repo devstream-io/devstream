@@ -14,22 +14,22 @@ const NAME = "githubactions-python"
 type Plugin string
 
 // Create implements the installation of some GitHub Actions workflows.
-func (p Plugin) Create(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Create(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return python.Create(options)
 }
 
 // Update implements the installation of some GitHub Actions workflows.
-func (p Plugin) Update(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Update(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return python.Update(options)
 }
 
 // Read implements the healthy check of GitHub Actions workflows.
-func (p Plugin) Read(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return python.Read(options)
 }
 
 // Delete implements the installation of some GitHub Actions workflows.
-func (p Plugin) Delete(options configmanager.RawOption) (bool, error) {
+func (p Plugin) Delete(options configmanager.RawOptions) (bool, error) {
 	return python.Delete(options)
 }
 

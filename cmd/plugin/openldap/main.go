@@ -14,22 +14,22 @@ const NAME = "openldap"
 type Plugin string
 
 // Create implements the create of OpenLDAP.
-func (p Plugin) Create(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Create(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return openldap.Create(options)
 }
 
 // Update implements the update of OpenLDAP.
-func (p Plugin) Update(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Update(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return openldap.Update(options)
 }
 
 // Delete implements the delete of OpenLDAP.
-func (p Plugin) Delete(options configmanager.RawOption) (bool, error) {
+func (p Plugin) Delete(options configmanager.RawOptions) (bool, error) {
 	return openldap.Delete(options)
 }
 
 // Read implements the read of OpenLDAP.
-func (p Plugin) Read(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return openldap.Read(options)
 }
 

@@ -3,12 +3,12 @@ package github
 import (
 	"fmt"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func GetStaticWorkFlowStatus(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
+func GetStaticWorkFlowStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	opts, err := NewGithubActionOptions(options)
 	if err != nil {
 		return nil, err
@@ -22,7 +22,7 @@ func GetStaticWorkFlowStatus(options plugininstaller.RawOptions) (statemanager.R
 	return res, nil
 }
 
-func GetActionStatus(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
+func GetActionStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	opts, err := NewGithubActionOptions(options)
 	if err != nil {
 		return nil, err

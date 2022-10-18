@@ -9,7 +9,7 @@ import (
 )
 
 // Update remove and set up GitHub Actions workflows.
-func Update(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func Update(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			validate,
@@ -23,7 +23,7 @@ func Update(options configmanager.RawOption) (statemanager.ResourceStatus, error
 		GetStatusOperation: github.GetActionStatus,
 	}
 
-	status, err := operator.Execute(plugininstaller.RawOptions(options))
+	status, err := operator.Execute(options)
 	if err != nil {
 		return nil, err
 	}

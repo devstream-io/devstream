@@ -14,22 +14,22 @@ const NAME = "jenkins"
 type Plugin string
 
 // Create implements the create of the jenkins.
-func (p Plugin) Create(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Create(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return jenkins.Create(options)
 }
 
 // Update implements the update of the jenkins.
-func (p Plugin) Update(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Update(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return jenkins.Update(options)
 }
 
 // Read implements read of the jenkins.
-func (p Plugin) Read(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return jenkins.Read(options)
 }
 
 // Delete implements the delete of the jenkins.
-func (p Plugin) Delete(options configmanager.RawOption) (bool, error) {
+func (p Plugin) Delete(options configmanager.RawOptions) (bool, error) {
 	return jenkins.Delete(options)
 }
 

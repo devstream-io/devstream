@@ -14,22 +14,22 @@ const NAME = "gitlab-ce-docker"
 type Plugin string
 
 // Create implements the create of gitlab-ce-docker.
-func (p Plugin) Create(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Create(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return gitlabcedocker.Create(options)
 }
 
 // Update implements the update of gitlab-ce-docker.
-func (p Plugin) Update(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Update(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return gitlabcedocker.Update(options)
 }
 
 // Delete implements the delete of gitlab-ce-docker.
-func (p Plugin) Delete(options configmanager.RawOption) (bool, error) {
+func (p Plugin) Delete(options configmanager.RawOptions) (bool, error) {
 	return gitlabcedocker.Delete(options)
 }
 
 // Read implements the read of gitlab-ce-docker.
-func (p Plugin) Read(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return gitlabcedocker.Read(options)
 }
 

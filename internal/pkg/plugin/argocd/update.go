@@ -8,7 +8,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func Update(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func Update(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
@@ -20,7 +20,7 @@ func Update(options configmanager.RawOption) (statemanager.ResourceStatus, error
 	}
 
 	// 2. update by helm config and get status
-	status, err := operator.Execute(plugininstaller.RawOptions(options))
+	status, err := operator.Execute(options)
 	if err != nil {
 		return nil, err
 	}

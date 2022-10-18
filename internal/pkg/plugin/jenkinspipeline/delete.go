@@ -7,7 +7,7 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/jenkins"
 )
 
-func Delete(options configmanager.RawOption) (bool, error) {
+func Delete(options configmanager.RawOptions) (bool, error) {
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
@@ -20,7 +20,7 @@ func Delete(options configmanager.RawOption) (bool, error) {
 			jenkins.DeleteJob,
 		},
 	}
-	_, err := operator.Execute(plugininstaller.RawOptions(options))
+	_, err := operator.Execute(options)
 	if err != nil {
 		return false, err
 	}

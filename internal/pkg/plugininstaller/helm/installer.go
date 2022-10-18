@@ -1,6 +1,7 @@
 package helm
 
 import (
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/pkg/util/helm"
 	"github.com/devstream-io/devstream/pkg/util/k8s"
@@ -24,7 +25,7 @@ var (
 )
 
 // InstallOrUpdate will install or update service by input options
-func InstallOrUpdate(options plugininstaller.RawOptions) error {
+func InstallOrUpdate(options configmanager.RawOptions) error {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return err
@@ -43,7 +44,7 @@ func InstallOrUpdate(options plugininstaller.RawOptions) error {
 }
 
 // DealWithNsWhenInstall will create namespace by input options
-func DealWithNsWhenInstall(options plugininstaller.RawOptions) error {
+func DealWithNsWhenInstall(options configmanager.RawOptions) error {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return err
@@ -58,7 +59,7 @@ func DealWithNsWhenInstall(options plugininstaller.RawOptions) error {
 }
 
 // Delete will delete service base on input options
-func Delete(options plugininstaller.RawOptions) error {
+func Delete(options configmanager.RawOptions) error {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return err

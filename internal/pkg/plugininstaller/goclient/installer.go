@@ -11,6 +11,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/utils/pointer"
 
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/k8s"
@@ -18,7 +19,7 @@ import (
 )
 
 // Create namespace by goclient
-func DealWithNsWhenInstall(options plugininstaller.RawOptions) error {
+func DealWithNsWhenInstall(options configmanager.RawOptions) error {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return err
@@ -58,7 +59,7 @@ func DealWithNsWhenInstall(options plugininstaller.RawOptions) error {
 }
 
 // Deal with resource when errors occur during creation
-func DealWithErrWhenInstall(options plugininstaller.RawOptions) error {
+func DealWithErrWhenInstall(options configmanager.RawOptions) error {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return err
@@ -93,7 +94,7 @@ func DealWithErrWhenInstall(options plugininstaller.RawOptions) error {
 
 // Create persistent volume with hostpath
 func CreatePersistentVolumeWrapper(pvPath map[string]string) plugininstaller.BaseOperation {
-	return func(options plugininstaller.RawOptions) error {
+	return func(options configmanager.RawOptions) error {
 		opts, err := NewOptions(options)
 		if err != nil {
 			return err
@@ -135,7 +136,7 @@ func CreatePersistentVolumeWrapper(pvPath map[string]string) plugininstaller.Bas
 }
 
 // Create persistent volume claim
-func CreatePersistentVolumeClaim(options plugininstaller.RawOptions) error {
+func CreatePersistentVolumeClaim(options configmanager.RawOptions) error {
 
 	opts, err := NewOptions(options)
 	if err != nil {
@@ -178,7 +179,7 @@ func CreatePersistentVolumeClaim(options plugininstaller.RawOptions) error {
 
 // Create deployment by goclient with label, containerPorts and name
 func CreateDeploymentWrapperLabelAndContainerPorts(label map[string]string, containerPorts *[]corev1.ContainerPort, name string) plugininstaller.BaseOperation {
-	return func(options plugininstaller.RawOptions) error {
+	return func(options configmanager.RawOptions) error {
 
 		opts, err := NewOptions(options)
 		if err != nil {
@@ -235,7 +236,7 @@ func CreateDeploymentWrapperLabelAndContainerPorts(label map[string]string, cont
 
 // Create service by goclient with label and servicePort
 func CreateServiceWrapperLabelAndPorts(label map[string]string, svcPort *corev1.ServicePort) plugininstaller.BaseOperation {
-	return func(options plugininstaller.RawOptions) error {
+	return func(options configmanager.RawOptions) error {
 
 		opts, err := NewOptions(options)
 		if err != nil {
@@ -267,7 +268,7 @@ func CreateServiceWrapperLabelAndPorts(label map[string]string, svcPort *corev1.
 
 // Check application status by goclient with retry times
 func WaitForReady(retry int) plugininstaller.BaseOperation {
-	return func(options plugininstaller.RawOptions) error {
+	return func(options configmanager.RawOptions) error {
 
 		opts, err := NewOptions(options)
 		if err != nil {
@@ -288,7 +289,7 @@ func WaitForReady(retry int) plugininstaller.BaseOperation {
 }
 
 // Delete plugin by goclient
-func Delete(options plugininstaller.RawOptions) error {
+func Delete(options configmanager.RawOptions) error {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return err
@@ -345,7 +346,7 @@ func Delete(options plugininstaller.RawOptions) error {
 }
 
 // Delete application by goclient
-func DeleteApp(options plugininstaller.RawOptions) error {
+func DeleteApp(options configmanager.RawOptions) error {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return err
@@ -366,7 +367,7 @@ func DeleteApp(options plugininstaller.RawOptions) error {
 }
 
 // GetStatus checks plugin status by goclient
-func GetStatus(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
+func GetStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return nil, err

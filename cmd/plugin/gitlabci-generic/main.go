@@ -14,22 +14,22 @@ const NAME = "gitlabci-generic"
 type Plugin string
 
 // Create implements the create of gitlabci-generic.
-func (p Plugin) Create(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Create(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return generic.Create(options)
 }
 
 // Update implements the update of gitlabci-generic.
-func (p Plugin) Update(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Update(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return generic.Update(options)
 }
 
 // Delete implements the delete of gitlabci-generic.
-func (p Plugin) Delete(options configmanager.RawOption) (bool, error) {
+func (p Plugin) Delete(options configmanager.RawOptions) (bool, error) {
 	return generic.Delete(options)
 }
 
 // Read implements the read of gitlabci-generic.
-func (p Plugin) Read(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return generic.Read(options)
 }
 

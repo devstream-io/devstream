@@ -7,7 +7,7 @@ import (
 )
 
 // Create sets up trello-github-integ workflows.
-func Create(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func Create(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	tg, err := NewTrelloGithub(options)
 	if err != nil {
 		return nil, err

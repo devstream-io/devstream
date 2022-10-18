@@ -12,7 +12,7 @@ import (
 )
 
 // Delete remove jira-github-integ workflows.
-func Delete(options configmanager.RawOption) (bool, error) {
+func Delete(options configmanager.RawOptions) (bool, error) {
 	var opts Options
 	err := mapstructure.Decode(options, &opts)
 	if err != nil {

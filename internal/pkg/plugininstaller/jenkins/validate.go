@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 	"github.com/devstream-io/devstream/pkg/util/k8s"
 	"github.com/devstream-io/devstream/pkg/util/log"
@@ -26,7 +26,7 @@ const (
 )
 
 // SetJobDefaultConfig config default fields for usage
-func SetJobDefaultConfig(options plugininstaller.RawOptions) (plugininstaller.RawOptions, error) {
+func SetJobDefaultConfig(options configmanager.RawOptions) (configmanager.RawOptions, error) {
 	opts, err := newJobOptions(options)
 	if err != nil {
 		return nil, err
@@ -75,7 +75,7 @@ func SetJobDefaultConfig(options plugininstaller.RawOptions) (plugininstaller.Ra
 	return types.EncodeStruct(opts)
 }
 
-func ValidateJobConfig(options plugininstaller.RawOptions) (plugininstaller.RawOptions, error) {
+func ValidateJobConfig(options configmanager.RawOptions) (configmanager.RawOptions, error) {
 	opts, err := newJobOptions(options)
 	if err != nil {
 		return nil, err

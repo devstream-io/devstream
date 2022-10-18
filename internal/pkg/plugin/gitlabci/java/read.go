@@ -10,7 +10,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func Read(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	var opts Options
 	if err := mapstructure.Decode(options, &opts); err != nil {
 		return nil, err

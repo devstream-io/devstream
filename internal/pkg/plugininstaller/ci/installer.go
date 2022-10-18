@@ -3,10 +3,9 @@ package ci
 import (
 	"errors"
 
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/pkg/util/scm"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
-
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 )
 
 const (
@@ -16,7 +15,7 @@ const (
 	defaultBranch = "feat-repo-ci-update"
 )
 
-func PushCIFiles(options plugininstaller.RawOptions) error {
+func PushCIFiles(options configmanager.RawOptions) error {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return err
@@ -40,7 +39,7 @@ func PushCIFiles(options plugininstaller.RawOptions) error {
 	return err
 }
 
-func DeleteCIFiles(options plugininstaller.RawOptions) error {
+func DeleteCIFiles(options configmanager.RawOptions) error {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return err

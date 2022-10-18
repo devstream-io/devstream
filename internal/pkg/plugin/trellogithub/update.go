@@ -7,7 +7,7 @@ import (
 )
 
 // Update remove and set up trello-github-integ workflows.
-func Update(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func Update(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	tg, err := NewTrelloGithub(options)
 	if err != nil {
 		return nil, err

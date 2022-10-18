@@ -5,7 +5,7 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/pkg/util/docker"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/validator"
@@ -25,7 +25,7 @@ type Options struct {
 }
 
 // NewOptions create options by raw options
-func NewOptions(options plugininstaller.RawOptions) (Options, error) {
+func NewOptions(options configmanager.RawOptions) (Options, error) {
 	var opts Options
 	if err := mapstructure.Decode(options, &opts); err != nil {
 		return opts, err
@@ -48,7 +48,7 @@ func (opts *Options) GetRunOpts() *docker.RunOptions {
 		RestartAlways: opts.RestartAlways,
 	}
 }
-func Validate(options plugininstaller.RawOptions) (plugininstaller.RawOptions, error) {
+func Validate(options configmanager.RawOptions) (configmanager.RawOptions, error) {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return nil, err

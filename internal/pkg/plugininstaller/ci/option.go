@@ -3,7 +3,7 @@ package ci
 import (
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/pkg/util/scm"
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
@@ -13,7 +13,7 @@ type Options struct {
 	ProjectRepo *scm.Repo `mapstructure:"projectRepo" validate:"required"`
 }
 
-func NewOptions(options plugininstaller.RawOptions) (*Options, error) {
+func NewOptions(options configmanager.RawOptions) (*Options, error) {
 	var opts Options
 	if err := mapstructure.Decode(options, &opts); err != nil {
 		return nil, err

@@ -14,22 +14,22 @@ const NAME = "harbor-docker"
 type Plugin string
 
 // Create implements the create of harbor-docker.
-func (p Plugin) Create(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Create(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return harbordocker.Create(options)
 }
 
 // Update implements the update of harbor-docker.
-func (p Plugin) Update(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Update(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return harbordocker.Update(options)
 }
 
 // Delete implements the delete of harbor-docker.
-func (p Plugin) Delete(options configmanager.RawOption) (bool, error) {
+func (p Plugin) Delete(options configmanager.RawOptions) (bool, error) {
 	return harbordocker.Delete(options)
 }
 
 // Read implements the read of harbor-docker.
-func (p Plugin) Read(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return harbordocker.Read(options)
 }
 

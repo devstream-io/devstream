@@ -10,7 +10,7 @@ import (
 )
 
 // Delete delete trello board and lists
-func Delete(options configmanager.RawOption) (bool, error) {
+func Delete(options configmanager.RawOptions) (bool, error) {
 	var opts Options
 	if err := mapstructure.Decode(options, &opts); err != nil {
 		return false, err

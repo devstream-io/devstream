@@ -11,7 +11,7 @@ import (
 )
 
 // Create creates Tello board and lists(todo/doing/done).
-func Create(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func Create(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	var opts Options
 
 	if err := mapstructure.Decode(options, &opts); err != nil {

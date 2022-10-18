@@ -11,7 +11,7 @@ import (
 )
 
 // Update recreate trello board and lists.
-func Update(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func Update(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	var opts Options
 	if err := mapstructure.Decode(options, &opts); err != nil {
 		return nil, err

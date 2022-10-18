@@ -13,7 +13,7 @@ import (
 )
 
 // Update remove and set up jira-github-integ workflows.
-func Update(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func Update(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	var opts Options
 	err := mapstructure.Decode(options, &opts)
 	if err != nil {

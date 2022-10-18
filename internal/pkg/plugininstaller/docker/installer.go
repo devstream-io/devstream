@@ -5,7 +5,7 @@ import (
 
 	"go.uber.org/multierr"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/pkg/util/docker"
 	"github.com/devstream-io/devstream/pkg/util/docker/dockersh"
 	"github.com/devstream-io/devstream/pkg/util/log"
@@ -14,7 +14,7 @@ import (
 var op docker.Operator = &dockersh.ShellOperator{}
 
 // Install runs the docker container
-func Install(options plugininstaller.RawOptions) error {
+func Install(options configmanager.RawOptions) error {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return err
@@ -48,7 +48,7 @@ func Install(options plugininstaller.RawOptions) error {
 }
 
 // ClearWhenInterruption will delete the container if the container fails to run
-func ClearWhenInterruption(options plugininstaller.RawOptions) error {
+func ClearWhenInterruption(options configmanager.RawOptions) error {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return err
@@ -84,7 +84,7 @@ func ClearWhenInterruption(options plugininstaller.RawOptions) error {
 }
 
 // DeleteAll will delete the container/volumes
-func DeleteAll(options plugininstaller.RawOptions) error {
+func DeleteAll(options configmanager.RawOptions) error {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return err

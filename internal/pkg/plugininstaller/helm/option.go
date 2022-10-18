@@ -3,7 +3,7 @@ package helm
 import (
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/pkg/util/helm"
 )
 
@@ -36,7 +36,7 @@ func (opts *Options) fillDefaultValue(defaultOpts *Options) {
 }
 
 // NewOptions create options by raw options
-func NewOptions(options plugininstaller.RawOptions) (*Options, error) {
+func NewOptions(options configmanager.RawOptions) (*Options, error) {
 	var opts Options
 	if err := mapstructure.Decode(options, &opts); err != nil {
 		return nil, err

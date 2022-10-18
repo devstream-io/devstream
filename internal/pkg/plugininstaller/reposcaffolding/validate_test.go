@@ -4,17 +4,17 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/reposcaffolding"
 )
 
 var _ = Describe("Validate func", func() {
 	var (
-		rawOpts plugininstaller.RawOptions
+		rawOpts configmanager.RawOptions
 	)
 	When("reposcaffolding option is not valid", func() {
 		BeforeEach(func() {
-			rawOpts = plugininstaller.RawOptions{
+			rawOpts = configmanager.RawOptions{
 				"not_exist": true,
 			}
 		})
@@ -25,7 +25,7 @@ var _ = Describe("Validate func", func() {
 	})
 	When("reposcaffolding option is valid", func() {
 		BeforeEach(func() {
-			rawOpts = plugininstaller.RawOptions{
+			rawOpts = configmanager.RawOptions{
 				"sourceRepo": map[string]string{
 					"owner":    "test_user",
 					"repo":     "test_repo",

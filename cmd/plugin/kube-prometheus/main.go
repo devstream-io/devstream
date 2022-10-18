@@ -14,22 +14,22 @@ const NAME = "kube-prometheus"
 type Plugin string
 
 // Create implements the create of the kube-prometheus.
-func (p Plugin) Create(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Create(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return kubeprometheus.Create(options)
 }
 
 // Update implements the update of the kube-prometheus.
-func (p Plugin) Update(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Update(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return kubeprometheus.Update(options)
 }
 
 // Read implements read of the kube-prometheus.
-func (p Plugin) Read(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return kubeprometheus.Read(options)
 }
 
 // Delete implements the delete of the kube-prometheus.
-func (p Plugin) Delete(options configmanager.RawOption) (bool, error) {
+func (p Plugin) Delete(options configmanager.RawOptions) (bool, error) {
 	return kubeprometheus.Delete(options)
 }
 

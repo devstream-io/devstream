@@ -9,7 +9,7 @@ import (
 )
 
 // Create sets up GitHub Actions workflow(s).
-func Create(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func Create(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
@@ -23,7 +23,7 @@ func Create(options configmanager.RawOption) (statemanager.ResourceStatus, error
 	}
 
 	// Execute all Operations in Operator
-	status, err := operator.Execute(plugininstaller.RawOptions(options))
+	status, err := operator.Execute(options)
 	if err != nil {
 		return nil, err
 	}

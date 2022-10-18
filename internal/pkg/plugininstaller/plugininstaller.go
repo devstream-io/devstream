@@ -1,19 +1,18 @@
 package plugininstaller
 
 import (
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-type RawOptions map[string]interface{}
-
 type (
 	// MutableOperation can be used to change options if it is needed
-	MutableOperation func(options RawOptions) (RawOptions, error)
+	MutableOperation func(options configmanager.RawOptions) (configmanager.RawOptions, error)
 	// BaseOperation reads options and executes operation
-	BaseOperation func(options RawOptions) error
+	BaseOperation func(options configmanager.RawOptions) error
 	// StatusOperation reads options and executes operation, then returns the status map
-	StatusOperation func(options RawOptions) (statemanager.ResourceStatus, error)
+	StatusOperation func(options configmanager.RawOptions) (statemanager.ResourceStatus, error)
 )
 
 type (
@@ -24,7 +23,7 @@ type (
 )
 
 type Installer interface {
-	Execute(options RawOptions) (statemanager.ResourceStatus, error)
+	Execute(options configmanager.RawOptions) (statemanager.ResourceStatus, error)
 }
 
 // Operator knows all the operations and can execute them in order
@@ -36,7 +35,7 @@ type Operator struct {
 }
 
 // Execute will sequentially execute all operations in Operator
-func (o *Operator) Execute(options RawOptions) (statemanager.ResourceStatus, error) {
+func (o *Operator) Execute(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	var err error
 	// 1. Execute PreExecuteOperations. It may changes the options.
 	log.Debugf("Start to execute PreExecuteOperations...")

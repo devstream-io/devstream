@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/helm"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	helmCommon "github.com/devstream-io/devstream/pkg/util/helm"
@@ -27,7 +27,7 @@ var defaultHelmConfig = helm.Options{
 	},
 }
 
-func genJenkinsStatus(options plugininstaller.RawOptions) (statemanager.ResourceStatus, error) {
+func genJenkinsStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	resStatus, err := helm.GetAllResourcesStatus(options)
 	if err != nil {
 		return nil, err
@@ -59,7 +59,7 @@ func genJenkinsStatus(options plugininstaller.RawOptions) (statemanager.Resource
 
 // See https://github.com/devstream-io/devstream/pull/1025#discussion_r952277174 and
 // https://github.com/devstream-io/devstream/pull/1027#discussion_r953415932 for more info.
-func genJenkinsSvcName(options plugininstaller.RawOptions) (string, error) {
+func genJenkinsSvcName(options configmanager.RawOptions) (string, error) {
 	opts, err := helm.NewOptions(options)
 	if err != nil {
 		return "", err

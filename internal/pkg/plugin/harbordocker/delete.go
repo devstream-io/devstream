@@ -6,7 +6,7 @@ import (
 	dockerInstaller "github.com/devstream-io/devstream/internal/pkg/plugininstaller/docker"
 )
 
-func Delete(options configmanager.RawOption) (bool, error) {
+func Delete(options configmanager.RawOptions) (bool, error) {
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
@@ -19,7 +19,7 @@ func Delete(options configmanager.RawOption) (bool, error) {
 	}
 
 	// Execute all Operations in Operator
-	_, err := operator.Execute(plugininstaller.RawOptions(options))
+	_, err := operator.Execute(options)
 	if err != nil {
 		return false, err
 	}

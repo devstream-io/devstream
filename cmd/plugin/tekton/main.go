@@ -14,22 +14,22 @@ const NAME = "tekton"
 type Plugin string
 
 // Create implements the create of tekton.
-func (p Plugin) Create(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Create(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return tekton.Create(options)
 }
 
 // Update implements the update of tekton.
-func (p Plugin) Update(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Update(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return tekton.Update(options)
 }
 
 // Delete implements the delete of tekton.
-func (p Plugin) Delete(options configmanager.RawOption) (bool, error) {
+func (p Plugin) Delete(options configmanager.RawOptions) (bool, error) {
 	return tekton.Delete(options)
 }
 
 // Read implements the read of tekton.
-func (p Plugin) Read(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return tekton.Read(options)
 }
 

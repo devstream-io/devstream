@@ -14,22 +14,22 @@ const NAME = "gitlabci-golang"
 type Plugin string
 
 // Create creates a GitLab CI workflow for Golang.
-func (p Plugin) Create(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Create(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return golang.Create(options)
 }
 
 // Update updates the GitLab CI workflow for Golang.
-func (p Plugin) Update(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Update(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return golang.Update(options)
 }
 
 // Read gets the state of the GitLab CI workflow for Golang.
-func (p Plugin) Read(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return golang.Read(options)
 }
 
 // Delete deletes the GitLab CI workflow.
-func (p Plugin) Delete(options configmanager.RawOption) (bool, error) {
+func (p Plugin) Delete(options configmanager.RawOptions) (bool, error) {
 	return golang.Delete(options)
 }
 

@@ -11,11 +11,11 @@ import (
 // DevStreamPlugin is a struct, on which Create/Read/Update/Delete interfaces are defined.
 type DevStreamPlugin interface {
 	// Create, Read, and Update return two results, the first being the "state"
-	Create(configmanager.RawOption) (statemanager.ResourceStatus, error)
-	Read(configmanager.RawOption) (statemanager.ResourceStatus, error)
-	Update(configmanager.RawOption) (statemanager.ResourceStatus, error)
+	Create(configmanager.RawOptions) (statemanager.ResourceStatus, error)
+	Read(configmanager.RawOptions) (statemanager.ResourceStatus, error)
+	Update(configmanager.RawOptions) (statemanager.ResourceStatus, error)
 	// Delete returns (true, nil) if there is no error; otherwise it returns (false, error)
-	Delete(configmanager.RawOption) (bool, error)
+	Delete(configmanager.RawOptions) (bool, error)
 }
 
 // Create loads the plugin and calls the Create method of that plugin.

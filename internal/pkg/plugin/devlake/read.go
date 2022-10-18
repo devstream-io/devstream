@@ -8,7 +8,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func Read(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
@@ -19,7 +19,7 @@ func Read(options configmanager.RawOption) (statemanager.ResourceStatus, error) 
 	}
 
 	// Execute all Operations in Operator
-	status, err := operator.Execute(plugininstaller.RawOptions(options))
+	status, err := operator.Execute(options)
 	if err != nil {
 		return nil, err
 	}

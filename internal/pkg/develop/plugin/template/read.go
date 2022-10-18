@@ -16,14 +16,14 @@ func Read(options configmanager.RawOption) (statemanager.ResourceStatus, error) 
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			// TODO(dtm): Add your PreExecuteOperations here.
 		},
-		GetStatusOperation: func(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
+		GetStatusOperation: func(options configmanager.RawOptions) (statemanager.ResourceState, error) {
 			// TODO(dtm): Add your GetStatusOperation here.
 			return nil, nil
 		},
 	}
 
 	// Execute all Operations in Operator
-	status, err := operator.Execute(plugininstaller.RawOptions(options))
+	status, err := operator.Execute(options)
 	if err != nil {
 		return nil, err
 	}

@@ -11,7 +11,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
-func Update(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func Update(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	var opts Options
 	if err := mapstructure.Decode(options, &opts); err != nil {
 		return nil, err

@@ -12,7 +12,7 @@ const (
 	ArgocdDefaultNamespace = "argocd"
 )
 
-func Read(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
@@ -23,7 +23,7 @@ func Read(options configmanager.RawOption) (statemanager.ResourceStatus, error) 
 	}
 
 	// 2. get plugin status
-	status, err := operator.Execute(plugininstaller.RawOptions(options))
+	status, err := operator.Execute(options)
 	if err != nil {
 		return nil, err
 	}

@@ -13,7 +13,7 @@ import (
 )
 
 // Create sets up jira-github-integ workflows.
-func Create(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func Create(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	var opts Options
 	err := mapstructure.Decode(options, &opts)
 	if err != nil {

@@ -22,14 +22,14 @@ func Update(options configmanager.RawOption) (statemanager.ResourceStatus, error
 		TerminateOperations: plugininstaller.TerminateOperations{
 			// TODO(dtm): Add your TerminateOperations here.
 		},
-		GetStatusOperation: func(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
+		GetStatusOperation: func(options configmanager.RawOptions) (statemanager.ResourceState, error) {
 			// TODO(dtm): Add your GetStatusOperation here.
 			return nil, nil
 		},
 	}
 
 	// Execute all Operations in Operator
-	status, err := operator.Execute(plugininstaller.RawOptions(options))
+	status, err := operator.Execute(options)
 	if err != nil {
 		return nil, err
 	}

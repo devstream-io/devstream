@@ -7,7 +7,7 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 )
 
-func Read(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			github.Validate,
@@ -16,7 +16,7 @@ func Read(options configmanager.RawOption) (statemanager.ResourceStatus, error) 
 		GetStatusOperation: github.GetActionStatus,
 	}
 
-	status, err := operator.Execute(plugininstaller.RawOptions(options))
+	status, err := operator.Execute(options)
 	if err != nil {
 		return nil, err
 	}

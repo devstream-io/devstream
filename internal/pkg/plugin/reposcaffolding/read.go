@@ -8,7 +8,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func Read(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			reposcaffolding.Validate,
@@ -16,7 +16,7 @@ func Read(options configmanager.RawOption) (statemanager.ResourceStatus, error) 
 		GetStatusOperation: reposcaffolding.GetDynamicStatus,
 	}
 
-	status, err := operator.Execute(plugininstaller.RawOptions(options))
+	status, err := operator.Execute(options)
 	if err != nil {
 		return nil, err
 	}

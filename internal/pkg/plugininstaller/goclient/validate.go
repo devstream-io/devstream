@@ -3,13 +3,13 @@ package goclient
 import (
 	"fmt"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/validator"
 )
 
 // validate validates the options provided by the core.
-func Validate(options plugininstaller.RawOptions) (plugininstaller.RawOptions, error) {
+func Validate(options configmanager.RawOptions) (configmanager.RawOptions, error) {
 	opts, err := NewOptions(options)
 	if err != nil {
 		return nil, err

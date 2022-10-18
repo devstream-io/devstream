@@ -6,7 +6,7 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/jenkins/plugins"
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
@@ -35,7 +35,7 @@ type Jenkins struct {
 	EnableRestart bool   `mapstructure:"enableRestart"`
 }
 
-func newJobOptions(options plugininstaller.RawOptions) (*JobOptions, error) {
+func newJobOptions(options configmanager.RawOptions) (*JobOptions, error) {
 	var opts JobOptions
 	if err := mapstructure.Decode(options, &opts); err != nil {
 		return nil, err

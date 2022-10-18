@@ -14,22 +14,22 @@ const NAME = "trello"
 type Plugin string
 
 // Create implements the creation of trello board.
-func (p Plugin) Create(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Create(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return trello.Create(options)
 }
 
 // Update implements the creation of trello board.
-func (p Plugin) Update(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Update(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return trello.Update(options)
 }
 
 // Read implements the healthy check of trello board.
-func (p Plugin) Read(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return trello.Read(options)
 }
 
 // Delete implements the creation of trello board.
-func (p Plugin) Delete(options configmanager.RawOption) (bool, error) {
+func (p Plugin) Delete(options configmanager.RawOptions) (bool, error) {
 	return trello.Delete(options)
 }
 

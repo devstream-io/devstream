@@ -7,7 +7,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/scm/github"
 )
 
-func Read(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	tg, err := NewTrelloGithub(options)
 	if err != nil {
 		return nil, err

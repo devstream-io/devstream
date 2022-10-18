@@ -3,6 +3,7 @@ package github
 import (
 	"fmt"
 
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
@@ -17,7 +18,7 @@ type action string
 
 // ProcessAction config github
 func ProcessAction(act action) plugininstaller.BaseOperation {
-	return func(options plugininstaller.RawOptions) error {
+	return func(options configmanager.RawOptions) error {
 		opts, err := NewGithubActionOptions(options)
 		if err != nil {
 			return err

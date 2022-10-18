@@ -13,7 +13,7 @@ import (
 )
 
 // Read get jira-github-integ workflows.
-func Read(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	var opts Options
 	err := mapstructure.Decode(options, &opts)
 	if err != nil {

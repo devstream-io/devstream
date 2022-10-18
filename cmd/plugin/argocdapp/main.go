@@ -14,22 +14,22 @@ const NAME = "argocdapp"
 type Plugin string
 
 // Create implements the installation of an ArgoCD app.
-func (p Plugin) Create(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Create(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return argocdapp.Create(options)
 }
 
 // Update implements the installation of an ArgoCD app.
-func (p Plugin) Update(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Update(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return argocdapp.Update(options)
 }
 
 // Read implements the healthy check of ArgoCD app.
-func (p Plugin) Read(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return argocdapp.Read(options)
 }
 
 // Delete Deletes the installation of an ArgoCD app.
-func (p Plugin) Delete(options configmanager.RawOption) (bool, error) {
+func (p Plugin) Delete(options configmanager.RawOptions) (bool, error) {
 	return argocdapp.Delete(options)
 }
 

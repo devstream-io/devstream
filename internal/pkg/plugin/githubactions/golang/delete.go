@@ -7,7 +7,7 @@ import (
 )
 
 // Delete remove GitHub Actions workflows.
-func Delete(options configmanager.RawOption) (bool, error) {
+func Delete(options configmanager.RawOptions) (bool, error) {
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			validate,
@@ -19,7 +19,7 @@ func Delete(options configmanager.RawOption) (bool, error) {
 		},
 	}
 
-	_, err := operator.Execute(plugininstaller.RawOptions(options))
+	_, err := operator.Execute(options)
 	if err != nil {
 		return false, err
 	}

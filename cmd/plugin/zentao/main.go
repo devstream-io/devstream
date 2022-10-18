@@ -14,22 +14,22 @@ const NAME = "zentao"
 type Plugin string
 
 // Create implements the create of zentao.
-func (p Plugin) Create(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Create(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return zentao.Create(options)
 }
 
 // Update implements the update of zentao.
-func (p Plugin) Update(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Update(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return zentao.Update(options)
 }
 
 // Delete implements the delete of zentao.
-func (p Plugin) Delete(options configmanager.RawOption) (bool, error) {
+func (p Plugin) Delete(options configmanager.RawOptions) (bool, error) {
 	return zentao.Delete(options)
 }
 
 // Read implements the read of zentao.
-func (p Plugin) Read(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func (p Plugin) Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return zentao.Read(options)
 }
 

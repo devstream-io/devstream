@@ -18,11 +18,11 @@ type ResourceStatus map[string]interface{}
 
 // State is the single component's state.
 type State struct {
-	Name           string                  `yaml:"name"`
-	InstanceID     string                  `yaml:"instanceID"`
-	DependsOn      []string                `yaml:"dependsOn"`
-	Options        configmanager.RawOption `yaml:"options"`
-	ResourceStatus ResourceStatus          `yaml:"resourceStatus"`
+	Name           string                   `yaml:"name"`
+	InstanceID     string                   `yaml:"instanceID"`
+	DependsOn      []string                 `yaml:"dependsOn"`
+	Options        configmanager.RawOptions `yaml:"options"`
+	ResourceStatus ResourceStatus           `yaml:"resourceStatus"`
 }
 
 func (rs *ResourceStatus) SetOutputs(outputs map[string]interface{}) {
