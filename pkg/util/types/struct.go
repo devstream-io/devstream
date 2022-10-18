@@ -3,6 +3,8 @@ package types
 import (
 	"reflect"
 
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
+
 	"github.com/mitchellh/mapstructure"
 )
 
@@ -34,8 +36,8 @@ func FillStructDefaultValue(structData, defaultStructData any) {
 }
 
 // EncodeStruct will get structData and encode this data to map
-func EncodeStruct(structData any) (map[string]interface{}, error) {
-	var options map[string]interface{}
+func EncodeStruct(structData any) (configmanager.RawOptions, error) {
+	var options configmanager.RawOptions
 	if err := mapstructure.Decode(structData, &options); err != nil {
 		return nil, err
 	}

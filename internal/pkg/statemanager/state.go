@@ -16,6 +16,8 @@ import (
 // We call what the plugin created a ResourceStatus, and which is stored as part of the state.
 type ResourceStatus map[string]interface{}
 
+type ResourceOutputs map[string]interface{}
+
 // State is the single component's state.
 type State struct {
 	Name           string                   `yaml:"name"`
@@ -25,8 +27,17 @@ type State struct {
 	ResourceStatus ResourceStatus           `yaml:"resourceStatus"`
 }
 
-func (rs *ResourceStatus) SetOutputs(outputs map[string]interface{}) {
+func (rs *ResourceStatus) SetOutputs(outputs ResourceOutputs) {
 	(*rs)["outputs"] = outputs
+}
+
+func (rs *ResourceStatus) GetOutputs() ResourceOutputs {
+	outputs, ok := (*rs)["outputs"]
+	if !ok {
+		return nil
+	}
+
+	return outputs.(ResourceOutputs)
 }
 
 type StatesMap struct {

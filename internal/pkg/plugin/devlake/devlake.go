@@ -50,7 +50,7 @@ func genDevLakeStatus(options configmanager.RawOptions) (statemanager.ResourceSt
 		return nil, err
 	}
 	url := fmt.Sprintf("http://%s:8080", ip)
-	outputs := map[string]interface{}{
+	outputs := statemanager.ResourceOutputs{
 		"devlake_url": url,
 	}
 	resStatus.SetOutputs(outputs)

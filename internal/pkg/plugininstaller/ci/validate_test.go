@@ -4,12 +4,14 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
+
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
 	"github.com/devstream-io/devstream/pkg/util/scm"
 )
 
 var _ = Describe("Validate func", func() {
-	var option map[string]interface{}
+	var option configmanager.RawOptions
 	When("options is not valid", func() {
 		It("should return error", func() {
 			ciTypeNotExistOptions := map[string]any{

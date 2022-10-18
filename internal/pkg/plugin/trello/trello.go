@@ -97,7 +97,7 @@ func buildStatus(opts *Options, ti *TrelloItemId) statemanager.ResourceStatus {
 	resStatus["doingListId"] = ti.doingListId
 	resStatus["doneListId"] = ti.doneListId
 
-	outputs := make(map[string]interface{})
+	outputs := make(statemanager.ResourceOutputs)
 	outputs["boardId"] = ti.boardId
 	outputs["todoListId"] = ti.todoListId
 	outputs["doingListId"] = ti.doingListId
@@ -119,7 +119,7 @@ func buildReadStatus(opts *Options) (statemanager.ResourceStatus, error) {
 	}
 
 	resStatus := statemanager.ResourceStatus(listIds)
-	output := make(map[string]interface{})
+	output := make(statemanager.ResourceOutputs)
 	output["boardId"] = fmt.Sprint(listIds["boardId"])
 	output["todoListId"] = fmt.Sprint(listIds["todoListId"])
 	output["doingListId"] = fmt.Sprint(listIds["doingListId"])

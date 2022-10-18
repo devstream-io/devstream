@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"fmt"
 
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
+
 	"gopkg.in/yaml.v3"
 
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
@@ -27,7 +29,7 @@ type Status struct {
 
 // If the resource has drifted, status.ResourceStatusInState & status.ResourceStatusFromRead must NOT be nil and status.InlineStatus should be nil.
 // If the resource hasn't drifted, status.ResourceStatusInState & status.ResourceStatusFromRead should be nil and status.InlineStatus must NOT be nil.
-func NewOutput(instanceID, plugin string, options map[string]interface{}, status *Status) (*Output, error) {
+func NewOutput(instanceID, plugin string, options configmanager.RawOptions, status *Status) (*Output, error) {
 	if ok, err := validateParams(instanceID, plugin, options, status); !ok {
 		return nil, err
 	}
@@ -61,7 +63,7 @@ func (o *Output) Print() error {
 	return nil
 }
 
-func validateParams(instanceID, plugin string, options map[string]interface{}, status *Status) (bool, error) {
+func validateParams(instanceID, plugin string, options configmanager.RawOptions, status *Status) (bool, error) {
 	if instanceID == "" || plugin == "" {
 		return false, fmt.Errorf("instanceID or plugin cannot be nil")
 	}

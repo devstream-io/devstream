@@ -48,7 +48,7 @@ func genJenkinsStatus(options configmanager.RawOptions) (statemanager.ResourceSt
 
 	// svc_name.svc_ns:svc_port
 	url := fmt.Sprintf("http://%s.%s:8080", svcName, opt.Chart.Namespace)
-	outputs := map[string]interface{}{
+	outputs := statemanager.ResourceOutputs{
 		"jenkins_url": url,
 	}
 
