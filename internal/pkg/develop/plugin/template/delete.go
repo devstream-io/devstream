@@ -5,10 +5,11 @@ var deleteGoDirTpl = "internal/pkg/plugin/[[ .Name | dirFormat ]]/"
 var deleteGoContentTpl = `package [[ .Name | format ]]
 
 import (
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 )
 
-func Delete(options configmanager.RawOption) (bool, error) {
+func Delete(options configmanager.RawOptions) (bool, error) {
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{

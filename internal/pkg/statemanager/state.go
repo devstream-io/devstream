@@ -27,12 +27,12 @@ type State struct {
 	ResourceStatus ResourceStatus           `yaml:"resourceStatus"`
 }
 
-func (rs *ResourceStatus) SetOutputs(outputs ResourceOutputs) {
-	(*rs)["outputs"] = outputs
+func (rs ResourceStatus) SetOutputs(outputs ResourceOutputs) {
+	(rs)["outputs"] = outputs
 }
 
-func (rs *ResourceStatus) GetOutputs() ResourceOutputs {
-	outputs, ok := (*rs)["outputs"]
+func (rs ResourceStatus) GetOutputs() ResourceOutputs {
+	outputs, ok := (rs)["outputs"]
 	if !ok {
 		return nil
 	}

@@ -10,13 +10,13 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func Read(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			// TODO(dtm): Add your PreExecuteOperations here.
 		},
-		GetStatusOperation: func(options configmanager.RawOptions) (statemanager.ResourceState, error) {
+		GetStatusOperation: func(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 			// TODO(dtm): Add your GetStatusOperation here.
 			return nil, nil
 		},

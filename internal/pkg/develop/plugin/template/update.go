@@ -10,7 +10,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func Update(options configmanager.RawOption) (statemanager.ResourceStatus, error) {
+func Update(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
@@ -22,7 +22,7 @@ func Update(options configmanager.RawOption) (statemanager.ResourceStatus, error
 		TerminateOperations: plugininstaller.TerminateOperations{
 			// TODO(dtm): Add your TerminateOperations here.
 		},
-		GetStatusOperation: func(options configmanager.RawOptions) (statemanager.ResourceState, error) {
+		GetStatusOperation: func(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 			// TODO(dtm): Add your GetStatusOperation here.
 			return nil, nil
 		},
