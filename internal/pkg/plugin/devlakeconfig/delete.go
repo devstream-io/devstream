@@ -10,6 +10,7 @@ func Delete(options configmanager.RawOptions) (bool, error) {
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			validate,
+			RenderAuthConfig,
 		},
 		ExecuteOperations: plugininstaller.ExecuteOperations{
 			DeleteConfig,

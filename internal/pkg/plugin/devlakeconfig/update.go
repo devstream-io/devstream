@@ -12,6 +12,7 @@ func Update(options configmanager.RawOptions) (statemanager.ResourceStatus, erro
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			validate,
+			RenderAuthConfig,
 		},
 		ExecuteOperations: plugininstaller.ExecuteOperations{
 			UpdateConfig,

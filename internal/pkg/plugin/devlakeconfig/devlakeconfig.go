@@ -131,57 +131,71 @@ func DeleteConfig(options configmanager.RawOptions) error {
 }
 
 func UpdateConfig(options configmanager.RawOptions) error {
-	// TODO(daniel-hutao): implement later
 	opts, err := NewOptions(options)
 	if err != nil {
 		return err
 	}
 	for _, p := range opts.Plugins {
-		connections, err := getConnections(opts.DevLakeAddr, p.Name)
-		if err != nil {
+		if updatePluginConfig(opts.DevLakeAddr, p) != nil {
 			return err
-		}
-		// Map Connection.Name -> Connection for config
-		configConnectionMap := make(map[string]Connection)
-		// Map Connection.Name -> Connection for state
-		stateConnectionMap := make(map[string]Connection)
-		for _, configConnection := range p.Connections {
-			configConnectionMap[configConnection.Name] = configConnection
-		}
-		// Construct a map
-		for _, stateConnection := range connections {
-			stateConnectionMap[stateConnection.Name] = stateConnection
-		}
-		for k := range configConnectionMap {
-			// Create connection which is not in State
-			if _, ok := stateConnectionMap[k]; !ok {
-				if err = createConnection(opts.DevLakeAddr, p.Name, configConnectionMap[k]); err != nil {
-					return err
-				}
-				continue
-			}
-			// Update connection which is different from State
-			if stateConnectionMap[k] != configConnectionMap[k] {
-				if err = updateConnection(opts.DevLakeAddr, p.Name, stateConnectionMap[k]); err != nil {
-					return err
-				}
-				continue
-			}
-		}
-		for k := range stateConnectionMap {
-			// Delete connection which is not in config
-			if _, ok := configConnectionMap[k]; !ok {
-				if err = deleteConnection(opts.DevLakeAddr, p.Name, stateConnectionMap[k]); err != nil {
-					return err
-				}
-				continue
-			}
 		}
 	}
 	return nil
 }
 
+func updatePluginConfig(devlakeAddr string, plugin DevLakePlugin) error {
+	connections, err := getConnections(devlakeAddr, plugin.Name)
+	if err != nil {
+		return err
+	}
+
+	// Connection.Name -> Connection for config
+	connMapForConfig := make(map[string]Connection)
+	// Connection.Name -> Connection for status
+	connMapForStatus := make(map[string]Connection)
+	for _, c := range plugin.Connections {
+		connMapForConfig[c.Name] = c
+	}
+	for _, c := range connections {
+		connMapForStatus[c.Name] = c
+	}
+
+	return updatePluginConnections(connMapForConfig, connMapForStatus, devlakeAddr, plugin)
+}
+
+func updatePluginConnections(connMapForConfig, connMapForStatus map[string]Connection, devlakeAddr string, plugin DevLakePlugin) error {
+	for name := range connMapForConfig {
+		// Create connection which is not in ResourceStatus
+		c, ok := connMapForStatus[name]
+		if ok {
+			if err := createConnection(devlakeAddr, plugin.Name, connMapForConfig[name]); err != nil {
+				return err
+			}
+			continue
+		}
+
+		// Update connection which is different from State
+		if c != connMapForConfig[name] {
+			if err := updateConnection(devlakeAddr, plugin.Name, connMapForStatus[name]); err != nil {
+				return err
+			}
+		}
+	}
+
+	// Delete connection which is not in Config
+	for name := range connMapForStatus {
+		if _, ok := connMapForConfig[name]; !ok {
+			if err := deleteConnection(devlakeAddr, plugin.Name, connMapForStatus[name]); err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
+}
+
 func GetStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
+	// TODO(daniel-hutao): get the real status later
 	resStatus := statemanager.ResourceStatus(options)
 	return resStatus, nil
 }
