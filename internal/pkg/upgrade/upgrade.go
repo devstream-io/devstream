@@ -4,6 +4,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 
 	"github.com/Masterminds/semver"
 
@@ -20,6 +21,7 @@ const (
 	dtmBakFileName = "dtm-bak"
 	dtmOrg         = "devstream-io"
 	dtmRepo        = "devstream"
+	dtmExecute     = "dtm"
 )
 
 // since dtm file name can be changeable by user,so it should be a variable to get current dtm file name
@@ -31,7 +33,9 @@ func Upgrade(continueDirectly bool) error {
 		log.Info("Dtm upgrade: do not support to upgrade dtm in development version.")
 		os.Exit(0)
 	}
-	workDir, err := os.Getwd()
+
+	execDir, err := os.Executable()
+	workDir := strings.Trim(execDir, dtmExecute)
 	if err != nil {
 		return err
 	}
