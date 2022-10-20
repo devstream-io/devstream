@@ -12,7 +12,6 @@ func Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error)
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			validate,
-			RenderAuthConfig,
 		},
 		GetStatusOperation: GetStatus,
 	}
