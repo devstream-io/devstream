@@ -1,6 +1,6 @@
-# Development Workflow
+# Development Workflow with Git
 
-This document shows the workflow of how to develop DevStream.
+This document shows the workflow of how to develop DevStream with Git.
 
 ## Step 1 - Fork the repo
 

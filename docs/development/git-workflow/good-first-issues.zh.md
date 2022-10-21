@@ -1,7 +1,7 @@
 # Good First Issues 中文文档
 想参与 DevStream（或任何开源项目），但不知道从哪开始？
 
-浏览 [good first issues](https://github.com/devstream-io/devstream/labels/good%20first%20issue) 吧！
+点开 [good first issues](https://github.com/devstream-io/devstream/labels/good%20first%20issue) 列表，开始你的贡献吧！
 
 ## 关于 Good First Issues 标签
 该标签意味着对应的 issue 只能被 _第一次参与贡献的人_ 认领。

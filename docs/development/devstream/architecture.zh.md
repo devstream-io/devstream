@@ -6,7 +6,7 @@
 
 下图展示了DevStream是如何执行一个用户命令的。
 
-![DevStream架构图](../images/architecture-overview.png)
+![DevStream架构图](../../images/architecture-overview.png)
 
 DevStream主要由三大块组成：
 
@@ -62,4 +62,4 @@ Plugin engine通过调用以下模块来实现目标：
 
 它执行的包括"创建"、"读取"、"更新"和"删除"等操作。
 
-要开发一个新的插件，请参阅[创建一个插件](./creating-a-plugin.zh.md)。
+要开发一个新的插件，请参阅[创建一个插件](../dev/creating-a-plugin.zh.md)。
