@@ -6,15 +6,15 @@ OK. So you want to get started with Golang/Kubernetes development. You've come t
 
 [Head to the official website](https://go.dev/) and click the "Download" button:
 
-![](../images/golang-install.png)
+![](../../images/golang-install.png)
 
 Make sure you select the correct package according to your operating system and processor:
 
-![](../images/golang-download.png)
+![](../../images/golang-download.png)
 
 For Apple macOS users, click the apple logo in the menu bar, and choose "About This Mac" to check your chip:
 
-![](../images/about-this-mac.png)
+![](../../images/about-this-mac.png)
 
 ---
 
@@ -26,7 +26,7 @@ The easiest way to run a Kubernetes cluster locally is to run it in a Docker con
 
 [Head to the official website](https://www.docker.com/) and click the download button:
 
-![](../images/docker-install.png)
+![](../../images/docker-install.png)
 
 Again, please pay attention to the operating system and processor options. For Apple M1 mac users, choose the "Apple Chip" option. To check what processor you have, see the previous section in "About This Mac".
 
@@ -42,7 +42,7 @@ _Note: there are other tools which can install a local K8s, such as `kind`, etc.
 
 First, go to the [official website of minikube](https://minikube.sigs.k8s.io/docs/start/), choose the right OS and architecture (again,) and download/install:
 
-![](../images/minikube-install.png)
+![](../../images/minikube-install.png)
 
 Alternatively, if you are using [Homebrew](https://brew.sh/) (if you don't know what it is, ignore this line,) you can simply run `brew install minikube`.
 
@@ -50,7 +50,7 @@ Alternatively, if you are using [Homebrew](https://brew.sh/) (if you don't know 
 
 Go to [Kubernetes' official documentation website](https://kubernetes.io/docs/tasks/tools/) and follow the guide to install kubectl. Choose your operating system:
 
-![](../images/kubectl-install.png)
+![](../../images/kubectl-install.png)
 
 Again, for macOS users, if you are using Homebrew package manager, you can install kubectl with Homebrew:
 
@@ -116,4 +116,4 @@ For example, you can try a local build:
 make build -j10 VERSION=0.8.0
 ```
 
-Or, maybe you would like to have a go with it first? Check our [quickstart guide](../quickstart.md). Happy hacking!
+Or, maybe you would like to have a go with it first? Check our [quickstart guide](../../quickstart.md). Happy hacking!

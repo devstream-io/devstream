@@ -73,6 +73,10 @@ plugins:
           Road Map: "Road Map"
           Code Review Guide: "Code Review Guide"
           Overview: "Overview"
+          Contribute Workflow: "Contribute Workflow"
+          DevStream Architecture: "DevStream Architecture"
+          Environment Setup and Development: "Environment Setup and Development"
+          Docs Contribution: "Docs Contribution"
         zh:
           DTM Commands Explained in Depth: "DTM 命令详解"
           Plugins: "插件"
@@ -84,6 +88,10 @@ plugins:
           Road Map: "路线图"
           Code Review Guide: "代码 review 指导"
           Overview: "概览"
+          Contribute Workflow: "贡献与协作流程"
+          DevStream Architecture: "DevStream 架构"
+          Environment Setup and Development: "环境搭建与开发"
+          Docs Contribution: "文档类贡献"
   - literate-nav
 nav:
   - Overview: .
@@ -100,6 +108,8 @@ nav:
   - Commands:
     - commands/autocomplete*.md
     - commands/*.md
+    - commands/develop*.md
+    - commands/verify*.md
   - Plugins:
     - plugins/plugins-list*.md
     - plugins/*.md
@@ -108,20 +118,23 @@ nav:
   - contributor_ladder*.md
   - Governance ⧉: https://github.com/devstream-io/devstream/blob/main/GOVERNANCE.md
   - Developer Guide:
-    - development/architecture*.md
-    - development/dev-env-setup*.md
-    - development/development-workflow*.md
-    - development/commit-messages*.md
-    - development/lint*.md
-    - development/project-layout*.md
-    - development/build*.md
-    - development/test*.md
-    - development/mkdocs*.md
-    - development/translation*.md
-    - development/creating-a-plugin*.md
-    - development/commands/develop*.md
-    - development/reviewing*.md
-    - development/good-first-issues*.md
-    - development/help-wanted*.md
-    - development/branch-and-release*.md
+    - Contribute Workflow:
+        - development/git-workflow/git-workflow*.md
+        - development/git-workflow/good-first-issue*.md
+        - development/git-workflow/help-wanted*.md
+        - development/git-workflow/commit-messages*.md
+        - development/git-workflow/branch-and-release*.md
+        - development/git-workflow/reviewing*.md
+    - DevStream Architecture:
+        - development/devstream/architecture*.md
+        - development/devstream/project-layout*.md
+    - Environment Setup and Development:
+        - development/dev/dev-env-setup*.md
+        - development/dev/lint*.md
+        - development/dev/build*.md
+        - development/dev/test*.md
+        - development/dev/creating-a-plugin*.md
+    - Docs Contribution:
+        - development/docs-contribution/mkdocs*.md
+        - development/docs-contribution/translation*.md
   - Road Map ⧉: https://github.com/devstream-io/devstream/blob/main/ROADMAP.md

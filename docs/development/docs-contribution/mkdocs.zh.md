@@ -1,4 +1,4 @@
-# 为DevStream创建中文文档
+# 为DevStream创建文档
 
 ## 背景
 

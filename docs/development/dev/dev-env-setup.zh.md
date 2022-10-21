@@ -6,15 +6,15 @@
 
 [前往Golang官网](https://go.dev/)并点击“下载”按钮：
 
-![](../images/golang-install.png)
+![](../../images/golang-install.png)
 
 根据你的操作系统和处理器来选择正确的软件包版本：
 
-![](../images/golang-download.png)
+![](../../images/golang-download.png)
 
 对于Apple macOS用户，点击菜单栏中的苹果标志，然后选择“关于本机”以查看您的芯片：
 
-![](../images/about-this-mac.png)
+![](../../images/about-this-mac.png)
 
 ---
 
@@ -26,7 +26,7 @@
 
 [前往Docker官网](https://www.docker.com/)点击下载按钮：
 
-![](../images/docker-install.png)
+![](../../images/docker-install.png)
 
 同样请注意操作系统和处理器选项。对于Apple M1 mac用户，选择“Apple Chip”选项。如果想确认你的处理器是Apple还是Intel，请参阅上一节中的“关于本机”部分。
 
@@ -42,7 +42,7 @@ _注意：其实有很多种可以安装本地K8s的工具，如`kind`等；在�
 
 首先，访问[minikube官网](https://minikube.sigs.k8s.io/docs/start/)，选择正确的操作系统和架构，并下载/安装：
 
-![](../images/minikube-install.png)
+![](../../images/minikube-install.png)
 
 或者，如果你在用[Homebrew](https://brew.sh/)的话（如果你不知道它是啥，请忽略）你可以通过运行`brew install minikube`来安装。
 
@@ -50,7 +50,7 @@ _注意：其实有很多种可以安装本地K8s的工具，如`kind`等；在�
 
 前往[Kubernetes的官方文档站点](https://kubernetes.io/docs/tasks/tools/)然后按照指南来安装kubectl。选择您的操作系统：
 
-![](../images/kubectl-install.png)
+![](../../images/kubectl-install.png)
 
 需要再次强调的是，对于macOS用户，如果你用Homebrew包管理器，那么你可以用brew装kubectl：
 
@@ -116,6 +116,6 @@ git clone https://github.com/devstream-io/devstream.git
 make build -j10 VERSION=0.8.0
 ```
 
-或者可能你想先试用一下DevStream？没问题，参考我们的[快速开始](../quickstart.zh.md)文档！
+或者可能你想先试用一下DevStream？没问题，参考我们的[快速开始](../../quickstart.zh.md)文档！
 
 Happy hacking!

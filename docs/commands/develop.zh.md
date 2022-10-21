@@ -9,7 +9,7 @@
 
 ## 2 完整插件开发指南
 
-插件开发的详细指南可以在[创建一个插件](../creating-a-plugin.zh.md)找到。
+插件开发的详细指南可以在[创建一个插件](../development/dev/creating-a-plugin.zh.md)找到。
 
 ## 3 命令行参数
 

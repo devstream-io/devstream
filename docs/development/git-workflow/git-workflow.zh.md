@@ -1,6 +1,6 @@
-# 开发工作流
+# Git协作工作流
 
-这篇文档是关于如何参与DevStream开发的流程。
+这篇文档是关于如何通过GitHub参与DevStream开发的流程。
 
 ## 第一步 - Fork 仓库
 1. 打开项目仓库： https://github.com/devstream-io/devstream ；
@@ -17,7 +17,7 @@ export PROJECT="devstream"
 export ORG="devstream-io"
 ```
 
-2. Clone仓库到你本地
+2. Clone 仓库到你本地
 ```sh
 mkdir -p ${WORKING_PATH}
 cd ${WORKING_PATH}
@@ -69,3 +69,7 @@ git push -f origin feat-xxx
 ```
 
 然后你就可以在GitHub上创建一个`pr`。
+
+## 附录
+
+也欢迎阅读我们的博客-[如何参与开源项目 - 细说 GitHub 上的 PR 全过程](https://blog.devstream.io/posts/open-a-pr-in-github/)，了解更多 GitHub 协作流程，如解决冲突等。

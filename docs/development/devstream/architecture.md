@@ -6,7 +6,7 @@ This document summarizes the main components of DevStream and how data flows bet
 
 The following diagram shows an approximation of how DevStream executes a user command:
 
-![DevStream Architecture Diagram](../images/architecture-overview.png)
+![DevStream Architecture Diagram](../../images/architecture-overview.png)
 
 There are three major parts:
 
@@ -64,4 +64,4 @@ A _plugin_ implements the aforementioned, predefined interfaces.
 
 It executes operations like `Create`, `Read`, `Update`, and `Delete`.
 
-To develop a new plugin, see [creating a plugin](./creating-a-plugin.md).
+To develop a new plugin, see [creating a plugin](../dev/creating-a-plugin.md).
