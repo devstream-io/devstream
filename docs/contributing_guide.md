@@ -81,6 +81,7 @@ For more documentation on GitHub collaboration, see the [GitHub Collaboration Pr
 - [Code linter](./development/dev/lint.md)
 - [Build the source code](./development/dev/build.md)
 - [Test the source code: unit test, e2e test](./development/dev/test.md)
+- [Create a plugin](./development/dev/creating-a-plugin.md)
 
 ## DevStream Architecture
 

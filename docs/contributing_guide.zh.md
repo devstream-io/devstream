@@ -78,6 +78,7 @@ DevStream 真诚地欢迎每一个人参与我们的会议，不需要被邀请�
 - [代码格式检查](./development/dev/lint.zh.md)
 - [源码构建](./development/dev/build.zh.md)
 - [代码测试：单元测试(unit test)、端到端测试(e2e test)](./development/dev/test.zh.md)
+- [开发新插件](./development/dev/creating-a-plugin.zh.md)
 
 ## 架构解读
 

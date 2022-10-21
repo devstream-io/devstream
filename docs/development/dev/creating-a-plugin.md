@@ -2,7 +2,7 @@
 
 ## 0 Thanks for Contributing!
 
-First, please read our [CONTRIBUTING](https://github.com/devstream-io/devstream/blob/main/CONTRIBUTING.md) doc.
+First, please read our [CONTRIBUTING](../../contributing_guide.md) doc.
 
 ## 1 Scaffolding Automagically
 

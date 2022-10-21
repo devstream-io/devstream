@@ -2,7 +2,7 @@
 
 ## 0 感谢你的贡献!
 
-首先，请阅读我们的 [CONTRIBUTING](https://github.com/devstream-io/devstream/blob/main/CONTRIBUTING.md) 文档。
+首先，请阅读我们的[贡献指引](../../contributing_guide.zh.md)文档。
 
 ## 1 自动建立新插件的代码框架
 

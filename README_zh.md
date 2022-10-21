@@ -79,7 +79,7 @@ A：受 [`git`](https://github.com/git/git#readme) 的启发，这个名字可�
 
 ## 快速入门
 
-现在就跟随我们的[快速入门](docs/quickstart.zh.md)文档开始使用 DevStream
+现在就跟随我们的[快速入门](https://docs.devstream.io/en/latest/quickstart.zh/)文档开始使用 DevStream
 
 ## 最佳实践
 
@@ -99,24 +99,24 @@ DevStream已经支持许多工具，而且还在不断增加。关于支持的�
 
 或者，运行 `dtm list plugins`，它将显示所有可用的插件。
 
-## 开发环境
+## 开发指南
 
 ### 前提条件
 
 - Git
 - Go (1.18版本以上)
 
-### 构建
+### 开发指南
 
-参见文档官网development章节下的[build](https://docs.devstream.io/en/latest/development/build/)文档。
-
-### 测试
-
-参见文档官网development章节下的[test](https://docs.devstream.io/en/latest/development/test/)文档。
+- [开发环境搭建](https://docs.devstream.io/en/latest/development/dev/dev-env-setup.zh)
+- [代码格式检查](https://docs.devstream.io/en/latest/development/dev/lint.zh)
+- [源码构建](https://docs.devstream.io/en/latest/development/dev/build.zh)
+- [代码测试：单元测试(unit test)、端到端测试(e2e test)](https://docs.devstream.io/en/latest/development/dev/test.zh)
+- [开发新插件](https://docs.devstream.io/en/latest/development/dev/creating-a-plugin.zh)
 
 ## 贡献
 
-首先，感谢你愿意为DevStream做贡献 
+首先，感谢你愿意为DevStream做贡献！
 
 关于如何贡献、贡献者成长计划、风格指南等更多细节，请查看我们的 [CONTRIBUTING](CONTRIBUTING.md) 文档。
 

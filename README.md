@@ -78,7 +78,7 @@ Want to remove or reinstall a specific piece in the workflow? DevStream has got 
 
 ## Quick Start
 
-If you want to get a quick start, follow our [quick start](./docs/quickstart.md) doc now.
+If you want to get a quick start, follow our [quick start](https://docs.devstream.io/en/latest/quickstart/) doc now.
 
 ## Best Practices Toolchain Integration
 
@@ -105,13 +105,13 @@ Alternatively, run `dtm list plugins` and it will show you all the available plu
 - Git
 - Go (1.18+)
 
-### Build
+### Development Guide
 
-See the [build](https://docs.devstream.io/en/latest/development/build/) doc under the "development" section of the documentation website.
-
-### Test
-
-See the [test](https://docs.devstream.io/en/latest/development/test/) doc under the "development" section of the documentation website.
+- [Development Environment Setup](https://docs.devstream.io/en/latest/development/dev/dev-env-setup)
+- [Code linter](https://docs.devstream.io/en/latest/development/dev/lint.md)
+- [Build the source code](https://docs.devstream.io/en/latest/development/dev/build.md)
+- [Test the source code: unit test, e2e test](https://docs.devstream.io/en/latest/development/dev/test)
+- [Create a plugin](https://docs.devstream.io/en/latest/development/dev/creating-a-plugin)
 
 ## Contribute
 
