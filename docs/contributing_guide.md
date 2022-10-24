@@ -85,8 +85,8 @@ For more documentation on GitHub collaboration, see the [GitHub Collaboration Pr
 
 ## DevStream Architecture
 
-- [overall architecture](development/devstream/architecture.md)
-- [Project Organization](development/devstream/project-layout.md)
+- [Architecture Overall](development/devstream/architecture.md)
+- [Project Layout](development/devstream/project-layout.md)
 
 ## Documentation Contribution
 
