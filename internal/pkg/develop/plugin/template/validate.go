@@ -7,7 +7,7 @@ var validateGoContentTpl = `package [[ .Name | format ]]
 import (
 	"fmt"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/validator"
 )
