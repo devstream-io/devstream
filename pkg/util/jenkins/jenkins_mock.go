@@ -20,6 +20,7 @@ type MockClient struct {
 	CreateSSHKeyCredentialError    error
 	CreateGiltabCredentialError    error
 	CreateSecretCredentialError    error
+	BasicInfo                      *JenkinsConfigOption
 }
 
 func (m *MockClient) ExecuteScript(string) (string, error) {

@@ -77,7 +77,6 @@ func (jenkins *jenkins) ExecuteScript(script string) (string, error) {
 			errorMsg: err.Error(),
 		}
 	}
-	log.Debugf("------> %s\n%s", output, script)
 	defer r.Body.Close()
 
 	if r.StatusCode != http.StatusOK {
@@ -98,6 +97,7 @@ func (jenkins *jenkins) ExecuteScript(script string) (string, error) {
 }
 
 func (jenkins *jenkins) ConfigCascForRepo(repoCascConfig *RepoCascConfig) error {
+	log.Info("Start ...")
 	cascConfig, err := template.Render(
 		"jenkins-repo-casc", repoCascScript, repoCascConfig,
 	)

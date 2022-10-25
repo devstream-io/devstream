@@ -2,7 +2,6 @@ package jenkins
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"net/http/cookiejar"
 	"strings"
@@ -44,23 +43,6 @@ type JenkinsAPI interface {
 	ConfigCascForRepo(repoCascConfig *RepoCascConfig) error
 	ApplyDingTalkBot(config dingtalk.BotConfig) error
 	GetBasicInfo() *JenkinsConfigOption
-}
-
-type setBearerToken struct {
-	rt    http.RoundTripper
-	token string
-}
-
-func (t *setBearerToken) transport() http.RoundTripper {
-	if t.rt != nil {
-		return t.rt
-	}
-	return http.DefaultTransport
-}
-
-func (t *setBearerToken) RoundTrip(r *http.Request) (*http.Response, error) {
-	r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", t.token))
-	return t.transport().RoundTrip(r)
 }
 
 func NewClient(configOption *JenkinsConfigOption) (JenkinsAPI, error) {
