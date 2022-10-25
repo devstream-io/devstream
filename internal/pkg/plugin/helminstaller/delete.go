@@ -1,4 +1,4 @@
-package helmgeneric
+package helminstaller
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
@@ -14,11 +14,12 @@ func Delete(options configmanager.RawOptions) (bool, error) {
 		},
 		ExecuteOperations: helm.DefaultDeleteOperations,
 	}
+
+	// Execute all Operations in Operator
 	_, err := operator.Execute(options)
 	if err != nil {
 		return false, err
 	}
 
-	// 2. return ture if all process success
 	return true, nil
 }

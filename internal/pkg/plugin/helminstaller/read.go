@@ -1,4 +1,4 @@
-package helmgeneric
+package helminstaller
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
@@ -14,14 +14,14 @@ func Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error)
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
 			helm.Validate,
 		},
-		GetStatusOperation: getEmptyStatus,
+		GetStatusOperation: helm.GetAllResourcesStatus,
 	}
 
+	// Execute all Operations in Operator
 	status, err := operator.Execute(options)
 	if err != nil {
 		return nil, err
 	}
-
 	log.Debugf("Return map: %v", status)
 	return status, nil
 }
