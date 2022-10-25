@@ -12,7 +12,9 @@ func Update(options configmanager.RawOptions) (statemanager.ResourceStatus, erro
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
-			helm.Validate,
+			SetDefaultConfig,
+			RenderValuesYaml,
+			validate,
 		},
 		ExecuteOperations:   helm.DefaultUpdateOperations,
 		TerminateOperations: helm.DefaultTerminateOperations,

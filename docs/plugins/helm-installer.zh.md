@@ -1,7 +1,6 @@
 # helm-installer 插件
 
-TODO(daniel-hutao): I'll add the document after code refactoring finished.
-
+TODO(daniel-hutao): I'll update this the document after code refactoring finished.
 ## 用例
 
 ``` yaml

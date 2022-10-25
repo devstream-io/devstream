@@ -12,6 +12,8 @@ func Create(options configmanager.RawOptions) (statemanager.ResourceStatus, erro
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
+			SetDefaultConfig,
+			RenderValuesYaml,
 			validate,
 		},
 		ExecuteOperations:   helm.DefaultCreateOperations,

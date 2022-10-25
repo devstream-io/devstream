@@ -9,9 +9,6 @@ var DefaultConfig string
 // plugin default config
 var (
 
-	//go:embed plugins/argocd.yaml
-	ArgocdDefaultConfig string
-
 	//go:embed plugins/argocdapp.yaml
 	ArgocdappDefaultConfig string
 
@@ -95,7 +92,6 @@ var (
 )
 
 var pluginDefaultConfigs = map[string]string{
-	"argocd":               ArgocdDefaultConfig,
 	"argocdapp":            ArgocdappDefaultConfig,
 	"artifactory":          ArtifactoryDefaultConfig,
 	"ci-generic":           CiGenericDefaultConfig,

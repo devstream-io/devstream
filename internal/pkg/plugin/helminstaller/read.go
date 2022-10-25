@@ -12,7 +12,9 @@ func Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error)
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
-			helm.Validate,
+			SetDefaultConfig,
+			RenderValuesYaml,
+			validate,
 		},
 		GetStatusOperation: helm.GetAllResourcesStatus,
 	}

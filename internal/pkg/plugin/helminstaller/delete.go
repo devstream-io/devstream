@@ -10,7 +10,9 @@ func Delete(options configmanager.RawOptions) (bool, error) {
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
-			helm.Validate,
+			SetDefaultConfig,
+			RenderValuesYaml,
+			validate,
 		},
 		ExecuteOperations: helm.DefaultDeleteOperations,
 	}
