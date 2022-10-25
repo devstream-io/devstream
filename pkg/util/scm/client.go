@@ -15,14 +15,15 @@ const (
 	TransitBranch    = "init-with-devstream"
 )
 
-func NewClient(repoInfo *git.RepoInfo) (ClientOperation, error) {
-	switch repoInfo.Type {
+func NewClientWithAuth(repoInfo *git.RepoInfo) (ClientOperation, error) {
+	repoInfo.NeedAuth = true
+	switch repoInfo.RepoType {
 	case "github":
 		return github.NewClient(repoInfo)
 	case "gitlab":
 		return gitlab.NewClient(repoInfo)
 	}
-	return nil, fmt.Errorf("scaffolding not support repo destination: %s", repoInfo.Type)
+	return nil, fmt.Errorf("scaffolding not support repo destination: %s", repoInfo.RepoType)
 }
 
 type ClientOperation interface {

@@ -14,7 +14,7 @@ func InstallRepo(options configmanager.RawOptions) error {
 	}
 
 	// 1. Download and render repo by SourceRepo
-	sourceClient, err := scm.NewClient(opts.SourceRepo.BuildRepoInfo())
+	sourceClient, err := scm.NewClientWithAuth(opts.SourceRepo)
 	if err != nil {
 		return err
 	}
@@ -24,7 +24,7 @@ func InstallRepo(options configmanager.RawOptions) error {
 	}
 
 	// 2. push repo to DestinationRepo
-	dstClient, err := scm.NewClient(opts.DestinationRepo.BuildRepoInfo())
+	dstClient, err := scm.NewClientWithAuth(opts.DestinationRepo)
 	if err != nil {
 		return err
 	}
@@ -43,7 +43,7 @@ func DeleteRepo(options configmanager.RawOptions) error {
 		return err
 	}
 
-	client, err := scm.NewClient(opts.DestinationRepo.BuildRepoInfo())
+	client, err := scm.NewClientWithAuth(opts.DestinationRepo)
 	if err != nil {
 		return err
 	}

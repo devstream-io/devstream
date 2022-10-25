@@ -1,20 +1,17 @@
 package plugins
 
 import (
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/base"
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 	"github.com/devstream-io/devstream/pkg/util/jenkins/dingtalk"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 type DingtalkJenkinsConfig struct {
-	Name          string `mapstructure:"name"`
-	Webhook       string `mapstructure:"webhook"`
-	SecurityValue string `mapstructure:"securityValue" validate:"required"`
-	SecurityType  string `mapstructure:"securityType" validate:"required,oneof=KEY SECRET"`
-	AtUsers       string `mapstructure:"atUsers"`
+	base.DingtalkStepConfig `mapstructure:",squash"`
 }
 
-func (g *DingtalkJenkinsConfig) GetDependentPlugins() []*jenkins.JenkinsPlugin {
+func (g *DingtalkJenkinsConfig) getDependentPlugins() []*jenkins.JenkinsPlugin {
 	return []*jenkins.JenkinsPlugin{
 		{
 			Name:    "dingding-notifications",
@@ -23,7 +20,7 @@ func (g *DingtalkJenkinsConfig) GetDependentPlugins() []*jenkins.JenkinsPlugin {
 	}
 }
 
-func (g *DingtalkJenkinsConfig) PreConfig(jenkinsClient jenkins.JenkinsAPI) (*jenkins.RepoCascConfig, error) {
+func (g *DingtalkJenkinsConfig) config(jenkinsClient jenkins.JenkinsAPI) (*jenkins.RepoCascConfig, error) {
 	config := dingtalk.BotConfig{
 		RobotConfigs: []dingtalk.BotInfoConfig{
 			{
@@ -40,7 +37,7 @@ func (g *DingtalkJenkinsConfig) PreConfig(jenkinsClient jenkins.JenkinsAPI) (*je
 	return nil, jenkinsClient.ApplyDingTalkBot(config)
 }
 
-func (g *DingtalkJenkinsConfig) UpdateJenkinsFileRenderVars(vars *jenkins.JenkinsFileRenderInfo) {
+func (g *DingtalkJenkinsConfig) setRenderVars(vars *jenkins.JenkinsFileRenderInfo) {
 	vars.DingtalkRobotID = g.Name
 	vars.DingtalkAtUser = g.AtUsers
 }

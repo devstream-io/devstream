@@ -12,7 +12,7 @@ func setCIContent(options configmanager.RawOptions) (configmanager.RawOptions, e
 	if err != nil {
 		return nil, err
 	}
-	gitlabClient, err := gitlab.NewClient(opts.ProjectRepo.BuildRepoInfo())
+	gitlabClient, err := gitlab.NewClient(opts.ProjectRepo)
 	if err != nil {
 		return nil, err
 	}

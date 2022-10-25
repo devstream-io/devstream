@@ -6,7 +6,7 @@ import (
 
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/server"
-	"github.com/devstream-io/devstream/pkg/util/scm"
+	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
 var _ = Describe("Options struct", func() {
@@ -20,7 +20,7 @@ var _ = Describe("Options struct", func() {
 			Type:           "github",
 			ConfigLocation: "http://www.test.com",
 		}
-		defaultRepo := &scm.Repo{
+		defaultRepo := &git.RepoInfo{
 			Owner:    "test",
 			Repo:     "test_repo",
 			Branch:   "test_branch",
@@ -64,7 +64,7 @@ var _ = Describe("Options struct", func() {
 				opts.CIConfig = &CIConfig{
 					ConfigLocation: "http://exist.com",
 				}
-				opts.ProjectRepo = &scm.Repo{
+				opts.ProjectRepo = &git.RepoInfo{
 					Branch: "new_branch",
 				}
 			})

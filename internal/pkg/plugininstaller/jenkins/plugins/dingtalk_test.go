@@ -1,7 +1,7 @@
-package plugins_test
+package plugins
 
 import (
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/jenkins/plugins"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/base"
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 
 	. "github.com/onsi/ginkgo/v2"
@@ -10,40 +10,43 @@ import (
 
 var _ = Describe("DingtalkJenkinsConfig", func() {
 	var (
-		c             *plugins.DingtalkJenkinsConfig
-		mockClient    *jenkins.MockClient
-		name, atUsers string
+		c          *DingtalkJenkinsConfig
+		mockClient *jenkins.MockClient
+		name       string
 	)
 	BeforeEach(func() {
 		name = "test"
-		c = &plugins.DingtalkJenkinsConfig{
-			Name: name,
+		c = &DingtalkJenkinsConfig{
+			base.DingtalkStepConfig{
+				Name: name,
+			},
 		}
 	})
 	Context("GetDependentPlugins method", func() {
 		It("should return dingding plugin", func() {
-			plugins := c.GetDependentPlugins()
+			plugins := c.getDependentPlugins()
 			Expect(len(plugins)).Should(Equal(1))
 			plugin := plugins[0]
 			Expect(plugin.Name).Should(Equal("dingding-notifications"))
 		})
 	})
 
-	Context("PreConfig method", func() {
+	Context("config method", func() {
 		When("all config work noraml", func() {
 			BeforeEach(func() {
 				mockClient = &jenkins.MockClient{}
 			})
 			It("should return nil", func() {
-				_, err := c.PreConfig(mockClient)
+				_, err := c.config(mockClient)
 				Expect(err).Error().ShouldNot(HaveOccurred())
 			})
 		})
 	})
 
-	Context("UpdateJenkinsFileRenderVars method", func() {
+	Context("setRenderVars method", func() {
 		var (
 			renderInfo *jenkins.JenkinsFileRenderInfo
+			atUsers    string
 		)
 		BeforeEach(func() {
 			atUsers = "testUser"
@@ -51,7 +54,7 @@ var _ = Describe("DingtalkJenkinsConfig", func() {
 			c.AtUsers = atUsers
 		})
 		It("should update renderInfo with DingtalkRobotID and DingtalkAtUser", func() {
-			c.UpdateJenkinsFileRenderVars(renderInfo)
+			c.setRenderVars(renderInfo)
 			Expect(renderInfo.DingtalkAtUser).Should(Equal(atUsers))
 			Expect(renderInfo.DingtalkRobotID).Should(Equal(name))
 		})

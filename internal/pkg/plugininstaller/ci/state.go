@@ -14,7 +14,7 @@ func GetCIFileStatus(options configmanager.RawOptions) (statemanager.ResourceSta
 		return nil, err
 	}
 	// init scm client
-	client, err := scm.NewClient(opts.ProjectRepo.BuildRepoInfo())
+	client, err := scm.NewClientWithAuth(opts.ProjectRepo)
 	if err != nil {
 		return nil, err
 	}

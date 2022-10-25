@@ -26,7 +26,7 @@ func PushCIFiles(options configmanager.RawOptions) error {
 		return err
 	}
 	//2. init git client
-	gitClient, err := scm.NewClient(opts.ProjectRepo.BuildRepoInfo())
+	gitClient, err := scm.NewClientWithAuth(opts.ProjectRepo)
 	if err != nil {
 		return err
 	}
@@ -53,7 +53,7 @@ func DeleteCIFiles(options configmanager.RawOptions) error {
 		return errors.New("can't get valid Jenkinsfile, please check your config")
 	}
 	//2. init git client
-	gitClient, err := scm.NewClient(opts.ProjectRepo.BuildRepoInfo())
+	gitClient, err := scm.NewClientWithAuth(opts.ProjectRepo)
 	if err != nil {
 		return err
 	}

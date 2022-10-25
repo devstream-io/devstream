@@ -45,6 +45,8 @@ type JenkinsFileRenderInfo struct {
 	DingtalkAtUser  string `mapstructure:"DingtalkAtUser"`
 	// sonarqube variables
 	SonarqubeEnable bool `mapstructure:"SonarqubeEnable"`
+	// custom variables
+	Custom map[string]interface{} `mapstructure:"Custom"`
 }
 
 func (jenkins *jenkins) GetFolderJob(jobName string, jobFolder string) (*gojenkins.Job, error) {

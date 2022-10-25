@@ -61,23 +61,13 @@ var _ = Describe("SetJobDefaultConfig func", func() {
 			opts, err := newJobOptions(newOptions)
 			Expect(err).Error().ShouldNot(HaveOccurred())
 			Expect(opts.CIConfig).ShouldNot(BeNil())
-			Expect(opts.Pipeline.JobName).Should(Equal("spring-demo"))
-			Expect(opts.BasicAuth).ShouldNot(BeNil())
-			Expect(opts.BasicAuth.Username).Should(Equal(jenkinsUser))
-			Expect(opts.BasicAuth.Password).Should(Equal(jenkinsPassword))
+			Expect(opts.Pipeline.Job).Should(Equal("spring-demo"))
 			Expect(opts.ProjectRepo).ShouldNot(BeNil())
 			Expect(opts.ProjectRepo.Repo).Should(Equal("spring-demo"))
 		})
 	})
 	AfterEach(func() {
 		os.Unsetenv("JENKINS_PASSWORD")
-	})
-})
-
-var _ = Describe("generateRandomSecretToken func", func() {
-	It("should return random str", func() {
-		token := generateRandomSecretToken()
-		Expect(token).ShouldNot(BeEmpty())
 	})
 })
 

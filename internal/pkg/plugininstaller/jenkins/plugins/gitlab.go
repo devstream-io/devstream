@@ -8,18 +8,18 @@ import (
 )
 
 const (
-	SSHKeyCredentialName = "gitlabSSHKeyCredential"
+	sshKeyCredentialName = "gitlabSSHKeyCredential"
 	gitlabCredentialName = "gitlabCredential"
 	GitlabConnectionName = "gitlabConnection"
 )
 
 type GitlabJenkinsConfig struct {
-	SSHPrivateKey string
-	RepoOwner     string
-	BaseURL       string
+	SSHPrivateKey string `mapstructure:"sshPrivateKey"`
+	RepoOwner     string `mapstructure:"repoOwner"`
+	BaseURL       string `mapstructure:"baseURL"`
 }
 
-func (g *GitlabJenkinsConfig) GetDependentPlugins() []*jenkins.JenkinsPlugin {
+func (g *GitlabJenkinsConfig) getDependentPlugins() []*jenkins.JenkinsPlugin {
 	return []*jenkins.JenkinsPlugin{
 		{
 			Name:    "gitlab-plugin",
@@ -28,13 +28,13 @@ func (g *GitlabJenkinsConfig) GetDependentPlugins() []*jenkins.JenkinsPlugin {
 	}
 }
 
-func (g *GitlabJenkinsConfig) PreConfig(jenkinsClient jenkins.JenkinsAPI) (*jenkins.RepoCascConfig, error) {
+func (g *GitlabJenkinsConfig) config(jenkinsClient jenkins.JenkinsAPI) (*jenkins.RepoCascConfig, error) {
 	// 1. create ssh credentials
 	if g.SSHPrivateKey == "" {
 		log.Warnf("jenkins gitlab ssh key not config, private repo can't be clone")
 	} else {
 		err := jenkinsClient.CreateSSHKeyCredential(
-			SSHKeyCredentialName, g.RepoOwner, g.SSHPrivateKey,
+			sshKeyCredentialName, g.RepoOwner, g.SSHPrivateKey,
 		)
 		if err != nil {
 			return nil, err
@@ -55,5 +55,13 @@ func (g *GitlabJenkinsConfig) PreConfig(jenkinsClient jenkins.JenkinsAPI) (*jenk
 	}, nil
 }
 
-func (g *GitlabJenkinsConfig) UpdateJenkinsFileRenderVars(vars *jenkins.JenkinsFileRenderInfo) {
+func NewGitlabPlugin(config *PluginGlobalConfig) *GitlabJenkinsConfig {
+	return &GitlabJenkinsConfig{
+		SSHPrivateKey: config.RepoInfo.SSHPrivateKey,
+		RepoOwner:     config.RepoInfo.GetRepoOwner(),
+		BaseURL:       config.RepoInfo.BaseURL,
+	}
+}
+
+func (g *GitlabJenkinsConfig) setRenderVars(vars *jenkins.JenkinsFileRenderInfo) {
 }

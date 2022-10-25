@@ -8,6 +8,7 @@ import (
 
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/pkg/util/scm"
+	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
 var _ = Describe("Options struct", func() {
@@ -16,12 +17,12 @@ var _ = Describe("Options struct", func() {
 	)
 	BeforeEach(func() {
 		opts = &Options{
-			SourceRepo: &scm.Repo{
+			SourceRepo: &git.RepoInfo{
 				Repo:     "source_repo",
 				Owner:    "source_owner",
 				RepoType: "github",
 			},
-			DestinationRepo: &scm.Repo{
+			DestinationRepo: &git.RepoInfo{
 				Repo:     "dst_repo",
 				Owner:    "dst_owner",
 				RepoType: "github",

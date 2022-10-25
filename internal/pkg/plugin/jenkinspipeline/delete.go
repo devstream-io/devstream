@@ -17,7 +17,7 @@ func Delete(options configmanager.RawOptions) (bool, error) {
 		ExecuteOperations: plugininstaller.ExecuteOperations{
 			// TODO(daniel-hutao): delete secret: docker-config
 			ci.DeleteCIFiles,
-			jenkins.DeleteJob,
+			jenkins.DeletePipeline,
 		},
 	}
 	_, err := operator.Execute(options)

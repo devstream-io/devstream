@@ -13,7 +13,7 @@ func GetDynamicStatus(options configmanager.RawOptions) (statemanager.ResourceSt
 		return nil, err
 	}
 
-	scmClient, err := github.NewClient(opts.DestinationRepo.BuildRepoInfo())
+	scmClient, err := github.NewClient(opts.DestinationRepo)
 	if err != nil {
 		log.Debugf("reposcaffolding status init repo failed: %+v", err)
 		return nil, err
@@ -30,7 +30,7 @@ func GetDynamicStatus(options configmanager.RawOptions) (statemanager.ResourceSt
 		"owner":    repoInfo.Owner,
 		"org":      repoInfo.Org,
 		"repoURL":  repoInfo.CloneURL,
-		"repoType": repoInfo.Type,
+		"repoType": repoInfo.RepoType,
 		"source":   opts.SourceRepo.BuildScmURL(),
 	}
 	return resStatus, nil

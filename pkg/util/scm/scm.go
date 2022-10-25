@@ -2,8 +2,14 @@ package scm
 
 import (
 	"fmt"
+	"os"
 
+	"github.com/devstream-io/devstream/pkg/util/scm/git"
 	"github.com/devstream-io/devstream/pkg/util/scm/gitlab"
+)
+
+const (
+	privateSSHKeyEnv = "REPO_SSH_PRIVATEKEY"
 )
 
 type SCMInfo struct {
@@ -13,12 +19,14 @@ type SCMInfo struct {
 	Type     string `mapstructure:"type"`
 
 	// used in package
-	SSHprivateKey string `mapstructure:"sshPrivateKey"`
+	SSHPrivateKey string `mapstructure:"sshPrivateKey"`
 }
 
-func (s *SCMInfo) NewRepo() (*Repo, error) {
-	repo := &Repo{
-		Branch: s.Branch,
+func (s *SCMInfo) BuildRepoInfo() (*git.RepoInfo, error) {
+	repo := &git.RepoInfo{
+		Branch:        s.Branch,
+		SSHPrivateKey: s.SSHPrivateKey,
+		CloneURL:      s.CloneURL,
 	}
 
 	if isGithubRepo(s.Type, s.CloneURL) {
@@ -41,9 +49,9 @@ func (s *SCMInfo) NewRepo() (*Repo, error) {
 		return nil, fmt.Errorf("git extract repo info failed: %w", err)
 	}
 	// if scm.branch is not configured, just use repo's default branch
-	repo.Branch = repo.getBranch()
-	if s.Branch == "" {
-		s.Branch = repo.Branch
+	repo.Branch = repo.GetBranchWithDefault()
+	if repo.SSHPrivateKey == "" {
+		repo.SSHPrivateKey = os.Getenv(privateSSHKeyEnv)
 	}
 	return repo, nil
 }

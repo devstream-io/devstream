@@ -12,7 +12,7 @@ func GetStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, e
 		return nil, err
 	}
 
-	client, err := jenkins.NewClient(opts.Jenkins.URL, opts.BasicAuth)
+	client, err := opts.Jenkins.newClient()
 	if err != nil {
 		return nil, err
 	}
