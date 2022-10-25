@@ -3,6 +3,7 @@ package jenkins
 import (
 	"encoding/xml"
 	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/bndr/gojenkins"
@@ -16,12 +17,29 @@ type BasicAuth struct {
 	Token    string
 }
 
-func (a *BasicAuth) IsNameMatch(userName string) bool {
+func (a *BasicAuth) CheckNameMatch(userName string) bool {
 	return userName == "" || userName == a.Username
 }
 
 func (a *BasicAuth) usePassWordAuth() bool {
 	return len(a.Username) > 0 && len(a.Password) > 0
+}
+
+type setBearerToken struct {
+	rt    http.RoundTripper
+	token string
+}
+
+func (t *setBearerToken) transport() http.RoundTripper {
+	if t.rt != nil {
+		return t.rt
+	}
+	return http.DefaultTransport
+}
+
+func (t *setBearerToken) RoundTrip(r *http.Request) (*http.Response, error) {
+	r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", t.token))
+	return t.transport().RoundTrip(r)
 }
 
 type GitlabCredentials struct {

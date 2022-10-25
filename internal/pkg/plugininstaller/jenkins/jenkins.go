@@ -10,7 +10,6 @@ import (
 )
 
 const (
-	defaultNameSpace               = "jenkins"
 	defaultAdminSecretName         = "jenkins"
 	defautlAdminSecretUserName     = "jenkins-admin-user"
 	defautlAdminSecretUserPassword = "jenkins-admin-password"
@@ -50,7 +49,7 @@ func (j *jenkinsOption) getBasicAuth() (*jenkins.BasicAuth, error) {
 	}
 	// 2. if not set, get user and password from secret
 	secretAuth := getAuthFromSecret(j.Namespace)
-	if secretAuth != nil && secretAuth.IsNameMatch(j.User) {
+	if secretAuth != nil && secretAuth.CheckNameMatch(j.User) {
 		log.Debugf("jenkins get auth token from secret")
 		return secretAuth, nil
 	}
