@@ -109,7 +109,7 @@ var _ = Describe("Repo", func() {
 			r, err := rightClient.DescribeRepo()
 			Expect(err).To(Succeed())
 			wantR := &git.RepoInfo{
-				Type: "github",
+				RepoType: "github",
 			}
 			Expect(r).To(Equal(wantR))
 		})

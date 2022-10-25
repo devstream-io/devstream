@@ -1,6 +1,7 @@
 package plugins
 
 import (
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/base"
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
@@ -10,12 +11,10 @@ const (
 )
 
 type SonarQubeJenkinsConfig struct {
-	Name  string `mapstructure:"name"`
-	Token string `mapstructure:"token"`
-	URL   string `mapstructure:"url" validate:"url"`
+	base.SonarQubeStepConfig `mapstructure:",squash"`
 }
 
-func (g *SonarQubeJenkinsConfig) GetDependentPlugins() []*jenkins.JenkinsPlugin {
+func (g *SonarQubeJenkinsConfig) getDependentPlugins() []*jenkins.JenkinsPlugin {
 	return []*jenkins.JenkinsPlugin{
 		{
 			Name:    "sonar",
@@ -24,7 +23,7 @@ func (g *SonarQubeJenkinsConfig) GetDependentPlugins() []*jenkins.JenkinsPlugin 
 	}
 }
 
-func (g *SonarQubeJenkinsConfig) PreConfig(jenkinsClient jenkins.JenkinsAPI) (*jenkins.RepoCascConfig, error) {
+func (g *SonarQubeJenkinsConfig) config(jenkinsClient jenkins.JenkinsAPI) (*jenkins.RepoCascConfig, error) {
 	log.Info("jenkins plugin sonarqube start config...")
 	// 1. install token credential
 	err := jenkinsClient.CreateSecretCredential(
@@ -41,9 +40,7 @@ func (g *SonarQubeJenkinsConfig) PreConfig(jenkinsClient jenkins.JenkinsAPI) (*j
 		SonarqubeName:          g.Name,
 		SonarTokenCredentialID: sonarQubeTokenCredentialName,
 	}, nil
-
 }
-
-func (g *SonarQubeJenkinsConfig) UpdateJenkinsFileRenderVars(vars *jenkins.JenkinsFileRenderInfo) {
+func (g *SonarQubeJenkinsConfig) setRenderVars(vars *jenkins.JenkinsFileRenderInfo) {
 	vars.SonarqubeEnable = true
 }

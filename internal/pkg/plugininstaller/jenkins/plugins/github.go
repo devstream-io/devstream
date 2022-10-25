@@ -9,15 +9,14 @@ import (
 )
 
 const (
-	GithubCredentialName = "jenkinsGithubCredential"
+	githubCredentialName = "jenkinsGithubCredential"
 )
 
 type GithubJenkinsConfig struct {
-	JenkinsURL string
-	RepoOwner  string
+	RepoOwner string `mapstructure:"repoOwner"`
 }
 
-func (g *GithubJenkinsConfig) GetDependentPlugins() []*jenkins.JenkinsPlugin {
+func (g *GithubJenkinsConfig) getDependentPlugins() []*jenkins.JenkinsPlugin {
 	return []*jenkins.JenkinsPlugin{
 		{
 			Name:    "github-branch-source",
@@ -26,10 +25,10 @@ func (g *GithubJenkinsConfig) GetDependentPlugins() []*jenkins.JenkinsPlugin {
 	}
 }
 
-func (g *GithubJenkinsConfig) PreConfig(jenkinsClient jenkins.JenkinsAPI) (*jenkins.RepoCascConfig, error) {
+func (g *GithubJenkinsConfig) config(jenkinsClient jenkins.JenkinsAPI) (*jenkins.RepoCascConfig, error) {
 	// 1. create github credentials by github token
 	err := jenkinsClient.CreatePasswordCredential(
-		GithubCredentialName,
+		githubCredentialName,
 		g.RepoOwner,
 		os.Getenv(github.TokenEnvKey),
 	)
@@ -40,10 +39,16 @@ func (g *GithubJenkinsConfig) PreConfig(jenkinsClient jenkins.JenkinsAPI) (*jenk
 	// 2. config github plugin casc
 	return &jenkins.RepoCascConfig{
 		RepoType:     "github",
-		CredentialID: GithubCredentialName,
-		JenkinsURL:   g.JenkinsURL,
+		CredentialID: githubCredentialName,
+		JenkinsURL:   jenkinsClient.GetBasicInfo().URL,
 	}, nil
 }
 
-func (g *GithubJenkinsConfig) UpdateJenkinsFileRenderVars(vars *jenkins.JenkinsFileRenderInfo) {
+func NewGithubPlugin(config *PluginGlobalConfig) *GithubJenkinsConfig {
+	return &GithubJenkinsConfig{
+		RepoOwner: config.RepoInfo.GetRepoOwner(),
+	}
+}
+
+func (g *GithubJenkinsConfig) setRenderVars(vars *jenkins.JenkinsFileRenderInfo) {
 }

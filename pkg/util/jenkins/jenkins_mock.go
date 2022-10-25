@@ -43,7 +43,7 @@ func (m *MockClient) DeleteJob(context.Context, string) (bool, error) {
 	}
 	return true, nil
 }
-func (m *MockClient) InstallPluginsIfNotExists([]*JenkinsPlugin, bool) error {
+func (m *MockClient) InstallPluginsIfNotExists([]*JenkinsPlugin) error {
 	if m.InstallPluginsIfNotExistsError != nil {
 		return m.InstallPluginsIfNotExistsError
 	}
@@ -84,4 +84,10 @@ func (m *MockClient) CreatePasswordCredential(id, userName, privateKey string) e
 		return m.CreatePasswordCredentialError
 	}
 	return nil
+}
+
+func (m *MockClient) GetBasicInfo() *JenkinsConfigOption {
+	return &JenkinsConfigOption{
+		URL: "http://mock.exmaple.com",
+	}
 }

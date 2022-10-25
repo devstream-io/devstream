@@ -17,9 +17,7 @@ func Create(options configmanager.RawOptions) (statemanager.ResourceStatus, erro
 			jenkins.ValidateJobConfig,
 		},
 		ExecuteOperations: plugininstaller.ExecuteOperations{
-			jenkins.PreInstall,
-			jenkins.CreateOrUpdateJob,
-			jenkins.CreateRepoWebhook,
+			jenkins.InstallPipeline,
 			ci.PushCIFiles,
 		},
 		GetStatusOperation: jenkins.GetStatus,

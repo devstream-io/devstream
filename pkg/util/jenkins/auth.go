@@ -10,6 +10,20 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
+type BasicAuth struct {
+	Username string
+	Password string
+	Token    string
+}
+
+func (a *BasicAuth) IsNameMatch(userName string) bool {
+	return userName == "" || userName == a.Username
+}
+
+func (a *BasicAuth) usePassWordAuth() bool {
+	return len(a.Username) > 0 && len(a.Password) > 0
+}
+
 type GitlabCredentials struct {
 	XMLName     xml.Name `xml:"com.dabsquared.gitlabjenkins.connection.GitLabApiTokenImpl"`
 	ID          string   `xml:"id"`

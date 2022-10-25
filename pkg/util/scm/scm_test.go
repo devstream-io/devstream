@@ -20,7 +20,7 @@ var _ = Describe("NewRepoFromURL func", func() {
 			scmInfo.Branch = "test"
 		})
 		It("should return github repo info", func() {
-			repo, err := scmInfo.NewRepo()
+			repo, err := scmInfo.BuildRepoInfo()
 			Expect(err).Error().ShouldNot(HaveOccurred())
 			Expect(repo).ShouldNot(BeNil())
 			Expect(repo.Repo).Should(Equal("dtm-test"))
@@ -35,7 +35,7 @@ var _ = Describe("NewRepoFromURL func", func() {
 			scmInfo.Branch = "test"
 		})
 		It("should return error", func() {
-			_, err := scmInfo.NewRepo()
+			_, err := scmInfo.BuildRepoInfo()
 			Expect(err).Error().Should(HaveOccurred())
 		})
 	})
@@ -50,7 +50,7 @@ var _ = Describe("NewRepoFromURL func", func() {
 				scmInfo.Branch = "test"
 			})
 			It("should return error", func() {
-				_, err := scmInfo.NewRepo()
+				_, err := scmInfo.BuildRepoInfo()
 				Expect(err).Error().Should(HaveOccurred())
 			})
 		})
@@ -61,7 +61,7 @@ var _ = Describe("NewRepoFromURL func", func() {
 				scmInfo.Branch = "test"
 			})
 			It("should return error", func() {
-				repo, err := scmInfo.NewRepo()
+				repo, err := scmInfo.BuildRepoInfo()
 				Expect(err).Error().ShouldNot(HaveOccurred())
 				Expect(repo.BaseURL).Should(Equal("http://gitlab.test.com:3000"))
 				Expect(repo.Owner).Should(Equal("root"))
@@ -76,7 +76,7 @@ var _ = Describe("NewRepoFromURL func", func() {
 				scmInfo.Branch = "test"
 			})
 			It("should set apiURL as BaseURL", func() {
-				repo, err := scmInfo.NewRepo()
+				repo, err := scmInfo.BuildRepoInfo()
 				Expect(err).Error().ShouldNot(HaveOccurred())
 				Expect(repo.BaseURL).Should(Equal("http://gitlab.http.com"))
 				Expect(repo.Owner).Should(Equal("root"))

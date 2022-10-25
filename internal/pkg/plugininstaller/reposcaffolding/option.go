@@ -11,8 +11,8 @@ import (
 )
 
 type Options struct {
-	SourceRepo      *scm.Repo `validate:"required" mapstructure:"sourceRepo"`
-	DestinationRepo *scm.Repo `validate:"required" mapstructure:"destinationRepo"`
+	SourceRepo      *git.RepoInfo `validate:"required" mapstructure:"sourceRepo"`
+	DestinationRepo *git.RepoInfo `validate:"required" mapstructure:"destinationRepo"`
 	Vars            map[string]interface{}
 }
 

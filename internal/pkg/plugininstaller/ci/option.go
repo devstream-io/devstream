@@ -4,13 +4,13 @@ import (
 	"github.com/mitchellh/mapstructure"
 
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
-	"github.com/devstream-io/devstream/pkg/util/scm"
+	"github.com/devstream-io/devstream/pkg/util/scm/git"
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
 type Options struct {
-	CIConfig    *CIConfig `mapstructure:"ci" validate:"required"`
-	ProjectRepo *scm.Repo `mapstructure:"projectRepo" validate:"required"`
+	CIConfig    *CIConfig     `mapstructure:"ci" validate:"required"`
+	ProjectRepo *git.RepoInfo `mapstructure:"projectRepo" validate:"required"`
 }
 
 func NewOptions(options configmanager.RawOptions) (*Options, error) {

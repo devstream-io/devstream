@@ -7,7 +7,7 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
-	"github.com/devstream-io/devstream/pkg/util/scm"
+	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
 var _ = Describe("Validate func", func() {
@@ -77,7 +77,7 @@ var _ = Describe("SetDefaultConfig func", func() {
 			Type:           "github",
 			ConfigLocation: "http://www.test.com",
 		}
-		defaultRepo := &scm.Repo{
+		defaultRepo := &git.RepoInfo{
 			Owner:    "test",
 			Repo:     "test_repo",
 			Branch:   "test_branch",

@@ -6,39 +6,55 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/base"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/jenkins/plugins"
+	"github.com/devstream-io/devstream/pkg/util/jenkins"
+	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
-var _ = Describe("Pipeline struct", func() {
+var _ = Describe("pipeline struct", func() {
 	var (
-		pipeline                 *Pipeline
-		jobName, jenkinsFilePath string
+		p                                                                  *pipeline
+		jobName, jenkinsFilePath, repoOwner, repoName, secretToken, errMsg string
+		repoInfo                                                           *git.RepoInfo
+		j                                                                  *jenkins.MockClient
 	)
 	BeforeEach(func() {
+		repoOwner = "owner"
+		repoName = "repo"
 		jobName = "test_pipeline"
 		jenkinsFilePath = "test_path"
-		pipeline = &Pipeline{
-			JobName:         jobName,
+		repoInfo = &git.RepoInfo{
+			Owner:    repoOwner,
+			Repo:     repoName,
+			Branch:   "test",
+			BaseURL:  "http://127.0.0.1:300",
+			RepoType: "gitlab",
+		}
+		secretToken = "test_secret"
+		p = &pipeline{
+			Job:             jobName,
 			JenkinsfilePath: jenkinsFilePath,
 		}
+		j = &jenkins.MockClient{}
 	})
 
 	Context("getJobName method", func() {
 		When("jobName has slash", func() {
 			BeforeEach(func() {
 				jobName = "testFolderJob"
-				pipeline.JobName = fmt.Sprintf("folder/%s", jobName)
+				p.Job = fmt.Sprintf("folder/%s", jobName)
 			})
 			It("should return later item", func() {
-				Expect(pipeline.getJobName()).Should(Equal(jobName))
+				Expect(p.getJobName()).Should(Equal(jobName))
 			})
 		})
 		When("jobName does'nt have slash", func() {
 			BeforeEach(func() {
-				pipeline.JobName = "testJob"
+				p.Job = "testJob"
 			})
 			It("should return jobName", func() {
-				Expect(pipeline.getJobName()).Should(Equal("testJob"))
+				Expect(p.getJobName()).Should(Equal("testJob"))
 			})
 		})
 	})
@@ -47,51 +63,166 @@ var _ = Describe("Pipeline struct", func() {
 		When("folder name exist", func() {
 			BeforeEach(func() {
 				jobName = "testFolderJob"
-				pipeline.JobName = fmt.Sprintf("folder/%s", jobName)
+				p.Job = fmt.Sprintf("folder/%s", jobName)
 			})
 			It("should return later item", func() {
-				Expect(pipeline.getJobFolder()).Should(Equal("folder"))
+				Expect(p.getJobFolder()).Should(Equal("folder"))
 			})
 		})
 		When("folder name not exist", func() {
 			It("should return empty string", func() {
-				Expect(pipeline.getJobFolder()).Should(Equal(""))
+				Expect(p.getJobFolder()).Should(Equal(""))
 			})
 		})
 	})
 
-	Context("extractPipelinePlugins method", func() {
-		When("pipeline plugins is config", func() {
+	Context("extractpipelinePlugins method", func() {
+		When("repo type is github", func() {
 			BeforeEach(func() {
-				pipeline.ImageRepo = &plugins.ImageRepoJenkinsConfig{
-					AuthNamespace: "test",
-					URL:           "http://test.com",
-					User:          "test",
+				p.ImageRepo = &plugins.ImageRepoJenkinsConfig{
+					ImageRepoStepConfig: base.ImageRepoStepConfig{
+						URL:  "http://test.com",
+						User: "test",
+					},
 				}
 			})
 			It("should return plugin config", func() {
-				plugins := pipeline.extractPipelinePlugins()
-				Expect(len(plugins)).Should(Equal(1))
+				plugins := p.extractPlugins(&git.RepoInfo{
+					RepoType: "github",
+				})
+				Expect(len(plugins)).Should(Equal(2))
+			})
+		})
+		When("repo type is gitlab", func() {
+			BeforeEach(func() {
+				p.ImageRepo = &plugins.ImageRepoJenkinsConfig{
+					ImageRepoStepConfig: base.ImageRepoStepConfig{
+						URL:  "http://test.com",
+						User: "test",
+					},
+				}
+			})
+			It("should return plugin config", func() {
+				plugins := p.extractPlugins(&git.RepoInfo{
+					RepoType: "gitlab",
+				})
+				Expect(len(plugins)).Should(Equal(2))
 			})
 		})
 	})
 
-	Context("setDefaultValue method", func() {
-		When("joName is empty and imageRepo namespace is empty", func() {
+	Context("createOrUpdateJob method", func() {
+		When("jenkins client return normal", func() {
 			BeforeEach(func() {
-				pipeline.JobName = ""
-				pipeline.ImageRepo = &plugins.ImageRepoJenkinsConfig{
-					URL:  "http://test.com",
-					User: "test",
-				}
+				repoInfo.SSHPrivateKey = "test"
 			})
-			It("should set default value", func() {
-				testJobName := "default_job"
-				testNamespace := "test_namespace"
-				pipeline.setDefaultValue(testJobName, testNamespace)
-				Expect(pipeline.JobName).Should(Equal(testJobName))
-				Expect(pipeline.ImageRepo).ShouldNot(BeNil())
-				Expect(pipeline.ImageRepo.AuthNamespace).Should(Equal(testNamespace))
+			It("should work noraml", func() {
+				err := p.createOrUpdateJob(j, repoInfo, secretToken)
+				Expect(err).ShouldNot(HaveOccurred())
+			})
+		})
+		When("jenkins client script error", func() {
+			BeforeEach(func() {
+				errMsg = "script err"
+				j.ExecuteScriptError = fmt.Errorf(errMsg)
+			})
+			It("should return error", func() {
+				err := p.createOrUpdateJob(j, repoInfo, secretToken)
+				Expect(err).Should(HaveOccurred())
+				Expect(err.Error()).Should(Equal(errMsg))
+			})
+		})
+	})
+
+	Context("remove method", func() {
+		When("jenkins job get error", func() {
+			BeforeEach(func() {
+				errMsg = "get job error"
+				j.GetFolderJobError = fmt.Errorf(errMsg)
+			})
+			It("should return error", func() {
+				err := p.remove(j, repoInfo)
+				Expect(err).Error().Should(HaveOccurred())
+				Expect(err.Error()).Should(Equal(errMsg))
+			})
+		})
+		When("jenkins job is not exist", func() {
+			BeforeEach(func() {
+				errMsg = "404"
+				j.GetFolderJobError = fmt.Errorf(errMsg)
+			})
+			It("should return delete error", func() {
+				err := p.remove(j, repoInfo)
+				Expect(err).Error().ShouldNot(HaveOccurred())
+			})
+		})
+	})
+
+	Context("buildCIConfig method", func() {
+		BeforeEach(func() {
+			p.JenkinsfilePath = "test/local"
+			p.Job = "test"
+			p.ImageRepo = &plugins.ImageRepoJenkinsConfig{
+				ImageRepoStepConfig: base.ImageRepoStepConfig{
+					URL:  "testurl",
+					User: "testuser",
+				},
+			}
+			p.Custom = map[string]interface{}{
+				"test": "gg",
+			}
+		})
+		It("should work normal", func() {
+			ciConfig, err := p.buildCIConfig(repoInfo)
+			Expect(err).Error().ShouldNot(HaveOccurred())
+			Expect(ciConfig.ConfigLocation).Should(Equal(p.JenkinsfilePath))
+			Expect(string(ciConfig.Type)).Should(Equal("jenkins"))
+			expectedMap := map[string]interface{}{
+				"ImageRepositoryURL":  "testurl/library",
+				"ImageAuthSecretName": "repo-auth",
+				"DingtalkRobotID":     "",
+				"DingtalkAtUser":      "",
+				"SonarqubeEnable":     false,
+				"Custom": map[string]interface{}{
+					"test": "gg",
+				},
+				"AppName": "test",
+			}
+			Expect(ciConfig.Vars).Should(Equal(expectedMap))
+		})
+	})
+
+	Context("install method", func() {
+		When("install plugin failed", func() {
+			BeforeEach(func() {
+				errMsg = "install plugin failed"
+				j.InstallPluginsIfNotExistsError = fmt.Errorf(errMsg)
+			})
+			It("should return error", func() {
+				err := p.install(j, repoInfo, secretToken)
+				Expect(err).Should(HaveOccurred())
+				Expect(err.Error()).Should(Equal(errMsg))
+			})
+		})
+		When("config plugin failed", func() {
+			BeforeEach(func() {
+				errMsg = "config plugin failed"
+				j = &jenkins.MockClient{}
+				j.ConfigCascForRepoError = fmt.Errorf(errMsg)
+			})
+			It("should return error", func() {
+				err := p.install(j, repoInfo, secretToken)
+				Expect(err).Should(HaveOccurred())
+				Expect(err.Error()).Should(Equal(errMsg))
+			})
+		})
+		When("all config valid", func() {
+			BeforeEach(func() {
+				j = &jenkins.MockClient{}
+			})
+			It("should work normal", func() {
+				err := p.install(j, repoInfo, secretToken)
+				Expect(err).ShouldNot(HaveOccurred())
 			})
 		})
 	})
