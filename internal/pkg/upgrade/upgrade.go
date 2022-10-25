@@ -21,7 +21,6 @@ const (
 	dtmBakFileName = "dtm-bak"
 	dtmOrg         = "devstream-io"
 	dtmRepo        = "devstream"
-	dtmExecute     = "dtm"
 )
 
 // since dtm file name can be changeable by user,so it should be a variable to get current dtm file name
@@ -34,13 +33,6 @@ func Upgrade(continueDirectly bool) error {
 		os.Exit(0)
 	}
 
-	execDir, err := os.Executable()
-	workDir := strings.Trim(execDir, dtmExecute)
-	if err != nil {
-		return err
-	}
-	log.Debugf("Dtm upgrade: work path is : %v", workDir)
-
 	// get dtm bin file path like `/usr/local/bin/dtm-linux-amd64`
 	binFilePath, err := os.Executable()
 	if err != nil {
@@ -50,6 +42,12 @@ func Upgrade(continueDirectly bool) error {
 	_, dtmFileName = filepath.Split(binFilePath)
 
 	log.Debugf("Dtm upgrade: dtm file name is : %v", dtmFileName)
+
+	workDir := strings.Trim(binFilePath, dtmFileName)
+	if err != nil {
+		return err
+	}
+	log.Debugf("Dtm upgrade: work path is : %v", workDir)
 
 	// 1. Get the latest release version
 	ghOptions := &git.RepoInfo{
