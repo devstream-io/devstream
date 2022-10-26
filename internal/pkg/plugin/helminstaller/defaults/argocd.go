@@ -6,7 +6,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
-var toolName = "argocd"
+var toolArgoCD = "argocd"
 
 var DefaultConfigWithArgoCD = helm.Options{
 	Chart: helmCommon.Chart{
@@ -26,5 +26,5 @@ var DefaultConfigWithArgoCD = helm.Options{
 }
 
 func init() {
-	DefaultOptionsMap[toolName] = &DefaultConfigWithArgoCD
+	DefaultOptionsMap[toolArgoCD] = &DefaultConfigWithArgoCD
 }

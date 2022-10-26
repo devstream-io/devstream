@@ -13,7 +13,7 @@ import (
 
 func GetDefaultOptionsByInstanceID(instanceID string) *helm.Options {
 	for name, options := range defaults.DefaultOptionsMap {
-		if strings.Contains(instanceID, name) {
+		if strings.Contains(instanceID, name+"-") {
 			return options
 		}
 	}
@@ -49,13 +49,13 @@ func RenderValuesYaml(options configmanager.RawOptions) (configmanager.RawOption
 		return nil, err
 	}
 
-	// 1. valuesYaml don't be set
+	// 1. valuesYaml isn't set
 	if helmOptions.ValuesYaml == "" {
 		return options, nil
 	}
 
 	// 2. valuesYaml is a YAML string
-	if strings.Contains(helmOptions.ValuesYaml, ":") {
+	if strings.Contains(helmOptions.ValuesYaml, ": ") {
 		helmOptions.Chart.ValuesYaml = helmOptions.ValuesYaml
 		helmOptions.ValuesYaml = ""
 		return types.EncodeStruct(helmOptions)
