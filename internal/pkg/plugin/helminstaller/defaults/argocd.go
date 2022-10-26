@@ -1,4 +1,4 @@
-package argocd
+package defaults
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/helm"
@@ -6,10 +6,13 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
-var defaultHelmConfig = helm.Options{
+var toolArgoCD = "argocd"
+
+var DefaultConfigWithArgoCD = helm.Options{
 	Chart: helmCommon.Chart{
 		ChartPath:   "",
 		ChartName:   "argo/argo-cd",
+		Version:     "",
 		Timeout:     "5m",
 		Wait:        types.Bool(true),
 		UpgradeCRDs: types.Bool(true),
@@ -20,4 +23,8 @@ var defaultHelmConfig = helm.Options{
 		URL:  "https://argoproj.github.io/argo-helm",
 		Name: "argo",
 	},
+}
+
+func init() {
+	DefaultOptionsMap[toolArgoCD] = &DefaultConfigWithArgoCD
 }

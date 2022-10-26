@@ -9,9 +9,6 @@ var DefaultConfig string
 // plugin default config
 var (
 
-	//go:embed plugins/argocd.yaml
-	ArgocdDefaultConfig string
-
 	//go:embed plugins/argocdapp.yaml
 	ArgocdappDefaultConfig string
 
@@ -57,8 +54,8 @@ var (
 	//go:embed plugins/hashicorp-vault.yaml
 	HashicorpVaultDefaultConfig string
 
-	//go:embed plugins/helm-generic.yaml
-	HelmGenericDefaultConfig string
+	//go:embed plugins/helm-installer.yaml
+	HelmInstallerDefaultConfig string
 
 	//go:embed plugins/jenkins-pipeline.yaml
 	JenkinsPipelineDefaultConfig string
@@ -95,7 +92,6 @@ var (
 )
 
 var pluginDefaultConfigs = map[string]string{
-	"argocd":               ArgocdDefaultConfig,
 	"argocdapp":            ArgocdappDefaultConfig,
 	"artifactory":          ArtifactoryDefaultConfig,
 	"ci-generic":           CiGenericDefaultConfig,
@@ -111,7 +107,7 @@ var pluginDefaultConfigs = map[string]string{
 	"harbor-docker":        HarborDockerDefaultConfig,
 	"harbor":               HarborDefaultConfig,
 	"hashicorp-vault":      HashicorpVaultDefaultConfig,
-	"helm-generic":         HelmGenericDefaultConfig,
+	"helm-installer":       HelmInstallerDefaultConfig,
 	"jenkins-pipeline":     JenkinsPipelineDefaultConfig,
 	"jenkins":              JenkinsDefaultConfig,
 	"jira-github-integ":    JiraGithubIntegDefaultConfig,

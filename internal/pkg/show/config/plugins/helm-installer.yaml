@@ -1,0 +1,5 @@
+tools:
+# name of the tool
+- name: helm-installer
+  # id of the tool instance. e.g. jenkins-001, harbor-002
+  instanceID: changeme-001

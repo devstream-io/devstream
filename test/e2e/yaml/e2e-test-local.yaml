@@ -50,23 +50,11 @@ tools:
       registry:
         type: dockerhub
         username: [[ dockerRegistryUserName ]]
-- name: argocd
-  instanceID: default
-  options:
-    repo:
-      name: argo
-      url: https://argoproj.github.io/argo-helm
-    chart:
-      chartPath: ""
-      chartName: argo/argo-cd
-      releaseName: argocd
-      namespace: [[ argocdNameSpace ]]
-      wait: true
-      timeout: [[ argocdDeployTimeout ]]
-      upgradeCRDs: true
+- name: helm-installer
+  instanceID: argocd-001
 - name: argocdapp
   instanceID: default
-  dependsOn: ["argocd.default", "repo-scaffolding.golang-github"]
+  dependsOn: ["helm-installer.argocd-001", "repo-scaffolding.golang-github"]
   options:
     app:
       name: ${{repo-scaffolding.golang-github.outputs.repo}}

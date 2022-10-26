@@ -1,4 +1,4 @@
-package helmgeneric
+package helminstaller
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
@@ -8,14 +8,15 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func Update(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
+func Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
-			helm.Validate,
+			SetDefaultConfig,
+			RenderValuesYaml,
+			validate,
 		},
-		ExecuteOperations:  helm.DefaultUpdateOperations,
-		GetStatusOperation: getEmptyStatus,
+		GetStatusOperation: helm.GetAllResourcesStatus,
 	}
 
 	// Execute all Operations in Operator

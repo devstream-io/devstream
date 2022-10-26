@@ -9,8 +9,10 @@ import (
 
 // Options is the struct for parameters used by the helm install config.
 type Options struct {
-	Repo  helm.Repo  `mapstructure:"repo"`
-	Chart helm.Chart `mapstructure:"chart"`
+	InstanceID string     `mapstructure:"instanceID"`
+	Repo       helm.Repo  `mapstructure:"repo"`
+	Chart      helm.Chart `mapstructure:"chart"`
+	ValuesYaml string     ` mapstructure:"valuesYaml" validate:"yaml"`
 }
 
 func (opts *Options) GetHelmParam() *helm.HelmParam {
@@ -28,7 +30,7 @@ func (opts *Options) GetReleaseName() string {
 	return opts.Chart.ReleaseName
 }
 
-func (opts *Options) fillDefaultValue(defaultOpts *Options) {
+func (opts *Options) FillDefaultValue(defaultOpts *Options) {
 	chart := &opts.Chart
 	chart.FillDefaultValue(&defaultOpts.Chart)
 	repo := &opts.Repo

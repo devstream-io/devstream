@@ -25,6 +25,7 @@ func Create(tool *configmanager.Tool) (statemanager.ResourceStatus, error) {
 	if err != nil {
 		return nil, err
 	}
+	renderInstanceIDtoOptions(tool)
 	return p.Create(tool.Options)
 }
 
@@ -35,6 +36,7 @@ func Update(tool *configmanager.Tool) (statemanager.ResourceStatus, error) {
 	if err != nil {
 		return nil, err
 	}
+	renderInstanceIDtoOptions(tool)
 	return p.Update(tool.Options)
 }
 
@@ -44,6 +46,7 @@ func Read(tool *configmanager.Tool) (statemanager.ResourceStatus, error) {
 	if err != nil {
 		return nil, err
 	}
+	renderInstanceIDtoOptions(tool)
 	return p.Read(tool.Options)
 }
 
@@ -54,5 +57,10 @@ func Delete(tool *configmanager.Tool) (bool, error) {
 	if err != nil {
 		return false, err
 	}
+	renderInstanceIDtoOptions(tool)
 	return p.Delete(tool.Options)
+}
+
+func renderInstanceIDtoOptions(tool *configmanager.Tool) {
+	tool.Options["instanceID"] = interface{}(tool.InstanceID)
 }

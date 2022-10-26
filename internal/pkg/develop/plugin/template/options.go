@@ -7,7 +7,7 @@ var optionsGoContentTpl = `package [[ .Name | format ]]
 import (
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 )
 
 // Options is the struct for configurations of the [[ .Name ]] plugin.

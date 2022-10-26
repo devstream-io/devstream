@@ -19,12 +19,11 @@
 | CI                             | ci-generic                  | Generic CI plugin              | [doc](ci-generic.md)                  |
 | CI                             | tekton                      | Tekton CI installation         | [doc](tekton.md)                      |
 | Code Quality/Security          | sonarqube                   | SonarQube                      | [doc](sonarqube.md)
-| CD/GitOps                      | argocd                      | ArgoCD installation            | [doc](argocd.md)                      |
 | CD/GitOps                      | argocdapp                   | ArgoCD Application creation    | [doc](argocdapp.md)                   |
 | Image Repository               | artifactory                 | Artifactory installation       | [doc](artifactory.md)                 |
 | Image Repository               | harbor                      | Harbor helm installation       | [doc](harbor.md)                      |
 | Image Repository               | harbor-docker               | Harbor Docker compose install  | [doc](harbor-docker.md)               |
-| Deployment                     | helm-generic                | Helm chart install             | [doc](helm-generic.md)               |
+| Deployment                     | helm-installer              | Helm chart install             | [doc](helm-installer.md)               |
 | Monitoring                     | kube-prometheus             | Prometheus/Grafana K8s install | [doc](kube-prometheus.md)             |
 | Observability                  | devlake                     | DevLake installation           | [doc](devlake.md)                     |
 | LDAP                           | openldap                    | OpenLDAP installation          | [doc](openldap.md)                    |
@@ -34,7 +33,6 @@ Or, to get a list of plugins, run:
 
 ```shell
 $ dtm list plugins
-argocd
 argocdapp
 artifactory
 ci-generic
