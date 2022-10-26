@@ -12,8 +12,7 @@ import (
 	githubCommon "github.com/google/go-github/v42/github"
 
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
-	"github.com/devstream-io/devstream/pkg/util/scm/github"
-	util_github "github.com/devstream-io/devstream/pkg/util/scm/github"
+	githubUtil "github.com/devstream-io/devstream/pkg/util/scm/github"
 )
 
 var (
@@ -25,15 +24,15 @@ var (
 const basePath = "/api-v3"
 
 var _ = BeforeSuite(func() {
-	mux, serverURL, teardown = util_github.Setup()
+	mux, serverURL, teardown = githubUtil.Setup()
 })
 
 var _ = AfterSuite(func() {
 	teardown()
 })
 
-func CreateClientWithOr(opt *git.RepoInfo) *github.Client {
-	c, err := github.NewClientWithOption(opt, serverURL)
+func CreateClientWithOr(opt *git.RepoInfo) *githubUtil.Client {
+	c, err := githubUtil.NewClientWithOption(opt, serverURL)
 	Expect(c).NotTo(Equal(nil))
 	Expect(err).To(Succeed())
 	return c
@@ -44,14 +43,14 @@ func TestPlanmanager(t *testing.T) {
 	RunSpecs(t, "GitHub Suite")
 }
 
-func newTestClient(baseUrl string, repoInfo *git.RepoInfo) *github.Client {
+func newTestClient(baseUrl string, repoInfo *git.RepoInfo) *githubUtil.Client {
 	githubClient := githubCommon.NewClient(nil)
 	url, _ := url.Parse(baseUrl + basePath + "/")
 
 	githubClient.BaseURL = url
 	githubClient.UploadURL = url
 
-	return &github.Client{
+	return &githubUtil.Client{
 		RepoInfo: repoInfo,
 		Client:   githubClient,
 		Context:  context.Background(),

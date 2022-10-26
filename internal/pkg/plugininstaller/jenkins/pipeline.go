@@ -111,7 +111,7 @@ func (p *pipeline) createOrUpdateJob(jenkinsClient jenkins.JenkinsAPI, repoInfo 
 	}
 	jobScript, err := jenkins.BuildRenderedScript(jobRenderInfo)
 	if err != nil {
-		log.Debugf("jenkins redner template failed: %s", err)
+		log.Debugf("jenkins render template failed: %s", err)
 		return err
 	}
 	// 2. execute script to create jenkins job

@@ -11,8 +11,8 @@ import (
 
 const (
 	defaultAdminSecretName         = "jenkins"
-	defautlAdminSecretUserName     = "jenkins-admin-user"
-	defautlAdminSecretUserPassword = "jenkins-admin-password"
+	defaultAdminSecretUserName     = "jenkins-admin-user"
+	defaultAdminSecretUserPassword = "jenkins-admin-password"
 	jenkinsPasswordEnvKey          = "JENKINS_PASSWORD"
 )
 
@@ -26,7 +26,7 @@ type jenkinsOption struct {
 func (j *jenkinsOption) newClient() (jenkins.JenkinsAPI, error) {
 	auth, err := j.getBasicAuth()
 	if err != nil {
-		return nil, errors.New("jenkins uesrname and password is required")
+		return nil, errors.New("jenkins username and password is required")
 	}
 	jenkinsConfig := &jenkins.JenkinsConfigOption{
 		BasicAuth:     auth,
@@ -53,7 +53,7 @@ func (j *jenkinsOption) getBasicAuth() (*jenkins.BasicAuth, error) {
 		log.Debugf("jenkins get auth token from secret")
 		return secretAuth, nil
 	}
-	return nil, errors.New("jenkins uesrname and password is required")
+	return nil, errors.New("jenkins username and password is required")
 }
 
 func getAuthFromSecret(namespace string) *jenkins.BasicAuth {
@@ -66,11 +66,11 @@ func getAuthFromSecret(namespace string) *jenkins.BasicAuth {
 		log.Warnf("jenkins get auth from k8s failed: %+v", err)
 		return nil
 	}
-	user, ok := secret[defautlAdminSecretUserName]
+	user, ok := secret[defaultAdminSecretUserName]
 	if !ok {
 		return nil
 	}
-	password, ok := secret[defautlAdminSecretUserPassword]
+	password, ok := secret[defaultAdminSecretUserPassword]
 	if !ok {
 		return nil
 	}

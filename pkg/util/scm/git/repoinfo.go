@@ -3,9 +3,9 @@ package git
 import (
 	"fmt"
 	"net/url"
-	"os"
 	"strings"
 
+	"github.com/devstream-io/devstream/pkg/util/config/configGetter"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -116,13 +116,9 @@ func (r *RepoInfo) BuildScmURL() string {
 func (r *RepoInfo) CheckValid() error {
 	switch r.RepoType {
 	case "gitlab":
-		if os.Getenv("GITLAB_TOKEN") == "" {
-			return fmt.Errorf("jenkins-pipeline gitlab should set env GITLAB_TOKEN")
-		}
+		return configGetter.CheckItemExist(configGetter.NewEnvGetter("GITLAB_TOKEN"))
 	case "github":
-		if os.Getenv("GITHUB_TOKEN") == "" {
-			return fmt.Errorf("jenkins-pipeline github should set env GITHUB_TOKEN")
-		}
+		return configGetter.CheckItemExist(configGetter.NewEnvGetter("GITHUB_TOKEN"))
 	}
 	return nil
 }
