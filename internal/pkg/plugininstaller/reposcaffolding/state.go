@@ -4,7 +4,7 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
-	"github.com/devstream-io/devstream/pkg/util/scm/github"
+	"github.com/devstream-io/devstream/pkg/util/scm"
 )
 
 func GetDynamicStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
@@ -13,7 +13,7 @@ func GetDynamicStatus(options configmanager.RawOptions) (statemanager.ResourceSt
 		return nil, err
 	}
 
-	scmClient, err := github.NewClient(opts.DestinationRepo)
+	scmClient, err := scm.NewClientWithAuth(opts.DestinationRepo)
 	if err != nil {
 		log.Debugf("reposcaffolding status init repo failed: %+v", err)
 		return nil, err
@@ -33,5 +33,12 @@ func GetDynamicStatus(options configmanager.RawOptions) (statemanager.ResourceSt
 		"repoType": repoInfo.RepoType,
 		"source":   opts.SourceRepo.BuildScmURL(),
 	}
+
+	resStatus.SetOutputs(statemanager.ResourceOutputs{
+		"repo":    repoInfo.Repo,
+		"org":     repoInfo.Org,
+		"owner":   repoInfo.Owner,
+		"repoURL": repoInfo.CloneURL,
+	})
 	return resStatus, nil
 }
