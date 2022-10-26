@@ -2,6 +2,7 @@ package configGetter_test
 
 import (
 	"os"
+	"strings"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -140,6 +141,28 @@ var _ = Describe("Each Getter", func() {
 			It("should return empty string", func() {
 				getter := configGetter.NewViperGetter("keyNotFound")
 				Expect(getter.Get()).To(Equal(""))
+			})
+		})
+
+		When("key is set by os.SetEnv", func() {
+			var key, value, keyUpper string
+
+			BeforeEach(func() {
+				// notice that the key is upper case
+				key, value = "key_1", "value"
+				keyUpper = strings.ToUpper(key)
+				originValue := os.Getenv(keyUpper)
+				os.Setenv(keyUpper, value)
+				viper.AutomaticEnv()
+				DeferCleanup(func() {
+					err := os.Setenv(keyUpper, originValue)
+					Expect(err).NotTo(HaveOccurred())
+				})
+			})
+
+			It("should return the right value", func() {
+				getter := configGetter.NewViperGetter(key)
+				Expect(getter.Get()).To(Equal(value))
 			})
 		})
 	})
