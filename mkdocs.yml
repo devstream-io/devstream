@@ -77,6 +77,7 @@ plugins:
           DevStream Architecture: "DevStream Architecture"
           Environment Setup and Development: "Environment Setup and Development"
           Docs Contribution: "Docs Contribution"
+          Helm Installer: "Helm Installer"
         zh:
           DTM Commands Explained in Depth: "DTM 命令详解"
           Plugins: "插件"
@@ -92,6 +93,7 @@ plugins:
           DevStream Architecture: "DevStream 架构"
           Environment Setup and Development: "环境搭建与开发"
           Docs Contribution: "文档类贡献"
+          Helm Installer: "Helm 安装器"
   - literate-nav
 nav:
   - Overview: .
@@ -112,6 +114,9 @@ nav:
     - commands/verify*.md
   - Plugins:
     - plugins/plugins-list*.md
+    - Helm Installer:
+      - plugins/helm-installer/helm-installer*.md
+      - plugins/helm-installer/*.md
     - plugins/*.md
   - Best Practices: best-practices/
   - contributing_guide*.md

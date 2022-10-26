@@ -8,30 +8,29 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
-var toolArgoCD = "argocd"
+var toolSonarQube = "sonarqube"
 
-var DefaultConfigWithArgoCD = helm.Options{
+var DefaultConfigWithSonarQube = helm.Options{
 	Chart: helmCommon.Chart{
-		ChartPath:   "",
-		ChartName:   "argo/argo-cd",
-		Version:     "",
+		ChartName:   "sonarqube/sonarqube",
 		Timeout:     "10m",
+		Version:     "",
 		Wait:        types.Bool(true),
 		UpgradeCRDs: types.Bool(true),
-		ReleaseName: "argocd",
-		Namespace:   "argocd",
+		ReleaseName: "sonarqube",
+		Namespace:   "sonarqube",
 	},
 	Repo: helmCommon.Repo{
-		URL:  "https://argoproj.github.io/argo-helm",
-		Name: "argo",
+		URL:  "https://SonarSource.github.io/helm-chart-sonarqube",
+		Name: "sonarqube",
 	},
 }
 
 func init() {
-	DefaultOptionsMap[toolArgoCD] = &DefaultConfigWithArgoCD
-	StatusGetterFuncMap[toolArgoCD] = GetArgoCDStatus
+	DefaultOptionsMap[toolSonarQube] = &DefaultConfigWithSonarQube
+	StatusGetterFuncMap[toolSonarQube] = GetSonarQubeStatus
 }
 
-func GetArgoCDStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
+func GetSonarQubeStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return helm.GetAllResourcesStatus(options)
 }

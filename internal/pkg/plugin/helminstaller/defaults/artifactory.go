@@ -8,30 +8,30 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
-var toolArgoCD = "argocd"
+var toolArtifactory = "artifactory"
 
-var DefaultConfigWithArgoCD = helm.Options{
+var DefaultConfigWithArtifactory = helm.Options{
 	Chart: helmCommon.Chart{
 		ChartPath:   "",
-		ChartName:   "argo/argo-cd",
+		ChartName:   "jfrog/artifactory",
 		Version:     "",
 		Timeout:     "10m",
-		Wait:        types.Bool(true),
 		UpgradeCRDs: types.Bool(true),
-		ReleaseName: "argocd",
-		Namespace:   "argocd",
+		Wait:        types.Bool(true),
+		ReleaseName: "artifactory",
+		Namespace:   "artifactory",
 	},
 	Repo: helmCommon.Repo{
-		URL:  "https://argoproj.github.io/argo-helm",
-		Name: "argo",
+		URL:  "https://charts.jfrog.io",
+		Name: "jfrog",
 	},
 }
 
 func init() {
-	DefaultOptionsMap[toolArgoCD] = &DefaultConfigWithArgoCD
-	StatusGetterFuncMap[toolArgoCD] = GetArgoCDStatus
+	DefaultOptionsMap[toolArtifactory] = &DefaultConfigWithArtifactory
+	StatusGetterFuncMap[toolArtifactory] = GetArtifactoryStatus
 }
 
-func GetArgoCDStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
+func GetArtifactoryStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return helm.GetAllResourcesStatus(options)
 }
