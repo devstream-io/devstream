@@ -5,24 +5,25 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/spf13/viper"
+
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
-	"github.com/spf13/viper"
 )
 
-type ToolOptionsGetter struct {
+type toolOptionsGetter struct {
 	key        string
 	rawOptions configmanager.RawOptions
 }
 
 func NewToolOptionsGetter(keyPath string, rawOptions configmanager.RawOptions) ItemGetter {
-	return &ToolOptionsGetter{
+	return &toolOptionsGetter{
 		key:        keyPath,
 		rawOptions: rawOptions,
 	}
 }
 
-func (g *ToolOptionsGetter) Get() string {
+func (g *toolOptionsGetter) Get() string {
 	buffer := new(bytes.Buffer)
 	if err := json.NewEncoder(buffer).Encode(g.rawOptions); err != nil {
 		log.Warnf("failed to marshal tool options: %v, err: %v", g.rawOptions, err)
@@ -30,10 +31,13 @@ func (g *ToolOptionsGetter) Get() string {
 	}
 	tmpViper := viper.New()
 	tmpViper.SetConfigType("json")
-	tmpViper.ReadConfig(buffer)
+	if err := tmpViper.ReadConfig(buffer); err != nil {
+		log.Warnf("failed to read tool options: %v, err: %v", g.rawOptions, err)
+		return ""
+	}
 	return tmpViper.GetString(g.key)
 }
 
-func (g *ToolOptionsGetter) DescribeWhereToSet() string {
+func (g *toolOptionsGetter) DescribeWhereToSet() string {
 	return fmt.Sprintf("<%s> in tools.options", g.key)
 }

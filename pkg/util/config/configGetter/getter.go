@@ -13,15 +13,15 @@ type ItemGetter interface {
 	DescribeWhereToSet() string
 }
 
-type ItemGetterChain []ItemGetter
+type itemGetterChain []ItemGetter
 
-func NewItemGetterChain(getters ...ItemGetter) ItemGetterChain {
+func NewItemGetterChain(getters ...ItemGetter) itemGetterChain {
 	return getters
 }
 
 // Get value from the getters chain util non-empty value is found
 // It will return an error to instruct user how to set the value if value not found
-func (c ItemGetterChain) Get() (string, error) {
+func (c itemGetterChain) Get() (string, error) {
 	for _, getter := range c {
 		if value := getter.Get(); value != "" {
 			log.Debugf("get value <%s> from %s", value, getter.DescribeWhereToSet())
@@ -32,7 +32,7 @@ func (c ItemGetterChain) Get() (string, error) {
 }
 
 // SingleGet gets value from a single getter,
-// it's just an alias of ItemGetterChain.Get
+// it's just an alias of itemGetterChain.Get
 func SingleGet(g ItemGetter) (string, error) {
 	return NewItemGetterChain(g).Get()
 }
@@ -65,9 +65,8 @@ func (e errItemNotFound) Error() string {
 	default:
 		var hints []string
 		for _, getter := range e.getters {
-
 			hints = append(hints, getter.DescribeWhereToSet())
 		}
-		return fmt.Sprintf("missing config setting, you could set it by: %s", strings.Join(hints, ", or "))
+		return fmt.Sprintf("missing config settings, you could set it by: %s", strings.Join(hints, ", or "))
 	}
 }

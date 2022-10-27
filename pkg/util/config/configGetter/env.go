@@ -5,18 +5,18 @@ import (
 	"os"
 )
 
-type EnvGetter struct {
+type envGetter struct {
 	key string
 }
 
 func NewEnvGetter(key string) ItemGetter {
-	return &EnvGetter{key: key}
+	return &envGetter{key: key}
 }
 
-func (g *EnvGetter) Get() string {
+func (g *envGetter) Get() string {
 	return os.Getenv(g.key)
 }
 
-func (g *EnvGetter) DescribeWhereToSet() string {
+func (g *envGetter) DescribeWhereToSet() string {
 	return fmt.Sprintf("<%s> in environment variable", g.key)
 }

@@ -7,8 +7,12 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"github.com/spf13/viper"
+	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/client-go/kubernetes/fake"
 
 	"github.com/devstream-io/devstream/pkg/util/config/configGetter"
+	"github.com/devstream-io/devstream/pkg/util/k8s"
 )
 
 var _ = Describe("Getter general", func() {
@@ -62,6 +66,16 @@ var _ = Describe("Getter general", func() {
 			_, err := getter.Get()
 			Expect(err).To(HaveOccurred())
 		})
+
+		It("should return right value if default value is set", func() {
+			const defaultValue = "defaultValue"
+			getter := configGetter.NewItemGetterChain(
+				configGetter.NewEnvGetter(keyNotSet),
+				configGetter.DefaultValue(defaultValue),
+			)
+			Expect(getter.Get()).To(Equal(defaultValue))
+		})
+
 	})
 
 })
@@ -168,6 +182,45 @@ var _ = Describe("Each Getter", func() {
 	})
 
 	Describe("K8s Secret Getter", func() {
-		// TODO(aFlyBird0): add ut after refactor /pkg/util/k8s.go/k8s.NewClient()
+		const (
+			namespace, secretName = "test-ns", "test-secret"
+			key1, value1          = "key1", "value1"
+			keyNotSet             = "key-not-set"
+		)
+		BeforeEach(func() {
+			// create a fake k8s client set set a secret
+			secret := &corev1.Secret{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      secretName,
+					Namespace: namespace,
+					Labels: map[string]string{
+						"usage": "test",
+					},
+				},
+				Data: map[string][]byte{
+					key1: []byte(value1),
+				},
+			}
+			fakeClient := fake.NewSimpleClientset(secret)
+			k8s.UseFakeClient(fakeClient, nil)
+		})
+
+		When("key is set", func() {
+			It("should return the right value", func() {
+				getter := configGetter.NewK8sSecretGetter(key1, namespace, secretName)
+				Expect(getter.Get()).To(Equal(value1))
+			})
+		})
+
+		When("key is not set", func() {
+			It("should return empty string", func() {
+				getter := configGetter.NewK8sSecretGetter(keyNotSet, namespace, secretName)
+				Expect(getter.Get()).To(Equal(""))
+			})
+		})
+	})
+
+	Describe("DefaultValue Getter", func() {
+		// it's tested in the general test
 	})
 })
