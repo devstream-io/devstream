@@ -124,7 +124,7 @@ func (c *Client) VerifyWorkflows(workflows []*Workflow) (map[string]error, error
 		filesInRemoteDir = append(filesInRemoteDir, f.GetName())
 	}
 
-	lostFiles := mapset.NewSet[string](wsFiles...).Difference(mapset.NewSet[string](filesInRemoteDir...)).ToSlice()
+	lostFiles := mapset.NewSet(wsFiles...).Difference(mapset.NewSet(filesInRemoteDir...)).ToSlice()
 	// all files exist
 	if len(lostFiles) == 0 {
 		log.Info("All files exist.")

@@ -108,8 +108,8 @@ Alternatively, run `dtm list plugins` and it will show you all the available plu
 ### Development Guide
 
 - [Development Environment Setup](https://docs.devstream.io/en/latest/development/dev/dev-env-setup)
-- [Code linter](https://docs.devstream.io/en/latest/development/dev/lint.md)
-- [Build the source code](https://docs.devstream.io/en/latest/development/dev/build.md)
+- [Code linter](https://docs.devstream.io/en/latest/development/dev/lint)
+- [Build the source code](https://docs.devstream.io/en/latest/development/dev/build)
 - [Test the source code: unit test, e2e test](https://docs.devstream.io/en/latest/development/dev/test)
 - [Create a plugin](https://docs.devstream.io/en/latest/development/dev/creating-a-plugin)
 
