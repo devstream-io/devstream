@@ -1,6 +1,5 @@
 # 代码检查
 
-
 项目使用Go 的代码检查工具集`golangci-lint` ([official website](https://golangci-lint.run/), [GitHub](https://github.com/golangci/golangci-lint)) 进行代码格式检查。
 
 也支持与 Github 工作流集成。

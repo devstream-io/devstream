@@ -10,11 +10,11 @@ Items marked with the “good first issue” label are intended for _first-time_
 
 ### For Contributors
 
-After a contributor has completed one (or two) "good first issue" items, it's recommended to move on to the "[help wanted](../contributing_guide.md#find-an-issue)" label, saving the remaining "good first issue" items for other new contributors.
+After a contributor has completed one (or two) "good first issue" items, it's recommended to move on to the "[help wanted](../../contributing_guide.md#find-an-issue)" label, saving the remaining "good first issue" items for other new contributors.
 
 ### For Reviewers
 
-- Keep an eye on pull requests for "good first issue" and guide the contributors through the [pull request process](../contributing_guide.md#pull-request-lifecycle).
+- Keep an eye on pull requests for "good first issue" and guide the contributors through the [pull request process](../../contributing_guide.md#pull-request-lifecycle).
 - Let them know what the next step is. For example:
     - move on to another good first issue if they are not completely confident yet
     - find "help wanted" issues

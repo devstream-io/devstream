@@ -2,7 +2,7 @@
 
 ## 0 Thanks for Contributing!
 
-First, please read our [CONTRIBUTING](https://github.com/devstream-io/devstream/blob/main/CONTRIBUTING.md) doc.
+First, please read our [CONTRIBUTING](../../contributing_guide.md) doc.
 
 ## 1 Scaffolding Automagically
 
@@ -24,7 +24,7 @@ Although dtm is automagic, but it can’t read your mind. I’m afraid that you 
 
 Please fill in the main logic of the plugin here.
 
-You can check out our [Standard Go Project Layout](project-layout.md) document for detailed instruction on the project layout.
+You can check out our [Standard Go Project Layout](../devstream/project-layout.md) document for detailed instruction on the project layout.
 
 ## 2 Interfaces
 

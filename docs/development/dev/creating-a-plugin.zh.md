@@ -2,7 +2,7 @@
 
 ## 0 感谢你的贡献!
 
-首先，请阅读我们的 [CONTRIBUTING](https://github.com/devstream-io/devstream/blob/main/CONTRIBUTING.md) 文档。
+首先，请阅读我们的[贡献指引](../../contributing_guide.zh.md)文档。
 
 ## 1 自动建立新插件的代码框架
 
@@ -24,7 +24,7 @@
 
 请在这里编写插件的主要逻辑。
 
-可以查看我们的[Standard Go Project Layout](project-layout.zh.md)文件，了解关于项目布局的详细说明。
+可以查看我们的[Standard Go Project Layout](../devstream/project-layout.zh.md)文件，了解关于项目布局的详细说明。
 
 ## 2 接口
 

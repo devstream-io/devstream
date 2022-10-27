@@ -10,7 +10,7 @@
 
 ## 2 Full Process Guide
 
-A detailed guide to the plugin development process can be found in [creating a plugin](../creating-a-plugin.md).
+A detailed guide to the plugin development process can be found in [creating a plugin](../development/dev/creating-a-plugin.md).
 
 ## 3 Flags
 
