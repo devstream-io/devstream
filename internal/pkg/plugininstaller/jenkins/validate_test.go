@@ -7,6 +7,7 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
+	"github.com/devstream-io/devstream/pkg/util/config/configGetter"
 	"github.com/devstream-io/devstream/pkg/util/scm/github"
 	"github.com/devstream-io/devstream/pkg/util/scm/gitlab"
 )
@@ -147,7 +148,7 @@ var _ = Describe("ValidateJobConfig func", func() {
 		It("should return error", func() {
 			_, err := ValidateJobConfig(options)
 			Expect(err).Error().Should(HaveOccurred())
-			Expect(err.Error()).Should(Equal(fmt.Sprintf("jenkins-pipeline gitlab should set env %s", gitlab.TokenEnvKey)))
+			Expect(configGetter.IsNotFoundErr(err)).Should(BeTrue())
 		})
 	})
 	When("repo type is github and github env is not configured", func() {
@@ -159,7 +160,7 @@ var _ = Describe("ValidateJobConfig func", func() {
 		It("should return error", func() {
 			_, err := ValidateJobConfig(options)
 			Expect(err).Error().Should(HaveOccurred())
-			Expect(err.Error()).Should(Equal(fmt.Sprintf("jenkins-pipeline github should set env %s", github.TokenEnvKey)))
+			Expect(configGetter.IsNotFoundErr(err)).Should(BeTrue())
 		})
 	})
 	When("jobName is not valid", func() {

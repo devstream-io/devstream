@@ -1,6 +1,8 @@
 package configGetter_test
 
 import (
+	"errors"
+	"fmt"
 	"os"
 	"strings"
 
@@ -223,4 +225,21 @@ var _ = Describe("Each Getter", func() {
 	Describe("DefaultValue Getter", func() {
 		// it's tested in the general test
 	})
+})
+
+var _ = Describe("err check", func() {
+	When("err is errNotFound", func() {
+		It("should return true", func() {
+			err := fmt.Errorf("wrap err: %w", configGetter.NewErrItemNotFound(configGetter.NewEnvGetter("test")))
+			Expect(configGetter.IsNotFoundErr(err)).Should(BeTrue())
+		})
+	})
+
+	When("err is not errNotFound", func() {
+		It("should return false", func() {
+			err := fmt.Errorf("wrap err: %w", errors.New("test"))
+			Expect(configGetter.IsNotFoundErr(err)).Should(BeFalse())
+		})
+	})
+
 })

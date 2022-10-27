@@ -1,6 +1,7 @@
 package configGetter
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
@@ -52,8 +53,8 @@ type errItemNotFound struct {
 	getters []ItemGetter
 }
 
-func NewErrItemNotFound(getters ...ItemGetter) *errItemNotFound {
-	return &errItemNotFound{
+func NewErrItemNotFound(getters ...ItemGetter) errItemNotFound {
+	return errItemNotFound{
 		getters: getters,
 	}
 }
@@ -69,4 +70,8 @@ func (e errItemNotFound) Error() string {
 		}
 		return fmt.Sprintf("missing config settings, you could set it by: %s", strings.Join(hints, ", or "))
 	}
+}
+
+func IsNotFoundErr(err error) bool {
+	return errors.As(err, &errItemNotFound{})
 }
