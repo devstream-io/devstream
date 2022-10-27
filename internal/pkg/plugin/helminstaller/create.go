@@ -12,13 +12,13 @@ func Create(options configmanager.RawOptions) (statemanager.ResourceStatus, erro
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
-			SetDefaultConfig,
+			RenderDefaultConfig,
 			RenderValuesYaml,
 			validate,
 		},
 		ExecuteOperations:   helm.DefaultCreateOperations,
 		TerminateOperations: helm.DefaultTerminateOperations,
-		GetStatusOperation:  helm.GetAllResourcesStatus,
+		GetStatusOperation:  IndexStatusGetterFunc(options),
 	}
 
 	// Execute all Operations in Operator

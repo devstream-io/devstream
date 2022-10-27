@@ -8,30 +8,30 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
-var toolArgoCD = "argocd"
+var toolOpenLDAP = "openldap"
 
-var DefaultConfigWithArgoCD = helm.Options{
+var DefaultConfigWithOpenLDAP = helm.Options{
 	Chart: helmCommon.Chart{
 		ChartPath:   "",
-		ChartName:   "argo/argo-cd",
+		ChartName:   "helm-openldap/openldap-stack-ha",
 		Version:     "",
 		Timeout:     "10m",
-		Wait:        types.Bool(true),
 		UpgradeCRDs: types.Bool(true),
-		ReleaseName: "argocd",
-		Namespace:   "argocd",
+		Wait:        types.Bool(true),
+		ReleaseName: "openldap",
+		Namespace:   "openldap",
 	},
 	Repo: helmCommon.Repo{
-		URL:  "https://argoproj.github.io/argo-helm",
-		Name: "argo",
+		URL:  "https://jp-gouin.github.io/helm-openldap/",
+		Name: "helm-openldap",
 	},
 }
 
 func init() {
-	DefaultOptionsMap[toolArgoCD] = &DefaultConfigWithArgoCD
-	StatusGetterFuncMap[toolArgoCD] = GetArgoCDStatus
+	DefaultOptionsMap[toolOpenLDAP] = &DefaultConfigWithOpenLDAP
+	StatusGetterFuncMap[toolOpenLDAP] = GetOpenLDAPStatus
 }
 
-func GetArgoCDStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
+func GetOpenLDAPStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return helm.GetAllResourcesStatus(options)
 }

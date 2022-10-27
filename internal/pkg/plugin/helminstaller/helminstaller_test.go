@@ -2,6 +2,7 @@ package helminstaller_test
 
 import (
 	"os"
+	"reflect"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -9,7 +10,9 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/helminstaller"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/helminstaller/defaults"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/helm"
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 )
 
 var _ = Describe("helm installer test", func() {
@@ -30,10 +33,28 @@ var _ = Describe("helm installer test", func() {
 		})
 	})
 
-	Context("SetDefaultConfig", func() {
+	Context("GetStatusGetterFuncByInstanceID", func() {
+		defaults.StatusGetterFuncMap = map[string]plugininstaller.StatusGetterOperation{
+			"foo": func(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
+				return nil, nil
+			},
+		}
+
+		It("should exists", func() {
+			fn := helminstaller.GetStatusGetterFuncByInstanceID("foo-001")
+			Expect(fn).NotTo(BeNil())
+		})
+
+		It("should not exists", func() {
+			fn := helminstaller.GetStatusGetterFuncByInstanceID("fooo")
+			Expect(fn).To(BeNil())
+		})
+	})
+
+	Context("RenderDefaultConfig", func() {
 		opts := configmanager.RawOptions{}
 		opts["instanceID"] = interface{}("argocd-001")
-		newOpts, err := helminstaller.SetDefaultConfig(opts)
+		newOpts, err := helminstaller.RenderDefaultConfig(opts)
 		Expect(err).To(BeNil())
 
 		helmOpts, err := helm.NewOptions(newOpts)
@@ -73,5 +94,16 @@ var _ = Describe("helm installer test", func() {
 			err = os.RemoveAll("./values.yaml")
 			Expect(err).To(BeNil())
 		})
+	})
+
+	Context("IndexStatusGetterFunc", func() {
+		opts1 := configmanager.RawOptions{
+			"instanceID": interface{}("argocd-001"),
+		}
+
+		defaults.StatusGetterFuncMap["argocd"] = defaults.GetArgoCDStatus
+
+		fn1 := helminstaller.IndexStatusGetterFunc(opts1)
+		Expect(reflect.ValueOf(fn1).Pointer()).To(Equal(reflect.ValueOf(defaults.GetArgoCDStatus).Pointer()))
 	})
 })

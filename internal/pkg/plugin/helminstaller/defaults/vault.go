@@ -8,30 +8,30 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
-var toolArgoCD = "argocd"
+var toolVault = "vault"
 
-var DefaultConfigWithArgoCD = helm.Options{
+var DefaultConfigWithVault = helm.Options{
 	Chart: helmCommon.Chart{
 		ChartPath:   "",
-		ChartName:   "argo/argo-cd",
+		ChartName:   "hashicorp/vault",
 		Version:     "",
 		Timeout:     "10m",
-		Wait:        types.Bool(true),
 		UpgradeCRDs: types.Bool(true),
-		ReleaseName: "argocd",
-		Namespace:   "argocd",
+		Wait:        types.Bool(true),
+		ReleaseName: "vault",
+		Namespace:   "vault",
 	},
 	Repo: helmCommon.Repo{
-		URL:  "https://argoproj.github.io/argo-helm",
-		Name: "argo",
+		URL:  "https://helm.releases.hashicorp.com",
+		Name: "hashicorp",
 	},
 }
 
 func init() {
-	DefaultOptionsMap[toolArgoCD] = &DefaultConfigWithArgoCD
-	StatusGetterFuncMap[toolArgoCD] = GetArgoCDStatus
+	DefaultOptionsMap[toolVault] = &DefaultConfigWithVault
+	StatusGetterFuncMap[toolVault] = GetVaultStatus
 }
 
-func GetArgoCDStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
+func GetVaultStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return helm.GetAllResourcesStatus(options)
 }

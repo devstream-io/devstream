@@ -1,4 +1,4 @@
-# [[ .Name ]] plugin
+# [[ .Name ]] Plugin
 
 TODO(dtm): Add your document here.
 

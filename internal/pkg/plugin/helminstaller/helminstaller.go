@@ -4,6 +4,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/helminstaller/defaults"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/helm"
@@ -11,16 +13,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
-func GetDefaultOptionsByInstanceID(instanceID string) *helm.Options {
-	for name, options := range defaults.DefaultOptionsMap {
-		if strings.Contains(instanceID, name+"-") {
-			return options
-		}
-	}
-	return nil
-}
-
-func SetDefaultConfig(options configmanager.RawOptions) (configmanager.RawOptions, error) {
+func RenderDefaultConfig(options configmanager.RawOptions) (configmanager.RawOptions, error) {
 	helmOptions, err := helm.NewOptions(options)
 	if err != nil {
 		return nil, err
@@ -70,4 +63,39 @@ func RenderValuesYaml(options configmanager.RawOptions) (configmanager.RawOption
 	helmOptions.ValuesYaml = ""
 
 	return types.EncodeStruct(helmOptions)
+}
+
+func IndexStatusGetterFunc(options configmanager.RawOptions) plugininstaller.StatusGetterOperation {
+	helmOptions, err := helm.NewOptions(options)
+	if err != nil {
+		// It's ok to return GetAllResourcesStatus here when err != nil.
+		return helm.GetAllResourcesStatus
+	}
+
+	instanceID := helmOptions.InstanceID
+	statusGetterFunc := GetStatusGetterFuncByInstanceID(instanceID)
+
+	if statusGetterFunc == nil {
+		return helm.GetAllResourcesStatus
+	}
+
+	return statusGetterFunc
+}
+
+func GetDefaultOptionsByInstanceID(instanceID string) *helm.Options {
+	for name, options := range defaults.DefaultOptionsMap {
+		if strings.Contains(instanceID, name+"-") {
+			return options
+		}
+	}
+	return nil
+}
+
+func GetStatusGetterFuncByInstanceID(instanceID string) plugininstaller.StatusGetterOperation {
+	for name, fn := range defaults.StatusGetterFuncMap {
+		if strings.Contains(instanceID, name+"-") {
+			return fn
+		}
+	}
+	return nil
 }

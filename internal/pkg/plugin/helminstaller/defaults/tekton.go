@@ -8,30 +8,30 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
-var toolArgoCD = "argocd"
+var toolTekton = "tekton"
 
-var DefaultConfigWithArgoCD = helm.Options{
+var DefaultConfigWithTekton = helm.Options{
 	Chart: helmCommon.Chart{
 		ChartPath:   "",
-		ChartName:   "argo/argo-cd",
+		ChartName:   "tekton/tekton-pipeline",
 		Version:     "",
 		Timeout:     "10m",
-		Wait:        types.Bool(true),
 		UpgradeCRDs: types.Bool(true),
-		ReleaseName: "argocd",
-		Namespace:   "argocd",
+		Wait:        types.Bool(true),
+		ReleaseName: "tekton",
+		Namespace:   "tekton",
 	},
 	Repo: helmCommon.Repo{
-		URL:  "https://argoproj.github.io/argo-helm",
-		Name: "argo",
+		URL:  "https://steinliber.github.io/tekton-helm-chart/",
+		Name: "tekton",
 	},
 }
 
 func init() {
-	DefaultOptionsMap[toolArgoCD] = &DefaultConfigWithArgoCD
-	StatusGetterFuncMap[toolArgoCD] = GetArgoCDStatus
+	DefaultOptionsMap[toolTekton] = &DefaultConfigWithTekton
+	StatusGetterFuncMap[toolTekton] = GetTektonStatus
 }
 
-func GetArgoCDStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
+func GetTektonStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return helm.GetAllResourcesStatus(options)
 }
