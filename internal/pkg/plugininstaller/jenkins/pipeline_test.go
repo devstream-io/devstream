@@ -6,8 +6,8 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/base"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/jenkins/plugins"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/cifile"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/step"
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
@@ -79,11 +79,9 @@ var _ = Describe("pipeline struct", func() {
 	Context("extractpipelinePlugins method", func() {
 		When("repo type is github", func() {
 			BeforeEach(func() {
-				p.ImageRepo = &plugins.ImageRepoJenkinsConfig{
-					ImageRepoStepConfig: base.ImageRepoStepConfig{
-						URL:  "http://test.com",
-						User: "test",
-					},
+				p.ImageRepo = &step.ImageRepoStepConfig{
+					URL:  "http://test.com",
+					User: "test",
 				}
 			})
 			It("should return plugin config", func() {
@@ -95,11 +93,9 @@ var _ = Describe("pipeline struct", func() {
 		})
 		When("repo type is gitlab", func() {
 			BeforeEach(func() {
-				p.ImageRepo = &plugins.ImageRepoJenkinsConfig{
-					ImageRepoStepConfig: base.ImageRepoStepConfig{
-						URL:  "http://test.com",
-						User: "test",
-					},
+				p.ImageRepo = &step.ImageRepoStepConfig{
+					URL:  "http://test.com",
+					User: "test",
 				}
 			})
 			It("should return plugin config", func() {
@@ -159,34 +155,41 @@ var _ = Describe("pipeline struct", func() {
 	})
 
 	Context("buildCIConfig method", func() {
+		var (
+			customMap map[string]interface{}
+		)
 		BeforeEach(func() {
 			p.JenkinsfilePath = "test/local"
 			p.Job = "test"
-			p.ImageRepo = &plugins.ImageRepoJenkinsConfig{
-				ImageRepoStepConfig: base.ImageRepoStepConfig{
-					URL:  "testurl",
-					User: "testuser",
-				},
+			p.ImageRepo = &step.ImageRepoStepConfig{
+				URL:  "testurl",
+				User: "testuser",
 			}
-			p.Custom = map[string]interface{}{
+			customMap = map[string]interface{}{
 				"test": "gg",
 			}
 		})
 		It("should work normal", func() {
-			ciConfig, err := p.buildCIConfig(repoInfo)
-			Expect(err).Error().ShouldNot(HaveOccurred())
+			var emptyDingTalk *step.DingtalkStepConfig
+			var emptySonar *step.SonarQubeStepConfig
+			var emptyGeneral *step.GeneralStepConfig
+			ciConfig := p.buildCIConfig(repoInfo, customMap)
 			Expect(ciConfig.ConfigLocation).Should(Equal(p.JenkinsfilePath))
 			Expect(string(ciConfig.Type)).Should(Equal("jenkins"))
-			expectedMap := map[string]interface{}{
-				"ImageRepositoryURL":  "testurl/library",
-				"ImageAuthSecretName": "repo-auth",
-				"DingtalkRobotID":     "",
-				"DingtalkAtUser":      "",
-				"SonarqubeEnable":     false,
-				"Custom": map[string]interface{}{
-					"test": "gg",
+			expectedMap := cifile.CIFileVarsMap{
+				"AppName":         "test",
+				"jobName":         "test",
+				"jenkinsfilePath": "test/local",
+				"imageRepo": map[string]interface{}{
+					"url":  "testurl",
+					"user": "testuser",
 				},
-				"AppName": "test",
+				"dingTalk":          emptyDingTalk,
+				"sonarqube":         emptySonar,
+				"general":           emptyGeneral,
+				"ImageRepoSecret":   "repo-auth",
+				"DingTalkSecretKey": "DINGTALK_SECURITY_VALUE",
+				"StepGlobalVars":    "",
 			}
 			Expect(ciConfig.Vars).Should(Equal(expectedMap))
 		})

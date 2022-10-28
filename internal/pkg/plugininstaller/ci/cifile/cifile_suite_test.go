@@ -1,4 +1,4 @@
-package plugins_test
+package cifile_test
 
 import (
 	"testing"
@@ -9,5 +9,5 @@ import (
 
 func TestCommon(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "PluginInstaller Jenkins plugins Suite")
+	RunSpecs(t, "PluginInstaller CiFile Suite")
 }

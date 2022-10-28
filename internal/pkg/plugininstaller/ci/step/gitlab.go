@@ -1,10 +1,11 @@
-package plugins
+package step
 
 import (
 	"os"
 
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/scm/github"
 )
 
 const (
@@ -13,13 +14,13 @@ const (
 	GitlabConnectionName = "gitlabConnection"
 )
 
-type GitlabJenkinsConfig struct {
+type GitlabStepConfig struct {
 	SSHPrivateKey string `mapstructure:"sshPrivateKey"`
 	RepoOwner     string `mapstructure:"repoOwner"`
 	BaseURL       string `mapstructure:"baseURL"`
 }
 
-func (g *GitlabJenkinsConfig) getDependentPlugins() []*jenkins.JenkinsPlugin {
+func (g *GitlabStepConfig) GetJenkinsPlugins() []*jenkins.JenkinsPlugin {
 	return []*jenkins.JenkinsPlugin{
 		{
 			Name:    "gitlab-plugin",
@@ -28,7 +29,7 @@ func (g *GitlabJenkinsConfig) getDependentPlugins() []*jenkins.JenkinsPlugin {
 	}
 }
 
-func (g *GitlabJenkinsConfig) config(jenkinsClient jenkins.JenkinsAPI) (*jenkins.RepoCascConfig, error) {
+func (g *GitlabStepConfig) ConfigJenkins(jenkinsClient jenkins.JenkinsAPI) (*jenkins.RepoCascConfig, error) {
 	// 1. create ssh credentials
 	if g.SSHPrivateKey == "" {
 		log.Warnf("jenkins gitlab ssh key not config, private repo can't be clone")
@@ -55,13 +56,14 @@ func (g *GitlabJenkinsConfig) config(jenkinsClient jenkins.JenkinsAPI) (*jenkins
 	}, nil
 }
 
-func NewGitlabPlugin(config *PluginGlobalConfig) *GitlabJenkinsConfig {
-	return &GitlabJenkinsConfig{
+func (g *GitlabStepConfig) ConfigGithub(ghClient *github.Client) error {
+	return nil
+}
+
+func newGitlabStep(config *StepGlobalOption) *GitlabStepConfig {
+	return &GitlabStepConfig{
 		SSHPrivateKey: config.RepoInfo.SSHPrivateKey,
 		RepoOwner:     config.RepoInfo.GetRepoOwner(),
 		BaseURL:       config.RepoInfo.BaseURL,
 	}
-}
-
-func (g *GitlabJenkinsConfig) setRenderVars(vars *jenkins.JenkinsFileRenderInfo) {
 }

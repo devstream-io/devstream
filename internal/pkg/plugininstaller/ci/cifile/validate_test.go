@@ -1,12 +1,12 @@
-package ci_test
+package cifile_test
 
 import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/cifile"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
@@ -28,7 +28,7 @@ var _ = Describe("Validate func", func() {
 					"repoType": "gitlab",
 				},
 			}
-			_, err := ci.Validate(ciTypeNotExistOptions)
+			_, err := cifile.Validate(ciTypeNotExistOptions)
 			Expect(err).Should(HaveOccurred())
 		})
 	})
@@ -64,16 +64,16 @@ var _ = Describe("Validate func", func() {
 					"repoType": "gitlab",
 				},
 			}
-			_, err := ci.Validate(option)
+			_, err := cifile.Validate(option)
 			Expect(err).ShouldNot(HaveOccurred())
 		})
 	})
 })
 
 var _ = Describe("SetDefaultConfig func", func() {
-	var defaultOpts *ci.Options
+	var defaultOpts *cifile.Options
 	BeforeEach(func() {
-		defaultCIConfig := &ci.CIConfig{
+		defaultCIConfig := &cifile.CIConfig{
 			Type:           "github",
 			ConfigLocation: "http://www.test.com",
 		}
@@ -83,13 +83,13 @@ var _ = Describe("SetDefaultConfig func", func() {
 			Branch:   "test_branch",
 			RepoType: "gitlab",
 		}
-		defaultOpts = &ci.Options{
+		defaultOpts = &cifile.Options{
 			CIConfig:    defaultCIConfig,
 			ProjectRepo: defaultRepo,
 		}
 	})
 	It("should work normal", func() {
-		defaultFunc := ci.SetDefaultConfig(defaultOpts)
+		defaultFunc := cifile.SetDefaultConfig(defaultOpts)
 		rawOptions := map[string]interface{}{}
 		opts, err := defaultFunc(rawOptions)
 		Expect(err).Error().ShouldNot(HaveOccurred())

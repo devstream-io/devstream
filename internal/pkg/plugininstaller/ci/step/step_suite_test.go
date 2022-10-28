@@ -1,4 +1,4 @@
-package ci_test
+package step_test
 
 import (
 	"testing"
@@ -9,5 +9,5 @@ import (
 
 func TestCommon(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "PluginInstaller Ci Suite")
+	RunSpecs(t, "PluginInstaller CI Base Suite")
 }

@@ -1,10 +1,10 @@
-package ci
+package cifile
 
 import (
 	"errors"
 	"fmt"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/server"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/cifile/server"
 	"github.com/devstream-io/devstream/pkg/util/downloader"
 	"github.com/devstream-io/devstream/pkg/util/file"
 	"github.com/devstream-io/devstream/pkg/util/log"
@@ -13,14 +13,15 @@ import (
 )
 
 type ciConfigMap map[string]string
+type CIFileVarsMap map[string]interface{}
 
 type CIConfig struct {
 	Type server.CIServerType `validate:"oneof=jenkins github gitlab" mapstructure:"type"`
 	// ConfigLocation represent location of ci config, it can be a remote location or local location
 	ConfigLocation string `validate:"required_without=ConfigContents" mapstructure:"configLocation"`
 	// Contents respent map of ci fileName to fileContent
-	ConfigContentMap ciConfigMap            `validate:"required_without=ConfigLocation" mapstructure:"configContents"`
-	Vars             map[string]interface{} `mapstructure:"vars"`
+	ConfigContentMap ciConfigMap   `validate:"required_without=ConfigLocation" mapstructure:"configContents"`
+	Vars             CIFileVarsMap `mapstructure:"vars"`
 }
 
 // SetContent is used to config ConfigContentMap for ci
@@ -88,4 +89,8 @@ func (c *CIConfig) getConfigContentFromLocation() (git.GitFileContentMap, error)
 		ciConfigPath, ciClient.FilterCIFilesFunc(),
 		ciClient.GetGitNameFunc(), processCIFilesFunc(c.Vars),
 	)
+}
+
+func (m CIFileVarsMap) Set(k, v string) {
+	m[k] = v
 }

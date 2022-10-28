@@ -3,11 +3,12 @@ package jenkins
 import (
 	"context"
 	"fmt"
-	"reflect"
 	"strings"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/jenkins/plugins"
+	"github.com/imdario/mergo"
+
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/cifile"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/step"
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/mapz"
@@ -15,12 +16,12 @@ import (
 )
 
 type pipeline struct {
-	Job             string                          `mapstructure:"jobName" validate:"required"`
-	JenkinsfilePath string                          `mapstructure:"jenkinsfilePath" validate:"required"`
-	ImageRepo       *plugins.ImageRepoJenkinsConfig `mapstructure:"imageRepo"`
-	Dingtalk        *plugins.DingtalkJenkinsConfig  `mapstructure:"dingTalk"`
-	Sonarqube       *plugins.SonarQubeJenkinsConfig `mapstructure:"sonarqube"`
-	Custom          map[string]interface{}          `mapstructure:",remain"`
+	Job             string                    `mapstructure:"jobName" validate:"required"`
+	JenkinsfilePath string                    `mapstructure:"jenkinsfilePath" validate:"required"`
+	ImageRepo       *step.ImageRepoStepConfig `mapstructure:"imageRepo"`
+	Dingtalk        *step.DingtalkStepConfig  `mapstructure:"dingTalk"`
+	Sonarqube       *step.SonarQubeStepConfig `mapstructure:"sonarqube"`
+	General         *step.GeneralStepConfig   `mapstructure:"general"`
 }
 
 func (p *pipeline) getJobName() string {
@@ -37,43 +38,21 @@ func (p *pipeline) getJobFolder() string {
 	return ""
 }
 
-func (p *pipeline) extractPlugins(repoInfo *git.RepoInfo) []plugins.PluginConfigAPI {
-	var pluginConfigs []plugins.PluginConfigAPI
-	plugGlobalConfig := &plugins.PluginGlobalConfig{
-		RepoInfo: repoInfo,
-	}
-	// 1. add pipeline plugin
-	v := reflect.ValueOf(p).Elem()
-	for i := 0; i < v.NumField(); i++ {
-		valueField := v.Field(i)
-		if valueField.Kind() == reflect.Ptr && !valueField.IsNil() {
-			fieldVal, ok := valueField.Interface().(plugins.PluginConfigAPI)
-			if ok {
-				pluginConfigs = append(pluginConfigs, fieldVal)
-			} else {
-				log.Warnf("jenkins extract pipeline plugins failed: %+v", valueField)
-			}
-		}
-
-	}
-	// 2. add scm plugin
-	switch repoInfo.RepoType {
-	case "gitlab":
-		pluginConfigs = append(pluginConfigs, plugins.NewGitlabPlugin(plugGlobalConfig))
-	case "github":
-		pluginConfigs = append(pluginConfigs, plugins.NewGithubPlugin(plugGlobalConfig))
-	}
-	return pluginConfigs
+func (p *pipeline) extractPlugins(repoInfo *git.RepoInfo) []step.StepConfigAPI {
+	stepConfigs := step.ExtractValidStepConfig(p)
+	// add repo plugin for repoInfo
+	stepConfigs = append(stepConfigs, step.GetRepoStepConfig(repoInfo)...)
+	return stepConfigs
 }
 
 func (p *pipeline) install(jenkinsClient jenkins.JenkinsAPI, repoInfo *git.RepoInfo, secretToken string) error {
 	// 1. install jenkins plugins
 	pipelinePlugins := p.extractPlugins(repoInfo)
-	if err := plugins.EnsurePluginInstalled(jenkinsClient, pipelinePlugins); err != nil {
+	if err := ensurePluginInstalled(jenkinsClient, pipelinePlugins); err != nil {
 		return err
 	}
 	// 2. config plugins by casc
-	if err := plugins.ConfigPlugins(jenkinsClient, pipelinePlugins); err != nil {
+	if err := configPlugins(jenkinsClient, pipelinePlugins); err != nil {
 		return err
 	}
 	// 3. create or update jenkins job
@@ -103,11 +82,11 @@ func (p *pipeline) createOrUpdateJob(jenkinsClient jenkins.JenkinsAPI, repoInfo 
 		Branch:            repoInfo.Branch,
 		SecretToken:       secretToken,
 		FolderName:        p.getJobFolder(),
-		GitlabConnection:  plugins.GitlabConnectionName,
+		GitlabConnection:  step.GitlabConnectionName,
 		RepoURL:           repoInfo.BuildScmURL(),
 		RepoOwner:         repoInfo.GetRepoOwner(),
 		RepoName:          repoInfo.Repo,
-		RepoCredentialsId: plugins.GetRepoCredentialsId(repoInfo),
+		RepoCredentialsId: step.GetStepGlobalVars(repoInfo).CredentialID,
 	}
 	jobScript, err := jenkins.BuildRenderedScript(jobRenderInfo)
 	if err != nil {
@@ -133,21 +112,21 @@ func (p *pipeline) checkValid() error {
 	return nil
 }
 
-func (p *pipeline) buildCIConfig(repoInfo *git.RepoInfo) (*ci.CIConfig, error) {
-	ciConfig := &ci.CIConfig{
-		Type:           "jenkins",
+func (p *pipeline) buildCIConfig(repoInfo *git.RepoInfo, pipelineRawOption map[string]interface{}) *cifile.CIConfig {
+	ciConfig := &cifile.CIConfig{
+		Type:           ciType,
 		ConfigLocation: p.JenkinsfilePath,
 	}
 	// update ci render variables by plugins
-	pipelinePlugins := p.extractPlugins(repoInfo)
-	jenkinsRenderVars := plugins.GetPluginsRenderVariables(pipelinePlugins)
-	jenkinsRenderVars.AppName = p.Job
-	jenkinsRenderVars.Custom = p.Custom
-	rawConfigVars, err := mapz.DecodeStructToMap(jenkinsRenderVars)
+	pipelineMap, _ := mapz.DecodeStructToMap(p)
+	globalVarsMap, _ := mapz.DecodeStructToMap(step.GetStepGlobalVars(repoInfo))
+	err := mergo.Merge(&pipelineMap, globalVarsMap)
 	if err != nil {
-		log.Debugf("jenkins config Jenkinsfile variables failed => %+v", err)
-		return nil, err
+		log.Warnf("jenkins buildCIConfig merge CIFileVarsMap failed: %+v", err)
 	}
+	rawConfigVars := cifile.CIFileVarsMap(pipelineMap)
+	rawConfigVars.Set("AppName", p.Job)
 	ciConfig.Vars = rawConfigVars
-	return ciConfig, nil
+	log.Debugf("jenkins pipeline get render vars: %+v", ciConfig.Vars)
+	return ciConfig
 }

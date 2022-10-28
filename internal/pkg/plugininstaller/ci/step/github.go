@@ -1,4 +1,4 @@
-package plugins
+package step
 
 import (
 	"os"
@@ -9,14 +9,14 @@ import (
 )
 
 const (
-	githubCredentialName = "jenkinsGithubCredential"
+	githubCredentialName = "githubCredential"
 )
 
-type GithubJenkinsConfig struct {
+type GithubStepConfig struct {
 	RepoOwner string `mapstructure:"repoOwner"`
 }
 
-func (g *GithubJenkinsConfig) getDependentPlugins() []*jenkins.JenkinsPlugin {
+func (g *GithubStepConfig) GetJenkinsPlugins() []*jenkins.JenkinsPlugin {
 	return []*jenkins.JenkinsPlugin{
 		{
 			Name:    "github-branch-source",
@@ -25,7 +25,7 @@ func (g *GithubJenkinsConfig) getDependentPlugins() []*jenkins.JenkinsPlugin {
 	}
 }
 
-func (g *GithubJenkinsConfig) config(jenkinsClient jenkins.JenkinsAPI) (*jenkins.RepoCascConfig, error) {
+func (g *GithubStepConfig) ConfigJenkins(jenkinsClient jenkins.JenkinsAPI) (*jenkins.RepoCascConfig, error) {
 	// 1. create github credentials by github token
 	err := jenkinsClient.CreatePasswordCredential(
 		githubCredentialName,
@@ -44,11 +44,12 @@ func (g *GithubJenkinsConfig) config(jenkinsClient jenkins.JenkinsAPI) (*jenkins
 	}, nil
 }
 
-func NewGithubPlugin(config *PluginGlobalConfig) *GithubJenkinsConfig {
-	return &GithubJenkinsConfig{
-		RepoOwner: config.RepoInfo.GetRepoOwner(),
-	}
+func (g *GithubStepConfig) ConfigGithub(ghClient *github.Client) error {
+	return nil
 }
 
-func (g *GithubJenkinsConfig) setRenderVars(vars *jenkins.JenkinsFileRenderInfo) {
+func newGithubStep(config *StepGlobalOption) *GithubStepConfig {
+	return &GithubStepConfig{
+		RepoOwner: config.RepoInfo.GetRepoOwner(),
+	}
 }

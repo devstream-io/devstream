@@ -4,17 +4,17 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/gitlabci"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/cifile"
 )
 
 func Delete(options configmanager.RawOptions) (bool, error) {
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
-			ci.SetDefaultConfig(gitlabci.DefaultCIOptions),
-			ci.Validate,
+			cifile.SetDefaultConfig(gitlabci.DefaultCIOptions),
+			cifile.Validate,
 		},
 		ExecuteOperations: plugininstaller.ExecuteOperations{
-			ci.DeleteCIFiles,
+			cifile.DeleteCIFiles,
 		},
 	}
 

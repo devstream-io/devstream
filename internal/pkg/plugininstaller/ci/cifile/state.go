@@ -1,4 +1,4 @@
-package ci
+package cifile
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
