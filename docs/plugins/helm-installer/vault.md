@@ -1,27 +1,12 @@
 # Install Vault with DevStream
 
-//TODO(daniel-hutao): to be updated
-
-This plugin installs [hashicorp-vault](https://www.vaultproject.io/) in an existing Kubernetes cluster using the Helm chart for your tests or develops hashicorp-vault.
-
-This plugin installs hashicorp-vault with replicas:3 by default value.
-
-## Usage
-
-The following content is an example of the "tool file".
-
-For more information on the main config, the tool file and the var file of DevStream, see [Core Concepts Overview](../core-concepts/core-concepts.md#1-config) and [DevStream Configuration](../core-concepts/config.md).
-
-```yaml
---8<-- "hashicorp-vault.yaml"
-```
-
-### Default Configs
+## Default Configs
 
 | key                | default value                       | description                                        |
 | ----               | ----                                | ----                                               |
 | chart.chartPath    | ""                                  | local chart path                                   |
 | chart.chartName    | hashicorp/vault                     | chart name                                         |
+| chart.version      | ""                                  | chart version                                      |
 | chart.timeout      | 5m                                  | this config will wait 5 minutes to deploy          |
 | chart.releaseName  | vault                               | helm release name                                  |
 | chart.upgradeCRDs  | true                                | default update CRD config                          |

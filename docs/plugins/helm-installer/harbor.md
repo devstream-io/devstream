@@ -1,15 +1,5 @@
 # Install Harbor with DevStream
 
-//TODO(daniel-hutao): to be updated
-
-The `harbor` plugin is used to deploy and manage [Harbor](https://goharbor.io/).
-
-Currently, two popular ways to deploy Harbor are using _docker compose_or _helm_.
-
-There are also two DevStream plugins, `harbor-docker` (docker-compose deployment) and `harbor` (helm deployment.) They will be merged into one soon, but we mainly use the helm one at the moment.
-
-In this doc, we will do a development environment deploy with minikube/kind. You can do the same in any Kubernetes cluster, but some steps need adjustment.
-
 ## 1 Prerequisites
 
 - An existing Kubernetes cluster, version > 1.10
@@ -35,34 +25,27 @@ Examples:
 
 ### 3.1 Quickstart
 
-The following content is an example of the "tool file".
-
-For more information on the main config, the tool file and the var file of DevStream, see [Core Concepts Overview](../core-concepts/core-concepts.md#1-config) and [DevStream Configuration](../core-concepts/config.md).
-
 For a local testing and developing purpose, we can deploy Harbor quickly using the minimal config as follows:
 
 ```yaml
 tools:
-- name: harbor
-  instanceID: default
+- name: helm-installer
+  instanceID: harbor-001
   dependsOn: [ ]
   options:
-    chart:
-      valuesYaml: |
-        externalURL: http://127.0.0.1
-        expose:
-          type: nodePort
-          tls:
-            enabled: false
-        chartmuseum:
+    valuesYaml: |
+      externalURL: http://127.0.0.1
+      expose:
+        type: nodePort
+        tls:
           enabled: false
-        notary:
-          enabled: false
-        trivy:
-          enabled: false
+      chartmuseum:
+        enabled: false
+      notary:
+        enabled: false
+      trivy:
+        enabled: false
 ```
-
-_Note: the config above is the "tool config" of DevStream. For a full DevStream config, we need the core config. See [here](../core-concepts/config.md)._
 
 After running `dtm apply`, we can see the following resources in the "harbor" namespace:
 
@@ -148,7 +131,6 @@ And the default login user/pwd is: `admin/Harbor12345`. You will see the dashboa
 
 ![Harbor Dashboard](./harbor/dashboard.png)
 
-
 ### 3.3 Default Config
 
 The `harbor` plugin provides default values for many options:
@@ -157,16 +139,11 @@ The `harbor` plugin provides default values for many options:
 | ----               | ----                     | ----                                |
 | chart.chartPath    | ""                       | local chart path                    |
 | chart.chartName    | harbor/harbor            | helm chart name                     |
+| chart.version      | ""                       | chart version                       |
 | chart.timeout      | 10m                      | timeout for helm install            |
 | chart.upgradeCRDs  | true                     | update CRDs or not (if any)         |
 | chart.releaseName  | harbor                   | helm release name                   |
-| chart.wait         | true                     | wait till deployment finishes       |
 | chart.namespace    | harbor                   | namespace                           |
+| chart.wait         | true                     | wait till deployment finishes       |
 | repo.url           | https://helm.goharbor.io | helm repo URL                       |
 | repo.name          | harbor                   | helm repo name                      |
-
-A maximum config is as follows:
-
-```yaml
---8<-- "harbor.yaml"
-```
