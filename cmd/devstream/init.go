@@ -12,9 +12,9 @@ import (
 	"github.com/devstream-io/devstream/cmd/devstream/list"
 	"github.com/devstream-io/devstream/internal/pkg/completion"
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
+	"github.com/devstream-io/devstream/internal/pkg/pluginengine"
 	"github.com/devstream-io/devstream/internal/pkg/pluginmanager"
 	"github.com/devstream-io/devstream/internal/pkg/version"
-	"github.com/devstream-io/devstream/pkg/util/file"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -71,7 +71,7 @@ func GetPluginsAndPluginDirFromConfig() (tools []configmanager.Tool, pluginDir s
 	}
 
 	// combine plugin dir from config file and flag
-	if err := file.SetPluginDir(cfg.PluginDir); err != nil {
+	if err = pluginengine.SetPluginDir(cfg.PluginDir); err != nil {
 		return nil, "", err
 	}
 
@@ -116,7 +116,7 @@ func GetPluginsAndPluginDirFromFlags() (tools []configmanager.Tool, pluginDir st
 	}
 
 	// 2. handle plugin dir
-	if err := file.SetPluginDir(""); err != nil {
+	if err = pluginengine.SetPluginDir(""); err != nil {
 		return nil, "", err
 	}
 

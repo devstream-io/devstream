@@ -10,7 +10,6 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/pluginengine"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
-	"github.com/devstream-io/devstream/pkg/util/file"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -36,7 +35,7 @@ func Show(configFile string) error {
 		return fmt.Errorf("failed to load the config file")
 	}
 
-	if err := file.SetPluginDir(cfg.PluginDir); err != nil {
+	if err = pluginengine.SetPluginDir(cfg.PluginDir); err != nil {
 		log.Errorf("Error: %s.", err)
 	}
 

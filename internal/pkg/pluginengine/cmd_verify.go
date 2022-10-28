@@ -4,7 +4,6 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/pluginmanager"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
-	"github.com/devstream-io/devstream/pkg/util/file"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -20,7 +19,7 @@ func Verify(configFile string) bool {
 		return false
 	}
 
-	if err := file.SetPluginDir(cfg.PluginDir); err != nil {
+	if err = SetPluginDir(cfg.PluginDir); err != nil {
 		log.Errorf("Error: %s.", err)
 	}
 

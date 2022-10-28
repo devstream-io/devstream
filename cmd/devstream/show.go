@@ -16,7 +16,7 @@ var template string
 
 var showCMD = &cobra.Command{
 	Use:   "show",
-	Short: "Show is used to print plugins' configuration templates or status.",
+	Short: "Show is used to print plugins' configuration templates or status",
 }
 
 var showConfigCMD = &cobra.Command{

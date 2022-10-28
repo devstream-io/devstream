@@ -20,6 +20,8 @@ var (
 
 // Config records rendered config values and is used as a general config in DevStream.
 type Config struct {
+	// Command line flag have a higher priority than the config file.
+	// If you used the `--plugin-dir` flag with `dtm`, then the "pluginDir" in the config file will be ignored.
 	PluginDir string
 	Tools     []Tool `yaml:"tools"`
 	State     *State
