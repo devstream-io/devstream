@@ -1,4 +1,4 @@
-package plugins
+package step
 
 import (
 	"fmt"
@@ -10,9 +10,9 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
-var _ = Describe("GitlabJenkinsConfig", func() {
+var _ = Describe("GitlabStepConfig", func() {
 	var (
-		c                          *GitlabJenkinsConfig
+		c                          *GitlabStepConfig
 		mockClient                 *jenkins.MockClient
 		sshKey, repoOwner, baseURL string
 	)
@@ -20,22 +20,22 @@ var _ = Describe("GitlabJenkinsConfig", func() {
 		baseURL = "jenkins_test"
 		repoOwner = "test_user"
 		sshKey = "test_key"
-		c = &GitlabJenkinsConfig{
+		c = &GitlabStepConfig{
 			BaseURL:   baseURL,
 			RepoOwner: repoOwner,
 		}
 	})
 
-	Context("getDependentPlugins method", func() {
+	Context("GetJenkinsPlugins method", func() {
 		It("should return gitlab plugin", func() {
-			plugins := c.getDependentPlugins()
+			plugins := c.GetJenkinsPlugins()
 			Expect(len(plugins)).Should(Equal(1))
 			plugin := plugins[0]
 			Expect(plugin.Name).Should(Equal("gitlab-plugin"))
 		})
 	})
 
-	Context("config method", func() {
+	Context("ConfigJenkins method", func() {
 		When("create sshKey failed", func() {
 			var (
 				createErrMsg string
@@ -48,7 +48,7 @@ var _ = Describe("GitlabJenkinsConfig", func() {
 				c.SSHPrivateKey = sshKey
 			})
 			It("should return error", func() {
-				_, err := c.config(mockClient)
+				_, err := c.ConfigJenkins(mockClient)
 				Expect(err).Error().Should(HaveOccurred())
 				Expect(err.Error()).Should(Equal(createErrMsg))
 			})
@@ -66,14 +66,14 @@ var _ = Describe("GitlabJenkinsConfig", func() {
 					mockClient.CreateGiltabCredentialError = fmt.Errorf(createErrMsg)
 				})
 				It("should return error", func() {
-					_, err := c.config(mockClient)
+					_, err := c.ConfigJenkins(mockClient)
 					Expect(err).Error().Should(HaveOccurred())
 					Expect(err.Error()).Should(Equal(createErrMsg))
 				})
 			})
 			When("create gitlabCredential success", func() {
 				It("should return repoCascConfig", func() {
-					cascConfig, err := c.config(mockClient)
+					cascConfig, err := c.ConfigJenkins(mockClient)
 					Expect(err).Error().ShouldNot(HaveOccurred())
 					Expect(cascConfig.RepoType).Should(Equal("gitlab"))
 					Expect(cascConfig.CredentialID).Should(Equal("gitlabCredential"))
@@ -83,31 +83,18 @@ var _ = Describe("GitlabJenkinsConfig", func() {
 			})
 		})
 	})
-
-	Context("setRenderVars method", func() {
-		var (
-			renderInfo *jenkins.JenkinsFileRenderInfo
-		)
-		BeforeEach(func() {
-			renderInfo = &jenkins.JenkinsFileRenderInfo{}
-		})
-		It("should update nothing", func() {
-			c.setRenderVars(renderInfo)
-			Expect(*renderInfo).Should(Equal(jenkins.JenkinsFileRenderInfo{}))
-		})
-	})
 })
 
-var _ = Describe("NewGitlabPlugin func", func() {
+var _ = Describe("newGitlabStep func", func() {
 	var (
-		pluginConfig           *PluginGlobalConfig
+		pluginConfig           *StepGlobalOption
 		sshKey, owner, baseURL string
 	)
 	BeforeEach(func() {
 		owner = "test_owner"
 		sshKey = "test_key"
 		baseURL = "http://base.com"
-		pluginConfig = &PluginGlobalConfig{
+		pluginConfig = &StepGlobalOption{
 			RepoInfo: &git.RepoInfo{
 				Owner:         owner,
 				SSHPrivateKey: sshKey,
@@ -116,7 +103,7 @@ var _ = Describe("NewGitlabPlugin func", func() {
 		}
 	})
 	It("should return gitlab plugin", func() {
-		githubPlugin := NewGitlabPlugin(pluginConfig)
+		githubPlugin := newGitlabStep(pluginConfig)
 		Expect(githubPlugin.RepoOwner).Should(Equal(owner))
 		Expect(githubPlugin.SSHPrivateKey).Should(Equal(sshKey))
 		Expect(githubPlugin.BaseURL).Should(Equal(baseURL))

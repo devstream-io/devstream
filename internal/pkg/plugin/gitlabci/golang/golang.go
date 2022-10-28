@@ -2,13 +2,13 @@ package golang
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/cifile"
 	"github.com/devstream-io/devstream/pkg/util/scm/gitlab"
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
 func setCIContent(options configmanager.RawOptions) (configmanager.RawOptions, error) {
-	opts, err := ci.NewOptions(options)
+	opts, err := cifile.NewOptions(options)
 	if err != nil {
 		return nil, err
 	}
@@ -23,7 +23,7 @@ func setCIContent(options configmanager.RawOptions) (configmanager.RawOptions, e
 	}
 	ciConfig := opts.CIConfig
 	if ciConfig == nil {
-		ciConfig = &ci.CIConfig{}
+		ciConfig = &cifile.CIConfig{}
 	}
 	ciConfig.SetContent(ciContent)
 	opts.CIConfig = ciConfig

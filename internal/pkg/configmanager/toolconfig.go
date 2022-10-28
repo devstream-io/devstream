@@ -12,6 +12,20 @@ import (
 
 type RawOptions map[string]interface{}
 
+func (r RawOptions) GetMapByKey(key string) map[string]interface{} {
+	val, exist := r[key]
+	if !exist {
+		log.Warnf("RawOptions key %s not exist", key)
+		return nil
+	}
+	valMap, ok := val.(RawOptions)
+	if !ok {
+		log.Warnf("RawOptions key %s is not map", key)
+		return nil
+	}
+	return valMap
+}
+
 // Tool is the struct for one section of the DevStream tool file (part of the config.)
 type Tool struct {
 	Name string `yaml:"name" validate:"required"`

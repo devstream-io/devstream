@@ -29,12 +29,7 @@ func SetJobDefaultConfig(options configmanager.RawOptions) (configmanager.RawOpt
 		opts.Pipeline.Job = projectRepo.Repo
 	}
 
-	// set ci field field
-	ciConfig, err := opts.Pipeline.buildCIConfig(projectRepo)
-	if err != nil {
-		return nil, err
-	}
-	opts.CIConfig = ciConfig
+	opts.CIConfig = opts.Pipeline.buildCIConfig(projectRepo, options.GetMapByKey("pipeline"))
 	return types.EncodeStruct(opts)
 }
 

@@ -8,6 +8,7 @@ import (
 	"github.com/mitchellh/mapstructure"
 )
 
+// FillStructDefaultValue will fill structData filed value by defaultStructData field value if they are empty
 func FillStructDefaultValue(structData, defaultStructData any) {
 	if defaultStructData == nil {
 		return

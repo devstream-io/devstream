@@ -1,34 +1,35 @@
-package plugins
+package step
 
 import (
 	"encoding/base64"
 	"fmt"
-	"net/url"
 	"os"
-	"path"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/base"
+	"github.com/spf13/viper"
+
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 	"github.com/devstream-io/devstream/pkg/util/k8s"
 	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/scm/github"
 )
 
 const (
 	imageRepoSecretName = "repo-auth"
-	defaultImageProject = "library"
+	dockerhubAuthURL    = "https://index.docker.io/v1/"
 )
 
-type ImageRepoJenkinsConfig struct {
-	base.ImageRepoStepConfig `mapstructure:",squash"`
+type ImageRepoStepConfig struct {
+	URL  string `mapstructure:"url"`
+	User string `mapstructure:"user"`
 }
 
-func (g *ImageRepoJenkinsConfig) getDependentPlugins() []*jenkins.JenkinsPlugin {
+func (g *ImageRepoStepConfig) GetJenkinsPlugins() []*jenkins.JenkinsPlugin {
 	return []*jenkins.JenkinsPlugin{}
 }
 
 // imageRepo config will create kubernetes secret for docker auth
 // pipeline in jenkins will mount this secret to login image repo
-func (g *ImageRepoJenkinsConfig) config(jenkinsClient jenkins.JenkinsAPI) (*jenkins.RepoCascConfig, error) {
+func (g *ImageRepoStepConfig) ConfigJenkins(jenkinsClient jenkins.JenkinsAPI) (*jenkins.RepoCascConfig, error) {
 	log.Info("jenkins plugin imageRepo start config...")
 	secretData, err := g.generateDockerAuthSecretData()
 	if err != nil {
@@ -45,13 +46,29 @@ func (g *ImageRepoJenkinsConfig) config(jenkinsClient jenkins.JenkinsAPI) (*jenk
 	return nil, err
 }
 
-func (g *ImageRepoJenkinsConfig) generateDockerAuthSecretData() (map[string][]byte, error) {
+func (g *ImageRepoStepConfig) ConfigGithub(client *github.Client) error {
+	dockerhubToken := viper.GetString("dockerhub_token")
+	if dockerhubToken == "" {
+		return fmt.Errorf("DockerHub Token is empty")
+	}
+
+	if err := client.AddRepoSecret("DOCKERHUB_TOKEN", dockerhubToken); err != nil {
+		return err
+	}
+	return client.AddRepoSecret("DOCKERHUB_USERNAME", g.User)
+}
+
+func (g *ImageRepoStepConfig) generateDockerAuthSecretData() (map[string][]byte, error) {
 	imageRepoPasswd := os.Getenv("IMAGE_REPO_PASSWORD")
 	if imageRepoPasswd == "" {
 		return nil, fmt.Errorf("the environment variable IMAGE_REPO_PASSWORD is not set")
 	}
 	tmpStr := fmt.Sprintf("%s:%s", g.User, imageRepoPasswd)
 	authStr := base64.StdEncoding.EncodeToString([]byte(tmpStr))
+	authURL := g.URL
+	if authURL == "" {
+		authURL = dockerhubAuthURL
+	}
 	log.Debugf("jenkins plugin imageRepo auth string: %s.", authStr)
 
 	configJsonStrTpl := `{
@@ -61,23 +78,10 @@ func (g *ImageRepoJenkinsConfig) generateDockerAuthSecretData() (map[string][]by
     }
   }
 }`
-	configJsonStr := fmt.Sprintf(configJsonStrTpl, g.URL, authStr)
+	configJsonStr := fmt.Sprintf(configJsonStrTpl, authURL, authStr)
 	log.Debugf("config.json: %s.", configJsonStr)
 
 	return map[string][]byte{
 		"config.json": []byte(configJsonStr),
 	}, nil
-}
-
-func (p *ImageRepoJenkinsConfig) setRenderVars(vars *jenkins.JenkinsFileRenderInfo) {
-	var host string
-	imageURL, err := url.ParseRequestURI(p.URL)
-	if err != nil {
-		host = p.URL
-	} else {
-		host = imageURL.Host
-	}
-	repositoryURL := path.Join(host, defaultImageProject)
-	vars.ImageRepositoryURL = repositoryURL
-	vars.ImageAuthSecretName = imageRepoSecretName
 }

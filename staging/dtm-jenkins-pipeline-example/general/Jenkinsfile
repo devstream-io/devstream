@@ -1,14 +1,26 @@
+[[ if .dingTalk -]]
 setting.configNotifyDingtalk([
-    'robot_id': "[[ .DingtalkRobotID ]]",
-    'at_user': "[[ .DingtalkAtUser ]]"
+    'robot_id': "[[ .dingTalk.name ]]",
 ])
+[[ end -]]
+[[ if .imageRepo -]]
 setting.configImageRepo([
-    'image_repo': "[[ .ImageRepositoryURL ]]",
-    'image_auth_secret_name': "[[ .ImageAuthSecretName ]]",
+    'image_repo': "[[ .imageRepo.url ]]",
+    'user': "[[ .imageRepo.user ]]",
+    'auth_secret_name': "[[ .ImageRepoSecret ]]",
 ])
-
+[[ end -]]
 runPipeline([
-    'test_enable': true,
     'name': "[[ .AppName ]]",
-    'sonarqube_enable': [[ .SonarqubeEnable ]],
+    [[ if .sonarqube -]]
+    'sonarqube_enable': true,
+    [[ end -]]
+    [[ if .general -]]
+    [[ if .general.language -]]
+    'language': [[ .general.language ]],
+    [[ end -]]
+    [[ if .general.enableTest -]]
+    'test_enable': [[ .general.enableTest ]],
+    [[ end -]]
+    [[ end -]]
 ])

@@ -3,7 +3,7 @@ package jenkinspipeline
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/cifile"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/jenkins"
 )
 
@@ -16,7 +16,7 @@ func Delete(options configmanager.RawOptions) (bool, error) {
 		},
 		ExecuteOperations: plugininstaller.ExecuteOperations{
 			// TODO(daniel-hutao): delete secret: docker-config
-			ci.DeleteCIFiles,
+			cifile.DeleteCIFiles,
 			jenkins.DeletePipeline,
 		},
 	}

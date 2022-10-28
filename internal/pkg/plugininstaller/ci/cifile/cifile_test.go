@@ -1,4 +1,4 @@
-package ci
+package cifile
 
 import (
 	"os"
@@ -6,7 +6,7 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/server"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/cifile/server"
 )
 
 var _ = Describe("Options struct", func() {

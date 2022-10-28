@@ -1,4 +1,4 @@
-package ci
+package cifile
 
 import (
 	"github.com/mitchellh/mapstructure"

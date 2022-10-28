@@ -1,4 +1,4 @@
-package plugins
+package step
 
 import (
 	"fmt"
@@ -10,29 +10,29 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
-var _ = Describe("GithubJenkinsConfig", func() {
+var _ = Describe("GithubStepConfig", func() {
 	var (
-		c          *GithubJenkinsConfig
+		c          *GithubStepConfig
 		mockClient *jenkins.MockClient
 		repoOwner  string
 	)
 	BeforeEach(func() {
 		repoOwner = "test_user"
-		c = &GithubJenkinsConfig{
+		c = &GithubStepConfig{
 			RepoOwner: repoOwner,
 		}
 	})
 
-	Context("GetDependentPlugins method", func() {
+	Context("GetJenkinsPlugins method", func() {
 		It("should return github plugin", func() {
-			plugins := c.getDependentPlugins()
+			plugins := c.GetJenkinsPlugins()
 			Expect(len(plugins)).Should(Equal(1))
 			plugin := plugins[0]
 			Expect(plugin.Name).Should(Equal("github-branch-source"))
 		})
 	})
 
-	Context("config method", func() {
+	Context("ConfigJenkins method", func() {
 		When("create password failed", func() {
 			var (
 				createErrMsg string
@@ -44,7 +44,7 @@ var _ = Describe("GithubJenkinsConfig", func() {
 				}
 			})
 			It("should return error", func() {
-				_, err := c.config(mockClient)
+				_, err := c.ConfigJenkins(mockClient)
 				Expect(err).Error().Should(HaveOccurred())
 				Expect(err.Error()).Should(Equal(createErrMsg))
 			})
@@ -54,40 +54,27 @@ var _ = Describe("GithubJenkinsConfig", func() {
 				mockClient = &jenkins.MockClient{}
 			})
 			It("should return repoCascConfig", func() {
-				cascConfig, err := c.config(mockClient)
+				cascConfig, err := c.ConfigJenkins(mockClient)
 				Expect(err).Error().ShouldNot(HaveOccurred())
 				Expect(cascConfig.RepoType).Should(Equal("github"))
 			})
 		})
 	})
-
-	Context("setRenderVars method", func() {
-		var (
-			renderInfo *jenkins.JenkinsFileRenderInfo
-		)
-		BeforeEach(func() {
-			renderInfo = &jenkins.JenkinsFileRenderInfo{}
-		})
-		It("should update nothing", func() {
-			c.setRenderVars(renderInfo)
-			Expect(*renderInfo).Should(Equal(jenkins.JenkinsFileRenderInfo{}))
-		})
-	})
 })
 
-var _ = Describe("NewGithubPlugin func", func() {
+var _ = Describe("newGithubStep func", func() {
 	var (
-		pluginConfig *PluginGlobalConfig
+		pluginConfig *StepGlobalOption
 	)
 	BeforeEach(func() {
-		pluginConfig = &PluginGlobalConfig{
+		pluginConfig = &StepGlobalOption{
 			RepoInfo: &git.RepoInfo{
 				Owner: "test",
 			},
 		}
 	})
 	It("should return github plugin", func() {
-		githubPlugin := NewGithubPlugin(pluginConfig)
+		githubPlugin := newGithubStep(pluginConfig)
 		Expect(githubPlugin.RepoOwner).Should(Equal("test"))
 	})
 })

@@ -3,7 +3,7 @@ package cigeneric
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/cifile"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
@@ -12,12 +12,12 @@ func Create(options configmanager.RawOptions) (statemanager.ResourceStatus, erro
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
-			ci.Validate,
+			cifile.Validate,
 		},
 		ExecuteOperations: plugininstaller.ExecuteOperations{
-			ci.PushCIFiles,
+			cifile.PushCIFiles,
 		},
-		GetStatusOperation: ci.GetCIFileStatus,
+		GetStatusOperation: cifile.GetCIFileStatus,
 	}
 
 	// Execute all Operations in Operator

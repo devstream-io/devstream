@@ -1,4 +1,4 @@
-package plugins
+package step
 
 import (
 	"fmt"
@@ -6,30 +6,25 @@ import (
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
-
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/base"
-	"github.com/devstream-io/devstream/pkg/util/jenkins"
 )
 
-var _ = Describe("ImageRepoJenkinsConfig", func() {
+var _ = Describe("ImageRepoStepConfig", func() {
 	var (
-		c         *ImageRepoJenkinsConfig
+		c         *ImageRepoStepConfig
 		url, user string
 	)
 	BeforeEach(func() {
 		url = "jenkins_test"
 		user = "test_user"
-		c = &ImageRepoJenkinsConfig{
-			base.ImageRepoStepConfig{
-				URL:  url,
-				User: user,
-			},
+		c = &ImageRepoStepConfig{
+			URL:  url,
+			User: user,
 		}
 	})
 
-	Context("getDependentPlugins method", func() {
+	Context("GetJenkinsPlugins method", func() {
 		It("should be empty", func() {
-			plugins := c.getDependentPlugins()
+			plugins := c.GetJenkinsPlugins()
 			Expect(len(plugins)).Should(BeZero())
 		})
 	})
@@ -75,20 +70,6 @@ var _ = Describe("ImageRepoJenkinsConfig", func() {
 }`, c.URL, "dGVzdF91c2VyOnRlc3RfaW1hZ2VfcmVwb19lbnY=")
 				Expect(string(configJson)).Should(Equal(expectStr))
 			})
-		})
-	})
-
-	Context("setRenderVars method", func() {
-		var (
-			renderInfo *jenkins.JenkinsFileRenderInfo
-		)
-		BeforeEach(func() {
-			renderInfo = &jenkins.JenkinsFileRenderInfo{}
-		})
-		It("should update image info", func() {
-			c.setRenderVars(renderInfo)
-			Expect(renderInfo.ImageRepositoryURL).Should(Equal(fmt.Sprintf("%s/library", url)))
-			Expect(renderInfo.ImageAuthSecretName).Should(Equal(imageRepoSecretName))
 		})
 	})
 })

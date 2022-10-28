@@ -1,18 +1,18 @@
-package plugins
+package step_test
 
 import (
 	"fmt"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/base"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/step"
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("SonarQubeJenkinsConfig", func() {
+var _ = Describe("SonarQubeStepConfig", func() {
 	var (
-		c                *SonarQubeJenkinsConfig
+		c                *step.SonarQubeStepConfig
 		mockClient       *jenkins.MockClient
 		name, url, token string
 	)
@@ -20,24 +20,22 @@ var _ = Describe("SonarQubeJenkinsConfig", func() {
 		name = "test"
 		token = "test_token"
 		url = "test_url"
-		c = &SonarQubeJenkinsConfig{
-			base.SonarQubeStepConfig{
-				Name:  name,
-				Token: token,
-				URL:   url,
-			},
+		c = &step.SonarQubeStepConfig{
+			Name:  name,
+			Token: token,
+			URL:   url,
 		}
 	})
-	Context("GetDependentPlugins method", func() {
+	Context("GetJenkinsPlugins method", func() {
 		It("should return sonar plugin", func() {
-			plugins := c.getDependentPlugins()
+			plugins := c.GetJenkinsPlugins()
 			Expect(len(plugins)).Should(Equal(1))
 			plugin := plugins[0]
 			Expect(plugin.Name).Should(Equal("sonar"))
 		})
 	})
 
-	Context("config method", func() {
+	Context("ConfigJenkins method", func() {
 		When("Create secret failed", func() {
 			var (
 				errMsg string
@@ -49,7 +47,7 @@ var _ = Describe("SonarQubeJenkinsConfig", func() {
 				}
 			})
 			It("should return error", func() {
-				_, err := c.config(mockClient)
+				_, err := c.ConfigJenkins(mockClient)
 				Expect(err).Error().Should(HaveOccurred())
 				Expect(err).Error().Should(HaveOccurred())
 			})
@@ -59,25 +57,12 @@ var _ = Describe("SonarQubeJenkinsConfig", func() {
 				mockClient = &jenkins.MockClient{}
 			})
 			It("should return nil", func() {
-				cascConfig, err := c.config(mockClient)
+				cascConfig, err := c.ConfigJenkins(mockClient)
 				Expect(err).Error().ShouldNot(HaveOccurred())
 				Expect(cascConfig.SonarqubeURL).Should(Equal(url))
 				Expect(cascConfig.SonarqubeName).Should(Equal(name))
-				Expect(cascConfig.SonarTokenCredentialID).Should(Equal("sonarqubeTokenCredential"))
+				Expect(cascConfig.SonarTokenCredentialID).Should(Equal("sonarSecretValue"))
 			})
-		})
-	})
-
-	Context("setRenderVars method", func() {
-		var (
-			renderInfo *jenkins.JenkinsFileRenderInfo
-		)
-		BeforeEach(func() {
-			renderInfo = &jenkins.JenkinsFileRenderInfo{}
-		})
-		It("should update renderInfo", func() {
-			c.setRenderVars(renderInfo)
-			Expect(renderInfo.SonarqubeEnable).Should(BeTrue())
 		})
 	})
 })
