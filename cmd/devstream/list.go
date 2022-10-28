@@ -12,7 +12,7 @@ var (
 
 var listCMD = &cobra.Command{
 	Use:   "list",
-	Short: "This command only supports listing plugins now.",
+	Short: "This command only supports listing plugins now",
 }
 
 var listPluginsCMD = &cobra.Command{
@@ -27,7 +27,7 @@ Examples:
 	Run: listPluginsCMDFunc,
 }
 
-func listPluginsCMDFunc(cmd *cobra.Command, args []string) {
+func listPluginsCMDFunc(_ *cobra.Command, _ []string) {
 	list.List(pluginFilter)
 }
 

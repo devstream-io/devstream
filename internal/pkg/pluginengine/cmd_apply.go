@@ -7,10 +7,11 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/pluginmanager"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
-	"github.com/devstream-io/devstream/pkg/util/file"
 	"github.com/devstream-io/devstream/pkg/util/interact"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
+
+const askUserIfContinue string = "Continue? [y/n]"
 
 func Apply(configFile string, continueDirectly bool) error {
 	cfg, err := configmanager.NewManager(configFile).LoadConfig()
@@ -18,7 +19,7 @@ func Apply(configFile string, continueDirectly bool) error {
 		return err
 	}
 
-	if err := file.SetPluginDir(cfg.PluginDir); err != nil {
+	if err = SetPluginDir(cfg.PluginDir); err != nil {
 		log.Errorf("Error: %s.", err)
 	}
 
