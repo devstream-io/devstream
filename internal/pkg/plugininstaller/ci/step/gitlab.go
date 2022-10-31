@@ -11,7 +11,7 @@ import (
 const (
 	sshKeyCredentialName = "gitlabSSHKeyCredential"
 	gitlabCredentialName = "gitlabCredential"
-	GitlabConnectionName = "gitlabConnection"
+	gitlabConnectionName = "gitlabConnection"
 )
 
 type GitlabStepConfig struct {
@@ -51,7 +51,7 @@ func (g *GitlabStepConfig) ConfigJenkins(jenkinsClient jenkins.JenkinsAPI) (*jen
 	return &jenkins.RepoCascConfig{
 		RepoType:             "gitlab",
 		CredentialID:         gitlabCredentialName,
-		GitLabConnectionName: GitlabConnectionName,
+		GitLabConnectionName: gitlabConnectionName,
 		GitlabURL:            g.BaseURL,
 	}, nil
 }

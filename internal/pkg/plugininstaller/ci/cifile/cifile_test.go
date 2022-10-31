@@ -40,6 +40,19 @@ var _ = Describe("Options struct", func() {
 		})
 	})
 
+	Context("SetContentMap method", func() {
+		It("should set contentMap", func() {
+			c := map[string]string{
+				"test": "gg",
+			}
+			ciConfig.SetContentMap(c)
+			v, ok := ciConfig.ConfigContentMap["test"]
+			Expect(ok).Should(BeTrue())
+			Expect(v).Should(Equal("gg"))
+			Expect(len(ciConfig.ConfigContentMap)).Should(Equal(1))
+		})
+	})
+
 	Context("getGitfileMap method", func() {
 		When("ConfigContentMap is not empty", func() {
 			When("render contentMap failed", func() {
@@ -130,5 +143,18 @@ var _ = Describe("Options struct", func() {
 				Expect(v).Should(Equal([]byte(ciFileContent)))
 			})
 		})
+	})
+})
+
+var _ = Describe("CIFileVarsMap struct", func() {
+	var m CIFileVarsMap
+	Context("Set method", func() {
+		m = CIFileVarsMap{}
+		k := "test_key"
+		v := "test_val"
+		m.Set(k, v)
+		expectV, ok := m[k]
+		Expect(ok).Should(BeTrue())
+		Expect(expectV).Should(Equal(v))
 	})
 })

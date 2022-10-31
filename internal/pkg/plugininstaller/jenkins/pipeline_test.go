@@ -184,12 +184,14 @@ var _ = Describe("pipeline struct", func() {
 					"url":  "testurl",
 					"user": "testuser",
 				},
-				"dingTalk":          emptyDingTalk,
-				"sonarqube":         emptySonar,
-				"general":           emptyGeneral,
-				"ImageRepoSecret":   "repo-auth",
-				"DingTalkSecretKey": "DINGTALK_SECURITY_VALUE",
-				"StepGlobalVars":    "",
+				"dingTalk":            emptyDingTalk,
+				"sonarqube":           emptySonar,
+				"general":             emptyGeneral,
+				"ImageRepoSecret":     "IMAGE_REPO_SECRET",
+				"DingTalkSecretKey":   "DINGTALK_SECURITY_VALUE",
+				"DingTalkSecretToken": "",
+				"StepGlobalVars":      "",
+				"SonarqubeSecretKey":  "SONAR_SECRET_TOKEN",
 			}
 			Expect(ciConfig.Vars).Should(Equal(expectedMap))
 		})
