@@ -39,19 +39,21 @@ var _ = Describe("action struct", func() {
 			Expect(string(ciConfig.Type)).Should(Equal("github"))
 			Expect(ciConfig.ConfigLocation).Should(Equal(configLocation))
 			expectVars := cifile.CIFileVarsMap{
-				"SonarqubeSecretKey": "SONAR_SECRET_TOKEN",
-				"AppName":            "test_repo",
+				"SonarqubeSecretKey":    "SONAR_SECRET_TOKEN",
+				"AppName":               "test_repo",
+				"ImageRepoSecret":       "IMAGE_REPO_SECRET",
+				"ImageRepoDockerSecret": "image-repo-auth",
 				"imageRepo": map[string]interface{}{
 					"url":  "exmaple.com",
 					"user": "test_user",
 				},
 				"dingTalk":            nilDingTalkConfig,
-				"ImageRepoSecret":     "IMAGE_REPO_SECRET",
 				"DingTalkSecretKey":   "DINGTALK_SECURITY_VALUE",
-				"DingTalkSecretToken": "",
+				"DingTalkSecretToken": "DINGTALK_SECURITY_TOKEN",
 				"StepGlobalVars":      "",
 				"configLocation":      "123/workflows",
 				"sonarqube":           nilStepConfig,
+				"GitlabConnectionID":  "gitlabConnection",
 			}
 			Expect(ciConfig.Vars).Should(Equal(expectVars))
 		})

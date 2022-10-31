@@ -77,7 +77,7 @@ func (r *RepoInfo) UpdateRepoPathByCloneURL(cloneURL string) error {
 		if strings.Contains(cloneURL, "git@") {
 			gitSSHLastIndex := strings.LastIndex(cloneURL, ":")
 			if gitSSHLastIndex == -1 {
-				return fmt.Errorf("git ssh repo not valid")
+				return fmt.Errorf("scm git ssh repo not valid")
 			}
 			paths = strings.Trim(cloneURL[gitSSHLastIndex:], ":")
 		} else {

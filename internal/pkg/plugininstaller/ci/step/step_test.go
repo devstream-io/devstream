@@ -32,7 +32,7 @@ var _ = Describe("GetStepGlobalVars func", func() {
 		})
 		It("should return github ssh key", func() {
 			v := step.GetStepGlobalVars(repoInfo)
-			Expect(v.CredentialID).Should(Equal("gitlabSSHKeyCredential"))
+			Expect(v.CredentialID).Should(Equal("githubCredential"))
 		})
 	})
 	When("repo type is not valid", func() {
@@ -136,11 +136,13 @@ var _ = Describe("GenerateCIFileVars func", func() {
 	It("should return file Vars", func() {
 		varMap := step.GenerateCIFileVars(p, r)
 		Expect(varMap).Should(Equal(cifile.CIFileVarsMap{
-			"ImageRepoSecret":     "IMAGE_REPO_SECRET",
-			"DingTalkSecretKey":   "DINGTALK_SECURITY_VALUE",
-			"DingTalkSecretToken": "",
-			"StepGlobalVars":      "gitlabSSHKeyCredential",
-			"SonarqubeSecretKey":  "SONAR_SECRET_TOKEN",
+			"ImageRepoSecret":       "IMAGE_REPO_SECRET",
+			"DingTalkSecretKey":     "DINGTALK_SECURITY_VALUE",
+			"DingTalkSecretToken":   "DINGTALK_SECURITY_TOKEN",
+			"StepGlobalVars":        "githubCredential",
+			"SonarqubeSecretKey":    "SONAR_SECRET_TOKEN",
+			"ImageRepoDockerSecret": "image-repo-auth",
+			"GitlabConnectionID":    "gitlabConnection",
 			"ImageRepo": map[string]interface{}{
 				"url":  "test",
 				"user": "",
