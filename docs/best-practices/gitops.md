@@ -1,5 +1,7 @@
 # GitOps Toolchain
 
+// TODO(daniel-hutao): to update according helm-installer plugin added.
+
 If you are interested in watching a video demo, see the youtube video below:
 
 <iframe width="100%" height="500" src="https://www.youtube.com/embed/q7TK3vFr1kg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -19,7 +21,7 @@ For Chinese readers, watch this one instead:
 1. [repo-scaffolding](../plugins/repo-scaffolding.md)
 2. [jira-github](../plugins/jira-github-integ.md)
 3. [githubactions-golang](../plugins/githubactions-golang.md)
-4. [argocd](../plugins/argocd.md)
+4. [argocd](../plugins/helm-installer/helm-installer.md)
 5. [argocdapp](../plugins/argocdapp.md)
 
 The dependencies of these plugins are(`a -> b` means for `a depends on b`):

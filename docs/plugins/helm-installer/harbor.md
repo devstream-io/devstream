@@ -19,7 +19,7 @@ Examples:
 
 ## 2 Harbor Architecture
 
-![Harbor Architecture](./harbor/ha.png)
+![Harbor Architecture](../harbor/ha.png)
 
 ## 3 Using the Harbor Plugin with DevStream
 
@@ -125,11 +125,11 @@ We can forward the port of the Harbor service and log in:
 kubectl port-forward -n harbor service/harbor 8080:80
 ```
 
-![Harbor Login](./harbor/login.png)
+![Harbor Login](../harbor/login.png)
 
 And the default login user/pwd is: `admin/Harbor12345`. You will see the dashboard after a successful login:
 
-![Harbor Dashboard](./harbor/dashboard.png)
+![Harbor Dashboard](../harbor/dashboard.png)
 
 ### 3.3 Default Config
 

@@ -40,7 +40,7 @@ tools:
         nodePort: 32000
 ```
 
-*注意：这个配置示例仅是 tool config，完整的 DevStream 配置文件还需要补充 core config 等内容，具体参考[这个文档](../core-concepts/config.zh.md)。*
+*注意：这个配置示例仅是 tool config，完整的 DevStream 配置文件还需要补充 core config 等内容，具体参考[这个文档](../../core-concepts/config.zh.md)。*
 
 在成功执行 `dtm apply` 命令后，我们可以在 jenkins 命名空间下看到下述主要资源：
 
@@ -103,13 +103,13 @@ standard (default)   k8s.io/minikube-hostpath   Delete          Immediate       
 
 这时候 minikube 会自动打开浏览器，跳转到 http://127.0.0.1:65398 页面(如果没有自动跳转，可以手动打开浏览器，输入这个 url；注意：根据你的命令行输出内容修改 url 中的端口号)：
 
-![Jenkins Login](./jenkins/login.png)
+![Jenkins Login](../jenkins/login.png)
 
 - **登录**
 
 如果你浏览过前面我们使用的"最小化配置文件"，肯定已经注意到了里面和用户名、密码相关的配置，没错，通过 admin/changeme 就可以登录 Jenkins 了！
 
-![Jenkins Dashboard](./jenkins/dashboard.png)
+![Jenkins Dashboard](../jenkins/dashboard.png)
 
 最后，记得修改密码哦！
 
@@ -354,7 +354,7 @@ valuesYaml: |
       tag: 0.2.0
 ```
 
-这段配置中留了一个变量 `[[ imageRepo ]]`，你可以在[变量配置](../core-concepts/variables.zh.md)中定义这个变量，变量值设置成你的镜像仓库地址，例如：
+这段配置中留了一个变量 `[[ imageRepo ]]`，你可以在[变量配置](../../core-concepts/variables.zh.md)中定义这个变量，变量值设置成你的镜像仓库地址，例如：
 
 ```yaml
 imageRepo: harbor.example.com:9000
@@ -362,7 +362,7 @@ imageRepo: harbor.example.com:9000
 
 当然，你需要保证需要的镜像都在你的镜像仓库中存在。
 
-你可以下载[镜像列表文件](./jenkins/jenkins-images.txt)，
+你可以下载[镜像列表文件](../jenkins/jenkins-images.txt)，
 然后借助["Image Pull Push"](https://raw.githubusercontent.com/devstream-io/devstream/main/hack/image-pull-push.sh)工具脚本来准备镜像。
 
 ```shell
@@ -379,11 +379,11 @@ export IMAGE_REPO_ADDR=harbor.devstream.io
 ./image-pull-push.sh -f jenkins-images.txt -r ${IMAGE_REPO_ADDR} -l -u
 ```
 
-如果你还没有一个私有镜像仓库，可以参考[这篇文章](../best-practices/image-registry.zh.md)快速部署一个 Docker Registry。
+如果你还没有一个私有镜像仓库，可以参考[这篇文章](../../best-practices/image-registry.zh.md)快速部署一个 Docker Registry。
 
 ### 5.3、参考配置
 
-可能你已经注意到前面的[镜像列表](./jenkins/jenkins-images.txt)里有一个 DevStream 自定义镜像 `devstreamdev/jenkins:2.361.1-jdk11-dtm-0.1`，
+可能你已经注意到前面的[镜像列表](../jenkins/jenkins-images.txt)里有一个 DevStream 自定义镜像 `devstreamdev/jenkins:2.361.1-jdk11-dtm-0.1`，
 在这个镜像里 DevStream 为离线部署场景做了增强，所以对应的配置文件我们也需要做一些调整，如下：
 
 ```yaml

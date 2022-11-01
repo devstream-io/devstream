@@ -18,7 +18,7 @@
 | CI                             | ci-generic                  | Generic CI plugin              | [doc](ci-generic.md)                  |
 | CD/GitOps                      | argocdapp                   | ArgoCD Application creation    | [doc](argocdapp.md)                   |
 | Image Repository               | harbor-docker               | Harbor Docker compose install  | [doc](harbor-docker.md)               |
-| Deployment                     | helm-installer              | Helm chart install             | [doc](helm-installer.md)              |
+| Deployment                     | helm-installer              | Helm chart install             | [doc](helm-installer/helm-installer.md)              |
 
 Or, to get a list of plugins, run:
 

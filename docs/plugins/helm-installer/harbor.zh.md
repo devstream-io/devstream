@@ -18,7 +18,7 @@ Harbor 本身并不关注如何实现存储高可用，所以 Harbor 通过 PVCs
 
 Harbor 部署架构整体如下图所示(图片来自 Harbor 官网)：
 
-![Harbor Architecture](./harbor/ha.png)
+![Harbor Architecture](../harbor/ha.png)
 
 ## 3、开始部署
 
@@ -130,11 +130,11 @@ standard (default)   k8s.io/minikube-hostpath   Delete          Immediate       
 
 到这里，我们就可以通过 http://127.0.0.1:3002 访问到 Harbor 登录页面了，如下：
 
-![Harbor Login](./harbor/login.png)
+![Harbor Login](../harbor/login.png)
 
 默认登录账号/密码是 `admin/Harbor12345`。登录后，可以看到默认首页如下：
 
-![Harbor Dashboard](./harbor/dashboard.png)
+![Harbor Dashboard](../harbor/dashboard.png)
 
 如果是在云主机上部署的 Harbor，可以通过 `kubectl port-forward` 命令来暴露服务：
 
@@ -465,7 +465,7 @@ valuesYaml: |
       tag: v2.5.3
 ```
 
-这段配置中留了一个变量 `[[ imageRepo ]]`，你可以在[变量配置](../core-concepts/variables.zh.md)中定义这个变量，变量值设置成你的镜像仓库地址，例如：
+这段配置中留了一个变量 `[[ imageRepo ]]`，你可以在[变量配置](../../core-concepts/variables.zh.md)中定义这个变量，变量值设置成你的镜像仓库地址，例如：
 
 ```yaml
 imageRepo: harbor.example.com:9000
@@ -490,7 +490,7 @@ export IMAGE_REPO_ADDR=harbor.devstream.io
 ./image-pull-push.sh -f harbor-images.txt -r ${IMAGE_REPO_ADDR} -l -u
 ```
 
-如果你还没有一个私有镜像仓库，可以参考[这篇文章](../best-practices/image-registry.zh.md)快速部署一个 Docker Registry。
+如果你还没有一个私有镜像仓库，可以参考[这篇文章](../../best-practices/image-registry.zh.md)快速部署一个 Docker Registry。
 
 ### 5.3、参考配置
 
