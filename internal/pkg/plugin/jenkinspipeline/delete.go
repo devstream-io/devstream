@@ -4,20 +4,19 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/cifile"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/jenkins"
 )
 
 func Delete(options configmanager.RawOptions) (bool, error) {
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
-			jenkins.SetJobDefaultConfig,
-			jenkins.ValidateJobConfig,
+			setDefault,
+			validate,
 		},
 		ExecuteOperations: plugininstaller.ExecuteOperations{
 			// TODO(daniel-hutao): delete secret: docker-config
 			cifile.DeleteCIFiles,
-			jenkins.DeletePipeline,
+			deletePipeline,
 		},
 	}
 	_, err := operator.Execute(options)

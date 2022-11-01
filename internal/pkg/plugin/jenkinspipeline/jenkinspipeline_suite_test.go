@@ -1,4 +1,4 @@
-package jenkins_test
+package jenkinspipeline_test
 
 import (
 	"testing"
@@ -9,5 +9,5 @@ import (
 
 func TestCommon(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "PluginInstaller Jenkins Suite")
+	RunSpecs(t, "Plugin JenkinsPipeline Suite")
 }

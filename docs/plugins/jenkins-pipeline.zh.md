@@ -88,7 +88,7 @@ tools:
       apiURL: YOUR_JENKINS_ADDR
     pipeline:
       jobName: test-job
-      jenkinsfilePath: https://raw.githubusercontent.com/devstream-io/dtm-jenkins-pipeline-example/main/springboot/Jenkinsfile
+      configLocation: https://raw.githubusercontent.com/devstream-io/dtm-jenkins-pipeline-example/main/springboot/Jenkinsfile
       imageRepo:
         url: YOUR_HARBOR_ADDR
         user: admin

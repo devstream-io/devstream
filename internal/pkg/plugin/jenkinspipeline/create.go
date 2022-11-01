@@ -4,7 +4,6 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/cifile"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/jenkins"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
@@ -13,14 +12,14 @@ func Create(options configmanager.RawOptions) (statemanager.ResourceStatus, erro
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
-			jenkins.SetJobDefaultConfig,
-			jenkins.ValidateJobConfig,
+			setDefault,
+			validate,
 		},
 		ExecuteOperations: plugininstaller.ExecuteOperations{
-			jenkins.InstallPipeline,
+			installPipeline,
 			cifile.PushCIFiles,
 		},
-		GetStatusOperation: jenkins.GetStatus,
+		GetStatusOperation: getStatus,
 	}
 
 	// Execute all Operations in Operator

@@ -1,4 +1,4 @@
-package jenkins
+package jenkinspipeline
 
 import (
 	"context"
@@ -14,7 +14,7 @@ import (
 
 type pipeline struct {
 	Job             string                    `mapstructure:"jobName" validate:"required"`
-	JenkinsfilePath string                    `mapstructure:"jenkinsfilePath" validate:"required"`
+	JenkinsfilePath string                    `mapstructure:"configLocation" validate:"required"`
 	ImageRepo       *step.ImageRepoStepConfig `mapstructure:"imageRepo"`
 	Dingtalk        *step.DingtalkStepConfig  `mapstructure:"dingTalk"`
 	Sonarqube       *step.SonarQubeStepConfig `mapstructure:"sonarqube"`

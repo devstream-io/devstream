@@ -558,7 +558,7 @@ Harbor 的 admin 用户初始登录密码是 `Harbor12345`，你可以尝试用 
           branch: master
         pipeline:
           jobName: test-job
-          jenkinsfilePath: https://raw.githubusercontent.com/devstream-io/dtm-jenkins-pipeline-example/main/springboot/Jenkinsfile
+          configLocation: https://raw.githubusercontent.com/devstream-io/dtm-jenkins-pipeline-example/main/springboot/Jenkinsfile
           imageRepo:
             url: http://harbor.example.com:80
             user: admin
@@ -622,7 +622,7 @@ tools:
       branch: master
     pipeline:
       jobName: test-job
-      jenkinsfilePath: https://raw.githubusercontent.com/devstream-io/dtm-jenkins-pipeline-example/main/springboot/Jenkinsfile
+      configLocation: https://raw.githubusercontent.com/devstream-io/dtm-jenkins-pipeline-example/main/springboot/Jenkinsfile
       imageRepo:
         url: http://harbor.example.com:80
         user: admin

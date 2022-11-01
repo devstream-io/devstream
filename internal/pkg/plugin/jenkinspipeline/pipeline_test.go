@@ -1,4 +1,4 @@
-package jenkins
+package jenkinspipeline
 
 import (
 	"fmt"
@@ -177,9 +177,9 @@ var _ = Describe("pipeline struct", func() {
 			Expect(ciConfig.ConfigLocation).Should(Equal(p.JenkinsfilePath))
 			Expect(string(ciConfig.Type)).Should(Equal("jenkins"))
 			expectedMap := cifile.CIFileVarsMap{
-				"AppName":         "test",
-				"jobName":         "test",
-				"jenkinsfilePath": "test/local",
+				"AppName":        "test",
+				"jobName":        "test",
+				"configLocation": "test/local",
 				"imageRepo": map[string]interface{}{
 					"url":  "testurl",
 					"user": "testuser",

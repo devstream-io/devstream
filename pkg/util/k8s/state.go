@@ -20,8 +20,8 @@ type AllResourceStatus struct {
 }
 
 // GetResourceStatus get all resource state by input nameSpace and filtermap
-func (c *Client) GetResourceStatus(nameSpace string, anFilter, labelFilter map[string]string) (AllResourceStatus, error) {
-	stateMap := AllResourceStatus{}
+func (c *Client) GetResourceStatus(nameSpace string, anFilter, labelFilter map[string]string) (*AllResourceStatus, error) {
+	stateMap := &AllResourceStatus{}
 	// 1. list deploy resource
 	dps, err := c.ListDeploymentsWithLabel(nameSpace, labelFilter)
 	if err != nil {

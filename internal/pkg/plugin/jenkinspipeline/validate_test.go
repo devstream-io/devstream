@@ -1,4 +1,4 @@
-package jenkins
+package jenkinspipeline
 
 import (
 	"fmt"
@@ -11,7 +11,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/scm/gitlab"
 )
 
-var _ = Describe("SetJobDefaultConfig func", func() {
+var _ = Describe("setDefault func", func() {
 	var (
 		jenkinsUser, jenkinsPassword, jenkinsURL, jenkinsFilePath, projectURL string
 		options                                                               map[string]interface{}
@@ -33,7 +33,7 @@ var _ = Describe("SetJobDefaultConfig func", func() {
 				"cloneURL": projectURL,
 			},
 			"pipeline": map[string]interface{}{
-				"jenkinsfilePath": jenkinsFilePath,
+				"configLocation": jenkinsFilePath,
 			},
 		}
 	})
@@ -44,7 +44,7 @@ var _ = Describe("SetJobDefaultConfig func", func() {
 			}
 		})
 		It("should return err", func() {
-			_, err := SetJobDefaultConfig(options)
+			_, err := setDefault(options)
 			Expect(err).Error().Should(HaveOccurred())
 		})
 	})
@@ -56,7 +56,7 @@ var _ = Describe("SetJobDefaultConfig func", func() {
 			}
 		})
 		It("should set default value", func() {
-			newOptions, err := SetJobDefaultConfig(options)
+			newOptions, err := setDefault(options)
 			Expect(err).Error().ShouldNot(HaveOccurred())
 			opts, err := newJobOptions(newOptions)
 			Expect(err).Error().ShouldNot(HaveOccurred())
@@ -71,7 +71,7 @@ var _ = Describe("SetJobDefaultConfig func", func() {
 	})
 })
 
-var _ = Describe("ValidateJobConfig func", func() {
+var _ = Describe("validate func", func() {
 	var (
 		githubToken, gitlabToken string
 	)
@@ -101,8 +101,8 @@ var _ = Describe("ValidateJobConfig func", func() {
 		projectURL = "https://test.gitlab.com/test/test_project"
 		jenkinsFilePath = "http://raw.content.com/Jenkinsfile"
 		pipeline = map[string]interface{}{
-			"jenkinsfilePath": jenkinsFilePath,
-			"jobName":         "test",
+			"configLocation": jenkinsFilePath,
+			"jobName":        "test",
 		}
 		projectRepo = map[string]interface{}{
 			"owner": "test_owner",
@@ -134,7 +134,7 @@ var _ = Describe("ValidateJobConfig func", func() {
 			}
 		})
 		It("should return error", func() {
-			_, err := ValidateJobConfig(options)
+			_, err := validate(options)
 			Expect(err).Error().Should(HaveOccurred())
 		})
 	})
@@ -145,7 +145,7 @@ var _ = Describe("ValidateJobConfig func", func() {
 			options["projectRepo"] = projectRepo
 		})
 		It("should return error", func() {
-			_, err := ValidateJobConfig(options)
+			_, err := validate(options)
 			Expect(err).Error().Should(HaveOccurred())
 			Expect(err.Error()).Should(Equal(fmt.Sprintf("jenkins-pipeline gitlab should set env %s", gitlab.TokenEnvKey)))
 		})
@@ -157,7 +157,7 @@ var _ = Describe("ValidateJobConfig func", func() {
 			options["projectRepo"] = projectRepo
 		})
 		It("should return error", func() {
-			_, err := ValidateJobConfig(options)
+			_, err := validate(options)
 			Expect(err).Error().Should(HaveOccurred())
 			Expect(err.Error()).Should(Equal(fmt.Sprintf("jenkins-pipeline github should set env %s", github.TokenEnvKey)))
 		})
@@ -172,7 +172,7 @@ var _ = Describe("ValidateJobConfig func", func() {
 			os.Setenv(github.TokenEnvKey, "test_env")
 		})
 		It("should return error", func() {
-			_, err := ValidateJobConfig(options)
+			_, err := validate(options)
 			Expect(err).Error().Should(HaveOccurred())
 			Expect(err.Error()).Should(Equal(fmt.Sprintf("jenkins jobName illegal: %s", pipeline["jobName"])))
 		})
@@ -186,7 +186,7 @@ var _ = Describe("ValidateJobConfig func", func() {
 			os.Setenv(github.TokenEnvKey, "test_env")
 		})
 		It("should return nil error", func() {
-			_, err := ValidateJobConfig(options)
+			_, err := validate(options)
 			Expect(err).Error().ShouldNot(HaveOccurred())
 		})
 	})

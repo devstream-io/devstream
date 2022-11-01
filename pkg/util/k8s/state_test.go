@@ -1,6 +1,8 @@
 package k8s
 
 import (
+	"fmt"
+
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	appsv1 "k8s.io/api/apps/v1"
@@ -11,7 +13,7 @@ import (
 	"k8s.io/utils/pointer"
 )
 
-var _ = Describe("k8s test methods", func() {
+var _ = Describe("k8s state methods", func() {
 	var (
 		client                                                                                *Client
 		labelFilter                                                                           map[string]string
@@ -127,6 +129,36 @@ var _ = Describe("k8s test methods", func() {
 			Expect(allStatus.Deployment[0].Name).Should(Equal(successName))
 			Expect(len(allStatus.StatefulSet)).Should(Equal(1))
 			Expect(allStatus.StatefulSet[0].Name).Should(Equal(successName))
+		})
+	})
+})
+
+var _ = Describe("AllResourceStatus struct", func() {
+	var (
+		depName  string
+		depReady bool
+		s        *AllResourceStatus
+	)
+	Context("ToStringInterfaceMap method", func() {
+		BeforeEach(func() {
+			depName = "test_dep"
+			depReady = true
+			s = &AllResourceStatus{
+				Deployment: []ResourceStatus{
+					{
+						Name:  "test_dep",
+						Ready: depReady,
+					},
+				},
+			}
+		})
+		It("should work", func() {
+			m, err := s.ToStringInterfaceMap()
+			Expect(err).ShouldNot(HaveOccurred())
+			expectVal := fmt.Sprintf("deployment:\n  - name: %s\n    ready: %t\nstatefulset: []\ndaemonset: []\n", depName, depReady)
+			Expect(m).Should(Equal(map[string]interface{}{
+				"workflows": expectVal,
+			}))
 		})
 	})
 })
