@@ -5,13 +5,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/imdario/mergo"
-
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/cifile"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/step"
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 	"github.com/devstream-io/devstream/pkg/util/log"
-	"github.com/devstream-io/devstream/pkg/util/mapz"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
@@ -74,6 +71,7 @@ func (p *pipeline) remove(jenkinsClient jenkins.JenkinsAPI, repoInfo *git.RepoIn
 }
 
 func (p *pipeline) createOrUpdateJob(jenkinsClient jenkins.JenkinsAPI, repoInfo *git.RepoInfo, secretToken string) error {
+	globalConfig := step.GetStepGlobalVars(repoInfo)
 	// 1. render groovy script
 	jobRenderInfo := &jenkins.JobScriptRenderInfo{
 		RepoType:          repoInfo.RepoType,
@@ -82,11 +80,11 @@ func (p *pipeline) createOrUpdateJob(jenkinsClient jenkins.JenkinsAPI, repoInfo 
 		Branch:            repoInfo.Branch,
 		SecretToken:       secretToken,
 		FolderName:        p.getJobFolder(),
-		GitlabConnection:  step.GitlabConnectionName,
+		GitlabConnection:  globalConfig.GitlabConnectionID,
 		RepoURL:           repoInfo.BuildScmURL(),
 		RepoOwner:         repoInfo.GetRepoOwner(),
 		RepoName:          repoInfo.Repo,
-		RepoCredentialsId: step.GetStepGlobalVars(repoInfo).CredentialID,
+		RepoCredentialsId: globalConfig.CredentialID,
 	}
 	jobScript, err := jenkins.BuildRenderedScript(jobRenderInfo)
 	if err != nil {
@@ -118,13 +116,7 @@ func (p *pipeline) buildCIConfig(repoInfo *git.RepoInfo, pipelineRawOption map[s
 		ConfigLocation: p.JenkinsfilePath,
 	}
 	// update ci render variables by plugins
-	pipelineMap, _ := mapz.DecodeStructToMap(p)
-	globalVarsMap, _ := mapz.DecodeStructToMap(step.GetStepGlobalVars(repoInfo))
-	err := mergo.Merge(&pipelineMap, globalVarsMap)
-	if err != nil {
-		log.Warnf("jenkins buildCIConfig merge CIFileVarsMap failed: %+v", err)
-	}
-	rawConfigVars := cifile.CIFileVarsMap(pipelineMap)
+	rawConfigVars := step.GenerateCIFileVars(p, repoInfo)
 	rawConfigVars.Set("AppName", p.Job)
 	ciConfig.Vars = rawConfigVars
 	log.Debugf("jenkins pipeline get render vars: %+v", ciConfig.Vars)

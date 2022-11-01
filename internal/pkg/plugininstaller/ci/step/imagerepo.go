@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/spf13/viper"
-
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 	"github.com/devstream-io/devstream/pkg/util/k8s"
 	"github.com/devstream-io/devstream/pkg/util/log"
@@ -14,8 +12,13 @@ import (
 )
 
 const (
-	imageRepoSecretName = "repo-auth"
-	dockerhubAuthURL    = "https://index.docker.io/v1/"
+	dockerhubAuthURL     = "https://index.docker.io/v1/"
+	imageRepoPasswordEnv = "IMAGE_REPO_PASSWORD"
+	// imageRepoDockerSecretName is used for creating k8s secret
+	// and it will be used by jenkins for mount
+	imageRepoDockerSecretName = "image-repo-auth"
+	// imageRepoSecretName is used for github action secret
+	imageRepoSecretName = "IMAGE_REPO_SECRET"
 )
 
 type ImageRepoStepConfig struct {
@@ -41,25 +44,22 @@ func (g *ImageRepoStepConfig) ConfigJenkins(jenkinsClient jenkins.JenkinsAPI) (*
 		return nil, err
 	}
 	namespace := jenkinsClient.GetBasicInfo().Namespace
-	_, err = client.ApplySecret(imageRepoSecretName, namespace, secretData, nil)
+	_, err = client.ApplySecret(imageRepoDockerSecretName, namespace, secretData, nil)
 	log.Debugf("jenkins imageRepo secret %s/%s create status: %+v", namespace, imageRepoSecretName, err)
 	return nil, err
 }
 
 func (g *ImageRepoStepConfig) ConfigGithub(client *github.Client) error {
-	dockerhubToken := viper.GetString("dockerhub_token")
-	if dockerhubToken == "" {
-		return fmt.Errorf("DockerHub Token is empty")
+	imageRepoPasswd := os.Getenv(imageRepoPasswordEnv)
+	if imageRepoPasswd == "" {
+		return fmt.Errorf("the environment variable IMAGE_REPO_PASSWORD is not set")
 	}
 
-	if err := client.AddRepoSecret("DOCKERHUB_TOKEN", dockerhubToken); err != nil {
-		return err
-	}
-	return client.AddRepoSecret("DOCKERHUB_USERNAME", g.User)
+	return client.AddRepoSecret(imageRepoSecretName, imageRepoPasswd)
 }
 
 func (g *ImageRepoStepConfig) generateDockerAuthSecretData() (map[string][]byte, error) {
-	imageRepoPasswd := os.Getenv("IMAGE_REPO_PASSWORD")
+	imageRepoPasswd := os.Getenv(imageRepoPasswordEnv)
 	if imageRepoPasswd == "" {
 		return nil, fmt.Errorf("the environment variable IMAGE_REPO_PASSWORD is not set")
 	}

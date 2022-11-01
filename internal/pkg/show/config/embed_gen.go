@@ -24,6 +24,9 @@ var (
 	//go:embed plugins/devlake.yaml
 	DevlakeDefaultConfig string
 
+	//go:embed plugins/github-actions.yaml
+	GithubActionsDefaultConfig string
+
 	//go:embed plugins/githubactions-golang.yaml
 	GithubactionsGolangDefaultConfig string
 
@@ -97,6 +100,7 @@ var pluginDefaultConfigs = map[string]string{
 	"ci-generic":           CiGenericDefaultConfig,
 	"devlake-config":       DevlakeConfigDefaultConfig,
 	"devlake":              DevlakeDefaultConfig,
+	"github-actions":       GithubActionsDefaultConfig,
 	"githubactions-golang": GithubactionsGolangDefaultConfig,
 	"githubactions-nodejs": GithubactionsNodejsDefaultConfig,
 	"githubactions-python": GithubactionsPythonDefaultConfig,

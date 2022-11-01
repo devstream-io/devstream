@@ -1,6 +1,9 @@
 package step
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 	"github.com/devstream-io/devstream/pkg/util/jenkins/dingtalk"
 	"github.com/devstream-io/devstream/pkg/util/log"
@@ -8,7 +11,8 @@ import (
 )
 
 const (
-	dingTalkSecretKey = "DINGTALK_SECURITY_VALUE"
+	dingTalkSecretToken = "DINGTALK_SECURITY_TOKEN"
+	dingTalkSecretVal   = "DINGTALK_SECURITY_VALUE"
 )
 
 type DingtalkStepConfig struct {
@@ -48,5 +52,13 @@ func (g *DingtalkStepConfig) ConfigJenkins(jenkinsClient jenkins.JenkinsAPI) (*j
 }
 
 func (g *DingtalkStepConfig) ConfigGithub(client *github.Client) error {
-	return client.AddRepoSecret(dingTalkSecretKey, g.SecurityValue)
+	splitWebhook := strings.Split(g.Webhook, "=")
+	if len(splitWebhook) < 2 {
+		return fmt.Errorf("githubAction dingTalk.webhook is not valid")
+	}
+	token := splitWebhook[len(splitWebhook)-1]
+	if err := client.AddRepoSecret(dingTalkSecretToken, token); err != nil {
+		return err
+	}
+	return client.AddRepoSecret(dingTalkSecretVal, g.SecurityValue)
 }

@@ -61,7 +61,7 @@ var _ = Describe("SonarQubeStepConfig", func() {
 				Expect(err).Error().ShouldNot(HaveOccurred())
 				Expect(cascConfig.SonarqubeURL).Should(Equal(url))
 				Expect(cascConfig.SonarqubeName).Should(Equal(name))
-				Expect(cascConfig.SonarTokenCredentialID).Should(Equal("sonarSecretValue"))
+				Expect(cascConfig.SonarTokenCredentialID).Should(Equal("SONAR_SECRET_TOKEN"))
 			})
 		})
 	})

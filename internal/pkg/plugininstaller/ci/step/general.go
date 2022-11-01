@@ -6,8 +6,7 @@ import (
 )
 
 type GeneralStepConfig struct {
-	Language   string `mapstructure:"language"`
-	EnableTest bool   `mapstructure:"enableTest"`
+	Language string `mapstructure:"language"`
 }
 
 // GetJenkinsPlugins return jenkins plugins info

@@ -53,5 +53,6 @@ func (s *SCMInfo) BuildRepoInfo() (*git.RepoInfo, error) {
 	if repo.SSHPrivateKey == "" {
 		repo.SSHPrivateKey = os.Getenv(privateSSHKeyEnv)
 	}
+	repo.NeedAuth = true
 	return repo, nil
 }

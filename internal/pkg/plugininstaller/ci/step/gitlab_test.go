@@ -77,7 +77,7 @@ var _ = Describe("GitlabStepConfig", func() {
 					Expect(err).Error().ShouldNot(HaveOccurred())
 					Expect(cascConfig.RepoType).Should(Equal("gitlab"))
 					Expect(cascConfig.CredentialID).Should(Equal("gitlabCredential"))
-					Expect(cascConfig.GitLabConnectionName).Should(Equal(GitlabConnectionName))
+					Expect(cascConfig.GitLabConnectionName).Should(Equal("gitlabConnection"))
 					Expect(cascConfig.GitlabURL).Should(Equal(baseURL))
 				})
 			})

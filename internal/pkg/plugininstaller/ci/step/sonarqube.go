@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	sonarSecretKey = "sonarSecretValue"
+	sonarSecretKey = "SONAR_SECRET_TOKEN"
 )
 
 type SonarQubeStepConfig struct {

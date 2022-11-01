@@ -2,6 +2,7 @@ package jenkins
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/cifile"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 )
@@ -24,6 +25,11 @@ func GetStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, e
 	}
 	res["JobCreated"] = true
 	res["Job"] = jobRes
+	generalState, err := cifile.GetCIFileStatus(options)
+	if err != nil {
+		return nil, err
+	}
+	res["General"] = generalState
 	return res, nil
 }
 

@@ -7,7 +7,7 @@ setting.configNotifyDingtalk([
 setting.configImageRepo([
     'image_repo': "[[ .imageRepo.url ]]",
     'user': "[[ .imageRepo.user ]]",
-    'auth_secret_name': "[[ .ImageRepoSecret ]]",
+    'auth_secret_name': "[[ .ImageRepoDockerSecret ]]",
 ])
 [[ end -]]
 runPipeline([

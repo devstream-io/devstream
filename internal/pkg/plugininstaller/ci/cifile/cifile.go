@@ -18,7 +18,7 @@ type CIFileVarsMap map[string]interface{}
 type CIConfig struct {
 	Type server.CIServerType `validate:"oneof=jenkins github gitlab" mapstructure:"type"`
 	// ConfigLocation represent location of ci config, it can be a remote location or local location
-	ConfigLocation string `validate:"required_without=ConfigContents" mapstructure:"configLocation"`
+	ConfigLocation string `validate:"required_without=ConfigContentMap" mapstructure:"configLocation"`
 	// Contents respent map of ci fileName to fileContent
 	ConfigContentMap ciConfigMap   `validate:"required_without=ConfigLocation" mapstructure:"configContents"`
 	Vars             CIFileVarsMap `mapstructure:"vars"`
