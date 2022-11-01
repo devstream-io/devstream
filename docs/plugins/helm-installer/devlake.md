@@ -1,13 +1,16 @@
 # Install DevLake with DevStream
 
-//TODO(daniel-hutao): to be updated
+## Default Configs
 
-## Usage
-
-The following content is an example of the "tool file".
-
-For more information on the main config, the tool file and the var file of DevStream, see [Core Concepts Overview](../core-concepts/core-concepts.md#1-config) and [DevStream Configuration](../core-concepts/config.md).
-
-``` yaml
---8<-- "devlake.yaml"
-```
+| key                | default value                        | description                                        |
+| ----------------   | ------------------------------------ | ------------------------------------------------   |
+| chart.chartPath    | ""                                   | local chart path                                   |
+| chart.chartName    | "devlake/devlake                     | chart name                                         |
+| chart.version      | ""                                   | chart version                                      |
+| chart.timeout      | 10m                                  | this config will wait 10 minutes to deploy DevLake |
+| chart.upgradeCRDs  | true                                 | default update CRD config                          |
+| chart.releaseName  | devlake                              | helm release name                                  |
+| chart.namespace    | devlake                              | namespace where helm to deploy                     |
+| chart.wait         | true                                 | whether to wait until installation is complete     |
+| repo.url           | https://merico-dev.github.io/devlake-helm-chart | helm official repo address              |
+| repo.name          | devlake                              | helm repo name                                     |

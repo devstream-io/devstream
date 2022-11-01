@@ -1,5 +1,7 @@
 # 离线部署
 
+// TODO(daniel-hutao): to update according helm-installer plugin added.
+
 本文将和你介绍如何在离线环境中使用 DevStream。
 
 !!! info "提醒"
@@ -51,8 +53,8 @@ harbor-linux-amd64_0.9.1.md5  harbor-linux-amd64_0.9.1.so  jenkins-linux-amd64_0
 
 如果 DevStream 的某个插件是使用容器化方式部署一个应用，那么其在支持离线部署的时候，就一定会提供镜像列表。比如 Jenkins 和 Harbor 的镜像列表分别如下：
 
-1. [Jenkins images](../plugins/jenkins/jenkins-images.txt)
-2. [Harbor images](../plugins/harbor/harbor-images.txt)
+1. [Jenkins images](../plugins/helm-installer/jenkins/jenkins-images.txt)
+2. [Harbor images](../plugins/helm-installer/harbor/harbor-images.txt)
 
 你可以通过如下命令将镜像列表下载到本地：
 
@@ -171,7 +173,7 @@ harbor-1.10.0.tgz jenkins-4.2.5.tgz
                 tag: 0.2.0
     ```
 
-    关于 jenkins 插件的详细文档可以看[ jenkins 插件文档](../plugins/jenkins.zh.md)。
+    关于 jenkins 插件的详细文档可以看[ jenkins 插件文档](../plugins/helm-installer/helm-installer.zh.md)。
 
 === "harbor 插件"
 
@@ -274,7 +276,7 @@ harbor-1.10.0.tgz jenkins-4.2.5.tgz
                   accessMode: ReadWriteOnce
                   size: 1Gi
     ```    
-    关于 harbor 插件的详细文档可以看[ harbor 插件文档](../plugins/harbor.zh.md)。
+    关于 harbor 插件的详细文档可以看[ harbor 插件文档](../plugins/helm-installer/helm-installer.zh.md)。
 
 ### 4.2、编写主配置和变量配置
 

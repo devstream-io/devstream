@@ -1,9 +1,5 @@
 # 使用 DevStream 部署 SonarQube
 
-//TODO(daniel-hutao): to be updated
-
-`sonarqube` 插件用于部署、管理 [SonarQube](https://www.sonarqube.org/) 应用。
-
 ## 1. 前置要求
 
 - 有一个可用的 Kubernetes 集群，版本 1.19+。
@@ -24,26 +20,17 @@ Sonarqube 内部会使用 Elastcisearch 来做搜索的索引，所以生产环�
 
 `sonarqube` 插件的配置项多数都有默认值，具体默认值信息如下表：
 
-| 配置项               | 默认值                    | 描述                                 |
+| 配置项             | 默认值                    | 描述                                 |
 |-------------------| ----                     | ----                                |
 | chart.chartName   | sonarqube/sonarqube      | helm chart 包名称                    |
-| chart.timeout     | 20m                      | helm install 的超时时间               |
+| chart.timeout     | 10m                      | helm install 的超时时间               |
+| chart.version     | ""                       | chart 版本                           |
 | chart.upgradeCRDs | true                     | 是否更新 CRDs（如果有）                 |
 | chart.releaseName | sonarqube                | helm 发布名称                         |
 | chart.wait        | true                     | 是否等待部署完成                       |
 | chart.namespace   | sonarqube                | 部署的命名空间                         |
-| repo.url          |  https://SonarSource.github.io/helm-chart-sonarqube| helm 仓库地址                         |
+| repo.url          | https://SonarSource.github.io/helm-chart-sonarqube| helm 仓库地址  |
 | repo.name         | sonarqube                | helm 仓库名                           |
-
-下面的配置文件展示的是"tool file"的内容。
-
-关于更多关于DevStream的主配置、tool file、var file的信息，请阅读[核心概念概览](../core-concepts/core-concepts.zh.md)和[DevStream配置](../core-concepts/config.zh.md).
-
-因此完整的配置文件应该是这样：
-
-```yaml
---8<-- "sonarqube.yaml"
-```
 
 ### 3.2、测试环境
 
@@ -51,14 +38,13 @@ Sonarqube 内部会使用 Elastcisearch 来做搜索的索引，所以生产环�
 
 ```yaml
 tools:
-- name: harbor
-  instanceID: default
+- name: helm-installer
+  instanceID: sonarqube-001
   dependsOn: [ ]
   options:
-    chart:
-      valuesYaml: |
-        prometheusExporter:
-          enabled: false
+    valuesYaml: |
+      prometheusExporter:
+        enabled: false
 ```
 
 在该配置下：

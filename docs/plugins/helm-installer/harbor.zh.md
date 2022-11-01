@@ -1,13 +1,5 @@
 # 使用 DevStream 部署 Harbor
 
-//TODO(daniel-hutao): to be updated
-
-`harbor` 插件用于部署、管理 [Harbor](https://goharbor.io/) 应用。
-
-Harbor 的主流部署方式有2种：**docker compose** 和 **helm**。
-现在 DevStream 有2个插件 `harbor-docker` 和 `harbor` 来分别支持这2种部署方式，但是目前以 helm 方式为主。
-在不久的将来，这两个插件将会被合并成一个。
-
 ## 1、前置要求
 
 **必须满足**
@@ -26,7 +18,7 @@ Harbor 本身并不关注如何实现存储高可用，所以 Harbor 通过 PVCs
 
 Harbor 部署架构整体如下图所示(图片来自 Harbor 官网)：
 
-![Harbor Architecture](./harbor/ha.png)
+![Harbor Architecture](../harbor/ha.png)
 
 ## 3、开始部署
 
@@ -41,34 +33,27 @@ minikube 方式部署的 k8s 集群自带一个默认的 StorageClass，另外�
 
 ### 3.1、快速开始
 
-下面的配置文件展示的是"tool file"的内容。
-
-关于更多关于DevStream的主配置、tool file、var file的信息，请阅读[核心概念概览](../core-concepts/core-concepts.zh.md)和[DevStream配置](../core-concepts/config.zh.md).
-
 如果仅是用于开发、测试等目的，希望快速完成 Harbor 的部署，可以使用如下配置快速开始：
 
 ```yaml title="config.yaml"
-tools: # (1)
-- name: harbor
-  instanceID: default
+tools:
+- name: helm-installer
+  instanceID: harbor-001
   dependsOn: [ ]
   options:
-    chart:
-      valuesYaml: |
-        externalURL: http://127.0.0.1
-        expose:
-          type: nodePort
-          tls:
-            enabled: false
-        chartmuseum:
+    valuesYaml: |
+      externalURL: http://127.0.0.1
+      expose:
+        type: nodePort
+        tls:
           enabled: false
-        notary:
-          enabled: false
-        trivy:
-          enabled: false
+      chartmuseum:
+        enabled: false
+      notary:
+        enabled: false
+      trivy:
+        enabled: false
 ```
-
-1. 注意：这个配置示例仅是 tool config，完整的 DevStream 配置文件还需要补充 core config 等内容，具体参考[这个文档](../core-concepts/config.zh.md)。
 
 在成功执行 `dtm apply` 命令后，我们可以在 harbor 命名空间下看到下述主要资源：
 
@@ -145,11 +130,11 @@ standard (default)   k8s.io/minikube-hostpath   Delete          Immediate       
 
 到这里，我们就可以通过 http://127.0.0.1:3002 访问到 Harbor 登录页面了，如下：
 
-![Harbor Login](./harbor/login.png)
+![Harbor Login](../harbor/login.png)
 
 默认登录账号/密码是 `admin/Harbor12345`。登录后，可以看到默认首页如下：
 
-![Harbor Dashboard](./harbor/dashboard.png)
+![Harbor Dashboard](../harbor/dashboard.png)
 
 如果是在云主机上部署的 Harbor，可以通过 `kubectl port-forward` 命令来暴露服务：
 
@@ -162,11 +147,9 @@ kubectl port-forward -n harbor service/harbor --address=${ip} 80
 
 ### 3.2、默认配置
 
-`harbor` 插件的配置项多数都有默认值，具体默认值信息如下表：
-
 | 配置项              | 默认值                    | 描述                                 |
 | ----               | ----                     | ----                                |
-| chart.chartPath    | ""                      | 本地 chart 包路径                      |
+| chart.chartPath    | ""                       | 本地 chart 包路径                      |
 | chart.chartName    | harbor/harbor            | helm chart 包名称                    |
 | chart.timeout      | 10m                      | helm install 的超时时间               |
 | chart.upgradeCRDs  | true                     | 是否更新 CRDs（如果有）                |
@@ -177,12 +160,6 @@ kubectl port-forward -n harbor service/harbor --address=${ip} 80
 | repo.name          | harbor                   | helm 仓库名                           |
 
 因此完整的配置文件应该是这样：
-
-```yaml
---8<-- "harbor.yaml"
-```
-
-目前除了 `valuesYaml` 字段和默认配置，其它所有示例参数均为必填项。
 
 ### 3.3、持久化存储数据
 
@@ -227,30 +204,29 @@ registry、jobservice、chartmuseum、database、redis、trivy 等组件都可�
 
 ```yaml
 tools:
-- name: harbor
-  instanceID: default
+- name: helm-installer
+  instanceID: harbor-001
   dependsOn: [ ]
   options:
-    chart:
-      valuesYaml: |
-        persistence:
-          persistentVolumeClaim:
-            registry:
-              storageClass: "nfs"
-              accessMode: ReadWriteOnce
-              size: 5Gi
-            jobservice:
-              storageClass: "nfs"
-              accessMode: ReadWriteOnce
-              size: 1Gi
-            database:
-              storageClass: "nfs"
-              accessMode: ReadWriteOnce
-              size: 1Gi
-            redis:
-              storageClass: "nfs"
-              accessMode: ReadWriteOnce
-              size: 1Gi
+    valuesYaml: |
+      persistence:
+        persistentVolumeClaim:
+          registry:
+            storageClass: "nfs"
+            accessMode: ReadWriteOnce
+            size: 5Gi
+          jobservice:
+            storageClass: "nfs"
+            accessMode: ReadWriteOnce
+            size: 1Gi
+          database:
+            storageClass: "nfs"
+            accessMode: ReadWriteOnce
+            size: 1Gi
+          redis:
+            storageClass: "nfs"
+            accessMode: ReadWriteOnce
+            size: 1Gi
 ```
 
 ### 3.4、服务暴露
@@ -259,35 +235,33 @@ Harbor 可以以 ClusterIP、LoadBalancer、NodePort 和 Ingress 等方式对外
 
 ```yaml
 tools:
-- name: harbor
-  instanceID: default
+- name: helm-installer
+  instanceID: harbor-001
   dependsOn: [ ]
   options:
-    chart:
-      valuesYaml: |
-        externalURL: http://127.0.0.1
-        expose:
-          type: nodePort
+    valuesYaml: |
+      externalURL: http://127.0.0.1
+      expose:
+        type: nodePort
 ```
 
 接下来我们再介绍一下如何使用 Ingress 方式暴露服务：
 
 ```yaml
 tools:
-- name: harbor
-  instanceID: default
+- name: helm-installer
+  instanceID: harbor-001
   dependsOn: [ ]
   options:
-    chart:
-      valuesYaml: |
-        externalURL: http://core.harbor.domain
-        expose:
-          type: ingress
-          tls:
-            enabled: false
-          ingress:
-            hosts:
-              core: core.harbor.domain
+    valuesYaml: |
+      externalURL: http://core.harbor.domain
+      expose:
+        type: ingress
+        tls:
+          enabled: false
+        ingress:
+          hosts:
+            core: core.harbor.domain
 ```
 
 注意：如果没有开启 TLS，这种方式暴露 Harbor 服务后 docker push/pull 命令必须带上端口。
@@ -330,44 +304,43 @@ TODO(daniel-hutao): 本节待细化
 
 ```yaml
 tools:
-- name: harbor
-  instanceID: default
+- name: helm-installer
+  instanceID: harbor-001
   dependsOn: [ ]
   options:
-    chart:
-      valuesYaml: |
-        externalURL: http://core.harbor.domain
-        expose:
-          type: ingress
-          tls:
-            enabled: false
-          ingress:
-            hosts:
-              core: core.harbor.domain
-        chartmuseum:
+    valuesYaml: |
+      externalURL: http://core.harbor.domain
+      expose:
+        type: ingress
+        tls:
           enabled: false
-        notary:
-          enabled: false
-        trivy:
-          enabled: false
-        persistence:
-          persistentVolumeClaim:
-            registry:
-              storageClass: "nfs"
-              accessMode: ReadWriteOnce
-              size: 5Gi
-            jobservice:
-              storageClass: "nfs"
-              accessMode: ReadWriteOnce
-              size: 1Gi
-            database:
-              storageClass: "nfs"
-              accessMode: ReadWriteOnce
-              size: 1Gi
-            redis:
-              storageClass: "nfs"
-              accessMode: ReadWriteOnce
-              size: 1Gi
+        ingress:
+          hosts:
+            core: core.harbor.domain
+      chartmuseum:
+        enabled: false
+      notary:
+        enabled: false
+      trivy:
+        enabled: false
+      persistence:
+        persistentVolumeClaim:
+          registry:
+            storageClass: "nfs"
+            accessMode: ReadWriteOnce
+            size: 5Gi
+          jobservice:
+            storageClass: "nfs"
+            accessMode: ReadWriteOnce
+            size: 1Gi
+          database:
+            storageClass: "nfs"
+            accessMode: ReadWriteOnce
+            size: 1Gi
+          redis:
+            storageClass: "nfs"
+            accessMode: ReadWriteOnce
+            size: 1Gi
 ```
 
 部署完成后，可以看到 Ingress 配置如下(`kubectl get ingress -n harbor)：
@@ -420,8 +393,8 @@ helm pull harbor/harbor	--version=1.10.0
 
 ```yaml
 tools:
-- name: harbor
-  instanceID: default
+- name: helm-installer
+  instanceID: harbor-001
   dependsOn: [ ]
   options:
     chart:
@@ -492,7 +465,7 @@ valuesYaml: |
       tag: v2.5.3
 ```
 
-这段配置中留了一个变量 `[[ imageRepo ]]`，你可以在[变量配置](../core-concepts/variables.zh.md)中定义这个变量，变量值设置成你的镜像仓库地址，例如：
+这段配置中留了一个变量 `[[ imageRepo ]]`，你可以在[变量配置](../../core-concepts/variables.zh.md)中定义这个变量，变量值设置成你的镜像仓库地址，例如：
 
 ```yaml
 imageRepo: harbor.example.com:9000
@@ -517,7 +490,7 @@ export IMAGE_REPO_ADDR=harbor.devstream.io
 ./image-pull-push.sh -f harbor-images.txt -r ${IMAGE_REPO_ADDR} -l -u
 ```
 
-如果你还没有一个私有镜像仓库，可以参考[这篇文章](../best-practices/image-registry.zh.md)快速部署一个 Docker Registry。
+如果你还没有一个私有镜像仓库，可以参考[这篇文章](../../best-practices/image-registry.zh.md)快速部署一个 Docker Registry。
 
 ### 5.3、参考配置
 
@@ -531,98 +504,98 @@ imageRepo: harbor.example.com:9000
 ---
 # plugin config
 tools:
-- name: harbor
-  instanceID: default
+- name: helm-installer
+  instanceID: harbor-001
   dependsOn: [ ]
   options:
     chart:
       chartPath: "~/devstream-test/harbor-1.10.0.tgz"
-      valuesYaml: |
-        externalURL: http://core.harbor.domain
-        expose:
-          type: ingress
-          tls:
-            enabled: false
-          ingress:
-            hosts:
-              core: core.harbor.domain
-        nginx:
-          image:
-            repository: [[ imageRepo ]]/goharbor/nginx-photon
-            tag: v2.5.3
-        portal:
-          image:
-            repository: [[ imageRepo ]]/goharbor/harbor-portal
-            tag: v2.5.3
-        core:
-          image:
-            repository: [[ imageRepo ]]/goharbor/harbor-core
-            tag: v2.5.3
-        jobservice:
-          image:
-            repository: [[ imageRepo ]]/goharbor/harbor-jobservice
-            tag: v2.5.3
+    valuesYaml: |
+      externalURL: http://core.harbor.domain
+      expose:
+        type: ingress
+        tls:
+          enabled: false
+        ingress:
+          hosts:
+            core: core.harbor.domain
+      nginx:
+        image:
+          repository: [[ imageRepo ]]/goharbor/nginx-photon
+          tag: v2.5.3
+      portal:
+        image:
+          repository: [[ imageRepo ]]/goharbor/harbor-portal
+          tag: v2.5.3
+      core:
+        image:
+          repository: [[ imageRepo ]]/goharbor/harbor-core
+          tag: v2.5.3
+      jobservice:
+        image:
+          repository: [[ imageRepo ]]/goharbor/harbor-jobservice
+          tag: v2.5.3
+      registry:
         registry:
+          image:
+            repository: [[ imageRepo ]]/goharbor/registry-photon
+            tag: v2.5.3
+        controller:
+          image:
+            repository: [[ imageRepo ]]/goharbor/harbor-registryctl
+            tag: v2.5.3
+      chartmuseum:
+        enabled: false
+        image:
+          repository: [[ imageRepo ]]/goharbor/chartmuseum-photon
+          tag: v2.5.3
+      trivy:
+        enabled: false
+        image:
+          repository: [[ imageRepo ]]/goharbor/trivy-adapter-photon
+          tag: v2.5.3
+      notary:
+        enabled: false
+        server:
+          image:
+            repository: [[ imageRepo ]]/goharbor/notary-server-photon
+            tag: v2.5.3
+        signer:
+          image:
+            repository: [[ imageRepo ]]/goharbor/notary-signer-photon
+            tag: v2.5.3
+      database:
+        internal:
+          image:
+            repository: [[ imageRepo ]]/goharbor/harbor-db
+            tag: v2.5.3
+      redis:
+        internal:
+          image:
+            repository: [[ imageRepo ]]/goharbor/redis-photon
+            tag: v2.5.3
+      exporter:
+        image:
+          repository: [[ imageRepo ]]/goharbor/harbor-exporter
+          tag: v2.5.3
+      persistence:
+        persistentVolumeClaim:
           registry:
-            image:
-              repository: [[ imageRepo ]]/goharbor/registry-photon
-              tag: v2.5.3
-          controller:
-            image:
-              repository: [[ imageRepo ]]/goharbor/harbor-registryctl
-              tag: v2.5.3
-        chartmuseum:
-          enabled: false
-          image:
-            repository: [[ imageRepo ]]/goharbor/chartmuseum-photon
-            tag: v2.5.3
-        trivy:
-          enabled: false
-          image:
-            repository: [[ imageRepo ]]/goharbor/trivy-adapter-photon
-            tag: v2.5.3
-        notary:
-          enabled: false
-          server:
-            image:
-              repository: [[ imageRepo ]]/goharbor/notary-server-photon
-              tag: v2.5.3
-          signer:
-            image:
-              repository: [[ imageRepo ]]/goharbor/notary-signer-photon
-              tag: v2.5.3
-        database:
-          internal:
-            image:
-              repository: [[ imageRepo ]]/goharbor/harbor-db
-              tag: v2.5.3
-        redis:
-          internal:
-            image:
-              repository: [[ imageRepo ]]/goharbor/redis-photon
-              tag: v2.5.3
-        exporter:
-          image:
-            repository: [[ imageRepo ]]/goharbor/harbor-exporter
-            tag: v2.5.3
-        persistence:
-          persistentVolumeClaim:
-            registry:
-              storageClass: "nfs"
-              accessMode: ReadWriteOnce
-              size: 5Gi
-            jobservice:
-              storageClass: "nfs"
-              accessMode: ReadWriteOnce
-              size: 1Gi
-            database:
-              storageClass: "nfs"
-              accessMode: ReadWriteOnce
-              size: 1Gi
-            redis:
-              storageClass: "nfs"
-              accessMode: ReadWriteOnce
-              size: 1Gi
+            storageClass: "nfs"
+            accessMode: ReadWriteOnce
+            size: 5Gi
+          jobservice:
+            storageClass: "nfs"
+            accessMode: ReadWriteOnce
+            size: 1Gi
+          database:
+            storageClass: "nfs"
+            accessMode: ReadWriteOnce
+            size: 1Gi
+          redis:
+            storageClass: "nfs"
+            accessMode: ReadWriteOnce
+            size: 1Gi
 ```
 
 在这个参考配置里包含了全部可能用到的镜像，在部分组件不启用的情况下你完全可以移除相关的镜像配置项。不过保留在这里也不会有什么影响。

@@ -1,5 +1,7 @@
 # GitOps 工具链
 
+// TODO(daniel-hutao): to update according helm-installer plugin added.
+
 请参考视频demo来快速熟悉用DevStream来实施GitOps工具链的部署和整合：
 - YouTube
 <iframe width="100%" height="500" src="https://www.youtube.com/embed/q7TK3vFr1kg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -11,7 +13,7 @@
 1. [repo-scaffolding](../plugins/repo-scaffolding.zh.md)
 2. [jira-github](../plugins/jira-github-integ.zh.md)
 3. [githubactions-golang](../plugins/githubactions-golang.zh.md)
-4. [argocd](../plugins/argocd.zh.md)
+4. [argocd](../plugins/helm-installer/helm-installer.zh.md)
 5. [argocdapp](../plugins/argocdapp.zh.md)
 
 这些插件的依赖关系如下（`a -> b`意味着`a依赖b`）：

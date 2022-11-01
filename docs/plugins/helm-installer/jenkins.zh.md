@@ -1,12 +1,5 @@
 # 使用 DevStream 部署 Jenkins
 
-//TODO(daniel-hutao): to be updated
-
-`jenkins` 插件用于部署、管理 [Jenkins](https://www.jenkins.io) 应用。
-
-Jenkins 的部署方式有很多种，比如 Docker、Kubernetes、Jar 包等等，本插件使用 helm 方式实现 Jenkins 在 Kubernetes 之上的部署逻辑，
-使用 Jenkins 官方提供的 [chart 包](https://github.com/jenkinsci/helm-charts)。
-
 ## 1、前置要求
 
 **必须满足**
@@ -28,36 +21,26 @@ Jenkins 的部署方式有很多种，比如 Docker、Kubernetes、Jar 包等等
 
 ## 2.1、快速开始
 
-下面的配置文件展示的是"tool file"的内容。
-
-关于更多关于DevStream的主配置、tool file、var file的信息，请阅读[核心概念概览](../core-concepts/core-concepts.zh.md)和[DevStream配置](../core-concepts/config.zh.md).
-
 如果仅是用于开发、测试等目的，希望快速完成 Jenkins 的部署，可以使用如下配置快速开始：
 
 ```yaml
 tools:
-# name of the tool
-- name: jenkins
-  # id of the tool instance
-  instanceID: default
-  # format: name.instanceID; If specified, dtm will make sure the dependency is applied first before handling this tool.
+- name: helm-installer
+  instanceID: jenkins-001
   dependsOn: [ ]
-  # options for the plugin
   options:
-    chart:
-      # custom configuration. You can refer to [Jenkins values.yaml](https://github.com/jenkinsci/helm-charts/blob/main/charts/jenkins/values.yaml)
-      valuesYaml: |
-        serviceAccount:
-          create: true
-          name: jenkins
-        controller:
-          adminUser: "admin"
-          adminPassword: "changeme"
-          serviceType: NodePort
-          nodePort: 32000
+    valuesYaml: |
+      serviceAccount:
+        create: true
+        name: jenkins
+      controller:
+        adminUser: "admin"
+        adminPassword: "changeme"
+        serviceType: NodePort
+        nodePort: 32000
 ```
 
-*注意：这个配置示例仅是 tool config，完整的 DevStream 配置文件还需要补充 core config 等内容，具体参考[这个文档](../core-concepts/config.zh.md)。*
+*注意：这个配置示例仅是 tool config，完整的 DevStream 配置文件还需要补充 core config 等内容，具体参考[这个文档](../../core-concepts/config.zh.md)。*
 
 在成功执行 `dtm apply` 命令后，我们可以在 jenkins 命名空间下看到下述主要资源：
 
@@ -120,13 +103,13 @@ standard (default)   k8s.io/minikube-hostpath   Delete          Immediate       
 
 这时候 minikube 会自动打开浏览器，跳转到 http://127.0.0.1:65398 页面(如果没有自动跳转，可以手动打开浏览器，输入这个 url；注意：根据你的命令行输出内容修改 url 中的端口号)：
 
-![Jenkins Login](./jenkins/login.png)
+![Jenkins Login](../jenkins/login.png)
 
 - **登录**
 
 如果你浏览过前面我们使用的"最小化配置文件"，肯定已经注意到了里面和用户名、密码相关的配置，没错，通过 admin/changeme 就可以登录 Jenkins 了！
 
-![Jenkins Dashboard](./jenkins/dashboard.png)
+![Jenkins Dashboard](../jenkins/dashboard.png)
 
 最后，记得修改密码哦！
 
@@ -136,23 +119,16 @@ standard (default)   k8s.io/minikube-hostpath   Delete          Immediate       
 
 | 配置项              | 默认值                     | 描述                                |
 | ----               | ----                      | ----                               |
-| chart.chartPath    | ""                      | 本地 chart 包路径                      |
+| chart.chartPath    | ""                        | 本地 chart 包路径                    |
 | chart.chartName    | jenkins/jenkins           | helm chart 包名称                   |
-| chart.timeout      | 5m                        | helm install 的超时时间              |
+| chart.version      | ""                        | chart 包版本                        |
+| chart.timeout      | 10m                       | helm install 的超时时间              |
 | chart.upgradeCRDs  | true                      | 是否更新 CRDs（如果有）               |
 | chart.releaseName  | jenkins                   | helm 发布名称                        |
-| chart.wait         | true                      | 是否等待部署完成                      |
 | chart.namespace    | jenkins                   | 部署的命名空间                        |
+| chart.wait         | true                      | 是否等待部署完成                      |
 | repo.url           | https://charts.jenkins.io | helm 仓库地址                        |
 | repo.name          | jenkins                   | helm 仓库名                          |
-
-因此完整的配置文件应该是这样：
-
-```yaml
---8<-- "jenkins.yaml"
-```
-
-目前除了 `valuesYaml` 字段和默认配置，其它所有示例参数均为必填项。
 
 ### 2.3、持久化存储
 
@@ -161,27 +137,21 @@ standard (default)   k8s.io/minikube-hostpath   Delete          Immediate       
 
 ```yaml
 tools:
-# name of the tool
-- name: jenkins
-  # id of the tool instance
-  instanceID: default
-  # format: name.instanceID; If specified, dtm will make sure the dependency is applied first before handling this tool.
+- name: helm-installer
+  instanceID: jenkins-001
   dependsOn: [ ]
-  # options for the plugin
   options:
-    chart:
-      # custom configuration. You can refer to [Jenkins values.yaml](https://github.com/jenkinsci/helm-charts/blob/main/charts/jenkins/values.yaml)
-      valuesYaml: |
-        serviceAccount:
-          create: true
-          name: jenkins
-        persistence:
-          storageClass: nfs
-        controller:
-          adminUser: "admin"
-          adminPassword: "changeme"
-          serviceType: NodePort
-          nodePort: 32000
+    valuesYaml: |
+      serviceAccount:
+        create: true
+        name: jenkins
+      persistence:
+        storageClass: nfs
+      controller:
+        adminUser: "admin"
+        adminPassword: "changeme"
+        serviceType: NodePort
+        nodePort: 32000
 ```
 
 上述配置以 nfs StorageClass 为例，请记得将 `persistence.storageClass` 修改成你的环境中真实 StorageClass 的名字。
@@ -192,28 +162,22 @@ tools:
 
 ```yaml
 tools:
-# name of the tool
-- name: jenkins
-  # id of the tool instance
-  instanceID: default
-  # format: name.instanceID; If specified, dtm will make sure the dependency is applied first before handling this tool.
+- name: helm-installer
+  instanceID: jenkins-001
   dependsOn: [ ]
-  # options for the plugin
   options:
-    chart:
-      # custom configuration. You can refer to [Jenkins values.yaml](https://github.com/jenkinsci/helm-charts/blob/main/charts/jenkins/values.yaml)
-      valuesYaml: |
-        serviceAccount:
-          create: true
-          name: jenkins
-        persistence:
-          storageClass: ""
-        controller:
-          adminUser: "admin"
-          adminPassword: "changeme"
-          ingress:
-            enabled: true
-            hostName: jenkins.example.com
+    valuesYaml: |
+      serviceAccount:
+        create: true
+        name: jenkins
+      persistence:
+        storageClass: ""
+      controller:
+        adminUser: "admin"
+        adminPassword: "changeme"
+        ingress:
+          enabled: true
+          hostName: jenkins.example.com
 ```
 
 使用当前配置成功执行 `dtm apply` 命令后，可以看到环境里的 Ingress 资源如下：
@@ -238,67 +202,59 @@ jenkins     jenkins   nginx   jenkins.example.com   192.168.49.2   80      9m13s
 
 ```yaml
 tools:
-# name of the tool
-- name: jenkins
-  # id of the tool instance
-  instanceID: default
-  # format: name.instanceID; If specified, dtm will make sure the dependency is applied first before handling this tool.
+- name: helm-installer
+  instanceID: jenkins-001
   dependsOn: [ ]
-  # options for the plugin
   options:
-    chart:
-      # custom configuration. You can refer to [Jenkins values.yaml](https://github.com/jenkinsci/helm-charts/blob/main/charts/jenkins/values.yaml)
-      valuesYaml: |
-        serviceAccount:
-          create: true
-          name: jenkins
-        persistence:
-          storageClass: ""
-        controller:
-          adminUser: "admin"
-          adminPassword: "changeme"
-          ingress:
-            enabled: true
-            hostName: jenkins.example.com
-          installPlugins:
-            - kubernetes:3600.v144b_cd192ca_a_
-            - workflow-aggregator:581.v0c46fa_697ffd
-            - git:4.11.3
-            - configuration-as-code:1512.vb_79d418d5fc8
-          additionalPlugins:
-            # install "GitHub Pull Request Builder" plugin, see https://plugins.jenkins.io/ghprb/ for more details
-            - ghprb
-            # install "OWASP Markup Formatter" plugin, see https://plugins.jenkins.io/antisamy-markup-formatter/ for more details
-            - antisamy-markup-formatter
-        # Enable HTML parsing using OWASP Markup Formatter Plugin (antisamy-markup-formatter), useful with ghprb plugin.
-        enableRawHtmlMarkupFormatter: true
-        # Jenkins Configuraction as Code, refer to https://plugins.jenkins.io/configuration-as-code/ for more details
-        # notice: All configuration files that are discovered MUST be supplementary. They cannot overwrite each other's configuration values. This creates a conflict and raises a ConfiguratorException.
-        JCasC:
-          defaultConfig: true
+    valuesYaml: |
+      serviceAccount:
+        create: true
+        name: jenkins
+      persistence:
+        storageClass: ""
+      controller:
+        adminUser: "admin"
+        adminPassword: "changeme"
+        ingress:
+          enabled: true
+          hostName: jenkins.example.com
+        installPlugins:
+          - kubernetes:3600.v144b_cd192ca_a_
+          - workflow-aggregator:581.v0c46fa_697ffd
+          - git:4.11.3
+          - configuration-as-code:1512.vb_79d418d5fc8
+        additionalPlugins:
+          # install "GitHub Pull Request Builder" plugin, see https://plugins.jenkins.io/ghprb/ for more details
+          - ghprb
+          # install "OWASP Markup Formatter" plugin, see https://plugins.jenkins.io/antisamy-markup-formatter/ for more details
+          - antisamy-markup-formatter
+      # Enable HTML parsing using OWASP Markup Formatter Plugin (antisamy-markup-formatter), useful with ghprb plugin.
+      enableRawHtmlMarkupFormatter: true
+      # Jenkins Configuraction as Code, refer to https://plugins.jenkins.io/configuration-as-code/ for more details
+      # notice: All configuration files that are discovered MUST be supplementary. They cannot overwrite each other'sconfiguration values. This creates a conflict and raises a ConfiguratorException.
+      JCasC:
+        defaultConfig: true
 ```
 
 ## 3、状态管理
 
-DevStream 的默认状态文件为 devstream.state，可以通过配置文件中的 state.options 字段来自定义。
-jenkins 插件会保存如下状态：
+DevStream 的默认状态文件为 devstream.state，可以通过配置文件中的 state.options 字段来自定义：
 
 ```yaml
-jenkins_default:
-  name: jenkins
-  instanceID: default
+helm-installer_jenkins-001:
+  name: helm-installer
+  instanceID: jenkins-001
   dependsOn: []
   options:
-    chart:
-      valuesYaml: |
-        serviceAccount:
-          create: true
-          name: jenkins
-        controller:
-          adminUser: "admin"
-          ingress:
-            enabled: true
-            hostName: jenkins.example.com
+    valuesYaml: |
+      serviceAccount:
+        create: true
+        name: jenkins
+      controller:
+        adminUser: "admin"
+        ingress:
+          enabled: true
+          hostName: jenkins.example.com
   resourceStatus:
     outputs:
       jenkins_url: http://jenkins.jenkins:8080
@@ -347,7 +303,7 @@ workflows: |
 在上一小节我们看到了 jenkins 插件的状态中保存了一个 outputs 字段，内容是 `jenkins_url: http://jenkins.jenkins:8080`，
 所以其他插件的配置中可以通过`${{jenkins.default.outputs.jenkins_url}}` 的语法读取到 `http://jenkins.jenkins:8080`。
 
-更多关于"插件输出"的内容，请阅读[这个文档](../core-concepts/output.zh.md)。
+更多关于"插件输出"的内容，请阅读[这个文档](../../core-concepts/output.zh.md)。
 
 ## 5、离线环境部署
 
@@ -368,8 +324,8 @@ helm pull jenkins/jenkins --version=4.2.5
 
 ```yaml
 tools:
-- name: jenkins
-  instanceID: default
+- name: helm-installer
+  instanceID: jenkins-001
   dependsOn: [ ]
   options:
     chart:
@@ -398,7 +354,7 @@ valuesYaml: |
       tag: 0.2.0
 ```
 
-这段配置中留了一个变量 `[[ imageRepo ]]`，你可以在[变量配置](../core-concepts/variables.zh.md)中定义这个变量，变量值设置成你的镜像仓库地址，例如：
+这段配置中留了一个变量 `[[ imageRepo ]]`，你可以在[变量配置](../../core-concepts/variables.zh.md)中定义这个变量，变量值设置成你的镜像仓库地址，例如：
 
 ```yaml
 imageRepo: harbor.example.com:9000
@@ -406,7 +362,7 @@ imageRepo: harbor.example.com:9000
 
 当然，你需要保证需要的镜像都在你的镜像仓库中存在。
 
-你可以下载[镜像列表文件](./jenkins/jenkins-images.txt)，
+你可以下载[镜像列表文件](../jenkins/jenkins-images.txt)，
 然后借助["Image Pull Push"](https://raw.githubusercontent.com/devstream-io/devstream/main/hack/image-pull-push.sh)工具脚本来准备镜像。
 
 ```shell
@@ -423,11 +379,11 @@ export IMAGE_REPO_ADDR=harbor.devstream.io
 ./image-pull-push.sh -f jenkins-images.txt -r ${IMAGE_REPO_ADDR} -l -u
 ```
 
-如果你还没有一个私有镜像仓库，可以参考[这篇文章](../best-practices/image-registry.zh.md)快速部署一个 Docker Registry。
+如果你还没有一个私有镜像仓库，可以参考[这篇文章](../../best-practices/image-registry.zh.md)快速部署一个 Docker Registry。
 
 ### 5.3、参考配置
 
-可能你已经注意到前面的[镜像列表](./jenkins/jenkins-images.txt)里有一个 DevStream 自定义镜像 `devstreamdev/jenkins:2.361.1-jdk11-dtm-0.1`，
+可能你已经注意到前面的[镜像列表](../jenkins/jenkins-images.txt)里有一个 DevStream 自定义镜像 `devstreamdev/jenkins:2.361.1-jdk11-dtm-0.1`，
 在这个镜像里 DevStream 为离线部署场景做了增强，所以对应的配置文件我们也需要做一些调整，如下：
 
 ```yaml
@@ -436,46 +392,41 @@ export IMAGE_REPO_ADDR=harbor.devstream.io
 imageRepo: harbor.example.com:9000
 
 ---
-# plugin config
 tools:
-# name of the tool
-- name: jenkins
-  # id of the tool instance
-  instanceID: default
-  # format: name.instanceID; If specified, dtm will make sure the dependency is applied first before handling this tool.
+- name: helm-installer
+  instanceID: jenkins-001
   dependsOn: [ ]
-  # options for the plugin
   options:
     chart:
       chartPath: "~/devstream-test/jenkins-4.2.5.tgz"
       # custom configuration. You can refer to [Jenkins values.yaml](https://github.com/jenkinsci/helm-charts/blob/main/charts/jenkins/values.yaml)
-      valuesYaml: |
-        serviceAccount:
-          create: true
-          name: jenkins
-        controller:
-          image: [[ imageRepo ]]/devstreamdev/jenkins
-          tag: 2.361.1-jdk11-dtm-0.1
-          imagePullPolicy: "IfNotPresent"
-          sidecars:
-            configAutoReload:
-              image: [[ imageRepo ]]/kiwigrid/k8s-sidecar:1.15.0
-          adminUser: "admin"
-          adminPassword: "changeme"
-          ingress:
-            enabled: true
-            hostName: jenkins.example.com
-        # Enable HTML parsing using OWASP Markup Formatter Plugin (antisamy-markup-formatter), useful with ghprb plugin.
-        enableRawHtmlMarkupFormatter: true
-        # Jenkins Configuraction as Code, refer to https://plugins.jenkins.io/configuration-as-code/ for more details
-        # notice: All configuration files that are discovered MUST be supplementary. They cannot overwrite each other's configuration values. This creates a conflict and raises a ConfiguratorException.
-        JCasC:
-          defaultConfig: true
-        agent:
-          image: [[ imageRepo ]]/jenkins/inbound-agent
-          tag: 4.11.2-4
-        backup:
-          image:
-            repository: [[ imageRepo ]]/maorfr/kube-tasks
-            tag: 0.2.0
+    valuesYaml: |
+      serviceAccount:
+        create: true
+        name: jenkins
+      controller:
+        image: [[ imageRepo ]]/devstreamdev/jenkins
+        tag: 2.361.1-jdk11-dtm-0.1
+        imagePullPolicy: "IfNotPresent"
+        sidecars:
+          configAutoReload:
+            image: [[ imageRepo ]]/kiwigrid/k8s-sidecar:1.15.0
+        adminUser: "admin"
+        adminPassword: "changeme"
+        ingress:
+          enabled: true
+          hostName: jenkins.example.com
+      # Enable HTML parsing using OWASP Markup Formatter Plugin (antisamy-markup-formatter), useful with ghprb plugin.
+      enableRawHtmlMarkupFormatter: true
+      # Jenkins Configuraction as Code, refer to https://plugins.jenkins.io/configuration-as-code/ for more details
+      # notice: All configuration files that are discovered MUST be supplementary. They cannot overwrite each other's configuration values. This creates a conflict and raises a ConfiguratorException.
+      JCasC:
+        defaultConfig: true
+      agent:
+        image: [[ imageRepo ]]/jenkins/inbound-agent
+        tag: 4.11.2-4
+      backup:
+        image:
+          repository: [[ imageRepo ]]/maorfr/kube-tasks
+          tag: 0.2.0
 ```

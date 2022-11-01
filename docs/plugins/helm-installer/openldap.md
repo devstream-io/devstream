@@ -1,30 +1,17 @@
 # Install OpenLDAP with DevStream
 
-//TODO(daniel-hutao): to be updated
-
-This plugin installs [OpenLDAP](https://www.openldap.org/) in an existing Kubernetes cluster using the Helm chart. Please at least make sure your Kubernetes's version is greater than 1.18.
-
-## Usage
-
-The following content is an example of the "tool file".
-
-For more information on the main config, the tool file and the var file of DevStream, see [Core Concepts Overview](../core-concepts/core-concepts.md#1-config) and [DevStream Configuration](../core-concepts/config.md).
-
-```yaml
---8<-- "openldap.yaml"
-```
-
 ### Default Configs
 
 | key                | default value                             | description                                        |
 | ----               | ----                                      | ----                                               |
 | chart.chartPath    | ""                                        | local chart path                                   |
 | chart.chartName    | helm-openldap/openldap-stack-ha           | community chart name                               |
-| chart.timeout      | 5m                                        | this config will wait 5 minutes to deploy          |
+| chart.version      | ""                                        | chart version                                      |
+| chart.timeout      | 10m                                       | this config will wait 5 minutes to deploy          |
 | chart.releaseName  | openldap                                  | helm release name                                  |
 | chart.upgradeCRDs  | true                                      | default update CRD config                          |
-| chart.wait         | true                                      | whether to wait until installation is complete     |
 | chart.namespace    | openldap                                  | namespace where helm to deploy                     |
+| chart.wait         | true                                      | whether to wait until installation is complete     |
 | repo.url           | https://jp-gouin.github.io/helm-openldap/ | helm repo address                                  |
 | repo.name          | helm-openldap                             | helm repo name                                     |
 
