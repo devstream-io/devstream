@@ -1,4 +1,4 @@
-package jenkins
+package jenkinspipeline
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
@@ -7,8 +7,8 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/validator"
 )
 
-// SetJobDefaultConfig config default fields for usage
-func SetJobDefaultConfig(options configmanager.RawOptions) (configmanager.RawOptions, error) {
+// setDefault config default fields for usage
+func setDefault(options configmanager.RawOptions) (configmanager.RawOptions, error) {
 	opts, err := newJobOptions(options)
 	if err != nil {
 		return nil, err
@@ -33,7 +33,7 @@ func SetJobDefaultConfig(options configmanager.RawOptions) (configmanager.RawOpt
 	return types.EncodeStruct(opts)
 }
 
-func ValidateJobConfig(options configmanager.RawOptions) (configmanager.RawOptions, error) {
+func validate(options configmanager.RawOptions) (configmanager.RawOptions, error) {
 	opts, err := newJobOptions(options)
 	if err != nil {
 		return nil, err

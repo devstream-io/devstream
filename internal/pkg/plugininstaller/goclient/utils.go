@@ -11,7 +11,7 @@ import (
 var checkRetryTime = 5
 
 // Check whether deployment is ready and service exists
-func checkDeploymentsAndServicesReady(kubeClient *k8s.Client, opts *Options) (bool, error) {
+func checkDeploymentsAndServicesReady(kubeClient k8s.K8sAPI, opts *Options) (bool, error) {
 	namespace := opts.Namespace
 	deploy := opts.Deployment.Name
 	svc := opts.Service.Name
@@ -46,7 +46,7 @@ func checkDeploymentsAndServicesReady(kubeClient *k8s.Client, opts *Options) (bo
 }
 
 // Delete application by goclient
-func deleteApp(kubeClient *k8s.Client, opts *Options) error {
+func deleteApp(kubeClient k8s.K8sAPI, opts *Options) error {
 	// 1. Delete service
 	if err := kubeClient.DeleteService(opts.Namespace, opts.Service.Name); err != nil {
 		if !kerr.IsNotFound(err) {

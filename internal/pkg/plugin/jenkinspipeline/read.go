@@ -3,7 +3,6 @@ package jenkinspipeline
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/jenkins"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
@@ -11,10 +10,10 @@ import (
 func Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
-			jenkins.SetJobDefaultConfig,
-			jenkins.ValidateJobConfig,
+			setDefault,
+			validate,
 		},
-		GetStatusOperation: jenkins.GetStatus,
+		GetStatusOperation: getStatus,
 	}
 
 	status, err := operator.Execute(options)

@@ -1,4 +1,4 @@
-package jenkins
+package jenkinspipeline
 
 import (
 	. "github.com/onsi/ginkgo/v2"
@@ -27,8 +27,8 @@ var _ = Describe("newJobOptions func", func() {
 				"cloneURL": projectURL,
 			},
 			"pipeline": map[string]interface{}{
-				"jobName":         jobName,
-				"jenkinsfilePath": jenkinsFilePath,
+				"jobName":        jobName,
+				"configLocation": jenkinsFilePath,
 			},
 		}
 

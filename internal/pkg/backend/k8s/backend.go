@@ -19,7 +19,7 @@ type Backend struct {
 	namespace     string
 	configMapName string
 
-	client *k8s.Client
+	client k8s.K8sAPI
 }
 
 // NewBackend returns a backend which uses ConfigMap to store data

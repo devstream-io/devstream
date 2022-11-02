@@ -26,8 +26,8 @@ tools:
     pipeline:
       # jobName is jenkins's job name; <jobFolder/jobName> or <jobName>; e.g. jobs/test-job, test-job, jobs2/test-job
       jobName: test-job
-      # jenkinsfilePath is the location describe how to get Jenkinsfile, it can be remote or local
-      jenkinsfilePath: https://raw.githubusercontent.com/devstream-io/devstream/main/staging/dtm-jenkins-pipeline-example/general/Jenkinsfile
+      # configLocation is the location describe how to get Jenkinsfile, it can be remote or local
+      configLocation: https://raw.githubusercontent.com/devstream-io/devstream/main/staging/dtm-jenkins-pipeline-example/general/Jenkinsfile
       imageRepo:
         # image repo URL for pulling/pushing
         url: http://harbor.example.com:80

@@ -1,4 +1,4 @@
-package jenkins
+package jenkinspipeline
 
 import (
 	"errors"
@@ -11,8 +11,8 @@ import (
 
 const (
 	defaultAdminSecretName         = "jenkins"
-	defautlAdminSecretUserName     = "jenkins-admin-user"
-	defautlAdminSecretUserPassword = "jenkins-admin-password"
+	defaultAdminSecretUserName     = "jenkins-admin-user"
+	defaultAdminSecretUserPassword = "jenkins-admin-password"
 	jenkinsPasswordEnvKey          = "JENKINS_PASSWORD"
 )
 
@@ -48,29 +48,28 @@ func (j *jenkinsOption) getBasicAuth() (*jenkins.BasicAuth, error) {
 		}, nil
 	}
 	// 2. if not set, get user and password from secret
-	secretAuth := getAuthFromSecret(j.Namespace)
-	if secretAuth != nil && secretAuth.CheckNameMatch(j.User) {
-		log.Debugf("jenkins get auth token from secret")
-		return secretAuth, nil
+	k8sClient, err := k8s.NewClient()
+	if err != nil {
+		secretAuth := getAuthFromSecret(k8sClient, j.Namespace)
+		if secretAuth != nil && secretAuth.CheckNameMatch(j.User) {
+			log.Debugf("jenkins get auth token from secret")
+			return secretAuth, nil
+		}
 	}
 	return nil, errors.New("jenkins uesrname and password is required")
 }
 
-func getAuthFromSecret(namespace string) *jenkins.BasicAuth {
-	k8sClient, err := k8s.NewClient()
-	if err != nil {
-		return nil
-	}
+func getAuthFromSecret(k8sClient k8s.K8sAPI, namespace string) *jenkins.BasicAuth {
 	secret, err := k8sClient.GetSecret(namespace, defaultAdminSecretName)
 	if err != nil {
 		log.Warnf("jenkins get auth from k8s failed: %+v", err)
 		return nil
 	}
-	user, ok := secret[defautlAdminSecretUserName]
+	user, ok := secret[defaultAdminSecretUserName]
 	if !ok {
 		return nil
 	}
-	password, ok := secret[defautlAdminSecretUserPassword]
+	password, ok := secret[defaultAdminSecretUserPassword]
 	if !ok {
 		return nil
 	}

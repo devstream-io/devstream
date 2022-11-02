@@ -1,4 +1,4 @@
-package jenkins
+package jenkinspipeline
 
 import (
 	"github.com/mitchellh/mapstructure"

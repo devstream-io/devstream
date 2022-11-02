@@ -1,4 +1,4 @@
-package jenkins
+package jenkinspipeline
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
@@ -7,7 +7,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 )
 
-func GetStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
+func getStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	opts, err := newJobOptions(options)
 	if err != nil {
 		return nil, err
