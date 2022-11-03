@@ -4,6 +4,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 
 	"github.com/Masterminds/semver"
 
@@ -31,11 +32,6 @@ func Upgrade(continueDirectly bool) error {
 		log.Info("Dtm upgrade: do not support to upgrade dtm in development version.")
 		os.Exit(0)
 	}
-	workDir, err := os.Getwd()
-	if err != nil {
-		return err
-	}
-	log.Debugf("Dtm upgrade: work path is : %v", workDir)
 
 	// get dtm bin file path like `/usr/local/bin/dtm-linux-amd64`
 	binFilePath, err := os.Executable()
@@ -46,6 +42,12 @@ func Upgrade(continueDirectly bool) error {
 	_, dtmFileName = filepath.Split(binFilePath)
 
 	log.Debugf("Dtm upgrade: dtm file name is : %v", dtmFileName)
+
+	workDir := strings.Trim(binFilePath, dtmFileName)
+	if err != nil {
+		return err
+	}
+	log.Debugf("Dtm upgrade: work path is : %v", workDir)
 
 	// 1. Get the latest release version
 	ghOptions := &git.RepoInfo{
