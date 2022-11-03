@@ -12,7 +12,7 @@ tools:
       cloneURL: git@github.com/root/test-exmaple.git
       # project branch, default branch will be main
       branch: YOUR_PROJECT_BRANCH
-    action:
+    pipeline:
       # workFlowfilePath is the location of workflows, it can be remote or local
       configLocation: https://raw.githubusercontent.com/devstream-io/devstream/main/staging/dtm-github-action-example/general
       imageRepo:

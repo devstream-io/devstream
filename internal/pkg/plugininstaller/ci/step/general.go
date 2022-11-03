@@ -2,7 +2,7 @@ package step
 
 import (
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
-	"github.com/devstream-io/devstream/pkg/util/scm/github"
+	"github.com/devstream-io/devstream/pkg/util/scm"
 )
 
 type GeneralStepConfig struct {
@@ -19,6 +19,6 @@ func (g *GeneralStepConfig) ConfigJenkins(jenkinsClient jenkins.JenkinsAPI) (*je
 	return nil, nil
 }
 
-func (g *GeneralStepConfig) ConfigGithub(client *github.Client) error {
+func (g *GeneralStepConfig) ConfigSCM(client scm.ClientOperation) error {
 	return nil
 }

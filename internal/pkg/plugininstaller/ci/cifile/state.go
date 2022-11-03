@@ -20,7 +20,7 @@ func GetCIFileStatus(options configmanager.RawOptions) (statemanager.ResourceSta
 	}
 
 	// get local file info
-	gitMap, err := opts.CIConfig.getGitfileMap()
+	gitMap, err := opts.CIFileConfig.getGitfileMap()
 	if err != nil {
 		log.Debugf("ci state get gitMap failed: %+v", err)
 		return nil, err

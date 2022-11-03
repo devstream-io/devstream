@@ -21,11 +21,11 @@ func setCIContent(options configmanager.RawOptions) (configmanager.RawOptions, e
 	if err != nil {
 		return nil, err
 	}
-	ciConfig := opts.CIConfig
-	if ciConfig == nil {
-		ciConfig = &cifile.CIConfig{}
+	CIFileConfig := opts.CIFileConfig
+	if CIFileConfig == nil {
+		CIFileConfig = &cifile.CIFileConfig{}
 	}
-	ciConfig.SetContent(ciContent)
-	opts.CIConfig = ciConfig
+	CIFileConfig.SetContent(ciContent)
+	opts.CIFileConfig = CIFileConfig
 	return types.EncodeStruct(opts)
 }

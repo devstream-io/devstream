@@ -3,7 +3,7 @@ package step
 import (
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 	"github.com/devstream-io/devstream/pkg/util/log"
-	"github.com/devstream-io/devstream/pkg/util/scm/github"
+	"github.com/devstream-io/devstream/pkg/util/scm"
 )
 
 const (
@@ -44,6 +44,6 @@ func (g *SonarQubeStepConfig) ConfigJenkins(jenkinsClient jenkins.JenkinsAPI) (*
 	}, nil
 }
 
-func (s *SonarQubeStepConfig) ConfigGithub(client *github.Client) error {
+func (s *SonarQubeStepConfig) ConfigSCM(client scm.ClientOperation) error {
 	return client.AddRepoSecret(sonarSecretKey, s.Token)
 }

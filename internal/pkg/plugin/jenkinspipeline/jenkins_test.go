@@ -5,10 +5,11 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/devstream-io/devstream/pkg/util/k8s"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/ghttp"
+
+	"github.com/devstream-io/devstream/pkg/util/k8s"
 )
 
 var _ = Describe("jenkinsOption struct", func() {

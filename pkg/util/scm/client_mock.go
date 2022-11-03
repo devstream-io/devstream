@@ -9,6 +9,7 @@ type MockScmClient struct {
 	PushRaiseError         error
 	GetPathInfoError       error
 	DownloadRepoError      error
+	AddRepoSecretError     error
 	DownloadRepoValue      string
 	NeedRollBack           bool
 	DeleteFuncIsRun        bool
@@ -58,4 +59,8 @@ func (m *MockScmClient) DownloadRepo() (string, error) {
 
 func (m *MockScmClient) DescribeRepo() (*git.RepoInfo, error) {
 	return nil, nil
+}
+
+func (m *MockScmClient) AddRepoSecret(secretKey, secretValue string) error {
+	return m.AddRepoSecretError
 }

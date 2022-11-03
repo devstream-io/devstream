@@ -9,14 +9,14 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/mapz"
+	"github.com/devstream-io/devstream/pkg/util/scm"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
-	"github.com/devstream-io/devstream/pkg/util/scm/github"
 )
 
 type StepConfigAPI interface {
 	GetJenkinsPlugins() []*jenkins.JenkinsPlugin
 	ConfigJenkins(jenkinsClient jenkins.JenkinsAPI) (*jenkins.RepoCascConfig, error)
-	ConfigGithub(client *github.Client) error
+	ConfigSCM(client scm.ClientOperation) error
 }
 
 type StepGlobalOption struct {

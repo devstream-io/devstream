@@ -53,7 +53,7 @@ func (c *Client) InitRepo() error {
 		p.NamespaceID = gitlab.Int(groupId)
 	}
 	_, _, err = c.Projects.CreateProject(p)
-	if err != nil && !pkgerror.CheckSlientErrorByMessage(err, errRepoNotFound, errRepoExist) {
+	if err != nil && !pkgerror.CheckErrorMatchByMessage(err, errRepoNotFound, errRepoExist) {
 		return err
 	}
 	return nil
@@ -61,7 +61,7 @@ func (c *Client) InitRepo() error {
 
 func (c *Client) DeleteRepo() error {
 	_, err := c.Projects.DeleteProject(c.GetRepoPath())
-	if err != nil && !pkgerror.CheckSlientErrorByMessage(err, errRepoNotFound) {
+	if err != nil && !pkgerror.CheckErrorMatchByMessage(err, errRepoNotFound) {
 		return err
 	}
 	return nil
@@ -113,7 +113,7 @@ func (c *Client) AddWebhook(webhookConfig *git.WebhookConfig) error {
 
 func (c *Client) DeleteWebhook(webhookConfig *git.WebhookConfig) error {
 	projectHook, err := c.getWebhook(webhookConfig)
-	if err != nil && !pkgerror.CheckSlientErrorByMessage(err, errRepoNotFound) {
+	if err != nil && !pkgerror.CheckErrorMatchByMessage(err, errRepoNotFound) {
 		return err
 	}
 	if projectHook == nil {
@@ -145,4 +145,41 @@ func (c *Client) getWebhook(webhookConfig *git.WebhookConfig) (*gitlab.ProjectHo
 // TODO(steinliber): support gtlab later
 func (c *Client) DownloadRepo() (string, error) {
 	return "", fmt.Errorf("gitlab doesn't support download repo for now")
+}
+
+func (c *Client) AddRepoSecret(secretKey, secretValue string) error {
+	var err error
+	createOpts := gitlab.CreateProjectVariableOptions{
+		Key:    gitlab.String(secretKey),
+		Value:  gitlab.String(secretValue),
+		Masked: gitlab.Bool(true),
+	}
+	_, _, err = c.ProjectVariables.CreateVariable(c.GetRepoPath(), &createOpts)
+	// if secret already exist, just update this secret
+	if err != nil && pkgerror.CheckErrorMatchByMessage(err, errVariableExist) {
+		updateOpts := gitlab.UpdateProjectVariableOptions{
+			Value:  gitlab.String(secretValue),
+			Masked: gitlab.Bool(true),
+		}
+		_, _, err = c.ProjectVariables.UpdateVariable(c.GetRepoPath(), secretKey, &updateOpts)
+	}
+	return err
+}
+
+func (c *Client) ListRepoRunner() ([]*gitlab.Runner, error) {
+	listOpts := &gitlab.ListProjectRunnersOptions{
+		Status:  gitlab.String("online"),
+		TagList: &[]string{"ci"},
+	}
+	runners, _, err := c.Runners.ListProjectRunners(c.GetRepoPath(), listOpts)
+	return runners, err
+
+}
+
+func (c *Client) ResetRepoRunnerToken() (string, error) {
+	token, _, err := c.Runners.ResetProjectRunnerRegistrationToken(c.GetRepoPath())
+	if err != nil {
+		return "", err
+	}
+	return *token.Token, nil
 }

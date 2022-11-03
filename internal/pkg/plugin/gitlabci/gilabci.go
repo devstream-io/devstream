@@ -6,7 +6,7 @@ import (
 )
 
 var DefaultCIOptions = &cifile.Options{
-	CIConfig: &cifile.CIConfig{
+	CIFileConfig: &cifile.CIFileConfig{
 		Type: "gitlab",
 	},
 	ProjectRepo: &git.RepoInfo{

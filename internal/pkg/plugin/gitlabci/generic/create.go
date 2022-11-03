@@ -2,8 +2,8 @@ package generic
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
-	"github.com/devstream-io/devstream/internal/pkg/plugin/gitlabci"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/cifile"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
@@ -12,10 +12,11 @@ import (
 func Create(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
-			cifile.SetDefaultConfig(gitlabci.DefaultCIOptions),
-			cifile.Validate,
+			ci.SetSCMDefault,
+			validate,
 		},
 		ExecuteOperations: plugininstaller.ExecuteOperations{
+			preConfigGitlab,
 			cifile.PushCIFiles,
 		},
 		GetStatusOperation: cifile.GetCIFileStatus,

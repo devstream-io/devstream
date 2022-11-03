@@ -5,6 +5,7 @@ import (
 
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/step"
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
+	"github.com/devstream-io/devstream/pkg/util/scm"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -63,6 +64,13 @@ var _ = Describe("SonarQubeStepConfig", func() {
 				Expect(cascConfig.SonarqubeName).Should(Equal(name))
 				Expect(cascConfig.SonarTokenCredentialID).Should(Equal("SONAR_SECRET_TOKEN"))
 			})
+		})
+	})
+	Context("ConfigSCM method", func() {
+		It("should return nil", func() {
+			scmClient := &scm.MockScmClient{}
+			err := c.ConfigSCM(scmClient)
+			Expect(err).Error().ShouldNot(HaveOccurred())
 		})
 	})
 })

@@ -21,7 +21,7 @@ func PushCIFiles(options configmanager.RawOptions) error {
 		return err
 	}
 	// 1. get git content by config
-	gitMap, err := opts.CIConfig.getGitfileMap()
+	gitMap, err := opts.CIFileConfig.getGitfileMap()
 	if err != nil {
 		return err
 	}
@@ -45,7 +45,7 @@ func DeleteCIFiles(options configmanager.RawOptions) error {
 		return err
 	}
 	// 1. get git content by config
-	gitMap, err := opts.CIConfig.getGitfileMap()
+	gitMap, err := opts.CIFileConfig.getGitfileMap()
 	if err != nil {
 		return err
 	}

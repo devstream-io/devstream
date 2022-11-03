@@ -1,4 +1,4 @@
-package general
+package generic
 
 import (
 	"fmt"
@@ -19,8 +19,8 @@ func validate(options configmanager.RawOptions) (configmanager.RawOptions, error
 		return nil, err
 	}
 	// check repo is valid
-	if opts.ProjectRepo.RepoType != "github" {
-		return nil, fmt.Errorf("github action don't support other repo")
+	if opts.ProjectRepo.RepoType != "gitlab" {
+		return nil, fmt.Errorf("gitlab action don't support other repo")
 	}
 	return options, nil
 }

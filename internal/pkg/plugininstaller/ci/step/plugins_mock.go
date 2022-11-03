@@ -2,7 +2,7 @@ package step
 
 import (
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
-	"github.com/devstream-io/devstream/pkg/util/scm/github"
+	"github.com/devstream-io/devstream/pkg/util/scm"
 )
 
 type MockPluginsConfig struct {
@@ -19,6 +19,6 @@ func (m *MockPluginsConfig) ConfigJenkins(jenkins.JenkinsAPI) (*jenkins.RepoCasc
 	}
 	return m.ConfigVar, nil
 }
-func (m *MockPluginsConfig) ConfigGithub(*github.Client) error {
+func (m *MockPluginsConfig) ConfigSCM(scm.ClientOperation) error {
 	return nil
 }

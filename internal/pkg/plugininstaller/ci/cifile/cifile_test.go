@@ -11,29 +11,29 @@ import (
 
 var _ = Describe("Options struct", func() {
 	var (
-		ciConfig                          *CIConfig
+		c                                 *CIFileConfig
 		ciFilePath, ciType, ciFileContent string
 	)
 	BeforeEach(func() {
 		ciType = "jenkins"
 		ciFileContent = "test_content"
-		ciConfig = &CIConfig{
+		c = &CIFileConfig{
 			Type: server.CIServerType(ciType),
 		}
-		ciFilePath = ciConfig.newCIServerClient().CIFilePath()
+		ciFilePath = c.newCIServerClient().CIFilePath()
 	})
 	Context("SetContent method", func() {
 		When("contentMap is existed", func() {
 			BeforeEach(func() {
-				ciConfig.SetContent(ciFileContent)
+				c.SetContent(ciFileContent)
 			})
 			It("should update map", func() {
-				existV, ok := ciConfig.ConfigContentMap[ciFilePath]
+				existV, ok := c.ConfigContentMap[ciFilePath]
 				Expect(ok).Should(BeTrue())
 				Expect(existV).Should(Equal(ciFileContent))
 				testContent := "another_test"
-				ciConfig.SetContent(testContent)
-				changedV, ok := ciConfig.ConfigContentMap[ciFilePath]
+				c.SetContent(testContent)
+				changedV, ok := c.ConfigContentMap[ciFilePath]
 				Expect(ok).Should(BeTrue())
 				Expect(changedV).Should(Equal(testContent))
 			})
@@ -42,14 +42,14 @@ var _ = Describe("Options struct", func() {
 
 	Context("SetContentMap method", func() {
 		It("should set contentMap", func() {
-			c := map[string]string{
+			testMap := map[string]string{
 				"test": "gg",
 			}
-			ciConfig.SetContentMap(c)
-			v, ok := ciConfig.ConfigContentMap["test"]
+			c.SetContentMap(testMap)
+			v, ok := c.ConfigContentMap["test"]
 			Expect(ok).Should(BeTrue())
 			Expect(v).Should(Equal("gg"))
-			Expect(len(ciConfig.ConfigContentMap)).Should(Equal(1))
+			Expect(len(c.ConfigContentMap)).Should(Equal(1))
 		})
 	})
 
@@ -58,24 +58,24 @@ var _ = Describe("Options struct", func() {
 			When("render contentMap failed", func() {
 				BeforeEach(func() {
 					ciFileContent = "rendered_test[[ .APP ]]"
-					ciConfig.SetContent(ciFileContent)
-					ciConfig.Vars = map[string]interface{}{
+					c.SetContent(ciFileContent)
+					c.Vars = map[string]interface{}{
 						"GG": "not_exist",
 					}
 				})
 				It("should return render err", func() {
-					_, err := ciConfig.getGitfileMap()
+					_, err := c.getGitfileMap()
 					Expect(err).Error().Should(HaveOccurred())
 					Expect(err.Error()).Should(ContainSubstring("map has no entry for key"))
 				})
 			})
 			When("not render map content", func() {
 				BeforeEach(func() {
-					ciConfig.SetContent(ciFileContent)
-					ciConfig.Vars = map[string]interface{}{}
+					c.SetContent(ciFileContent)
+					c.Vars = map[string]interface{}{}
 				})
 				It("should return render err", func() {
-					gitFileMap, err := ciConfig.getGitfileMap()
+					gitFileMap, err := c.getGitfileMap()
 					Expect(err).Error().ShouldNot(HaveOccurred())
 					v, ok := gitFileMap[ciFilePath]
 					Expect(ok).Should(BeTrue())
@@ -85,11 +85,11 @@ var _ = Describe("Options struct", func() {
 		})
 		When("content and location are all empty", func() {
 			BeforeEach(func() {
-				ciConfig.ConfigContentMap = map[string]string{}
-				ciConfig.ConfigLocation = ""
+				c.ConfigContentMap = map[string]string{}
+				c.ConfigLocation = ""
 			})
 			It("should return error", func() {
-				_, err := ciConfig.getGitfileMap()
+				_, err := c.getGitfileMap()
 				Expect(err).Error().Should(HaveOccurred())
 				Expect(err.Error()).Should(ContainSubstring("ci can't get valid ci files"))
 			})
@@ -98,13 +98,13 @@ var _ = Describe("Options struct", func() {
 
 	Context("renderContent method", func() {
 		BeforeEach(func() {
-			ciConfig.Vars = map[string]interface{}{
+			c.Vars = map[string]interface{}{
 				"APP": "here",
 			}
 			ciFileContent = "test,[[ .APP ]]"
 		})
 		It("should work normal", func() {
-			content, err := ciConfig.renderContent(ciFileContent)
+			content, err := c.renderContent(ciFileContent)
 			Expect(err).Error().ShouldNot(HaveOccurred())
 			Expect(content).Should(Equal("test,here"))
 		})
@@ -115,11 +115,11 @@ var _ = Describe("Options struct", func() {
 		When("get ci file failed", func() {
 			BeforeEach(func() {
 				localFilePath = "not_exist"
-				ciConfig.ConfigContentMap = map[string]string{}
-				ciConfig.ConfigLocation = localFilePath
+				c.ConfigContentMap = map[string]string{}
+				c.ConfigLocation = localFilePath
 			})
 			It("should return error", func() {
-				_, err := ciConfig.getConfigContentFromLocation()
+				_, err := c.getConfigContentFromLocation()
 				Expect(err).Error().Should(HaveOccurred())
 				Expect(err.Error()).Should(ContainSubstring("no such file or directory"))
 			})
@@ -132,13 +132,13 @@ var _ = Describe("Options struct", func() {
 				testContent := []byte(ciFileContent)
 				err = os.WriteFile(localFilePath.Name(), testContent, 0755)
 				Expect(err).Error().ShouldNot(HaveOccurred())
-				ciConfig.ConfigContentMap = map[string]string{}
-				ciConfig.ConfigLocation = localFilePath.Name()
+				c.ConfigContentMap = map[string]string{}
+				c.ConfigLocation = localFilePath.Name()
 			})
 			It("should return error", func() {
-				gitMap, err := ciConfig.getConfigContentFromLocation()
+				gitMap, err := c.getConfigContentFromLocation()
 				Expect(err).Error().ShouldNot(HaveOccurred())
-				v, ok := gitMap[ciConfig.newCIServerClient().CIFilePath()]
+				v, ok := gitMap[c.newCIServerClient().CIFilePath()]
 				Expect(ok).Should(BeTrue())
 				Expect(v).Should(Equal([]byte(ciFileContent)))
 			})

@@ -21,7 +21,7 @@ var _ = Describe("validate func", func() {
 			"scm": map[string]interface{}{
 				"cloneURL": cloneURL,
 			},
-			"action": map[string]interface{}{
+			"pipeline": map[string]interface{}{
 				"configLocation": configLocation,
 			},
 			"projectRepo": map[string]interface{}{
@@ -59,40 +59,5 @@ var _ = Describe("validate func", func() {
 		AfterEach(func() {
 			os.Unsetenv("GITHUB_TOKEN")
 		})
-	})
-})
-
-var _ = Describe("setDefault func", func() {
-	var (
-		options                  configmanager.RawOptions
-		cloneURL, configLocation string
-	)
-	BeforeEach(func() {
-		cloneURL = "http://github.com/root/test-exmaple.git"
-		configLocation = "workflows"
-		options = configmanager.RawOptions{
-			"scm": map[string]interface{}{
-				"cloneURL": cloneURL,
-			},
-			"action": map[string]interface{}{
-				"configLocation": configLocation,
-			},
-		}
-	})
-	BeforeEach(func() {
-		os.Setenv("GITHUB_TOKEN", "test")
-	})
-	It("should work normal", func() {
-		opts, err := setDefault(options)
-		Expect(err).ShouldNot(HaveOccurred())
-		projectRepo, ok := opts["projectRepo"]
-		Expect(ok).Should(BeTrue())
-		Expect(projectRepo).ShouldNot(BeNil())
-		ciConfig, ok := opts["ci"]
-		Expect(ok).Should(BeTrue())
-		Expect(ciConfig).ShouldNot(BeNil())
-	})
-	AfterEach(func() {
-		os.Unsetenv("GITHUB_TOKEN")
 	})
 })

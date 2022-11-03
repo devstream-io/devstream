@@ -12,6 +12,7 @@ var (
 	errRepoExist      pkgerror.ErrorMessage = "{name: [has already been taken]}"
 	errWebHookInvalid pkgerror.ErrorMessage = "invlid url given"
 	errFileExist      pkgerror.ErrorMessage = "A file with this name already exists"
+	errVariableExist  pkgerror.ErrorMessage = "has already been taken"
 )
 
 var errorMsgMap = map[pkgerror.ErrorMessage]string{

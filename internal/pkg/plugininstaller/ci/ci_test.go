@@ -1,26 +1,30 @@
-package general
+package ci_test
 
 import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/cifile"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/cifile/server"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/step"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
-var _ = Describe("action struct", func() {
+var _ = Describe("PipelineConfig struct", func() {
 	var (
-		a                                            *action
+		a                                            *ci.PipelineConfig
 		imageRepoURL, user, repoName, configLocation string
 		r                                            *git.RepoInfo
+		ciType                                       server.CIServerType
 	)
 	BeforeEach(func() {
 		imageRepoURL = "exmaple.com"
 		user = "test_user"
 		repoName = "test_repo"
 		configLocation = "123/workflows"
-		a = &action{
+		ciType = "gitlab"
+		a = &ci.PipelineConfig{
 			ConfigLocation: configLocation,
 			ImageRepo: &step.ImageRepoStepConfig{
 				URL:  imageRepoURL,
@@ -31,13 +35,14 @@ var _ = Describe("action struct", func() {
 			Repo: repoName,
 		}
 	})
-	Context("buildCIConfig method", func() {
+	Context("BuildCIFileConfig method", func() {
 		It("should work normal", func() {
 			var nilStepConfig *step.SonarQubeStepConfig
 			var nilDingTalkConfig *step.DingtalkStepConfig
-			ciConfig := a.buildCIConfig(r)
-			Expect(string(ciConfig.Type)).Should(Equal("github"))
-			Expect(ciConfig.ConfigLocation).Should(Equal(configLocation))
+			var nilGeneral *step.GeneralStepConfig
+			CIFileConfig := a.BuildCIFileConfig(ciType, r)
+			Expect(string(CIFileConfig.Type)).Should(Equal("gitlab"))
+			Expect(CIFileConfig.ConfigLocation).Should(Equal(configLocation))
 			expectVars := cifile.CIFileVarsMap{
 				"SonarqubeSecretKey":    "SONAR_SECRET_TOKEN",
 				"AppName":               "test_repo",
@@ -47,6 +52,7 @@ var _ = Describe("action struct", func() {
 					"url":  "exmaple.com",
 					"user": "test_user",
 				},
+				"general":             nilGeneral,
 				"dingTalk":            nilDingTalkConfig,
 				"DingTalkSecretKey":   "DINGTALK_SECURITY_VALUE",
 				"DingTalkSecretToken": "DINGTALK_SECURITY_TOKEN",
@@ -55,7 +61,7 @@ var _ = Describe("action struct", func() {
 				"sonarqube":           nilStepConfig,
 				"GitlabConnectionID":  "gitlabConnection",
 			}
-			Expect(ciConfig.Vars).Should(Equal(expectVars))
+			Expect(CIFileConfig.Vars).Should(Equal(expectVars))
 		})
 	})
 })

@@ -22,7 +22,7 @@ type CIServerOptions interface {
 
 func NewCIServer(ciType CIServerType) CIServerOptions {
 	// there are no validation for ciType
-	// because we have already validated it by `validate` flag in CIConfig.Type
+	// because we have already validated it by `validate` flag in CIFileConfig.Type
 	switch ciType {
 	case CIGitLabType:
 		return &GitLabCI{}
