@@ -59,8 +59,8 @@ harbor-linux-amd64_0.9.1.md5  harbor-linux-amd64_0.9.1.so  jenkins-linux-amd64_0
 你可以通过如下命令将镜像列表下载到本地：
 
 ```shell
-curl -o jenkins-images.txt https://raw.githubusercontent.com/devstream-io/devstream/main/docs/plugins/jenkins/jenkins-images.txt
-curl -o harbor-images.txt https://raw.githubusercontent.com/devstream-io/devstream/main/docs/plugins/harbor/harbor-images.txt
+curl -o jenkins-images.txt https://raw.githubusercontent.com/devstream-io/devstream/main/docs/plugins/helm-installer/jenkins/jenkins-images.txt
+curl -o harbor-images.txt https://raw.githubusercontent.com/devstream-io/devstream/main/docs/plugins/helm-installer/harbor/harbor-images.txt
 ```
 
 另外 DevStream 提供了一个工具脚本用于帮助你快速将这些镜像下载到本地并且上传到私有镜像仓库，你可以通过如下命令下载这个脚本并赋予可执行权限：

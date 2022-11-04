@@ -477,7 +477,7 @@ imageRepo: harbor.example.com:9000
 然后借助["Image Pull Push"](https://raw.githubusercontent.com/devstream-io/devstream/main/hack/image-pull-push.sh)工具脚本来准备镜像。
 
 ```shell
-curl -o harbor-images.txt https://raw.githubusercontent.com/devstream-io/devstream/main/docs/plugins/harbor/harbor-images.txt
+curl -o harbor-images.txt https://raw.githubusercontent.com/devstream-io/devstream/main/docs/plugins/helm-installer/harbor/harbor-images.txt
 curl -o image-pull-push.sh https://raw.githubusercontent.com/devstream-io/devstream/main/hack/image-pull-push.sh
 chmod +x image-pull-push.sh
 # 查看工具脚本的使用方法和注意事项等

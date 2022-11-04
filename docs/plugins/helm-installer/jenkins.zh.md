@@ -362,11 +362,11 @@ imageRepo: harbor.example.com:9000
 
 当然，你需要保证需要的镜像都在你的镜像仓库中存在。
 
-你可以下载[镜像列表文件](../jenkins/jenkins-images.txt)，
+你可以下载[镜像列表文件](./jenkins/jenkins-images.txt)，
 然后借助["Image Pull Push"](https://raw.githubusercontent.com/devstream-io/devstream/main/hack/image-pull-push.sh)工具脚本来准备镜像。
 
 ```shell
-curl -o jenkins-images.txt https://raw.githubusercontent.com/devstream-io/devstream/main/docs/plugins/jenkins/jenkins-images.txt
+curl -o jenkins-images.txt https://raw.githubusercontent.com/devstream-io/devstream/main/docs/plugins/helm-installer/jenkins/jenkins-images.txt
 curl -o image-pull-push.sh https://raw.githubusercontent.com/devstream-io/devstream/main/hack/image-pull-push.sh
 chmod +x image-pull-push.sh
 # 查看工具脚本的使用方法和注意事项等
@@ -383,7 +383,7 @@ export IMAGE_REPO_ADDR=harbor.devstream.io
 
 ### 5.3、参考配置
 
-可能你已经注意到前面的[镜像列表](../jenkins/jenkins-images.txt)里有一个 DevStream 自定义镜像 `devstreamdev/jenkins:2.361.1-jdk11-dtm-0.1`，
+可能你已经注意到前面的[镜像列表](./jenkins/jenkins-images.txt)里有一个 DevStream 自定义镜像 `devstreamdev/jenkins:2.361.1-jdk11-dtm-0.1`，
 在这个镜像里 DevStream 为离线部署场景做了增强，所以对应的配置文件我们也需要做一些调整，如下：
 
 ```yaml
