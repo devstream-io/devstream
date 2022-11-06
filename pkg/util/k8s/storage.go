@@ -21,7 +21,7 @@ type PVOption struct {
 	AccessMode []corev1.PersistentVolumeAccessMode
 
 	// <binarySI>        ::= Ki | Mi | Gi | Ti | Pi | Ei
-	//   (International System of units; See: http://physics.nist.gov/cuu/Units/binary.html)
+	//   (International System of units; See: https://physics.nist.gov/cuu/Units/binary.html)
 	// <decimalSI>       ::= m | "" | k | M | G | T | P | E
 	//   (Note that 1024 = 1Ki but 1000 = 1k; I didn't choose the capitalization.)
 	// eg: 10Gi 200Mi
