@@ -14,7 +14,7 @@ func InstallRepo(options configmanager.RawOptions) error {
 	}
 
 	// 1. Download and render repo by SourceRepo
-	sourceClient, err := scm.NewClientWithAuth(opts.SourceRepo)
+	sourceClient, err := scm.NewClient(opts.SourceRepo)
 	if err != nil {
 		return err
 	}

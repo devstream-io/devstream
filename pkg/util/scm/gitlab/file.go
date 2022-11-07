@@ -30,7 +30,7 @@ func (c *Client) PushFiles(commitInfo *git.CommitInfo, checkUpdate bool) (bool, 
 		tree.addCommitFilesFromMap(gitlab.FileCreate, commitInfo.GitFileMap)
 	}
 	_, _, err := c.Commits.CreateCommit(c.GetRepoPath(), tree.createCommitInfo())
-	if err != nil && !pkgerror.CheckSlientErrorByMessage(err, errFileExist) {
+	if err != nil && !pkgerror.CheckErrorMatchByMessage(err, errFileExist) {
 		return true, c.newModuleError(err)
 	}
 	return false, nil
@@ -40,7 +40,7 @@ func (c *Client) DeleteFiles(commitInfo *git.CommitInfo) error {
 	tree := newCommitTree(commitInfo.CommitMsg, c.Branch)
 	tree.addCommitFilesFromMap(gitlab.FileDelete, commitInfo.GitFileMap)
 	_, _, err := c.Commits.CreateCommit(c.GetRepoPath(), tree.createCommitInfo())
-	if err != nil && !pkgerror.CheckSlientErrorByMessage(err, errRepoNotFound) {
+	if err != nil && !pkgerror.CheckErrorMatchByMessage(err, errRepoNotFound) {
 		return c.newModuleError(err)
 	}
 	return nil

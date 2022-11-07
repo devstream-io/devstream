@@ -7,6 +7,7 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
+	"github.com/devstream-io/devstream/pkg/util/scm"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
@@ -81,6 +82,13 @@ var _ = Describe("GitlabStepConfig", func() {
 					Expect(cascConfig.GitlabURL).Should(Equal(baseURL))
 				})
 			})
+		})
+	})
+	Context("ConfigSCM method", func() {
+		It("should return nil", func() {
+			scmClient := &scm.MockScmClient{}
+			err := c.ConfigSCM(scmClient)
+			Expect(err).Error().ShouldNot(HaveOccurred())
 		})
 	})
 })

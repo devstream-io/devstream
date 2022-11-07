@@ -12,37 +12,37 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/template"
 )
 
-type ciConfigMap map[string]string
+type CIFileConfigMap map[string]string
 type CIFileVarsMap map[string]interface{}
 
-type CIConfig struct {
+type CIFileConfig struct {
 	Type server.CIServerType `validate:"oneof=jenkins github gitlab" mapstructure:"type"`
 	// ConfigLocation represent location of ci config, it can be a remote location or local location
 	ConfigLocation string `validate:"required_without=ConfigContentMap" mapstructure:"configLocation"`
 	// Contents respent map of ci fileName to fileContent
-	ConfigContentMap ciConfigMap   `validate:"required_without=ConfigLocation" mapstructure:"configContents"`
-	Vars             CIFileVarsMap `mapstructure:"vars"`
+	ConfigContentMap CIFileConfigMap `validate:"required_without=ConfigLocation" mapstructure:"configContents"`
+	Vars             CIFileVarsMap   `mapstructure:"vars"`
 }
 
 // SetContent is used to config ConfigContentMap for ci
-func (c *CIConfig) SetContent(content string) {
+func (c *CIFileConfig) SetContent(content string) {
 	ciFileName := c.newCIServerClient().CIFilePath()
 	if c.ConfigContentMap == nil {
-		c.ConfigContentMap = ciConfigMap{}
+		c.ConfigContentMap = CIFileConfigMap{}
 	}
 	c.ConfigContentMap[ciFileName] = content
 }
 
-func (c *CIConfig) SetContentMap(contentMap map[string]string) {
+func (c *CIFileConfig) SetContentMap(contentMap map[string]string) {
 	c.ConfigContentMap = contentMap
 }
 
-func (c *CIConfig) getGitfileMap() (gitFileMap git.GitFileContentMap, err error) {
+func (c *CIFileConfig) getGitfileMap() (gitFileMap git.GitFileContentMap, err error) {
 	if len(c.ConfigContentMap) == 0 {
 		// 1. if ConfigContentMap is empty, get GitFileContentMap from ConfigLocation
 		gitFileMap, err = c.getConfigContentFromLocation()
 	} else {
-		// 2. else render CIConfig.ConfigContentMap values
+		// 2. else render CIFileConfig.ConfigContentMap values
 		gitFileMap = make(git.GitFileContentMap)
 		ciServerClient := c.newCIServerClient()
 		for filePath, content := range c.ConfigContentMap {
@@ -61,11 +61,11 @@ func (c *CIConfig) getGitfileMap() (gitFileMap git.GitFileContentMap, err error)
 	return gitFileMap, err
 }
 
-func (c *CIConfig) newCIServerClient() (ciClient server.CIServerOptions) {
+func (c *CIFileConfig) newCIServerClient() (ciClient server.CIServerOptions) {
 	return server.NewCIServer(c.Type)
 }
 
-func (c *CIConfig) renderContent(ciFileContent string) (string, error) {
+func (c *CIFileConfig) renderContent(ciFileContent string) (string, error) {
 	needRenderContent := len(c.Vars) > 0
 	if needRenderContent {
 		return template.New().FromContent(ciFileContent).SetDefaultRender(ciTemplateName, c.Vars).Render()
@@ -73,20 +73,21 @@ func (c *CIConfig) renderContent(ciFileContent string) (string, error) {
 	return ciFileContent, nil
 
 }
-func (c *CIConfig) getConfigContentFromLocation() (git.GitFileContentMap, error) {
+func (c *CIFileConfig) getConfigContentFromLocation() (git.GitFileContentMap, error) {
 	// 1. get resource
 	getClient := downloader.ResourceClient{
 		Source: c.ConfigLocation,
 	}
-	ciConfigPath, err := getClient.GetWithGoGetter()
+	CIFileConfigPath, err := getClient.GetWithGoGetter()
 	if err != nil {
 		return nil, fmt.Errorf("ci get files by %s failed: %w", c.ConfigLocation, err)
 	}
 	defer getClient.CleanUp()
-	// 2. get ci content map from ciConfigPath
+	// 2. get ci content map from CIFileConfigPath
+	log.Infof("----------------> %+v", c.Type)
 	ciClient := c.newCIServerClient()
 	return file.GetFileMap(
-		ciConfigPath, ciClient.FilterCIFilesFunc(),
+		CIFileConfigPath, ciClient.FilterCIFilesFunc(),
 		ciClient.GetGitNameFunc(), processCIFilesFunc(c.Vars),
 	)
 }

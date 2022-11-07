@@ -138,7 +138,7 @@ func (c *Client) AddWebhook(webhookConfig *git.WebhookConfig) error {
 	hook.Config["url"] = webhookConfig.Address
 	hook.Config["content_type"] = "json"
 	_, _, err := client.Repositories.CreateHook(c.Context, c.Owner, c.Repo, hook)
-	if err != nil && !pkgerror.CheckSlientErrorByMessage(err, errHookAlreadyExist) {
+	if err != nil && !pkgerror.CheckErrorMatchByMessage(err, errHookAlreadyExist) {
 		return err
 	}
 	return nil

@@ -20,7 +20,7 @@ func installPipeline(options configmanager.RawOptions) error {
 	}
 	// 2. generate secretToken for webhook auth
 	secretToken := random.GenerateRandomSecretToken()
-	if err := opts.Pipeline.install(jenkinsClient, opts.ProjectRepo, secretToken); err != nil {
+	if err := opts.install(jenkinsClient, secretToken); err != nil {
 		log.Debugf("jenkins install pipeline failed: %s", err)
 		return err
 	}
@@ -30,7 +30,7 @@ func installPipeline(options configmanager.RawOptions) error {
 		return err
 	}
 	webHookConfig := opts.ProjectRepo.BuildWebhookInfo(
-		opts.Jenkins.URL, opts.Pipeline.Job, secretToken,
+		opts.Jenkins.URL, string(opts.JobName), secretToken,
 	)
 	return scmClient.AddWebhook(webHookConfig)
 
@@ -47,7 +47,7 @@ func deletePipeline(options configmanager.RawOptions) error {
 		log.Debugf("jenkins init client failed: %s", err)
 		return err
 	}
-	err = opts.Pipeline.remove(client, opts.ProjectRepo)
+	err = opts.remove(client)
 	if err != nil {
 		return err
 	}
@@ -57,7 +57,7 @@ func deletePipeline(options configmanager.RawOptions) error {
 		return err
 	}
 	webHookConfig := opts.ProjectRepo.BuildWebhookInfo(
-		opts.Jenkins.URL, opts.Pipeline.Job, "",
+		opts.Jenkins.URL, string(opts.JobName), "",
 	)
 	return scmClient.DeleteWebhook(webHookConfig)
 }

@@ -5,7 +5,7 @@ import (
 
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 	"github.com/devstream-io/devstream/pkg/util/log"
-	"github.com/devstream-io/devstream/pkg/util/scm/github"
+	"github.com/devstream-io/devstream/pkg/util/scm"
 )
 
 const (
@@ -56,7 +56,7 @@ func (g *GitlabStepConfig) ConfigJenkins(jenkinsClient jenkins.JenkinsAPI) (*jen
 	}, nil
 }
 
-func (g *GitlabStepConfig) ConfigGithub(ghClient *github.Client) error {
+func (g *GitlabStepConfig) ConfigSCM(client scm.ClientOperation) error {
 	return nil
 }
 

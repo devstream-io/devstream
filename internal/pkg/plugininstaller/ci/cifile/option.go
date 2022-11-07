@@ -9,8 +9,8 @@ import (
 )
 
 type Options struct {
-	CIConfig    *CIConfig     `mapstructure:"ci" validate:"required"`
-	ProjectRepo *git.RepoInfo `mapstructure:"projectRepo" validate:"required"`
+	CIFileConfig *CIFileConfig `mapstructure:"ci" validate:"required"`
+	ProjectRepo  *git.RepoInfo `mapstructure:"projectRepo" validate:"required"`
 }
 
 func NewOptions(options configmanager.RawOptions) (*Options, error) {
@@ -23,10 +23,10 @@ func NewOptions(options configmanager.RawOptions) (*Options, error) {
 
 // FillDefaultValue config options default values by input defaultOptions
 func (opts *Options) fillDefaultValue(defaultOptions *Options) {
-	if opts.CIConfig == nil {
-		opts.CIConfig = defaultOptions.CIConfig
+	if opts.CIFileConfig == nil {
+		opts.CIFileConfig = defaultOptions.CIFileConfig
 	} else {
-		types.FillStructDefaultValue(opts.CIConfig, defaultOptions.CIConfig)
+		types.FillStructDefaultValue(opts.CIFileConfig, defaultOptions.CIFileConfig)
 	}
 	if opts.ProjectRepo == nil {
 		opts.ProjectRepo = defaultOptions.ProjectRepo

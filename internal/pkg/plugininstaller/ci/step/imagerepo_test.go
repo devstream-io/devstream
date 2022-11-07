@@ -6,6 +6,8 @@ import (
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+
+	"github.com/devstream-io/devstream/pkg/util/scm"
 )
 
 var _ = Describe("ImageRepoStepConfig", func() {
@@ -72,4 +74,43 @@ var _ = Describe("ImageRepoStepConfig", func() {
 			})
 		})
 	})
+
+	Context("ConfigSCM method", func() {
+		var (
+			scmClient             *scm.MockScmClient
+			errMsg, existImageEnv string
+		)
+		BeforeEach(func() {
+			existImageEnv = os.Getenv("IMAGE_REPO_PASSWORD")
+			if existImageEnv != "" {
+				err := os.Unsetenv("IMAGE_REPO_PASSWORD")
+				Expect(err).Error().ShouldNot(HaveOccurred())
+			}
+		})
+		When("imageRepoPassword is not valid", func() {
+			BeforeEach(func() {
+				errMsg = "the environment variable IMAGE_REPO_PASSWORD is not set"
+				scmClient = &scm.MockScmClient{}
+			})
+			It("should return error", func() {
+				err := c.ConfigSCM(scmClient)
+				Expect(err).Error().Should(HaveOccurred())
+				Expect(err.Error()).Should(Equal(errMsg))
+			})
+		})
+		When("all valid", func() {
+			BeforeEach(func() {
+				scmClient = &scm.MockScmClient{}
+				os.Setenv("IMAGE_REPO_PASSWORD", "test")
+			})
+			It("should return nil", func() {
+				err := c.ConfigSCM(scmClient)
+				Expect(err).Error().ShouldNot(HaveOccurred())
+			})
+		})
+		AfterEach(func() {
+			os.Setenv("IMAGE_REPO_PASSWORD", existImageEnv)
+		})
+	})
+
 })

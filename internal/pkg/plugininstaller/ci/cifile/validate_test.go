@@ -73,7 +73,7 @@ var _ = Describe("Validate func", func() {
 var _ = Describe("SetDefaultConfig func", func() {
 	var defaultOpts *cifile.Options
 	BeforeEach(func() {
-		defaultCIConfig := &cifile.CIConfig{
+		defaultCIFileConfig := &cifile.CIFileConfig{
 			Type:           "github",
 			ConfigLocation: "http://www.test.com",
 		}
@@ -84,8 +84,8 @@ var _ = Describe("SetDefaultConfig func", func() {
 			RepoType: "gitlab",
 		}
 		defaultOpts = &cifile.Options{
-			CIConfig:    defaultCIConfig,
-			ProjectRepo: defaultRepo,
+			CIFileConfig: defaultCIFileConfig,
+			ProjectRepo:  defaultRepo,
 		}
 	})
 	It("should work normal", func() {

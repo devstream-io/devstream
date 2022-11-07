@@ -6,6 +6,7 @@ import (
 
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/step"
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
+	"github.com/devstream-io/devstream/pkg/util/scm"
 )
 
 var _ = Describe("GeneralStepConfig struct", func() {
@@ -29,6 +30,13 @@ var _ = Describe("GeneralStepConfig struct", func() {
 			casc, err := c.ConfigJenkins(mockClient)
 			Expect(err).Should(BeNil())
 			Expect(casc).Should(BeNil())
+		})
+	})
+	Context("ConfigSCM method", func() {
+		It("should return nil", func() {
+			scmClient := &scm.MockScmClient{}
+			err := c.ConfigSCM(scmClient)
+			Expect(err).Error().ShouldNot(HaveOccurred())
 		})
 	})
 })

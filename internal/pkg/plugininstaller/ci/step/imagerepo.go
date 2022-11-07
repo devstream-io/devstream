@@ -8,17 +8,17 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 	"github.com/devstream-io/devstream/pkg/util/k8s"
 	"github.com/devstream-io/devstream/pkg/util/log"
-	"github.com/devstream-io/devstream/pkg/util/scm/github"
+	"github.com/devstream-io/devstream/pkg/util/scm"
 )
 
 const (
-	dockerhubAuthURL     = "https://index.docker.io/v1/"
 	imageRepoPasswordEnv = "IMAGE_REPO_PASSWORD"
 	// imageRepoDockerSecretName is used for creating k8s secret
 	// and it will be used by jenkins for mount
 	imageRepoDockerSecretName = "image-repo-auth"
 	// imageRepoSecretName is used for github action secret
 	imageRepoSecretName = "IMAGE_REPO_SECRET"
+	imageRepoUserName   = "IMAGE_REPO_USER"
 )
 
 type ImageRepoStepConfig struct {
@@ -49,12 +49,15 @@ func (g *ImageRepoStepConfig) ConfigJenkins(jenkinsClient jenkins.JenkinsAPI) (*
 	return nil, err
 }
 
-func (g *ImageRepoStepConfig) ConfigGithub(client *github.Client) error {
+func (g *ImageRepoStepConfig) ConfigSCM(client scm.ClientOperation) error {
 	imageRepoPasswd := os.Getenv(imageRepoPasswordEnv)
 	if imageRepoPasswd == "" {
 		return fmt.Errorf("the environment variable IMAGE_REPO_PASSWORD is not set")
 	}
 
+	if err := client.AddRepoSecret(imageRepoUserName, g.User); err != nil {
+		return err
+	}
 	return client.AddRepoSecret(imageRepoSecretName, imageRepoPasswd)
 }
 
@@ -65,10 +68,7 @@ func (g *ImageRepoStepConfig) generateDockerAuthSecretData() (map[string][]byte,
 	}
 	tmpStr := fmt.Sprintf("%s:%s", g.User, imageRepoPasswd)
 	authStr := base64.StdEncoding.EncodeToString([]byte(tmpStr))
-	authURL := g.URL
-	if authURL == "" {
-		authURL = dockerhubAuthURL
-	}
+	authURL := g.getImageRepoURL()
 	log.Debugf("jenkins plugin imageRepo auth string: %s.", authStr)
 
 	configJsonStrTpl := `{
@@ -84,4 +84,12 @@ func (g *ImageRepoStepConfig) generateDockerAuthSecretData() (map[string][]byte,
 	return map[string][]byte{
 		"config.json": []byte(configJsonStr),
 	}, nil
+}
+
+func (g *ImageRepoStepConfig) getImageRepoURL() string {
+	if g.URL == "" {
+		// default use docker image repo
+		return "https://index.docker.io/v1/"
+	}
+	return g.URL
 }

@@ -5,6 +5,7 @@ import (
 
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/scm"
 	"github.com/devstream-io/devstream/pkg/util/scm/github"
 )
 
@@ -44,7 +45,7 @@ func (g *GithubStepConfig) ConfigJenkins(jenkinsClient jenkins.JenkinsAPI) (*jen
 	}, nil
 }
 
-func (g *GithubStepConfig) ConfigGithub(ghClient *github.Client) error {
+func (g *GithubStepConfig) ConfigSCM(client scm.ClientOperation) error {
 	return nil
 }
 

@@ -25,7 +25,7 @@ func (e *PluginError) Error() string {
 	return fmt.Sprintf("[%s]%s: %s", e.PluginName, moduleMsg, e.Message)
 }
 
-func CheckSlientErrorByMessage(targetError error, errCheckStrings ...ErrorMessage) bool {
+func CheckErrorMatchByMessage(targetError error, errCheckStrings ...ErrorMessage) bool {
 	for _, checkErr := range errCheckStrings {
 		if strings.Contains(targetError.Error(), string(checkErr)) {
 			return true

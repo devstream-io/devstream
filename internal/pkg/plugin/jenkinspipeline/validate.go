@@ -25,11 +25,11 @@ func setDefault(options configmanager.RawOptions) (configmanager.RawOptions, err
 	if opts.Jenkins.Namespace == "" {
 		opts.Jenkins.Namespace = "jenkins"
 	}
-	if opts.Pipeline.Job == "" {
-		opts.Pipeline.Job = projectRepo.Repo
+	if opts.JobName == "" {
+		opts.JobName = jenkinsJobName(projectRepo.Repo)
 	}
 
-	opts.CIConfig = opts.Pipeline.buildCIConfig(projectRepo, options.GetMapByKey("pipeline"))
+	opts.CIFileConfig = opts.Pipeline.BuildCIFileConfig(ciType, projectRepo)
 	return types.EncodeStruct(opts)
 }
 
@@ -49,7 +49,7 @@ func validate(options configmanager.RawOptions) (configmanager.RawOptions, error
 		return nil, err
 	}
 	// check jenkins job name
-	if err := opts.Pipeline.checkValid(); err != nil {
+	if err := opts.JobName.checkValid(); err != nil {
 		log.Debugf("jenkins validate pipeline invalid: %+v", err)
 		return nil, err
 	}

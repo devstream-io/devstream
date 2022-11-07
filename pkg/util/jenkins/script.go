@@ -97,7 +97,7 @@ func (jenkins *jenkins) ExecuteScript(script string) (string, error) {
 }
 
 func (jenkins *jenkins) ConfigCascForRepo(repoCascConfig *RepoCascConfig) error {
-	log.Info("Start ...")
+	log.Info("jenkins start config casc...")
 	cascConfig, err := template.Render(
 		"jenkins-repo-casc", repoCascScript, repoCascConfig,
 	)

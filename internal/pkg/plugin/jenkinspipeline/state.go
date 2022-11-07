@@ -19,7 +19,7 @@ func getStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, e
 	}
 
 	res := make(statemanager.ResourceStatus)
-	jobRes, err := getJobState(client, opts.Pipeline.getJobName(), opts.Pipeline.getJobFolder())
+	jobRes, err := getJobState(client, opts.JobName.getJobName(), opts.JobName.getJobFolder())
 	if err != nil {
 		return nil, err
 	}

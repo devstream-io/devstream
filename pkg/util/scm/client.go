@@ -17,6 +17,10 @@ const (
 
 func NewClientWithAuth(repoInfo *git.RepoInfo) (ClientOperation, error) {
 	repoInfo.NeedAuth = true
+	return NewClient(repoInfo)
+}
+
+func NewClient(repoInfo *git.RepoInfo) (ClientOperation, error) {
 	switch repoInfo.RepoType {
 	case "github":
 		return github.NewClient(repoInfo)
@@ -24,6 +28,7 @@ func NewClientWithAuth(repoInfo *git.RepoInfo) (ClientOperation, error) {
 		return gitlab.NewClient(repoInfo)
 	}
 	return nil, fmt.Errorf("scaffolding not support repo destination: %s", repoInfo.RepoType)
+
 }
 
 type ClientOperation interface {
@@ -36,6 +41,7 @@ type ClientOperation interface {
 	GetPathInfo(path string) ([]*git.RepoFileStatus, error)
 	AddWebhook(webhookConfig *git.WebhookConfig) error
 	DeleteWebhook(webhookConfig *git.WebhookConfig) error
+	AddRepoSecret(secretKey, secretValue string) error
 }
 
 func PushInitRepo(client ClientOperation, commitInfo *git.CommitInfo) error {

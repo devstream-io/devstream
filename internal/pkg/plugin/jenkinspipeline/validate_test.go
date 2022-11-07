@@ -60,8 +60,8 @@ var _ = Describe("setDefault func", func() {
 			Expect(err).Error().ShouldNot(HaveOccurred())
 			opts, err := newJobOptions(newOptions)
 			Expect(err).Error().ShouldNot(HaveOccurred())
-			Expect(opts.CIConfig).ShouldNot(BeNil())
-			Expect(opts.Pipeline.Job).Should(Equal("spring-demo"))
+			Expect(opts.CIFileConfig).ShouldNot(BeNil())
+			Expect(string(opts.JobName)).Should(Equal("spring-demo"))
 			Expect(opts.ProjectRepo).ShouldNot(BeNil())
 			Expect(opts.ProjectRepo.Repo).Should(Equal("spring-demo"))
 		})
@@ -102,7 +102,6 @@ var _ = Describe("validate func", func() {
 		jenkinsFilePath = "http://raw.content.com/Jenkinsfile"
 		pipeline = map[string]interface{}{
 			"configLocation": jenkinsFilePath,
-			"jobName":        "test",
 		}
 		projectRepo = map[string]interface{}{
 			"owner": "test_owner",
@@ -110,6 +109,7 @@ var _ = Describe("validate func", func() {
 			"repo":  "test_repo",
 		}
 		options = map[string]interface{}{
+			"jobName": "test",
 			"jenkins": map[string]interface{}{
 				"url":  jenkinsURL,
 				"user": jenkinsUser,
@@ -164,7 +164,7 @@ var _ = Describe("validate func", func() {
 	})
 	When("jobName is not valid", func() {
 		BeforeEach(func() {
-			pipeline["jobName"] = "folder/not_exist/jobName"
+			options["jobName"] = "folder/not_exist/jobName"
 			options["pipeline"] = pipeline
 			repoType = "github"
 			projectRepo["repoType"] = repoType
@@ -174,7 +174,7 @@ var _ = Describe("validate func", func() {
 		It("should return error", func() {
 			_, err := validate(options)
 			Expect(err).Error().Should(HaveOccurred())
-			Expect(err.Error()).Should(Equal(fmt.Sprintf("jenkins jobName illegal: %s", pipeline["jobName"])))
+			Expect(err.Error()).Should(Equal(fmt.Sprintf("jenkins jobName illegal: %s", options["jobName"])))
 		})
 	})
 	When("all params is right", func() {

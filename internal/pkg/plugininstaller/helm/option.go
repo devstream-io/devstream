@@ -12,7 +12,7 @@ type Options struct {
 	InstanceID string     `mapstructure:"instanceID"`
 	Repo       helm.Repo  `mapstructure:"repo"`
 	Chart      helm.Chart `mapstructure:"chart"`
-	ValuesYaml string     ` mapstructure:"valuesYaml" validate:"yaml"`
+	ValuesYaml string     `mapstructure:"valuesYaml" validate:"yaml"`
 }
 
 func (opts *Options) GetHelmParam() *helm.HelmParam {

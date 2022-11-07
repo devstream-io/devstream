@@ -16,7 +16,7 @@ var _ = Describe("Options struct", func() {
 	)
 	BeforeEach(func() {
 		opts = &Options{}
-		defaultCIConfig := &CIConfig{
+		defaultCIFileConfig := &CIFileConfig{
 			Type:           "github",
 			ConfigLocation: "http://www.test.com",
 		}
@@ -27,8 +27,8 @@ var _ = Describe("Options struct", func() {
 			RepoType: "gitlab",
 		}
 		defaultOpts = &Options{
-			CIConfig:    defaultCIConfig,
-			ProjectRepo: defaultRepo,
+			CIFileConfig: defaultCIFileConfig,
+			ProjectRepo:  defaultRepo,
 		}
 	})
 
@@ -53,15 +53,15 @@ var _ = Describe("Options struct", func() {
 		When("ci config and repo are all empty", func() {
 			It("should set default value", func() {
 				opts.fillDefaultValue(defaultOpts)
-				Expect(opts.CIConfig).ShouldNot(BeNil())
+				Expect(opts.CIFileConfig).ShouldNot(BeNil())
 				Expect(opts.ProjectRepo).ShouldNot(BeNil())
-				Expect(opts.CIConfig.ConfigLocation).Should(Equal("http://www.test.com"))
+				Expect(opts.CIFileConfig.ConfigLocation).Should(Equal("http://www.test.com"))
 				Expect(opts.ProjectRepo.Repo).Should(Equal("test_repo"))
 			})
 		})
 		When("ci config and repo has some value", func() {
 			BeforeEach(func() {
-				opts.CIConfig = &CIConfig{
+				opts.CIFileConfig = &CIFileConfig{
 					ConfigLocation: "http://exist.com",
 				}
 				opts.ProjectRepo = &git.RepoInfo{
@@ -70,10 +70,10 @@ var _ = Describe("Options struct", func() {
 			})
 			It("should update empty value", func() {
 				opts.fillDefaultValue(defaultOpts)
-				Expect(opts.CIConfig).ShouldNot(BeNil())
+				Expect(opts.CIFileConfig).ShouldNot(BeNil())
 				Expect(opts.ProjectRepo).ShouldNot(BeNil())
-				Expect(opts.CIConfig.ConfigLocation).Should(Equal("http://exist.com"))
-				Expect(opts.CIConfig.Type).Should(Equal(server.CIServerType("github")))
+				Expect(opts.CIFileConfig.ConfigLocation).Should(Equal("http://exist.com"))
+				Expect(opts.CIFileConfig.Type).Should(Equal(server.CIServerType("github")))
 				Expect(opts.ProjectRepo.Branch).Should(Equal("new_branch"))
 				Expect(opts.ProjectRepo.Repo).Should(Equal("test_repo"))
 			})
