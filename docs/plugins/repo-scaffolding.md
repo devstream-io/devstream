@@ -76,16 +76,26 @@ This configuration is used for template render, It has default variables listed 
 }
 ```
 
+## Outputs
+
+This plugin has three outputs:
+
+- `owner`
+- `repo`
+- `repoURL`
+
+
 ## Examples 
 
 ### official scaffolding repo config
 
 These repos are official scaffolding repo to use for `sourceRepo` config, You can use these repo directly or just create one for yourself.
 
-| language | org | repo |
-|  ----  | ----  |----  |
-| Golang | devstream-io | dtm-scaffolding-golang |
-| Java Spring | spring-guides | gs-spring-boot |
+| language    | org           | repo                       |
+|-------------|---------------|----------------------------|
+| Golang      | devstream-io  | dtm-scaffolding-golang     |
+| Golang      | devstream-io  | dtm-scaffolding-golang-cli |
+| Java Spring | spring-guides | gs-spring-boot             |
 
 
 ### Golang
@@ -111,6 +121,27 @@ tools:
 
 This config will create `dtm-test-golang` repo for user test_owner in GitHub, and the variable ImageRepo will be used for template render. 
 
+### Golang CLI
+
+```yaml
+tools:
+  - name: repo-scaffolding
+    instanceID: golang-cli-scaffolding
+    options:
+      destinationRepo:
+        owner: test_owner
+        org: ""
+        repo: dtm-test-golang-cli
+        branch: main
+        repoType: github
+      sourceRepo:
+        org: devstream-io
+        repo: dtm-scaffolding-golang-cli
+        repoType: github
+```
+
+This config will create `dtm-test-golang-cli` repo for user test_owner in GitHub.
+
 ### Java Spring
 
 ```yaml
@@ -133,11 +164,3 @@ tools:
 ```
 
 this config will create `dtm-test-java` repo for user test_owner in GitHub.
-
-## Outputs
-
-This plugin has three outputs:
-
-- `owner`
-- `repo`
-- `repoURL`
