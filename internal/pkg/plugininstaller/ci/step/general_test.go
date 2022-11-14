@@ -16,7 +16,9 @@ var _ = Describe("GeneralStepConfig struct", func() {
 	)
 	BeforeEach(func() {
 		c = &step.GeneralStepConfig{
-			Language: "test",
+			Language: &step.Language{
+				Name: "test",
+			},
 		}
 	})
 	Context("GetJenkinsPlugins method", func() {

@@ -37,33 +37,23 @@ var _ = Describe("setDefault func", func() {
 			},
 		}
 	})
-	When("repo url is not valie", func() {
-		BeforeEach(func() {
-			options["scm"] = map[string]interface{}{
-				"cloneURL": "not_valid_url/gg",
-			}
-		})
-		It("should return err", func() {
-			_, err := setDefault(options)
-			Expect(err).Error().Should(HaveOccurred())
-		})
-	})
 	When("all input is valid", func() {
 		BeforeEach(func() {
 			options["scm"] = map[string]interface{}{
 				"cloneURL": "git@44.33.22.11:30022:root/spring-demo.git",
 				"apiURL":   "http://www.app.com",
 			}
+			options["projectRepo"] = map[string]interface{}{
+				"repo": "testRepo",
+			}
 		})
 		It("should set default value", func() {
-			newOptions, err := setDefault(options)
+			newOptions, err := setJenkinsDefault(options)
 			Expect(err).Error().ShouldNot(HaveOccurred())
 			opts, err := newJobOptions(newOptions)
 			Expect(err).Error().ShouldNot(HaveOccurred())
-			Expect(opts.CIFileConfig).ShouldNot(BeNil())
-			Expect(string(opts.JobName)).Should(Equal("spring-demo"))
-			Expect(opts.ProjectRepo).ShouldNot(BeNil())
-			Expect(opts.ProjectRepo.Repo).Should(Equal("spring-demo"))
+			Expect(opts.CIFileConfig).Should(BeNil())
+			Expect(string(opts.JobName)).Should(Equal("testRepo"))
 		})
 	})
 	AfterEach(func() {
@@ -134,34 +124,11 @@ var _ = Describe("validate func", func() {
 			}
 		})
 		It("should return error", func() {
-			_, err := validate(options)
+			_, err := validateJenkins(options)
 			Expect(err).Error().Should(HaveOccurred())
 		})
 	})
-	When("repo type is gitlab and gitlab env is not configured", func() {
-		BeforeEach(func() {
-			repoType = "gitlab"
-			projectRepo["repoType"] = repoType
-			options["projectRepo"] = projectRepo
-		})
-		It("should return error", func() {
-			_, err := validate(options)
-			Expect(err).Error().Should(HaveOccurred())
-			Expect(err.Error()).Should(Equal(fmt.Sprintf("jenkins-pipeline gitlab should set env %s", gitlab.TokenEnvKey)))
-		})
-	})
-	When("repo type is github and github env is not configured", func() {
-		BeforeEach(func() {
-			repoType = "github"
-			projectRepo["repoType"] = repoType
-			options["projectRepo"] = projectRepo
-		})
-		It("should return error", func() {
-			_, err := validate(options)
-			Expect(err).Error().Should(HaveOccurred())
-			Expect(err.Error()).Should(Equal(fmt.Sprintf("jenkins-pipeline github should set env %s", github.TokenEnvKey)))
-		})
-	})
+
 	When("jobName is not valid", func() {
 		BeforeEach(func() {
 			options["jobName"] = "folder/not_exist/jobName"
@@ -172,7 +139,7 @@ var _ = Describe("validate func", func() {
 			os.Setenv(github.TokenEnvKey, "test_env")
 		})
 		It("should return error", func() {
-			_, err := validate(options)
+			_, err := validateJenkins(options)
 			Expect(err).Error().Should(HaveOccurred())
 			Expect(err.Error()).Should(Equal(fmt.Sprintf("jenkins jobName illegal: %s", options["jobName"])))
 		})
@@ -186,7 +153,7 @@ var _ = Describe("validate func", func() {
 			os.Setenv(github.TokenEnvKey, "test_env")
 		})
 		It("should return nil error", func() {
-			_, err := validate(options)
+			_, err := validateJenkins(options)
 			Expect(err).Error().ShouldNot(HaveOccurred())
 		})
 	})

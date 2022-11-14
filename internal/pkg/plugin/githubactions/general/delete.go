@@ -11,7 +11,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 	// Initialize Operator with Operations
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
-			ci.SetSCMDefault,
+			ci.SetDefault(ciType),
 			validate,
 		},
 		ExecuteOperations: plugininstaller.ExecuteOperations{

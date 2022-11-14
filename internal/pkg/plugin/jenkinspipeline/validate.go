@@ -7,33 +7,24 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/validator"
 )
 
-// setDefault config default fields for usage
-func setDefault(options configmanager.RawOptions) (configmanager.RawOptions, error) {
+// setJenkinsDefault config default fields for usage
+func setJenkinsDefault(options configmanager.RawOptions) (configmanager.RawOptions, error) {
 	opts, err := newJobOptions(options)
 	if err != nil {
 		return nil, err
 	}
-
-	// config scm and projectRepo values
-	projectRepo, err := opts.SCM.BuildRepoInfo()
-	if err != nil {
-		return nil, err
-	}
-	opts.ProjectRepo = projectRepo
-
 	// set field value if empty
 	if opts.Jenkins.Namespace == "" {
 		opts.Jenkins.Namespace = "jenkins"
 	}
-	if opts.JobName == "" {
-		opts.JobName = jenkinsJobName(projectRepo.Repo)
+	if opts.JobName == "" && opts.ProjectRepo != nil {
+		opts.JobName = jenkinsJobName(opts.ProjectRepo.Repo)
 	}
-
-	opts.CIFileConfig = opts.Pipeline.BuildCIFileConfig(ciType, projectRepo)
 	return types.EncodeStruct(opts)
 }
 
-func validate(options configmanager.RawOptions) (configmanager.RawOptions, error) {
+// validateJenkins will validate jenkins jobName field and jenkins field
+func validateJenkins(options configmanager.RawOptions) (configmanager.RawOptions, error) {
 	opts, err := newJobOptions(options)
 	if err != nil {
 		return nil, err
@@ -43,11 +34,6 @@ func validate(options configmanager.RawOptions) (configmanager.RawOptions, error
 		return nil, err
 	}
 
-	// check repo is valid
-	if err := opts.ProjectRepo.CheckValid(); err != nil {
-		log.Debugf("jenkins validate repo invalid: %+v", err)
-		return nil, err
-	}
 	// check jenkins job name
 	if err := opts.JobName.checkValid(); err != nil {
 		log.Debugf("jenkins validate pipeline invalid: %+v", err)

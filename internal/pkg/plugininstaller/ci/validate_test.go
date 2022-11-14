@@ -8,6 +8,7 @@ import (
 
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/cifile/server"
 )
 
 var _ = Describe("SetDefault func", func() {
@@ -31,7 +32,7 @@ var _ = Describe("SetDefault func", func() {
 		os.Setenv("GITHUB_TOKEN", "test")
 	})
 	It("should work normal", func() {
-		opts, err := ci.SetSCMDefault(options)
+		opts, err := ci.SetDefault(server.CIGithubType)(options)
 		Expect(err).ShouldNot(HaveOccurred())
 		projectRepo, ok := opts["projectRepo"]
 		Expect(ok).Should(BeTrue())

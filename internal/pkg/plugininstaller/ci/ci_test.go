@@ -1,10 +1,9 @@
-package ci_test
+package ci
 
 import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/cifile"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/cifile/server"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/step"
@@ -13,7 +12,7 @@ import (
 
 var _ = Describe("PipelineConfig struct", func() {
 	var (
-		a                                            *ci.PipelineConfig
+		a                                            *PipelineConfig
 		imageRepoURL, user, repoName, configLocation string
 		r                                            *git.RepoInfo
 		ciType                                       server.CIServerType
@@ -24,7 +23,7 @@ var _ = Describe("PipelineConfig struct", func() {
 		repoName = "test_repo"
 		configLocation = "123/workflows"
 		ciType = "gitlab"
-		a = &ci.PipelineConfig{
+		a = &PipelineConfig{
 			ConfigLocation: configLocation,
 			ImageRepo: &step.ImageRepoStepConfig{
 				URL:  imageRepoURL,
@@ -63,5 +62,28 @@ var _ = Describe("PipelineConfig struct", func() {
 			}
 			Expect(CIFileConfig.Vars).Should(Equal(expectVars))
 		})
+	})
+	It("should return file Vars", func() {
+		varMap := a.generateCIFileVars(r)
+		var emptyGeneral *step.GeneralStepConfig
+		var emptyDingtalk *step.DingtalkStepConfig
+		var emptySonar *step.SonarQubeStepConfig
+		Expect(varMap).Should(Equal(cifile.CIFileVarsMap{
+			"configLocation":        "123/workflows",
+			"DingTalkSecretToken":   "DINGTALK_SECURITY_TOKEN",
+			"ImageRepoSecret":       "IMAGE_REPO_SECRET",
+			"ImageRepoDockerSecret": "image-repo-auth",
+			"StepGlobalVars":        "",
+			"imageRepo": map[string]interface{}{
+				"url":  "exmaple.com",
+				"user": "test_user",
+			},
+			"dingTalk":           emptyDingtalk,
+			"sonarqube":          emptySonar,
+			"general":            emptyGeneral,
+			"SonarqubeSecretKey": "SONAR_SECRET_TOKEN",
+			"GitlabConnectionID": "gitlabConnection",
+			"DingTalkSecretKey":  "DINGTALK_SECURITY_VALUE",
+		}))
 	})
 })

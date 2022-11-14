@@ -10,7 +10,7 @@ import (
 func Delete(options configmanager.RawOptions) (bool, error) {
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
-			ci.SetSCMDefault,
+			ci.SetDefault(ciType),
 			validate,
 		},
 		ExecuteOperations: plugininstaller.ExecuteOperations{
