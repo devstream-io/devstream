@@ -122,6 +122,7 @@ nav:
   - contributing_guide*.md
   - contributor_ladder*.md
   - Governance ⧉: https://github.com/devstream-io/devstream/blob/main/GOVERNANCE.md
+  - PMC: pmc.md
   - Developer Guide:
     - Contribute Workflow:
         - development/git-workflow/git-workflow*.md
