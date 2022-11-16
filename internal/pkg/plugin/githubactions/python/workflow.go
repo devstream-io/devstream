@@ -1,7 +1,7 @@
 package python
 
 import (
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/github"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/plugininstaller/github"
 	githubCommon "github.com/devstream-io/devstream/pkg/util/scm/github"
 )
 

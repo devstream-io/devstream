@@ -2,8 +2,8 @@ package reposcaffolding
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/reposcaffolding"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/plugininstaller/reposcaffolding"
 )
 
 func Delete(options configmanager.RawOptions) (bool, error) {

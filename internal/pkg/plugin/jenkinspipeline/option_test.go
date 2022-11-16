@@ -7,8 +7,8 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/step"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/plugininstaller/ci"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/plugininstaller/ci/step"
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )

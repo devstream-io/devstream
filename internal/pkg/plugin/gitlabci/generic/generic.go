@@ -6,9 +6,9 @@ import (
 
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/helminstaller"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/step"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/reposcaffolding"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/plugininstaller/ci"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/plugininstaller/ci/step"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/plugininstaller/reposcaffolding"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"

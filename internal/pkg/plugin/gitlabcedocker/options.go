@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
-	dockerInstaller "github.com/devstream-io/devstream/internal/pkg/plugininstaller/docker"
+	dockerInstaller "github.com/devstream-io/devstream/internal/pkg/plugin/plugininstaller/docker"
 	"github.com/devstream-io/devstream/pkg/util/docker"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )

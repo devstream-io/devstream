@@ -2,8 +2,8 @@ package general
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/step"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/plugininstaller/ci"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/plugininstaller/ci/step"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm"
 )

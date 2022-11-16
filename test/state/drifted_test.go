@@ -5,8 +5,8 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/plugininstaller/docker"
 	"github.com/devstream-io/devstream/internal/pkg/pluginengine"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/docker"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	dockerUtil "github.com/devstream-io/devstream/pkg/util/docker"
 )

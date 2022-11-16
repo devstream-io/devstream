@@ -2,8 +2,8 @@ package argocdapp
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/kubectl"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/plugininstaller/kubectl"
 	kubectlUtil "github.com/devstream-io/devstream/pkg/util/kubectl"
 )
 

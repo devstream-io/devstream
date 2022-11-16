@@ -2,7 +2,7 @@ package devlakeconfig
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/plugininstaller"
 )
 
 func Delete(options configmanager.RawOptions) (bool, error) {

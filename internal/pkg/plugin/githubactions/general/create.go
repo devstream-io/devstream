@@ -2,9 +2,9 @@ package general
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/cifile"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/plugininstaller/ci"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/plugininstaller/ci/cifile"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
