@@ -3,10 +3,13 @@ package general
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/cifile/server"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/step"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm"
 )
+
+var ciType = server.CIGithubType
 
 func preConfigGithub(options configmanager.RawOptions) error {
 	opts, err := ci.NewCIOptions(options)

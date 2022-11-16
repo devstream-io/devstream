@@ -26,17 +26,18 @@ func Validate(options configmanager.RawOptions) (configmanager.RawOptions, error
 }
 
 // SetSCMDefault is used for gitlab/github to set default options in ci
-func SetSCMDefault(option configmanager.RawOptions) (configmanager.RawOptions, error) {
-	opts, err := NewCIOptions(option)
-	if err != nil {
-		return nil, err
+func SetDefault(ciType server.CIServerType) func(option configmanager.RawOptions) (configmanager.RawOptions, error) {
+	return func(option configmanager.RawOptions) (configmanager.RawOptions, error) {
+		opts, err := NewCIOptions(option)
+		if err != nil {
+			return nil, err
+		}
+		projectRepo, err := opts.SCM.BuildRepoInfo()
+		if err != nil {
+			return nil, err
+		}
+		opts.ProjectRepo = projectRepo
+		opts.CIFileConfig = opts.Pipeline.BuildCIFileConfig(ciType, projectRepo)
+		return mapz.DecodeStructToMap(opts)
 	}
-	projectRepo, err := opts.SCM.BuildRepoInfo()
-	if err != nil {
-		return nil, err
-	}
-	opts.ProjectRepo = projectRepo
-	ciType := server.CIServerType(projectRepo.RepoType)
-	opts.CIFileConfig = opts.Pipeline.BuildCIFileConfig(ciType, projectRepo)
-	return mapz.DecodeStructToMap(opts)
 }

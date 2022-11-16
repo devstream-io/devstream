@@ -3,12 +3,8 @@ package step
 import (
 	"reflect"
 
-	"github.com/imdario/mergo"
-
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/cifile"
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 	"github.com/devstream-io/devstream/pkg/util/log"
-	"github.com/devstream-io/devstream/pkg/util/mapz"
 	"github.com/devstream-io/devstream/pkg/util/scm"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
@@ -84,16 +80,4 @@ func GetRepoStepConfig(repoInfo *git.RepoInfo) []StepConfigAPI {
 		stepConfigs = append(stepConfigs, newGithubStep(plugGlobalConfig))
 	}
 	return stepConfigs
-}
-
-func GenerateCIFileVars(p any, repoInfo *git.RepoInfo) cifile.CIFileVarsMap {
-	varMap, _ := mapz.DecodeStructToMap(p)
-	globalVarsMap, _ := mapz.DecodeStructToMap(
-		GetStepGlobalVars(repoInfo),
-	)
-	err := mergo.Merge(&varMap, globalVarsMap)
-	if err != nil {
-		log.Warnf("cifile merge CIFileVarsMap failed: %+v", err)
-	}
-	return varMap
 }

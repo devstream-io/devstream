@@ -7,6 +7,7 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/helminstaller"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
+	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/cifile/server"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/step"
 	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/reposcaffolding"
 	"github.com/devstream-io/devstream/pkg/util/log"
@@ -18,6 +19,8 @@ import (
 
 //go:embed tpl/helmValue.tpl.yaml
 var helmValueTpl string
+
+var ciType = server.CIGitLabType
 
 func preConfigGitlab(options configmanager.RawOptions) error {
 	opts, err := ci.NewCIOptions(options)

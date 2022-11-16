@@ -12,7 +12,7 @@ import (
 func Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	operator := &plugininstaller.Operator{
 		PreExecuteOperations: plugininstaller.PreExecuteOperations{
-			ci.SetSCMDefault,
+			ci.SetDefault(ciType),
 			validate,
 		},
 		GetStatusOperation: cifile.GetCIFileStatus,
