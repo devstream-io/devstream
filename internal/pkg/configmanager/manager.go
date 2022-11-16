@@ -24,20 +24,6 @@ func NewManager(configFileName string) *Manager {
 	}
 }
 
-// ConfigRaw is used to describe original raw configs read from files
-type ConfigRaw struct {
-	VarFile           string             `yaml:"varFile"`
-	ToolFile          string             `yaml:"toolFile"`
-	AppFile           string             `yaml:"appFile"`
-	TemplateFile      string             `yaml:"templateFile"`
-	PluginDir         string             `yaml:"pluginDir"`
-	State             *State             `yaml:"state"`
-	Tools             []Tool             `yaml:"tools"`
-	AppsInConfig      []AppInConfig      `yaml:"apps"`
-	PipelineTemplates []PipelineTemplate `yaml:"pipelineTemplates"`
-	Vars              map[string]any     `yaml:"-"`
-}
-
 // LoadConfig reads an input file as a general config.
 // It will return "non-nil, err" or "nil, err".
 func (m *Manager) LoadConfig() (*Config, error) {
@@ -47,13 +33,13 @@ func (m *Manager) LoadConfig() (*Config, error) {
 		return nil, err
 	}
 
-	// get all globals vars
+	// 2. get all globals vars
 	globalVars, err := getVarsFromConfigBytes(configBytesOrigin)
 	if err != nil {
 		return nil, err
 	}
 
-	// 2. yaml unmarshal to get the whole config
+	// 3. yaml unmarshal to get the whole config
 	var config ConfigRaw
 	err = yaml.Unmarshal(configBytesOrigin, &config)
 	if err != nil {
@@ -61,21 +47,12 @@ func (m *Manager) LoadConfig() (*Config, error) {
 		return nil, err
 	}
 
-	// 3. render ci/cd templates
-	cis := make([][]PipelineTemplate, 0)
-	cds := make([][]PipelineTemplate, 0)
-	for i, app := range config.AppsInConfig {
-		cisOneApp, err := renderCICDFromPipeTemplates(app.CIs, config.PipelineTemplates, globalVars, i, app.Name, "ci")
-		if err != nil {
-			return nil, err
-		}
-		cis = append(cis, cisOneApp)
+	config.GlobalVars = globalVars
 
-		cdsOneApp, err := renderCICDFromPipeTemplates(app.CDs, config.PipelineTemplates, globalVars, i, app.Name, "cd")
-		if err != nil {
-			return nil, err
-		}
-		cds = append(cds, cdsOneApp)
+	// 4. render ci/cd templates
+	ciPipelines, cdPipelines, err := config.renderAllCICD()
+	if err != nil {
+		return nil, err
 	}
 
 	// remove the pipeline templates, because we don't need them anymore.
@@ -83,13 +60,13 @@ func (m *Manager) LoadConfig() (*Config, error) {
 	// it will cause error when rendered in the next step if we don't remove them.
 	config.PipelineTemplates = nil
 
-	// 4. re-generate the config bytes(without pipeline templates)
+	// 5. re-generate the config bytes(without pipeline templates)
 	configBytesWithoutPipelineTemplates, err := yaml.Marshal(config)
 	if err != nil {
 		return nil, err
 	}
 
-	// 5. render all vars to the whole config bytes
+	// 6. render all vars to the whole config bytes
 	renderedConfigBytes, err := renderConfigWithVariables(string(configBytesWithoutPipelineTemplates), globalVars)
 	if err != nil {
 		return nil, err
@@ -98,32 +75,17 @@ func (m *Manager) LoadConfig() (*Config, error) {
 	renderedConfigStr := string(renderedConfigBytes)
 	log.Debugf("redenered config: %s\n", renderedConfigStr)
 
-	// 6. yaml unmarshal again to get the whole config
+	// 7. yaml unmarshal again to get the whole config
 	var configRendered ConfigRaw
-	//renderedConfigStr := string(renderedConfigBytes)
-	//fmt.Println(renderedConfigStr)
 	err = yaml.Unmarshal(renderedConfigBytes, &configRendered)
 	if err != nil {
 		return nil, err
 	}
-	configFinal := &Config{}
-	configFinal.PluginDir = configRendered.PluginDir
-	configFinal.State = configRendered.State
-	configFinal.Tools = configRendered.Tools
 
-	// 7. restructure the apps
-	for i, app := range configRendered.AppsInConfig {
-		appFinal := App{
-			Name:         app.Name,
-			Spec:         app.Spec,
-			Repo:         app.Repo,
-			RepoTemplate: app.RepoTemplate,
-		}
-		appFinal.CIs = cis[i]
-		appFinal.CDs = cds[i]
-		configFinal.Apps = append(configFinal.Apps, appFinal)
-	}
+	// 8. convert configRaw to Config
+	configFinal := configRendered.constructApps(ciPipelines, cdPipelines)
 
+	// 9. validate
 	errs := configFinal.Validate()
 	if len(errs) > 0 {
 		return nil, multierr.Combine(errs...)
@@ -154,6 +116,8 @@ func getVarsFromConfigBytes(configBytes []byte) (map[string]any, error) {
 	return allVars, nil
 }
 
+// merge two maps
+// if there are same keys in two maps, the key of second one will overwrite the first one
 func mergeMaps(m1 map[string]any, m2 map[string]any) map[string]any {
 	all := make(map[string]any)
 	for k, v := range m1 {
@@ -268,4 +232,21 @@ func genAbsFilePath(baseDir, file string) (string, error) {
 	} else {
 		return "", fmt.Errorf("file %s not exists", absFilePath)
 	}
+}
+
+func (config *ConfigRaw) renderAllCICD() (ciPipelines, cdPipelines [][]PipelineTemplate, err error) {
+	for i, app := range config.AppsInConfig {
+		cisOneApp, err := renderCICDFromPipelineTemplates(app.CIRawConfigs, config.PipelineTemplates, config.GlobalVars, i, app.Name, "ci")
+		if err != nil {
+			return nil, nil, err
+		}
+		ciPipelines = append(ciPipelines, cisOneApp)
+
+		cdsOneApp, err := renderCICDFromPipelineTemplates(app.CDRawConfigs, config.PipelineTemplates, config.GlobalVars, i, app.Name, "cd")
+		if err != nil {
+			return nil, nil, err
+		}
+		cdPipelines = append(cdPipelines, cdsOneApp)
+	}
+	return ciPipelines, cdPipelines, err
 }

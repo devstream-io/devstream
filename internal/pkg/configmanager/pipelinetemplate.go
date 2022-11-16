@@ -15,7 +15,7 @@ type (
 	}
 )
 
-func findTemplateByName(name string, templates []PipelineTemplate) *PipelineTemplate {
+func getTemplateByName(name string, templates []PipelineTemplate) *PipelineTemplate {
 	for _, template := range templates {
 		if template.Name == name {
 			return &template
@@ -24,7 +24,7 @@ func findTemplateByName(name string, templates []PipelineTemplate) *PipelineTemp
 	return nil
 }
 
-func renderCICDFromPipeTemplates(cicds []CICD, templates []PipelineTemplate, globalVars map[string]any,
+func renderCICDFromPipelineTemplates(cicds []CICD, templates []PipelineTemplate, globalVars map[string]any,
 	appIndex int, appName string, ciOrCD string) ([]PipelineTemplate, error) {
 	cicdsOneApp := make([]PipelineTemplate, 0)
 	for j, cicd := range cicds {
@@ -33,7 +33,7 @@ func renderCICDFromPipeTemplates(cicds []CICD, templates []PipelineTemplate, glo
 			if cicd.TemplateName == "" {
 				return nil, fmt.Errorf("apps[%d](%s).%s[%d].templateName is required", appIndex, appName, ciOrCD, j)
 			}
-			template := findTemplateByName(cicd.TemplateName, templates)
+			template := getTemplateByName(cicd.TemplateName, templates)
 			if template == nil {
 				return nil, fmt.Errorf("apps[%d](%s).%s[%d].%s not found in pipelineTemplates", appIndex, appName, ciOrCD, j, cicd.TemplateName)
 			}
@@ -45,7 +45,8 @@ func renderCICDFromPipeTemplates(cicds []CICD, templates []PipelineTemplate, glo
 				return nil, err
 			}
 
-			// render vars to the whole template
+			// render vars to the whole template,
+			// cicd.Vars is local variables, it will overwrite the keys in globalVars
 			allVars := mergeMaps(globalVars, cicd.Vars)
 			if err := templateNew.renderVars(allVars); err != nil {
 				return nil, err

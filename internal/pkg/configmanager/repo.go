@@ -2,17 +2,17 @@ package configmanager
 
 type (
 	Repo struct {
-		// all fields in RepoCommon will be flattened
-		*RepoCommon `yaml:",inline" mapstructure:",squash"`
-		ApiURL      string `yaml:"apiURL" mapstructure:"apiURL"`
+		// all fields in RepoInfo will be flattened
+		*RepoInfo `yaml:",inline" mapstructure:",squash"`
+		ApiURL    string `yaml:"apiURL" mapstructure:"apiURL"`
 	}
 
 	RepoTemplate struct {
-		// all fields in RepoCommon will be flattened
-		*RepoCommon `yaml:",inline" mapstructure:",squash"`
+		// all fields in RepoInfo will be flattened
+		*RepoInfo `yaml:",inline" mapstructure:",squash"`
 	}
 
-	RepoCommon struct {
+	RepoInfo struct {
 		ScmType string `yaml:"scmType" mapstructure:"scmType"`
 		Owner   string `yaml:"owner" mapstructure:"owner"`
 		Org     string `yaml:"org" mapstructure:"org"`
@@ -21,7 +21,7 @@ type (
 	}
 )
 
-func (repo *RepoCommon) FillAndValidate() error {
+func (repo *RepoInfo) FillAndValidate() error {
 	if err := repo.fill(); err != nil {
 		return err
 	}
@@ -31,7 +31,7 @@ func (repo *RepoCommon) FillAndValidate() error {
 	return nil
 }
 
-func (repo *RepoCommon) fill() error {
+func (repo *RepoInfo) fill() error {
 	scmType, owner, repoName, err := getRepoCommonFromUrl(repo.URL)
 	if err != nil {
 		return err
@@ -48,7 +48,7 @@ func (repo *RepoCommon) fill() error {
 	return nil
 }
 
-func (repo *RepoCommon) GetOwner() string {
+func (repo *RepoInfo) GetOwner() string {
 	if repo.Org != "" {
 		return repo.Org
 	}
@@ -60,7 +60,7 @@ func getRepoCommonFromUrl(url string) (scmType, owner, repoName string, err erro
 	return
 }
 
-func (repo *RepoCommon) validate() error {
+func (repo *RepoInfo) validate() error {
 	// TODO(aFlyBird0): complete this function
 	return nil
 }

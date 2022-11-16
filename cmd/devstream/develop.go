@@ -34,8 +34,8 @@ Examples:
 
 var developValidatePluginCMD = &cobra.Command{
 	Use:   "validate-plugin",
-	Short: "validate a plugin",
-	Long: `validate-plugin is used for validating an existing plugin or all plugins.
+	Short: "Validate a plugin",
+	Long: `Validate-plugin is used for validating an existing plugin or all plugins.
 Examples:
   dtm develop validate-plugin --name=YOUR-PLUGIN-NAME,
   dtm develop validate-plugin --all`,

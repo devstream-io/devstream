@@ -43,37 +43,37 @@ var1: value-of-var1 # var1 is a global var
     repo:
       scmType: github
       owner: devstream-io
-      org: devstream-io # owner, org 二选一
-      name: # 默认跟name一致
-      url: github.com/devstream-io/service-A # 可选，如果有url，就不需要scm/owner/org/name了    # 如果 repoTemplate 为空，则默认 repo 已经建立好了，不需要再创建
-      apiURL: gitlab.com/some/path/to/your/api # 可选，如果需要从模板创建repo
-    # 如果 repoTemplate 不为空，则根据 scafoldingRepo 模板创建 repo
-    repoTemplate: # 可选
+      org: devstream-io # choose between owner and org
+      name: # optional, default is the same as app name
+      url: github.com/devstream-io/service-A # optional，if url is specified，we can infer scm/owner/org/name from url
+      apiURL: gitlab.com/some/path/to/your/api # optional, if you want to create a repo from repo template
+    # if repoTemplate is not empty，we could help user to create repo from scaffoldingRepo
+    repoTemplate: # optional
       scmType: github
       owner: devstream-io
-      org: devstream-io # owner, org 二选一
+      org: devstream-io # choose between owner and org
       name: dtm-scaffolding-golang
-      url: github.com/devstream-io/dtm-scaffolding-golang # 可选，如果有url，就不需要scm/owner/org/name了    # 如果 repoTemplate 为空，则默认 repo 已经建立好了，不需要再创建
+      url: github.com/devstream-io/dtm-scaffolding-golang # optional，if url is specified，we can infer scm/owner/org/name from url
     ci:
       - type: template
         templateName: ci-pipeline-1
-        options: # 覆盖模板中的options
+        options: # overwrite options in pipelineTemplates
           docker:
             registry:
-              type: "[[ var3 ]]" # 在覆盖的同时，使用全局变量
-        vars: # 可选, 传给模板用的变量（当且仅当type为template时有效）
+              type: "[[ var3 ]]" # while overridden, use global variables
+        vars: # optional, use to render vars in template（valid only if the ci.type is template）
           dockerUser: dockerUser1
           app: service-A
     cd:
-      - type: cd-pipeline-custom
-        options: # 自定义的options
-          key: "[[ var1 ]]"
+      - type: cd-pipeline-custom # if the type is not "template", it means plugins
+        options: # options to the plugins
+          key: "[[ var1 ]]" # use global vars
       - type: template
         templateName: cd-pipeline-1
-        options: # 覆盖模板中的options
+        options: # overwrite options in pipelineTemplates
           destination:
             namespace: devstream-io
-        vars: # 可选, 传给模板用的变量（当且仅当type为template时有效）
+        vars: # optional, use to render vars in template（valid only if the cd.type is template）
           app: service-A
 `
 	const toolConfig = `tools:
@@ -93,9 +93,9 @@ argocdNamespace: argocd
 `
 	const templateConfig = `pipelineTemplates:
   - name: ci-pipeline-1
-    type: githubactions # 对应一个插件
+    type: githubactions # corresponding to a plugin
     options:
-      branch: main # 可选 默认值
+      branch: main # optional, default is main
       docker:
         registry:
           type: dockerhub
@@ -105,7 +105,7 @@ argocdNamespace: argocd
     type: argocdapp
     options:
       app:
-        namespace: "[[ argocdNamespace ]]" # templates 内也可以引用全局变量
+        namespace: "[[ argocdNamespace ]]" # you can use global vars in templates
       destination:
         server: https://kubernetes.default.svc
         namespace: default
@@ -147,7 +147,7 @@ argocdNamespace: argocd
 				"framework": "django",
 			},
 			Repo: &Repo{
-				RepoCommon: &RepoCommon{
+				RepoInfo: &RepoInfo{
 					ScmType: "github",
 					Owner:   "devstream-io",
 					Org:     "devstream-io",
@@ -157,7 +157,7 @@ argocdNamespace: argocd
 				ApiURL: "gitlab.com/some/path/to/your/api",
 			},
 			RepoTemplate: &RepoTemplate{
-				RepoCommon: &RepoCommon{
+				RepoInfo: &RepoInfo{
 					ScmType: "github",
 					Owner:   "devstream-io",
 					Org:     "devstream-io",
@@ -165,7 +165,7 @@ argocdNamespace: argocd
 					URL:     "github.com/devstream-io/dtm-scaffolding-golang",
 				},
 			},
-			CIs: []PipelineTemplate{
+			CIPipelines: []PipelineTemplate{
 				{
 					Name: "ci-pipeline-1",
 					Type: "githubactions",
@@ -181,7 +181,7 @@ argocdNamespace: argocd
 					},
 				},
 			},
-			CDs: []PipelineTemplate{
+			CDPipelines: []PipelineTemplate{
 				{
 					Name: "cd-pipeline-custom",
 					Type: "cd-pipeline-custom",

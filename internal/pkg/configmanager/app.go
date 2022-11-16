@@ -6,8 +6,8 @@ type (
 		Spec         RawOptions         `yaml:"spec" mapstructure:"spec"`
 		Repo         *Repo              `yaml:"repo" mapstructure:"repo"`
 		RepoTemplate *RepoTemplate      `yaml:"repoTemplate" mapstructure:"repoTemplate"`
-		CIs          []PipelineTemplate `yaml:"ci" mapstructure:"ci"`
-		CDs          []PipelineTemplate `yaml:"cd" mapstructure:"cd"`
+		CIPipelines  []PipelineTemplate `yaml:"ci" mapstructure:"ci"`
+		CDPipelines  []PipelineTemplate `yaml:"cd" mapstructure:"cd"`
 	}
 	Apps []App
 
@@ -17,8 +17,8 @@ type (
 		Spec         RawOptions    `yaml:"spec" mapstructure:"spec"`
 		Repo         *Repo         `yaml:"repo" mapstructure:"repo"`
 		RepoTemplate *RepoTemplate `yaml:"repoTemplate" mapstructure:"repoTemplate"`
-		CIs          []CICD        `yaml:"ci" mapstructure:"ci"`
-		CDs          []CICD        `yaml:"cd" mapstructure:"cd"`
+		CIRawConfigs []CICD        `yaml:"ci" mapstructure:"ci"`
+		CDRawConfigs []CICD        `yaml:"cd" mapstructure:"cd"`
 	}
 
 	CICD struct {
@@ -26,6 +26,20 @@ type (
 		TemplateName string     `yaml:"templateName" mapstructure:"templateName"`
 		Options      RawOptions `yaml:"options" mapstructure:"options"`
 		Vars         RawOptions `yaml:"vars" mapstructure:"vars"`
+	}
+
+	// ConfigRaw is used to describe original raw configs read from files
+	ConfigRaw struct {
+		VarFile           string             `yaml:"varFile"`
+		ToolFile          string             `yaml:"toolFile"`
+		AppFile           string             `yaml:"appFile"`
+		TemplateFile      string             `yaml:"templateFile"`
+		PluginDir         string             `yaml:"pluginDir"`
+		State             *State             `yaml:"state"`
+		Tools             []Tool             `yaml:"tools"`
+		AppsInConfig      []AppInConfig      `yaml:"apps"`
+		PipelineTemplates []PipelineTemplate `yaml:"pipelineTemplates"`
+		GlobalVars        map[string]any     `yaml:"-"`
 	}
 )
 
@@ -39,12 +53,10 @@ func (apps Apps) validate() (errs []error) {
 }
 
 func (app *App) validate() error {
-	// set "app.repo.name = app.name" if "app.repo.name" is empty
-	if app.Repo.RepoCommon != nil && app.Repo.RepoCommon.Name == "" {
-		app.Repo.RepoCommon.Name = app.Name
+	if app.Repo.RepoInfo != nil && app.Repo.RepoInfo.Name == "" {
+		app.Repo.RepoInfo.Name = app.Name
 	}
 
-	// fill and validate "app.repo"
 	err := app.Repo.FillAndValidate()
 	if err != nil {
 		return err
@@ -59,4 +71,25 @@ func (app *App) validate() error {
 	}
 
 	return nil
+}
+
+func (config *ConfigRaw) constructApps(ciPipelines, cdPipelines [][]PipelineTemplate) *Config {
+	configFinal := &Config{}
+	configFinal.PluginDir = config.PluginDir
+	configFinal.State = config.State
+	configFinal.Tools = config.Tools
+
+	for i, app := range config.AppsInConfig {
+		appFinal := App{
+			Name:         app.Name,
+			Spec:         app.Spec,
+			Repo:         app.Repo,
+			RepoTemplate: app.RepoTemplate,
+		}
+		appFinal.CIPipelines = ciPipelines[i]
+		appFinal.CDPipelines = cdPipelines[i]
+		configFinal.Apps = append(configFinal.Apps, appFinal)
+	}
+
+	return configFinal
 }
