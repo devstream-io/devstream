@@ -67,7 +67,7 @@ var1: value-of-var1 # var1 is a global var
     cd:
       - type: cd-pipeline-custom
         options: # 自定义的options
-          key: value
+          key: "[[ var1 ]]"
       - type: template
         templateName: cd-pipeline-1
         options: # 覆盖模板中的options
@@ -186,7 +186,7 @@ argocdNamespace: argocd
 					Name: "cd-pipeline-custom",
 					Type: "cd-pipeline-custom",
 					Options: RawOptions{
-						"key": "value",
+						"key": "value-of-var1",
 					},
 				},
 				{

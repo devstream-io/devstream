@@ -39,29 +39,19 @@ func renderCICDFromPipeTemplates(cicds []CICD, templates []PipelineTemplate, glo
 			}
 			// merge options
 			// we shoould first merge options here
-			// then render vars(globalVars, cicd.vars) in the options or in the whole template
-			template = template.DeepCopy()
-			if err := mergo.Merge(&template.Options, cicd.Options, mergo.WithOverride); err != nil {
-				return nil, err
-			}
-			templateBytes, err := yaml.Marshal(template)
-			if err != nil {
+			// then render vars(globalVars, cicd.vars) in the options or in the whole templateNew
+			templateNew := template.DeepCopy()
+			if err := mergo.Merge(&templateNew.Options, cicd.Options, mergo.WithOverride); err != nil {
 				return nil, err
 			}
 
+			// render vars to the whole template
 			allVars := mergeMaps(globalVars, cicd.Vars)
-
-			renderedTemplateBytes, err := renderConfigWithVariables(string(templateBytes), allVars)
-			if err != nil {
-				return nil, err
-			}
-			templateNew := PipelineTemplate{}
-			err = yaml.Unmarshal(renderedTemplateBytes, &templateNew)
-			if err != nil {
+			if err := templateNew.renderVars(allVars); err != nil {
 				return nil, err
 			}
 
-			cicdsOneApp = append(cicdsOneApp, templateNew)
+			cicdsOneApp = append(cicdsOneApp, *templateNew)
 		default:
 			// that means it's a plugin
 			templateNew := PipelineTemplate{
@@ -69,6 +59,12 @@ func renderCICDFromPipeTemplates(cicds []CICD, templates []PipelineTemplate, glo
 				Type:    cicd.Type,
 				Options: cicd.Options,
 			}
+
+			// render vars to the whole template
+			if err := templateNew.renderVars(globalVars); err != nil {
+				return nil, err
+			}
+
 			cicdsOneApp = append(cicdsOneApp, templateNew)
 		}
 	}
@@ -86,4 +82,17 @@ func (template *PipelineTemplate) DeepCopy() *PipelineTemplate {
 		return nil
 	}
 	return &templateNew
+}
+
+func (template *PipelineTemplate) renderVars(vars map[string]any) error {
+	templateBytes, err := yaml.Marshal(template)
+	if err != nil {
+		return err
+	}
+
+	renderedTemplateBytes, err := renderConfigWithVariables(string(templateBytes), vars)
+	if err != nil {
+		return err
+	}
+	return yaml.Unmarshal(renderedTemplateBytes, &template)
 }

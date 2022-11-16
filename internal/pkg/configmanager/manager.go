@@ -78,8 +78,8 @@ func (m *Manager) LoadConfig() (*Config, error) {
 		cds = append(cds, cdsOneApp)
 	}
 
-	// remove the pipeline templates, beacuse we don't need them anymore.
-	// and because vars here main contains local vars,
+	// remove the pipeline templates, because we don't need them anymore.
+	// and because vars here may contain local vars,
 	// it will cause error when rendered in the next step if we don't remove them.
 	config.PipelineTemplates = nil
 
