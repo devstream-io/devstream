@@ -10,7 +10,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
-var _ = Describe("Validate func", func() {
+var _ = Describe("validate func", func() {
 	var option configmanager.RawOptions
 	When("options is not valid", func() {
 		It("should return error", func() {
