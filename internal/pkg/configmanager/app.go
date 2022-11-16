@@ -11,7 +11,11 @@ type (
 	}
 	Apps []App
 
-	// AppInConfig is the raw structured data in config file
+	// AppInConfig is the raw structured data in config file.
+	// The main difference between App and AppInConfig is "CI" and "CD" field.
+	// The "CIRawConfigs" is the raw data of "CI" field defined in config file,
+	// which will be rendered to "CIPipelines" field in App with "PipelineTemplates".
+	// The "CDRawConfigs" is similar to "CIRawConfigs".
 	AppInConfig struct {
 		Name         string        `yaml:"name" mapstructure:"name"`
 		Spec         RawOptions    `yaml:"spec" mapstructure:"spec"`
@@ -26,20 +30,6 @@ type (
 		TemplateName string     `yaml:"templateName" mapstructure:"templateName"`
 		Options      RawOptions `yaml:"options" mapstructure:"options"`
 		Vars         RawOptions `yaml:"vars" mapstructure:"vars"`
-	}
-
-	// ConfigRaw is used to describe original raw configs read from files
-	ConfigRaw struct {
-		VarFile           string             `yaml:"varFile"`
-		ToolFile          string             `yaml:"toolFile"`
-		AppFile           string             `yaml:"appFile"`
-		TemplateFile      string             `yaml:"templateFile"`
-		PluginDir         string             `yaml:"pluginDir"`
-		State             *State             `yaml:"state"`
-		Tools             []Tool             `yaml:"tools"`
-		AppsInConfig      []AppInConfig      `yaml:"apps"`
-		PipelineTemplates []PipelineTemplate `yaml:"pipelineTemplates"`
-		GlobalVars        map[string]any     `yaml:"-"`
 	}
 )
 

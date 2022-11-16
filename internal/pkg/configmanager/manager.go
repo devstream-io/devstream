@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"go.uber.org/multierr"
+	"golang.org/x/exp/maps"
 	"gopkg.in/yaml.v3"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
@@ -117,20 +118,20 @@ func getVarsFromConfigBytes(configBytes []byte) (map[string]any, error) {
 		delete(allVars, key)
 	}
 
+	// note: maybe it can aslo be done by using mapstructure with tag `mapstructure:",remain"`
+	// e.g. Vars map[string]any `mapstructure:",remain"`
+	// TODO(aFlyBird0): to be verified and completed
+	// refer: https://pkg.go.dev/github.com/mitchellh/mapstructure#hdr-Remainder_Values
+
 	return allVars, nil
 }
 
 // merge two maps
 // if there are same keys in two maps, the key of second one will overwrite the first one
 func mergeMaps(m1 map[string]any, m2 map[string]any) map[string]any {
-	all := make(map[string]any)
-	for k, v := range m1 {
-		all[k] = v
-	}
-	for k, v := range m2 {
-		all[k] = v
-	}
-	return all
+	m1Clone := maps.Clone(m1)
+	maps.Copy(m1Clone, m2)
+	return m1Clone
 }
 
 func (m *Manager) loadMainConfigFile() ([]byte, error) {
@@ -201,7 +202,7 @@ func (m *Manager) combineBytesFromFile(origin []byte, file string) ([]byte, erro
 	if err != nil {
 		return nil, fmt.Errorf("%s not exists", m.ConfigFile)
 	}
-	// refer other config file path by main config file
+	// refer other config file path by directory of main config file
 	fileAbs, err := genAbsFilePath(filepath.Dir(mainConfigFileAbs), file)
 	if err != nil {
 		return nil, err
@@ -213,7 +214,7 @@ func (m *Manager) combineBytesFromFile(origin []byte, file string) ([]byte, erro
 	return append(origin, bytes...), nil
 }
 
-// genAbsFilePath return all of the path with a given file name
+// genAbsFilePath return all the path with a given file name
 func genAbsFilePath(baseDir, file string) (string, error) {
 	file = filepath.Join(baseDir, file)
 

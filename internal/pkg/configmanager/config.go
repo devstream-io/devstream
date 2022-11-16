@@ -20,6 +20,20 @@ type Config struct {
 	State     *State
 }
 
+// ConfigRaw is used to describe original raw configs read from files
+type ConfigRaw struct {
+	VarFile           string             `yaml:"varFile"`
+	ToolFile          string             `yaml:"toolFile"`
+	AppFile           string             `yaml:"appFile"`
+	TemplateFile      string             `yaml:"templateFile"`
+	PluginDir         string             `yaml:"pluginDir"`
+	State             *State             `yaml:"state"`
+	Tools             []Tool             `yaml:"tools"`
+	AppsInConfig      []AppInConfig      `yaml:"apps"`
+	PipelineTemplates []PipelineTemplate `yaml:"pipelineTemplates"`
+	GlobalVars        map[string]any     `yaml:"-"`
+}
+
 // State is the struct for reading the state configuration in the config file.
 // It defines how the state is stored, specifies the type of backend and related options.
 type State struct {

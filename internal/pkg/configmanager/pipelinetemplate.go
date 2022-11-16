@@ -56,7 +56,7 @@ func renderCICDFromPipelineTemplates(cicds []CICD, templates []PipelineTemplate,
 		default:
 			// that means it's a plugin
 			templateNew := PipelineTemplate{
-				Name:    cicd.Type,
+				Name:    cicd.Type, // use type as the name of the plugin
 				Type:    cicd.Type,
 				Options: cicd.Options,
 			}
