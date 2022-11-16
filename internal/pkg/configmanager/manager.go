@@ -1,6 +1,7 @@
 package configmanager
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"io"
@@ -32,6 +33,9 @@ func (m *Manager) LoadConfig() (*Config, error) {
 	if err != nil {
 		return nil, err
 	}
+	// replace all "---"
+	// otherwise yaml.Unmarshal can only read the content before the first "---"
+	configBytesOrigin = bytes.Replace(configBytesOrigin, []byte("---"), []byte("\n"), -1)
 
 	// 2. get all globals vars
 	globalVars, err := getVarsFromConfigBytes(configBytesOrigin)
@@ -40,7 +44,7 @@ func (m *Manager) LoadConfig() (*Config, error) {
 	}
 
 	// 3. yaml unmarshal to get the whole config
-	var config ConfigRaw
+	config := ConfigRaw{}
 	err = yaml.Unmarshal(configBytesOrigin, &config)
 	if err != nil {
 		log.Errorf("Please verify the format of your config. Error: %s.", err)
@@ -186,7 +190,7 @@ func (m *Manager) getWholeConfigBytes() ([]byte, error) {
 	}
 
 	configBytesStr := string(configBytes)
-	log.Debugf("The final whole config is: \n%s\n", configBytesStr)
+	log.Debugf("The whole config without rendered is: \n%s\n", configBytesStr)
 
 	return configBytes, nil
 }

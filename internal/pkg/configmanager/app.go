@@ -62,7 +62,6 @@ func (app *App) validate() error {
 		return err
 	}
 
-	// fill and validate "app.repoTemplate"
 	if app.RepoTemplate != nil {
 		err = app.RepoTemplate.FillAndValidate()
 		if err != nil {
