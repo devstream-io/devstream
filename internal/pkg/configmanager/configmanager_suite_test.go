@@ -1,4 +1,4 @@
-package configmanager_test
+package configmanager
 
 import (
 	"testing"
