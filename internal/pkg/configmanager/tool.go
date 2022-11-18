@@ -2,10 +2,18 @@ package configmanager
 
 import (
 	"fmt"
+	"runtime"
 	"strings"
+
+	"go.uber.org/multierr"
 
 	"github.com/devstream-io/devstream/internal/pkg/version"
 	"github.com/devstream-io/devstream/pkg/util/validator"
+)
+
+var (
+	GOOS   string = runtime.GOOS
+	GOARCH string = runtime.GOARCH
 )
 
 type RawOptions map[string]any
@@ -23,6 +31,13 @@ type Tool struct {
 	Options    RawOptions `yaml:"options"`
 }
 type Tools []Tool
+
+func (tools Tools) validateAll() error {
+	var errs []error
+	errs = append(errs, tools.validate()...)
+	errs = append(errs, tools.validateDependency()...)
+	return multierr.Combine(errs...)
+}
 
 func (tools Tools) validate() (errs []error) {
 	for _, tool := range tools {
@@ -109,4 +124,20 @@ func (tools Tools) validateDependency() []error {
 	}
 
 	return errors
+}
+
+func newTool(name, instanceID string, options RawOptions) *Tool {
+	// set option instanceID default
+	if options != nil {
+		_, ok := options["instanceID"]
+		if !ok {
+			options["instanceID"] = interface{}(instanceID)
+		}
+	}
+	t := &Tool{
+		Name:       name,
+		InstanceID: instanceID,
+		Options:    options,
+	}
+	return t
 }

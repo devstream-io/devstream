@@ -30,7 +30,7 @@ var _ = Describe("setDefault func", func() {
 				"user": jenkinsUser,
 			},
 			"scm": map[string]interface{}{
-				"cloneURL": projectURL,
+				"url": projectURL,
 			},
 			"pipeline": map[string]interface{}{
 				"configLocation": jenkinsFilePath,
@@ -40,8 +40,8 @@ var _ = Describe("setDefault func", func() {
 	When("all input is valid", func() {
 		BeforeEach(func() {
 			options["scm"] = map[string]interface{}{
-				"cloneURL": "git@44.33.22.11:30022:root/spring-demo.git",
-				"apiURL":   "http://www.app.com",
+				"url":    "git@44.33.22.11:30022:root/spring-demo.git",
+				"apiURL": "http://www.app.com",
 			}
 			options["projectRepo"] = map[string]interface{}{
 				"repo": "testRepo",
@@ -52,8 +52,7 @@ var _ = Describe("setDefault func", func() {
 			Expect(err).Error().ShouldNot(HaveOccurred())
 			opts, err := newJobOptions(newOptions)
 			Expect(err).Error().ShouldNot(HaveOccurred())
-			Expect(opts.CIFileConfig).Should(BeNil())
-			Expect(string(opts.JobName)).Should(Equal("testRepo"))
+			Expect(string(opts.JobName)).Should(Equal("spring-demo"))
 		})
 	})
 	AfterEach(func() {
@@ -105,7 +104,7 @@ var _ = Describe("validate func", func() {
 				"user": jenkinsUser,
 			},
 			"scm": map[string]interface{}{
-				"cloneURL": projectURL,
+				"url": projectURL,
 			},
 			"pipeline":    pipeline,
 			"projectRepo": projectRepo,
@@ -119,7 +118,7 @@ var _ = Describe("validate func", func() {
 					"user": jenkinsUser,
 				},
 				"scm": map[string]interface{}{
-					"cloneURL": projectURL,
+					"url": projectURL,
 				},
 			}
 		})

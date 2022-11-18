@@ -1,6 +1,9 @@
 package configmanager
 
 import (
+	"fmt"
+	"runtime"
+
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
@@ -59,4 +62,59 @@ var _ = Describe("Tool Validation", func() {
 		Expect(errors).ShouldNot(BeEmpty())
 	})
 
+})
+
+var _ = Describe("Tool struct", func() {
+	var (
+		t                *Tool
+		name, instanceID string
+		opts             RawOptions
+	)
+	BeforeEach(func() {
+		name = "test"
+		instanceID = "test_instance"
+		opts = RawOptions{"test": "gg"}
+		t = &Tool{
+			Name:       name,
+			InstanceID: instanceID,
+			Options:    opts,
+		}
+	})
+	Context("DeepCopy method", func() {
+		It("should copy struct", func() {
+			x := t.DeepCopy()
+			Expect(x).Should(Equal(t))
+		})
+	})
+	Context("GetPluginName method", func() {
+		It("should return valid", func() {
+			Expect(t.GetPluginName()).Should(Equal(
+				fmt.Sprintf("%s-%s-%s_%s", t.Name, runtime.GOOS, runtime.GOARCH, ""),
+			))
+		})
+	})
+	Context("GetPluginFileName method", func() {
+		It("should return valid", func() {
+			Expect(t.GetPluginFileName()).Should(
+				Equal(fmt.Sprintf("%s-%s-%s_%s.so", t.Name, runtime.GOOS, runtime.GOARCH, "")),
+			)
+		})
+	})
+	Context("GetPluginFileNameWithOSAndArch method", func() {
+		It("should return valid", func() {
+			Expect(t.GetPluginFileNameWithOSAndArch("test", "plug")).Should(Equal("test-test-plug_.so"))
+		})
+	})
+	Context("GetPluginMD5FileName method", func() {
+		It("should return valid", func() {
+			Expect(t.GetPluginMD5FileName()).Should(
+				Equal(fmt.Sprintf("%s-%s-%s_%s.md5", t.Name, runtime.GOOS, runtime.GOARCH, "")),
+			)
+		})
+	})
+	Context("GetPluginMD5FileNameWithOSAndArch method", func() {
+		It("should return valid", func() {
+			Expect(t.GetPluginMD5FileNameWithOSAndArch("test", "plug")).Should(Equal("test-test-plug_.md5"))
+		})
+	})
 })

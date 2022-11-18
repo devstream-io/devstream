@@ -28,7 +28,6 @@ func Apply(configFile string, continueDirectly bool) error {
 		log.Error(`Error checking required plugins. Maybe you forgot to run "dtm init" first?`)
 		return err
 	}
-
 	smgr, err := statemanager.NewManager(*cfg.State)
 	if err != nil {
 		log.Debugf("Failed to get the manager: %s.", err)

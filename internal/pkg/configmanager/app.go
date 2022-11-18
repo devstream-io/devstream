@@ -1,84 +1,118 @@
 package configmanager
 
+import (
+	"fmt"
+
+	"gopkg.in/yaml.v3"
+
+	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/mapz"
+	"github.com/devstream-io/devstream/pkg/util/scm"
+)
+
+const (
+	repoScaffoldingPluginName = "repo-scaffolding"
+)
+
 type (
-	App struct {
-		Name         string             `yaml:"name" mapstructure:"name"`
-		Spec         RawOptions         `yaml:"spec" mapstructure:"spec"`
-		Repo         *Repo              `yaml:"repo" mapstructure:"repo"`
-		RepoTemplate *RepoTemplate      `yaml:"repoTemplate" mapstructure:"repoTemplate"`
-		CIPipelines  []PipelineTemplate `yaml:"ci" mapstructure:"ci"`
-		CDPipelines  []PipelineTemplate `yaml:"cd" mapstructure:"cd"`
-	}
-	Apps []App
-
-	// AppInConfig is the raw structured data in config file.
-	// The main difference between App and AppInConfig is "CI" and "CD" field.
-	// The "CIRawConfigs" is the raw data of "CI" field defined in config file,
-	// which will be rendered to "CIPipelines" field in App with "PipelineTemplates".
-	// The "CDRawConfigs" is similar to "CIRawConfigs".
-	AppInConfig struct {
-		Name         string        `yaml:"name" mapstructure:"name"`
-		Spec         RawOptions    `yaml:"spec" mapstructure:"spec"`
-		Repo         *Repo         `yaml:"repo" mapstructure:"repo"`
-		RepoTemplate *RepoTemplate `yaml:"repoTemplate" mapstructure:"repoTemplate"`
-		CIRawConfigs []CICD        `yaml:"ci" mapstructure:"ci"`
-		CDRawConfigs []CICD        `yaml:"cd" mapstructure:"cd"`
-	}
-
-	CICD struct {
-		Type         string     `yaml:"type" mapstructure:"type"`
-		TemplateName string     `yaml:"templateName" mapstructure:"templateName"`
-		Options      RawOptions `yaml:"options" mapstructure:"options"`
-		Vars         RawOptions `yaml:"vars" mapstructure:"vars"`
+	appRaw struct {
+		Name         string         `yaml:"name" mapstructure:"name"`
+		Spec         map[string]any `yaml:"spec" mapstructure:"spec"`
+		Repo         *scm.SCMInfo   `yaml:"repo" mapstructure:"repo"`
+		RepoTemplate *scm.SCMInfo   `yaml:"repoTemplate" mapstructure:"repoTemplate"`
+		CIRawConfigs []pipelineRaw  `yaml:"ci" mapstructure:"ci"`
+		CDRawConfigs []pipelineRaw  `yaml:"cd" mapstructure:"cd"`
 	}
 )
 
-func (apps Apps) validate() (errs []error) {
-	for _, app := range apps {
-		if err := app.validate(); err != nil {
-			errs = append(errs, err)
-		}
-	}
-	return errs
-}
-
-func (app *App) validate() error {
-	if app.Repo.RepoInfo != nil && app.Repo.RepoInfo.Name == "" {
-		app.Repo.RepoInfo.Name = app.Name
-	}
-
-	err := app.Repo.FillAndValidate()
+// getAppTools return app tools
+func getAppTools(appStr string, globalVars map[string]any, templateMap map[string]string) (Tools, error) {
+	//1. render appStr with globalVars
+	appRenderStr, err := renderConfigWithVariables(appStr, globalVars)
 	if err != nil {
-		return err
+		log.Debugf("configmanager/app %s render globalVars %+v failed", appRenderStr, globalVars)
+		return nil, fmt.Errorf("app render globalVars failed: %w", err)
 	}
-
-	if app.RepoTemplate != nil {
-		err = app.RepoTemplate.FillAndValidate()
-		if err != nil {
-			return err
-		}
+	// 2. unmarshal appRaw config for render pipelineTemplate
+	var rawData appRaw
+	if err := yaml.Unmarshal([]byte(appRenderStr), &rawData); err != nil {
+		return nil, fmt.Errorf("app parse yaml failed: %w", err)
 	}
-
-	return nil
+	rawData.setDefault()
+	appVars := mapz.MergeMaps(globalVars, rawData.Spec)
+	// 3. generate app repo and tempalte repo from scmInfo
+	repoScaffoldingTool, err := rawData.getRepoTemplateTool(appVars)
+	if err != nil {
+		return nil, fmt.Errorf("app[%s] get repo failed: %w", rawData.Name, err)
+	}
+	// 4. get ci/cd pipelineTemplates
+	tools, err := rawData.getPipelineTools(templateMap, appVars)
+	if err != nil {
+		return nil, fmt.Errorf("app[%s] get pipeline tools failed: %w", rawData.Name, err)
+	}
+	if repoScaffoldingTool != nil {
+		tools = append(tools, *repoScaffoldingTool)
+	}
+	return tools, nil
 }
 
-func (config *ConfigRaw) constructApps(ciPipelines, cdPipelines [][]PipelineTemplate) *Config {
-	configFinal := &Config{}
-	configFinal.PluginDir = config.PluginDir
-	configFinal.State = config.State
-	configFinal.Tools = config.Tools
-
-	for i, app := range config.AppsInConfig {
-		appFinal := App{
-			Name:         app.Name,
-			Spec:         app.Spec,
-			Repo:         app.Repo,
-			RepoTemplate: app.RepoTemplate,
+// getAppPipelineTool generate ci/cd tools from app config
+func (a *appRaw) getPipelineTools(templateMap map[string]string, appVars map[string]any) (Tools, error) {
+	allPipelineRaw := append(a.CIRawConfigs, a.CDRawConfigs...)
+	var tools Tools
+	for _, p := range allPipelineRaw {
+		t, err := p.newPipeline(a.Repo, templateMap, appVars)
+		if err != nil {
+			return nil, err
 		}
-		appFinal.CIPipelines = ciPipelines[i]
-		appFinal.CDPipelines = cdPipelines[i]
-		configFinal.Apps = append(configFinal.Apps, appFinal)
+		pipelineTool, err := t.getPipelineTool(a.Name)
+		if err != nil {
+			return nil, err
+		}
+		pipelineTool.DependsOn = a.getRepoTemplateDepends()
+		tools = append(tools, *pipelineTool)
 	}
+	return tools, nil
+}
 
-	return configFinal
+// getRepoTemplateTool will use repo-scaffolding plugin for app
+func (a *appRaw) getRepoTemplateTool(appVars map[string]any) (*Tool, error) {
+	if a.Repo == nil {
+		return nil, fmt.Errorf("app.repo field can't be empty")
+	}
+	appRepo, err := a.Repo.BuildRepoInfo()
+	if err != nil {
+		return nil, fmt.Errorf("configmanager[app] parse repo failed: %w", err)
+	}
+	if a.RepoTemplate != nil {
+		templateRepo, err := a.RepoTemplate.BuildRepoInfo()
+		if err != nil {
+			return nil, fmt.Errorf("configmanager[app] parse repoTemplate failed: %w", err)
+		}
+		return newTool(
+			repoScaffoldingPluginName, a.Name, RawOptions{
+				"destinationRepo": RawOptions(appRepo.Encode()),
+				"sourceRepo":      RawOptions(templateRepo.Encode()),
+				"vars":            RawOptions(appVars),
+			},
+		), nil
+	}
+	return nil, nil
+}
+
+// setDefault will set repoName to appName if repo.name field is empty
+func (a *appRaw) setDefault() {
+	if a.Repo != nil && a.Repo.Name == "" {
+		a.Repo.Name = a.Name
+	}
+}
+
+// since all plugin depends on code is deployed, get dependsOn for repoTemplate
+func (a *appRaw) getRepoTemplateDepends() []string {
+	var dependsOn []string
+	// if a.RepoTemplate is configured, pipeline need to wait reposcaffolding finished
+	if a.RepoTemplate != nil {
+		dependsOn = []string{fmt.Sprintf("%s.%s", repoScaffoldingPluginName, a.Name)}
+	}
+	return dependsOn
 }

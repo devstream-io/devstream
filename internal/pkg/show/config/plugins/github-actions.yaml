@@ -8,8 +8,8 @@ tools:
   # options for the plugin
   options:
     scm:
-      # cloneURL is the project repo location
-      cloneURL: git@github.com/root/test-exmaple.git
+      # url is the project repo location
+      url: git@github.com/root/test-exmaple.git
       # project branch, default branch will be main
       branch: YOUR_PROJECT_BRANCH
     pipeline:

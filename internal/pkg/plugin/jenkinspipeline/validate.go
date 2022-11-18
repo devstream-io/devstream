@@ -13,6 +13,13 @@ func setJenkinsDefault(options configmanager.RawOptions) (configmanager.RawOptio
 	if err != nil {
 		return nil, err
 	}
+	// set project and ci default
+	projectRepo, err := opts.SCM.BuildRepoInfo()
+	if err != nil {
+		return nil, err
+	}
+	opts.ProjectRepo = projectRepo
+	opts.CIFileConfig = opts.Pipeline.BuildCIFileConfig(ciType, projectRepo)
 	// set field value if empty
 	if opts.Jenkins.Namespace == "" {
 		opts.Jenkins.Namespace = "jenkins"
@@ -34,11 +41,15 @@ func validateJenkins(options configmanager.RawOptions) (configmanager.RawOptions
 		return nil, err
 	}
 
+	if err := opts.ProjectRepo.CheckValid(); err != nil {
+		log.Debugf("github action validate repo invalid: %+v", err)
+		return nil, err
+	}
+
 	// check jenkins job name
 	if err := opts.JobName.checkValid(); err != nil {
 		log.Debugf("jenkins validate pipeline invalid: %+v", err)
 		return nil, err
 	}
-
 	return options, nil
 }

@@ -81,7 +81,7 @@ func drifted(a, b map[string]interface{}) bool {
 		return false
 	}
 
-	log.Debug(cmp.Diff(a, b))
+	log.Debugf("detect tool sate changed => %s", cmp.Diff(a, b))
 	return !cmp.Equal(a, b)
 }
 

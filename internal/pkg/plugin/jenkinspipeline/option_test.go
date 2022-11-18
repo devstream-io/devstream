@@ -31,7 +31,7 @@ var _ = Describe("newJobOptions func", func() {
 				"user": userName,
 			},
 			"scm": map[string]interface{}{
-				"cloneURL": projectURL,
+				"url": projectURL,
 			},
 			"pipeline": map[string]interface{}{
 				"configLocation": jenkinsFilePath,

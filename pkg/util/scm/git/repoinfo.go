@@ -7,26 +7,27 @@ import (
 	"strings"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/mapz"
 )
 
 type RepoInfo struct {
-	Owner    string `validate:"required_without=Org" mapstructure:"owner"`
-	Org      string `validate:"required_without=Owner" mapstructure:"org"`
-	Repo     string `validate:"required" mapstructure:"repo"`
-	Branch   string `mapstructure:"branch"`
-	RepoType string `validate:"oneof=gitlab github" mapstructure:"repoType"`
+	Owner    string `validate:"required_without=Org" mapstructure:"owner,omitempty"`
+	Org      string `validate:"required_without=Owner" mapstructure:"org,omitempty"`
+	Repo     string `validate:"required" mapstructure:"repo,omitempty"`
+	Branch   string `mapstructure:"branch,omitempty"`
+	RepoType string `validate:"oneof=gitlab github" mapstructure:"repoType,omitempty"`
 	// This is config for gitlab
-	CloneURL      string `mapstructure:"cloneURL"`
-	SSHPrivateKey string `mapstructure:"sshPrivateKey"`
+	CloneURL      string `mapstructure:"url,omitempty"`
+	SSHPrivateKey string `mapstructure:"sshPrivateKey,omitempty"`
 
 	// used for gitlab
-	Namespace  string
-	BaseURL    string `validate:"omitempty,url" mapstructure:"baseURL"`
-	Visibility string `validate:"omitempty,oneof=public private internal" mapstructure:"visibility"`
+	Namespace  string `mapstructure:"nameSpace,omitempty"`
+	BaseURL    string `mapstructure:"baseURL,omitempty"`
+	Visibility string `mapstructure:"visibility,omitempty"`
 
 	// used for GitHub
-	WorkPath string
-	NeedAuth bool
+	WorkPath string `mapstructure:"workPath,omitempty"`
+	NeedAuth bool   `mapstructure:"needAuth,omitempty"`
 }
 
 func (r *RepoInfo) GetRepoOwner() string {
@@ -117,11 +118,11 @@ func (r *RepoInfo) CheckValid() error {
 	switch r.RepoType {
 	case "gitlab":
 		if os.Getenv("GITLAB_TOKEN") == "" {
-			return fmt.Errorf("jenkins-pipeline gitlab should set env GITLAB_TOKEN")
+			return fmt.Errorf("pipeline gitlab should set env GITLAB_TOKEN")
 		}
 	case "github":
 		if os.Getenv("GITHUB_TOKEN") == "" {
-			return fmt.Errorf("jenkins-pipeline github should set env GITHUB_TOKEN")
+			return fmt.Errorf("pipeline github should set env GITHUB_TOKEN")
 		}
 	}
 	return nil
@@ -142,10 +143,10 @@ func (r *RepoInfo) BuildWebhookInfo(baseURL, appName, token string) *WebhookConf
 	}
 }
 
-func (r *RepoInfo) IsGitlab() bool {
-	return r.RepoType == "gitlab"
-}
-
-func (r *RepoInfo) IsGithub() bool {
-	return r.RepoType == "github"
+func (r *RepoInfo) Encode() map[string]any {
+	m, err := mapz.DecodeStructToMap(r)
+	if err != nil {
+		log.Errorf("gitRepo [%+v] decode to map failed: %+v", r, err)
+	}
+	return m
 }

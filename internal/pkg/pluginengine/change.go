@@ -83,7 +83,6 @@ func execute(smgr statemanager.Manager, changes []*Change, reverse bool) map[str
 				// not executing this change since its input isn't valid
 				continue
 			}
-
 			switch c.ActionName {
 			case statemanager.ActionCreate:
 				if returnValue, err = Create(c.Tool); err == nil {
@@ -96,7 +95,6 @@ func execute(smgr statemanager.Manager, changes []*Change, reverse bool) map[str
 			case statemanager.ActionDelete:
 				succeeded, err = Delete(c.Tool)
 			}
-
 			if err != nil {
 				key := fmt.Sprintf("%s/%s-%s", c.Tool.Name, c.Tool.InstanceID, c.ActionName)
 				errorsMap[key] = err

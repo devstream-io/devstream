@@ -17,8 +17,8 @@ tools:
       # restart jenkins if true for plugin install
       enableRestart: true
     scm:
-      # cloneURL is the project repo location, this can be http address or git address
-      cloneURL: git@gitlab.com/root/test-exmaple.git
+      # url is the project repo location, this can be http address or git address
+      url: git@gitlab.com/root/test-exmaple.git
       # apiURL is the api address of gitlab, if you use github, this field can be empty
       apiURL: http://gitlab.example.com
       # project branch, if your repo type is github, default branch will be main. if your repo type is gitlab, default branch will be master

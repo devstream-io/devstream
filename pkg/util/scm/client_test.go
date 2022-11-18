@@ -65,3 +65,22 @@ var _ = Describe("PushInitRepo func", func() {
 		})
 	})
 })
+
+var _ = Describe("NewClientWithAuth func", func() {
+	var (
+		r *git.RepoInfo
+	)
+	BeforeEach(func() {
+		r = &git.RepoInfo{}
+	})
+	When("scm type not valid", func() {
+		BeforeEach(func() {
+			r.RepoType = "not_exist"
+		})
+		It("should return error", func() {
+			_, err := scm.NewClient(r)
+			Expect(err).Error().Should(HaveOccurred())
+			Expect(err.Error()).Should(ContainSubstring("scaffolding not support scm type"))
+		})
+	})
+})

@@ -13,15 +13,15 @@ import (
 
 var _ = Describe("SetDefault func", func() {
 	var (
-		options                  configmanager.RawOptions
-		cloneURL, configLocation string
+		options             configmanager.RawOptions
+		url, configLocation string
 	)
 	BeforeEach(func() {
-		cloneURL = "http://github.com/root/test-exmaple.git"
+		url = "https://github.com/root/test-exmaple.git"
 		configLocation = "workflows"
 		options = configmanager.RawOptions{
 			"scm": map[string]interface{}{
-				"cloneURL": cloneURL,
+				"url": url,
 			},
 			"pipeline": map[string]interface{}{
 				"configLocation": configLocation,
