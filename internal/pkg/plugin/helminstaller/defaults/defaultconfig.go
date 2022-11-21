@@ -1,9 +1,9 @@
 package defaults
 
 import (
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/helm"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/helm"
 )
 
 var DefaultOptionsMap = make(map[string]*helm.Options)
-var StatusGetterFuncMap = make(map[string]plugininstaller.StatusGetterOperation)
+var StatusGetterFuncMap = make(map[string]installer.StatusGetterOperation)

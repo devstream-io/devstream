@@ -6,15 +6,15 @@ var readGoContentTpl = `package [[ .Name | format ]]
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 func Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	// Initialize Operator with Operations
-	operator := &plugininstaller.Operator{
-		PreExecuteOperations: plugininstaller.PreExecuteOperations{
+	operator := &installer.Operator{
+		PreExecuteOperations: installer.PreExecuteOperations{
 			// TODO(dtm): Add your PreExecuteOperations here.
 		},
 		GetStatusOperation: func(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {

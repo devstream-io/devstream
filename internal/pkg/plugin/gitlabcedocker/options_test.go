@@ -4,7 +4,7 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	dockerInstaller "github.com/devstream-io/devstream/internal/pkg/plugininstaller/docker"
+	dockerInstaller "github.com/devstream-io/devstream/internal/pkg/plugin/installer/docker"
 	"github.com/devstream-io/devstream/pkg/util/docker"
 )
 

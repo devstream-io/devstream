@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/helm"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/helm"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	helmCommon "github.com/devstream-io/devstream/pkg/util/helm"
 	"github.com/devstream-io/devstream/pkg/util/k8s"

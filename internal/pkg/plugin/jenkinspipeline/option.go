@@ -8,9 +8,9 @@ import (
 	"github.com/mitchellh/mapstructure"
 
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/cifile/server"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/step"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/cifile/server"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/step"
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )

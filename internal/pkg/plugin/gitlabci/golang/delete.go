@@ -3,18 +3,18 @@ package golang
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/gitlabci"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/cifile"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/cifile"
 )
 
 func Delete(options configmanager.RawOptions) (bool, error) {
-	operator := &plugininstaller.Operator{
-		PreExecuteOperations: plugininstaller.PreExecuteOperations{
+	operator := &installer.Operator{
+		PreExecuteOperations: installer.PreExecuteOperations{
 			cifile.SetDefaultConfig(gitlabci.DefaultCIOptions),
 			setCIContent,
 			cifile.Validate,
 		},
-		ExecuteOperations: plugininstaller.ExecuteOperations{
+		ExecuteOperations: installer.ExecuteOperations{
 			cifile.DeleteCIFiles,
 		},
 	}

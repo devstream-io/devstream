@@ -2,8 +2,8 @@ package gitlabcedocker
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
-	dockerInstaller "github.com/devstream-io/devstream/internal/pkg/plugininstaller/docker"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer"
+	dockerInstaller "github.com/devstream-io/devstream/internal/pkg/plugin/installer/docker"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/types"
@@ -17,8 +17,8 @@ func Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error)
 	}
 
 	// 2. config read operations
-	operator := &plugininstaller.Operator{
-		PreExecuteOperations: plugininstaller.PreExecuteOperations{
+	operator := &installer.Operator{
+		PreExecuteOperations: installer.PreExecuteOperations{
 			dockerInstaller.Validate,
 		},
 		GetStatusOperation: dockerInstaller.GetRunningStatus,

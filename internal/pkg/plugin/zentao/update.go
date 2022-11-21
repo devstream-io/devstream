@@ -2,24 +2,24 @@ package zentao
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/goclient"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/goclient"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 )
 
 func Update(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	// Initialize Operator with Operations
-	operator := &plugininstaller.Operator{
-		PreExecuteOperations: plugininstaller.PreExecuteOperations{
+	operator := &installer.Operator{
+		PreExecuteOperations: installer.PreExecuteOperations{
 			goclient.Validate,
 		},
-		ExecuteOperations: plugininstaller.ExecuteOperations{
+		ExecuteOperations: installer.ExecuteOperations{
 			goclient.DeleteApp,
 			goclient.CreateDeploymentWrapperLabelAndContainerPorts(defaultZentaolabels, &defaultZentaoPorts, defaultName),
 			goclient.CreateServiceWrapperLabelAndPorts(defaultZentaolabels, &defaultSVCPort),
 			goclient.WaitForReady(retryTimes),
 		},
-		TerminateOperations: plugininstaller.TerminateOperations{
+		TerminateOperations: installer.TerminateOperations{
 			goclient.DealWithErrWhenInstall,
 		},
 		GetStatusOperation: goclient.GetStatus,
