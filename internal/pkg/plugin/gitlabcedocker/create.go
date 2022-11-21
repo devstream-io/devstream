@@ -2,8 +2,8 @@ package gitlabcedocker
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
-	dockerInstaller "github.com/devstream-io/devstream/internal/pkg/plugininstaller/docker"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer"
+	dockerInstaller "github.com/devstream-io/devstream/internal/pkg/plugin/installer/docker"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/types"
@@ -17,15 +17,15 @@ func Create(options configmanager.RawOptions) (statemanager.ResourceStatus, erro
 	}
 
 	// 2. config install operations
-	operator := &plugininstaller.Operator{
-		PreExecuteOperations: plugininstaller.PreExecuteOperations{
+	operator := &installer.Operator{
+		PreExecuteOperations: installer.PreExecuteOperations{
 			dockerInstaller.Validate,
 		},
-		ExecuteOperations: plugininstaller.ExecuteOperations{
+		ExecuteOperations: installer.ExecuteOperations{
 			dockerInstaller.Install,
 			showHelpMsg,
 		},
-		TerminateOperations: plugininstaller.TerminateOperations{
+		TerminateOperations: installer.TerminateOperations{
 			dockerInstaller.ClearWhenInterruption,
 		},
 		GetStatusOperation: dockerInstaller.GetStaticStatus,

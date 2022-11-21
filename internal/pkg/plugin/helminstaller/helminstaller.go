@@ -4,11 +4,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
-
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/helminstaller/defaults"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/helm"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/helm"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
@@ -65,7 +64,7 @@ func RenderValuesYaml(options configmanager.RawOptions) (configmanager.RawOption
 	return types.EncodeStruct(helmOptions)
 }
 
-func IndexStatusGetterFunc(options configmanager.RawOptions) plugininstaller.StatusGetterOperation {
+func IndexStatusGetterFunc(options configmanager.RawOptions) installer.StatusGetterOperation {
 	helmOptions, err := helm.NewOptions(options)
 	if err != nil {
 		// It's ok to return GetAllResourcesStatus here when err != nil.
@@ -91,7 +90,7 @@ func GetDefaultOptionsByInstanceID(instanceID string) *helm.Options {
 	return nil
 }
 
-func GetStatusGetterFuncByInstanceID(instanceID string) plugininstaller.StatusGetterOperation {
+func GetStatusGetterFuncByInstanceID(instanceID string) installer.StatusGetterOperation {
 	for name, fn := range defaults.StatusGetterFuncMap {
 		if strings.Contains(instanceID, name+"-") {
 			return fn

@@ -6,7 +6,7 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci/step"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/step"
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 )
 

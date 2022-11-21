@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci"
 )
 
 // validate validates the options provided by the core.

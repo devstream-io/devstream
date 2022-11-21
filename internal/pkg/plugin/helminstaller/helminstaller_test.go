@@ -10,8 +10,8 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/helminstaller"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/helminstaller/defaults"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/helm"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/helm"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 )
 
@@ -34,7 +34,7 @@ var _ = Describe("helm installer test", func() {
 	})
 
 	Context("GetStatusGetterFuncByInstanceID", func() {
-		defaults.StatusGetterFuncMap = map[string]plugininstaller.StatusGetterOperation{
+		defaults.StatusGetterFuncMap = map[string]installer.StatusGetterOperation{
 			"foo": func(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 				return nil, nil
 			},

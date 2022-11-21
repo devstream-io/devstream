@@ -3,7 +3,7 @@ package s3
 import (
 	"context"
 
-	"github.com/devstream-io/devstream/internal/pkg/aws/s3"
+	"github.com/devstream-io/devstream/pkg/util/cloud/aws/s3"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
