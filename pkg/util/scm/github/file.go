@@ -154,7 +154,7 @@ func (c *Client) DeleteFiles(commitInfo *git.CommitInfo) error {
 		if err != nil {
 			return err
 		}
-		log.Successf("GitHub file %s removed.", fileLoc)
+		log.Debugf("GitHub file %s removed.", fileLoc)
 	}
 	return nil
 }

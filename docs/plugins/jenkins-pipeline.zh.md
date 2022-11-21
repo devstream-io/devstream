@@ -10,7 +10,7 @@
 
 !!! tip "提示"
 
-    GitHub 与 GitLab 的主要区别在于 DevStream tool config 的 options.scm.cloneURL 以及所需要的 token 等不同。
+    GitHub 与 GitLab 的主要区别在于 DevStream tool config 的 options.scm.url 以及所需要的 token 等不同。
 
 ## 1、前置要求
 
@@ -83,7 +83,7 @@ tools:
       user: admin
       enableRestart: true
     scm:
-      cloneURL: git@YOUR_REPO_CLONE_ADDRESS/root/spring-demo
+      url: git@YOUR_REPO_CLONE_ADDRESS/root/spring-demo
       branch: master
       apiURL: YOUR_JENKINS_ADDR
     pipeline:

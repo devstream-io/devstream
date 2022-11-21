@@ -15,8 +15,19 @@ var _ = Describe("CommitInfo struct", func() {
 		fileContent      []byte
 		dstPath, tempDir string
 		filePaths        []*git.GitFilePathInfo
+		testFile         *os.File
 	)
 
+	BeforeEach(func() {
+		var err error
+		fileContent = []byte("this file content")
+		tempDir = GinkgoT().TempDir()
+		dstPath = filepath.Join(tempDir, "dstFile")
+		testFile, err = os.CreateTemp(tempDir, "test")
+		Expect(err).Error().ShouldNot(HaveOccurred())
+		err = os.WriteFile(testFile.Name(), fileContent, 0755)
+		Expect(err).Error().ShouldNot(HaveOccurred())
+	})
 	Context("GetFileContent method", func() {
 		When("file not exist", func() {
 			BeforeEach(func() {
@@ -31,15 +42,21 @@ var _ = Describe("CommitInfo struct", func() {
 				Expect(len(fileMap)).Should(Equal(0))
 			})
 		})
+		When("file dest not exist", func() {
+			BeforeEach(func() {
+				filePaths = []*git.GitFilePathInfo{
+					{
+						SourcePath:      testFile.Name(),
+						DestinationPath: "",
+					}}
+			})
+			It("should return empty map", func() {
+				fileMap := git.GetFileContent(filePaths)
+				Expect(len(fileMap)).Should(Equal(0))
+			})
+		})
 		When("file exist", func() {
 			BeforeEach(func() {
-				fileContent = []byte("this file content")
-				tempDir = GinkgoT().TempDir()
-				dstPath = filepath.Join(tempDir, "dstFile")
-				testFile, err := os.CreateTemp(tempDir, "test")
-				Expect(err).Error().ShouldNot(HaveOccurred())
-				err = os.WriteFile(testFile.Name(), fileContent, 0755)
-				Expect(err).Error().ShouldNot(HaveOccurred())
 				filePaths = []*git.GitFilePathInfo{
 					{
 						SourcePath:      testFile.Name(),

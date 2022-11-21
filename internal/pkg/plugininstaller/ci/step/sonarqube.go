@@ -11,7 +11,7 @@ const (
 )
 
 type SonarQubeStepConfig struct {
-	Name  string `mapstructure:"name"`
+	Name  string `mapstructure:"name" validate:"required"`
 	Token string `mapstructure:"token"`
 	URL   string `mapstructure:"url" validate:"url"`
 }

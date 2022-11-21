@@ -27,6 +27,7 @@ func (c *Client) DownloadRepo() (string, error) {
 	getterClient := downloader.ResourceClient{
 		Source: latestCodeZipfileDownloadURL,
 	}
+	log.Info("github start to download repoTemplate...")
 	return getterClient.GetWithGoGetter()
 }
 
@@ -93,7 +94,7 @@ func (c *Client) InitRepo() error {
 		log.Errorf("Failed to create repo: %s.", err)
 		return err
 	}
-	log.Infof("The repo %s has been created.", c.Repo)
+	log.Successf("The repo %s has been created.", c.Repo)
 
 	//	upload a placeholder file to make repo not empty
 	if err := c.CreateFile([]byte(" "), repoPlaceHolderFileName, c.Branch); err != nil {

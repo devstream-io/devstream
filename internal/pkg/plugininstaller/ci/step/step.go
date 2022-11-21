@@ -39,10 +39,11 @@ func GetStepGlobalVars(repoInfo *git.RepoInfo) *StepGlobalVars {
 		SonarqubeSecretKey:    sonarSecretKey,
 		GitlabConnectionID:    gitlabConnectionName,
 	}
-	if repoInfo.IsGitlab() && repoInfo.SSHPrivateKey != "" {
-		v.CredentialID = gitlabCredentialName
-	} else if repoInfo.IsGithub() {
+	switch repoInfo.RepoType {
+	case "github":
 		v.CredentialID = githubCredentialName
+	case "gitlab":
+		v.CredentialID = gitlabCredentialName
 	}
 	return v
 }

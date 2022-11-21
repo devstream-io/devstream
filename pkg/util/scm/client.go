@@ -27,7 +27,7 @@ func NewClient(repoInfo *git.RepoInfo) (ClientOperation, error) {
 	case "gitlab":
 		return gitlab.NewClient(repoInfo)
 	}
-	return nil, fmt.Errorf("scaffolding not support repo destination: %s", repoInfo.RepoType)
+	return nil, fmt.Errorf("scaffolding not support scm type: %s", repoInfo.RepoType)
 
 }
 

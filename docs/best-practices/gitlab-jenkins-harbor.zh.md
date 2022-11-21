@@ -554,7 +554,7 @@ Harbor 的 admin 用户初始登录密码是 `Harbor12345`，你可以尝试用 
           user: admin
           enableRestart: true
         scm:
-          cloneURL: http://gitlab.example.com:30080/root/spring-demo
+          url: http://gitlab.example.com:30080/root/spring-demo
           branch: master
         pipeline:
           jobName: test-job
@@ -618,7 +618,7 @@ tools:
       user: admin
       enableRestart: true
     scm:
-      cloneURL: http://gitlab.example.com:30080/root/spring-demo
+      url: http://gitlab.example.com:30080/root/spring-demo
       branch: master
     pipeline:
       jobName: test-job

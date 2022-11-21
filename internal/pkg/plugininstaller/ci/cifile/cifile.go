@@ -78,13 +78,13 @@ func (c *CIFileConfig) getConfigContentFromLocation() (git.GitFileContentMap, er
 	getClient := downloader.ResourceClient{
 		Source: c.ConfigLocation,
 	}
+	log.Debugf("ci start to get config files [%s]...", c.ConfigLocation)
 	CIFileConfigPath, err := getClient.GetWithGoGetter()
 	if err != nil {
 		return nil, fmt.Errorf("ci get files by %s failed: %w", c.ConfigLocation, err)
 	}
 	defer getClient.CleanUp()
 	// 2. get ci content map from CIFileConfigPath
-	log.Infof("----------------> %+v", c.Type)
 	ciClient := c.newCIServerClient()
 	return file.GetFileMap(
 		CIFileConfigPath, ciClient.FilterCIFilesFunc(),

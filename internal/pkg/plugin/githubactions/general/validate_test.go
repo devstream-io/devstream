@@ -11,15 +11,15 @@ import (
 
 var _ = Describe("validate func", func() {
 	var (
-		options                  configmanager.RawOptions
-		cloneURL, configLocation string
+		options             configmanager.RawOptions
+		url, configLocation string
 	)
 	BeforeEach(func() {
-		cloneURL = "git@github.com/root/test-exmaple.git"
+		url = "git@github.com/root/test-exmaple.git"
 		configLocation = "workflows"
 		options = configmanager.RawOptions{
 			"scm": map[string]interface{}{
-				"cloneURL": cloneURL,
+				"url": url,
 			},
 			"pipeline": map[string]interface{}{
 				"configLocation": configLocation,
@@ -40,7 +40,7 @@ var _ = Describe("validate func", func() {
 	When("scm repo is gitlab", func() {
 		BeforeEach(func() {
 			options["scm"] = map[string]interface{}{
-				"cloneURL": "http://exmaple.gitlab.com",
+				"url": "http://exmaple.gitlab.com",
 			}
 		})
 		It("should return error", func() {
