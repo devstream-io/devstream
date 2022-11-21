@@ -25,8 +25,8 @@ type (
 	}
 )
 
-// getAppTools return app tools
-func getAppTools(appStr string, globalVars map[string]any, templateMap map[string]string) (Tools, error) {
+// getToolsFromApp return app tools
+func getToolsFromApp(appStr string, globalVars map[string]any, templateMap map[string]string) (Tools, error) {
 	//1. render appStr with globalVars
 	appRenderStr, err := renderConfigWithVariables(appStr, globalVars)
 	if err != nil {
@@ -39,14 +39,14 @@ func getAppTools(appStr string, globalVars map[string]any, templateMap map[strin
 		return nil, fmt.Errorf("app parse yaml failed: %w", err)
 	}
 	rawData.setDefault()
-	appVars := mapz.MergeMaps(globalVars, rawData.Spec)
+	appVars := mapz.Merge(globalVars, rawData.Spec)
 	// 3. generate app repo and tempalte repo from scmInfo
 	repoScaffoldingTool, err := rawData.getRepoTemplateTool(appVars)
 	if err != nil {
 		return nil, fmt.Errorf("app[%s] get repo failed: %w", rawData.Name, err)
 	}
 	// 4. get ci/cd pipelineTemplates
-	tools, err := rawData.getPipelineTools(templateMap, appVars)
+	tools, err := rawData.generateCICDToolsFromAppConfig(templateMap, appVars)
 	if err != nil {
 		return nil, fmt.Errorf("app[%s] get pipeline tools failed: %w", rawData.Name, err)
 	}
@@ -57,7 +57,7 @@ func getAppTools(appStr string, globalVars map[string]any, templateMap map[strin
 }
 
 // getAppPipelineTool generate ci/cd tools from app config
-func (a *appRaw) getPipelineTools(templateMap map[string]string, appVars map[string]any) (Tools, error) {
+func (a *appRaw) generateCICDToolsFromAppConfig(templateMap map[string]string, appVars map[string]any) (Tools, error) {
 	allPipelineRaw := append(a.CIRawConfigs, a.CDRawConfigs...)
 	var tools Tools
 	for _, p := range allPipelineRaw {
@@ -69,7 +69,7 @@ func (a *appRaw) getPipelineTools(templateMap map[string]string, appVars map[str
 		if err != nil {
 			return nil, err
 		}
-		pipelineTool.DependsOn = a.getRepoTemplateDepends()
+		pipelineTool.DependsOn = a.getRepoTemplateDependants()
 		tools = append(tools, *pipelineTool)
 	}
 	return tools, nil
@@ -108,7 +108,7 @@ func (a *appRaw) setDefault() {
 }
 
 // since all plugin depends on code is deployed, get dependsOn for repoTemplate
-func (a *appRaw) getRepoTemplateDepends() []string {
+func (a *appRaw) getRepoTemplateDependants() []string {
 	var dependsOn []string
 	// if a.RepoTemplate is configured, pipeline need to wait reposcaffolding finished
 	if a.RepoTemplate != nil {

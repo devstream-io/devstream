@@ -45,8 +45,8 @@ func CopyFile(srcFile, dstFile string) (err error) {
 	return dFile.Sync()
 }
 
-// GenAbsFilePath return all the path with a given file name
-func GenAbsFilePath(baseDir, file string) (string, error) {
+// GenerateAbsFilePath return all the path with a given file name
+func GenerateAbsFilePath(baseDir, file string) (string, error) {
 	file = filepath.Join(baseDir, file)
 
 	fileExist := func(path string) bool {

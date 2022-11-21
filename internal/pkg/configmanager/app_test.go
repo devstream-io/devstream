@@ -7,7 +7,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/scm"
 )
 
-var _ = Describe("getAppTools func", func() {
+var _ = Describe("getToolsFromApp func", func() {
 	var (
 		appStr      string
 		globalVars  map[string]any
@@ -25,7 +25,7 @@ var _ = Describe("getAppTools func", func() {
 			}
 		})
 		It("should return err", func() {
-			_, err := getAppTools(appStr, globalVars, templateMap)
+			_, err := getToolsFromApp(appStr, globalVars, templateMap)
 			Expect(err).Error().Should(HaveOccurred())
 			Expect(err.Error()).Should(ContainSubstring("app render globalVars failed"))
 		})
@@ -35,7 +35,7 @@ var _ = Describe("getAppTools func", func() {
 			appStr = "fsdfsd{123213}"
 		})
 		It("should return error", func() {
-			_, err := getAppTools(appStr, globalVars, templateMap)
+			_, err := getToolsFromApp(appStr, globalVars, templateMap)
 			Expect(err).Error().Should(HaveOccurred())
 			Expect(err.Error()).Should(ContainSubstring("app parse yaml failed"))
 		})
@@ -51,7 +51,7 @@ ci:
   templateName:`
 		})
 		It("should return error", func() {
-			_, err := getAppTools(appStr, globalVars, templateMap)
+			_, err := getToolsFromApp(appStr, globalVars, templateMap)
 			Expect(err).Error().Should(HaveOccurred())
 			Expect(err.Error()).Should(ContainSubstring("app[test] get pipeline tools failed"))
 		})
@@ -65,7 +65,7 @@ cd:
   templateName:`
 		})
 		It("should return error", func() {
-			_, err := getAppTools(appStr, globalVars, templateMap)
+			_, err := getToolsFromApp(appStr, globalVars, templateMap)
 			Expect(err).Error().Should(HaveOccurred())
 			Expect(err.Error()).Should(ContainSubstring("app.repo field can't be empty"))
 		})
@@ -81,7 +81,7 @@ cd:
   templateName:`
 		})
 		It("should return error", func() {
-			_, err := getAppTools(appStr, globalVars, templateMap)
+			_, err := getToolsFromApp(appStr, globalVars, templateMap)
 			Expect(err).Error().Should(HaveOccurred())
 			Expect(err.Error()).Should(ContainSubstring("app[test] get pipeline tools failed"))
 		})
@@ -184,7 +184,7 @@ options:
 					"instanceID": "service-A",
 				},
 			}
-			tools, err := getAppTools(appStr, globalVars, templateMap)
+			tools, err := getToolsFromApp(appStr, globalVars, templateMap)
 			Expect(err).Error().ShouldNot(HaveOccurred())
 			Expect(tools).ShouldNot(BeNil())
 			Expect(len(tools)).Should(Equal(3))
@@ -222,7 +222,7 @@ var _ = Describe("appRaw struct", func() {
 			})
 		})
 	})
-	Context("getPipelineTools method", func() {
+	Context("generateCICDToolsFromAppConfig method", func() {
 		When("config is not valid", func() {
 			BeforeEach(func() {
 				rawConfig = []pipelineRaw{
@@ -234,7 +234,7 @@ var _ = Describe("appRaw struct", func() {
 				a.CIRawConfigs = rawConfig
 			})
 			It("should return error", func() {
-				_, err := a.getPipelineTools(templateMap, globalVars)
+				_, err := a.generateCICDToolsFromAppConfig(templateMap, globalVars)
 				Expect(err).Error().Should(HaveOccurred())
 				Expect(err.Error()).Should(ContainSubstring(".templateName is required"))
 			})
@@ -252,7 +252,7 @@ var _ = Describe("appRaw struct", func() {
 				a.CIRawConfigs = rawConfig
 			})
 			It("should return pipeline array", func() {
-				p, err := a.getPipelineTools(templateMap, globalVars)
+				p, err := a.generateCICDToolsFromAppConfig(templateMap, globalVars)
 				Expect(err).Error().ShouldNot(HaveOccurred())
 				Expect(len(p)).Should(Equal(2))
 				Expect(p[0].Name).Should(Equal("github-actions"))

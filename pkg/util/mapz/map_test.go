@@ -45,7 +45,7 @@ func BenchmarkFillMapWithStrAndError(b *testing.B) {
 	b.StopTimer()
 }
 
-var _ = Describe("MergeMaps func", func() {
+var _ = Describe("Merge func", func() {
 	var (
 		src1, src2 map[string]any
 	)
@@ -60,7 +60,7 @@ var _ = Describe("MergeMaps func", func() {
 		}
 	})
 	It("should merge maps", func() {
-		allMaps := mapz.MergeMaps(src1, src2)
+		allMaps := mapz.Merge(src1, src2)
 		Expect(allMaps).Should(Equal(map[string]any{
 			"test1": "cover",
 			"test":  "test",

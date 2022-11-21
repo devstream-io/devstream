@@ -25,9 +25,9 @@ func DecodeStructToMap(structVars any) (map[string]interface{}, error) {
 	return rawConfigVars, nil
 }
 
-// MergeMaps merge two maps
+// Merge merge two maps
 // if there are same keys in two maps, the key of second one will overwrite the first one
-func MergeMaps(m1 map[string]any, m2 map[string]any) map[string]any {
+func Merge(m1 map[string]any, m2 map[string]any) map[string]any {
 	m1Clone := maps.Clone(m1)
 	maps.Copy(m1Clone, m2)
 	return m1Clone

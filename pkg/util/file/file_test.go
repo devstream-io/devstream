@@ -40,7 +40,7 @@ var _ = Describe("CopyFile func", func() {
 	})
 })
 
-var _ = Describe("GenAbsFilePath func", func() {
+var _ = Describe("GenerateAbsFilePath func", func() {
 	var baseDir, fileName string
 	When("file not exist", func() {
 		BeforeEach(func() {
@@ -48,7 +48,7 @@ var _ = Describe("GenAbsFilePath func", func() {
 			fileName = "not_exist"
 		})
 		It("should return err", func() {
-			_, err := file.GenAbsFilePath(baseDir, fileName)
+			_, err := file.GenerateAbsFilePath(baseDir, fileName)
 			Expect(err).Error().Should(HaveOccurred())
 		})
 	})
@@ -60,7 +60,7 @@ var _ = Describe("GenAbsFilePath func", func() {
 			fileName = filepath.Base(testFile.Name())
 		})
 		It("should return absPath", func() {
-			path, err := file.GenAbsFilePath(baseDir, fileName)
+			path, err := file.GenerateAbsFilePath(baseDir, fileName)
 			Expect(err).Error().ShouldNot(HaveOccurred())
 			Expect(path).Should(Equal(filepath.Join(baseDir, fileName)))
 		})

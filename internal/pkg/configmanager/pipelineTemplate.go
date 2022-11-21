@@ -90,7 +90,7 @@ func (p *pipelineRaw) newPipelineFromTemplate(templateMap map[string]string, glo
 		return nil, fmt.Errorf("%s not found in pipelineTemplates", p.TemplateName)
 	}
 
-	allVars := mapz.MergeMaps(globalVars, p.Vars)
+	allVars := mapz.Merge(globalVars, p.Vars)
 	templateRenderdStr, err := renderConfigWithVariables(templateStr, allVars)
 	if err != nil {
 		return nil, fmt.Errorf("%s render pipelineTemplate failed: %+w", p.TemplateName, err)
