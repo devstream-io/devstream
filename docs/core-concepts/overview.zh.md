@@ -1,4 +1,4 @@
-# 核心概念概览
+# 概览
 
 您需要熟知以下概念：Git 核心概念，Docker, Kubernetes, 持续集成，持续交付以及 GitOps概念. 这些都是 DevStream 的核心概念。
 

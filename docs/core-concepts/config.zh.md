@@ -1,5 +1,7 @@
 # DevStream配置
 
+TODO: 需要跟英文文档同步。请暂且阅读英文文档。
+
 DevStream使用YAML文件来描述你的DevOps工具链配置。
 
 ## 主配置文件
