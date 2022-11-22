@@ -14,7 +14,7 @@ func NewManager(configFilePath string) *Manager {
 // It will return "non-nil, nil" or "nil, err".
 func (m *Manager) LoadConfig() (*Config, error) {
 	// 1. get rawConfig from config.yaml file
-	rawConfig, err := GetRawConfigFromFile(m.ConfigFilePath)
+	rawConfig, err := getRawConfigFromFile(m.ConfigFilePath)
 	if err != nil {
 		return nil, err
 	}

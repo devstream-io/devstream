@@ -424,7 +424,7 @@ tools:
 	})
 
 	Context("LoadConfig method", func() {
-		When("get RawConfig failed", func() {
+		When("get rawConfig failed", func() {
 			BeforeEach(func() {
 				m.ConfigFilePath = "not_exist"
 			})

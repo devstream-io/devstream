@@ -14,8 +14,8 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-// RawConfig is used to describe original raw configs read from files
-type RawConfig struct {
+// rawConfig is used to describe original raw configs read from files
+type rawConfig struct {
 	VarFile           configFileLoc `yaml:"varFile" mapstructure:"varFile"`
 	ToolFile          configFileLoc `yaml:"toolFile" mapstructure:"toolFile"`
 	AppFile           configFileLoc `yaml:"appFile" mapstructure:"appFile"`
@@ -31,8 +31,8 @@ type RawConfig struct {
 	totalConfigBytes  []byte         `mapstructure:"-"`
 }
 
-// GetRawConfigFromFile generate new RawConfig options
-func GetRawConfigFromFile(configFilePath string) (*RawConfig, error) {
+// getRawConfigFromFile generate new rawConfig options
+func getRawConfigFromFile(configFilePath string) (*rawConfig, error) {
 	// 1. get baseDir from configFile
 	baseDir, err := file.GetFileAbsDirPath(configFilePath)
 	if err != nil {
@@ -51,7 +51,7 @@ func GetRawConfigFromFile(configFilePath string) (*RawConfig, error) {
 	configBytes = bytes.Replace(configBytes, []byte("---"), []byte("\n"), -1)
 
 	// 3. decode total yaml files to get rawConfig
-	var rawConfig RawConfig
+	var rawConfig rawConfig
 	if err := yaml.Unmarshal(configBytes, &rawConfig); err != nil && !errors.Is(err, io.EOF) {
 		log.Errorf("Please verify the format of your config. Error: %s.", err)
 		return nil, err
@@ -63,7 +63,7 @@ func GetRawConfigFromFile(configFilePath string) (*RawConfig, error) {
 }
 
 // GetGlobalVars will get global variables from GlobalVars field and varFile content
-func (r *RawConfig) GetGlobalVars() (map[string]any, error) {
+func (r *rawConfig) GetGlobalVars() (map[string]any, error) {
 	valueContent, err := r.VarFile.getContentBytes(r.configFileBaseDir)
 	if err != nil {
 		return nil, err
@@ -78,9 +78,9 @@ func (r *RawConfig) GetGlobalVars() (map[string]any, error) {
 	return globalVars, nil
 }
 
-// UnmarshalYAML is used for RawConfig
+// UnmarshalYAML is used for rawConfig
 // it will put variables fields in globalVars field
-func (r *RawConfig) UnmarshalYAML(value *yaml.Node) error {
+func (r *rawConfig) UnmarshalYAML(value *yaml.Node) error {
 	configMap := make(map[string]any)
 	if err := value.Decode(configMap); err != nil {
 		return err
@@ -88,8 +88,8 @@ func (r *RawConfig) UnmarshalYAML(value *yaml.Node) error {
 	return mapstructure.Decode(configMap, r)
 }
 
-// GetToolsFromApps will get Tools from RawConfig.totalConfigBytes config
-func (r *RawConfig) GetToolsFromApps(globalVars map[string]any) (Tools, error) {
+// GetToolsFromApps will get Tools from rawConfig.totalConfigBytes config
+func (r *rawConfig) GetToolsFromApps(globalVars map[string]any) (Tools, error) {
 	// 1. get tools config str
 	yamlPath := "$.apps[*]"
 	appFileBytes, err := r.AppFile.getContentBytes(r.configFileBaseDir)
@@ -121,7 +121,7 @@ func (r *RawConfig) GetToolsFromApps(globalVars map[string]any) (Tools, error) {
 }
 
 // GetTools get Tools from tool config
-func (r *RawConfig) GetTools(globalVars map[string]any) (Tools, error) {
+func (r *rawConfig) GetTools(globalVars map[string]any) (Tools, error) {
 	// 1. get tools config str
 	yamlPath := "$.tools[*]"
 	fileBytes, err := r.ToolFile.getContentBytes(r.configFileBaseDir)
@@ -153,7 +153,7 @@ func (r *RawConfig) GetTools(globalVars map[string]any) (Tools, error) {
 }
 
 // getPipelineTemplatesMap generate template name/rawString map
-func (r *RawConfig) getPipelineTemplatesMap() (map[string]string, error) {
+func (r *rawConfig) getPipelineTemplatesMap() (map[string]string, error) {
 	yamlPath := "$.pipelineTemplates[*]"
 	fileBytes, err := r.TemplateFile.getContentBytes(r.configFileBaseDir)
 	if err != nil {
@@ -190,11 +190,11 @@ func (f configFileLoc) getContentBytes(baseDir string) ([]byte, error) {
 		return nil, err
 	}
 
-	bytes, err := os.ReadFile(fileAbs)
+	fileBytes, err := os.ReadFile(fileAbs)
 	if err != nil {
 		return nil, err
 	}
-	return bytes, err
+	return fileBytes, err
 }
 
 // getMergedNodeConfig will use yamlPath to config from configFile content and global content
