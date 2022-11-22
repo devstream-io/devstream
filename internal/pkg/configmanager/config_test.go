@@ -26,19 +26,21 @@ var _ = Describe("getRawConfigFromFile func", func() {
 	var (
 		fLoc    string
 		baseDir string
+		m       Manager
 	)
 	BeforeEach(func() {
 		baseDir = GinkgoT().TempDir()
 		f, err := os.CreateTemp(baseDir, "test")
 		Expect(err).Error().ShouldNot(HaveOccurred())
 		fLoc = f.Name()
+		m.ConfigFilePath = fLoc
 	})
 	When("file not exist", func() {
 		BeforeEach(func() {
 			fLoc = "not_exist"
 		})
 		It("should return err", func() {
-			_, err := getRawConfigFromFile(fLoc)
+			_, err := m.getRawConfigFromFile()
 			Expect(err).Error().Should(HaveOccurred())
 			Expect(err.Error()).Should(ContainSubstring("no such file or directory"))
 		})
@@ -49,7 +51,7 @@ var _ = Describe("getRawConfigFromFile func", func() {
 			Expect(err).Error().ShouldNot(HaveOccurred())
 		})
 		It("should return err", func() {
-			_, err := getRawConfigFromFile(fLoc)
+			_, err := m.getRawConfigFromFile()
 			Expect(err).Error().Should(HaveOccurred())
 			Expect(err.Error()).Should(ContainSubstring("cannot unmarshal"))
 		})
@@ -58,10 +60,9 @@ var _ = Describe("getRawConfigFromFile func", func() {
 
 var _ = Describe("rawConfig struct", func() {
 	var (
-		r          *rawConfig
-		baseDir    string
-		fLoc       string
-		globalVars map[string]any
+		r       *rawConfig
+		baseDir string
+		fLoc    string
 	)
 	BeforeEach(func() {
 		r = &rawConfig{}
@@ -69,27 +70,26 @@ var _ = Describe("rawConfig struct", func() {
 		f, err := os.CreateTemp(baseDir, "test")
 		Expect(err).Error().ShouldNot(HaveOccurred())
 		fLoc = f.Name()
-		globalVars = map[string]any{}
 	})
-	Context("GetGlobalVars method", func() {
+	Context("mergeGlobalVars method", func() {
 		When("varFile get content failed", func() {
 			BeforeEach(func() {
 				r.VarFile = "not_exist"
 			})
 			It("should return err", func() {
-				_, err := r.GetGlobalVars()
+				err := r.mergeGlobalVars()
 				Expect(err).Error().Should(HaveOccurred())
 				Expect(err.Error()).Should(ContainSubstring("not exists"))
 			})
 		})
 		When("varFiles is not valid", func() {
 			BeforeEach(func() {
-				r.VarFile = configFileLoc(fLoc)
+				r.VarFile = fLoc
 				err := os.WriteFile(fLoc, []byte("not_Valid_Yaml{{}}"), 0666)
 				Expect(err).Error().ShouldNot(HaveOccurred())
 			})
 			It("should return err", func() {
-				_, err := r.GetGlobalVars()
+				err := r.mergeGlobalVars()
 				Expect(err).Error().Should(HaveOccurred())
 				Expect(err.Error()).Should(ContainSubstring("cannot unmarshal"))
 			})
@@ -102,7 +102,7 @@ var _ = Describe("rawConfig struct", func() {
 				r.AppFile = "not_exist"
 			})
 			It("should return err", func() {
-				_, err := r.GetToolsFromApps(globalVars)
+				_, err := r.getToolsFromApps()
 				Expect(err).Error().Should(HaveOccurred())
 				Expect(err.Error()).Should(ContainSubstring("not exists"))
 			})
@@ -111,23 +111,23 @@ var _ = Describe("rawConfig struct", func() {
 			BeforeEach(func() {
 				err := os.WriteFile(fLoc, []byte("not_Valid_Yaml{{}}"), 0666)
 				Expect(err).Error().ShouldNot(HaveOccurred())
-				r.AppFile = configFileLoc(fLoc)
+				r.AppFile = fLoc
 			})
 			It("should return err", func() {
-				_, err := r.GetToolsFromApps(globalVars)
+				_, err := r.getToolsFromApps()
 				Expect(err).Error().Should(HaveOccurred())
 				Expect(err.Error()).Should(ContainSubstring("yaml parse path[$.apps[*]] failed"))
 			})
 		})
 	})
 
-	Context("GetTools method", func() {
+	Context("getToolsOutOfApps method", func() {
 		When("toolsFile get content failed", func() {
 			BeforeEach(func() {
 				r.ToolFile = "not_exist"
 			})
 			It("should return err", func() {
-				_, err := r.GetTools(globalVars)
+				_, err := r.getToolsOutOfApps()
 				Expect(err).Error().Should(HaveOccurred())
 				Expect(err.Error()).Should(ContainSubstring("not exists"))
 			})
@@ -136,10 +136,10 @@ var _ = Describe("rawConfig struct", func() {
 			BeforeEach(func() {
 				err := os.WriteFile(fLoc, []byte("not_Valid_Yaml{{}}"), 0666)
 				Expect(err).Error().ShouldNot(HaveOccurred())
-				r.ToolFile = configFileLoc(fLoc)
+				r.ToolFile = fLoc
 			})
 			It("should return err", func() {
-				_, err := r.GetTools(globalVars)
+				_, err := r.getToolsOutOfApps()
 				Expect(err).Error().Should(HaveOccurred())
 				Expect(err.Error()).Should(ContainSubstring("yaml parse path[$.tools[*]] failed"))
 			})
@@ -155,7 +155,7 @@ tools:
       key1: [[ var1 ]]`)
 			})
 			It("should return err", func() {
-				_, err := r.GetTools(globalVars)
+				_, err := r.getToolsOutOfApps()
 				Expect(err).Error().Should(HaveOccurred())
 			})
 		})
@@ -170,7 +170,7 @@ tools:
       key1: {{}}`)
 			})
 			It("should return err", func() {
-				_, err := r.GetTools(globalVars)
+				_, err := r.getToolsOutOfApps()
 				Expect(err).Error().Should(HaveOccurred())
 				Expect(err.Error()).Should(ContainSubstring("unexpected mapping key"))
 			})
@@ -185,17 +185,13 @@ tools:
   dependsOn: [ "not_exist" ]
   options:
     key1: [[ var1 ]]`)
-				globalVars = map[string]any{
-					"var1": "global",
-				}
 			})
 			It("should return err", func() {
-				_, err := r.GetTools(globalVars)
+				_, err := r.getToolsOutOfApps()
 				Expect(err).Error().Should(HaveOccurred())
 				Expect(err.Error()).Should(ContainSubstring("tool default's dependency not_exist doesn't exist"))
 			})
 		})
-
 	})
 
 	Context("getPipelineTemplatesMap method", func() {

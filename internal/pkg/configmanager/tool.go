@@ -30,6 +30,21 @@ type Tool struct {
 	DependsOn  []string   `yaml:"dependsOn"`
 	Options    RawOptions `yaml:"options"`
 }
+
+func newTool(name, instanceID string, options RawOptions) *Tool {
+	if options == nil {
+		options = make(RawOptions)
+	}
+	// set instanceID to options
+	options["instanceID"] = interface{}(instanceID)
+
+	return &Tool{
+		Name:       name,
+		InstanceID: instanceID,
+		Options:    options,
+	}
+}
+
 type Tools []Tool
 
 func (tools Tools) validateAll() error {
@@ -71,6 +86,7 @@ func (t *Tool) KeyWithNameAndInstanceID() string {
 func (t *Tool) GetPluginName() string {
 	return fmt.Sprintf("%s-%s-%s_%s", t.Name, GOOS, GOARCH, version.Version)
 }
+
 func (t *Tool) GetPluginNameWithOSAndArch(os, arch string) string {
 	return fmt.Sprintf("%s-%s-%s_%s", t.Name, os, arch, version.Version)
 }
@@ -80,11 +96,11 @@ func (t *Tool) GetPluginNameWithOSAndArch(os, arch string) string {
 func (t *Tool) GetPluginFileName() string {
 	return t.GetPluginName() + ".so"
 }
+
 func (t *Tool) GetPluginFileNameWithOSAndArch(os, arch string) string {
 	return t.GetPluginNameWithOSAndArch(os, arch) + ".so"
 }
 
-// GetPluginMD5FileName  If the plugin {githubactions 0.0.1}, the generated name will be "githubactions_0.0.1.md5"
 func (t *Tool) GetPluginMD5FileName() string {
 	return t.GetPluginName() + ".md5"
 }
@@ -124,20 +140,4 @@ func (tools Tools) validateDependency() []error {
 	}
 
 	return errors
-}
-
-func newTool(name, instanceID string, options RawOptions) *Tool {
-	// set option instanceID default
-	if options != nil {
-		_, ok := options["instanceID"]
-		if !ok {
-			options["instanceID"] = interface{}(instanceID)
-		}
-	}
-	t := &Tool{
-		Name:       name,
-		InstanceID: instanceID,
-		Options:    options,
-	}
-	return t
 }
