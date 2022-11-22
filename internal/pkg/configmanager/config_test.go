@@ -37,7 +37,7 @@ var _ = Describe("getRawConfigFromFile func", func() {
 	})
 	When("file not exist", func() {
 		BeforeEach(func() {
-			fLoc = "not_exist"
+			m.ConfigFilePath = "not_exists"
 		})
 		It("should return err", func() {
 			_, err := m.getRawConfigFromFile()
@@ -185,7 +185,11 @@ tools:
   dependsOn: [ "not_exist" ]
   options:
     key1: [[ var1 ]]`)
+				r.GlobalVars = map[string]any{
+					"var1": "global",
+				}
 			})
+
 			It("should return err", func() {
 				_, err := r.getToolsOutOfApps()
 				Expect(err).Error().Should(HaveOccurred())

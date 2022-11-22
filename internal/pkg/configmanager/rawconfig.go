@@ -73,7 +73,7 @@ func (r *rawConfig) mergeGlobalVars() error {
 		return err
 	}
 
-	if err = mergo.Merge(r.GlobalVars, globalVars); err != nil {
+	if err = mergo.Merge(&(r.GlobalVars), globalVars); err != nil {
 		return err
 	}
 	return nil
