@@ -14,10 +14,10 @@ import (
 
 var _ = Describe("action struct", func() {
 	var (
-		a                            *ci.PipelineConfig
+		pipelineConfig               *ci.PipelineConfig
 		imageRepoURL, user, repoName string
 		configLocation               downloader.ResourceLocation
-		r                            *git.RepoInfo
+		repoInfo                     *git.RepoInfo
 		ciType                       server.CIServerType
 	)
 	BeforeEach(func() {
@@ -26,14 +26,14 @@ var _ = Describe("action struct", func() {
 		repoName = "test_repo"
 		configLocation = "123/workflows"
 		ciType = server.CIServerType("gitlab")
-		a = &ci.PipelineConfig{
+		pipelineConfig = &ci.PipelineConfig{
 			ConfigLocation: configLocation,
 			ImageRepo: &step.ImageRepoStepConfig{
 				URL:  imageRepoURL,
 				User: user,
 			},
 		}
-		r = &git.RepoInfo{
+		repoInfo = &git.RepoInfo{
 			Repo: repoName,
 		}
 	})
@@ -42,7 +42,7 @@ var _ = Describe("action struct", func() {
 			var nilStepConfig *step.SonarQubeStepConfig
 			var nilDingTalkConfig *step.DingtalkStepConfig
 			var nilGeneral *step.GeneralStepConfig
-			CIFileConfig := a.BuildCIFileConfig(ciType, r)
+			CIFileConfig := pipelineConfig.BuildCIFileConfig(ciType, repoInfo)
 			Expect(string(CIFileConfig.Type)).Should(Equal("gitlab"))
 			Expect(CIFileConfig.ConfigLocation).Should(Equal(configLocation))
 			expectVars := cifile.CIFileVarsMap{
