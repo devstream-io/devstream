@@ -11,19 +11,7 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 )
 
-var _ = Describe("LoadConfig", func() {
-	const (
-		mainConfigFile = "config.yaml"
-		varFile        = "var.yaml"
-		toolFile       = "tool.yaml"
-		appFile        = "app.yaml"
-		templateFile   = "template.yaml"
-		pluginDir      = "./plugins"
-	)
-
-	var tmpDir string
-	var mainConfig string
-	const appConfig = `apps:
+const appConfig = `apps:
   - name: service-A
     spec:
       language: python
@@ -60,7 +48,7 @@ var _ = Describe("LoadConfig", func() {
         vars: # optional, use to render vars in template（valid only if the cd.type is template）
           app: service-A
 `
-	const toolConfig = `tools:
+const toolConfig = `tools:
   - name: plugin1
     instanceID: default
     options:
@@ -71,11 +59,11 @@ var _ = Describe("LoadConfig", func() {
       key1: value1
       key2: [[ var2 ]]
 `
-	const varConfig = `var2: value-of-var2
+const varConfig = `var2: value-of-var2
 var3: dockerhub-overwrite
 argocdNamespace: argocd
 `
-	const templateConfig = `pipelineTemplates:
+const templateConfig = `pipelineTemplates:
   - name: ci-pipeline-1
     type: github-actions # corresponding to a plugin
     options:
@@ -98,19 +86,31 @@ argocdNamespace: argocd
         path: helm/[[ app ]]
         repoURL: ${{repo-scaffolding.myapp.outputs.repoURL}}
 `
-	var (
-		state = &configmanager.State{
-			Backend: "local",
-			Options: configmanager.StateConfigOptions{
-				StateFile: "devstream.state",
-			},
-		}
 
-		expectedConfig = &configmanager.Config{
-			PluginDir: pluginDir,
-			State:     state,
-		}
-	)
+const (
+	mainConfigFile = "config.yaml"
+	varFile        = "var.yaml"
+	toolFile       = "tool.yaml"
+	appFile        = "app.yaml"
+	templateFile   = "template.yaml"
+	pluginDir      = "./plugins"
+)
+
+var _ = Describe("LoadConfig", func() {
+	var tmpDir string
+	var mainConfig string
+	var state = &configmanager.State{
+		Backend: "local",
+		Options: configmanager.StateConfigOptions{
+			StateFile: "devstream.state",
+		},
+	}
+
+	var expectedConfig = &configmanager.Config{
+		PluginDir: pluginDir,
+		State:     state,
+	}
+
 	BeforeEach(func() {
 		// create files
 		tmpDir = GinkgoT().TempDir()
@@ -125,6 +125,7 @@ argocdNamespace: argocd
 			Expect(err).Should(Succeed())
 		}
 	})
+
 	When("only with config file", func() {
 		BeforeEach(func() {
 			mainConfig = fmt.Sprintf(`# main config
@@ -271,6 +272,7 @@ var1: value-of-var1 # var1 is a global var
 			Expect(config.Tools[4]).Should(Equal(expectedTools5))
 		})
 	})
+
 	When("global file and configFile all has config", func() {
 		BeforeEach(func() {
 			mainConfig = fmt.Sprintf(`# main config
@@ -306,6 +308,7 @@ tools:
 			Expect(len(config.Tools)).Should(Equal(4))
 		})
 	})
+
 	When("with global config", func() {
 		BeforeEach(func() {
 			mainConfig = `
@@ -397,7 +400,6 @@ tools:
 			Expect(len(config.Tools)).Should(Equal(3))
 		})
 	})
-
 })
 
 var _ = Describe("Manager struct", func() {
@@ -434,6 +436,7 @@ tools:
 				Expect(err.Error()).Should(ContainSubstring("no such file or directory"))
 			})
 		})
+
 		When("GetGlobalVars failed", func() {
 			BeforeEach(func() {
 				err := os.WriteFile(fLoc, []byte(`
@@ -449,6 +452,7 @@ state:
 				Expect(err).Error().Should(HaveOccurred())
 			})
 		})
+
 		When("GetTools failed", func() {
 			BeforeEach(func() {
 				err := os.WriteFile(fLoc, []byte(`
@@ -464,6 +468,7 @@ state:
 				Expect(err).Error().Should(HaveOccurred())
 			})
 		})
+
 		When("getApps failed", func() {
 			BeforeEach(func() {
 				err := os.WriteFile(fLoc, []byte(`
