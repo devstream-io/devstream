@@ -7,15 +7,17 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/cifile"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/cifile/server"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/step"
+	"github.com/devstream-io/devstream/pkg/util/downloader"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
 var _ = Describe("PipelineConfig struct", func() {
 	var (
-		a                                            *PipelineConfig
-		imageRepoURL, user, repoName, configLocation string
-		r                                            *git.RepoInfo
-		ciType                                       server.CIServerType
+		a                            *PipelineConfig
+		imageRepoURL, user, repoName string
+		configLocation               downloader.ResourceLocation
+		r                            *git.RepoInfo
+		ciType                       server.CIServerType
 	)
 	BeforeEach(func() {
 		imageRepoURL = "exmaple.com"
@@ -56,7 +58,7 @@ var _ = Describe("PipelineConfig struct", func() {
 				"DingTalkSecretKey":   "DINGTALK_SECURITY_VALUE",
 				"DingTalkSecretToken": "DINGTALK_SECURITY_TOKEN",
 				"StepGlobalVars":      "",
-				"configLocation":      "123/workflows",
+				"configLocation":      downloader.ResourceLocation("123/workflows"),
 				"sonarqube":           nilStepConfig,
 				"GitlabConnectionID":  "gitlabConnection",
 			}
@@ -69,7 +71,7 @@ var _ = Describe("PipelineConfig struct", func() {
 		var emptyDingtalk *step.DingtalkStepConfig
 		var emptySonar *step.SonarQubeStepConfig
 		Expect(varMap).Should(Equal(cifile.CIFileVarsMap{
-			"configLocation":        "123/workflows",
+			"configLocation":        downloader.ResourceLocation("123/workflows"),
 			"DingTalkSecretToken":   "DINGTALK_SECURITY_TOKEN",
 			"ImageRepoSecret":       "IMAGE_REPO_SECRET",
 			"ImageRepoDockerSecret": "image-repo-auth",

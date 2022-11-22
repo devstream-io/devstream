@@ -7,6 +7,7 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/cifile/server"
+	"github.com/devstream-io/devstream/pkg/util/downloader"
 )
 
 var _ = Describe("Options struct", func() {
@@ -116,7 +117,7 @@ var _ = Describe("Options struct", func() {
 			BeforeEach(func() {
 				localFilePath = "not_exist"
 				c.ConfigContentMap = map[string]string{}
-				c.ConfigLocation = localFilePath
+				c.ConfigLocation = downloader.ResourceLocation(localFilePath)
 			})
 			It("should return error", func() {
 				_, err := c.getConfigContentFromLocation()
@@ -133,7 +134,7 @@ var _ = Describe("Options struct", func() {
 				err = os.WriteFile(localFilePath.Name(), testContent, 0755)
 				Expect(err).Error().ShouldNot(HaveOccurred())
 				c.ConfigContentMap = map[string]string{}
-				c.ConfigLocation = localFilePath.Name()
+				c.ConfigLocation = downloader.ResourceLocation(localFilePath.Name())
 			})
 			It("should return error", func() {
 				gitMap, err := c.getConfigContentFromLocation()

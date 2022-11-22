@@ -8,15 +8,17 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/cifile"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/cifile/server"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/step"
+	"github.com/devstream-io/devstream/pkg/util/downloader"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
 var _ = Describe("action struct", func() {
 	var (
-		a                                            *ci.PipelineConfig
-		imageRepoURL, user, repoName, configLocation string
-		r                                            *git.RepoInfo
-		ciType                                       server.CIServerType
+		a                            *ci.PipelineConfig
+		imageRepoURL, user, repoName string
+		configLocation               downloader.ResourceLocation
+		r                            *git.RepoInfo
+		ciType                       server.CIServerType
 	)
 	BeforeEach(func() {
 		imageRepoURL = "exmaple.com"
@@ -57,7 +59,7 @@ var _ = Describe("action struct", func() {
 				"DingTalkSecretKey":   "DINGTALK_SECURITY_VALUE",
 				"DingTalkSecretToken": "DINGTALK_SECURITY_TOKEN",
 				"StepGlobalVars":      "",
-				"configLocation":      "123/workflows",
+				"configLocation":      downloader.ResourceLocation("123/workflows"),
 				"sonarqube":           nilStepConfig,
 				"GitlabConnectionID":  "gitlabConnection",
 			}

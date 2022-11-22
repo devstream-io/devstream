@@ -75,3 +75,12 @@ func GetFileMap(
 		fileName: []byte(content),
 	}, nil
 }
+
+func CreateTempDir(dirPattern string) (string, error) {
+	tempDir, err := os.MkdirTemp("", dirPattern)
+	if err != nil {
+		log.Debugf("create tempDir %s failed: %+v", dirPattern, err)
+		return "", err
+	}
+	return tempDir, err
+}

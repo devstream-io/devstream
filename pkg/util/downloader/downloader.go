@@ -11,6 +11,7 @@ import (
 
 	"github.com/cheggaaa/pb"
 
+	"github.com/devstream-io/devstream/pkg/util/file"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -70,7 +71,7 @@ func (d *Downloader) Download(url, filename, targetDir string) (size int64, err 
 		if err != nil {
 			log.Debugf("download create file failed: %s", err)
 		}
-		err = removeFileIfExists(pluginTmpLocation)
+		err = file.RemoveFileIfExists(pluginTmpLocation)
 		if err != nil {
 			log.Debugf("download create file failed: %s", err)
 		}
@@ -180,11 +181,4 @@ func FetchContentFromURL(url string) ([]byte, error) {
 	}
 
 	return io.ReadAll(resp.Body)
-}
-
-func removeFileIfExists(filename string) error {
-	if _, err := os.Stat(filename); os.IsNotExist(err) {
-		return nil
-	}
-	return os.Remove(filename)
 }

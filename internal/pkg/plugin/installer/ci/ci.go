@@ -8,6 +8,7 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/cifile"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/cifile/server"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/step"
+	"github.com/devstream-io/devstream/pkg/util/downloader"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/mapz"
 	"github.com/devstream-io/devstream/pkg/util/scm"
@@ -15,11 +16,11 @@ import (
 )
 
 type PipelineConfig struct {
-	ConfigLocation string                    `mapstructure:"configLocation" validate:"required"`
-	ImageRepo      *step.ImageRepoStepConfig `mapstructure:"imageRepo"`
-	Dingtalk       *step.DingtalkStepConfig  `mapstructure:"dingTalk"`
-	Sonarqube      *step.SonarQubeStepConfig `mapstructure:"sonarqube"`
-	General        *step.GeneralStepConfig   `mapstructure:"general"`
+	ConfigLocation downloader.ResourceLocation `mapstructure:"configLocation" validate:"required"`
+	ImageRepo      *step.ImageRepoStepConfig   `mapstructure:"imageRepo"`
+	Dingtalk       *step.DingtalkStepConfig    `mapstructure:"dingTalk"`
+	Sonarqube      *step.SonarQubeStepConfig   `mapstructure:"sonarqube"`
+	General        *step.GeneralStepConfig     `mapstructure:"general"`
 }
 
 type CIConfig struct {
@@ -42,7 +43,7 @@ func NewCIOptions(options configmanager.RawOptions) (*CIConfig, error) {
 func (p *PipelineConfig) BuildCIFileConfig(ciType server.CIServerType, repoInfo *git.RepoInfo) *cifile.CIFileConfig {
 	CIFileConfig := &cifile.CIFileConfig{
 		Type:           ciType,
-		ConfigLocation: p.ConfigLocation,
+		ConfigLocation: downloader.ResourceLocation(p.ConfigLocation),
 	}
 	// update ci render variables by plugins
 	rawConfigVars := p.generateCIFileVars(repoInfo)

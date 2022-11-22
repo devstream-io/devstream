@@ -18,7 +18,7 @@ type CIFileVarsMap map[string]interface{}
 type CIFileConfig struct {
 	Type server.CIServerType `validate:"oneof=jenkins github gitlab" mapstructure:"type"`
 	// ConfigLocation represent location of ci config, it can be a remote location or local location
-	ConfigLocation string `validate:"required_without=ConfigContentMap" mapstructure:"configLocation"`
+	ConfigLocation downloader.ResourceLocation `validate:"required_without=ConfigContentMap" mapstructure:"configLocation"`
 	// Contents respent map of ci fileName to fileContent
 	ConfigContentMap CIFileConfigMap `validate:"required_without=ConfigLocation" mapstructure:"configContents"`
 	Vars             CIFileVarsMap   `mapstructure:"vars"`
@@ -75,15 +75,11 @@ func (c *CIFileConfig) renderContent(ciFileContent string) (string, error) {
 }
 func (c *CIFileConfig) getConfigContentFromLocation() (git.GitFileContentMap, error) {
 	// 1. get resource
-	getClient := downloader.ResourceClient{
-		Source: c.ConfigLocation,
-	}
 	log.Debugf("ci start to get config files [%s]...", c.ConfigLocation)
-	CIFileConfigPath, err := getClient.GetWithGoGetter()
+	CIFileConfigPath, err := c.ConfigLocation.Download()
 	if err != nil {
 		return nil, fmt.Errorf("ci get files by %s failed: %w", c.ConfigLocation, err)
 	}
-	defer getClient.CleanUp()
 	// 2. get ci content map from CIFileConfigPath
 	ciClient := c.newCIServerClient()
 	return file.GetFileMap(
