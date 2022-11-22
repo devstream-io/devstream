@@ -23,7 +23,7 @@
 
 ## 4 Config / State / ResourceStatus
 
-关于 _Config_ 、 _State_ 和 _ResourceStatus_ 的定义，见[核心概念](../core-concepts/core-concepts.zh.md)。
+关于 _Config_ 、 _State_ 和 _ResourceStatus_ 的定义，见[核心概念](../core-concepts/overview.zh.md)。
 
 `dtm verify` 尝试判断 _Config_ 是否与 _State_ 和 _ResourceStatus_ 匹配。如果不匹配，它会告诉你到底是什么不一样，以及如果你运行 `dtm apply` 会发生什么。
 

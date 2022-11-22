@@ -30,7 +30,7 @@ DevStream 在配置文件中定义了 DevOps 工具链。
 - `varFile`: 变量配置文件的路径
 - `toolFile`: 工具文件的路径
 - `pluginDir`: 插件目录的路径，默认为 `~/.devstream/plugins`, 或使用 `-d` 参数指定一个目录
-- `state`: 与 State 关联的设置。更多信息，请看[这里](./stateconfig.md)
+- `state`: 与 State 关联的设置。更多信息，请看[这里](./state.zh.md)
 
 变量配置文件是一个包含了键值对的YAML文件，可以用于工具配置文件。
 
