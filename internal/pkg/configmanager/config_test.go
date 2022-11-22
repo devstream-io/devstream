@@ -22,7 +22,7 @@ var _ = Describe("Config struct", func() {
 	})
 })
 
-var _ = Describe("GetRawConfigFromFile func", func() {
+var _ = Describe("getRawConfigFromFile func", func() {
 	var (
 		fLoc    string
 		baseDir string
@@ -38,7 +38,7 @@ var _ = Describe("GetRawConfigFromFile func", func() {
 			fLoc = "not_exist"
 		})
 		It("should return err", func() {
-			_, err := GetRawConfigFromFile(fLoc)
+			_, err := getRawConfigFromFile(fLoc)
 			Expect(err).Error().Should(HaveOccurred())
 			Expect(err.Error()).Should(ContainSubstring("no such file or directory"))
 		})
@@ -49,22 +49,22 @@ var _ = Describe("GetRawConfigFromFile func", func() {
 			Expect(err).Error().ShouldNot(HaveOccurred())
 		})
 		It("should return err", func() {
-			_, err := GetRawConfigFromFile(fLoc)
+			_, err := getRawConfigFromFile(fLoc)
 			Expect(err).Error().Should(HaveOccurred())
 			Expect(err.Error()).Should(ContainSubstring("cannot unmarshal"))
 		})
 	})
 })
 
-var _ = Describe("RawConfig struct", func() {
+var _ = Describe("rawConfig struct", func() {
 	var (
-		r          *RawConfig
+		r          *rawConfig
 		baseDir    string
 		fLoc       string
 		globalVars map[string]any
 	)
 	BeforeEach(func() {
-		r = &RawConfig{}
+		r = &rawConfig{}
 		baseDir = GinkgoT().TempDir()
 		f, err := os.CreateTemp(baseDir, "test")
 		Expect(err).Error().ShouldNot(HaveOccurred())
