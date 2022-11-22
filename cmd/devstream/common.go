@@ -1,7 +1,7 @@
 package main
 
 var (
-	configFile       string
+	configFilePath   string
 	pluginDir        string
 	continueDirectly bool
 )

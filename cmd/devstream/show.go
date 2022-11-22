@@ -51,7 +51,7 @@ func showConfigCMDFunc(_ *cobra.Command, _ []string) {
 
 func showStatusCMDFunc(_ *cobra.Command, _ []string) {
 	log.Debug("Show status information.")
-	if err := status.Show(configFile); err != nil {
+	if err := status.Show(configFilePath); err != nil {
 		log.Fatal(err)
 	}
 }
@@ -68,6 +68,6 @@ func init() {
 	showStatusCMD.Flags().StringVarP(&instanceID, "id", "i", "", "specify id with the plugin instance")
 	showStatusCMD.Flags().BoolVarP(&statusAllFlag, "all", "a", false, "show all instances of all plugins status")
 	showStatusCMD.Flags().StringVarP(&pluginDir, "plugin-dir", "d", "", "plugins directory")
-	showStatusCMD.Flags().StringVarP(&configFile, "config-file", "f", "config.yaml", "config file")
+	showStatusCMD.Flags().StringVarP(&configFilePath, "config-file", "f", "config.yaml", "config file")
 	completion.FlagPluginsCompletion(showStatusCMD, "plugin")
 }

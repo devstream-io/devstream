@@ -22,7 +22,7 @@ var _ = Describe("Config struct", func() {
 	})
 })
 
-var _ = Describe("newRawConfig func", func() {
+var _ = Describe("GetRawConfigFromFile func", func() {
 	var (
 		fLoc    string
 		baseDir string
@@ -38,7 +38,7 @@ var _ = Describe("newRawConfig func", func() {
 			fLoc = "not_exist"
 		})
 		It("should return err", func() {
-			_, err := newRawConfig(fLoc)
+			_, err := GetRawConfigFromFile(fLoc)
 			Expect(err).Error().Should(HaveOccurred())
 			Expect(err.Error()).Should(ContainSubstring("no such file or directory"))
 		})
@@ -49,7 +49,7 @@ var _ = Describe("newRawConfig func", func() {
 			Expect(err).Error().ShouldNot(HaveOccurred())
 		})
 		It("should return err", func() {
-			_, err := newRawConfig(fLoc)
+			_, err := GetRawConfigFromFile(fLoc)
 			Expect(err).Error().Should(HaveOccurred())
 			Expect(err.Error()).Should(ContainSubstring("cannot unmarshal"))
 		})
@@ -71,13 +71,13 @@ var _ = Describe("RawConfig struct", func() {
 		fLoc = f.Name()
 		globalVars = map[string]any{}
 	})
-	Context("getGlobalVars method", func() {
+	Context("GetGlobalVars method", func() {
 		When("varFile get content failed", func() {
 			BeforeEach(func() {
 				r.VarFile = "not_exist"
 			})
 			It("should return err", func() {
-				_, err := r.getGlobalVars()
+				_, err := r.GetGlobalVars()
 				Expect(err).Error().Should(HaveOccurred())
 				Expect(err.Error()).Should(ContainSubstring("not exists"))
 			})
@@ -89,7 +89,7 @@ var _ = Describe("RawConfig struct", func() {
 				Expect(err).Error().ShouldNot(HaveOccurred())
 			})
 			It("should return err", func() {
-				_, err := r.getGlobalVars()
+				_, err := r.GetGlobalVars()
 				Expect(err).Error().Should(HaveOccurred())
 				Expect(err.Error()).Should(ContainSubstring("cannot unmarshal"))
 			})
@@ -102,7 +102,7 @@ var _ = Describe("RawConfig struct", func() {
 				r.AppFile = "not_exist"
 			})
 			It("should return err", func() {
-				_, err := r.getAppsTools(globalVars)
+				_, err := r.GetToolsFromApps(globalVars)
 				Expect(err).Error().Should(HaveOccurred())
 				Expect(err.Error()).Should(ContainSubstring("not exists"))
 			})
@@ -114,20 +114,20 @@ var _ = Describe("RawConfig struct", func() {
 				r.AppFile = configFileLoc(fLoc)
 			})
 			It("should return err", func() {
-				_, err := r.getAppsTools(globalVars)
+				_, err := r.GetToolsFromApps(globalVars)
 				Expect(err).Error().Should(HaveOccurred())
 				Expect(err.Error()).Should(ContainSubstring("yaml parse path[$.apps[*]] failed"))
 			})
 		})
 	})
 
-	Context("getTools method", func() {
+	Context("GetTools method", func() {
 		When("toolsFile get content failed", func() {
 			BeforeEach(func() {
 				r.ToolFile = "not_exist"
 			})
 			It("should return err", func() {
-				_, err := r.getTools(globalVars)
+				_, err := r.GetTools(globalVars)
 				Expect(err).Error().Should(HaveOccurred())
 				Expect(err.Error()).Should(ContainSubstring("not exists"))
 			})
@@ -139,7 +139,7 @@ var _ = Describe("RawConfig struct", func() {
 				r.ToolFile = configFileLoc(fLoc)
 			})
 			It("should return err", func() {
-				_, err := r.getTools(globalVars)
+				_, err := r.GetTools(globalVars)
 				Expect(err).Error().Should(HaveOccurred())
 				Expect(err.Error()).Should(ContainSubstring("yaml parse path[$.tools[*]] failed"))
 			})
@@ -147,7 +147,7 @@ var _ = Describe("RawConfig struct", func() {
 		When("render failed", func() {
 			BeforeEach(func() {
 				r.ToolFile = ""
-				r.globalBytes = []byte(`
+				r.totalConfigBytes = []byte(`
 tools:
   - name: plugin1
     instanceID: default
@@ -155,14 +155,14 @@ tools:
       key1: [[ var1 ]]`)
 			})
 			It("should return err", func() {
-				_, err := r.getTools(globalVars)
+				_, err := r.GetTools(globalVars)
 				Expect(err).Error().Should(HaveOccurred())
 			})
 		})
 		When("yaml render failed", func() {
 			BeforeEach(func() {
 				r.ToolFile = ""
-				r.globalBytes = []byte(`
+				r.totalConfigBytes = []byte(`
 tools:
   - name: plugin1
     instanceID: default
@@ -170,7 +170,7 @@ tools:
       key1: {{}}`)
 			})
 			It("should return err", func() {
-				_, err := r.getTools(globalVars)
+				_, err := r.GetTools(globalVars)
 				Expect(err).Error().Should(HaveOccurred())
 				Expect(err.Error()).Should(ContainSubstring("unexpected mapping key"))
 			})
@@ -178,7 +178,7 @@ tools:
 		When("tool validate failed", func() {
 			BeforeEach(func() {
 				r.ToolFile = ""
-				r.globalBytes = []byte(`
+				r.totalConfigBytes = []byte(`
 tools:
 - name: plugin1
   instanceID: default
@@ -190,7 +190,7 @@ tools:
 				}
 			})
 			It("should return err", func() {
-				_, err := r.getTools(globalVars)
+				_, err := r.GetTools(globalVars)
 				Expect(err).Error().Should(HaveOccurred())
 				Expect(err.Error()).Should(ContainSubstring("tool default's dependency not_exist doesn't exist"))
 			})
@@ -212,7 +212,7 @@ tools:
 		When("getMergedNodeConfig failed", func() {
 			BeforeEach(func() {
 				r.TemplateFile = ""
-				r.globalBytes = []byte(`
+				r.totalConfigBytes = []byte(`
 
 pipelineTemplates:
   - name: ci-pipeline-1

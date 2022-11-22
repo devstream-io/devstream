@@ -65,7 +65,7 @@ func initCMDFunc(_ *cobra.Command, _ []string) {
 }
 
 func GetPluginsAndPluginDirFromConfig() (tools []configmanager.Tool, pluginDir string, err error) {
-	cfg, err := configmanager.NewManager(configFile).LoadConfig()
+	cfg, err := configmanager.NewManager(configFilePath).LoadConfig()
 	if err != nil {
 		return nil, "", err
 	}
@@ -125,7 +125,7 @@ func GetPluginsAndPluginDirFromFlags() (tools []configmanager.Tool, pluginDir st
 
 func init() {
 	// flags for init from config file
-	initCMD.Flags().StringVarP(&configFile, configFlagName, "f", "config.yaml", "config file")
+	initCMD.Flags().StringVarP(&configFilePath, configFlagName, "f", "config.yaml", "config file")
 	initCMD.Flags().StringVarP(&pluginDir, pluginDirFlagName, "d", "", "plugins directory")
 
 	// downloading specific plugins from flags

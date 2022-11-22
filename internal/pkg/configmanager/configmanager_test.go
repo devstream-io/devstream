@@ -420,13 +420,13 @@ tools:
       key1: test
 		`), 0666)
 		Expect(err).Error().ShouldNot(HaveOccurred())
-		m.ConfigFile = fLoc
+		m.ConfigFilePath = fLoc
 	})
 
 	Context("LoadConfig method", func() {
 		When("get RawConfig failed", func() {
 			BeforeEach(func() {
-				m.ConfigFile = "not_exist"
+				m.ConfigFilePath = "not_exist"
 			})
 			It("should return error", func() {
 				_, err := m.LoadConfig()
@@ -434,7 +434,7 @@ tools:
 				Expect(err.Error()).Should(ContainSubstring("no such file or directory"))
 			})
 		})
-		When("getGlobalVars failed", func() {
+		When("GetGlobalVars failed", func() {
 			BeforeEach(func() {
 				err := os.WriteFile(fLoc, []byte(`
 varFile: not_exist
@@ -449,7 +449,7 @@ state:
 				Expect(err).Error().Should(HaveOccurred())
 			})
 		})
-		When("getTools failed", func() {
+		When("GetTools failed", func() {
 			BeforeEach(func() {
 				err := os.WriteFile(fLoc, []byte(`
 toolFile: not_exist
