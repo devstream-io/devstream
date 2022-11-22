@@ -32,7 +32,7 @@ There are a few different configs, but please don't be overwhelmed because some 
 Configurations in the main config:
 
 - `pluginDir`: the directory where DevStream plugins are stored, defaults to `~/.devstream/plugins`. You can also use the `-d' flag to specify a directory.
-- `state`: state-related settings. Read more [here](./stateconfig.md).
+- `state`: state-related settings. Read more [here](./state.md).
 - `varFile`: the location of the variable file used by DevStream. The variable file is a YAML of key/values, which can be referred to in the toolFile/appFile/templateFile.
 - `toolFile`: the location of the tool file used by DevStream. The tool file is a list of DevStream _Tools_, each containing its name, instanceID (unique identifier), and options. Read more [here](./tools-apps.md).
 - `appFile`: the location of the app file used by DevStream. The app file is a list of _Apps_, another DevStream concept, each corresponding to a microservice. Read more [here](./tools-apps.md).

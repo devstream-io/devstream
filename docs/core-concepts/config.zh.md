@@ -97,7 +97,7 @@ tools:
 
 从v0.6.0开始，我们将支持`local`和`s3`两种存储。
 
-更多状态存储细节请参见[DevStream状态存储](./stateconfig.md)
+更多状态存储细节请参见[DevStream状态存储](./state.zh.md)
 
 ## 默认值
 

@@ -16,7 +16,7 @@ _Note: when creating the token, make sure you select "API" in the "scopes" secti
 
 The following content is an example of the "tool file".
 
-For more information on the main config, the tool file and the var file of DevStream, see [Core Concepts Overview](../core-concepts/core-concepts.md#1-config) and [DevStream Configuration](../core-concepts/config.md).
+For more information on the main config, the tool file and the var file of DevStream, see [Core Concepts Overview](../core-concepts/overview.md) and [DevStream Configuration](../core-concepts/config.md).
 
 Plugin config example:
 
