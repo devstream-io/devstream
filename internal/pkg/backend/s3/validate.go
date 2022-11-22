@@ -3,7 +3,6 @@ package s3
 import (
 	"fmt"
 
-	"github.com/devstream-io/devstream/internal/pkg/backend/types"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -23,7 +22,7 @@ func validate(bucket, region, key string) error {
 		for _, err := range errs {
 			log.Error(err)
 		}
-		return types.NewBackendOptionErr(types.S3)
+		return fmt.Errorf("s3 Backend config error")
 	}
 
 	return nil
