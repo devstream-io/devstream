@@ -11,7 +11,7 @@ As mentioned in the overview section, the main config contains many settings, li
 - `pluginDir`
 - `state`
 - `varFile`
-- `toolFile`[here](./tools-apps.md).
+- `toolFile`, see [here](./tools-apps.md).
 - `appFile`
 - `templateFile`
 
@@ -46,9 +46,7 @@ No default values are provided for `varFile` and `toolFile`. If `varFile` isn't 
 
 To not repeat yourself (Don't repeat yourself, DRY, see [here](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself),) we can define some variables in a var file and use the vars in the config file.
 
-The var file is a YAML file containing key-value pairs.
-
-_Note: at the moment, nested/composite values (for example, the value is a list/dictionary) are not supported yet._
+The var file is a YAML file containing key-value pairs, which can be nested/composite values (for example, the value is a list/dictionary).
 
 Example:
 
@@ -190,7 +188,7 @@ apps:
     scmType: github
     owner: devstream-io
     org: devstream-io # either owner or org must exist
-    name: service-A   # defaults to "name"
+    name: service-A   # defaults to "app.name"
     url: github.com/devstream-io/repo-name   # optional. if exists, no need for the scm/owner/org/name sections
     apiURL: gitlab.com/some/path/to/your/api # optional, in case of self-managed git
   repoTemplate:   # optional. if repoTemplate isn't empty, create repo according to the template
