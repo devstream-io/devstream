@@ -195,9 +195,9 @@ options:
 	})
 })
 
-var _ = Describe("appRaw struct", func() {
+var _ = Describe("RawApp struct", func() {
 	var (
-		a           *appRaw
+		a           *RawApp
 		appName     string
 		rawConfig   []pipelineRaw
 		templateMap map[string]string
@@ -211,7 +211,7 @@ var _ = Describe("appRaw struct", func() {
 		When("repoInfo is not config", func() {
 			BeforeEach(func() {
 				appName = "test"
-				a = &appRaw{
+				a = &RawApp{
 					Repo: &scm.SCMInfo{},
 					Name: appName,
 				}
