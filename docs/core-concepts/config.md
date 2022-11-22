@@ -2,6 +2,8 @@
 
 Now let's have a look at some config examples.
 
+TL;DR: see [the last section](./config.md#8-min-config) of this documentation.
+
 ---
 
 ## 1 The Main Config File
@@ -299,7 +301,7 @@ apps:
   repo:
     url: github.com/devstream-io/repo-name
   repoTemplate:
-    url: github.com/devstream-io/repo-name
+    url: github.com/devstream-io/dtm-scaffolding-python
   ci:
     - type: githubactions
   cd:
@@ -307,3 +309,34 @@ apps:
 ```
 
 In this example, we didn't use a var file, or template file, since they are optional and we don't need them in this example.
+
+## 8 Min Config
+
+Alternatively, you can merge multiple files into one to achieve a minimum config:
+
+```yaml
+---
+state:
+  backend: local
+  options:
+    stateFile: devstream.state
+---
+tools:
+- name: argocd
+  instanceID: default
+---
+serviceName: test-service
+apps:
+- name: [[ serviceName ]]
+  spec:
+    language: python
+    framework: django
+  repo:
+    url: github.com/devstream-io/[[ serviceName ]]
+  repoTemplate:
+    url: github.com/devstream-io/dtm-scaffolding-python
+  ci:
+    - type: githubactions
+  cd:
+    - type: argocdapp
+```
