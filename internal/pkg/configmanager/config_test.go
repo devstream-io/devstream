@@ -149,10 +149,10 @@ var _ = Describe("rawConfig struct", func() {
 				r.ToolFile = ""
 				r.totalConfigBytes = []byte(`
 tools:
-  - name: plugin1
-    instanceID: default
-    options:
-      key1: [[ var1 ]]`)
+- name: plugin1
+  instanceID: default
+  options:
+    key1: [[ var1 ]]`)
 			})
 			It("should return err", func() {
 				_, err := r.getToolsOutOfApps()
@@ -164,10 +164,10 @@ tools:
 				r.ToolFile = ""
 				r.totalConfigBytes = []byte(`
 tools:
-  - name: plugin1
-    instanceID: default
-    options:
-      key1: {{}}`)
+- name: plugin1
+  instanceID: default
+  options:
+    key1: {{}}`)
 			})
 			It("should return err", func() {
 				_, err := r.getToolsOutOfApps()

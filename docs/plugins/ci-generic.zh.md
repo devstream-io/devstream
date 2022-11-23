@@ -38,18 +38,18 @@
 
 ```yaml
 tools:
-  - name: ci-generic
-    instanceID: test-github
-    options:
-      ci:
-        configLocation: workflows
-        type: github
-      projectRepo:
-        owner: devstream
-        org: ""
-        repo: test-repo
-        branch: main
-        repoType: github
+- name: ci-generic
+  instanceID: test-github
+  options:
+    ci:
+      configLocation: workflows
+      type: github
+    projectRepo:
+      owner: devstream
+      org: ""
+      repo: test-repo
+      branch: main
+      repoType: github
 ```
 
 这个配置将会把本地当前运行环境下的 workflows 目录放置于 GitHub 的 `.github/workflows` 目录。
@@ -58,55 +58,53 @@ tools:
 
 ```yaml
 tools:
-  - name: ci-generic
-    instanceID: test-gitlab
-    options:
-      ci:
-        configLocation : https://raw.githubusercontent.com/DeekshithSN/Jenkinsfile/inputTest/Jenkinsfile
-        type: jenkins
-      projectRepo:
-        owner: root
-        org: ""
-        repo: test-repo
-        branch: main
-        repoType: gitlab
-        baseURL: http://127.0.0.1:30000
+- name: ci-generic
+  instanceID: test-gitlab
+  options:
+    ci:
+      configLocation : https://raw.githubusercontent.com/DeekshithSN/Jenkinsfile/inputTest/Jenkinsfile
+      type: jenkins
+    projectRepo:
+      owner: root
+      org: ""
+      repo: test-repo
+      branch: main
+      repoType: gitlab
+      baseURL: http://127.0.0.1:30000
 ```
 
 这个配置将会把[URL](https://raw.githubusercontent.com/DeekshithSN/Jenkinsfile/inputTest/Jenkinsfile) 中的 Jenkinsfile 文件置于 GitLab 的仓库。
 
-
-
 #### 使用Github仓库中的CI文件
 ```yaml
 tools:
-  - name: ci-generic
-    instanceID: test-gitlab
-    options:
-      ci:
-        configLocation : git@github.com:devstream-io/devstream.git//staging/dtm-jenkins-pipeline-example/general
-        type: jenkins
-      projectRepo:
-        owner: root
-        org: ""
-        repo: test-repo
-        branch: main
-        repoType: gitlab
-        baseURL: http://127.0.0.1:30000
+- name: ci-generic
+  instanceID: test-gitlab
+  options:
+    ci:
+      configLocation : git@github.com:devstream-io/devstream.git//staging/dtm-jenkins-pipeline-example/general
+      type: jenkins
+    projectRepo:
+      owner: root
+      org: ""
+      repo: test-repo
+      branch: main
+      repoType: gitlab
+      baseURL: http://127.0.0.1:30000
 ```
 
 这个配置将会搜索[devstream 仓库](https://github.com/devstream-io/devstream)下的staging/dtm-jenkins-pipeline-example/general 目录，获取到目录下的 Jenkinsfile，置于 gitlab 仓库内。
 
-
 #### 在Devstream中直接配置CI文件
+
 ```yaml
 tools:
-  - name: ci-generic
-    instanceID: test-gitlab
-    options:
-      ci:
-        configContents:
-          pr.yaml: |
+- name: ci-generic
+  instanceID: test-gitlab
+  options:
+    ci:
+      configContents:
+        pr.yaml: |
 name: GitHub Actions Demo
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: [push]

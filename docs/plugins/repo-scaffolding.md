@@ -102,21 +102,21 @@ These repos are official scaffolding repo to use for `sourceRepo` config, You ca
 
 ```yaml
 tools:
-  - name: repo-scaffolding
-    instanceID: golang-scaffolding
-    options:
-      destinationRepo:
-        owner: test_owner
-        org: ""
-        repo: dtm-test-golang
-        branch: main
-        repoType: github
-      sourceRepo:
-        org: devstream-io
-        repo: dtm-scaffolding-golang
-        repoType: github
-      vars:
-        ImageRepo: dtm-test/golang-repo
+- name: repo-scaffolding
+  instanceID: golang-scaffolding
+  options:
+    destinationRepo:
+      owner: test_owner
+      org: ""
+      repo: dtm-test-golang
+      branch: main
+      repoType: github
+    sourceRepo:
+      org: devstream-io
+      repo: dtm-scaffolding-golang
+      repoType: github
+    vars:
+      ImageRepo: dtm-test/golang-repo
 ```
 
 This config will create `dtm-test-golang` repo for user test_owner in GitHub, and the variable ImageRepo will be used for template render. 
@@ -125,19 +125,19 @@ This config will create `dtm-test-golang` repo for user test_owner in GitHub, an
 
 ```yaml
 tools:
-  - name: repo-scaffolding
-    instanceID: golang-cli-scaffolding
-    options:
-      destinationRepo:
-        owner: test_owner
-        org: ""
-        repo: dtm-test-golang-cli
-        branch: main
-        repoType: github
-      sourceRepo:
-        org: devstream-io
-        repo: dtm-scaffolding-golang-cli
-        repoType: github
+- name: repo-scaffolding
+  instanceID: golang-cli-scaffolding
+  options:
+    destinationRepo:
+      owner: test_owner
+      org: ""
+      repo: dtm-test-golang-cli
+      branch: main
+      repoType: github
+    sourceRepo:
+      org: devstream-io
+      repo: dtm-scaffolding-golang-cli
+      repoType: github
 ```
 
 This config will create `dtm-test-golang-cli` repo for user test_owner in GitHub.
@@ -146,21 +146,21 @@ This config will create `dtm-test-golang-cli` repo for user test_owner in GitHub
 
 ```yaml
 tools:
-  - name: repo-scaffolding
-    instanceID: java-scaffolding
-    options:
-      destinationRepo:
-        owner: test_owner
-        org: ""
-        repo: dtm-test-java
-        branch: main
-        baseUrl: 127.0.0.1:30001
-        visibility: public
-        repoType: gitlab
-      sourceRepo:
-        org: spring-guides
-        repo: gs-spring-boot
-        repoType: github
+- name: repo-scaffolding
+  instanceID: java-scaffolding
+  options:
+    destinationRepo:
+      owner: test_owner
+      org: ""
+      repo: dtm-test-java
+      branch: main
+      baseUrl: 127.0.0.1:30001
+      visibility: public
+      repoType: gitlab
+    sourceRepo:
+      org: spring-guides
+      repo: gs-spring-boot
+      repoType: github
 ```
 
 this config will create `dtm-test-java` repo for user test_owner in GitHub.

@@ -22,83 +22,83 @@ argocdDeployTimeout: 10m
 ---
 # plugins config
 tools:
-  - name: repo-scaffolding
-    instanceID: golang-github
-    options:
-      destinationRepo:
-        owner: [[ githubUsername ]]
-        org: ""
-        repo: [[ repoName ]]
-        branch: [[ defaultBranch ]]
-        repoType: github
-      sourceRepo:
-        org: devstream-io
-        repo: dtm-scaffolding-golang
-        repoType: github
-      vars:
-        ImageRepo: "[[ dockerhubUsername ]]/[[ repoName ]]"
-  - name: jira-github-integ
-    instanceID: default
-    dependsOn: [ "repo-scaffolding.golang-github" ]
-    options:
+- name: repo-scaffolding
+  instanceID: golang-github
+  options:
+    destinationRepo:
       owner: [[ githubUsername ]]
-      repo: [[ repoName ]]
-      jiraBaseUrl: https://[[ jiraID ]].atlassian.net
-      jiraUserEmail: [[ jiraUserEmail ]]
-      jiraProjectKey: [[ jiraProjectKey ]]
-      branch: main
-  - name: githubactions-golang
-    instanceID: default
-    dependsOn: [ "repo-scaffolding.golang-github" ]
-    options:
-      owner: ${{repo-scaffolding.golang-github.outputs.owner}}
       org: ""
-      repo: ${{repo-scaffolding.golang-github.outputs.repo}}
-      language:
-        name: go
-        version: "1.18"
+      repo: [[ repoName ]]
       branch: [[ defaultBranch ]]
-      build:
+      repoType: github
+    sourceRepo:
+      org: devstream-io
+      repo: dtm-scaffolding-golang
+      repoType: github
+    vars:
+      ImageRepo: "[[ dockerhubUsername ]]/[[ repoName ]]"
+- name: jira-github-integ
+  instanceID: default
+  dependsOn: [ "repo-scaffolding.golang-github" ]
+  options:
+    owner: [[ githubUsername ]]
+    repo: [[ repoName ]]
+    jiraBaseUrl: https://[[ jiraID ]].atlassian.net
+    jiraUserEmail: [[ jiraUserEmail ]]
+    jiraProjectKey: [[ jiraProjectKey ]]
+    branch: main
+- name: githubactions-golang
+  instanceID: default
+  dependsOn: [ "repo-scaffolding.golang-github" ]
+  options:
+    owner: ${{repo-scaffolding.golang-github.outputs.owner}}
+    org: ""
+    repo: ${{repo-scaffolding.golang-github.outputs.repo}}
+    language:
+      name: go
+      version: "1.18"
+    branch: [[ defaultBranch ]]
+    build:
+      enable: True
+      command: "go build ./..."
+    test:
+      enable: True
+      command: "go test ./..."
+      coverage:
         enable: True
-        command: "go build ./..."
-      test:
-        enable: True
-        command: "go test ./..."
-        coverage:
-          enable: True
-          profile: "-race -covermode=atomic"
-          output: "coverage.out"
-      docker:
-        enable: True
-        registry:
-          type: dockerhub
-          username: [[ dockerhubUsername ]]
-          repository: ${{repo-scaffolding.golang-github.outputs.repo}}
-  - name: argocd
-    instanceID: default
-    options:
-      repo:
-        name: argo
-        url: https://argoproj.github.io/argo-helm
-      chart:
-        chartPath: ""
-        chartName: argo/argo-cd
-        releaseName: argocd
-        namespace: [[ argocdNameSpace ]]
-        wait: true
-        timeout: [[ argocdDeployTimeout ]]
-        upgradeCRDs: true
-  - name: argocdapp
-    instanceID: default
-    dependsOn: ["argocd.default", "repo-scaffolding.golang-github"]
-    options:
-      app:
-        name: ${{repo-scaffolding.golang-github.outputs.repo}}
-        namespace: [[ argocdNameSpace ]]
-      destination:
-        server: https://kubernetes.default.svc
-        namespace: default
-      source:
-        valuefile: values.yaml
-        path: helm/${{repo-scaffolding.golang-github.outputs.repo}}
-        repoURL: ${{repo-scaffolding.golang-github.outputs.repoURL}}
+        profile: "-race -covermode=atomic"
+        output: "coverage.out"
+    docker:
+      enable: True
+      registry:
+        type: dockerhub
+        username: [[ dockerhubUsername ]]
+        repository: ${{repo-scaffolding.golang-github.outputs.repo}}
+- name: argocd
+  instanceID: default
+  options:
+    repo:
+      name: argo
+      url: https://argoproj.github.io/argo-helm
+    chart:
+      chartPath: ""
+      chartName: argo/argo-cd
+      releaseName: argocd
+      namespace: [[ argocdNameSpace ]]
+      wait: true
+      timeout: [[ argocdDeployTimeout ]]
+      upgradeCRDs: true
+- name: argocdapp
+  instanceID: default
+  dependsOn: ["argocd.default", "repo-scaffolding.golang-github"]
+  options:
+    app:
+      name: ${{repo-scaffolding.golang-github.outputs.repo}}
+      namespace: [[ argocdNameSpace ]]
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: default
+    source:
+      valuefile: values.yaml
+      path: helm/${{repo-scaffolding.golang-github.outputs.repo}}
+      repoURL: ${{repo-scaffolding.golang-github.outputs.repoURL}}

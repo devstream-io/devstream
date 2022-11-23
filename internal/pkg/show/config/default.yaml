@@ -12,19 +12,19 @@ state:
 
 # tools.yaml sample:
 tools:
-  - name: repo-scaffolding
-    instanceID: default
-    options:
-    destinationRepo:
-      owner: [[ githubUsername ]]
-      org: ""
-      repo: [[ repo ]]
-      branch: main
-      repoType: github
-    sourceRepo:
-      org: devstream-io
-      repo: dtm-scaffolding-golang
-      repoType: github
+- name: repo-scaffolding
+  instanceID: default
+  options:
+  destinationRepo:
+    owner: [[ githubUsername ]]
+    org: ""
+    repo: [[ repo ]]
+    branch: main
+    repoType: github
+  sourceRepo:
+    org: devstream-io
+    repo: dtm-scaffolding-golang
+    repoType: github
 
 # variables.yaml sample:
 githubUsername: daniel-hutao
