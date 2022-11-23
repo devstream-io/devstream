@@ -20,7 +20,7 @@ func Destroy(configFile string, continueDirectly bool, isForceDestroy bool) erro
 		return fmt.Errorf("failed to load the config file")
 	}
 
-	smgr, err := statemanager.NewManager(*cfg.State)
+	smgr, err := statemanager.NewManager(*cfg.Config.State)
 	if err != nil {
 		log.Debugf("Failed to get the manager: %s.", err)
 		return err

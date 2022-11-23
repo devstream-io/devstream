@@ -23,7 +23,7 @@ func Remove(configFile string, continueDirectly bool, isForceDelete bool) error 
 		return err
 	}
 
-	smgr, err := statemanager.NewManager(*cfg.State)
+	smgr, err := statemanager.NewManager(*cfg.Config.State)
 	if err != nil {
 		log.Debugf("Failed to get the manager: %s.", err)
 		return err

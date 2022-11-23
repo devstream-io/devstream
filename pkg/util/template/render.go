@@ -53,8 +53,6 @@ func DefaultRender(templateName string, vars any, funcMaps ...template.FuncMap) 
 	}
 }
 
-// Quick Calls
-
 func (r *rendererWithGetter) SetDefaultRender(templateName string, vars any, funcMaps ...template.FuncMap) *rendererWithRender {
 	return r.SetRender(DefaultRender(templateName, vars, funcMaps...))
 }

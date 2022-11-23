@@ -31,7 +31,7 @@ func resourceStatusFromState() map[string]interface{} {
 		panic(err)
 	}
 
-	smgr, err := statemanager.NewManager(*cfg.State)
+	smgr, err := statemanager.NewManager(*cfg.Config.State)
 	if err != nil {
 		panic(err)
 	}

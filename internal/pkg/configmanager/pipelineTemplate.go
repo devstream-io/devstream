@@ -95,12 +95,15 @@ func (p *pipelineRaw) newPipelineFromTemplate(templateMap map[string]string, glo
 	if err != nil {
 		return nil, fmt.Errorf("%s render pipelineTemplate failed: %+w", p.TemplateName, err)
 	}
+
 	if err := yaml.Unmarshal([]byte(templateRenderdStr), &t); err != nil {
 		return nil, fmt.Errorf("%s parse pipelineTemplate yaml failed: %+w", p.TemplateName, err)
 	}
+
 	if err := mergo.Merge(&p.Options, t.Options); err != nil {
 		return nil, fmt.Errorf("%s merge template options faield: %+v", p.TemplateName, err)
 	}
+
 	return &t, nil
 }
 
