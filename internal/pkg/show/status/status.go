@@ -35,7 +35,7 @@ func Show(configFile string) error {
 		return fmt.Errorf("failed to load the config file")
 	}
 
-	smgr, err := statemanager.NewManager(*cfg.State)
+	smgr, err := statemanager.NewManager(*cfg.Config.State)
 	if err != nil {
 		log.Debugf("Failed to get State Manager: %s.", err)
 		return err

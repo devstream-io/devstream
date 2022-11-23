@@ -3,10 +3,6 @@ package configmanager
 import (
 	"fmt"
 
-	"gopkg.in/yaml.v3"
-
-	"github.com/devstream-io/devstream/pkg/util/log"
-	"github.com/devstream-io/devstream/pkg/util/mapz"
 	"github.com/devstream-io/devstream/pkg/util/scm"
 )
 
@@ -14,7 +10,7 @@ const (
 	repoScaffoldingPluginName = "repo-scaffolding"
 )
 
-type rawApp struct {
+type app struct {
 	Name         string         `yaml:"name" mapstructure:"name"`
 	Spec         map[string]any `yaml:"spec" mapstructure:"spec"`
 	Repo         *scm.SCMInfo   `yaml:"repo" mapstructure:"repo"`
@@ -23,39 +19,8 @@ type rawApp struct {
 	CDRawConfigs []pipelineRaw  `yaml:"cd" mapstructure:"cd"`
 }
 
-// getToolsFromApp return app tools
-func getToolsFromApp(appStr string, globalVars map[string]any, templateMap map[string]string) (Tools, error) {
-	//1. render appStr with globalVars
-	appRenderStr, err := renderConfigWithVariables(appStr, globalVars)
-	if err != nil {
-		log.Debugf("configmanager/app %s render globalVars %+v failed", appRenderStr, globalVars)
-		return nil, fmt.Errorf("app render globalVars failed: %w", err)
-	}
-	// 2. unmarshal rawApp config for render pipelineTemplate
-	var rawData rawApp
-	if err := yaml.Unmarshal([]byte(appRenderStr), &rawData); err != nil {
-		return nil, fmt.Errorf("app parse yaml failed: %w", err)
-	}
-	rawData.setDefault()
-	appVars := mapz.Merge(globalVars, rawData.Spec)
-	// 3. generate app repo and tempalte repo from scmInfo
-	repoScaffoldingTool, err := rawData.getRepoTemplateTool(appVars)
-	if err != nil {
-		return nil, fmt.Errorf("app[%s] get repo failed: %w", rawData.Name, err)
-	}
-	// 4. get ci/cd pipelineTemplates
-	tools, err := rawData.generateCICDToolsFromAppConfig(templateMap, appVars)
-	if err != nil {
-		return nil, fmt.Errorf("app[%s] get pipeline tools failed: %w", rawData.Name, err)
-	}
-	if repoScaffoldingTool != nil {
-		tools = append(tools, *repoScaffoldingTool)
-	}
-	return tools, nil
-}
-
 // getAppPipelineTool generate ci/cd tools from app config
-func (a *rawApp) generateCICDToolsFromAppConfig(templateMap map[string]string, appVars map[string]any) (Tools, error) {
+func (a *app) generateCICDToolsFromAppConfig(templateMap map[string]string, appVars map[string]any) (Tools, error) {
 	allPipelineRaw := append(a.CIRawConfigs, a.CDRawConfigs...)
 	var tools Tools
 	for _, p := range allPipelineRaw {
@@ -74,7 +39,7 @@ func (a *rawApp) generateCICDToolsFromAppConfig(templateMap map[string]string, a
 }
 
 // getRepoTemplateTool will use repo-scaffolding plugin for app
-func (a *rawApp) getRepoTemplateTool(appVars map[string]any) (*Tool, error) {
+func (a *app) getRepoTemplateTool(appVars map[string]any) (*Tool, error) {
 	if a.Repo == nil {
 		return nil, fmt.Errorf("app.repo field can't be empty")
 	}
@@ -99,14 +64,14 @@ func (a *rawApp) getRepoTemplateTool(appVars map[string]any) (*Tool, error) {
 }
 
 // setDefault will set repoName to appName if repo.name field is empty
-func (a *rawApp) setDefault() {
+func (a *app) setDefault() {
 	if a.Repo != nil && a.Repo.Name == "" {
 		a.Repo.Name = a.Name
 	}
 }
 
 // since all plugin depends on code is deployed, get dependsOn for repoTemplate
-func (a *rawApp) getRepoTemplateDependants() []string {
+func (a *app) getRepoTemplateDependants() []string {
 	var dependsOn []string
 	// if a.RepoTemplate is configured, pipeline need to wait reposcaffolding finished
 	if a.RepoTemplate != nil {
