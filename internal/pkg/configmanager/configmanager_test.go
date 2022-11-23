@@ -93,7 +93,6 @@ const (
 	toolFile       = "tool.yaml"
 	appFile        = "app.yaml"
 	templateFile   = "template.yaml"
-	pluginDir      = "./plugins"
 )
 
 var _ = Describe("LoadConfig", func() {
@@ -107,8 +106,7 @@ var _ = Describe("LoadConfig", func() {
 	}
 
 	var expectedConfig = &configmanager.Config{
-		PluginDir: pluginDir,
-		State:     state,
+		State: state,
 	}
 
 	BeforeEach(func() {
@@ -133,7 +131,6 @@ varFile: %s
 toolFile: %s
 appFile: %s
 templateFile: %s
-pluginDir: %s
 state: # state config, backend can be local or s3
   backend: local
   options:
@@ -141,7 +138,7 @@ state: # state config, backend can be local or s3
 
 var1: value-of-var1 # var1 is a global var
 
-`, varFile, toolFile, appFile, templateFile, pluginDir)
+`, varFile, toolFile, appFile, templateFile)
 			err := os.WriteFile(filepath.Join(tmpDir, mainConfigFile), []byte(mainConfig), 0644)
 			Expect(err).Should(Succeed())
 		})
@@ -262,7 +259,6 @@ var1: value-of-var1 # var1 is a global var
 			config, err := manager.LoadConfig()
 			Expect(err).Should(Succeed())
 			Expect(config).ShouldNot(BeNil())
-			Expect(config.PluginDir).Should(Equal(expectedConfig.PluginDir))
 			Expect(config.State).Should(Equal(expectedConfig.State))
 			Expect(len(config.Tools)).Should(Equal(5))
 			Expect(config.Tools[0]).Should(Equal(expectedTools1))
@@ -277,7 +273,6 @@ var1: value-of-var1 # var1 is a global var
 		BeforeEach(func() {
 			mainConfig = fmt.Sprintf(`# main config
 toolFile: %s
-pluginDir: %s
 var1: test
 var2: test2
 state: # state config, backend can be local or s3
@@ -294,7 +289,7 @@ tools:
     options:
       key1: value1
       key2: [[ var2 ]]
-`, toolFile, pluginDir)
+`, toolFile)
 			err := os.WriteFile(filepath.Join(tmpDir, mainConfigFile), []byte(mainConfig), 0644)
 			Expect(err).Should(Succeed())
 		})
@@ -303,7 +298,6 @@ tools:
 			config, err := manager.LoadConfig()
 			Expect(err).Should(Succeed())
 			Expect(config).ShouldNot(BeNil())
-			Expect(config.PluginDir).Should(Equal(expectedConfig.PluginDir))
 			Expect(config.State).Should(Equal(expectedConfig.State))
 			Expect(len(config.Tools)).Should(Equal(4))
 		})
@@ -315,7 +309,6 @@ tools:
 ---
 varFile:
 toolFile:
-pluginDir: ""
 state:
   backend: local
   options:
@@ -396,7 +389,6 @@ tools:
 			config, err := manager.LoadConfig()
 			Expect(err).Should(Succeed())
 			Expect(config).ShouldNot(BeNil())
-			Expect(config.PluginDir).Should(Equal(""))
 			Expect(len(config.Tools)).Should(Equal(3))
 		})
 	})

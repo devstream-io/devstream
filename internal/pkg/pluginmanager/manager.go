@@ -105,7 +105,7 @@ func CheckLocalPlugins(tools []configmanager.Tool) error {
 		pluginMD5FileName := tool.GetPluginMD5FileName()
 		if _, err = os.Stat(filepath.Join(pluginDir, pluginFileName)); err != nil {
 			if errors.Is(err, os.ErrNotExist) {
-				return fmt.Errorf("plugin %s doesn't exist", tool.Name)
+				return fmt.Errorf("plugin %s(%s) doesn't exist", tool.Name, pluginFileName)
 			}
 			return err
 		}

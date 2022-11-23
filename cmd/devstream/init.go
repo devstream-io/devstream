@@ -119,7 +119,7 @@ func GetPluginsFromFlags() (tools []configmanager.Tool, err error) {
 func init() {
 	// flags for init from config file
 	initCMD.Flags().StringVarP(&configFilePath, configFlagName, "f", "config.yaml", "config file")
-	initCMD.Flags().StringVarP(&pluginDir, pluginDirFlagName, "d", "~/.devstream/plugins", "plugins directory")
+	initCMD.Flags().StringVarP(&pluginDir, pluginDirFlagName, "d", defaultPluginDir, "plugins directory")
 
 	// downloading specific plugins from flags
 	initCMD.Flags().BoolVar(&downloadOnly, "download-only", false, "download plugins only")

@@ -67,7 +67,7 @@ func init() {
 	showStatusCMD.Flags().StringVarP(&plugin, "plugin", "p", "", "specify name with the plugin")
 	showStatusCMD.Flags().StringVarP(&instanceID, "id", "i", "", "specify id with the plugin instance")
 	showStatusCMD.Flags().BoolVarP(&statusAllFlag, "all", "a", false, "show all instances of all plugins status")
-	showStatusCMD.Flags().StringVarP(&pluginDir, "plugin-dir", "d", "", "plugins directory")
+	showStatusCMD.Flags().StringVarP(&pluginDir, pluginDirFlagName, "d", defaultPluginDir, "plugins directory")
 	showStatusCMD.Flags().StringVarP(&configFilePath, "config-file", "f", "config.yaml", "config file")
 	completion.FlagPluginsCompletion(showStatusCMD, "plugin")
 }
