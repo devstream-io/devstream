@@ -437,7 +437,7 @@ tools:
 			})
 		})
 
-		When("GetGlobalVars failed", func() {
+		When("mergeGlobalVars failed", func() {
 			BeforeEach(func() {
 				err := os.WriteFile(fLoc, []byte(`
 varFile: not_exist
@@ -453,7 +453,7 @@ state:
 			})
 		})
 
-		When("GetTools failed", func() {
+		When("getToolsOutOfApps failed", func() {
 			BeforeEach(func() {
 				err := os.WriteFile(fLoc, []byte(`
 toolFile: not_exist

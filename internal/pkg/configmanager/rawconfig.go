@@ -1,9 +1,7 @@
 package configmanager
 
 import (
-	"bytes"
-	"errors"
-	"io"
+	"fmt"
 	"os"
 
 	"github.com/imdario/mergo"
@@ -11,88 +9,81 @@ import (
 	"gopkg.in/yaml.v3"
 
 	"github.com/devstream-io/devstream/pkg/util/file"
-	"github.com/devstream-io/devstream/pkg/util/log"
+)
+
+type fileType string
+
+const (
+	varFile      fileType = "varfile"
+	appFile      fileType = "appfile"
+	toolFile     fileType = "toolfile"
+	templateFile fileType = "templateFile"
 )
 
 // rawConfig is used to describe original raw configs read from files
 type rawConfig struct {
-	VarFile           configFileLoc `yaml:"varFile" mapstructure:"varFile"`
-	ToolFile          configFileLoc `yaml:"toolFile" mapstructure:"toolFile"`
-	AppFile           configFileLoc `yaml:"appFile" mapstructure:"appFile"`
-	TemplateFile      configFileLoc `yaml:"templateFile" mapstructure:"templateFile"`
-	PluginDir         string        `yaml:"pluginDir" mapstructure:"pluginDir"`
-	State             *State        `yaml:"state" mapstructure:"state"`
-	Apps              []RawOptions  `yaml:"apps"`
-	Tools             []RawOptions  `yaml:"tools"`
-	PipelineTemplates []RawOptions  `yaml:"pipelineTemplates"`
+	VarFile           string       `yaml:"varFile" mapstructure:"varFile"`
+	ToolFile          string       `yaml:"toolFile" mapstructure:"toolFile"`
+	AppFile           string       `yaml:"appFile" mapstructure:"appFile"`
+	TemplateFile      string       `yaml:"templateFile" mapstructure:"templateFile"`
+	PluginDir         string       `yaml:"pluginDir" mapstructure:"pluginDir"`
+	State             *State       `yaml:"state" mapstructure:"state"`
+	Apps              []RawOptions `yaml:"apps"`
+	Tools             []RawOptions `yaml:"tools"`
+	PipelineTemplates []RawOptions `yaml:"pipelineTemplates"`
 
 	GlobalVars        map[string]any `yaml:"-" mapstructure:",remain"`
 	configFileBaseDir string         `mapstructure:"-"`
 	totalConfigBytes  []byte         `mapstructure:"-"`
 }
 
-// getRawConfigFromFile generate new rawConfig options
-func getRawConfigFromFile(configFilePath string) (*rawConfig, error) {
-	// 1. get baseDir from configFile
-	baseDir, err := file.GetFileAbsDirPath(configFilePath)
+// getAllTools will return the tools transfer from apps and out of apps.
+func (r *rawConfig) getAllTools() (Tools, error) {
+	// 1. get all globals vars
+	err := r.mergeGlobalVars()
 	if err != nil {
 		return nil, err
 	}
 
-	// 2. read the original main config file
-	configBytes, err := os.ReadFile(configFilePath)
+	// 2. get Tools from Apps
+	appTools, err := r.getToolsFromApps()
 	if err != nil {
 		return nil, err
 	}
 
-	// TODO(daniel-hutao): We should change the documents to delete all "---" with config file. After a while, delete the following line of code, or prompt the user with "This is the wrong way" when "---" be detected
-
-	// replace all "---", otherwise yaml.Unmarshal can only read the content before the first "---"
-	configBytes = bytes.Replace(configBytes, []byte("---"), []byte("\n"), -1)
-
-	// 3. decode total yaml files to get rawConfig
-	var rawConfig rawConfig
-	if err := yaml.Unmarshal(configBytes, &rawConfig); err != nil && !errors.Is(err, io.EOF) {
-		log.Errorf("Please verify the format of your config. Error: %s.", err)
+	// 3. get Tools out of apps
+	tools, err := r.getToolsOutOfApps()
+	if err != nil {
 		return nil, err
 	}
 
-	rawConfig.configFileBaseDir = baseDir
-	rawConfig.totalConfigBytes = configBytes
-	return &rawConfig, nil
+	tools = append(tools, appTools...)
+	return tools, nil
 }
 
-// GetGlobalVars will get global variables from GlobalVars field and varFile content
-func (r *rawConfig) GetGlobalVars() (map[string]any, error) {
-	valueContent, err := r.VarFile.getContentBytes(r.configFileBaseDir)
+// mergeGlobalVars will merge the global vars from varFile and rawConfig, then merge it to rawConfig.GlobalVars
+func (r *rawConfig) mergeGlobalVars() error {
+	valueContent, err := r.getFileBytes(varFile)
 	if err != nil {
-		return nil, err
-	}
-	globalVars := make(map[string]any)
-	if err := yaml.Unmarshal(valueContent, globalVars); err != nil {
-		return nil, err
-	}
-	if err := mergo.Merge(&globalVars, r.GlobalVars); err != nil {
-		return nil, err
-	}
-	return globalVars, nil
-}
-
-// UnmarshalYAML is used for rawConfig
-// it will put variables fields in globalVars field
-func (r *rawConfig) UnmarshalYAML(value *yaml.Node) error {
-	configMap := make(map[string]any)
-	if err := value.Decode(configMap); err != nil {
 		return err
 	}
-	return mapstructure.Decode(configMap, r)
+
+	globalVars := make(map[string]any)
+	if err = yaml.Unmarshal(valueContent, globalVars); err != nil {
+		return err
+	}
+
+	if err = mergo.Merge(&(r.GlobalVars), globalVars); err != nil {
+		return err
+	}
+	return nil
 }
 
-// GetToolsFromApps will get Tools from rawConfig.totalConfigBytes config
-func (r *rawConfig) GetToolsFromApps(globalVars map[string]any) (Tools, error) {
+// getToolsFromApps will get Tools from rawConfig.totalConfigBytes config
+func (r *rawConfig) getToolsFromApps() (Tools, error) {
 	// 1. get tools config str
 	yamlPath := "$.apps[*]"
-	appFileBytes, err := r.AppFile.getContentBytes(r.configFileBaseDir)
+	appFileBytes, err := r.getFileBytes(appFile)
 	if err != nil {
 		return nil, err
 	}
@@ -111,7 +102,7 @@ func (r *rawConfig) GetToolsFromApps(globalVars map[string]any) (Tools, error) {
 	// 3. render app with pipelineTemplate and globalVars
 	var tools Tools
 	for _, appConfigStr := range appArray {
-		appTools, err := getToolsFromApp(appConfigStr, globalVars, templateMap)
+		appTools, err := getToolsFromApp(appConfigStr, r.GlobalVars, templateMap)
 		if err != nil {
 			return nil, err
 		}
@@ -120,11 +111,11 @@ func (r *rawConfig) GetToolsFromApps(globalVars map[string]any) (Tools, error) {
 	return tools, nil
 }
 
-// GetTools get Tools from tool config
-func (r *rawConfig) GetTools(globalVars map[string]any) (Tools, error) {
+// getToolsOutOfApps get Tools from tool config
+func (r *rawConfig) getToolsOutOfApps() (Tools, error) {
 	// 1. get tools config str
 	yamlPath := "$.tools[*]"
-	fileBytes, err := r.ToolFile.getContentBytes(r.configFileBaseDir)
+	fileBytes, err := r.getFileBytes(toolFile)
 	if err != nil {
 		return nil, err
 	}
@@ -134,7 +125,7 @@ func (r *rawConfig) GetTools(globalVars map[string]any) (Tools, error) {
 	}
 
 	// 2. render config str with global variables
-	toolsWithRenderdStr, err := renderConfigWithVariables(toolStr, globalVars)
+	toolsWithRenderdStr, err := renderConfigWithVariables(toolStr, r.GlobalVars)
 	if err != nil {
 		return nil, err
 	}
@@ -155,7 +146,7 @@ func (r *rawConfig) GetTools(globalVars map[string]any) (Tools, error) {
 // getPipelineTemplatesMap generate template name/rawString map
 func (r *rawConfig) getPipelineTemplatesMap() (map[string]string, error) {
 	yamlPath := "$.pipelineTemplates[*]"
-	fileBytes, err := r.TemplateFile.getContentBytes(r.configFileBaseDir)
+	fileBytes, err := r.getFileBytes(templateFile)
 	if err != nil {
 		return nil, err
 	}
@@ -174,23 +165,45 @@ func (r *rawConfig) getPipelineTemplatesMap() (map[string]string, error) {
 	return templateMap, nil
 }
 
-// configFileLoc is configFile location
-type configFileLoc string
+func (r *rawConfig) getFileBytes(fType fileType) ([]byte, error) {
+	switch fType {
+	case varFile:
+		return getFileBytesInSpecificDir(r.VarFile, r.configFileBaseDir)
+	case appFile:
+		return getFileBytesInSpecificDir(r.AppFile, r.configFileBaseDir)
+	case toolFile:
+		return getFileBytesInSpecificDir(r.ToolFile, r.configFileBaseDir)
+	case templateFile:
+		return getFileBytesInSpecificDir(r.TemplateFile, r.configFileBaseDir)
+	default:
+		return nil, fmt.Errorf("not likely to happen")
+	}
+}
 
-// getContentBytes get file content with abs path for configFile
-func (f configFileLoc) getContentBytes(baseDir string) ([]byte, error) {
+// UnmarshalYAML is used for rawConfig
+// it will put variables fields in globalVars field
+func (r *rawConfig) UnmarshalYAML(value *yaml.Node) error {
+	configMap := make(map[string]any)
+	if err := value.Decode(configMap); err != nil {
+		return err
+	}
+	return mapstructure.Decode(configMap, r)
+}
+
+// getFileBytesInSpecificDir get file content with abs path for configFile
+func getFileBytesInSpecificDir(filePath, baseDir string) ([]byte, error) {
 	// if configFile is not setted, return empty content
-	if string(f) == "" {
+	if filePath == "" {
 		return []byte{}, nil
 	}
 
 	// refer other config file path by directory of main config file
-	fileAbs, err := file.GenerateAbsFilePath(baseDir, string(f))
+	fileAbsPath, err := file.GenerateAbsFilePath(baseDir, filePath)
 	if err != nil {
 		return nil, err
 	}
 
-	fileBytes, err := os.ReadFile(fileAbs)
+	fileBytes, err := os.ReadFile(fileAbsPath)
 	if err != nil {
 		return nil, err
 	}
