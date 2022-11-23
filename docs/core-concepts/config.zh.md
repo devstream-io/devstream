@@ -21,11 +21,7 @@ DevStream使用YAML文件来描述你的DevOps工具链配置。
 
 ```yaml
 varFile: variables.yaml
-
 toolFile: tools.yaml
-
-pluginDir: /usr/local/devstream/plugins # 可选
-
 state:
   backend: local
   options:

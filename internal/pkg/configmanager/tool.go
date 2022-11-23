@@ -36,7 +36,7 @@ func newTool(name, instanceID string, options RawOptions) *Tool {
 		options = make(RawOptions)
 	}
 	// set instanceID to options
-	options["instanceID"] = interface{}(instanceID)
+	options["instanceID"] = instanceID
 
 	return &Tool{
 		Name:       name,

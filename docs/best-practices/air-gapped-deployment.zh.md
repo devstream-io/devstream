@@ -290,7 +290,6 @@ harbor-1.10.0.tgz jenkins-4.2.5.tgz
     ```yaml title="local Backend"
     varFile: "" # If not empty, use the specified external variables config file
     toolFile: "" # If not empty, use the specified external tools config file
-    pluginDir: "./plugins" # If empty, use the default value: ~/.devstream/plugins, or use -d flag to specify a directory
     state: # state config, backend can be local, s3 or k8s
       backend: local
       options:
@@ -302,7 +301,6 @@ harbor-1.10.0.tgz jenkins-4.2.5.tgz
     ```yaml title="k8s Backend"
     varFile: "" # If not empty, use the specified external variables config file
     toolFile: "" # If not empty, use the specified external tools config file
-    pluginDir: "./plugins" # If empty, use the default value: ~/.devstream/plugins, or use -d flag to specify a directory
     state: # state config, backend can be local, s3 or k8s
       backend: k8s
       options:
@@ -330,7 +328,6 @@ harborURL: harbor.example.com
 # core config
 varFile: "" # If not empty, use the specified external variables config file
 toolFile: "" # If not empty, use the specified external tools config file
-pluginDir: "./plugins" # If empty, use the default value: ~/.devstream/plugins, or use -d flag to specify a directory
 state: # state config, backend can be local, s3 or k8s
   backend: k8s
   options:

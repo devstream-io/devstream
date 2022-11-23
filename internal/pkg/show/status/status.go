@@ -35,10 +35,6 @@ func Show(configFile string) error {
 		return fmt.Errorf("failed to load the config file")
 	}
 
-	if err = pluginengine.SetPluginDir(cfg.PluginDir); err != nil {
-		log.Errorf("Error: %s.", err)
-	}
-
 	smgr, err := statemanager.NewManager(*cfg.State)
 	if err != nil {
 		log.Debugf("Failed to get State Manager: %s.", err)

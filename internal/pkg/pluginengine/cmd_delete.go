@@ -17,10 +17,6 @@ func Remove(configFile string, continueDirectly bool, isForceDelete bool) error 
 		return err
 	}
 
-	if err = SetPluginDir(cfg.PluginDir); err != nil {
-		log.Errorf("Error: %s.", err)
-	}
-
 	err = pluginmanager.CheckLocalPlugins(cfg.Tools)
 	if err != nil {
 		log.Errorf(`Error checking required plugins. Maybe you forgot to run "dtm init" first?`)
