@@ -37,7 +37,7 @@ func (c *Config) getToolsWithVarsFromApp(a app) (Tools, error) {
 		return nil, err
 	}
 
-	// 1. render appStr with globalVars
+	// 1. render appStr with Vars
 	appRenderStr, err := renderConfigWithVariables(string(appStr), c.Vars)
 	if err != nil {
 		log.Debugf("configmanager/app %s render globalVars %+v failed", appRenderStr, c.Vars)
@@ -70,7 +70,7 @@ func (c *Config) getToolsWithVarsFromApp(a app) (Tools, error) {
 		return nil, fmt.Errorf("app[%s] get pipeline tools failed: %w", rawApp.Name, err)
 	}
 	if repoScaffoldingTool != nil {
-		tools = append(tools, *repoScaffoldingTool)
+		tools = append(tools, repoScaffoldingTool)
 	}
 
 	log.Debugf("Have got %d tools from app %s.", len(tools), rawApp.Name)
@@ -79,6 +79,26 @@ func (c *Config) getToolsWithVarsFromApp(a app) (Tools, error) {
 	}
 
 	return tools, nil
+}
+
+func (c *Config) renderToolsWithVars() error {
+	toolsStr, err := yaml.Marshal(c.Tools)
+	if err != nil {
+		return err
+	}
+
+	toolsStrWithVars, err := renderConfigWithVariables(string(toolsStr), c.Vars)
+	if err != nil {
+		return err
+	}
+
+	var tools Tools
+	if err = yaml.Unmarshal(toolsStrWithVars, &tools); err != nil {
+		return err
+	}
+	c.Tools = tools
+
+	return nil
 }
 
 func (c *Config) renderPipelineTemplateMap() error {
@@ -91,6 +111,12 @@ func (c *Config) renderPipelineTemplateMap() error {
 		c.pipelineTemplateMap[pt.Name] = string(tplBytes)
 	}
 	return nil
+}
+
+func (c *Config) renderInstanceIDtoOptions() {
+	for _, t := range c.Tools {
+		t.Options["instanceID"] = t.InstanceID
+	}
 }
 
 func (c *Config) validate() error {

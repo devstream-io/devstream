@@ -236,6 +236,7 @@ var _ = Describe("PipelineTemplate struct", func() {
 				Expect(tool).Should(Equal(&Tool{
 					Name:       t.Type,
 					InstanceID: appName,
+					DependsOn:  []string{},
 					Options:    opts,
 				}))
 			})

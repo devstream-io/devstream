@@ -4,6 +4,7 @@ import (
 	"errors"
 	"io"
 	"os"
+	"regexp"
 
 	"gopkg.in/yaml.v3"
 
@@ -39,7 +40,13 @@ func (m *Manager) LoadConfig() (*Config, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	err = c.renderToolsWithVars()
+	if err != nil {
+		return nil, err
+	}
 	c.Tools = append(c.Tools, appTools...)
+	c.renderInstanceIDtoOptions()
 
 	// step 3
 	if err = c.validate(); err != nil {
@@ -51,18 +58,24 @@ func (m *Manager) LoadConfig() (*Config, error) {
 
 // getConfigFromFile gets Config from the config file specified by Manager.ConfigFilePath
 func (m *Manager) getConfigFromFile() (*Config, error) {
-	// 1. read the original config file
 	configBytes, err := os.ReadFile(m.ConfigFilePath)
 	if err != nil {
 		return nil, err
 	}
 
-	// 2. decode total yaml files
+	configBytesEscaped := escapeBrackets(configBytes)
+
 	var c Config
-	if err = yaml.Unmarshal(configBytes, &c); err != nil && !errors.Is(err, io.EOF) {
+	if err = yaml.Unmarshal(configBytesEscaped, &c); err != nil && !errors.Is(err, io.EOF) {
 		log.Errorf("Please verify the format of your config. Error: %s.", err)
 		return nil, err
 	}
 
 	return &c, nil
+}
+
+// escapeBrackets is used to escape []byte(": [[xxx]]xxx\n") to []byte(": \"[[xxx]]\"xxx\n")
+func escapeBrackets(param []byte) []byte {
+	re := regexp.MustCompile(`([^:]+:)(\s*)(\[\[[^\]]+\]\][^\s]*)`)
+	return re.ReplaceAll(param, []byte("$1$2\"$3\""))
 }
