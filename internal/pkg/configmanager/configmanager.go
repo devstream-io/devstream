@@ -1,8 +1,6 @@
 package configmanager
 
 import (
-	"errors"
-	"io"
 	"os"
 	"regexp"
 
@@ -66,7 +64,7 @@ func (m *Manager) getConfigFromFile() (*Config, error) {
 	configBytesEscaped := escapeBrackets(configBytes)
 
 	var c Config
-	if err = yaml.Unmarshal(configBytesEscaped, &c); err != nil && !errors.Is(err, io.EOF) {
+	if err = yaml.Unmarshal(configBytesEscaped, &c); err != nil {
 		log.Errorf("Please verify the format of your config. Error: %s.", err)
 		return nil, err
 	}
