@@ -9,14 +9,16 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/step"
+	"github.com/devstream-io/devstream/pkg/util/downloader"
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
 var _ = Describe("newJobOptions func", func() {
 	var (
-		jenkinsURL, jobName, projectURL, jenkinsFilePath, userName string
-		rawOptions                                                 configmanager.RawOptions
+		jenkinsURL, jobName, projectURL, userName string
+		jenkinsFilePath                           downloader.ResourceLocation
+		rawOptions                                configmanager.RawOptions
 	)
 	BeforeEach(func() {
 		jenkinsURL = "http://test.com"
@@ -52,10 +54,11 @@ var _ = Describe("newJobOptions func", func() {
 
 var _ = Describe("options struct", func() {
 	var (
-		jobName, jenkinsFilePath, repoOwner, repoName, secretToken, errMsg string
-		repoInfo                                                           *git.RepoInfo
-		j                                                                  *jenkins.MockClient
-		opts                                                               *jobOptions
+		jobName, repoOwner, repoName, secretToken, errMsg string
+		jenkinsFilePath                                   downloader.ResourceLocation
+		repoInfo                                          *git.RepoInfo
+		j                                                 *jenkins.MockClient
+		opts                                              *jobOptions
 	)
 	BeforeEach(func() {
 		repoOwner = "owner"

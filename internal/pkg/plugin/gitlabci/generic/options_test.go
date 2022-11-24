@@ -8,15 +8,17 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/cifile"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/cifile/server"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/step"
+	"github.com/devstream-io/devstream/pkg/util/downloader"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
 var _ = Describe("action struct", func() {
 	var (
-		a                                            *ci.PipelineConfig
-		imageRepoURL, user, repoName, configLocation string
-		r                                            *git.RepoInfo
-		ciType                                       server.CIServerType
+		pipelineConfig               *ci.PipelineConfig
+		imageRepoURL, user, repoName string
+		configLocation               downloader.ResourceLocation
+		repoInfo                     *git.RepoInfo
+		ciType                       server.CIServerType
 	)
 	BeforeEach(func() {
 		imageRepoURL = "exmaple.com"
@@ -24,14 +26,14 @@ var _ = Describe("action struct", func() {
 		repoName = "test_repo"
 		configLocation = "123/workflows"
 		ciType = server.CIServerType("gitlab")
-		a = &ci.PipelineConfig{
+		pipelineConfig = &ci.PipelineConfig{
 			ConfigLocation: configLocation,
 			ImageRepo: &step.ImageRepoStepConfig{
 				URL:  imageRepoURL,
 				User: user,
 			},
 		}
-		r = &git.RepoInfo{
+		repoInfo = &git.RepoInfo{
 			Repo: repoName,
 		}
 	})
@@ -40,7 +42,7 @@ var _ = Describe("action struct", func() {
 			var nilStepConfig *step.SonarQubeStepConfig
 			var nilDingTalkConfig *step.DingtalkStepConfig
 			var nilGeneral *step.GeneralStepConfig
-			CIFileConfig := a.BuildCIFileConfig(ciType, r)
+			CIFileConfig := pipelineConfig.BuildCIFileConfig(ciType, repoInfo)
 			Expect(string(CIFileConfig.Type)).Should(Equal("gitlab"))
 			Expect(CIFileConfig.ConfigLocation).Should(Equal(configLocation))
 			expectVars := cifile.CIFileVarsMap{
@@ -57,7 +59,7 @@ var _ = Describe("action struct", func() {
 				"DingTalkSecretKey":   "DINGTALK_SECURITY_VALUE",
 				"DingTalkSecretToken": "DINGTALK_SECURITY_TOKEN",
 				"StepGlobalVars":      "",
-				"configLocation":      "123/workflows",
+				"configLocation":      downloader.ResourceLocation("123/workflows"),
 				"sonarqube":           nilStepConfig,
 				"GitlabConnectionID":  "gitlabConnection",
 			}

@@ -16,20 +16,17 @@ import (
 
 var _ = Describe("ResourceClient struct", func() {
 	var (
-		source string
-		c      *downloader.ResourceClient
+		source           string
+		resourceLocation downloader.ResourceLocation
 	)
-	BeforeEach(func() {
-		c = &downloader.ResourceClient{}
-	})
 	Context("GetWithGoGetter method", func() {
 		When("source is local files or directory", func() {
 			BeforeEach(func() {
 				source = GinkgoT().TempDir()
-				c.Source = source
+				resourceLocation = downloader.ResourceLocation(source)
 			})
 			It("should return local source path directly", func() {
-				dstPath, err := c.GetWithGoGetter()
+				dstPath, err := resourceLocation.Download()
 				Expect(err).Error().ShouldNot(HaveOccurred())
 				Expect(dstPath).Should(Equal(source))
 			})
@@ -45,12 +42,12 @@ var _ = Describe("ResourceClient struct", func() {
 			When("resource return error", func() {
 				BeforeEach(func() {
 					reqPath = path.Join(s.URL(), "not_exist_resource")
-					c.Source = reqPath
+					resourceLocation = downloader.ResourceLocation(reqPath)
 				})
 				It("should return err", func() {
-					_, err := c.GetWithGoGetter()
+					_, err := resourceLocation.Download()
 					Expect(err).Error().Should(HaveOccurred())
-					Expect(err.Error()).Should(ContainSubstring("http: no Host in request URL"))
+					Expect(err.Error()).Should(ContainSubstring(fmt.Sprintf("get resource files %s failed", reqPath)))
 				})
 			})
 			When("resource return normal", func() {
@@ -69,11 +66,11 @@ var _ = Describe("ResourceClient struct", func() {
 						ghttp.VerifyRequest("GET", pathName),
 						ghttp.RespondWith(http.StatusOK, returnContent),
 					))
-					c.Source = reqPath
+					resourceLocation = downloader.ResourceLocation(reqPath)
 				})
 				When("destination is not setted", func() {
 					It("should create temp dir and download file", func() {
-						dstPath, err := c.GetWithGoGetter()
+						dstPath, err := resourceLocation.Download()
 						Expect(err).Error().ShouldNot(HaveOccurred())
 						files, err := os.ReadDir(dstPath)
 						Expect(err).Error().ShouldNot(HaveOccurred())
@@ -84,7 +81,6 @@ var _ = Describe("ResourceClient struct", func() {
 						content, err := os.ReadFile(filePath)
 						Expect(err).Error().ShouldNot(HaveOccurred())
 						Expect(string(content)).Should(Equal(returnContent))
-						c.CleanUp()
 					})
 				})
 			})

@@ -20,15 +20,12 @@ const (
 
 // DownloadRepo will download repo, return repo local path and error
 func (c *Client) DownloadRepo() (string, error) {
-	latestCodeZipfileDownloadURL := fmt.Sprintf(
+	latestCodeZipfileDownloadLocation := downloader.ResourceLocation(fmt.Sprintf(
 		defaultLatestCodeZipfileDownloadUrlFormat, c.GetRepoOwner(), c.Repo, c.GetBranchWithDefault(),
-	)
-	log.Debugf("github get repo download url: %s.", latestCodeZipfileDownloadURL)
-	getterClient := downloader.ResourceClient{
-		Source: latestCodeZipfileDownloadURL,
-	}
+	))
+	log.Debugf("github get repo download url: %s.", latestCodeZipfileDownloadLocation)
 	log.Info("github start to download repoTemplate...")
-	return getterClient.GetWithGoGetter()
+	return latestCodeZipfileDownloadLocation.Download()
 }
 
 func (c *Client) CreateRepo(org, defaultBranch string) error {
