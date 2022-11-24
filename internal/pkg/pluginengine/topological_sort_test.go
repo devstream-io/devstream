@@ -10,14 +10,14 @@ import (
 )
 
 func TestNoDependency(t *testing.T) {
-	tools := []configmanager.Tool{
+	tools := configmanager.Tools{
 		{InstanceID: "a", Name: "a"},
 		{InstanceID: "b", Name: "b"},
 		{InstanceID: "c", Name: "c"},
 		{InstanceID: "d", Name: "d"},
 	}
 	expectedRes :=
-		[][]configmanager.Tool{
+		[]configmanager.Tools{
 			{
 				{InstanceID: "a", Name: "a"},
 				{InstanceID: "b", Name: "b"},
@@ -31,12 +31,12 @@ func TestNoDependency(t *testing.T) {
 }
 
 func TestSingleDependency(t *testing.T) {
-	tools := []configmanager.Tool{
+	tools := configmanager.Tools{
 		{InstanceID: "a", Name: "a"},
 		{InstanceID: "c", Name: "c", DependsOn: []string{"a.a"}},
 	}
 	expectedRes :=
-		[][]configmanager.Tool{
+		[]configmanager.Tools{
 			{
 				{InstanceID: "a", Name: "a"},
 			},
@@ -50,14 +50,14 @@ func TestSingleDependency(t *testing.T) {
 }
 
 func TestMultiDependencies(t *testing.T) {
-	tools := []configmanager.Tool{
+	tools := configmanager.Tools{
 		{InstanceID: "a", Name: "a"},
 		{InstanceID: "b", Name: "b"},
 		{InstanceID: "c", Name: "c", DependsOn: []string{"a.a", "b.b"}},
 		{InstanceID: "d", Name: "d", DependsOn: []string{"c.c"}},
 	}
 	expectedRes :=
-		[][]configmanager.Tool{
+		[]configmanager.Tools{
 			{
 				{InstanceID: "a", Name: "a"},
 				{InstanceID: "b", Name: "b"},
@@ -75,14 +75,14 @@ func TestMultiDependencies(t *testing.T) {
 }
 
 func TestDependencyLoop(t *testing.T) {
-	tools := []configmanager.Tool{
+	tools := configmanager.Tools{
 		{InstanceID: "a", Name: "a"},
 		{InstanceID: "b", Name: "b", DependsOn: []string{"d.d"}},
 		{InstanceID: "c", Name: "c", DependsOn: []string{"b.b"}},
 		{InstanceID: "d", Name: "d", DependsOn: []string{"c.c"}},
 	}
 	expectedRes :=
-		[][]configmanager.Tool{
+		[]configmanager.Tools{
 			{
 				{InstanceID: "a", Name: "a"},
 				{InstanceID: "b", Name: "b"},

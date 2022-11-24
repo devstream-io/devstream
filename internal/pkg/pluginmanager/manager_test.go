@@ -20,7 +20,7 @@ var _ = Describe("downloadPlugins func", func() {
 
 	var (
 		server  *mockPluginServer
-		tools   []configmanager.Tool
+		tools   configmanager.Tools
 		tempDir string
 	)
 
@@ -37,7 +37,7 @@ var _ = Describe("downloadPlugins func", func() {
 			jenkins = "jenkins"
 		)
 		BeforeEach(func() {
-			tools = []configmanager.Tool{
+			tools = configmanager.Tools{
 				{Name: argocd},
 				{Name: jenkins},
 			}
@@ -65,7 +65,7 @@ var _ = Describe("downloadPlugins func", func() {
 	When("plugin is not exist", func() {
 		BeforeEach(func() {
 			const invalidPlugin = "invalidPlugin"
-			tools = []configmanager.Tool{
+			tools = configmanager.Tools{
 				{Name: invalidPlugin},
 			}
 			server.registerPluginNotFound(invalidPlugin, version, runtime.GOOS, runtime.GOARCH)
@@ -83,7 +83,7 @@ var _ = Describe("MD5", func() {
 		err                                           error
 		config                                        *configmanager.Config
 		tempDir, file, fileMD5, filePath, fileMD5Path string
-		tools                                         []configmanager.Tool
+		tools                                         configmanager.Tools
 	)
 
 	createNewFile := func(fileName string) error {
@@ -114,7 +114,7 @@ var _ = Describe("MD5", func() {
 	BeforeEach(func() {
 		tempDir = GinkgoT().TempDir()
 		viper.Set("plugin-dir", tempDir)
-		tools = []configmanager.Tool{
+		tools = configmanager.Tools{
 			{InstanceID: "a", Name: "a"},
 		}
 		config = &configmanager.Config{Tools: tools}

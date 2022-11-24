@@ -1,4 +1,4 @@
-package configmanager_test
+package configmanager
 
 import (
 	"os"
@@ -6,8 +6,6 @@ import (
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
-
-	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 )
 
 const configFileStr = `---
@@ -98,35 +96,38 @@ pipelineTemplates:
 var _ = Describe("LoadConfig", func() {
 	var tmpWorkDir string
 
-	tool1 := configmanager.Tool{
+	tool1 := &Tool{
 		Name:       "plugin1",
 		InstanceID: "default",
-		Options: configmanager.RawOptions{
+		DependsOn:  []string{},
+		Options: RawOptions{
 			"foo1":       "bar1",
 			"instanceID": "default",
 		},
 	}
 
-	tool2 := configmanager.Tool{
+	tool2 := &Tool{
 		Name:       "plugin2",
 		InstanceID: "tluafed",
-		Options: configmanager.RawOptions{
+		DependsOn:  []string{},
+		Options: RawOptions{
+			"instanceID": "tluafed",
 			"foo":        "bar",
 			"foo2":       "bar2",
-			"instanceID": "default1",
 		},
 	}
 
-	tool3 := configmanager.Tool{
+	tool3 := &Tool{
 		Name:       "github-actions",
 		InstanceID: "service-a",
 		DependsOn: []string{
 			"repo-scaffolding.service-a",
 		},
-		Options: configmanager.RawOptions{
-			"pipeline": configmanager.RawOptions{
-				"docker": configmanager.RawOptions{
-					"registry": configmanager.RawOptions{
+		Options: RawOptions{
+			"instanceID": "service-a",
+			"pipeline": RawOptions{
+				"docker": RawOptions{
+					"registry": RawOptions{
 						"repository": "service-a",
 						"type":       "dockerhub",
 						"username":   "dockerUser1",
@@ -135,7 +136,7 @@ var _ = Describe("LoadConfig", func() {
 				"branch":         "main",
 				"configLocation": "git@github.com:devstream-io/ci-template.git//github-actions",
 			},
-			"scm": configmanager.RawOptions{
+			"scm": RawOptions{
 				"apiURL":  "gitlab.com/some/path/to/your/api",
 				"owner":   "devstream-io",
 				"org":     "devstream-io",
@@ -143,33 +144,33 @@ var _ = Describe("LoadConfig", func() {
 				"scmType": "github",
 				"url":     "https://github.com/devstream-io/service-a",
 			},
-			"instanceID": "service-a",
 		},
 	}
 
-	tool4 := configmanager.Tool{
+	tool4 := &Tool{
 		Name:       "argocdapp",
 		InstanceID: "service-a",
 		DependsOn: []string{
 			"repo-scaffolding.service-a",
 		},
-		Options: configmanager.RawOptions{
-			"pipeline": configmanager.RawOptions{
-				"destination": configmanager.RawOptions{
+		Options: RawOptions{
+			"instanceID": "service-a",
+			"pipeline": RawOptions{
+				"destination": RawOptions{
 					"namespace": "devstream-io",
 					"server":    "https://kubernetes.default.svc",
 				},
-				"app": configmanager.RawOptions{
+				"app": RawOptions{
 					"namespace": "argocd",
 				},
-				"source": configmanager.RawOptions{
+				"source": RawOptions{
 					"valuefile": "values.yaml",
 					"path":      "helm/service-a",
 					"repoURL":   "${{repo-scaffolding.myapp.outputs.repoURL}}",
 				},
 				"configLocation": "",
 			},
-			"scm": configmanager.RawOptions{
+			"scm": RawOptions{
 				"url":     "https://github.com/devstream-io/service-a",
 				"apiURL":  "gitlab.com/some/path/to/your/api",
 				"owner":   "devstream-io",
@@ -177,15 +178,16 @@ var _ = Describe("LoadConfig", func() {
 				"name":    "service-a",
 				"scmType": "github",
 			},
-			"instanceID": "service-a",
 		},
 	}
 
-	tool5 := configmanager.Tool{
+	tool5 := &Tool{
 		Name:       "repo-scaffolding",
 		InstanceID: "service-a",
-		Options: configmanager.RawOptions{
-			"destinationRepo": configmanager.RawOptions{
+		DependsOn:  []string{},
+		Options: RawOptions{
+			"instanceID": "service-a",
+			"destinationRepo": RawOptions{
 				"needAuth": true,
 				"org":      "devstream-io",
 				"repo":     "service-a",
@@ -193,7 +195,7 @@ var _ = Describe("LoadConfig", func() {
 				"repoType": "github",
 				"url":      "github.com/devstream-io/service-a",
 			},
-			"sourceRepo": configmanager.RawOptions{
+			"sourceRepo": RawOptions{
 				"repoType": "github",
 				"url":      "github.com/devstream-io/dtm-scaffolding-golang",
 				"needAuth": true,
@@ -201,7 +203,7 @@ var _ = Describe("LoadConfig", func() {
 				"repo":     "dtm-scaffolding-golang",
 				"branch":   "main",
 			},
-			"vars": configmanager.RawOptions{
+			"vars": RawOptions{
 				"foo1":            "bar1",
 				"foo2":            "bar2",
 				"registryType":    "dockerhub",
@@ -209,7 +211,6 @@ var _ = Describe("LoadConfig", func() {
 				"language":        "python",
 				"argocdNamespace": "argocd",
 			},
-			"instanceID": "service-a",
 		},
 	}
 
@@ -221,7 +222,7 @@ var _ = Describe("LoadConfig", func() {
 
 	When("load a config file", func() {
 		It("should return 5 tools", func() {
-			mgr := configmanager.NewManager(filepath.Join(tmpWorkDir, "config.yaml"))
+			mgr := NewManager(filepath.Join(tmpWorkDir, "config.yaml"))
 			cfg, err := mgr.LoadConfig()
 			Expect(err).NotTo(HaveOccurred())
 			Expect(cfg).NotTo(BeNil())
@@ -229,9 +230,9 @@ var _ = Describe("LoadConfig", func() {
 			GinkgoWriter.Printf("Config: %v", cfg)
 
 			// config/state
-			Expect(*cfg.Config.State).To(Equal(configmanager.State{
+			Expect(*cfg.Config.State).To(Equal(State{
 				Backend: "local",
-				Options: configmanager.StateConfigOptions{
+				Options: StateConfigOptions{
 					StateFile: "devstream.state",
 				},
 			}))
@@ -258,6 +259,24 @@ var _ = Describe("LoadConfig", func() {
 					Fail("Unexpected plugin name.")
 				}
 			}
+		})
+	})
+})
+
+var _ = Describe("escapeBrackets", func() {
+	When("escape brackets", func() {
+		It("should works right", func() {
+			testStrBytes1 := "foo: [[ foo ]]\n"
+			testStr2 := "foo: xx[[ foo ]]\n"
+			testStr3 := "foo: [[ foo ]]xx\n"
+
+			retStr1 := escapeBrackets([]byte(testStrBytes1))
+			retStr2 := escapeBrackets([]byte(testStr2))
+			retStr3 := escapeBrackets([]byte(testStr3))
+
+			Expect(string(retStr1)).To(Equal("foo: \"[[ foo ]]\"\n"))
+			Expect(string(retStr2)).To(Equal("foo: xx[[ foo ]]\n"))
+			Expect(string(retStr3)).To(Equal("foo: \"[[ foo ]]xx\"\n"))
 		})
 	})
 })

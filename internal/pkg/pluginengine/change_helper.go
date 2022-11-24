@@ -96,7 +96,7 @@ func GetChangesForApply(smgr statemanager.Manager, cfg *configmanager.Config) (c
 	tmpStatesMap := smgr.GetStatesMap().DeepCopy()
 
 	// 2. handle dependency and sort the tools in the config into "batches" of tools
-	var batchesOfTools [][]configmanager.Tool
+	var batchesOfTools []configmanager.Tools
 	// the elements in batchesOfTools are sorted "batches"
 	// and each element/batch is a list of tools that, in theory, can run in parallel
 	// that is to say, the tools in the same batch won't depend on each other
@@ -113,7 +113,7 @@ func GetChangesForApply(smgr statemanager.Manager, cfg *configmanager.Config) (c
 			if state == nil {
 				// tool not in the state, create, no need to Read resource before Create
 				description := fmt.Sprintf("Tool (%s/%s) found in config but doesn't exist in the state, will be created.", tool.Name, tool.InstanceID)
-				changes = append(changes, generateCreateAction(&tool, description))
+				changes = append(changes, generateCreateAction(tool, description))
 			} else {
 				// tool found in the state
 
@@ -124,12 +124,12 @@ func GetChangesForApply(smgr statemanager.Manager, cfg *configmanager.Config) (c
 				if drifted(state.Options, tool.Options) {
 					// tool's config differs from State's, Update
 					description := fmt.Sprintf("Tool (%s/%s) config drifted from the state, will be updated.", tool.Name, tool.InstanceID)
-					changes = append(changes, generateUpdateAction(&tool, description))
+					changes = append(changes, generateUpdateAction(tool, description))
 				} else {
 					// tool's config is the same as State's
 
 					// read resource status
-					resource, err := Read(&tool)
+					resource, err := Read(tool)
 					if err != nil {
 						return changes, err
 					}
@@ -137,14 +137,14 @@ func GetChangesForApply(smgr statemanager.Manager, cfg *configmanager.Config) (c
 					if resource == nil {
 						// tool exists in the state, but resource doesn't exist, Create
 						description := fmt.Sprintf("Tool (%s/%s) state found but it seems the tool isn't created, will be created.", tool.Name, tool.InstanceID)
-						changes = append(changes, generateCreateAction(&tool, description))
+						changes = append(changes, generateCreateAction(tool, description))
 					} else if drifted, err := ResourceDrifted(state.ResourceStatus, resource); drifted || err != nil {
 						if err != nil {
 							return nil, err
 						}
 						// resource drifted from state, Update
 						description := fmt.Sprintf("Tool (%s/%s) drifted from the state, will be updated.", tool.Name, tool.InstanceID)
-						changes = append(changes, generateUpdateAction(&tool, description))
+						changes = append(changes, generateUpdateAction(tool, description))
 					} else {
 						// resource is the same as the state, do nothing
 						log.Debugf("Tool (%s/%s) is the same as the state, do nothing.", tool.Name, tool.InstanceID)
@@ -195,7 +195,7 @@ func GetChangesForDelete(smgr statemanager.Manager, cfg *configmanager.Config, i
 			}
 
 			description := fmt.Sprintf("Tool (%s/%s) will be deleted.", tool.Name, tool.InstanceID)
-			changes = append(changes, generateDeleteAction(&tool, description))
+			changes = append(changes, generateDeleteAction(tool, description))
 		}
 	}
 
@@ -210,9 +210,9 @@ func GetChangesForDelete(smgr statemanager.Manager, cfg *configmanager.Config, i
 func GetChangesForDestroy(smgr statemanager.Manager, isForceDestroy bool) (changes []*Change, err error) {
 	// rebuilding tools from config
 	// because destroy will only be used when the config file is missing
-	var tools []configmanager.Tool
+	var tools configmanager.Tools
 	for _, state := range smgr.GetStatesMap().ToList() {
-		tool := configmanager.Tool{
+		tool := &configmanager.Tool{
 			InstanceID: state.InstanceID,
 			Name:       state.Name,
 			DependsOn:  state.DependsOn,
@@ -237,7 +237,7 @@ func GetChangesForDestroy(smgr statemanager.Manager, isForceDestroy bool) (chang
 				}
 			}
 			description := fmt.Sprintf("Tool (%s/%s) will be deleted.", tool.Name, tool.InstanceID)
-			changes = append(changes, generateDeleteAction(&tool, description))
+			changes = append(changes, generateDeleteAction(tool, description))
 		}
 	}
 
@@ -288,16 +288,16 @@ func topologicalSortChangesInBatch(changes []*Change) ([][]*Change, error) {
 	return batchesOfChanges, nil
 }
 
-func getToolsFromChanges(changes []*Change) []configmanager.Tool {
+func getToolsFromChanges(changes []*Change) configmanager.Tools {
 	// use slice instead of map to keep the order of tools
-	tools := make([]configmanager.Tool, 0)
+	tools := make(configmanager.Tools, 0)
 	// use map to record the tool that has been added to the slice
 	toolsKeyMap := make(map[string]struct{})
 
 	// get tools from changes avoiding duplicated tools
 	for _, change := range changes {
 		if _, ok := toolsKeyMap[change.Tool.KeyWithNameAndInstanceID()]; !ok {
-			tools = append(tools, *change.Tool)
+			tools = append(tools, change.Tool)
 			toolsKeyMap[change.Tool.KeyWithNameAndInstanceID()] = struct{}{}
 		}
 	}

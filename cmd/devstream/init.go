@@ -37,7 +37,7 @@ func initCMDFunc(_ *cobra.Command, _ []string) {
 	}
 
 	var (
-		tools []configmanager.Tool
+		tools configmanager.Tools
 		err   error
 	)
 
@@ -67,7 +67,7 @@ func initCMDFunc(_ *cobra.Command, _ []string) {
 	log.Success("Initialize finished.")
 }
 
-func GetPluginsFromConfig() (tools []configmanager.Tool, err error) {
+func GetPluginsFromConfig() (tools configmanager.Tools, err error) {
 	cfg, err := configmanager.NewManager(configFilePath).LoadConfig()
 	if err != nil {
 		return nil, err
@@ -76,7 +76,7 @@ func GetPluginsFromConfig() (tools []configmanager.Tool, err error) {
 	return cfg.Tools, nil
 }
 
-func GetPluginsFromFlags() (tools []configmanager.Tool, err error) {
+func GetPluginsFromFlags() (tools configmanager.Tools, err error) {
 	// 1. get plugins from flags
 	var pluginsName []string
 	if downloadAll {
@@ -110,7 +110,7 @@ func GetPluginsFromFlags() (tools []configmanager.Tool, err error) {
 
 	// build the plugin list
 	for _, pluginName := range pluginsName {
-		tools = append(tools, configmanager.Tool{Name: pluginName})
+		tools = append(tools, &configmanager.Tool{Name: pluginName})
 	}
 
 	return tools, nil

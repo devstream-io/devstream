@@ -49,7 +49,7 @@ var _ = Describe("Pluginengine", func() {
 		name := "tool-a"
 
 		cfg := &configmanager.Config{
-			Tools: []configmanager.Tool{*getTool(name, instanceID)},
+			Tools: configmanager.Tools{getTool(name, instanceID)},
 		}
 		changes, _ := pluginengine.GetChangesForApply(smgr, cfg)
 		GinkgoWriter.Print(changes)
@@ -64,7 +64,7 @@ var _ = Describe("Pluginengine", func() {
 		name1, name2 := "tool-a", "too-b"
 
 		cfg := &configmanager.Config{
-			Tools: []configmanager.Tool{*getTool(name1, instanceID1), *getTool(name2, instanceID2)},
+			Tools: configmanager.Tools{getTool(name1, instanceID1), getTool(name2, instanceID2)},
 		}
 		changes, _ := pluginengine.GetChangesForApply(smgr, cfg)
 
@@ -85,7 +85,7 @@ var _ = Describe("Pluginengine", func() {
 		name := "tool-a"
 
 		cfg := &configmanager.Config{
-			Tools: []configmanager.Tool{*getTool(name, instanceID)},
+			Tools: configmanager.Tools{getTool(name, instanceID)},
 		}
 
 		err = smgr.AddState(statemanager.StateKey(fmt.Sprintf("%s_%s", name, instanceID)), statemanager.State{})

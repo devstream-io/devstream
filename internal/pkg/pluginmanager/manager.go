@@ -17,11 +17,11 @@ import (
 
 const defaultReleaseUrl = "https://download.devstream.io"
 
-func DownloadPlugins(tools []configmanager.Tool, pluginDir, os, arch string) error {
+func DownloadPlugins(tools configmanager.Tools, pluginDir, os, arch string) error {
 	return downloadPlugins(defaultReleaseUrl, tools, pluginDir, os, arch, version.Version)
 }
 
-func downloadPlugins(baseURL string, tools []configmanager.Tool, pluginDir, osName, arch, version string) error {
+func downloadPlugins(baseURL string, tools configmanager.Tools, pluginDir, osName, arch, version string) error {
 	if pluginDir == "" {
 		return fmt.Errorf(`plugins directory should not be ""`)
 	}
@@ -94,7 +94,7 @@ func downloadPlugins(baseURL string, tools []configmanager.Tool, pluginDir, osNa
 }
 
 // CheckLocalPlugins checks if the local plugins exists, and matches with md5 value.
-func CheckLocalPlugins(tools []configmanager.Tool) error {
+func CheckLocalPlugins(tools configmanager.Tools) error {
 	pluginDir, err := GetPluginDir()
 	if err != nil {
 		return err

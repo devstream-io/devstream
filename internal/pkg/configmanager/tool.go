@@ -5,9 +5,8 @@ import (
 	"runtime"
 	"strings"
 
-	"gopkg.in/yaml.v3"
-
 	"go.uber.org/multierr"
+	"gopkg.in/yaml.v3"
 
 	"github.com/devstream-io/devstream/internal/pkg/version"
 	"github.com/devstream-io/devstream/pkg/util/validator"
@@ -37,12 +36,11 @@ func newTool(name, instanceID string, options RawOptions) *Tool {
 	if options == nil {
 		options = make(RawOptions)
 	}
-	// set instanceID to options
-	options["instanceID"] = instanceID
 
 	return &Tool{
 		Name:       name,
 		InstanceID: instanceID,
+		DependsOn:  []string{},
 		Options:    options,
 	}
 }
@@ -55,17 +53,17 @@ func (t *Tool) String() string {
 	return string(bs)
 }
 
-type Tools []Tool
+type Tools []*Tool
 
-func (tools Tools) validateAll() error {
+func (ts Tools) validateAll() error {
 	var errs []error
-	errs = append(errs, tools.validate()...)
-	errs = append(errs, tools.validateDependency()...)
+	errs = append(errs, ts.validate()...)
+	errs = append(errs, ts.validateDependency()...)
 	return multierr.Combine(errs...)
 }
 
-func (tools Tools) validate() (errs []error) {
-	for _, tool := range tools {
+func (ts Tools) validate() (errs []error) {
+	for _, tool := range ts {
 		errs = append(errs, tool.validate()...)
 	}
 	return
@@ -118,17 +116,17 @@ func (t *Tool) GetPluginMD5FileNameWithOSAndArch(os, arch string) string {
 	return t.GetPluginNameWithOSAndArch(os, arch) + ".md5"
 }
 
-func (tools Tools) validateDependency() []error {
+func (ts Tools) validateDependency() []error {
 	errors := make([]error, 0)
 
 	// config "set" (map)
 	toolMap := make(map[string]bool)
 	// creating the set
-	for _, tool := range tools {
+	for _, tool := range ts {
 		toolMap[tool.KeyWithNameAndInstanceID()] = true
 	}
 
-	for _, tool := range tools {
+	for _, tool := range ts {
 		// no dependency, pass
 		if len(tool.DependsOn) == 0 {
 			continue

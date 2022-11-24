@@ -33,7 +33,7 @@ func (a *app) generateCICDToolsFromAppConfig(templateMap map[string]string, appV
 			return nil, err
 		}
 		pipelineTool.DependsOn = a.getRepoTemplateDependants()
-		tools = append(tools, *pipelineTool)
+		tools = append(tools, pipelineTool)
 	}
 	return tools, nil
 }
