@@ -10,16 +10,16 @@ import (
 )
 
 type test struct {
-	Enable                *bool  `mapstructure:"enable"`
-	Command               string `mapstructure:"command"`
-	ContainerName         string `mapstructure:"containerName"`
-	CoverageCommand       string `mapstructure:"coverageCommand"`
-	CoverageStatusCommand string `mapstructure:"CoverageStatusCommand"`
+	Enable                *bool    `mapstructure:"enable"`
+	Command               []string `mapstructure:"command"`
+	ContainerName         string   `mapstructure:"containerName"`
+	CoverageCommand       string   `mapstructure:"coverageCommand"`
+	CoverageStatusCommand string   `mapstructure:"CoverageStatusCommand"`
 }
 
 type GeneralStepConfig struct {
-	Language *Language `mapstructure:"language"`
-	Test     *test     `mapstructure:"test"`
+	Language language `mapstructure:"language"`
+	Test     test     `mapstructure:"test"`
 }
 
 // GetJenkinsPlugins return jenkins plugins info
@@ -37,12 +37,12 @@ func (g *GeneralStepConfig) ConfigSCM(client scm.ClientOperation) error {
 }
 
 func (g *GeneralStepConfig) SetDefault() {
-	if g.Language != nil && g.Language.Name == "" {
+	if g.Language.Name == "" {
 		return
 	}
 	generalDefaultOpts := g.Language.getGeneralDefaultOption()
 	if g.Test.Enable != types.Bool(false) {
-		if err := mergo.Merge(g.Test, generalDefaultOpts); err != nil {
+		if err := mergo.Merge(&g.Test, generalDefaultOpts.testOption); err != nil {
 			log.Warnf("step general merge default config failed: %+v", err)
 		}
 	}

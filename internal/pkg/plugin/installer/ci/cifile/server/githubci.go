@@ -28,7 +28,7 @@ func (g *GitHubWorkflow) FilterCIFilesFunc() file.DirFIleFilterFunc {
 		if isDir {
 			return false
 		}
-		return strings.Contains(filePath, "workflows")
+		return strings.Contains(filePath, "yml") || strings.Contains(filePath, "yaml")
 	}
 }
 
