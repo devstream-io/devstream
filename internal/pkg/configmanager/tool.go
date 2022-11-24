@@ -5,6 +5,8 @@ import (
 	"runtime"
 	"strings"
 
+	"gopkg.in/yaml.v3"
+
 	"go.uber.org/multierr"
 
 	"github.com/devstream-io/devstream/internal/pkg/version"
@@ -43,6 +45,14 @@ func newTool(name, instanceID string, options RawOptions) *Tool {
 		InstanceID: instanceID,
 		Options:    options,
 	}
+}
+
+func (t *Tool) String() string {
+	bs, err := yaml.Marshal(t)
+	if err != nil {
+		return err.Error()
+	}
+	return string(bs)
 }
 
 type Tools []Tool

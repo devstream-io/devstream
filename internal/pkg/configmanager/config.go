@@ -73,17 +73,22 @@ func (c *Config) getToolsWithVarsFromApp(a app) (Tools, error) {
 		tools = append(tools, *repoScaffoldingTool)
 	}
 
+	log.Debugf("Have got %d tools from app %s.", len(tools), rawApp.Name)
+	for i, t := range tools {
+		log.Debugf("Tool %d: %v", i+1, t)
+	}
+
 	return tools, nil
 }
 
 func (c *Config) renderPipelineTemplateMap() error {
-	templateMap := make(map[string]string)
+	c.pipelineTemplateMap = make(map[string]string)
 	for _, pt := range c.PipelineTemplates {
 		tplBytes, err := yaml.Marshal(pt)
 		if err != nil {
 			return err
 		}
-		templateMap[pt.Name] = string(tplBytes)
+		c.pipelineTemplateMap[pt.Name] = string(tplBytes)
 	}
 	return nil
 }
@@ -97,4 +102,12 @@ func (c *Config) validate() error {
 		return err
 	}
 	return nil
+}
+
+func (c *Config) String() string {
+	bs, err := yaml.Marshal(c)
+	if err != nil {
+		return err.Error()
+	}
+	return string(bs)
 }
