@@ -1,26 +1,20 @@
----
-# core config
-varFile: "" # If not empty, use the specified external variables config file
-toolFile: "" # If not empty, use the specified external tools config file
-state: # state config, backend can be local, s3 or k8s
-  backend: local
-  options:
-    stateFile: devstream.state
+config:
+  state: # state config, backend can be local, s3 or k8s
+    backend: local
+    options:
+      stateFile: devstream.state
 
----
-# variables config
-defaultBranch: main
-githubUsername: daniel-hutao
-repoName: dtm-test-go
-jiraID: merico
-jiraUserEmail: tao.hu@merico.dev
-jiraProjectKey: DT
-dockerhubUsername: exploitht
-argocdNameSpace: argocd
-argocdDeployTimeout: 10m
+vars:
+  defaultBranch: main
+  githubUsername: daniel-hutao
+  repoName: dtm-test-go
+  jiraID: merico
+  jiraUserEmail: tao.hu@merico.dev
+  jiraProjectKey: DT
+  dockerhubUsername: exploitht
+  argocdNameSpace: argocd
+  argocdDeployTimeout: 10m
 
----
-# plugins config
 tools:
 - name: repo-scaffolding
   instanceID: golang-github

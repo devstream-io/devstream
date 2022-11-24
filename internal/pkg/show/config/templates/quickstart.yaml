@@ -1,14 +1,9 @@
----
-# core config
-varFile: "" # If not empty, use the specified external variables config file
-toolFile: "" # If not empty, use the specified external tools config file
-state: # state config, backend can be local, s3 or k8s
-  backend: local
-  options:
-    stateFile: devstream.state
+config:
+  state: # state config, backend can be local, s3 or k8s
+    backend: local
+    options:
+      stateFile: devstream.state
 
----
-# plugins config
 tools:
 - name: repo-scaffolding
   instanceID: golang-github
