@@ -18,9 +18,8 @@ For more information on the main config, the tool file and the var file of DevSt
 ```yaml
 ---
 # core config
-varFile: ''
-toolFile: ''
-pluginDir: ''
+varFile: ""
+toolFile: ""
 state: # state config, backend can be local or s3
   backend: local
   options:

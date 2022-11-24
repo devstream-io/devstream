@@ -26,7 +26,6 @@ type rawConfig struct {
 	ToolFile          string       `yaml:"toolFile" mapstructure:"toolFile"`
 	AppFile           string       `yaml:"appFile" mapstructure:"appFile"`
 	TemplateFile      string       `yaml:"templateFile" mapstructure:"templateFile"`
-	PluginDir         string       `yaml:"pluginDir" mapstructure:"pluginDir"`
 	State             *State       `yaml:"state" mapstructure:"state"`
 	Apps              []RawOptions `yaml:"apps"`
 	Tools             []RawOptions `yaml:"tools"`

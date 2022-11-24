@@ -36,9 +36,8 @@ func (m *Manager) LoadConfig() (*Config, error) {
 	}
 
 	config := &Config{
-		PluginDir: rawConf.PluginDir,
-		State:     rawConf.State,
-		Tools:     tools,
+		State: rawConf.State,
+		Tools: tools,
 	}
 	if err = config.validate(); err != nil {
 		return nil, err

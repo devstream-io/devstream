@@ -1,6 +1,5 @@
 varFile: e2e-variables.yaml
 toolFile: e2e-tools.yaml
-pluginDir: ""
 state:
   backend: local
   options:

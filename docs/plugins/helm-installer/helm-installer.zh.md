@@ -10,7 +10,6 @@
 ---
 varFile: ""
 toolFile: ""
-pluginDir: ""
 state:
   backend: local
   options:

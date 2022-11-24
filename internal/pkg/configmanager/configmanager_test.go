@@ -12,79 +12,79 @@ import (
 )
 
 const appConfig = `apps:
-  - name: service-A
-    spec:
-      language: python
-      framework: django
-    repo:
-      scmType: github
-      owner: devstream-io
-      org: devstream-io # choose between owner and org
-      url: github.com/devstream-io/service-A # optional，if url is specified，we can infer scm/owner/org/name from url
-      apiURL: gitlab.com/some/path/to/your/api # optional, if you want to create a repo from repo template
-    # if repoTemplate is not empty，we could help user to create repo from scaffoldingRepo
-    repoTemplate: # optional
-      scmType: github
-      owner: devstream-io
-      org: devstream-io # choose between owner and org
-      name: dtm-scaffolding-golang
-      url: github.com/devstream-io/dtm-scaffolding-golang # optional，if url is specified，we can infer scm/owner/org/name from url
-    ci:
-      - type: template
-        templateName: ci-pipeline-1
-        options: # overwrite options in pipelineTemplates
-          docker:
-            registry:
-              type: [[ var3 ]] # while overridden, use global variables
-        vars: # optional, use to render vars in template（valid only if the ci.type is template）
-          dockerUser: dockerUser1
-          app: service-A
-    cd:
-      - type: template
-        templateName: cd-pipeline-1
-        options: # overwrite options in pipelineTemplates
-          destination:
-            namespace: devstream-io
-        vars: # optional, use to render vars in template（valid only if the cd.type is template）
-          app: service-A
+- name: service-A
+  spec:
+    language: python
+    framework: django
+  repo:
+    scmType: github
+    owner: devstream-io
+    org: devstream-io # choose between owner and org
+    url: github.com/devstream-io/service-A # optional，if url is specified，we can infer scm/owner/org/name from url
+    apiURL: gitlab.com/some/path/to/your/api # optional, if you want to create a repo from repo template
+  # if repoTemplate is not empty，we could help user to create repo from scaffoldingRepo
+  repoTemplate: # optional
+    scmType: github
+    owner: devstream-io
+    org: devstream-io # choose between owner and org
+    name: dtm-scaffolding-golang
+    url: github.com/devstream-io/dtm-scaffolding-golang # optional，if url is specified，we can infer scm/owner/org/name from url
+  ci:
+  - type: template
+    templateName: ci-pipeline-1
+    options: # overwrite options in pipelineTemplates
+      docker:
+        registry:
+          type: [[ var3 ]] # while overridden, use global variables
+    vars: # optional, use to render vars in template（valid only if the ci.type is template）
+      dockerUser: dockerUser1
+      app: service-A
+  cd:
+  - type: template
+    templateName: cd-pipeline-1
+    options: # overwrite options in pipelineTemplates
+      destination:
+        namespace: devstream-io
+    vars: # optional, use to render vars in template（valid only if the cd.type is template）
+      app: service-A
 `
 const toolConfig = `tools:
-  - name: plugin1
-    instanceID: default
-    options:
-      key1: [[ var1 ]]
-  - name: plugin2
-    instanceID: ins2
-    options:
-      key1: value1
-      key2: [[ var2 ]]
+- name: plugin1
+  instanceID: default
+  options:
+    key1: [[ var1 ]]
+- name: plugin2
+  instanceID: ins2
+  options:
+    key1: value1
+    key2: [[ var2 ]]
 `
 const varConfig = `var2: value-of-var2
 var3: dockerhub-overwrite
 argocdNamespace: argocd
 `
 const templateConfig = `pipelineTemplates:
-  - name: ci-pipeline-1
-    type: github-actions # corresponding to a plugin
-    options:
-      branch: main # optional, default is main
-      docker:
-        registry:
-          type: dockerhub
-          username: [[ dockerUser ]]
-          repository: [[ app ]]
-  - name: cd-pipeline-1
-    type: argocdapp
-    options:
-      app:
-        namespace: [[ argocdNamespace ]] # you can use global vars in templates
-      destination:
-        server: https://kubernetes.default.svc
-        namespace: default
-      source:
-        valuefile: values.yaml
-        path: helm/[[ app ]]
-        repoURL: ${{repo-scaffolding.myapp.outputs.repoURL}}
+- name: ci-pipeline-1
+  type: github-actions # corresponding to a plugin
+  options:
+    branch: main # optional, default is main
+    docker:
+      registry:
+        type: dockerhub
+        username: [[ dockerUser ]]
+        repository: [[ app ]]
+- name: cd-pipeline-1
+  type: argocdapp
+  options:
+    app:
+      namespace: [[ argocdNamespace ]] # you can use global vars in templates
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: default
+    source:
+      valuefile: values.yaml
+      path: helm/[[ app ]]
+      repoURL: ${{repo-scaffolding.myapp.outputs.repoURL}}
 `
 
 const (
@@ -93,7 +93,6 @@ const (
 	toolFile       = "tool.yaml"
 	appFile        = "app.yaml"
 	templateFile   = "template.yaml"
-	pluginDir      = "./plugins"
 )
 
 var _ = Describe("LoadConfig", func() {
@@ -107,8 +106,7 @@ var _ = Describe("LoadConfig", func() {
 	}
 
 	var expectedConfig = &configmanager.Config{
-		PluginDir: pluginDir,
-		State:     state,
+		State: state,
 	}
 
 	BeforeEach(func() {
@@ -133,7 +131,6 @@ varFile: %s
 toolFile: %s
 appFile: %s
 templateFile: %s
-pluginDir: %s
 state: # state config, backend can be local or s3
   backend: local
   options:
@@ -141,7 +138,7 @@ state: # state config, backend can be local or s3
 
 var1: value-of-var1 # var1 is a global var
 
-`, varFile, toolFile, appFile, templateFile, pluginDir)
+`, varFile, toolFile, appFile, templateFile)
 			err := os.WriteFile(filepath.Join(tmpDir, mainConfigFile), []byte(mainConfig), 0644)
 			Expect(err).Should(Succeed())
 		})
@@ -262,7 +259,6 @@ var1: value-of-var1 # var1 is a global var
 			config, err := manager.LoadConfig()
 			Expect(err).Should(Succeed())
 			Expect(config).ShouldNot(BeNil())
-			Expect(config.PluginDir).Should(Equal(expectedConfig.PluginDir))
 			Expect(config.State).Should(Equal(expectedConfig.State))
 			Expect(len(config.Tools)).Should(Equal(5))
 			Expect(config.Tools[0]).Should(Equal(expectedTools1))
@@ -277,7 +273,6 @@ var1: value-of-var1 # var1 is a global var
 		BeforeEach(func() {
 			mainConfig = fmt.Sprintf(`# main config
 toolFile: %s
-pluginDir: %s
 var1: test
 var2: test2
 state: # state config, backend can be local or s3
@@ -285,16 +280,16 @@ state: # state config, backend can be local or s3
   options:
     stateFile: devstream.state
 tools:
-  - name: plugin1
-    instanceID: default
-    options:
-      config: app
-  - name: plugin3
-    instanceID: ins2
-    options:
-      key1: value1
-      key2: [[ var2 ]]
-`, toolFile, pluginDir)
+- name: plugin1
+  instanceID: default
+  options:
+    config: app
+- name: plugin3
+  instanceID: ins2
+  options:
+    key1: value1
+    key2: [[ var2 ]]
+`, toolFile)
 			err := os.WriteFile(filepath.Join(tmpDir, mainConfigFile), []byte(mainConfig), 0644)
 			Expect(err).Should(Succeed())
 		})
@@ -303,7 +298,6 @@ tools:
 			config, err := manager.LoadConfig()
 			Expect(err).Should(Succeed())
 			Expect(config).ShouldNot(BeNil())
-			Expect(config.PluginDir).Should(Equal(expectedConfig.PluginDir))
 			Expect(config.State).Should(Equal(expectedConfig.State))
 			Expect(len(config.Tools)).Should(Equal(4))
 		})
@@ -315,7 +309,6 @@ tools:
 ---
 varFile:
 toolFile:
-pluginDir: ""
 state:
   backend: local
   options:
@@ -336,58 +329,58 @@ argocdDeployTimeout: 10m
 ---
 # plugins config
 tools:
-  - name: repo-scaffolding
-    instanceID: golang-github
-    options:
-      destinationRepo:
-        owner: [[ githubUsername ]]
-        org: ""
-        repo: [[ repoName ]]
-        branch: [[ defaultBranch ]]
-        repoType: github
-      sourceRepo:
-        org: devstream-io
-        repo: dtm-scaffolding-golang
-        repoType: github
-      vars:
-        ImageRepo: "[[ dockerhubUsername ]]/[[ repoName ]]"
-  - name: jira-github-integ
-    instanceID: default
-    dependsOn: [ "repo-scaffolding.golang-github" ]
-    options:
+- name: repo-scaffolding
+  instanceID: golang-github
+  options:
+    destinationRepo:
       owner: [[ githubUsername ]]
-      repo: [[ repoName ]]
-      jiraBaseUrl: https://[[ jiraID ]].atlassian.net
-      jiraUserEmail: [[ jiraUserEmail ]]
-      jiraProjectKey: [[ jiraProjectKey ]]
-      branch: main
-  - name: githubactions-golang
-    instanceID: default
-    dependsOn: [ "repo-scaffolding.golang-github" ]
-    options:
-      owner: ${{repo-scaffolding.golang-github.outputs.owner}}
       org: ""
-      repo: ${{repo-scaffolding.golang-github.outputs.repo}}
-      language:
-        name: go
-        version: "1.18"
+      repo: [[ repoName ]]
       branch: [[ defaultBranch ]]
-      build:
+      repoType: github
+    sourceRepo:
+      org: devstream-io
+      repo: dtm-scaffolding-golang
+      repoType: github
+    vars:
+      ImageRepo: "[[ dockerhubUsername ]]/[[ repoName ]]"
+- name: jira-github-integ
+  instanceID: default
+  dependsOn: [ "repo-scaffolding.golang-github" ]
+  options:
+    owner: [[ githubUsername ]]
+    repo: [[ repoName ]]
+    jiraBaseUrl: https://[[ jiraID ]].atlassian.net
+    jiraUserEmail: [[ jiraUserEmail ]]
+    jiraProjectKey: [[ jiraProjectKey ]]
+    branch: main
+- name: githubactions-golang
+  instanceID: default
+  dependsOn: [ "repo-scaffolding.golang-github" ]
+  options:
+    owner: ${{repo-scaffolding.golang-github.outputs.owner}}
+    org: ""
+    repo: ${{repo-scaffolding.golang-github.outputs.repo}}
+    language:
+      name: go
+      version: "1.18"
+    branch: [[ defaultBranch ]]
+    build:
+      enable: True
+      command: "go build ./..."
+    test:
+      enable: True
+      command: "go test ./..."
+      coverage:
         enable: True
-        command: "go build ./..."
-      test:
-        enable: True
-        command: "go test ./..."
-        coverage:
-          enable: True
-          profile: "-race -covermode=atomic"
-          output: "coverage.out"
-      docker:
-        enable: True
-        registry:
-          type: dockerhub
-          username: [[ dockerhubUsername ]]
-          repository: ${{repo-scaffolding.golang-github.outputs.repo}}`
+        profile: "-race -covermode=atomic"
+        output: "coverage.out"
+    docker:
+      enable: True
+      registry:
+        type: dockerhub
+        username: [[ dockerhubUsername ]]
+        repository: ${{repo-scaffolding.golang-github.outputs.repo}}`
 			err := os.WriteFile(filepath.Join(tmpDir, mainConfigFile), []byte(mainConfig), 0644)
 			Expect(err).Should(Succeed())
 		})
@@ -396,7 +389,6 @@ tools:
 			config, err := manager.LoadConfig()
 			Expect(err).Should(Succeed())
 			Expect(config).ShouldNot(BeNil())
-			Expect(config.PluginDir).Should(Equal(""))
 			Expect(len(config.Tools)).Should(Equal(3))
 		})
 	})
@@ -416,10 +408,10 @@ var _ = Describe("Manager struct", func() {
 		fLoc = f.Name()
 		err = os.WriteFile(fLoc, []byte(`
 tools:
-  - name: plugin1
-    instanceID: default
-    options:
-      key1: test
+- name: plugin1
+  instanceID: default
+  options:
+    key1: test
 		`), 0666)
 		Expect(err).Error().ShouldNot(HaveOccurred())
 		m.ConfigFilePath = fLoc
@@ -483,7 +475,6 @@ state:
 				_, err := m.LoadConfig()
 				Expect(err).Error().Should(HaveOccurred())
 			})
-
 		})
 	})
 })

@@ -9,4 +9,5 @@ var (
 const (
 	configFlagName    = "config-file"
 	pluginDirFlagName = "plugin-dir"
+	defaultPluginDir  = "~/.devstream/plugins"
 )

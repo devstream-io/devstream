@@ -40,18 +40,18 @@ For more information on the main config, the tool file and the var file of DevSt
 
 ```yaml
 tools:
-  - name: ci-generic
-    instanceID: test-github
-    options:
-      ci:
-        localPath: workflows
-        type: github
-      projectRepo:
-        owner: devstream
-        org: ""
-        repo: test-repo
-        branch: main
-        repoType: github
+- name: ci-generic
+  instanceID: test-github
+  options:
+    ci:
+      localPath: workflows
+      type: github
+    projectRepo:
+      owner: devstream
+      org: ""
+      repo: test-repo
+      branch: main
+      repoType: github
 ```
 
 This config will put local workflows directory to GitHub repo's .github/workflows directory.
@@ -60,19 +60,19 @@ This config will put local workflows directory to GitHub repo's .github/workflow
 
 ```yaml
 tools:
-  - name: ci-generic
-    instanceID: test-gitlab
-    options:
-      ci:
-        remoteURL : https://raw.githubusercontent.com/DeekshithSN/Jenkinsfile/inputTest/Jenkinsfile
-        type: jenkins
-      projectRepo:
-        owner: root
-        org: ""
-        repo: test-repo
-        branch: main
-        repoType: gitlab
-        baseURL: http://127.0.0.1:30000
+- name: ci-generic
+  instanceID: test-gitlab
+  options:
+    ci:
+      remoteURL : https://raw.githubusercontent.com/DeekshithSN/Jenkinsfile/inputTest/Jenkinsfile
+      type: jenkins
+    projectRepo:
+      owner: root
+      org: ""
+      repo: test-repo
+      branch: main
+      repoType: gitlab
+      baseURL: http://127.0.0.1:30000
 ```
 
 This config will put file from [remote](https://raw.githubusercontent.com/DeekshithSN/Jenkinsfile/inputTest/Jenkinsfile)  to GitLab repo.

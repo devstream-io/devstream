@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/spf13/viper"
 
@@ -94,23 +95,21 @@ func downloadPlugins(baseURL string, tools []configmanager.Tool, pluginDir, osNa
 
 // CheckLocalPlugins checks if the local plugins exists, and matches with md5 value.
 func CheckLocalPlugins(tools []configmanager.Tool) error {
-	pluginDir := viper.GetString("plugin-dir")
-	if pluginDir == "" {
-		return fmt.Errorf(`plugins directory should not be ""`)
+	pluginDir, err := GetPluginDir()
+	if err != nil {
+		return err
 	}
-
-	log.Infof("Using dir <%s> to store plugins.", pluginDir)
 
 	for _, tool := range tools {
 		pluginFileName := tool.GetPluginFileName()
 		pluginMD5FileName := tool.GetPluginMD5FileName()
-		if _, err := os.Stat(filepath.Join(pluginDir, pluginFileName)); err != nil {
+		if _, err = os.Stat(filepath.Join(pluginDir, pluginFileName)); err != nil {
 			if errors.Is(err, os.ErrNotExist) {
-				return fmt.Errorf("plugin %s doesn't exist", tool.Name)
+				return fmt.Errorf("plugin %s(%s) doesn't exist", tool.Name, pluginFileName)
 			}
 			return err
 		}
-		if _, err := os.Stat(filepath.Join(pluginDir, pluginMD5FileName)); err != nil {
+		if _, err = os.Stat(filepath.Join(pluginDir, pluginMD5FileName)); err != nil {
 			if errors.Is(err, os.ErrNotExist) {
 				return fmt.Errorf(".md5 file of plugin %s doesn't exist", tool.Name)
 			}
@@ -138,4 +137,36 @@ func ifPluginAndMD5Match(pluginDir, soFileName, md5FileName string) (bool, error
 		return false, err
 	}
 	return isMD5Match, nil
+}
+
+func GetPluginDir() (string, error) {
+	pluginDir := viper.GetString("plugin-dir")
+	if pluginDir == "" {
+		return "", fmt.Errorf(`plugins directory is ""`)
+	}
+	log.Debugf("Plugin directory: %s.", pluginDir)
+
+	realPluginDir, err := handlePathWithHome(pluginDir)
+	if err != nil {
+		return "", err
+	}
+	log.Debugf("Real plugin directory: %s.", realPluginDir)
+
+	return realPluginDir, nil
+}
+
+// handlePathWithHome deal with "~" in the filePath
+func handlePathWithHome(filePath string) (string, error) {
+	if !strings.Contains(filePath, "~") {
+		return filePath, nil
+	}
+
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return "", err
+	}
+	retPath := filepath.Join(homeDir, strings.TrimPrefix(filePath, "~"))
+	log.Debugf("real path: %s.", retPath)
+
+	return retPath, nil
 }

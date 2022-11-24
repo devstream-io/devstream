@@ -26,7 +26,7 @@ func verifyCMDFunc(cmd *cobra.Command, args []string) {
 
 func init() {
 	verifyCMD.Flags().StringVarP(&configFilePath, configFlagName, "f", "config.yaml", "config file")
-	verifyCMD.Flags().StringVarP(&pluginDir, pluginDirFlagName, "d", "", "plugins directory")
+	verifyCMD.Flags().StringVarP(&pluginDir, pluginDirFlagName, "d", defaultPluginDir, "plugins directory")
 
 	completion.FlagFilenameCompletion(verifyCMD, configFlagName)
 	completion.FlagDirnameCompletion(verifyCMD, pluginDirFlagName)
