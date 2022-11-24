@@ -1,6 +1,30 @@
-varFile: e2e-variables.yaml
-toolFile: e2e-trello-github-tools.yaml
-state:
-  backend: local
+config:
+  state:
+    backend: local
+    options:
+      stateFile: devstream.state
+
+vars:
+  githubOrganization: devstream-io
+  repoName: dtm-e2e-go
+  kanbanBoardName: dtmKanbanTest
+
+tools:
+- name: trello
+  instanceID: default
+  dependsOn: [ ]
   options:
-    stateFile: devstream.state
+    org: [[ githubOrganization ]]
+    repo: [[ repoName ]]
+    kanbanBoardName: [[ kanbanBoardName ]]
+- name: trello-github-integ
+  instanceID: default
+  dependsOn: [ "trello.default" ]
+  options:
+    org: [[ githubOrganization ]]
+    repo: [[ repoName ]]
+    boardId: ${{ trello.default.outputs.boardId }}
+    todoListId: ${{ trello.default.outputs.todoListId }}
+    doingListId: ${{ trello.default.outputs.doingListId }}
+    doneListId: ${{ trello.default.outputs.doneListId }}
+    branch: main

@@ -1,18 +1,17 @@
----
-varFile: ""
-toolFile: ""
-state:
-  backend: local
-  options:
-    stateFile: devstream.state
----
-defaultBranch: main
-githubUsername: GITHUBUSERNAME
-repoName: dtm-e2e-test-golang
-dockerRegistryUserName: DOCKERUSERNAME
-argocdNameSpace: argocd-e2e-test
-argocdDeployTimeout: 10m
----
+config:
+  state:
+    backend: local
+    options:
+      stateFile: devstream.state
+
+vars:
+  defaultBranch: main
+  githubUsername: GITHUBUSERNAME
+  repoName: dtm-e2e-test-golang
+  dockerRegistryUserName: DOCKERUSERNAME
+  argocdNameSpace: argocd-e2e-test
+  argocdDeployTimeout: 10m
+
 tools:
 - name: repo-scaffolding
   instanceID: golang-github
