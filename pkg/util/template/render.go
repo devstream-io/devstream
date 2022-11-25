@@ -17,7 +17,7 @@ func Render(name, templateStr string, variable any, funcMaps ...template.FuncMap
 
 	t, err := t.Parse(templateStr)
 	if err != nil {
-		log.Debugf("Template parse file failed: %s.", err)
+		log.Warnf("Template parse file failed: %s.", err)
 		return "", err
 	}
 
