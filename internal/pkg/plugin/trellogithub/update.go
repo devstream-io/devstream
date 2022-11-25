@@ -2,12 +2,18 @@ package trellogithub
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
+	. "github.com/devstream-io/devstream/internal/pkg/plugin/common"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 // Update remove and set up trello-github-integ workflows.
 func Update(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
+	var err error
+	defer func() {
+		HandleErrLogsWithPlugin(err, Name)
+	}()
+
 	tg, err := NewTrelloGithub(options)
 	if err != nil {
 		return nil, err
@@ -32,7 +38,7 @@ func Update(options configmanager.RawOptions) (statemanager.ResourceStatus, erro
 		doneListId:  tg.options.DoneListId,
 	}
 
-	if err := tg.AddTrelloIdSecret(trelloItemId); err != nil {
+	if err = tg.AddTrelloIdSecret(trelloItemId); err != nil {
 		return nil, err
 	}
 	log.Success("Adding secret keys for trello succeeded.")

@@ -6,6 +6,7 @@ import (
 	"github.com/mitchellh/mapstructure"
 
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
+	. "github.com/devstream-io/devstream/internal/pkg/plugin/common"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
@@ -14,8 +15,13 @@ import (
 
 // Update remove and set up jira-github-integ workflows.
 func Update(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
+	var err error
+	defer func() {
+		HandleErrLogsWithPlugin(err, Name)
+	}()
+
 	var opts Options
-	err := mapstructure.Decode(options, &opts)
+	err = mapstructure.Decode(options, &opts)
 	if err != nil {
 		return nil, err
 	}
@@ -38,7 +44,7 @@ func Update(options configmanager.RawOptions) (statemanager.ResourceStatus, erro
 		return nil, err
 	}
 
-	if err := ghClient.DeleteWorkflow(workflow, opts.Branch); err != nil {
+	if err = ghClient.DeleteWorkflow(workflow, opts.Branch); err != nil {
 		return nil, err
 	}
 

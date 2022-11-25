@@ -6,6 +6,7 @@ import (
 	"github.com/mitchellh/mapstructure"
 
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
+	. "github.com/devstream-io/devstream/internal/pkg/plugin/common"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
@@ -14,8 +15,13 @@ import (
 
 // Create sets up jira-github-integ workflows.
 func Create(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
+	var err error
+	defer func() {
+		HandleErrLogsWithPlugin(err, Name)
+	}()
+
 	var opts Options
-	err := mapstructure.Decode(options, &opts)
+	err = mapstructure.Decode(options, &opts)
 	if err != nil {
 		return nil, err
 	}
@@ -24,7 +30,8 @@ func Create(options configmanager.RawOptions) (statemanager.ResourceStatus, erro
 		for _, e := range errs {
 			log.Errorf("Options error: %s.", e)
 		}
-		return nil, fmt.Errorf("options are illegal")
+		err = fmt.Errorf("options are illegal")
+		return nil, err
 	}
 
 	ghOptions := &git.RepoInfo{
@@ -44,11 +51,11 @@ func Create(options configmanager.RawOptions) (statemanager.ResourceStatus, erro
 	}
 	workflow.WorkflowContent = content
 
-	if err := ghClient.AddWorkflow(workflow, opts.Branch); err != nil {
+	if err = ghClient.AddWorkflow(workflow, opts.Branch); err != nil {
 		return nil, err
 	}
 
-	if err := setRepoSecrets(ghClient); err != nil {
+	if err = setRepoSecrets(ghClient); err != nil {
 		return nil, err
 	}
 

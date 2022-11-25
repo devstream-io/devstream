@@ -8,6 +8,8 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/trello"
 )
 
+const Name = "trello"
+
 // Options is the struct for configurations of the trellogithub plugin.
 type Options struct {
 	Owner           string `validate:"required_without=Org"`

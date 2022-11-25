@@ -6,15 +6,20 @@ import (
 	"github.com/mitchellh/mapstructure"
 
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
+	. "github.com/devstream-io/devstream/internal/pkg/plugin/common"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 // Create creates Tello board and lists(todo/doing/done).
 func Create(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
-	var opts Options
+	var err error
+	defer func() {
+		HandleErrLogsWithPlugin(err, Name)
+	}()
 
-	if err := mapstructure.Decode(options, &opts); err != nil {
+	var opts Options
+	if err = mapstructure.Decode(options, &opts); err != nil {
 		return nil, err
 	}
 

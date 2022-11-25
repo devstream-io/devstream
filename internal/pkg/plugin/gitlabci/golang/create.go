@@ -2,6 +2,7 @@ package golang
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
+	. "github.com/devstream-io/devstream/internal/pkg/plugin/common"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/gitlabci"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/cifile"
@@ -10,6 +11,12 @@ import (
 )
 
 func Create(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
+	var err error
+	defer func() {
+		HandleErrLogsWithPlugin(err, Name)
+	}()
+
+	// Initialize Operator with Operations
 	operator := &installer.Operator{
 		PreExecuteOperations: installer.PreExecuteOperations{
 			cifile.SetDefaultConfig(gitlabci.DefaultCIOptions),

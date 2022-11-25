@@ -9,6 +9,8 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/scm"
 )
 
+const Name = "github-actions"
+
 var ciType = server.CIGithubType
 
 func preConfigGithub(options configmanager.RawOptions) error {

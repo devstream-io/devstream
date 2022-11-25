@@ -14,6 +14,8 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
+const Name = "devlake-config"
+
 var httpClient = &http.Client{
 	Timeout: 5 * time.Second,
 }

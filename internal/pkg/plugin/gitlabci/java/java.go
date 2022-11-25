@@ -2,6 +2,8 @@ package java
 
 import "github.com/devstream-io/devstream/internal/pkg/statemanager"
 
+const Name = "gitlabci-java"
+
 const (
 	ciFileName    string = ".gitlab-ci.yml"
 	commitMessage string = "managed by DevStream"

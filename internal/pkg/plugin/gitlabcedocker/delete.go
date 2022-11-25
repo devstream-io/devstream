@@ -2,12 +2,18 @@ package gitlabcedocker
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
+	. "github.com/devstream-io/devstream/internal/pkg/plugin/common"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer"
 	dockerInstaller "github.com/devstream-io/devstream/internal/pkg/plugin/installer/docker"
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
 func Delete(options configmanager.RawOptions) (bool, error) {
+	var err error
+	defer func() {
+		HandleErrLogsWithPlugin(err, Name)
+	}()
+
 	// 1. create config and pre-handle operations
 	opts, err := validateAndDefault(options)
 	if err != nil {

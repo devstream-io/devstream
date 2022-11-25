@@ -7,6 +7,8 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
+const Name = "gitlabci-golang"
+
 func setCIContent(options configmanager.RawOptions) (configmanager.RawOptions, error) {
 	opts, err := cifile.NewOptions(options)
 	if err != nil {
