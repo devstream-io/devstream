@@ -6,12 +6,7 @@ import (
 )
 
 func renderConfigWithVariables(fileContent string, variables map[string]interface{}) ([]byte, error) {
-	log.Debugf("renderConfigWithVariables got str: %s", fileContent)
-	log.Debugf("Vars: ---")
-	for k, v := range variables {
-		log.Debugf("%s: %s", k, v)
-	}
-	log.Debugf("---")
+	logFunc(fileContent, variables)
 
 	str, err := template.New().
 		FromContent(fileContent).
@@ -24,4 +19,13 @@ func renderConfigWithVariables(fileContent string, variables map[string]interfac
 	}
 
 	return []byte(str), nil
+}
+
+func logFunc(fileContent string, variables map[string]interface{}) {
+	log.Debugf("renderConfigWithVariables got str: %s", fileContent)
+	log.Debugf("Vars: ---")
+	for k, v := range variables {
+		log.Debugf("%s: %s", k, v)
+	}
+	log.Debugf("---")
 }
