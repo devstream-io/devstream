@@ -122,6 +122,8 @@ var _ = Describe("LoadConfig", func() {
 		InstanceID: "service-a",
 		DependsOn: []string{
 			"repo-scaffolding.service-a",
+			"plugin1.default",
+			"plugin2.tluafed",
 		},
 		Options: RawOptions{
 			"instanceID": "service-a",
@@ -152,6 +154,8 @@ var _ = Describe("LoadConfig", func() {
 		InstanceID: "service-a",
 		DependsOn: []string{
 			"repo-scaffolding.service-a",
+			"plugin1.default",
+			"plugin2.tluafed",
 		},
 		Options: RawOptions{
 			"instanceID": "service-a",
@@ -184,7 +188,10 @@ var _ = Describe("LoadConfig", func() {
 	tool5 := &Tool{
 		Name:       "repo-scaffolding",
 		InstanceID: "service-a",
-		DependsOn:  []string{},
+		DependsOn: []string{
+			"plugin1.default",
+			"plugin2.tluafed",
+		},
 		Options: RawOptions{
 			"instanceID": "service-a",
 			"destinationRepo": RawOptions{
