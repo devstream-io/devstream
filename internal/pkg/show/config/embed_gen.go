@@ -12,17 +12,11 @@ var (
 	//go:embed plugins/argocdapp.yaml
 	ArgocdappDefaultConfig string
 
-	//go:embed plugins/artifactory.yaml
-	ArtifactoryDefaultConfig string
-
 	//go:embed plugins/ci-generic.yaml
 	CiGenericDefaultConfig string
 
 	//go:embed plugins/devlake-config.yaml
 	DevlakeConfigDefaultConfig string
-
-	//go:embed plugins/devlake.yaml
-	DevlakeDefaultConfig string
 
 	//go:embed plugins/github-actions.yaml
 	GithubActionsDefaultConfig string
@@ -51,38 +45,17 @@ var (
 	//go:embed plugins/harbor-docker.yaml
 	HarborDockerDefaultConfig string
 
-	//go:embed plugins/harbor.yaml
-	HarborDefaultConfig string
-
-	//go:embed plugins/hashicorp-vault.yaml
-	HashicorpVaultDefaultConfig string
-
 	//go:embed plugins/helm-installer.yaml
 	HelmInstallerDefaultConfig string
 
 	//go:embed plugins/jenkins-pipeline.yaml
 	JenkinsPipelineDefaultConfig string
 
-	//go:embed plugins/jenkins.yaml
-	JenkinsDefaultConfig string
-
 	//go:embed plugins/jira-github-integ.yaml
 	JiraGithubIntegDefaultConfig string
 
-	//go:embed plugins/kube-prometheus.yaml
-	KubePrometheusDefaultConfig string
-
-	//go:embed plugins/openldap.yaml
-	OpenldapDefaultConfig string
-
 	//go:embed plugins/repo-scaffolding.yaml
 	RepoScaffoldingDefaultConfig string
-
-	//go:embed plugins/sonarqube.yaml
-	SonarqubeDefaultConfig string
-
-	//go:embed plugins/tekton.yaml
-	TektonDefaultConfig string
 
 	//go:embed plugins/trello-github-integ.yaml
 	TrelloGithubIntegDefaultConfig string
@@ -96,10 +69,8 @@ var (
 
 var pluginDefaultConfigs = map[string]string{
 	"argocdapp":            ArgocdappDefaultConfig,
-	"artifactory":          ArtifactoryDefaultConfig,
 	"ci-generic":           CiGenericDefaultConfig,
 	"devlake-config":       DevlakeConfigDefaultConfig,
-	"devlake":              DevlakeDefaultConfig,
 	"github-actions":       GithubActionsDefaultConfig,
 	"githubactions-golang": GithubactionsGolangDefaultConfig,
 	"githubactions-nodejs": GithubactionsNodejsDefaultConfig,
@@ -109,17 +80,10 @@ var pluginDefaultConfigs = map[string]string{
 	"gitlabci-golang":      GitlabciGolangDefaultConfig,
 	"gitlabci-java":        GitlabciJavaDefaultConfig,
 	"harbor-docker":        HarborDockerDefaultConfig,
-	"harbor":               HarborDefaultConfig,
-	"hashicorp-vault":      HashicorpVaultDefaultConfig,
 	"helm-installer":       HelmInstallerDefaultConfig,
 	"jenkins-pipeline":     JenkinsPipelineDefaultConfig,
-	"jenkins":              JenkinsDefaultConfig,
 	"jira-github-integ":    JiraGithubIntegDefaultConfig,
-	"kube-prometheus":      KubePrometheusDefaultConfig,
-	"openldap":             OpenldapDefaultConfig,
 	"repo-scaffolding":     RepoScaffoldingDefaultConfig,
-	"sonarqube":            SonarqubeDefaultConfig,
-	"tekton":               TektonDefaultConfig,
 	"trello-github-integ":  TrelloGithubIntegDefaultConfig,
 	"trello":               TrelloDefaultConfig,
 	"zentao":               ZentaoDefaultConfig,

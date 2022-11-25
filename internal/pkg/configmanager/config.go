@@ -20,6 +20,11 @@ type Config struct {
 }
 
 func (c *Config) getToolsFromApps() (Tools, error) {
+	err := c.renderPipelineTemplateMap()
+	if err != nil {
+		return nil, err
+	}
+
 	var tools Tools
 	for _, a := range c.Apps {
 		appTools, err := c.getToolsWithVarsFromApp(a)
@@ -50,15 +55,10 @@ func (c *Config) getToolsWithVarsFromApp(a app) (Tools, error) {
 		return nil, fmt.Errorf("app parse yaml failed: %w", err)
 	}
 
-	err = c.renderPipelineTemplateMap()
-	if err != nil {
-		return nil, err
-	}
-
 	rawApp.setDefault()
 	appVars := mapz.Merge(c.Vars, rawApp.Spec)
 
-	// 3. generate app repo and tempalte repo from scmInfo
+	// 3. generate app repo and template repo from scmInfo
 	repoScaffoldingTool, err := rawApp.getRepoTemplateTool(appVars)
 	if err != nil {
 		return nil, fmt.Errorf("app[%s] get repo failed: %w", rawApp.Name, err)

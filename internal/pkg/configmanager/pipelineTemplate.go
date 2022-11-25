@@ -83,7 +83,7 @@ func (p *pipelineRaw) getOptions(piplineType string, repo *scm.SCMInfo) RawOptio
 func (p *pipelineRaw) newPipelineFromTemplate(templateMap map[string]string, globalVars map[string]any) (*pipelineTemplate, error) {
 	var t pipelineTemplate
 	if p.TemplateName == "" {
-		return nil, fmt.Errorf("%s.templateName is required", p.TemplateName)
+		return nil, fmt.Errorf("templateName is required")
 	}
 	templateStr, ok := templateMap[p.TemplateName]
 	if !ok {
