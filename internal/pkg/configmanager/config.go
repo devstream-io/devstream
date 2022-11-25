@@ -6,7 +6,6 @@ import (
 	"gopkg.in/yaml.v3"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
-	"github.com/devstream-io/devstream/pkg/util/mapz"
 )
 
 // Config is a general config in DevStream.
@@ -55,16 +54,15 @@ func (c *Config) getToolsWithVarsFromApp(a app) (Tools, error) {
 		return nil, fmt.Errorf("app parse yaml failed: %w", err)
 	}
 
-	rawApp.setDefault()
-	appVars := mapz.Merge(c.Vars, rawApp.Spec)
-
 	// 3. generate app repo and template repo from scmInfo
-	repoScaffoldingTool, err := rawApp.getRepoTemplateTool(appVars)
+	rawApp.setDefault()
+	repoScaffoldingTool, err := rawApp.getRepoTemplateTool()
 	if err != nil {
 		return nil, fmt.Errorf("app[%s] get repo failed: %w", rawApp.Name, err)
 	}
 
 	// 4. get ci/cd pipelineTemplates
+	appVars := rawApp.Spec.merge(c.Vars)
 	tools, err := rawApp.generateCICDToolsFromAppConfig(c.pipelineTemplateMap, appVars)
 	if err != nil {
 		return nil, fmt.Errorf("app[%s] get pipeline tools failed: %w", rawApp.Name, err)

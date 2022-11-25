@@ -41,7 +41,8 @@ var _ = Describe("action struct", func() {
 		It("should work normal", func() {
 			var nilStepConfig *step.SonarQubeStepConfig
 			var nilDingTalkConfig *step.DingtalkStepConfig
-			var nilGeneral *step.GeneralStepConfig
+			var nilBool *bool
+			var nilArray []string
 			CIFileConfig := pipelineConfig.BuildCIFileConfig(ciType, repoInfo)
 			Expect(string(CIFileConfig.Type)).Should(Equal("gitlab"))
 			Expect(CIFileConfig.ConfigLocation).Should(Equal(configLocation))
@@ -54,7 +55,6 @@ var _ = Describe("action struct", func() {
 					"url":  "exmaple.com",
 					"user": "test_user",
 				},
-				"general":             nilGeneral,
 				"dingTalk":            nilDingTalkConfig,
 				"DingTalkSecretKey":   "DINGTALK_SECURITY_VALUE",
 				"DingTalkSecretToken": "DINGTALK_SECURITY_TOKEN",
@@ -62,6 +62,18 @@ var _ = Describe("action struct", func() {
 				"configLocation":      downloader.ResourceLocation("123/workflows"),
 				"sonarqube":           nilStepConfig,
 				"GitlabConnectionID":  "gitlabConnection",
+				"language": map[string]interface{}{
+					"name":      "",
+					"version":   "",
+					"frameWork": "",
+				},
+				"test": map[string]interface{}{
+					"enable":                nilBool,
+					"command":               nilArray,
+					"containerName":         "",
+					"coverageCommand":       "",
+					"CoverageStatusCommand": "",
+				},
 			}
 			Expect(CIFileConfig.Vars).Should(Equal(expectVars))
 		})

@@ -74,6 +74,6 @@ func (m *Manager) getConfigFromFile() (*Config, error) {
 
 // escapeBrackets is used to escape []byte(": [[xxx]]xxx\n") to []byte(": \"[[xxx]]\"xxx\n")
 func escapeBrackets(param []byte) []byte {
-	re := regexp.MustCompile(`([^:]+:)(\s*)(\[\[[^\]]+\]\][^\s]*)`)
+	re := regexp.MustCompile(`([^:]+:)(\s*)((\[\[[^\]]+\]\][^\s\[]*)+)[^\s#\n]*`)
 	return re.ReplaceAll(param, []byte("$1$2\"$3\""))
 }

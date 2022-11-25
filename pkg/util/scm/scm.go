@@ -39,7 +39,7 @@ func (s *SCMInfo) BuildRepoInfo() (*git.RepoInfo, error) {
 		repo, err = s.getRepoInfoFromURL()
 	} else {
 		// get repo from repo basic fields
-		repo, err = s.getRepoInfoFromBasic()
+		repo = s.getRepoInfoFromBasic()
 	}
 	if err != nil {
 		return nil, err
@@ -91,8 +91,8 @@ func (s *SCMInfo) getRepoInfoFromURL() (*git.RepoInfo, error) {
 
 }
 
-func (s *SCMInfo) getRepoInfoFromBasic() (*git.RepoInfo, error) {
-	return &git.RepoInfo{
+func (s *SCMInfo) getRepoInfoFromBasic() *git.RepoInfo {
+	repoInfo := &git.RepoInfo{
 		Owner:         s.Owner,
 		Org:           s.Org,
 		Repo:          s.Name,
@@ -100,7 +100,9 @@ func (s *SCMInfo) getRepoInfoFromBasic() (*git.RepoInfo, error) {
 		RepoType:      s.Type,
 		SSHPrivateKey: s.SSHPrivateKey,
 		NeedAuth:      true,
-	}, nil
+	}
+	repoInfo.CloneURL = repoInfo.BuildScmURL()
+	return repoInfo
 }
 
 func (s *SCMInfo) Encode() map[string]any {

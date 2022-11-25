@@ -86,7 +86,7 @@ pipelineTemplates:
       namespace: [[ argocdNamespace ]] # you can use global vars in templates
     destination:
       server: https://kubernetes.default.svc
-      namespace: default
+      namespace: devstream-io
     source:
       valuefile: values.yaml
       path: helm/[[ app ]]
@@ -126,6 +126,10 @@ var _ = Describe("LoadConfig", func() {
 		Options: RawOptions{
 			"instanceID": "service-a",
 			"pipeline": RawOptions{
+				"language": RawOptions{
+					"name":      "python",
+					"framework": "django",
+				},
 				"docker": RawOptions{
 					"registry": RawOptions{
 						"repository": "service-a",
@@ -155,28 +159,17 @@ var _ = Describe("LoadConfig", func() {
 		},
 		Options: RawOptions{
 			"instanceID": "service-a",
-			"pipeline": RawOptions{
-				"destination": RawOptions{
-					"namespace": "devstream-io",
-					"server":    "https://kubernetes.default.svc",
-				},
-				"app": RawOptions{
-					"namespace": "argocd",
-				},
-				"source": RawOptions{
-					"valuefile": "values.yaml",
-					"path":      "helm/service-a",
-					"repoURL":   "${{repo-scaffolding.myapp.outputs.repoURL}}",
-				},
-				"configLocation": "",
+			"destination": RawOptions{
+				"namespace": "devstream-io",
+				"server":    "https://kubernetes.default.svc",
 			},
-			"scm": RawOptions{
-				"url":     "https://github.com/devstream-io/service-a",
-				"apiURL":  "gitlab.com/some/path/to/your/api",
-				"owner":   "devstream-io",
-				"org":     "devstream-io",
-				"name":    "service-a",
-				"scmType": "github",
+			"app": RawOptions{
+				"namespace": "argocd",
+			},
+			"source": RawOptions{
+				"valuefile": "values.yaml",
+				"path":      "helm/service-a",
+				"repoURL":   "${{repo-scaffolding.myapp.outputs.repoURL}}",
 			},
 		},
 	}
@@ -203,14 +196,7 @@ var _ = Describe("LoadConfig", func() {
 				"repo":     "dtm-scaffolding-golang",
 				"branch":   "main",
 			},
-			"vars": RawOptions{
-				"foo1":            "bar1",
-				"foo2":            "bar2",
-				"registryType":    "dockerhub",
-				"framework":       "django",
-				"language":        "python",
-				"argocdNamespace": "argocd",
-			},
+			"vars": RawOptions{},
 		},
 	}
 
@@ -266,17 +252,20 @@ var _ = Describe("LoadConfig", func() {
 var _ = Describe("escapeBrackets", func() {
 	When("escape brackets", func() {
 		It("should works right", func() {
-			testStrBytes1 := "foo: [[ foo ]]\n"
-			testStr2 := "foo: xx[[ foo ]]\n"
-			testStr3 := "foo: [[ foo ]]xx\n"
+			testMap := map[string]string{
+				"foo: [[ foo ]]":           "foo: \"[[ foo ]]\"",
+				"foo: [[ foo ]] #comment":  "foo: \"[[ foo ]]\" #comment",
+				"foo: xx[[ foo ]]":         "foo: xx[[ foo ]]",
+				"foo: [[ foo ]]xx":         "foo: \"[[ foo ]]xx\"",
+				"foo: [[ foo ]]/[[ poo ]]": "foo: \"[[ foo ]]/[[ poo ]]\"",
+				`foo: [[ test ]]
+poo: [[ gg ]]`: "foo: \"[[ test ]]\"\npoo: \"[[ gg ]]\"",
+			}
 
-			retStr1 := escapeBrackets([]byte(testStrBytes1))
-			retStr2 := escapeBrackets([]byte(testStr2))
-			retStr3 := escapeBrackets([]byte(testStr3))
-
-			Expect(string(retStr1)).To(Equal("foo: \"[[ foo ]]\"\n"))
-			Expect(string(retStr2)).To(Equal("foo: xx[[ foo ]]\n"))
-			Expect(string(retStr3)).To(Equal("foo: \"[[ foo ]]xx\"\n"))
+			for testStr, expectStr := range testMap {
+				retStr1 := escapeBrackets([]byte(testStr))
+				Expect(string(retStr1)).Should(Equal(expectStr))
+			}
 		})
 	})
 })

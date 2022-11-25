@@ -95,6 +95,7 @@ var _ = Describe("BuildRepoInfo func", func() {
 				CloneURL: "",
 				Name:     "test",
 				Type:     "github",
+				Org:      "test_org",
 			}
 		})
 		It("should return repoInfo", func() {
@@ -105,6 +106,8 @@ var _ = Describe("BuildRepoInfo func", func() {
 				Repo:     "test",
 				RepoType: "github",
 				NeedAuth: true,
+				CloneURL: "https://github.com/test_org/test",
+				Org:      "test_org",
 			}))
 		})
 	})
