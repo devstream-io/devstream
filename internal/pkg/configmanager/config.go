@@ -73,6 +73,14 @@ func (c *Config) getToolsWithVarsFromApp(a app) (Tools, error) {
 		tools = append(tools, repoScaffoldingTool)
 	}
 
+	// 5. all tools from apps should depend on the original tools,
+	//    because dtm will execute all original tools first, then execute all tools from apps
+	for _, toolFromApps := range tools {
+		for _, t := range c.Tools {
+			toolFromApps.DependsOn = append(toolFromApps.DependsOn, t.KeyWithNameAndInstanceID())
+		}
+	}
+
 	log.Debugf("Have got %d tools from app %s.", len(tools), rawApp.Name)
 	for i, t := range tools {
 		log.Debugf("Tool %d: %v", i+1, t)
