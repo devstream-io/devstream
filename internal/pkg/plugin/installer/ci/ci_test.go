@@ -40,7 +40,8 @@ var _ = Describe("PipelineConfig struct", func() {
 		It("should work normal", func() {
 			var nilStepConfig *step.SonarQubeStepConfig
 			var nilDingTalkConfig *step.DingtalkStepConfig
-			var nilGeneral *step.GeneralStepConfig
+			var emptyBool *bool
+			var emptyArray []string
 			CIFileConfig := a.BuildCIFileConfig(ciType, r)
 			Expect(string(CIFileConfig.Type)).Should(Equal("gitlab"))
 			Expect(CIFileConfig.ConfigLocation).Should(Equal(configLocation))
@@ -53,7 +54,6 @@ var _ = Describe("PipelineConfig struct", func() {
 					"url":  "exmaple.com",
 					"user": "test_user",
 				},
-				"general":             nilGeneral,
 				"dingTalk":            nilDingTalkConfig,
 				"DingTalkSecretKey":   "DINGTALK_SECURITY_VALUE",
 				"DingTalkSecretToken": "DINGTALK_SECURITY_TOKEN",
@@ -61,15 +61,28 @@ var _ = Describe("PipelineConfig struct", func() {
 				"configLocation":      downloader.ResourceLocation("123/workflows"),
 				"sonarqube":           nilStepConfig,
 				"GitlabConnectionID":  "gitlabConnection",
+				"test": map[string]interface{}{
+					"enable":                emptyBool,
+					"command":               emptyArray,
+					"containerName":         "",
+					"coverageCommand":       "",
+					"CoverageStatusCommand": "",
+				},
+				"language": map[string]interface{}{
+					"name":      "",
+					"version":   "",
+					"frameWork": "",
+				},
 			}
 			Expect(CIFileConfig.Vars).Should(Equal(expectVars))
 		})
 	})
 	It("should return file Vars", func() {
 		varMap := a.generateCIFileVars(r)
-		var emptyGeneral *step.GeneralStepConfig
 		var emptyDingtalk *step.DingtalkStepConfig
 		var emptySonar *step.SonarQubeStepConfig
+		var emptyBool *bool
+		var emptyArray []string
 		Expect(varMap).Should(Equal(cifile.CIFileVarsMap{
 			"configLocation":        downloader.ResourceLocation("123/workflows"),
 			"DingTalkSecretToken":   "DINGTALK_SECURITY_TOKEN",
@@ -82,10 +95,21 @@ var _ = Describe("PipelineConfig struct", func() {
 			},
 			"dingTalk":           emptyDingtalk,
 			"sonarqube":          emptySonar,
-			"general":            emptyGeneral,
 			"SonarqubeSecretKey": "SONAR_SECRET_TOKEN",
 			"GitlabConnectionID": "gitlabConnection",
 			"DingTalkSecretKey":  "DINGTALK_SECURITY_VALUE",
+			"test": map[string]interface{}{
+				"enable":                emptyBool,
+				"command":               emptyArray,
+				"containerName":         "",
+				"coverageCommand":       "",
+				"CoverageStatusCommand": "",
+			},
+			"language": map[string]interface{}{
+				"name":      "",
+				"version":   "",
+				"frameWork": "",
+			},
 		}))
 	})
 })

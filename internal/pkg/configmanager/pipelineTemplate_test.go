@@ -11,24 +11,19 @@ import (
 
 var _ = Describe("pipelineRaw struct", func() {
 	var (
-		r                                *pipelineRaw
-		s                                *scm.SCMInfo
-		templateMap                      map[string]string
-		opt, globalVars                  map[string]any
-		typeInfo, templateName, cloneURL string
+		r                      *pipelineRaw
+		templateMap            map[string]string
+		opt, globalVars        map[string]any
+		typeInfo, templateName string
 	)
 	BeforeEach(func() {
-		cloneURL = "http://test.com"
 		typeInfo = "github-actions"
 		templateName = "testTemplate"
 		templateMap = map[string]string{}
 		globalVars = map[string]any{}
 		opt = map[string]any{}
-		s = &scm.SCMInfo{
-			CloneURL: cloneURL,
-		}
 	})
-	Context("newPipeline method", func() {
+	Context("getPipelineTemplate method", func() {
 		When("type is not template", func() {
 			BeforeEach(func() {
 				opt = RawOptions{
@@ -41,12 +36,9 @@ var _ = Describe("pipelineRaw struct", func() {
 			})
 			It("should return template", func() {
 				expectedInfo := RawOptions{
-					"pipeline": RawOptions(opt),
-					"scm": RawOptions{
-						"url": cloneURL,
-					},
+					"toolconfig": "here",
 				}
-				t, err := r.newPipeline(s, templateMap, globalVars)
+				t, err := r.getPipelineTemplate(templateMap, globalVars)
 				Expect(err).ShouldNot(HaveOccurred())
 				Expect(t.Type).Should(Equal(typeInfo))
 				Expect(t.Name).Should(Equal(typeInfo))
@@ -61,7 +53,7 @@ var _ = Describe("pipelineRaw struct", func() {
 				}
 			})
 			It("should return err", func() {
-				_, err := r.newPipeline(s, templateMap, globalVars)
+				_, err := r.getPipelineTemplate(templateMap, globalVars)
 				Expect(err).Error().Should(HaveOccurred())
 				Expect(err.Error()).Should(ContainSubstring("templateName is required"))
 			})
@@ -75,7 +67,7 @@ var _ = Describe("pipelineRaw struct", func() {
 				templateMap = map[string]string{}
 			})
 			It("should return err", func() {
-				_, err := r.newPipeline(s, templateMap, globalVars)
+				_, err := r.getPipelineTemplate(templateMap, globalVars)
 				Expect(err).Error().Should(HaveOccurred())
 				Expect(err.Error()).Should(ContainSubstring("not found in pipelineTemplates"))
 			})
@@ -91,7 +83,7 @@ var _ = Describe("pipelineRaw struct", func() {
 				}
 			})
 			It("should return err", func() {
-				_, err := r.newPipeline(s, templateMap, globalVars)
+				_, err := r.getPipelineTemplate(templateMap, globalVars)
 				Expect(err).Error().Should(HaveOccurred())
 				Expect(err.Error()).Should(ContainSubstring("render pipelineTemplate failed"))
 			})
@@ -107,7 +99,7 @@ var _ = Describe("pipelineRaw struct", func() {
 				}
 			})
 			It("should return err", func() {
-				_, err := r.newPipeline(s, templateMap, globalVars)
+				_, err := r.getPipelineTemplate(templateMap, globalVars)
 				Expect(err).Error().Should(HaveOccurred())
 				Expect(err.Error()).Should(ContainSubstring("parse pipelineTemplate yaml failed"))
 			})
@@ -136,18 +128,13 @@ options:
 				}
 			})
 			It("should render with app vars", func() {
-				t, err := r.newPipeline(s, templateMap, globalVars)
+				t, err := r.getPipelineTemplate(templateMap, globalVars)
 				Expect(err).ShouldNot(HaveOccurred())
 				Expect(t.Options).Should(Equal(RawOptions{
-					"pipeline": RawOptions{
-						"branch": "main",
-						"registry": RawOptions{
-							"username": "cover",
-						},
-						"configLocation": validPipelineConfigMap["github-actions"],
-					},
-					"scm": RawOptions{
-						"url": "http://test.com",
+					"branch": "main",
+					"docker": nil,
+					"registry": RawOptions{
+						"username": "cover",
 					},
 				}))
 			})
@@ -180,21 +167,14 @@ options:
 				}
 			})
 			It("should render with app vars", func() {
-				t, err := r.newPipeline(s, templateMap, globalVars)
+				t, err := r.getPipelineTemplate(templateMap, globalVars)
 				Expect(err).ShouldNot(HaveOccurred())
 				Expect(t.Options).Should(Equal(RawOptions{
-					"pipeline": RawOptions{
-						"option": "app",
-						"branch": "main",
-						"registry": RawOptions{
-							"username": "cover",
-						},
-						"app":            "test",
-						"configLocation": "",
+					"branch": "main",
+					"registry": RawOptions{
+						"username": "cover",
 					},
-					"scm": RawOptions{
-						"url": "http://test.com",
-					},
+					"app": "template",
 				}))
 			})
 		})
@@ -203,22 +183,33 @@ options:
 
 var _ = Describe("PipelineTemplate struct", func() {
 	var (
-		t       *pipelineTemplate
-		opts    map[string]any
-		appName string
+		t                 *pipelineTemplate
+		s                 *scm.SCMInfo
+		opts              map[string]any
+		appName, cloneURL string
+		a                 *app
 	)
 	BeforeEach(func() {
+		appName = "test_app"
+		cloneURL = "http://test.com"
 		t = &pipelineTemplate{}
+		s = &scm.SCMInfo{
+			CloneURL: cloneURL,
+		}
+		a = &app{
+			Repo: s,
+			Name: appName,
+		}
 	})
-	Context("getPipelineTool method", func() {
+	Context("generatePipelineTool method", func() {
 		When("pipeline type is not valid", func() {
 			BeforeEach(func() {
 				t.Type = "not_exist"
 			})
 			It("should return err", func() {
-				_, err := t.getPipelineTool("test")
+				_, err := t.generatePipelineTool(a)
 				Expect(err).Error().Should(HaveOccurred())
-				Expect(err.Error()).Should(ContainSubstring("pipeline type not_exist not supported for now"))
+				Expect(err.Error()).Should(ContainSubstring("pipeline type [not_exist] not supported for now"))
 			})
 		})
 		When("pipeline type is valid", func() {
@@ -231,13 +222,21 @@ var _ = Describe("PipelineTemplate struct", func() {
 				t.Options = opts
 			})
 			It("should return tool", func() {
-				tool, err := t.getPipelineTool(appName)
+				tool, err := t.generatePipelineTool(a)
 				Expect(err).Error().ShouldNot(HaveOccurred())
 				Expect(tool).Should(Equal(&Tool{
 					Name:       t.Type,
 					InstanceID: appName,
 					DependsOn:  []string{},
-					Options:    opts,
+					Options: RawOptions{
+						"pipeline": RawOptions{
+							"test":           "testV",
+							"configLocation": "git@github.com:devstream-io/ci-template.git//github-actions",
+						},
+						"scm": RawOptions{
+							"url": cloneURL,
+						},
+					},
 				}))
 			})
 		})

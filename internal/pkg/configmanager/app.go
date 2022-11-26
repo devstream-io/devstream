@@ -10,13 +10,18 @@ const (
 	repoScaffoldingPluginName = "repo-scaffolding"
 )
 
+type repoTemplate struct {
+	*scm.SCMInfo `yaml:",inline"`
+	Vars         map[string]any `yaml:"vars"`
+}
+
 type app struct {
-	Name         string         `yaml:"name" mapstructure:"name"`
-	Spec         map[string]any `yaml:"spec" mapstructure:"spec"`
-	Repo         *scm.SCMInfo   `yaml:"repo" mapstructure:"repo"`
-	RepoTemplate *scm.SCMInfo   `yaml:"repoTemplate" mapstructure:"repoTemplate"`
-	CIRawConfigs []pipelineRaw  `yaml:"ci" mapstructure:"ci"`
-	CDRawConfigs []pipelineRaw  `yaml:"cd" mapstructure:"cd"`
+	Name         string        `yaml:"name" mapstructure:"name"`
+	Spec         *appSpec      `yaml:"spec" mapstructure:"spec"`
+	Repo         *scm.SCMInfo  `yaml:"repo" mapstructure:"repo"`
+	RepoTemplate *repoTemplate `yaml:"repoTemplate" mapstructure:"repoTemplate"`
+	CIRawConfigs []pipelineRaw `yaml:"ci" mapstructure:"ci"`
+	CDRawConfigs []pipelineRaw `yaml:"cd" mapstructure:"cd"`
 }
 
 // getAppPipelineTool generate ci/cd tools from app config
@@ -24,11 +29,11 @@ func (a *app) generateCICDToolsFromAppConfig(templateMap map[string]string, appV
 	allPipelineRaw := append(a.CIRawConfigs, a.CDRawConfigs...)
 	var tools Tools
 	for _, p := range allPipelineRaw {
-		t, err := p.newPipeline(a.Repo, templateMap, appVars)
+		t, err := p.getPipelineTemplate(templateMap, appVars)
 		if err != nil {
 			return nil, err
 		}
-		pipelineTool, err := t.getPipelineTool(a.Name)
+		pipelineTool, err := t.generatePipelineTool(a)
 		if err != nil {
 			return nil, err
 		}
@@ -39,7 +44,7 @@ func (a *app) generateCICDToolsFromAppConfig(templateMap map[string]string, appV
 }
 
 // getRepoTemplateTool will use repo-scaffolding plugin for app
-func (a *app) getRepoTemplateTool(appVars map[string]any) (*Tool, error) {
+func (a *app) getRepoTemplateTool() (*Tool, error) {
 	if a.Repo == nil {
 		return nil, fmt.Errorf("app.repo field can't be empty")
 	}
@@ -56,7 +61,7 @@ func (a *app) getRepoTemplateTool(appVars map[string]any) (*Tool, error) {
 			repoScaffoldingPluginName, a.Name, RawOptions{
 				"destinationRepo": RawOptions(appRepo.Encode()),
 				"sourceRepo":      RawOptions(templateRepo.Encode()),
-				"vars":            RawOptions(appVars),
+				"vars":            RawOptions(a.RepoTemplate.Vars),
 			},
 		), nil
 	}
