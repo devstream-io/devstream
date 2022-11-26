@@ -5,8 +5,6 @@ import (
 	"k8s.io/apimachinery/pkg/util/intstr"
 )
 
-const Name = "zentao"
-
 var (
 	// Retry times for check zentao deployment status, currently this means 5 seconds * 120 times = 10 minutes
 	retryTimes int = 120

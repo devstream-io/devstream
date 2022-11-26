@@ -6,7 +6,6 @@ import (
 	"github.com/mitchellh/mapstructure"
 
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
-	. "github.com/devstream-io/devstream/internal/pkg/plugin/common"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
@@ -15,13 +14,8 @@ import (
 
 // Read get jira-github-integ workflows.
 func Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
-	var err error
-	defer func() {
-		HandleErrLogsWithPlugin(err, Name)
-	}()
-
 	var opts Options
-	err = mapstructure.Decode(options, &opts)
+	err := mapstructure.Decode(options, &opts)
 	if err != nil {
 		return nil, err
 	}

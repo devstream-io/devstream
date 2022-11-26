@@ -2,7 +2,6 @@ package gitlabcedocker
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
-	. "github.com/devstream-io/devstream/internal/pkg/plugin/common"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer"
 	dockerInstaller "github.com/devstream-io/devstream/internal/pkg/plugin/installer/docker"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
@@ -11,12 +10,6 @@ import (
 )
 
 func Create(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
-	var err error
-	defer func() {
-		HandleErrLogsWithPlugin(err, Name)
-	}()
-
-	// TODO(daniel-hutao): refactoring is needed.
 	// 1. create config and pre-handle operations
 	opts, err := validateAndDefault(options)
 	if err != nil {

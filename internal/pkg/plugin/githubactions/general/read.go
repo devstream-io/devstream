@@ -2,20 +2,13 @@ package general
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
-	. "github.com/devstream-io/devstream/internal/pkg/plugin/common"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/cifile"
-	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
-	var err error
-	defer func() {
-		HandleErrLogsWithPlugin(err, Name)
-	}()
-
+func Read(options map[string]interface{}) (map[string]interface{}, error) {
 	// Initialize Operator with Operations
 	operator := &installer.Operator{
 		PreExecuteOperations: installer.PreExecuteOperations{

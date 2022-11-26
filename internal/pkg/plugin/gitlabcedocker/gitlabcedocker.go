@@ -2,8 +2,6 @@ package gitlabcedocker
 
 import "github.com/devstream-io/devstream/pkg/util/types"
 
-const Name = "gitlab-ce-docker"
-
 const (
 	defaultHostname       = "gitlab.example.com"
 	defaultGitlabHome     = "/srv/gitlab"

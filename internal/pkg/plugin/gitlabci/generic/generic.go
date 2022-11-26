@@ -17,8 +17,6 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/template"
 )
 
-const Name = "gitlabci-generic"
-
 //go:embed tpl/helmValue.tpl.yaml
 var helmValueTpl string
 

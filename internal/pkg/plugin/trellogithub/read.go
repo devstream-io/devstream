@@ -2,18 +2,12 @@ package trellogithub
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
-	. "github.com/devstream-io/devstream/internal/pkg/plugin/common"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm/github"
 )
 
 func Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
-	var err error
-	defer func() {
-		HandleErrLogsWithPlugin(err, Name)
-	}()
-
 	tg, err := NewTrelloGithub(options)
 	if err != nil {
 		return nil, err

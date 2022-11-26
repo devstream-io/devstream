@@ -6,20 +6,14 @@ import (
 	"github.com/mitchellh/mapstructure"
 
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
-	. "github.com/devstream-io/devstream/internal/pkg/plugin/common"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
 func Update(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
-	var err error
-	defer func() {
-		HandleErrLogsWithPlugin(err, Name)
-	}()
-
 	var opts Options
-	if err = mapstructure.Decode(options, &opts); err != nil {
+	if err := mapstructure.Decode(options, &opts); err != nil {
 		return nil, err
 	}
 
@@ -31,7 +25,7 @@ func Update(options configmanager.RawOptions) (statemanager.ResourceStatus, erro
 	}
 
 	// set with default value
-	if err = opts.complete(); err != nil {
+	if err := opts.complete(); err != nil {
 		return nil, err
 	}
 

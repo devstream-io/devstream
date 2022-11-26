@@ -2,8 +2,6 @@ package golang
 
 import _ "embed"
 
-const Name = "githubactions-golang"
-
 //go:embed pr.tpl.yml
 var prPipeline string
 

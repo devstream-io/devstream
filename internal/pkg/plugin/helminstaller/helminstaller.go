@@ -12,8 +12,6 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
-const Name = "helm-installer"
-
 func RenderDefaultConfig(options configmanager.RawOptions) (configmanager.RawOptions, error) {
 	helmOptions, err := helm.NewOptions(options)
 	if err != nil {

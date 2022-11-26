@@ -15,8 +15,6 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/scm/github"
 )
 
-const Name = "trello-github"
-
 type TrelloGithub struct {
 	ctx     context.Context
 	client  *github.Client

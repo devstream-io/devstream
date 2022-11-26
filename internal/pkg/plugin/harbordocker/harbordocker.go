@@ -12,8 +12,6 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/template"
 )
 
-const Name = "harbor-docker"
-
 const (
 	HarborConfigFileName        = "harbor.yml"
 	HarborScriptInstallFileName = "install.sh"

@@ -7,8 +7,6 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/scm"
 )
 
-const Name = "jenkins-pipeline"
-
 func installPipeline(options configmanager.RawOptions) error {
 	opts, err := newJobOptions(options)
 	if err != nil {

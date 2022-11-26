@@ -5,8 +5,6 @@ var NameGoDirTpl = "internal/pkg/plugin/[[ .Name | dirFormat ]]/"
 var NameGoMustExistFlag = true
 var NameGoContentTpl = `package [[ .Name | format ]]
 
-const Name = "[[ .Name ]]"
-
 // TODO(dtm): Add your logic here.
 `
 
