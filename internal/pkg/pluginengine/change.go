@@ -96,7 +96,8 @@ func execute(smgr statemanager.Manager, changes []*Change, reverse bool) map[str
 				succeeded, err = Delete(c.Tool)
 			}
 			if err != nil {
-				key := fmt.Sprintf("%s/%s-%s", c.Tool.Name, c.Tool.InstanceID, c.ActionName)
+				key := fmt.Sprintf("%s/%s/%s", c.Tool.Name, c.Tool.InstanceID, c.ActionName)
+				log.Errorf("%s/%s %s failed with error: %s", c.Tool.Name, c.Tool.InstanceID, c.ActionName, err)
 				errorsMap[key] = err
 			}
 

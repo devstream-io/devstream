@@ -9,7 +9,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-// Create creates an ArgoCD app YAML and applys it.
+// Create creates an ArgoCD app YAML and applies it.
 func Create(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	// Initialize Operator with Operations
 	operator := &installer.Operator{
