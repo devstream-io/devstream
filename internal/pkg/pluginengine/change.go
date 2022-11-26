@@ -30,7 +30,7 @@ func (c *Change) String() string {
 		c.ActionName, c.Tool.Name, c.Tool.InstanceID)
 }
 
-// execute changes in the plan in batch.
+// execute changes the plan in batch.
 // If any error occurs, it will stop executing the next batches and return the error.
 func execute(smgr statemanager.Manager, changes []*Change, reverse bool) map[string]error {
 	errorsMap := make(map[string]error)

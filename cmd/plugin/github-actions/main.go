@@ -13,22 +13,22 @@ const NAME = "github-actions"
 // Plugin is the type used by DevStream core. It's a string.
 type Plugin string
 
-// Create implements the installation of some GitHub Actions workflows.
+// Create implements the create of github-actions.
 func (p Plugin) Create(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return general.Create(options)
 }
 
-// Update implements the installation of some GitHub Actions workflows.
+// Update implements the update of github-actions.
 func (p Plugin) Update(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return general.Update(options)
 }
 
-// Read implements the healthy check of GitHub Actions workflows.
+// Read implements the read of github-actions.
 func (p Plugin) Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return general.Read(options)
 }
 
-// Delete implements the installation of some GitHub Actions workflows.
+// Delete implements the delete of github-actions.
 func (p Plugin) Delete(options configmanager.RawOptions) (bool, error) {
 	return general.Delete(options)
 }

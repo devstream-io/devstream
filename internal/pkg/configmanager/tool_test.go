@@ -8,41 +8,62 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("Dependency", func() {
-	Context("singe dep", func() {
-		tools := Tools{
-			{InstanceID: "argocd", Name: "argocd"},
-			{InstanceID: "argocdapp", Name: "argocdapp", DependsOn: []string{"argocd.argocd"}},
-		}
-		errors := tools.validateDependency()
-		Expect(len(errors)).To(Equal(0))
+var tools Tools
+
+var _ = Describe("validateDependsOnConfig", func() {
+	When("empty dep", func() {
+		BeforeEach(func() {
+			tools = Tools{
+				{InstanceID: "ins-1", Name: "plugin1"},
+				{InstanceID: "ins-2", Name: "plugin2"},
+			}
+		})
+		It("should not have errors", func() {
+			errs := tools.validateDependsOnConfig()
+			Expect(len(errs)).To(Equal(0))
+		})
 	})
 
-	Context("dep not exist", func() {
-		tools := Tools{
-			{InstanceID: "argocdapp", Name: "argocdapp", DependsOn: []string{"argocd.argocd"}},
-		}
-		errors := tools.validateDependency()
-		Expect(len(errors)).To(Equal(1))
+	When("singe dep", func() {
+		BeforeEach(func() {
+			tools = Tools{
+				{InstanceID: "ins-1", Name: "plugin1"},
+				{InstanceID: "ins-2", Name: "plugin2"},
+			}
+		})
+		It("should not have errors", func() {
+			tools[1].DependsOn = []string{"plugin1.ins-1"}
+			errs := tools.validateDependsOnConfig()
+			Expect(len(errs)).To(Equal(0))
+		})
+		It("should has some errors", func() {
+			tools[1].DependsOn = []string{"plugin1.ins-2"}
+			errs := tools.validateDependsOnConfig()
+			Expect(len(errs)).To(Equal(1))
+		})
 	})
 
-	Context("multi-dep", func() {
-		tools := Tools{
-			{InstanceID: "argocd", Name: "argocd"},
-			{InstanceID: "repo", Name: "github"},
-			{InstanceID: "argocdapp", Name: "argocdapp", DependsOn: []string{"argocd.argocd", "github.repo"}},
-		}
-		errors := tools.validateDependency()
-		Expect(len(errors)).To(Equal(0))
-	})
-
-	Context("empty dep", func() {
-		tools := Tools{
-			{InstanceID: "argocd", Name: "argocd"},
-			{InstanceID: "argocdapp", Name: "argocdapp", DependsOn: []string{}},
-		}
-		errors := tools.validateDependency()
-		Expect(len(errors)).To(Equal(0))
+	When("multi-dep", func() {
+		BeforeEach(func() {
+			tools = Tools{
+				{InstanceID: "ins-1", Name: "plugin1"},
+				{InstanceID: "ins-2", Name: "plugin2"},
+				{InstanceID: "ins-3", Name: "plugin3"},
+			}
+		})
+		It("should not have errors", func() {
+			tools[2].DependsOn = []string{"plugin1.ins-1"}
+			tools[2].DependsOn = []string{"plugin2.ins-2"}
+			tools[1].DependsOn = []string{"plugin1.ins-1"}
+			errs := tools.validateDependsOnConfig()
+			Expect(len(errs)).To(Equal(0))
+		})
+		It("should has some errors", func() {
+			tools[1].DependsOn = []string{"plugin1.ins-3"}
+			tools[2].DependsOn = []string{"plugin1.ins-2", "plugin2.ins-1"}
+			errs := tools.validateDependsOnConfig()
+			Expect(len(errs)).To(Equal(3))
+		})
 	})
 })
 

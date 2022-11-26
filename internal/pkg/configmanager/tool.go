@@ -55,15 +55,15 @@ func (t *Tool) String() string {
 
 type Tools []*Tool
 
-func (ts Tools) validateAll() error {
+func (tools Tools) validateAll() error {
 	var errs []error
-	errs = append(errs, ts.validate()...)
-	errs = append(errs, ts.validateDependency()...)
+	errs = append(errs, tools.validate()...)
+	errs = append(errs, tools.validateDependsOnConfig()...)
 	return multierr.Combine(errs...)
 }
 
-func (ts Tools) validate() (errs []error) {
-	for _, tool := range ts {
+func (tools Tools) validate() (errs []error) {
+	for _, tool := range tools {
 		errs = append(errs, tool.validate()...)
 	}
 	return
@@ -116,36 +116,36 @@ func (t *Tool) GetPluginMD5FileNameWithOSAndArch(os, arch string) string {
 	return t.GetPluginNameWithOSAndArch(os, arch) + ".md5"
 }
 
-func (ts Tools) validateDependency() []error {
-	errors := make([]error, 0)
+// validateDependsOnConfig is used to validate all tools' DependsOn config
+func (tools Tools) validateDependsOnConfig() (retErrs []error) {
+	retErrs = make([]error, 0)
+	toolKeySet := make(map[string]struct{})
 
-	// config "set" (map)
-	toolMap := make(map[string]bool)
-	// creating the set
-	for _, tool := range ts {
-		toolMap[tool.KeyWithNameAndInstanceID()] = true
+	// record all tools' key with name.instanceID
+	for _, tool := range tools {
+		toolKeySet[tool.KeyWithNameAndInstanceID()] = struct{}{}
 	}
 
-	for _, tool := range ts {
-		// no dependency, pass
+	validateOneTool := func(tool *Tool) (errs []error) {
+		errs = make([]error, 0)
 		if len(tool.DependsOn) == 0 {
-			continue
+			return
 		}
-
-		// for each dependency
-		for _, dependency := range tool.DependsOn {
-			// skip empty string
-			dependency = strings.TrimSpace(dependency)
-			if dependency == "" {
+		for _, d := range tool.DependsOn {
+			if strings.TrimSpace(d) == "" {
 				continue
 			}
 
-			// generate an error if the dependency isn't in the config set,
-			if _, ok := toolMap[dependency]; !ok {
-				errors = append(errors, fmt.Errorf("tool %s's dependency %s doesn't exist in the config", tool.InstanceID, dependency))
+			if _, ok := toolKeySet[d]; !ok {
+				errs = append(errs, fmt.Errorf("t %s's DependsOn %s doesn't exist", tool.InstanceID, d))
 			}
 		}
+		return
 	}
 
-	return errors
+	for _, t := range tools {
+		retErrs = append(retErrs, validateOneTool(t)...)
+	}
+
+	return
 }

@@ -93,8 +93,9 @@ pipelineTemplates:
       repoURL: ${{repo-scaffolding.myapp.outputs.repoURL}}
 `
 
+var tmpWorkDir string
+
 var _ = Describe("LoadConfig", func() {
-	var tmpWorkDir string
 
 	tool1 := &Tool{
 		Name:       "plugin1",
@@ -252,6 +253,28 @@ var _ = Describe("LoadConfig", func() {
 					Fail("Unexpected plugin name.")
 				}
 			}
+		})
+	})
+})
+
+var _ = Describe("getConfigFromFile", func() {
+	BeforeEach(func() {
+		tmpWorkDir = GinkgoT().TempDir()
+		err := os.WriteFile(filepath.Join(tmpWorkDir, "config.yaml"), []byte(configFileStr), 0644)
+		Expect(err).NotTo(HaveOccurred())
+	})
+
+	When("get config from file", func() {
+		It("should return a config", func() {
+			mgr := NewManager(filepath.Join(tmpWorkDir, "config.yaml"))
+			cfg, err := mgr.getConfigFromFile()
+			Expect(err).NotTo(HaveOccurred())
+			Expect(cfg.Config.State.Backend).To(Equal("local"))
+			Expect(cfg.Vars["foo1"]).To(Equal("bar1"))
+			Expect(len(cfg.Apps)).To(Equal(1))
+			Expect(cfg.Apps[0].Name).To(Equal("service-a"))
+			Expect(len(cfg.Tools)).To(Equal(2))
+			Expect(cfg.Tools[1].Name).To(Equal("plugin2"))
 		})
 	})
 })
