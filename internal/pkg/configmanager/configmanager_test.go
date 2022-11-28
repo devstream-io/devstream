@@ -17,7 +17,8 @@ config:
 
 vars:
   foo1: bar1
-  foo2: bar2
+  foo2: 123
+  appName: service-a
   registryType: dockerhub
   argocdNamespace: argocd
 
@@ -56,15 +57,17 @@ apps:
       destination:
         namespace: devstream-io
     vars: # optional, use to render vars in template（valid only if the cd.type is template）
-      app: service-a
+      app: [[ appName ]]
 
 tools:
 - name: plugin1
   instanceID: default
+  dependsOn: []
   options:
     foo1: [[ foo1 ]]
 - name: plugin2
   instanceID: tluafed
+  dependsOn: []
   options:
     foo: bar
     foo2: [[ foo2 ]]
@@ -114,7 +117,7 @@ var _ = Describe("LoadConfig", func() {
 		Options: RawOptions{
 			"instanceID": "tluafed",
 			"foo":        "bar",
-			"foo2":       "bar2",
+			"foo2":       123,
 		},
 	}
 
@@ -232,7 +235,7 @@ var _ = Describe("LoadConfig", func() {
 			}))
 
 			// vars
-			Expect(len(cfg.Vars)).To(Equal(4))
+			Expect(len(cfg.Vars)).To(Equal(5))
 			Expect(cfg.Vars["foo1"]).To(Equal("bar1"))
 
 			// tools
@@ -257,7 +260,7 @@ var _ = Describe("LoadConfig", func() {
 	})
 })
 
-var _ = Describe("getConfigFromFile", func() {
+var _ = Describe("getConfigFromFileWithGlobalVars", func() {
 	BeforeEach(func() {
 		tmpWorkDir = GinkgoT().TempDir()
 		err := os.WriteFile(filepath.Join(tmpWorkDir, "config.yaml"), []byte(configFileStr), 0644)
@@ -267,7 +270,7 @@ var _ = Describe("getConfigFromFile", func() {
 	When("get config from file", func() {
 		It("should return a config", func() {
 			mgr := NewManager(filepath.Join(tmpWorkDir, "config.yaml"))
-			cfg, err := mgr.getConfigFromFile()
+			cfg, err := mgr.getConfigFromFileWithGlobalVars()
 			Expect(err).NotTo(HaveOccurred())
 			Expect(cfg.Config.State.Backend).To(Equal("local"))
 			Expect(cfg.Vars["foo1"]).To(Equal("bar1"))
@@ -275,27 +278,6 @@ var _ = Describe("getConfigFromFile", func() {
 			Expect(cfg.Apps[0].Name).To(Equal("service-a"))
 			Expect(len(cfg.Tools)).To(Equal(2))
 			Expect(cfg.Tools[1].Name).To(Equal("plugin2"))
-		})
-	})
-})
-
-var _ = Describe("escapeBrackets", func() {
-	When("escape brackets", func() {
-		It("should works right", func() {
-			testMap := map[string]string{
-				"foo: [[ foo ]]":           "foo: \"[[ foo ]]\"",
-				"foo: [[ foo ]] #comment":  "foo: \"[[ foo ]]\" #comment",
-				"foo: xx[[ foo ]]":         "foo: xx[[ foo ]]",
-				"foo: [[ foo ]]xx":         "foo: \"[[ foo ]]xx\"",
-				"foo: [[ foo ]]/[[ poo ]]": "foo: \"[[ foo ]]/[[ poo ]]\"",
-				`foo: [[ test ]]
-poo: [[ gg ]]`: "foo: \"[[ test ]]\"\npoo: \"[[ gg ]]\"",
-			}
-
-			for testStr, expectStr := range testMap {
-				retStr1 := escapeBrackets([]byte(testStr))
-				Expect(string(retStr1)).Should(Equal(expectStr))
-			}
 		})
 	})
 })

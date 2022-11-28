@@ -48,9 +48,9 @@ func GetYamlNodeArrayByPath(content []byte, path string) (*YamlSequenceNode, err
 	if !ok {
 		return nil, fmt.Errorf("yaml parse path[%s] is not valid sequenceNode", string(content))
 	}
-	var nodeArray []string
-	for _, seqNode := range seqNode.Values {
-		nodeArray = append(nodeArray, seqNode.String())
+	var nodeArray = make([]string, 0)
+	for _, sn := range seqNode.Values {
+		nodeArray = append(nodeArray, sn.String())
 	}
 	y := &YamlSequenceNode{
 		StrOrigin: node.String(),

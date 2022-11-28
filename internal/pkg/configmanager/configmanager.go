@@ -1,12 +1,8 @@
 package configmanager
 
 import (
+	"fmt"
 	"os"
-	"regexp"
-
-	"gopkg.in/yaml.v3"
-
-	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 // Manager is used to load the config file from the ConfigFilePath and finally get the Config object.
@@ -28,7 +24,7 @@ func NewManager(configFilePath string) *Manager {
 // 3. Validation.
 func (m *Manager) LoadConfig() (*Config, error) {
 	// step 1
-	c, err := m.getConfigFromFile()
+	c, err := m.getConfigFromFileWithGlobalVars()
 	if err != nil {
 		return nil, err
 	}
@@ -39,10 +35,6 @@ func (m *Manager) LoadConfig() (*Config, error) {
 		return nil, err
 	}
 
-	err = c.renderToolsWithVars()
-	if err != nil {
-		return nil, err
-	}
 	c.Tools = append(c.Tools, appTools...)
 	c.renderInstanceIDtoOptions()
 
@@ -54,26 +46,54 @@ func (m *Manager) LoadConfig() (*Config, error) {
 	return c, nil
 }
 
-// getConfigFromFile gets Config from the config file specified by Manager.ConfigFilePath
-func (m *Manager) getConfigFromFile() (*Config, error) {
+// getConfigFromFileWithGlobalVars gets Config from the config file specified by Manager.ConfigFilePath, then:
+// 1. render the global variables to Config.Tools and Config.Apps
+// 2. transfer the PipelineTemplates to Config.pipelineTemplateMap, it's map[string]string type.
+// We can't render the original config file to Config.PipelineTemplates directly for the:
+//   1. variables rendered must be before the yaml.Unmarshal() called for the [[ foo ]] will be treated as a two-dimensional array by the yaml parser;
+//   2. the variables used([[ foo ]]) in the Config.PipelineTemplates can be defined in the Config.Apps or Config.Vars;
+//   3. pipeline templates are used in apps, so it would be more appropriate to refer to pipeline templates when dealing with apps
+func (m *Manager) getConfigFromFileWithGlobalVars() (*Config, error) {
 	configBytes, err := os.ReadFile(m.ConfigFilePath)
 	if err != nil {
 		return nil, err
 	}
 
-	configBytesEscaped := escapeBrackets(configBytes)
-
-	var c Config
-	if err = yaml.Unmarshal(configBytesEscaped, &c); err != nil {
-		log.Errorf("Please verify the format of your config. Error: %s.", err)
-		return nil, err
+	// global variables
+	vars, err := getVarsFromConfigFile(configBytes)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get variables from config file. Error: %w", err)
 	}
 
-	return &c, nil
-}
+	// tools with global variables rendered
+	tools, err := getToolsFromConfigFileWithVarsRendered(configBytes, vars)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get tools from config file. Error: %w", err)
+	}
 
-// escapeBrackets is used to escape []byte(": [[xxx]]xxx\n") to []byte(": \"[[xxx]]\"xxx\n")
-func escapeBrackets(param []byte) []byte {
-	re := regexp.MustCompile(`([^:]+:)(\s*)((\[\[[^\]]+\]\][^\s\[]*)+)[^\s#\n]*`)
-	return re.ReplaceAll(param, []byte("$1$2\"$3\""))
+	// apps with global variables rendered
+	apps, err := getAppsFromConfigFileWithVarsRendered(configBytes, vars)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get apps from config file. Error: %w", err)
+	}
+
+	// pipelineTemplateMap transfer from PipelineTemplates
+	pipelineTemplateMap, err := getPipelineTemplatesMapFromConfigFile(configBytes)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get pipelineTemplatesMap from config file. Error: %w", err)
+	}
+
+	// coreConfig without any changes
+	coreConfig, err := getCoreConfigFromConfigFile(configBytes)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get coreConfig from config file. Error: %w", err)
+	}
+
+	return &Config{
+		Config:              *coreConfig,
+		Vars:                vars,
+		Tools:               tools,
+		Apps:                apps,
+		pipelineTemplateMap: pipelineTemplateMap,
+	}, nil
 }

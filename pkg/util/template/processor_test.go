@@ -7,21 +7,21 @@ import (
 )
 
 func TestAddDotForVariablesInConfigNormal(t *testing.T) {
-	res := AddDotForVariablesInConfig("[[varNameA]]")
+	res := addDotForVariablesInConfig("[[varNameA]]")
 	assert.Equal(t, "[[ .varNameA]]", res, "Adding dot for variable names passed.")
 }
 
 func TestAddDotForVariablesInConfigWithSpaces(t *testing.T) {
-	res := AddDotForVariablesInConfig("[[  varNameA]]")
+	res := addDotForVariablesInConfig("[[  varNameA]]")
 	assert.Equal(t, "[[ .varNameA]]", res, "Adding dot for variable names passed.")
 }
 
 func TestAddDotForVariablesInConfigWithTrailingSpaces(t *testing.T) {
-	res := AddDotForVariablesInConfig("[[ varNameA  ]]")
+	res := addDotForVariablesInConfig("[[ varNameA  ]]")
 	assert.Equal(t, "[[ .varNameA  ]]", res, "Adding dot for variable names passed.")
 }
 
 func TestAddDotForVariablesInConfigMultipleVars(t *testing.T) {
-	res := AddDotForVariablesInConfig("[[ varNameA ]]/[[ varNameB ]]/[[ varNameC ]]")
+	res := addDotForVariablesInConfig("[[ varNameA ]]/[[ varNameB ]]/[[ varNameC ]]")
 	assert.Equal(t, "[[ .varNameA ]]/[[ .varNameB ]]/[[ .varNameC ]]", res, "Adding dot for variable names passed.")
 }
