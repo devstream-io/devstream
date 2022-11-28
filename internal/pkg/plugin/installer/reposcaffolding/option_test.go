@@ -1,13 +1,10 @@
 package reposcaffolding
 
 import (
-	"fmt"
-
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
-	"github.com/devstream-io/devstream/pkg/util/scm"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
@@ -73,43 +70,6 @@ var _ = Describe("Options struct", func() {
 			appName, ok := renderConfig["AppName"]
 			Expect(ok).Should(BeTrue())
 			Expect(appName).Should(Equal(coverAppName))
-		})
-	})
-
-	Context("downloadAndRenderScmRepo method", func() {
-		var (
-			scmClient *scm.MockScmClient
-		)
-		When("download repo from scm failed", func() {
-			var (
-				errMsg string
-			)
-			BeforeEach(func() {
-				errMsg = "test download repo failed"
-				scmClient = &scm.MockScmClient{
-					DownloadRepoError: fmt.Errorf(errMsg),
-				}
-			})
-			It("should return error", func() {
-				_, err := opts.downloadAndRenderScmRepo(scmClient)
-				Expect(err).Error().Should(HaveOccurred())
-			})
-		})
-		When("download repo success", func() {
-			var (
-				tempDir string
-			)
-			BeforeEach(func() {
-				tempDir = GinkgoT().TempDir()
-				scmClient = &scm.MockScmClient{
-					DownloadRepoValue: tempDir,
-				}
-			})
-			It("should work normal", func() {
-				gitMap, err := opts.downloadAndRenderScmRepo(scmClient)
-				Expect(err).Error().ShouldNot(HaveOccurred())
-				Expect(len(gitMap)).Should(BeZero())
-			})
 		})
 	})
 })

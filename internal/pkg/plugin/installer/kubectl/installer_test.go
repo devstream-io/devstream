@@ -81,11 +81,6 @@ var _ = Describe("ProcessByContent", Ordered, func() {
 		err := op(options)
 		Expect(err).To(HaveOccurred())
 	})
-	It("action is kubectl delete", func() {
-		op := ProcessByURL(utilKubectl.Delete, s.URL())
-		err := op(options)
-		Expect(err).To(HaveOccurred())
-	})
 	It("action is not support", func() {
 		op := ProcessByURL("", s.URL())
 		err := op(options)

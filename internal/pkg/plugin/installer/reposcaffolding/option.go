@@ -4,9 +4,6 @@ import (
 	"github.com/mitchellh/mapstructure"
 
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
-	"github.com/devstream-io/devstream/pkg/util/file"
-	"github.com/devstream-io/devstream/pkg/util/log"
-	"github.com/devstream-io/devstream/pkg/util/scm"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
@@ -30,20 +27,4 @@ func (opts *Options) renderTplConfig() map[string]interface{} {
 		renderConfig[k] = v
 	}
 	return renderConfig
-}
-
-// downloadAndRenderScmRepo will download repo from source repo and render it locally
-func (opts *Options) downloadAndRenderScmRepo(scmClient scm.ClientOperation) (git.GitFileContentMap, error) {
-	// 1. download zip file and unzip this file then render folders
-	zipFilesDir, err := scmClient.DownloadRepo()
-	if err != nil {
-		log.Debugf("reposcaffolding process files error: %s", err)
-		return nil, err
-	}
-	appName := opts.DestinationRepo.Repo
-	return file.GetFileMapByWalkDir(
-		zipFilesDir, filterGitFiles,
-		getRepoFileNameFunc(appName, opts.SourceRepo.GetRepoNameWithBranch()),
-		processRepoFileFunc(appName, opts.renderTplConfig()),
-	)
 }

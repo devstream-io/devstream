@@ -1,7 +1,11 @@
 package reposcaffolding
 
 import (
+	"fmt"
+
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
+	"github.com/devstream-io/devstream/pkg/util/file"
+	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
@@ -12,18 +16,30 @@ func InstallRepo(options configmanager.RawOptions) error {
 	if err != nil {
 		return err
 	}
-
-	// 1. Download and render repo by SourceRepo
+	// 1. Download repo by SourceRepo
 	sourceClient, err := scm.NewClient(opts.SourceRepo)
 	if err != nil {
 		return err
 	}
-	gitMap, err := opts.downloadAndRenderScmRepo(sourceClient)
+	repoDir, err := sourceClient.DownloadRepo()
 	if err != nil {
+		log.Debugf("reposcaffolding process files error: %s", err)
 		return err
 	}
 
-	// 2. push repo to DestinationRepo
+	// 2. render repo with variables
+	appName := opts.DestinationRepo.Repo
+	gitMap, err := file.GetFileMapByWalkDir(
+		repoDir, filterGitFiles,
+		getRepoFileNameFunc(appName, opts.SourceRepo.GetRepoNameWithBranch()),
+		processRepoFileFunc(appName, opts.renderTplConfig()),
+	)
+	if err != nil {
+		log.Warnf("repoScaffolding render repoTemplate failed=> %+v", err)
+		return fmt.Errorf("render RepoTemplate files failed")
+	}
+
+	// 3. push repo to DestinationRepo
 	dstClient, err := scm.NewClientWithAuth(opts.DestinationRepo)
 	if err != nil {
 		return err
