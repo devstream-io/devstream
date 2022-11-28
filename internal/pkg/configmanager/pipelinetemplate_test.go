@@ -85,7 +85,6 @@ var _ = Describe("pipelineRaw struct", func() {
 			It("should return err", func() {
 				_, err := r.getPipelineTemplate(templateMap, globalVars)
 				Expect(err).Error().Should(HaveOccurred())
-				Expect(err.Error()).Should(ContainSubstring("render pipelineTemplate failed"))
 			})
 		})
 		When("template is not valid yaml format", func() {
@@ -239,6 +238,29 @@ var _ = Describe("PipelineTemplate struct", func() {
 					},
 				}))
 			})
+		})
+	})
+})
+
+var _ = Describe("getPipelineTemplatesMapFromConfigFile", func() {
+	const toolsConfig = `pipelineTemplates:
+- name: tpl1
+  type: github-actions
+  options:
+    foo: bar
+`
+	const pipelineTemplate = `  name: tpl1
+  type: github-actions
+  options:
+    foo: bar`
+
+	When("get tools from config file", func() {
+		It("should return config with vars", func() {
+			pipelineTemplatesMap, err := getPipelineTemplatesMapFromConfigFile([]byte(toolsConfig))
+			Expect(err).NotTo(HaveOccurred())
+			Expect(pipelineTemplatesMap).NotTo(BeNil())
+			Expect(len(pipelineTemplatesMap)).To(Equal(1))
+			Expect(pipelineTemplatesMap["tpl1"]).To(Equal(pipelineTemplate))
 		})
 	})
 })

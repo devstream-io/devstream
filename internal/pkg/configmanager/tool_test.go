@@ -139,3 +139,24 @@ var _ = Describe("Tool struct", func() {
 		})
 	})
 })
+
+var _ = Describe("getToolsFromConfigFileWithVarsRendered", func() {
+	const toolsConfig = `---
+tools:
+- name: name1
+  instanceID: ins-1
+  dependsOn: []
+  options:
+    foo: [[ foo ]]
+`
+	When("get tools from config file", func() {
+		It("should return config with vars", func() {
+			tools, err := getToolsFromConfigFileWithVarsRendered([]byte(toolsConfig), map[string]any{"foo": interface{}("bar")})
+			Expect(err).NotTo(HaveOccurred())
+			Expect(tools).NotTo(BeNil())
+			Expect(len(tools)).To(Equal(1))
+			Expect(len(tools[0].Options)).To(Equal(1))
+			Expect(tools[0].Options["foo"]).To(Equal(interface{}("bar")))
+		})
+	})
+})

@@ -3,6 +3,8 @@ package configmanager
 import (
 	"fmt"
 
+	"github.com/devstream-io/devstream/pkg/util/file"
+
 	"github.com/imdario/mergo"
 	"gopkg.in/yaml.v3"
 
@@ -23,6 +25,29 @@ type (
 		Options RawOptions `yaml:"options"`
 	}
 )
+
+func getPipelineTemplatesMapFromConfigFile(fileBytes []byte) (map[string]string, error) {
+	yamlPath := "$.pipelineTemplates[*]"
+	yamlStrArray, err := file.GetYamlNodeArrayByPath(fileBytes, yamlPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if yamlStrArray == nil {
+		return make(map[string]string, 0), nil
+	}
+
+	var retMap = make(map[string]string)
+	for _, tplStr := range yamlStrArray.StrArray {
+		tplName, err := file.GetYamlNodeStrByPath([]byte(tplStr), "$.name")
+		if err != nil {
+			return nil, err
+		}
+		retMap[tplName] = tplStr
+	}
+
+	return retMap, nil
+}
 
 // getPipelineTemplate will generate pipleinTemplate from pipelineRaw
 func (p *pipelineRaw) getPipelineTemplate(templateMap map[string]string, globalVars map[string]any) (*pipelineTemplate, error) {

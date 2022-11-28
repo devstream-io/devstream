@@ -9,6 +9,7 @@ import (
 	"gopkg.in/yaml.v3"
 
 	"github.com/devstream-io/devstream/internal/pkg/version"
+	"github.com/devstream-io/devstream/pkg/util/file"
 	"github.com/devstream-io/devstream/pkg/util/validator"
 )
 
@@ -43,6 +44,31 @@ func newTool(name, instanceID string, options RawOptions) *Tool {
 		DependsOn:  []string{},
 		Options:    options,
 	}
+}
+
+func getToolsFromConfigFileWithVarsRendered(fileBytes []byte, vars map[string]any) (Tools, error) {
+	yamlPath := "$.tools[*]"
+	yamlStrArray, err := file.GetYamlNodeArrayByPath(fileBytes, yamlPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if yamlStrArray == nil {
+		return make(Tools, 0), nil
+	}
+
+	yamlWithVars, err := renderConfigWithVariables(yamlStrArray.StrOrigin, vars)
+	if err != nil {
+		return nil, err
+	}
+
+	var retTools = make(Tools, 0)
+	err = yaml.Unmarshal(yamlWithVars, &retTools)
+	if err != nil {
+		return nil, err
+	}
+
+	return retTools, nil
 }
 
 func (t *Tool) String() string {
