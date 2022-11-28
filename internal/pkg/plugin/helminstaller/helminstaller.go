@@ -12,14 +12,14 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
-func RenderDefaultConfig(options configmanager.RawOptions) (configmanager.RawOptions, error) {
+func renderDefaultConfig(options configmanager.RawOptions) (configmanager.RawOptions, error) {
 	helmOptions, err := helm.NewOptions(options)
 	if err != nil {
 		return nil, err
 	}
 
 	instanceID := helmOptions.InstanceID
-	defaultHelmOptions := GetDefaultOptionsByInstanceID(instanceID)
+	defaultHelmOptions := getDefaultOptionsByInstanceID(instanceID)
 
 	if defaultHelmOptions == nil {
 		log.Debugf("Default config for %s wasn't found.", instanceID)
@@ -33,9 +33,9 @@ func RenderDefaultConfig(options configmanager.RawOptions) (configmanager.RawOpt
 	return types.EncodeStruct(helmOptions)
 }
 
-// RenderValuesYaml renders options.valuesYaml to options.chart.valuesYaml;
+// renderValuesYaml renders options.valuesYaml to options.chart.valuesYaml;
 // If options.valuesYaml don't contains ":", it should be a path like "./values.yaml", then read it and transfer to options.chart.valuesYaml
-func RenderValuesYaml(options configmanager.RawOptions) (configmanager.RawOptions, error) {
+func renderValuesYaml(options configmanager.RawOptions) (configmanager.RawOptions, error) {
 	helmOptions, err := helm.NewOptions(options)
 	if err != nil {
 		return nil, err
@@ -64,7 +64,7 @@ func RenderValuesYaml(options configmanager.RawOptions) (configmanager.RawOption
 	return types.EncodeStruct(helmOptions)
 }
 
-func IndexStatusGetterFunc(options configmanager.RawOptions) installer.StatusGetterOperation {
+func indexStatusGetterFunc(options configmanager.RawOptions) installer.StatusGetterOperation {
 	helmOptions, err := helm.NewOptions(options)
 	if err != nil {
 		// It's ok to return GetAllResourcesStatus here when err != nil.
@@ -72,7 +72,7 @@ func IndexStatusGetterFunc(options configmanager.RawOptions) installer.StatusGet
 	}
 
 	instanceID := helmOptions.InstanceID
-	statusGetterFunc := GetStatusGetterFuncByInstanceID(instanceID)
+	statusGetterFunc := getStatusGetterFuncByInstanceID(instanceID)
 
 	if statusGetterFunc == nil {
 		return helm.GetAllResourcesStatus
@@ -81,16 +81,36 @@ func IndexStatusGetterFunc(options configmanager.RawOptions) installer.StatusGet
 	return statusGetterFunc
 }
 
-func GetDefaultOptionsByInstanceID(instanceID string) *helm.Options {
-	for name, options := range defaults.DefaultOptionsMap {
-		if strings.Contains(instanceID, name+"-") {
-			return options
+// e.g. instanceID="argocd-config-001", "argocd" and "argocd-config" both are supported helm charts,
+// then DefaultOptionsMap["argocd-config"] needs to be returned.
+func getDefaultOptionsByInstanceID(instanceID string) *helm.Options {
+	// if string instanceID contains a name, that name is a matched name.
+	// e.g. argocd-config-001 contains argocd and argocd-config, so the argocd and argocd-config both are matched name.
+	var matchedNames = make([]string, 0)
+	for name := range defaults.DefaultOptionsMap {
+		if strings.Contains(instanceID, name) {
+			matchedNames = append(matchedNames, name)
 		}
 	}
-	return nil
+
+	if len(matchedNames) == 1 {
+		return defaults.DefaultOptionsMap[matchedNames[0]]
+	}
+
+	return defaults.DefaultOptionsMap[getLongestMatchedName(matchedNames)]
 }
 
-func GetStatusGetterFuncByInstanceID(instanceID string) installer.StatusGetterOperation {
+func getLongestMatchedName(nameList []string) string {
+	var retStr string
+	for _, name := range nameList {
+		if len(name) > len(retStr) {
+			retStr = name
+		}
+	}
+	return retStr
+}
+
+func getStatusGetterFuncByInstanceID(instanceID string) installer.StatusGetterOperation {
 	for name, fn := range defaults.StatusGetterFuncMap {
 		if strings.Contains(instanceID, name+"-") {
 			return fn

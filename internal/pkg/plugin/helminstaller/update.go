@@ -12,13 +12,13 @@ func Update(options configmanager.RawOptions) (statemanager.ResourceStatus, erro
 	// Initialize Operator with Operations
 	operator := &installer.Operator{
 		PreExecuteOperations: installer.PreExecuteOperations{
-			RenderDefaultConfig,
-			RenderValuesYaml,
+			renderDefaultConfig,
+			renderValuesYaml,
 			validate,
 		},
 		ExecuteOperations:   helm.DefaultUpdateOperations,
 		TerminateOperations: helm.DefaultTerminateOperations,
-		GetStatusOperation:  IndexStatusGetterFunc(options),
+		GetStatusOperation:  indexStatusGetterFunc(options),
 	}
 
 	// Execute all Operations in Operator

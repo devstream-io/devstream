@@ -1,4 +1,4 @@
-package helminstaller_test
+package helminstaller
 
 import (
 	"os"
@@ -8,7 +8,6 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
-	"github.com/devstream-io/devstream/internal/pkg/plugin/helminstaller"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/helminstaller/defaults"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/helm"
@@ -16,24 +15,24 @@ import (
 )
 
 var _ = Describe("helm installer test", func() {
-	Context("GetDefaultOptionsByInstanceID", func() {
+	Context("getDefaultOptionsByInstanceID", func() {
 		defaults.DefaultOptionsMap["foo"] = &helm.Options{
 			ValuesYaml: "foo: bar",
 		}
 
 		It("should exists", func() {
-			opts := helminstaller.GetDefaultOptionsByInstanceID("foo-001")
+			opts := getDefaultOptionsByInstanceID("foo-001")
 			Expect(opts).NotTo(BeNil())
 			Expect(opts.ValuesYaml).To(Equal("foo: bar"))
 		})
 
 		It("should not exists", func() {
-			optsNil := helminstaller.GetDefaultOptionsByInstanceID("fo-001")
+			optsNil := getDefaultOptionsByInstanceID("fo-001")
 			Expect(optsNil).To(BeNil())
 		})
 	})
 
-	Context("GetStatusGetterFuncByInstanceID", func() {
+	Context("getStatusGetterFuncByInstanceID", func() {
 		defaults.StatusGetterFuncMap = map[string]installer.StatusGetterOperation{
 			"foo": func(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 				return nil, nil
@@ -41,20 +40,20 @@ var _ = Describe("helm installer test", func() {
 		}
 
 		It("should exists", func() {
-			fn := helminstaller.GetStatusGetterFuncByInstanceID("foo-001")
+			fn := getStatusGetterFuncByInstanceID("foo-001")
 			Expect(fn).NotTo(BeNil())
 		})
 
 		It("should not exists", func() {
-			fn := helminstaller.GetStatusGetterFuncByInstanceID("fooo")
+			fn := getStatusGetterFuncByInstanceID("fooo")
 			Expect(fn).To(BeNil())
 		})
 	})
 
-	Context("RenderDefaultConfig", func() {
+	Context("renderDefaultConfig", func() {
 		opts := configmanager.RawOptions{}
 		opts["instanceID"] = interface{}("argocd-001")
-		newOpts, err := helminstaller.RenderDefaultConfig(opts)
+		newOpts, err := renderDefaultConfig(opts)
 		Expect(err).To(BeNil())
 
 		helmOpts, err := helm.NewOptions(newOpts)
@@ -64,11 +63,11 @@ var _ = Describe("helm installer test", func() {
 		Expect(helmOpts.Repo.URL).To(Equal(defaults.DefaultConfigWithArgoCD.Repo.URL))
 	})
 
-	Context("RenderValuesYaml", func() {
+	Context("renderValuesYaml", func() {
 		It("config with yaml", func() {
 			opts := configmanager.RawOptions{}
 			opts["valuesYaml"] = interface{}("foo: bar")
-			newOpts, err := helminstaller.RenderValuesYaml(opts)
+			newOpts, err := renderValuesYaml(opts)
 			Expect(err).To(BeNil())
 
 			helmOpts, err := helm.NewOptions(newOpts)
@@ -83,7 +82,7 @@ var _ = Describe("helm installer test", func() {
 
 			opts := configmanager.RawOptions{}
 			opts["valuesYaml"] = interface{}("./values.yaml")
-			newOpts, err := helminstaller.RenderValuesYaml(opts)
+			newOpts, err := renderValuesYaml(opts)
 			Expect(err).To(BeNil())
 
 			helmOpts, err := helm.NewOptions(newOpts)
@@ -96,14 +95,29 @@ var _ = Describe("helm installer test", func() {
 		})
 	})
 
-	Context("IndexStatusGetterFunc", func() {
+	Context("indexStatusGetterFunc", func() {
 		opts1 := configmanager.RawOptions{
 			"instanceID": interface{}("argocd-001"),
 		}
 
 		defaults.StatusGetterFuncMap["argocd"] = defaults.GetArgoCDStatus
 
-		fn1 := helminstaller.IndexStatusGetterFunc(opts1)
+		fn1 := indexStatusGetterFunc(opts1)
 		Expect(reflect.ValueOf(fn1).Pointer()).To(Equal(reflect.ValueOf(defaults.GetArgoCDStatus).Pointer()))
+	})
+
+	Context("getLongestMatchedName", func() {
+		testList := []string{"abc", "abcd", "ab"}
+		retStr := getLongestMatchedName(testList)
+		Expect(retStr).To(Equal("abcd"))
+	})
+
+	Context("getDefaultOptionsByInstanceID", func() {
+		opt1 := getDefaultOptionsByInstanceID("argocd")
+		opt2 := getDefaultOptionsByInstanceID("argocd-001")
+		opt3 := getDefaultOptionsByInstanceID("argocd001")
+
+		Expect(opt1).To(Equal(opt2))
+		Expect(opt2).To(Equal(opt3))
 	})
 })

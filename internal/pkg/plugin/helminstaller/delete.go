@@ -10,8 +10,8 @@ func Delete(options configmanager.RawOptions) (bool, error) {
 	// Initialize Operator with Operations
 	operator := &installer.Operator{
 		PreExecuteOperations: installer.PreExecuteOperations{
-			RenderDefaultConfig,
-			RenderValuesYaml,
+			renderDefaultConfig,
+			renderValuesYaml,
 			validate,
 		},
 		ExecuteOperations: helm.DefaultDeleteOperations,
