@@ -8,6 +8,8 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer"
 	"github.com/devstream-io/devstream/pkg/util/kubectl"
+	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/pkgerror"
 	"github.com/devstream-io/devstream/pkg/util/template"
 )
 
@@ -61,6 +63,11 @@ func processByIOReader(action string, reader io.Reader) error {
 		err = kubectl.KubeApplyFromIOReader(reader)
 	case kubectl.Delete:
 		err = kubectl.KubeDeleteFromIOReader(reader)
+		// ignore resource not exist error
+		if err != nil && pkgerror.CheckErrorMatchByMessage(err, kubectl.ArgocdApplicationNotExist) {
+			log.Warnf("kubectl config is already deleted")
+			err = nil
+		}
 	default:
 		err = fmt.Errorf("kubectl not support this kind of action: %v", action)
 	}

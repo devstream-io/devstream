@@ -62,9 +62,8 @@ var _ = Describe("GetFileMapByWalkDir func", func() {
 	})
 	When("processFunc return false", func() {
 		It("should return empty", func() {
-			result, err := file.GetFileMapByWalkDir(tempDir, mockFilterSuccessFunc, mockGetFileNameFunc, mockProcessFailedFunc)
-			Expect(err).Error().ShouldNot(HaveOccurred())
-			Expect(len(result)).Should(Equal(0))
+			_, err := file.GetFileMapByWalkDir(tempDir, mockFilterSuccessFunc, mockGetFileNameFunc, mockProcessFailedFunc)
+			Expect(err).Error().Should(HaveOccurred())
 		})
 	})
 	When("all func work normal", func() {

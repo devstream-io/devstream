@@ -36,9 +36,10 @@ func GetFileMapByWalkDir(
 
 		// if file ends-with tpl, render this file, else copy this file directly
 		dstFileName := fileNameFunc(path, srcPath)
+		// if process file failed, return error
 		content, err := processFunc(path)
 		if err != nil {
-			return nil
+			return err
 		}
 		contentMap[dstFileName] = content
 		return nil

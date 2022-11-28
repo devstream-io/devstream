@@ -1,6 +1,7 @@
 package kubectl
 
 import (
+	"fmt"
 	"io"
 	"os"
 	"os/exec"
@@ -49,9 +50,7 @@ func kubectlAction(action string, filename string) error {
 	cmd := exec.Command("kubectl", action, "-f", filename)
 	cOut, err := cmd.CombinedOutput()
 	if err != nil {
-		log.Errorf("Failed to exec: < %s >.", cmd.String())
-		log.Errorf("Exec logs: < %s >. Got error: %s.", string(cOut), err)
-		return err
+		return fmt.Errorf("Failed to exec: < %s >.\nExec logs: < %s >. Got error: %s.", cmd.String(), string(cOut), err)
 	}
 	log.Info(strings.TrimSuffix(string(cOut), "\n"))
 	return nil
