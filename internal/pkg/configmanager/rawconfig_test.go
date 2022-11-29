@@ -1,0 +1,199 @@
+package configmanager
+
+import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+)
+
+var _ = Describe("newRawConfigFromConfigText func", func() {
+	var testText []byte
+	When("text is valid", func() {
+		BeforeEach(func() {
+			testText = []byte(`---
+config:
+  state:
+    backend: local
+    options:
+      stateFile: devstream.state
+vars:
+  tests: argocd
+apps:
+- name: service-a
+  spec:
+    language: python
+    framework: [[ var1 ]]/[[ var2 ]]_gg
+not_exist: 123`)
+		})
+		It("should return config map", func() {
+			rawMap, err := newRawConfigFromConfigBytes(testText)
+			Expect(err).ShouldNot(HaveOccurred())
+			Expect(string(rawMap.apps)).Should(Equal(`
+- name: service-a
+  spec:
+    language: python
+    framework: [[ var1 ]]/[[ var2 ]]_gg
+`))
+			Expect(string(rawMap.config)).Should(Equal(`
+  state:
+    backend: local
+    options:
+      stateFile: devstream.state
+`))
+			Expect(string(rawMap.vars)).Should(Equal(`
+  tests: argocd
+`))
+		})
+	})
+	When("text is not valid", func() {
+		BeforeEach(func() {
+			testText = []byte(`
+not_valid: not_exist
+`)
+		})
+		It("should return error", func() {
+			_, err := newRawConfigFromConfigBytes(testText)
+			Expect(err).Error().Should(HaveOccurred())
+		})
+	})
+})
+
+var _ = Describe("rawConfig struct", func() {
+	var r *rawConfig
+	Context("checkValid method", func() {
+		When("config is not exist", func() {
+			BeforeEach(func() {
+				r = &rawConfig{
+					apps: []byte("apps"),
+				}
+			})
+			It("should return error", func() {
+				e := r.validate()
+				Expect(e).Error().Should(HaveOccurred())
+				Expect(e.Error()).Should(Equal("configmanager can't found valid [config], please check your config file"))
+			})
+		})
+		When("apps and tools is not exist", func() {
+			BeforeEach(func() {
+				r = &rawConfig{
+					config: []byte("config"),
+				}
+			})
+			It("should return error", func() {
+				e := r.validate()
+				Expect(e).Error().Should(HaveOccurred())
+				Expect(e.Error()).Should(Equal("configmanager can't found valid [tools and apps], please check your config file"))
+			})
+		})
+	})
+
+	Context("getTemplateMap method", func() {
+		BeforeEach(func() {
+			r = &rawConfig{
+				pipelineTemplates: []byte(`---
+- name: ci-pipeline-for-gh-actions
+  type: github-actions # corresponding to a plugin
+  options:
+    docker:
+      registry:
+        username: [[ dockerUser ]]
+        repository: [[ app ]]
+- name: cd-pipeline-for-argocdapp
+  type: argocdapp
+  options:
+    app:
+      namespace: [[ argocdNamespace ]]/[[ test ]] # you can use global vars in templates
+`)}
+		})
+		It("should get template", func() {
+			m, err := r.getTemplatePipelineMap()
+			Expect(err).Error().ShouldNot(HaveOccurred())
+			Expect(m).Should(Equal(map[string]string{
+				"ci-pipeline-for-gh-actions": "name: ci-pipeline-for-gh-actions\ntype: github-actions\noptions:\n    docker:\n        registry:\n            repository: '[[ app ]]'\n            username: '[[ dockerUser ]]'\n",
+				"cd-pipeline-for-argocdapp":  "name: cd-pipeline-for-argocdapp\ntype: argocdapp\noptions:\n    app:\n        namespace: '[[ argocdNamespace ]]/[[ test ]]'\n",
+			}))
+		})
+	})
+
+	Context("getApps method", func() {
+		When("app file is not valid", func() {
+			BeforeEach(func() {
+				r = &rawConfig{
+					apps: []byte(`
+---
+- name: app-1
+  cd:
+  - type: template
+    vars:
+      app: [[ appName ]]`)}
+			})
+			It("should get apps", func() {
+				vars := map[string]any{}
+				_, err := r.getAppsWithVars(vars)
+				Expect(err).Should(HaveOccurred())
+				Expect(err.Error()).Should(ContainSubstring("has no entry"))
+			})
+		})
+	})
+	Context("getConfig method", func() {
+		BeforeEach(func() {
+			r = &rawConfig{
+				config: []byte(`
+  state:
+    backend: local
+    options:
+      stateFile: devstream.state`)}
+		})
+
+		When("get core config from config file", func() {
+			It("should works fine", func() {
+				cc, err := r.getConfig()
+				Expect(err).NotTo(HaveOccurred())
+				Expect(cc).NotTo(BeNil())
+				Expect(cc.State.Backend).To(Equal("local"))
+				Expect(cc.State.Options.StateFile).To(Equal("devstream.state"))
+			})
+		})
+	})
+
+	Context("getTools method", func() {
+		BeforeEach(func() {
+			r = &rawConfig{
+				tools: []byte(`
+- name: name1
+  instanceID: ins-1
+  dependsOn: []
+  options:
+    foo: [[ foo ]]`)}
+		})
+
+		When("get tools from config file", func() {
+			It("should return config with vars", func() {
+				tools, err := r.getToolsWithVars(map[string]any{"foo": interface{}("bar")})
+				Expect(err).NotTo(HaveOccurred())
+				Expect(tools).NotTo(BeNil())
+				Expect(len(tools)).To(Equal(1))
+				Expect(len(tools[0].Options)).To(Equal(1))
+				Expect(tools[0].Options["foo"]).To(Equal(interface{}("bar")))
+			})
+		})
+	})
+	Context("getPipelineTemplateMap method", func() {
+		BeforeEach(func() {
+			r = &rawConfig{
+				pipelineTemplates: []byte(`
+- name: tpl1
+  type: github-actions
+  options:
+    foo: bar`)}
+		})
+		When("get tools from config file", func() {
+			It("should return config with vars", func() {
+				pipelineTemplatesMap, err := r.getTemplatePipelineMap()
+				Expect(err).NotTo(HaveOccurred())
+				Expect(pipelineTemplatesMap).NotTo(BeNil())
+				Expect(len(pipelineTemplatesMap)).To(Equal(1))
+				Expect(pipelineTemplatesMap["tpl1"]).To(Equal("name: tpl1\ntype: github-actions\noptions:\n    foo: bar\n"))
+			})
+		})
+	})
+})
