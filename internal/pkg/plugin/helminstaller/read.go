@@ -11,11 +11,11 @@ func Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error)
 	// Initialize Operator with Operations
 	operator := &installer.Operator{
 		PreExecuteOperations: installer.PreExecuteOperations{
-			RenderDefaultConfig,
-			RenderValuesYaml,
+			renderDefaultConfig,
+			renderValuesYaml,
 			validate,
 		},
-		GetStatusOperation: IndexStatusGetterFunc(options),
+		GetStatusOperation: indexStatusGetterFunc(options),
 	}
 
 	// Execute all Operations in Operator
