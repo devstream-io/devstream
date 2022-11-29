@@ -184,6 +184,8 @@ apps:
     org: devstream-io # either owner or org must exist
     name: dtm-scaffolding-golang
     url: github.com/devstream-io/repo-name   # optional. if exists, no need for the scm/owner/org/name sections
+    vars:  # optional
+      foo: bar  # variables used for repoTemplate specifically
   ci:
   - type: template              # type template means it's a reference to the pipeline template. read the next section.
     templateName: ci-pipeline-1
