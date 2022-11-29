@@ -77,7 +77,9 @@ func (a *app) getRepoTemplateTool() (*Tool, error) {
 		return nil, fmt.Errorf("configmanager[app] parse repo failed: %w", err)
 	}
 	if a.RepoTemplate != nil {
+		// templateRepo doesn't need auth info
 		templateRepo, err := a.RepoTemplate.BuildRepoInfo()
+		templateRepo.NeedAuth = false
 		if err != nil {
 			return nil, fmt.Errorf("configmanager[app] parse repoTemplate failed: %w", err)
 		}
