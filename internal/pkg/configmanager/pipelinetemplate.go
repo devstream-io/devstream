@@ -30,6 +30,9 @@ func (p *pipelineRaw) getPipelineTemplate(templateMap map[string]string, globalV
 		t   *pipelineTemplate
 		err error
 	)
+	if p.Options == nil {
+		p.Options = make(RawOptions)
+	}
 	switch p.Type {
 	case "template":
 		t, err = p.newPipelineFromTemplate(templateMap, globalVars)
@@ -64,6 +67,10 @@ func (p *pipelineRaw) newPipelineFromTemplate(templateMap map[string]string, glo
 
 	if err := yaml.Unmarshal([]byte(templateRenderdStr), &t); err != nil {
 		return nil, fmt.Errorf("%s parse pipelineTemplate yaml failed: %+w", p.TemplateName, err)
+	}
+
+	if t.Options == nil {
+		t.Options = make(RawOptions)
 	}
 
 	if err := mergo.Merge(&t.Options, p.Options, mergo.WithOverride); err != nil {
