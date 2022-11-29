@@ -20,25 +20,17 @@ func NewManager(configFilePath string) *Manager {
 // LoadConfig is the only method that the caller of Manager needs to be concerned with, and this method returns a *Config finally.
 // The main workflow of this method is:
 // 1. Get the original config from the config file specified by ConfigFilePath;
-// 2. Parsing tools from the apps, and merge that tools to Config.Tools;
-// 3. Validation.
+// 2. Validation.
 func (m *Manager) LoadConfig() (*Config, error) {
-	// step 1
+	// step 1: get config
 	c, err := m.getConfigFromFileWithGlobalVars()
 	if err != nil {
 		return nil, err
 	}
-
-	// step 2
-	appTools, err := c.getToolsFromApps()
-	if err != nil {
-		return nil, err
-	}
-
-	c.Tools = append(c.Tools, appTools...)
+	// set instanceID in options
 	c.renderInstanceIDtoOptions()
 
-	// step 3
+	// step 2: check config is valid
 	if err = c.validate(); err != nil {
 		return nil, err
 	}
@@ -50,50 +42,50 @@ func (m *Manager) LoadConfig() (*Config, error) {
 // 1. render the global variables to Config.Tools and Config.Apps
 // 2. transfer the PipelineTemplates to Config.pipelineTemplateMap, it's map[string]string type.
 // We can't render the original config file to Config.PipelineTemplates directly for the:
-//   1. variables rendered must be before the yaml.Unmarshal() called for the [[ foo ]] will be treated as a two-dimensional array by the yaml parser;
-//   2. the variables used([[ foo ]]) in the Config.PipelineTemplates can be defined in the Config.Apps or Config.Vars;
-//   3. pipeline templates are used in apps, so it would be more appropriate to refer to pipeline templates when dealing with apps
+//  1. variables rendered must be before the yaml.Unmarshal() called for the [[ foo ]] will be treated as a two-dimensional array by the yaml parser;
+//  2. the variables used([[ foo ]]) in the Config.PipelineTemplates can be defined in the Config.Apps or Config.Vars;
 func (m *Manager) getConfigFromFileWithGlobalVars() (*Config, error) {
 	configBytes, err := os.ReadFile(m.ConfigFilePath)
 	if err != nil {
 		return nil, err
 	}
 
-	// global variables
-	vars, err := getVarsFromConfigFile(configBytes)
+	// extract top raw config struct from config text
+	r, err := newRawConfigFromConfigBytes(configBytes)
+	if err != nil {
+		return nil, err
+	}
+	// 1. get global variables
+	vars, err := r.getVars()
 	if err != nil {
 		return nil, fmt.Errorf("failed to get variables from config file. Error: %w", err)
 	}
 
-	// tools with global variables rendered
-	tools, err := getToolsFromConfigFileWithVarsRendered(configBytes, vars)
+	// 2. tools with global variables rendered
+	tools, err := r.getToolsWithVars(vars)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get tools from config file. Error: %w", err)
 	}
 
-	// apps with global variables rendered
-	apps, err := getAppsFromConfigFileWithVarsRendered(configBytes, vars)
+	// 3. apps tools with global variables rendered
+	appTools, err := r.getAppToolsWithVars(vars)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get apps from config file. Error: %w", err)
 	}
+	// all tools from apps should depend on the original tools,
+	// because dtm will execute all original tools first, then execute all tools from apps
+	appTools.updateToolDepends(tools)
+	tools = append(tools, appTools...)
 
-	// pipelineTemplateMap transfer from PipelineTemplates
-	pipelineTemplateMap, err := getPipelineTemplatesMapFromConfigFile(configBytes)
-	if err != nil {
-		return nil, fmt.Errorf("failed to get pipelineTemplatesMap from config file. Error: %w", err)
-	}
-
-	// coreConfig without any changes
-	coreConfig, err := getCoreConfigFromConfigFile(configBytes)
+	// 4. coreConfig without any changes
+	coreConfig, err := r.getConfig()
 	if err != nil {
 		return nil, fmt.Errorf("failed to get coreConfig from config file. Error: %w", err)
 	}
 
 	return &Config{
-		Config:              *coreConfig,
-		Vars:                vars,
-		Tools:               tools,
-		Apps:                apps,
-		pipelineTemplateMap: pipelineTemplateMap,
+		Config: *coreConfig,
+		Vars:   vars,
+		Tools:  tools,
 	}, nil
 }

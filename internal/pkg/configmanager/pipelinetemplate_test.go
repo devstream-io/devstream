@@ -173,7 +173,8 @@ options:
 					"registry": RawOptions{
 						"username": "cover",
 					},
-					"app": "template",
+					"app":    "test",
+					"option": "app",
 				}))
 			})
 		})
@@ -238,29 +239,6 @@ var _ = Describe("PipelineTemplate struct", func() {
 					},
 				}))
 			})
-		})
-	})
-})
-
-var _ = Describe("getPipelineTemplatesMapFromConfigFile", func() {
-	const toolsConfig = `pipelineTemplates:
-- name: tpl1
-  type: github-actions
-  options:
-    foo: bar
-`
-	const pipelineTemplate = `  name: tpl1
-  type: github-actions
-  options:
-    foo: bar`
-
-	When("get tools from config file", func() {
-		It("should return config with vars", func() {
-			pipelineTemplatesMap, err := getPipelineTemplatesMapFromConfigFile([]byte(toolsConfig))
-			Expect(err).NotTo(HaveOccurred())
-			Expect(pipelineTemplatesMap).NotTo(BeNil())
-			Expect(len(pipelineTemplatesMap)).To(Equal(1))
-			Expect(pipelineTemplatesMap["tpl1"]).To(Equal(pipelineTemplate))
 		})
 	})
 })
