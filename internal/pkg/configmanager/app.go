@@ -3,9 +3,7 @@ package configmanager
 import (
 	"fmt"
 
-	"gopkg.in/yaml.v3"
-
-	"github.com/devstream-io/devstream/pkg/util/file"
+	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm"
 )
 
@@ -27,33 +25,31 @@ type app struct {
 	CDRawConfigs []pipelineRaw `yaml:"cd" mapstructure:"cd"`
 }
 
-func getAppsFromConfigFileWithVarsRendered(fileBytes []byte, vars map[string]any) ([]*app, error) {
-	yamlPath := "$.apps[*]"
-	yamlStrArray, err := file.GetYamlNodeArrayByPath(fileBytes, yamlPath)
+func (a *app) getTools(vars map[string]any, templateMap map[string]string) (Tools, error) {
+	// generate app repo and template repo from scmInfo
+	a.setDefault()
+	repoScaffoldingTool, err := a.getRepoTemplateTool()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("app[%s] can't get valid repo config: %w", a.Name, err)
 	}
 
-	if yamlStrArray == nil {
-		return make([]*app, 0), nil
-	}
-
-	yamlWithVars, err := renderConfigWithVariables(yamlStrArray.StrOrigin, vars)
+	// get ci/cd pipelineTemplates
+	appVars := a.Spec.merge(vars)
+	tools, err := a.generateCICDTools(templateMap, appVars)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("app[%s] get pipeline tools failed: %w", a.Name, err)
+	}
+	if repoScaffoldingTool != nil {
+		tools = append(tools, repoScaffoldingTool)
 	}
 
-	var retTApps = make([]*app, 0)
-	err = yaml.Unmarshal(yamlWithVars, &retTApps)
-	if err != nil {
-		return nil, err
-	}
+	log.Debugf("Have got %d tools from app %s.", len(tools), a.Name)
 
-	return retTApps, nil
+	return tools, nil
 }
 
 // getAppPipelineTool generate ci/cd tools from app config
-func (a *app) generateCICDToolsFromAppConfig(templateMap map[string]string, appVars map[string]any) (Tools, error) {
+func (a *app) generateCICDTools(templateMap map[string]string, appVars map[string]any) (Tools, error) {
 	allPipelineRaw := append(a.CIRawConfigs, a.CDRawConfigs...)
 	var tools Tools
 	for _, p := range allPipelineRaw {
@@ -81,7 +77,9 @@ func (a *app) getRepoTemplateTool() (*Tool, error) {
 		return nil, fmt.Errorf("configmanager[app] parse repo failed: %w", err)
 	}
 	if a.RepoTemplate != nil {
+		// templateRepo doesn't need auth info
 		templateRepo, err := a.RepoTemplate.BuildRepoInfo()
+		templateRepo.NeedAuth = false
 		if err != nil {
 			return nil, fmt.Errorf("configmanager[app] parse repoTemplate failed: %w", err)
 		}

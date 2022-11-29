@@ -202,7 +202,6 @@ var _ = Describe("LoadConfig", func() {
 			"sourceRepo": RawOptions{
 				"repoType": "github",
 				"url":      "github.com/devstream-io/dtm-scaffolding-golang",
-				"needAuth": true,
 				"org":      "devstream-io",
 				"repo":     "dtm-scaffolding-golang",
 				"branch":   "main",
@@ -218,7 +217,7 @@ var _ = Describe("LoadConfig", func() {
 	})
 
 	When("load a config file", func() {
-		It("should return 5 tools", func() {
+		It("should return  tools", func() {
 			mgr := NewManager(filepath.Join(tmpWorkDir, "config.yaml"))
 			cfg, err := mgr.LoadConfig()
 			Expect(err).NotTo(HaveOccurred())
@@ -274,9 +273,7 @@ var _ = Describe("getConfigFromFileWithGlobalVars", func() {
 			Expect(err).NotTo(HaveOccurred())
 			Expect(cfg.Config.State.Backend).To(Equal("local"))
 			Expect(cfg.Vars["foo1"]).To(Equal("bar1"))
-			Expect(len(cfg.Apps)).To(Equal(1))
-			Expect(cfg.Apps[0].Name).To(Equal("service-a"))
-			Expect(len(cfg.Tools)).To(Equal(2))
+			Expect(len(cfg.Tools)).To(Equal(5))
 			Expect(cfg.Tools[1].Name).To(Equal("plugin2"))
 		})
 	})
