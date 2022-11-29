@@ -66,7 +66,7 @@
 我们鼓励审稿人阅读以下文章，这会对常见的审查工作有所帮助：
 
 - [常规提交](https://www.conventionalcommits.org/en/v1.0.0/)
-- [项目结构](https://docs.devstream.io/en/latest/development/devstream/project-layout.zh/)
+- [项目结构](https://docs.devstream.io/en/latest/development/project-layout.zh/)
 - [关闭的艺术：如何关闭未完成或被拒绝的拉取请求](https://blog.jessfraz.com/post/the-art-of-closing/)
 - [善意和代码审查：改进我们反馈的方式](https://product.voxmedia.com/2018/8/21/17549400/kindness-and-code-reviews-improving-the-way-we-give-feedback)
 - [代码审查指南：良好反馈和反向反馈的示例](https://phauer.com/2018/code-review-guidelines/#code-reviews-guidelines-for-the-reviewer)

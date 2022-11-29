@@ -29,14 +29,13 @@ The main config file, which defaults to `config.yaml` in the working directory, 
 
 There are a few different configs, but please don't be overwhelmed because some are not mandatory, and [you can define all things within a single file](https://stackoverflow.com/questions/50788277/why-3-dashes-hyphen-in-yaml-file).
 
-Configurations in the main config:
+Configurations in the main config contains multiple sections:
 
-- `pluginDir`: the directory where DevStream plugins are stored, defaults to `~/.devstream/plugins`. You can also use the `-d' flag to specify a directory.
-- `state`: state-related settings. Read more [here](./state.md).
-- `varFile`: the location of the variable file used by DevStream. The variable file is a YAML of key/values, which can be referred to in the toolFile/appFile/templateFile.
-- `toolFile`: the location of the tool file used by DevStream. The tool file is a list of DevStream _Tools_, each containing its name, instanceID (unique identifier), and options. Read more [here](./tools-apps.md).
-- `appFile`: the location of the app file used by DevStream. The app file is a list of _Apps_, another DevStream concept, each corresponding to a microservice. Read more [here](./tools-apps.md).
-- `templateFile`: the location of the template file used by DevStream. The templateFile can be referred to by DevStream _Apps_. Read more [here](./tools-apps.md).
+- `config`: basic configuration of DevStream, at the moment mainly state-related settings. Read more [here](./state.md).
+- `vars`: variable definitions. Key/value pairs, which can be referred to in the tools/apps/pipelineTemplates sections.
+- `tools`: a list of DevStream _Tools_, each containing its name, instanceID (unique identifier), and options. Read more [here](./tools-apps.md).
+- `apps`: a list of _Apps_, another DevStream concept, each corresponding to a microservice. Read more [here](./tools-apps.md).
+- `pipelineTemplates`: a list of templates which can be referred to by DevStream _Apps_. Read more [here](./tools-apps.md).
 
 ---
 
