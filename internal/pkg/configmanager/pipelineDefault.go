@@ -33,12 +33,23 @@ var (
 	}
 	jenkinsGeneral = pipelineOption{
 		defaultConfigLocation: "https://raw.githubusercontent.com/devstream-io/ci-template/main/jenkins-pipeline/general/Jenkinsfile",
-		optionGeneratorFunc:   pipelineGeneralGenerator,
+		optionGeneratorFunc:   jenkinsGenerator,
 	}
 	argocdApp = pipelineOption{
 		optionGeneratorFunc: pipelineArgocdAppGenerator,
 	}
 )
+
+// jenkinsGenerator generate jenkins pipeline config
+func jenkinsGenerator(options RawOptions, app *app) RawOptions {
+	newOptions := pipelineGeneralGenerator(options, app)
+	// extract jenkins config from options
+	jenkinsOptions, exist := options["jenkins"]
+	if exist {
+		newOptions["jenkins"] = jenkinsOptions
+	}
+	return newOptions
+}
 
 // pipelineGeneralGenerator generate pipeline general options from RawOptions
 func pipelineGeneralGenerator(options RawOptions, app *app) RawOptions {
