@@ -53,4 +53,31 @@ var _ = Describe("app struct", func() {
 			})
 		})
 	})
+
+	Context("generateCICDTools method", func() {
+		When("template type not exist", func() {
+			BeforeEach(func() {
+				a = &app{
+					Repo: &scm.SCMInfo{
+						CloneURL: "http://test.com/test/test_app",
+					},
+					CIRawConfigs: []pipelineRaw{
+						{
+							Type:         "template",
+							TemplateName: "not_valid",
+						},
+					},
+				}
+			})
+			It("should return error", func() {
+				templateMap = map[string]string{
+					"not_valid": `
+name: not_valid,
+type: not_valid`}
+				_, err := a.generateCICDTools(templateMap, vars)
+				Expect(err).Should(HaveOccurred())
+				Expect(err.Error()).Should(ContainSubstring("pipeline type [not_valid] not supported for now"))
+			})
+		})
+	})
 })

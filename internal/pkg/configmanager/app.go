@@ -35,7 +35,7 @@ func (a *app) getTools(vars map[string]any, templateMap map[string]string) (Tool
 
 	// get ci/cd pipelineTemplates
 	appVars := a.Spec.merge(vars)
-	tools, err := a.generateCICDToolsFromAppConfig(templateMap, appVars)
+	tools, err := a.generateCICDTools(templateMap, appVars)
 	if err != nil {
 		return nil, fmt.Errorf("app[%s] get pipeline tools failed: %w", a.Name, err)
 	}
@@ -49,7 +49,7 @@ func (a *app) getTools(vars map[string]any, templateMap map[string]string) (Tool
 }
 
 // getAppPipelineTool generate ci/cd tools from app config
-func (a *app) generateCICDToolsFromAppConfig(templateMap map[string]string, appVars map[string]any) (Tools, error) {
+func (a *app) generateCICDTools(templateMap map[string]string, appVars map[string]any) (Tools, error) {
 	allPipelineRaw := append(a.CIRawConfigs, a.CDRawConfigs...)
 	var tools Tools
 	for _, p := range allPipelineRaw {

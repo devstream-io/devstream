@@ -196,4 +196,22 @@ var _ = Describe("rawConfig struct", func() {
 			})
 		})
 	})
+
+	Context("getVars method", func() {
+		BeforeEach(func() {
+			r = &rawConfig{
+				vars: []byte(`---
+foo1: bar1
+foo2: 123
+foo3: bar3`)}
+		})
+		It("should works fine", func() {
+			varMap, err := r.getVars()
+			Expect(err).NotTo(HaveOccurred())
+			Expect(varMap).NotTo(BeNil())
+			Expect(len(varMap)).To(Equal(3))
+			Expect(varMap["foo1"]).To(Equal(interface{}("bar1")))
+			Expect(varMap["foo2"]).To(Equal(interface{}(123)))
+		})
+	})
 })
