@@ -202,7 +202,6 @@ var _ = Describe("LoadConfig", func() {
 			"sourceRepo": RawOptions{
 				"repoType": "github",
 				"url":      "github.com/devstream-io/dtm-scaffolding-golang",
-				"needAuth": true,
 				"org":      "devstream-io",
 				"repo":     "dtm-scaffolding-golang",
 				"branch":   "main",

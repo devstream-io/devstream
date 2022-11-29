@@ -69,27 +69,27 @@ func (p *pipelineRaw) newPipelineFromTemplate(templateMap map[string]string, glo
 	if err := mergo.Merge(&t.Options, p.Options, mergo.WithOverride); err != nil {
 		return nil, fmt.Errorf("%s merge template options faield: %+v", p.TemplateName, err)
 	}
-	// set default options
-	if t.Options == nil {
-		t.Options = RawOptions{}
-	}
 	return &t, nil
 }
 
 func (t *pipelineTemplate) generatePipelineTool(app *app) (*Tool, error) {
 	const configLocationKey = "configLocation"
-	// 1. get configurator by template type
+	// 1.set default options
+	if t.Options == nil {
+		t.Options = RawOptions{}
+	}
+	// 2. get configurator by template type
 	pipelineConfigurator, exist := optionConfiguratorMap[t.Type]
 	if !exist {
 		return nil, fmt.Errorf("pipeline type [%s] not supported for now", t.Type)
 	}
-	// 2. set default configLocation
+	// 3. set default configLocation
 	if _, configLocationExist := t.Options[configLocationKey]; !configLocationExist {
 		if pipelineConfigurator.hasDefaultConfig() {
 			t.Options[configLocationKey] = pipelineConfigurator.defaultConfigLocation
 		}
 	}
-	// 3. generate tool options
+	// 4. generate tool options
 	pipelineFinalOptions := pipelineConfigurator.optionGeneratorFunc(t.Options, app)
 	return newTool(t.Type, app.Name, pipelineFinalOptions), nil
 }
