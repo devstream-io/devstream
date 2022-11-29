@@ -88,7 +88,7 @@ func getDefaultOptionsByInstanceID(instanceID string) *helm.Options {
 	// e.g. argocd-config-001 contains argocd and argocd-config, so the argocd and argocd-config both are matched name.
 	var matchedNames = make([]string, 0)
 	for name := range defaults.DefaultOptionsMap {
-		if strings.Contains(instanceID, name) {
+		if strings.HasPrefix(instanceID, name) {
 			matchedNames = append(matchedNames, name)
 		}
 	}
