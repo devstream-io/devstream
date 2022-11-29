@@ -82,8 +82,8 @@ DevStream 真诚地欢迎每一个人参与我们的会议，不需要被邀请�
 
 ## 架构解读
 
-- [整体架构](development/devstream/architecture.zh.md)
-- [项目组织结构](development/devstream/project-layout.zh.md)
+- [整体架构](development/architecture.zh.md)
+- [项目组织结构](development/project-layout.zh.md)
 
 ## 文档类贡献
 
