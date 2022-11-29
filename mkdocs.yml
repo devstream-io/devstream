@@ -130,9 +130,8 @@ nav:
     - development/git-workflow/commit-messages*.md
     - development/git-workflow/branch-and-release*.md
     - development/git-workflow/reviewing*.md
-  - DevStream Architecture:
-    - development/devstream/architecture*.md
-    - development/devstream/project-layout*.md
+  - development/architecture*.md
+  - development/project-layout*.md
   - Environment Setup and Development:
     - development/dev/dev-env-setup*.md
     - development/dev/lint*.md
