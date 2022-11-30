@@ -89,22 +89,31 @@ func (c *Client) DescribeRepo() (*git.RepoInfo, error) {
 	return repoInfo, nil
 }
 
+// AddWebhook will update webhook when it exists
+// else create a webbhook
 func (c *Client) AddWebhook(webhookConfig *git.WebhookConfig) error {
 	projectHook, err := c.getWebhook(webhookConfig)
 	if err != nil {
 		return err
 	}
 	if projectHook != nil {
-		log.Debugf("gitlab AddWebhook already exist")
-		return nil
+		log.Debugf("gitlab AddWebhook already exist, update this webhook")
+		p := &gitlab.EditProjectHookOptions{
+			PushEvents:          gitlab.Bool(true),
+			Token:               gitlab.String(webhookConfig.SecretToken),
+			URL:                 gitlab.String(webhookConfig.Address),
+			MergeRequestsEvents: gitlab.Bool(true),
+		}
+		_, _, err = c.Projects.EditProjectHook(c.GetRepoPath(), projectHook.ID, p)
+	} else {
+		p := &gitlab.AddProjectHookOptions{
+			PushEvents:          gitlab.Bool(true),
+			Token:               gitlab.String(webhookConfig.SecretToken),
+			URL:                 gitlab.String(webhookConfig.Address),
+			MergeRequestsEvents: gitlab.Bool(true),
+		}
+		_, _, err = c.Projects.AddProjectHook(c.GetRepoPath(), p)
 	}
-	p := &gitlab.AddProjectHookOptions{
-		PushEvents:          gitlab.Bool(true),
-		Token:               gitlab.String(webhookConfig.SecretToken),
-		URL:                 gitlab.String(webhookConfig.Address),
-		MergeRequestsEvents: gitlab.Bool(true),
-	}
-	_, _, err = c.Projects.AddProjectHook(c.GetRepoPath(), p)
 	if err != nil {
 		return c.newModuleError(err)
 	}
