@@ -7,12 +7,12 @@ config:
 vars:
   defaultBranch: main
   githubOrganization: devstream-io
-  repoName: dtm-e2e-go
+  repoName: dtm-e2e-python
   dockerRegistryUserName: dtme2etest
 
 tools:
 - name: repo-scaffolding
-  instanceID: golang-github
+  instanceID: python-github
   options:
     destinationRepo:
       org: [[ githubOrganization ]]
@@ -20,51 +20,38 @@ tools:
       branch: [[ defaultBranch ]]
       repoType: github
     vars:
-      ImageRepo: "[[ dockerRegistryUserName ]]/[[ repoName ]]"
+      imageRepo: "[[ dockerRegistryUserName ]]/[[ repoName ]]"
     sourceRepo:
       org: devstream-io
-      repo: dtm-scaffolding-golang
+      repo: dtm-scaffolding-python
       repoType: github
-- name: githubactions-golang
+- name: githubactions-python
   instanceID: default
-  dependsOn: ["repo-scaffolding.golang-github"]
+  dependsOn: ["repo-scaffolding.python-github"]
   options:
-    org: ${{repo-scaffolding.golang-github.outputs.org}}
-    repo: ${{repo-scaffolding.golang-github.outputs.repo}}
+    org: [[ githubOrganization ]]
+    repo: [[ repoName ]]
     language:
-      name: go
-      version: "1.18"
+      name: python
     branch: [[ defaultBranch ]]
-    build:
-      enable: True
-    test:
-      enable: True
-      coverage:
-        enable: True
     docker:
-      enable: True
       registry:
         type: dockerhub
-        username: dtme2etest
+        username: [[ dockerRegistryUserName ]]
+        repository: [[ repoName ]]
 - name: helm-installer
-  instanceID: argocd-001
-  options:
-    chart:
-      upgradeCRDs: false
-    valuesYaml: |
-      crds:
-        keep: false
+  instanceID: argocd
 - name: argocdapp
   instanceID: default
-  dependsOn: ["helm-installer.argocd-001", "repo-scaffolding.golang-github"]
+  dependsOn: ["helm-installer.argocd", "repo-scaffolding.python-github"]
   options:
     app:
-      name: ${{repo-scaffolding.golang-github.outputs.repo}}
+      name: [[ repoName ]]
       namespace: argocd
     destination:
       server: https://kubernetes.default.svc
       namespace: default
     source:
       valuefile: values.yaml
-      path: helm/${{repo-scaffolding.golang-github.outputs.repo}}
-      repoURL: ${{repo-scaffolding.golang-github.outputs.repoURL}}
+      path: helm/[[ repoName ]]
+      repoURL: ${{repo-scaffolding.python-github.outputs.repoURL}}
