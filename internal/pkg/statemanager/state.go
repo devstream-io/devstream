@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"sort"
 
+	"golang.org/x/exp/maps"
+
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 
 	"gopkg.in/yaml.v3"
@@ -36,8 +38,14 @@ func (rs ResourceStatus) GetOutputs() ResourceOutputs {
 	if !ok {
 		return nil
 	}
-
-	return outputs.(ResourceOutputs)
+	outputStatus, isStatus := outputs.(ResourceStatus)
+	if !isStatus {
+		return outputs.(ResourceOutputs)
+	}
+	// if outputs type is ResourceStatus, transfer this type to ResourceOutputs
+	outputData := ResourceOutputs{}
+	maps.Copy(outputData, outputStatus)
+	return outputData
 }
 
 type StatesMap struct {
