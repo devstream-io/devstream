@@ -18,9 +18,10 @@ env:
   # see https://github.com/devstream-io/devstream/pull/414 for more info
   GITHUB_TOKEN: ${{ secrets.E2E_GITHUB_TOKEN }}
   DOCKERHUB_USERNAME: ${{ secrets.E2E_DOCKERHUB_USERNAME }}
+  # for github actions
   DOCKERHUB_TOKEN: ${{ secrets.E2E_DOCKERHUB_TOKEN }}
-  TRELLO_API_KEY: ${{ secrets.E2E_TRELLO_API_KEY }}
-  TRELLO_TOKEN: ${{ secrets.E2E_TRELLO_TOKEN }}
+  # for apps
+  IMAGE_REPO_PASSWORD: ${{ secrets.E2E_DOCKERHUB_TOKEN }}
 
 concurrency:
   group: ${{ github.workflow }}
@@ -65,24 +66,33 @@ jobs:
       - name: Configure EKS credentials
         run: |
           aws eks update-kubeconfig --region ap-southeast-1 --name dtm-test
-      - name: copy config files
-        run: cp ./test/e2e/yaml/e2e-*.yaml ./
-      - name: install kubectl
+      - name: Install kubectl
         run: |
           curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.22.0/bin/linux/amd64/kubectl
           chmod +x ./kubectl
           sudo mv ./kubectl /usr/local/bin/kubectl
-      - name: apply git-ops
-        run: ./dtm apply -f e2e-config.yaml -y
-      - name: apply twice git-ops
-        run: ./dtm apply -f e2e-config.yaml -y
-      - name: check if pod is ready
+      - name: copy config files
+        run: cp ./test/e2e/yaml/e2e-*.yaml ./
+      - name: test 1 - apply git-ops (tools only)
+        run: ./dtm apply -f e2e-tools.yaml -y
+      - name: test 1 - apply git-ops (tools only) again
+        run: ./dtm apply -f e2e-tools.yaml -y
+      - name: test 1 - check if pod is ready
+        run: while [[ $(kubectl get pods -l app=dtm-e2e-python -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "pod not ready yet..."; sleep 3; done
+        timeout-minutes: 10
+      - name: test 1 - verify
+        run: ./dtm verify -f e2e-tools.yaml
+      - name: test 1 - clean
+        run: ./dtm delete -f e2e-tools.yaml -y
+      - name: test 2 - apply (apps)
+        run: ./dtm apply -f e2e-apps.yaml -y
+      - name: test 2 - apply (apps) again
+        run: ./dtm apply -f e2e-apps.yaml -y
+      - name: test 2 - check if pod is ready
         run: while [[ $(kubectl get pods -l app=dtm-e2e-go -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "pod not ready yet..."; sleep 3; done
         timeout-minutes: 10
-      - name: verify
-        run: ./dtm verify -f e2e-config.yaml
-      - name: clean
-        run: ./dtm delete -f e2e-config.yaml -y
+      - name: test 2 - clean
+        run: ./dtm delete -f e2e-apps.yaml -y
       - name: test e2e success or not
         if: failure()
         run: |
