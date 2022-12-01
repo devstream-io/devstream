@@ -40,8 +40,6 @@ func HandleOutputsReferences(smgr statemanager.Manager, options configmanager.Ra
 			// recursive if the value is a map (which means Tool.Option is a nested map)
 			log.Debugf("Got nested map: %v", optionValue)
 			errorsList = append(errorsList, HandleOutputsReferences(smgr, optionValue)...)
-		default:
-			log.Warnf("option %+v process output can't get valid type", optionInterface)
 		}
 	}
 
