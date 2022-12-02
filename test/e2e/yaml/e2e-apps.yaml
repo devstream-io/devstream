@@ -21,7 +21,7 @@ apps:
     framework: gin
     language: golang
   repo:
-    owner: [[ repoOwner ]]
+    org: [[ repoOwner ]]
     scmType: github
   repoTemplate:
     url: github.com/devstream-io/dtm-scaffolding-golang
