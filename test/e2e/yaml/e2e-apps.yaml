@@ -23,7 +23,7 @@ apps:
     owner: [[ repoOwner ]]
     scmType: github
   repoTemplate:
-    url: [[ repoTemplateBaseURL ]]/dtm-scaffolding-golang
+    url: github.com/devstream-io/dtm-scaffolding-golang
     vars:
       imageRepo: [[ imageRepoOwner ]]/dtm-e2e-go
   ci:
