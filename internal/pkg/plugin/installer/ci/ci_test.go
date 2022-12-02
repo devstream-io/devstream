@@ -80,7 +80,7 @@ var _ = Describe("PipelineConfig struct", func() {
 		})
 	})
 	It("should return file Vars", func() {
-		varMap := a.generateCIFileVars(r)
+		varMap := a.GenerateCIFileVars(r)
 		var emptyDingtalk *step.DingtalkStepConfig
 		var emptySonar *step.SonarQubeStepConfig
 		var emptyBool *bool
@@ -90,6 +90,7 @@ var _ = Describe("PipelineConfig struct", func() {
 			"DingTalkSecretToken":   "DINGTALK_SECURITY_TOKEN",
 			"ImageRepoSecret":       "IMAGE_REPO_SECRET",
 			"ImageRepoDockerSecret": "image-repo-auth",
+			"AppName":               "test_repo",
 			"StepGlobalVars":        "",
 			"RepoType":              "gitlab",
 			"imageRepo": map[string]interface{}{
