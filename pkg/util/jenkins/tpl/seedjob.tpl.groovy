@@ -64,7 +64,7 @@ gitlabTrigger.setTriggerOnPush(true)
 gitlabTrigger.setTriggerOnMergeRequest(true)
 gitlabTrigger.setBranchFilterType(BranchFilterType.RegexBasedFilter)
 gitlabTrigger.setSourceBranchRegex(".*")
-gitlabTrigger.setTargetBranchRegex("master")
+gitlabTrigger.setTargetBranchRegex("[[ .Branch ]]")
 
 jobRef.addTrigger(gitlabTrigger)
 def gitlabConnection = new GitLabConnectionProperty("[[ .GitlabConnection ]]")

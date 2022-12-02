@@ -218,12 +218,12 @@ var _ = Describe("Pluginengine", func() {
 		Expect(err).NotTo(HaveOccurred())
 
 		dependantOptions := configmanager.RawOptions{
-			"outerKey": map[string]interface{}{
+			"outerKey": configmanager.RawOptions{
 				"innerKey": fmt.Sprintf("${{ %s.%s.outputs.boardId }}", trelloName, trelloInstance),
 			},
 		}
 		expectResult := configmanager.RawOptions{
-			"outerKey": map[string]interface{}{
+			"outerKey": configmanager.RawOptions{
 				"innerKey": expectedBoardId,
 			},
 		}
