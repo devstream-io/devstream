@@ -40,7 +40,6 @@ jobs:
     runs-on: [self-hosted, linux, X64]
     name: e2e-test-${{ matrix.os }}
     steps:
-      - run: echo "🐧 This job is now running on a ${{ runner.os }}-${{ runner.arch }} server hosted by GitHub!"
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup Golang env
@@ -78,7 +77,7 @@ jobs:
       - name: test 1 - apply git-ops (tools only) again
         run: ./dtm apply -f e2e-tools.yaml -y
       - name: test 1 - check if pod is ready
-        run: while [[ $(kubectl get pods -l app=dtm-e2e-python -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "pod not ready yet..."; sleep 3; done
+        run: while [[ $(kubectl get pods -l app=dtme2epython -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "pod not ready yet..."; sleep 3; done
         timeout-minutes: 10
       - name: test 1 - verify
         run: ./dtm verify -f e2e-tools.yaml

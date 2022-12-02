@@ -7,7 +7,7 @@ config:
 vars:
   defaultBranch: main
   githubOrganization: devstream-io
-  repoName: dtm-e2e-python
+  repoName: dtme2epython
   dockerRegistryUserName: dtme2etest
 
 tools:
