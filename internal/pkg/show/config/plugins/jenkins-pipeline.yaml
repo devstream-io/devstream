@@ -15,7 +15,10 @@ tools:
       # jenkins namespace in k8s cluster
       namespace: jenkins
       # restart jenkins if true for plugin install
-      enableRestart: true
+      enableRestart: false
+      # if offline is true, jenkins-pipeline will not install jenkins plugins and share library
+      # it will use a local Jenkinsfile for jenkins-pipeline
+      offline: false
     scm:
       # url is the project repo location, this can be http address or git address
       url: git@gitlab.com/root/test-exmaple.git
