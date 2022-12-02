@@ -28,6 +28,7 @@ unclassified:
         skipScmCause: false
         skipUpstreamCause: false
 [[- end ]]
+[[ if not .Offline ]]
   globalLibraries:
     libraries:
     - defaultVersion: "main"
@@ -41,3 +42,4 @@ unclassified:
               remote: "https://github.com/devstream-io/jenkins-share-library.git"
               traits:
               - "gitBranchDiscovery"
+[[- end ]]

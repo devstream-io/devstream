@@ -21,6 +21,7 @@ type jenkinsOption struct {
 	User          string `mapstructure:"user"`
 	Namespace     string `mapstructure:"namespace"`
 	EnableRestart bool   `mapstructure:"enableRestart"`
+	Offline       bool   `mapstructure:"offline"`
 }
 
 func (j *jenkinsOption) newClient() (jenkins.JenkinsAPI, error) {
@@ -33,6 +34,7 @@ func (j *jenkinsOption) newClient() (jenkins.JenkinsAPI, error) {
 		URL:           j.URL,
 		Namespace:     j.Namespace,
 		EnableRestart: j.EnableRestart,
+		Offline:       j.Offline,
 	}
 	return jenkins.NewClient(jenkinsConfig)
 }

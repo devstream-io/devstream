@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/Masterminds/semver v1.5.0
+	github.com/Masterminds/sprig/v3 v3.2.2
 	github.com/adlio/trello v1.9.0
 	github.com/argoproj/argo-cd/v2 v2.2.2
 	github.com/argoproj/gitops-engine v0.5.2
@@ -55,7 +56,6 @@ require (
 	github.com/MakeNowJust/heredoc v0.0.0-20170808103936-bb23615498cd // indirect
 	github.com/Masterminds/goutils v1.1.1 // indirect
 	github.com/Masterminds/semver/v3 v3.1.1 // indirect
-	github.com/Masterminds/sprig/v3 v3.2.2 // indirect
 	github.com/Masterminds/squirrel v1.5.2 // indirect
 	github.com/Microsoft/go-winio v0.4.17 // indirect
 	github.com/ProtonMail/go-crypto v0.0.0-20210428141323-04723f9f07d7 // indirect

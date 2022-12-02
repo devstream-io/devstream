@@ -11,6 +11,7 @@ setting.configImageRepo([
 ])
 [[ end -]]
 runPipeline([
+    'repo_type': "[[ .RepoType ]]"
     'name': "[[ .AppName ]]",
     [[ if .sonarqube -]]
     'sonarqube_enable': true,

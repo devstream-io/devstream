@@ -28,6 +28,7 @@ type JenkinsConfigOption struct {
 	URL           string
 	Namespace     string
 	EnableRestart bool
+	Offline       bool
 	BasicAuth     *BasicAuth
 }
 
@@ -94,4 +95,8 @@ func NewClient(configOption *JenkinsConfigOption) (JenkinsAPI, error) {
 
 func (j *jenkins) GetBasicInfo() *JenkinsConfigOption {
 	return j.BasicInfo
+}
+
+func (o *JenkinsConfigOption) IsOffline() bool {
+	return o.Offline
 }
