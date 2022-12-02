@@ -1,0 +1,36 @@
+config:
+  state:
+    backend: local
+    options:
+      stateFile: devstream.state
+
+vars:
+  defaultBranch: main
+  repoOwner: devstream-io
+  repoName: dtm-e2e-go
+  dockerRegistryUserName: dtme2etest
+  imageRepoOwner: dtme2etest
+
+tools:
+- name: helm-installer
+  instanceID: argocd
+
+apps:
+- name: dtm-e2e-go
+  spec:
+    framework: gin
+    language: golang
+  repo:
+    org: [[ repoOwner ]]
+    scmType: github
+  repoTemplate:
+    url: github.com/devstream-io/dtm-scaffolding-golang
+    vars:
+      imageRepo: [[ imageRepoOwner ]]/dtm-e2e-go
+  ci:
+  - type: github-actions
+    options:
+      imageRepo:
+        user: [[ imageRepoOwner ]]
+  cd:
+  - type: argocdapp

@@ -34,7 +34,8 @@ var _ = Describe("action struct", func() {
 			},
 		}
 		repoInfo = &git.RepoInfo{
-			Repo: repoName,
+			Repo:     repoName,
+			RepoType: "gitlab",
 		}
 	})
 	Context("buildCIFileConfig method", func() {
@@ -51,6 +52,7 @@ var _ = Describe("action struct", func() {
 				"AppName":               "test_repo",
 				"ImageRepoSecret":       "IMAGE_REPO_SECRET",
 				"ImageRepoDockerSecret": "image-repo-auth",
+				"RepoType":              "gitlab",
 				"imageRepo": map[string]interface{}{
 					"url":  "exmaple.com",
 					"user": "test_user",

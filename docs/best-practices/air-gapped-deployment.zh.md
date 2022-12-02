@@ -33,7 +33,7 @@ chmod +x dtm
 
 ```shell
 $ dtm version
-0.9.1
+0.10.0
 ```
 
 ### 1.2、下载 plugins

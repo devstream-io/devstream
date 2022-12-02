@@ -31,6 +31,7 @@ type RepoCascConfig struct {
 	// common variables
 	RepoType     string
 	CredentialID string
+	Offline      bool
 	// gitlab variables
 	GitLabConnectionName string
 	GitlabURL            string

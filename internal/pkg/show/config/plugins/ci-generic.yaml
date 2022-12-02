@@ -8,7 +8,7 @@ tools:
   # options for the plugin
   options:
     ci:
-      configLocation : Jenkinsfile
+      configLocation: Jenkinsfile
       # support jenkins/gitlab/github for now
       type: jenkins
     projectRepo:

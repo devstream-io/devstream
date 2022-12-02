@@ -47,5 +47,5 @@ chmod +x dtm
 
 ```shell
 $ dtm version
-0.9.1
+0.10.0
 ```

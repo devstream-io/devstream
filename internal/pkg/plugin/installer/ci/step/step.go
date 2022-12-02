@@ -27,6 +27,7 @@ type StepGlobalVars struct {
 	CredentialID          string `mapstructure:"StepGlobalVars"`
 	SonarqubeSecretKey    string `mapstructure:"SonarqubeSecretKey"`
 	GitlabConnectionID    string `mapstructure:"GitlabConnectionID"`
+	RepoType              string `mapstructure:"RepoType"`
 }
 
 // GetStepGlobalVars get global config vars for step
@@ -38,12 +39,16 @@ func GetStepGlobalVars(repoInfo *git.RepoInfo) *StepGlobalVars {
 		DingTalkSecretToken:   dingTalkSecretToken,
 		SonarqubeSecretKey:    sonarSecretKey,
 		GitlabConnectionID:    gitlabConnectionName,
+		RepoType:              repoInfo.RepoType,
 	}
+	// config credentialID for jenkins if SSHPrivateKey is configured
 	switch repoInfo.RepoType {
 	case "github":
 		v.CredentialID = githubCredentialName
 	case "gitlab":
-		v.CredentialID = gitlabCredentialName
+		if repoInfo.SSHPrivateKey != "" {
+			v.CredentialID = gitlabCredentialName
+		}
 	}
 	return v
 }

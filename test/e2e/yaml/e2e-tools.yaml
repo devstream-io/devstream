@@ -1,0 +1,57 @@
+config:
+  state:
+    backend: local
+    options:
+      stateFile: devstream.state
+
+vars:
+  defaultBranch: main
+  githubOrganization: devstream-io
+  repoName: dtme2epython
+  dockerRegistryUserName: dtme2etest
+
+tools:
+- name: repo-scaffolding
+  instanceID: python-github
+  options:
+    destinationRepo:
+      org: [[ githubOrganization ]]
+      repo: [[ repoName ]]
+      branch: [[ defaultBranch ]]
+      repoType: github
+    vars:
+      imageRepo: "[[ dockerRegistryUserName ]]/[[ repoName ]]"
+    sourceRepo:
+      org: devstream-io
+      repo: dtm-scaffolding-python
+      repoType: github
+- name: githubactions-python
+  instanceID: default
+  dependsOn: ["repo-scaffolding.python-github"]
+  options:
+    org: [[ githubOrganization ]]
+    repo: [[ repoName ]]
+    language:
+      name: python
+    branch: [[ defaultBranch ]]
+    docker:
+      registry:
+        type: dockerhub
+        username: [[ dockerRegistryUserName ]]
+        repository: [[ repoName ]]
+- name: helm-installer
+  instanceID: argocd
+- name: argocdapp
+  instanceID: default
+  dependsOn: ["helm-installer.argocd", "repo-scaffolding.python-github"]
+  options:
+    app:
+      name: [[ repoName ]]
+      namespace: argocd
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: default
+    source:
+      valuefile: values.yaml
+      path: helm/[[ repoName ]]
+      repoURL: ${{repo-scaffolding.python-github.outputs.repoURL}}

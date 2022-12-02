@@ -8,7 +8,11 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
+// ensurePluginInstalled will ensure jenkins plugins are installed
 func ensurePluginInstalled(jenkinsClient jenkins.JenkinsAPI, pluginConfigs []step.StepConfigAPI) error {
+	if jenkinsClient.GetBasicInfo().IsOffline() {
+		return nil
+	}
 	var plugins []*jenkins.JenkinsPlugin
 	for _, pluginConfig := range pluginConfigs {
 		plugins = append(plugins, pluginConfig.GetJenkinsPlugins()...)
@@ -17,7 +21,9 @@ func ensurePluginInstalled(jenkinsClient jenkins.JenkinsAPI, pluginConfigs []ste
 }
 
 func configPlugins(jenkinsClient jenkins.JenkinsAPI, pluginConfigs []step.StepConfigAPI) error {
-	globalCascConfig := new(jenkins.RepoCascConfig)
+	globalCascConfig := &jenkins.RepoCascConfig{
+		Offline: jenkinsClient.GetBasicInfo().IsOffline(),
+	}
 	for _, pluginConfig := range pluginConfigs {
 		cascConfig, err := pluginConfig.ConfigJenkins(jenkinsClient)
 		if err != nil {

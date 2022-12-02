@@ -33,7 +33,8 @@ var _ = Describe("PipelineConfig struct", func() {
 			},
 		}
 		r = &git.RepoInfo{
-			Repo: repoName,
+			Repo:     repoName,
+			RepoType: "gitlab",
 		}
 	})
 	Context("BuildCIFileConfig method", func() {
@@ -60,6 +61,7 @@ var _ = Describe("PipelineConfig struct", func() {
 				"StepGlobalVars":      "",
 				"configLocation":      downloader.ResourceLocation("123/workflows"),
 				"sonarqube":           nilStepConfig,
+				"RepoType":            "gitlab",
 				"GitlabConnectionID":  "gitlabConnection",
 				"test": map[string]interface{}{
 					"enable":                emptyBool,
@@ -89,6 +91,7 @@ var _ = Describe("PipelineConfig struct", func() {
 			"ImageRepoSecret":       "IMAGE_REPO_SECRET",
 			"ImageRepoDockerSecret": "image-repo-auth",
 			"StepGlobalVars":        "",
+			"RepoType":              "gitlab",
 			"imageRepo": map[string]interface{}{
 				"url":  "exmaple.com",
 				"user": "test_user",

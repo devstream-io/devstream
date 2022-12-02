@@ -47,5 +47,5 @@ Then you can verify that the permissions and version of dtm are correct with the
 
 ```shell
 $ dtm version
-0.9.1
+0.10.0
 ```
