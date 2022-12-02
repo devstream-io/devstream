@@ -42,11 +42,11 @@ func GetStepGlobalVars(repoInfo *git.RepoInfo) *StepGlobalVars {
 		RepoType:              repoInfo.RepoType,
 	}
 	// config credentialID for jenkins if SSHPrivateKey is configured
-	if repoInfo.SSHPrivateKey != "" {
-		switch repoInfo.RepoType {
-		case "github":
-			v.CredentialID = githubCredentialName
-		case "gitlab":
+	switch repoInfo.RepoType {
+	case "github":
+		v.CredentialID = githubCredentialName
+	case "gitlab":
+		if repoInfo.SSHPrivateKey != "" {
 			v.CredentialID = gitlabCredentialName
 		}
 	}
