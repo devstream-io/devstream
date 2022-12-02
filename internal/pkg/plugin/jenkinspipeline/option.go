@@ -19,18 +19,10 @@ const (
 	ciType = server.CIServerType("jenkins")
 )
 
-type jenkinsJobName string
-
 type jobOptions struct {
 	Jenkins     jenkinsOption `mapstructure:"jenkins"`
 	ci.CIConfig `mapstructure:",squash"`
 	JobName     jenkinsJobName `mapstructure:"jobName"`
-	// SCM      scm.SCMInfo   `mapstructure:"scm"`
-	// Pipeline pipeline      `mapstructure:"pipeline"`
-
-	// used in package
-	// CIFileConfig *cifile.CIFileConfig `mapstructure:"ci"`
-	// ProjectRepo  *git.RepoInfo        `mapstructure:"projectRepo"`
 }
 
 func newJobOptions(options configmanager.RawOptions) (*jobOptions, error) {
@@ -41,38 +33,18 @@ func newJobOptions(options configmanager.RawOptions) (*jobOptions, error) {
 	return &opts, nil
 }
 
-func (n jenkinsJobName) getJobName() string {
-	jobNameStr := string(n)
-	if strings.Contains(jobNameStr, "/") {
-		return strings.Split(jobNameStr, "/")[1]
+func (j *jobOptions) install(jenkinsClient jenkins.JenkinsAPI, secretToken string) error {
+	// 1. install jenkins plugins
+	pipelinePlugins := j.extractPlugins()
+	if err := ensurePluginInstalled(jenkinsClient, pipelinePlugins); err != nil {
+		return err
 	}
-	return jobNameStr
-}
-
-func (n jenkinsJobName) getJobFolder() string {
-	jobNameStr := string(n)
-	if strings.Contains(jobNameStr, "/") {
-		return strings.Split(jobNameStr, "/")[0]
+	// 2. config plugins by casc
+	if err := configPlugins(jenkinsClient, pipelinePlugins); err != nil {
+		return err
 	}
-	return ""
-}
-
-func (n jenkinsJobName) checkValid() error {
-	jobNameStr := string(n)
-	if strings.Contains(jobNameStr, "/") {
-		strs := strings.Split(jobNameStr, "/")
-		if len(strs) != 2 || len(strs[0]) == 0 || len(strs[1]) == 0 {
-			return fmt.Errorf("jenkins jobName illegal: %s", n)
-		}
-	}
-	return nil
-}
-
-func (j *jobOptions) extractPlugins() []step.StepConfigAPI {
-	stepConfigs := step.ExtractValidStepConfig(j.Pipeline)
-	// add repo plugin for repoInfo
-	stepConfigs = append(stepConfigs, step.GetRepoStepConfig(j.ProjectRepo)...)
-	return stepConfigs
+	// 3. create or update jenkins job
+	return j.createOrUpdateJob(jenkinsClient, secretToken)
 }
 
 func (j *jobOptions) remove(jenkinsClient jenkins.JenkinsAPI) error {
@@ -120,16 +92,39 @@ func (j *jobOptions) createOrUpdateJob(jenkinsClient jenkins.JenkinsAPI, secretT
 	return nil
 }
 
-func (j *jobOptions) install(jenkinsClient jenkins.JenkinsAPI, secretToken string) error {
-	// 1. install jenkins plugins
-	pipelinePlugins := j.extractPlugins()
-	if err := ensurePluginInstalled(jenkinsClient, pipelinePlugins); err != nil {
-		return err
+func (j *jobOptions) extractPlugins() []step.StepConfigAPI {
+	stepConfigs := step.ExtractValidStepConfig(j.Pipeline)
+	// add repo plugin for repoInfo
+	stepConfigs = append(stepConfigs, step.GetRepoStepConfig(j.ProjectRepo)...)
+	return stepConfigs
+}
+
+// jenkins jobName, can be like folder/jobName or jobName
+type jenkinsJobName string
+
+func (n jenkinsJobName) getJobName() string {
+	jobNameStr := string(n)
+	if strings.Contains(jobNameStr, "/") {
+		return strings.Split(jobNameStr, "/")[1]
 	}
-	// 2. config plugins by casc
-	if err := configPlugins(jenkinsClient, pipelinePlugins); err != nil {
-		return err
+	return jobNameStr
+}
+
+func (n jenkinsJobName) getJobFolder() string {
+	jobNameStr := string(n)
+	if strings.Contains(jobNameStr, "/") {
+		return strings.Split(jobNameStr, "/")[0]
 	}
-	// 3. create or update jenkins job
-	return j.createOrUpdateJob(jenkinsClient, secretToken)
+	return ""
+}
+
+func (n jenkinsJobName) checkValid() error {
+	jobNameStr := string(n)
+	if strings.Contains(jobNameStr, "/") {
+		strs := strings.Split(jobNameStr, "/")
+		if len(strs) != 2 || len(strs[0]) == 0 || len(strs[1]) == 0 {
+			return fmt.Errorf("jenkins jobName illegal: %s", n)
+		}
+	}
+	return nil
 }
