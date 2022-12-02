@@ -49,7 +49,7 @@ export DOCKERHUB_USERNAME="<YOUR_DOCKER_HUB_USER_NAME_HERE>"
 
 Then we run the following commands to update our config file with those env vars:
 
-Then, if you are using **macOS** or **FreeBSD** based systems\, run:
+Then, if you are using **macOS** or **FreeBSD** based systems, run:
 
 ```shell
 sed -i.bak "s@YOUR_GITHUB_USERNAME_CASE_SENSITIVE@${GITHUB_USER}@g" config.yaml
