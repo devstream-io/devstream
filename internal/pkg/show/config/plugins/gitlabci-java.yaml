@@ -23,11 +23,11 @@ tools:
         tags: "YOUR_GITLAB_RUNNER_TAG"
         # Package step will run on the specified branchs, default use "main"
         allowedBranch:
-          - "main"
-          - "test"
-      # Customized pipeline scripts. Leave it blank to use default value. 
+        - "main"
+        - "test"
+      # Customized pipeline scripts. Leave it blank to use default value.
       scriptCommand:
-        - "YOUR_PACKAGE_SCRIPTS"
+      - "YOUR_PACKAGE_SCRIPTS"
     build:
       # Same as above
       baseOption:
