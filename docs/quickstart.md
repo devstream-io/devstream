@@ -1,13 +1,11 @@
 # Quick Start
 
-[Watch the demo](./index.md) first if you prefer to see DevStream in action.
-
-> Note: currently, we only have Linux and macOS versions of DevStream. Windows support will come later.
-
 In this quickstart, we will do the following automatically with DevStream:
 
-- create a GitHub repository with Golang web app scaffolding;
-- set up GitHub Actions workflow for the Golang app we created, which contains test and build stages for our Go web app.
+- create a GitHub repository with automatically generated code for a web application written in Golang with the [gin](https://github.com/gin-gonic/gin) framework;
+- set up GitHub Actions workflow for the app created in the previous step.
+
+---
 
 ## 1 Download
 
@@ -16,12 +14,18 @@ In your working directory, run:
 ```shell
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/devstream-io/devstream/main/hack/install/download.sh)"
 ```
-
-This will download the corresponding `dtm` binary to your working directory according to your OS and chip architecture, and grant the binary execution permission.
-
+> Note: the command above does the following:
+> 
+> - find out your OS and chip architecture
+> - find the latest version of the `dtm` binary
+> - download the correct `dtm` according to OS/architecture
+> - grant the binary execution permission.
+> 
 > Optional: you can then move `dtm` to a place which is in your PATH. For example: `mv dtm /usr/local/bin/`.
+> 
+> For more ways to install `dtm`, see [install dtm](./install.md).
 
-_For more details on how to install, see [install dtm](./install.md)._
+---
 
 ## 2 Configuration
 
@@ -31,13 +35,7 @@ Run the following command to generate the template configuration file `config.ya
 ./dtm show config -t quickstart > config.yaml
 ```
 
-As aforementioned, we will handle GitHub repo scaffolding and CI workflows in GitHub Actions, so, we will need the following environment variables (env vars) to be set:
-
-- GITHUB_USER
-- GITHUB_TOKEN
-- DOCKERHUB_USERNAME
-
-Run the following commands to set values for these env vars (replace values within the double quotes):
+Then set the following environment variables by running (replace values within the double quotes):
 
 ```shell
 export GITHUB_USER="<YOUR_GITHUB_USER_NAME_HERE>"
@@ -45,115 +43,97 @@ export GITHUB_TOKEN="<YOUR_GITHUB_PERSONAL_ACCESS_TOKEN_HERE>"
 export DOCKERHUB_USERNAME="<YOUR_DOCKER_HUB_USER_NAME_HERE>"
 ```
 
-> Tip: Go to [Personal Access Token](https://github.com/settings/tokens/new) to generate a new `GITHUB_TOKEN` for `dtm`.
+> Tip: go to [Personal Access Token](https://github.com/settings/tokens/new) to generate a new `GITHUB_TOKEN` for `dtm`.
 > 
-> For "Quick Start", we only need `repo`,`workflow`,`delete_repo` scopes. However, we recommend that you check all and future plugins may require more scopes.
+> For "Quick Start", we only need `repo`,`workflow`,`delete_repo` permissions.
 
 Then we run the following commands to update our config file with those env vars:
 
-For **macOS** or **FreeBSD** based systems:
+Then, if you are using **macOS** or **FreeBSD** based systems\, run:
 
 ```shell
-sed -i.bak "s@YOUR_GITHUB_USERNAME_CASE_SENSITIVE@${GITHUB_USER}@g" quickstart.yaml
-sed -i.bak "s@YOUR_DOCKER_USERNAME@${DOCKERHUB_USERNAME}@g" quickstart.yaml
+sed -i.bak "s@YOUR_GITHUB_USERNAME_CASE_SENSITIVE@${GITHUB_USER}@g" config.yaml
+sed -i.bak "s@YOUR_DOCKER_USERNAME@${DOCKERHUB_USERNAME}@g" config.yaml
 ```
 
-For **GNU** Linux users:
+> For **GNU** Linux users, run:
+> 
+> ```shell
+> sed -i "s@YOUR_GITHUB_USERNAME_CASE_SENSITIVE@${GITHUB_USER}@g" config.yaml
+> sed -i "s@YOUR_DOCKER_USERNAME@${DOCKERHUB_USERNAME}@g" config.yaml
+> ```
 
-```shell
-sed -i "s@YOUR_GITHUB_USERNAME_CASE_SENSITIVE@${GITHUB_USER}@g" quickstart.yaml
-sed -i "s@YOUR_DOCKER_USERNAME@${DOCKERHUB_USERNAME}@g" quickstart.yaml
-```
+---
 
 ## 3 Init
 
 Run:
 
 ```shell
-./dtm init -f quickstart.yaml
+./dtm init
 ```
 
-and you should see similar output to the following:
+> You should see some output similar to the following:
+```
+2022-12-02 16:11:55 ℹ [INFO]  Using dir </Users/tiexin/.devstream/plugins> to store plugins.
+2022-12-02 16:11:55 ℹ [INFO]  -------------------- [  repo-scaffolding-darwin-arm64_0.10.1  ] --------------------
+2022-12-02 16:11:57 ℹ [INFO]  Downloading: [repo-scaffolding-darwin-arm64_0.10.1.so] ...
+ 87.82 MiB / 87.82 MiB [================================] 100.00% 12.30 MiB/s 7s
+2022-12-02 16:12:04 ✔ [SUCCESS]  [repo-scaffolding-darwin-arm64_0.10.1.so] download succeeded.
+2022-12-02 16:12:04 ℹ [INFO]  Downloading: [repo-scaffolding-darwin-arm64_0.10.1.md5] ...
+ 33 B / 33 B [==========================================] 100.00% 50.98 KiB/s 0s
+2022-12-02 16:12:04 ✔ [SUCCESS]  [repo-scaffolding-darwin-arm64_0.10.1.md5] download succeeded.
+2022-12-02 16:12:04 ℹ [INFO]  Initialize [repo-scaffolding-darwin-arm64_0.10.1] finished.
+2022-12-02 16:12:04 ℹ [INFO]  -------------------- [  repo-scaffolding-darwin-arm64_0.10.1  ] --------------------
+2022-12-02 16:12:04 ℹ [INFO]  -------------------- [  githubactions-golang-darwin-arm64_0.10.1  ] --------------------
+2022-12-02 16:12:05 ℹ [INFO]  Downloading: [githubactions-golang-darwin-arm64_0.10.1.so] ...
+ 86.44 MiB / 86.44 MiB [================================] 100.00% 15.12 MiB/s 5s
+2022-12-02 16:12:10 ✔ [SUCCESS]  [githubactions-golang-darwin-arm64_0.10.1.so] download succeeded.
+2022-12-02 16:12:10 ℹ [INFO]  Downloading: [githubactions-golang-darwin-arm64_0.10.1.md5] ...
+ 33 B / 33 B [==========================================] 100.00% 71.24 KiB/s 0s
+2022-12-02 16:12:10 ✔ [SUCCESS]  [githubactions-golang-darwin-arm64_0.10.1.md5] download succeeded.
+2022-12-02 16:12:11 ℹ [INFO]  Initialize [githubactions-golang-darwin-arm64_0.10.1] finished.
+2022-12-02 16:12:11 ℹ [INFO]  -------------------- [  githubactions-golang-darwin-arm64_0.10.1  ] --------------------
+2022-12-02 16:12:11 ✔ [SUCCESS]  Initialize finished.
+```
 
-```
-2022-06-30 11:21:48 ℹ [INFO]  Got Backend from config: local
-2022-06-30 11:21:48 ℹ [INFO]  Using dir <.devstream> to store plugins.
-2022-06-30 11:21:48 ℹ [INFO]  Downloading: [repo-scaffolding-darwin-arm64_0.7.0.so] ...
- 15.05 MiB / 15.05 MiB [================================] 100.00% 21.17 MiB/s 0s
-2022-06-30 11:21:49 ✔ [SUCCESS]  [repo-scaffolding-darwin-arm64_0.7.0.so] download succeeded.
-2022-06-30 11:21:49 ℹ [INFO]  Downloading: [repo-scaffolding-darwin-arm64_0.7.0.md5] ...
- 33 B / 33 B [==========================================] 100.00% 35.29 KiB/s 0s
-2022-06-30 11:21:49 ✔ [SUCCESS]  [repo-scaffolding-darwin-arm64_0.7.0.md5] download succeeded.
-2022-06-30 11:21:49 ℹ [INFO]  Plugin: repo-scaffolding-darwin-arm64_0.7.0.so doesn't match with .md5 and will be downloaded.
-2022-06-30 11:21:49 ℹ [INFO]  Downloading: [repo-scaffolding-darwin-arm64_0.7.0.so] ...
- 15.05 MiB / 15.05 MiB [================================] 100.00% 31.25 MiB/s 0s
-2022-06-30 11:21:50 ✔ [SUCCESS]  [repo-scaffolding-darwin-arm64_0.7.0.so] download succeeded.
-2022-06-30 11:21:50 ℹ [INFO]  Downloading: [repo-scaffolding-darwin-arm64_0.7.0.md5] ...
- 33 B / 33 B [==========================================] 100.00% 43.43 KiB/s 0s
-2022-06-30 11:21:50 ✔ [SUCCESS]  [repo-scaffolding-darwin-arm64_0.7.0.md5] download succeeded.
-2022-06-30 11:21:50 ℹ [INFO]  Downloading: [githubactions-golang-darwin-arm64_0.7.0.so] ...
- 17.49 MiB / 17.49 MiB [================================] 100.00% 31.18 MiB/s 0s
-2022-06-30 11:21:51 ✔ [SUCCESS]  [githubactions-golang-darwin-arm64_0.7.0.so] download succeeded.
-2022-06-30 11:21:51 ℹ [INFO]  Downloading: [githubactions-golang-darwin-arm64_0.7.0.md5] ...
- 33 B / 33 B [=========================================] 100.00% 160.70 KiB/s 0s
-2022-06-30 11:21:51 ✔ [SUCCESS]  [githubactions-golang-darwin-arm64_0.7.0.md5] download succeeded.
-2022-06-30 11:21:51 ℹ [INFO]  Plugin: githubactions-golang-darwin-arm64_0.7.0.so doesn't match with .md5 and will be downloaded.
-2022-06-30 11:21:51 ℹ [INFO]  Downloading: [githubactions-golang-darwin-arm64_0.7.0.so] ...
- 17.49 MiB / 17.49 MiB [================================] 100.00% 31.78 MiB/s 0s
-2022-06-30 11:21:52 ✔ [SUCCESS]  [githubactions-golang-darwin-arm64_0.7.0.so] download succeeded.
-2022-06-30 11:21:52 ℹ [INFO]  Downloading: [githubactions-golang-darwin-arm64_0.7.0.md5] ...
- 33 B / 33 B [==========================================] 100.00% 87.12 KiB/s 0s
-2022-06-30 11:21:52 ✔ [SUCCESS]  [githubactions-golang-darwin-arm64_0.7.0.md5] download succeeded.
-2022-06-30 11:21:52 ✔ [SUCCESS]  Initialize finished.
-```
+---
 
 ## 4 Apply
 
 Run:
 
 ```shell
-./dtm apply -f quickstart.yaml
+./dtm apply -y
 ```
 
-When it prompts:
-
-```shell
-...(omitted)
-Continue? [y/n]
-Enter a value (Default is n):
-```
-
-input `y` and hit the enter key.
-
-You should see similar output to the following
+> You should see similar output to the following
 
 ```
-2022-06-30 11:25:47 ℹ [INFO]  Apply started.
-2022-06-30 11:25:47 ℹ [INFO]  Got Backend from config: local
-2022-06-30 11:25:47 ℹ [INFO]  Using dir <.devstream> to store plugins.
-2022-06-30 11:25:47 ℹ [INFO]  Using local backend. State file: devstream.state.
-2022-06-30 11:25:47 ℹ [INFO]  Tool (repo-scaffolding/default) found in config but doesn't exist in the state, will be created.
-2022-06-30 11:25:47 ℹ [INFO]  Tool (githubactions-golang/default) found in config but doesn't exist in the state, will be created.
-Continue? [y/n]
-Enter a value (Default is n): y
-
-2022-06-30 11:26:20 ℹ [INFO]  Start executing the plan.
-2022-06-30 11:26:20 ℹ [INFO]  Changes count: 2.
-2022-06-30 11:26:20 ℹ [INFO]  -------------------- [  Processing progress: 1/2.  ] --------------------
-2022-06-30 11:26:20 ℹ [INFO]  Processing: (repo-scaffolding/default) -> Create ...
-2022-06-30 11:26:24 ℹ [INFO]  The repo go-webapp-devstream-demo has been created.
-2022-06-30 11:26:37 ✔ [SUCCESS]  Tool (repo-scaffolding/default) Create done.
-2022-06-30 11:26:37 ℹ [INFO]  -------------------- [  Processing progress: 2/2.  ] --------------------
-2022-06-30 11:26:37 ℹ [INFO]  Processing: (githubactions-golang/default) -> Create ...
-2022-06-30 11:26:38 ℹ [INFO]  Creating GitHub Actions workflow pr-builder.yml ...
-2022-06-30 11:26:38 ✔ [SUCCESS]  Github Actions workflow pr-builder.yml created.
-2022-06-30 11:26:38 ℹ [INFO]  Creating GitHub Actions workflow main-builder.yml ...
-2022-06-30 11:26:39 ✔ [SUCCESS]  Github Actions workflow main-builder.yml created.
-2022-06-30 11:26:39 ✔ [SUCCESS]  Tool (githubactions-golang/default) Create done.
-2022-06-30 11:26:39 ℹ [INFO]  -------------------- [  Processing done.  ] --------------------
-2022-06-30 11:26:39 ✔ [SUCCESS]  All plugins applied successfully.
-2022-06-30 11:26:39 ✔ [SUCCESS]  Apply finished.
+2022-12-02 16:18:00 ℹ [INFO]  Apply started.
+2022-12-02 16:18:00 ℹ [INFO]  Using local backend. State file: devstream.state.
+2022-12-02 16:18:00 ℹ [INFO]  Tool (repo-scaffolding/golang-github) found in config but doesn't exist in the state, will be created.
+2022-12-02 16:18:00 ℹ [INFO]  Tool (githubactions-golang/default) found in config but doesn't exist in the state, will be created.
+2022-12-02 16:18:00 ℹ [INFO]  Start executing the plan.
+2022-12-02 16:18:00 ℹ [INFO]  Changes count: 2.
+2022-12-02 16:18:00 ℹ [INFO]  -------------------- [  Processing progress: 1/2.  ] --------------------
+2022-12-02 16:18:00 ℹ [INFO]  Processing: (repo-scaffolding/golang-github) -> Create ...
+2022-12-02 16:18:00 ℹ [INFO]  github start to download repoTemplate...
+2022-12-02 16:18:04 ✔ [SUCCESS]  The repo go-webapp-devstream-demo has been created.
+2022-12-02 16:18:12 ✔ [SUCCESS]  Tool (repo-scaffolding/golang-github) Create done.
+2022-12-02 16:18:12 ℹ [INFO]  -------------------- [  Processing progress: 2/2.  ] --------------------
+2022-12-02 16:18:12 ℹ [INFO]  Processing: (githubactions-golang/default) -> Create ...
+2022-12-02 16:18:13 ℹ [INFO]  Creating GitHub Actions workflow pr-builder.yml ...
+2022-12-02 16:18:14 ✔ [SUCCESS]  Github Actions workflow pr-builder.yml created.
+2022-12-02 16:18:14 ℹ [INFO]  Creating GitHub Actions workflow main-builder.yml ...
+2022-12-02 16:18:15 ✔ [SUCCESS]  Github Actions workflow main-builder.yml created.
+2022-12-02 16:18:15 ✔ [SUCCESS]  Tool (githubactions-golang/default) Create done.
+2022-12-02 16:18:15 ℹ [INFO]  -------------------- [  Processing done.  ] --------------------
+2022-12-02 16:18:15 ✔ [SUCCESS]  All plugins applied successfully.
+2022-12-02 16:18:15 ✔ [SUCCESS]  Apply finished.
 ```
+
+---
 
 ## 5 Check the Results
 
@@ -165,46 +145,46 @@ The commits (made by DevStream when scaffolding the repo and creating workflows)
 
 ![](./images/repo-scaffolding.png)
 
+---
+
 ## 6 Clean Up
 
 Run:
 
 ```shell
-./dtm delete -f quickstart.yaml
+./dtm delete
 ```
 
-input `y` the same just like you did in the previous steps, and you should see similar output:
+Input `y` then press enter to continue, and you should see similar output:
 
 ```
-2022-06-30 11:31:01 ℹ [INFO]  Delete started.
-2022-06-30 11:31:01 ℹ [INFO]  Got Backend from config: local
-2022-06-30 11:31:01 ℹ [INFO]  Using dir <.devstream> to store plugins.
-2022-06-30 11:31:01 ℹ [INFO]  Using local backend. State file: devstream.state.
-2022-06-30 11:31:01 ℹ [INFO]  Tool (githubactions-golang/default) will be deleted.
-2022-06-30 11:31:01 ℹ [INFO]  Tool (repo-scaffolding/default) will be deleted.
+2022-12-02 16:19:07 ℹ [INFO]  Delete started.
+2022-12-02 16:19:07 ℹ [INFO]  Using local backend. State file: devstream.state.
+2022-12-02 16:19:07 ℹ [INFO]  Tool (githubactions-golang/default) will be deleted.
+2022-12-02 16:19:07 ℹ [INFO]  Tool (repo-scaffolding/golang-github) will be deleted.
 Continue? [y/n]
 Enter a value (Default is n): y
 
-2022-06-30 11:31:03 ℹ [INFO]  Start executing the plan.
-2022-06-30 11:31:03 ℹ [INFO]  Changes count: 2.
-2022-06-30 11:31:03 ℹ [INFO]  -------------------- [  Processing progress: 1/2.  ] --------------------
-2022-06-30 11:31:03 ℹ [INFO]  Processing: (githubactions-golang/default) -> Delete ...
-2022-06-30 11:31:04 ℹ [INFO]  Deleting GitHub Actions workflow pr-builder.yml ...
-2022-06-30 11:31:05 ✔ [SUCCESS]  GitHub Actions workflow pr-builder.yml removed.
-2022-06-30 11:31:05 ℹ [INFO]  Deleting GitHub Actions workflow main-builder.yml ...
-2022-06-30 11:31:06 ✔ [SUCCESS]  GitHub Actions workflow main-builder.yml removed.
-2022-06-30 11:31:06 ℹ [INFO]  Prepare to delete 'githubactions-golang_default' from States.
-2022-06-30 11:31:06 ✔ [SUCCESS]  Tool (githubactions-golang/default) delete done.
-2022-06-30 11:31:06 ℹ [INFO]  -------------------- [  Processing progress: 2/2.  ] --------------------
-2022-06-30 11:31:06 ℹ [INFO]  Processing: (repo-scaffolding/default) -> Delete ...
-2022-06-30 11:31:06 ✔ [SUCCESS]  GitHub repo go-webapp-devstream-demo removed.
-2022-06-30 11:31:06 ℹ [INFO]  Prepare to delete 'repo-scaffolding_default' from States.
-2022-06-30 11:31:06 ✔ [SUCCESS]  Tool (repo-scaffolding/default) delete done.
-2022-06-30 11:31:06 ℹ [INFO]  -------------------- [  Processing done.  ] --------------------
-2022-06-30 11:31:06 ✔ [SUCCESS]  All plugins deleted successfully.
-2022-06-30 11:31:06 ✔ [SUCCESS]  Delete finished.
+2022-12-02 16:19:08 ℹ [INFO]  Start executing the plan.
+2022-12-02 16:19:08 ℹ [INFO]  Changes count: 2.
+2022-12-02 16:19:08 ℹ [INFO]  -------------------- [  Processing progress: 1/2.  ] --------------------
+2022-12-02 16:19:08 ℹ [INFO]  Processing: (githubactions-golang/default) -> Delete ...
+2022-12-02 16:19:09 ℹ [INFO]  Deleting GitHub Actions workflow pr-builder.yml ...
+2022-12-02 16:19:09 ✔ [SUCCESS]  GitHub Actions workflow pr-builder.yml removed.
+2022-12-02 16:19:10 ℹ [INFO]  Deleting GitHub Actions workflow main-builder.yml ...
+2022-12-02 16:19:10 ✔ [SUCCESS]  GitHub Actions workflow main-builder.yml removed.
+2022-12-02 16:19:10 ℹ [INFO]  Prepare to delete 'githubactions-golang_default' from States.
+2022-12-02 16:19:10 ✔ [SUCCESS]  Tool (githubactions-golang/default) delete done.
+2022-12-02 16:19:10 ℹ [INFO]  -------------------- [  Processing progress: 2/2.  ] --------------------
+2022-12-02 16:19:10 ℹ [INFO]  Processing: (repo-scaffolding/golang-github) -> Delete ...
+2022-12-02 16:19:11 ✔ [SUCCESS]  GitHub repo go-webapp-devstream-demo removed.
+2022-12-02 16:19:11 ℹ [INFO]  Prepare to delete 'repo-scaffolding_golang-github' from States.
+2022-12-02 16:19:11 ✔ [SUCCESS]  Tool (repo-scaffolding/golang-github) delete done.
+2022-12-02 16:19:11 ℹ [INFO]  -------------------- [  Processing done.  ] --------------------
+2022-12-02 16:19:11 ✔ [SUCCESS]  All plugins deleted successfully.
+2022-12-02 16:19:11 ✔ [SUCCESS]  Delete finished.
 ```
 
 Now if you check your GitHub repo list again, everything has been nuked by DevStream. Hooray!
 
-> Optional: you can also remove the DevStream state file (which should be empty now) by running: `rm devstream.state`.
+You can also remove the DevStream state file (which should be empty now) by running: `rm devstream.state`.
