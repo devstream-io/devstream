@@ -18,6 +18,6 @@ echo "Uploading ${DTM_CORE_BINARY} ..."
 # upload dtm to github release
 github-release upload --security-token $github_token --user $user --repo $repo --tag $tag --file dtm --name ${DTM_CORE_BINARY}
 # upload dtm to aws s3
-aws s3 cp dtm ${STORAGE_URL_WITH_TAG}/${DTM_CORE_BINARY}
+aws s3 cp dtm ${STORAGE_URL_WITH_TAG}/${DTM_CORE_BINARY} --acl public-read
 echo "${DTM_CORE_BINARY} uploaded."
 
