@@ -32,6 +32,9 @@ plugin_dir=~/.devstream/plugins
 
 GOOS=$(go env GOOS)
 GOARCH=$(go env GOARCH)
+DTM_CORE_BINARY=dtm-${GOOS}-${GOARCH}
+STORAGE_BASE_URL=s3://download.devstream.io
+STORAGE_URL_WITH_TAG=${STORAGE_BASE_URL}/${tag}
 
 if [ ! $tag ] || [ ! $user ] || [ ! $repo ] || [ ! $github_token ] || [ ! $plugin_dir ]; then
   echo "The following variables cannot be empty!"
@@ -56,11 +59,15 @@ make build -j8
 go install github.com/github-release/github-release@latest
 
 # upload dtm
-echo 'Uploading 'dtm-${GOOS}-${GOARCH}' ...'
-github-release upload --security-token $github_token --user $user --repo $repo --tag $tag --file dtm --name dtm-${GOOS}-${GOARCH}
-echo dtm-${GOOS}-${GOARCH}' uploaded.'
+echo "Uploading ${DTM_CORE_BINARY} ..."
+# upload dtm to github release
+github-release upload --security-token $github_token --user $user --repo $repo --tag $tag --file dtm --name ${DTM_CORE_BINARY}
+# upload dtm to aws s3
+aws s3 cp dtm ${STORAGE_URL_WITH_TAG}/${DTM_CORE_BINARY} --acl public-read
+echo "${DTM_CORE_BINARY} uploaded."
 
 # upload plugins and .md5 files
-# In order to upload plug-ins to s3, you need to download awscli. After downloading awscli, you need to configure aws credentials.
+# In order to upload plug-ins to s3, you need to download aws cli.
+# After downloading aws cli, you need to configure aws credentials.
 pip3 install awscli
-aws s3 cp $plugin_dir s3://download.devstream.io/${tag} --recursive --acl public-read
+aws s3 cp $plugin_dir $STORAGE_URL_WITH_TAG --recursive --acl public-read

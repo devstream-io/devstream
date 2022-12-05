@@ -1,6 +1,7 @@
 #!/bin/bash
 
 function init() {
+  # todo customize dtm version, default is latest
   if [ "$(uname)" == "Darwin" ];then
     HOST_OS="darwin"
   elif [ "$(uname)" == "Linux" ];then
@@ -23,23 +24,24 @@ function init() {
 }
 
 function getLatestReleaseVersion() {
-  if [ -n "${GITHUB_TOKEN}" ]; then
-    AUTH_HEADER="-H Authorization: token ${GITHUB_TOKEN}"
-  fi
+  # get latest release version from aws s3
+  STORAGE_BASE_URL=https://download.devstream.io
+  LATEST_VERSION_FILE="latest_version"
 
-  # like "v1.2.3"
-  latestVersion=$(curl ${AUTH_HEADER} -s https://api.github.com/repos/devstream-io/devstream/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
-  if [ -z "$latestVersion" ]; then
+  LATEST_VERSION=$(curl -fsSL ${STORAGE_BASE_URL}/${LATEST_VERSION_FILE})
+
+  if [ -z "${LATEST_VERSION}" ];then
     echo "Failed to get latest release version"
     exit 1
   fi
-  echo "Latest dtm release version: ${latestVersion}"
+
+  echo "Got latest release version: ${LATEST_VERSION}"
 }
 
 function downloadDtm() {
   # 1. download the release and rename it to "dtm"
   # 2. count the download count of the release
-  fullReleaseUrl="https://devstream.gateway.scarf.sh/releases/$latestVersion/dtm-$HOST_OS-$HOST_ARCH"
+  fullReleaseUrl="${STORAGE_BASE_URL}/${LATEST_VERSION}/dtm-${HOST_OS}-${HOST_ARCH}"
   echo "Downloading dtm from: $fullReleaseUrl"
   # use -L to follow redirects
   curl -L -o dtm $fullReleaseUrl
