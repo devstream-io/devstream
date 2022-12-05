@@ -116,7 +116,7 @@ tools:
       repo: dtm-scaffolding-golang
       repoType: github
     vars:
-      ImageRepo: dtm-test/golang-repo
+      imageRepo: dtm-test/golang-repo
 ```
 
 This config will create `dtm-test-golang` repo for user test_owner in GitHub, and the variable ImageRepo will be used for template render. 

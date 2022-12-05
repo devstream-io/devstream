@@ -45,7 +45,7 @@ tools:
       branch: [[ defaultBranch ]]
       repoType: github
     vars:
-      ImageRepo: "[[ dockerhubUsername ]]/[[ repoName ]]"
+      imageRepo: "[[ dockerhubUsername ]]/[[ repoName ]]"
     sourceRepo:
       org: devstream-io
       repo: dtm-scaffolding-golang

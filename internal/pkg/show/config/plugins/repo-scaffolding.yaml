@@ -23,4 +23,4 @@ tools:
       repoType: YOUR_TEMPLATE_REPO_TYPE
     # this is used for template render
     vars:
-      ImageRepo: YOUR_DOCKERHUB_REPOSITORY
+      imageRepo: YOUR_DOCKERHUB_REPOSITORY

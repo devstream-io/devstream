@@ -19,7 +19,7 @@ tools:
       repo: dtm-scaffolding-golang
       repoType: github
     vars:
-      ImageRepo: YOUR_DOCKER_USERNAME/go-webapp-devstream-demo
+      imageRepo: YOUR_DOCKER_USERNAME/go-webapp-devstream-demo
 - name: githubactions-golang
   instanceID: default
   dependsOn: ["repo-scaffolding.golang-github"]
