@@ -4,7 +4,7 @@
 
 本文将演示：
 
-1. 通过 [`repo-scaffolding`](./repo-scaffolding.zh.md) 插件在 GitLab 上创建一个 Java Sprint Boot 项目脚手架；
+1. 通过 [`repo-scaffolding`](./repo-scaffolding.zh.md) 插件在 GitLab 上创建一个 Java Spring Boot 项目脚手架；
 2. 通过 `jenkins-pipeline` 插件在 Jenkins 上创建一条 Java Spring Boot 的 CI 流水线；
 3. 通过 `jenkins-pipeline` 插件实现在 GitLab 和 Jenkins 上分别配置相应参数，实现当 GitLab 上的代码库有 push 或者 merge 事件时，自动触发 Jenkins 上的流水线运行，同时流水线的执行结果自动回写到 GitLab 上。
 
