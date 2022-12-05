@@ -1,4 +1,4 @@
-# 用 DevStream 搭建 GitLab + Jenkins + Harbor 工具链，管理 Java Sprint Boot 项目开发生命周期全流程
+# 用 DevStream 搭建 GitLab + Jenkins + Harbor 工具链，管理 Java Spring Boot 项目开发生命周期全流程
 
 ## 1、概述
 
@@ -359,7 +359,7 @@ Harbor 的 admin 用户初始登录密码是 `Harbor12345`，你可以尝试用 
 
 ## 3、开始应用 apps
 
-本节你将继续使用 DevStream apps 管理能力实现一个 Java Sprint Boot 项目的脚手架创建和 CI 流程配置等过程。
+本节你将继续使用 DevStream apps 管理能力实现一个 Java Spring Boot 项目的脚手架创建和 CI 流程配置等过程。
 
 ### 3.1、准备 apps 配置文件（config-apps.yaml）
 
