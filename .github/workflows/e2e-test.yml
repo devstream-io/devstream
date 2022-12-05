@@ -84,7 +84,7 @@ jobs:
       - name: test 1 - clean
         run: ./dtm delete -f e2e-tools.yaml -y
       - name: test 2 - apply (apps)
-        run: ./dtm apply -f e2e-apps.yaml -y
+        run: ./dtm apply --debug -f e2e-apps.yaml -y
       - name: test 2 - apply (apps) again
         run: ./dtm apply -f e2e-apps.yaml -y
       - name: test 2 - check if pod is ready
