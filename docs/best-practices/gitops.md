@@ -37,7 +37,7 @@ Note: These dependencies are optional; you can use dependency to make sure a cer
 In your working directory, run:
 
 ```shell
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/devstream-io/devstream/main/hack/install/download.sh)"
+sh -c "$(curl -fsSL https://download.devstream.io/download.sh)
 ```
 
 This will download the corresponding `dtm` binary to your working directory according to your OS and chip architecture, and grant the binary execution permission.

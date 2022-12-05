@@ -12,7 +12,7 @@ In this quickstart, we will do the following automatically with DevStream:
 In your working directory, run:
 
 ```shell
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/devstream-io/devstream/main/hack/install/download.sh)"
+sh -c "$(curl -fsSL https://download.devstream.io/download.sh)
 ```
 
 !!! note "Note"
