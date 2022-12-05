@@ -24,7 +24,7 @@ type pipelineOption struct {
 var (
 	// github actions pipeline options
 	githubGeneral = pipelineOption{
-		defaultConfigLocation: "git@github.com:devstream-io/ci-template.git//github-actions",
+		defaultConfigLocation: "https://raw.githubusercontent.com/devstream-io/ci-template/main/github-actions/workflows/main.yml",
 		optionGeneratorFunc:   pipelineGeneralGenerator,
 	}
 	gitlabGeneral = pipelineOption{
