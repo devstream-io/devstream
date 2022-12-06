@@ -113,6 +113,14 @@ func (s *SCMInfo) Encode() map[string]any {
 	return m
 }
 
+func (s *SCMInfo) NewClientWithAuthFromScm() (ClientOperation, error) {
+	repo, err := s.BuildRepoInfo()
+	if err != nil {
+		return nil, err
+	}
+	return NewClientWithAuth(repo)
+}
+
 func formatGithubCloneURL(cloneURL string) string {
 	if !strings.Contains(cloneURL, "git@") && !strings.HasPrefix(cloneURL, "http") {
 		return fmt.Sprintf("https://%s", cloneURL)

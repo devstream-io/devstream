@@ -44,6 +44,7 @@ func GetFileMapByWalkDir(
 		contentMap[dstFileName] = content
 		return nil
 	}); err != nil {
+		log.Debugf("Walk Dir %s failed: %+v", srcPath, err)
 		return nil, err
 	}
 	return contentMap, nil
@@ -84,4 +85,10 @@ func CreateTempDir(dirPattern string) (string, error) {
 		return "", err
 	}
 	return tempDir, err
+}
+
+// DirFileFilterDefaultFunc is used for GetFileMap
+// it will return false if isDir is true
+func DirFileFilterDefaultFunc(filePath string, isDir bool) bool {
+	return !isDir
 }
