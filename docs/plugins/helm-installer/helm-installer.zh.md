@@ -7,15 +7,11 @@
 只需要一个最小化配置，你就可以快速使用默认配置部署一个 Helm Chart。你可以将如下配置内容保存到本地 config.yaml 文件中：
 
 ```yaml
----
-varFile: ""
-toolFile: ""
-state:
-  backend: local
-  options:
-    stateFile: devstream.state
-
----
+config:
+  state:
+    backend: local
+    options:
+      stateFile: devstream.state
 tools:
 - name: helm-installer
   instanceID: argocd-001

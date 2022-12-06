@@ -60,8 +60,8 @@ cd test/
 
 Then, under the newly created directory, execute the following command:
 
-```bash
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/devstream-io/devstream/main/hack/install/download.sh)"
+```shell
+sh -c "$(curl -fsSL https://download.devstream.io/download.sh)
 ```
 
 This script checks your system and downloads the corresponding `dtm` binary. Then the binary will be granted execution permission.

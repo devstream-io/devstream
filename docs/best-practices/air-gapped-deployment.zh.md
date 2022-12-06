@@ -1,12 +1,10 @@
 # 离线部署
 
-// TODO(daniel-hutao): to update according helm-installer plugin added.
-
 本文将和你介绍如何在离线环境中使用 DevStream。
 
 !!! info "提醒"
 
-    当前并不是所有 DevStream 插件都支持离线部署，具体支持情况请查看具体的插件文档确认。
+    当前并不是所有 DevStream 插件都支持离线部署，比如 `githubactions-golang` 插件执行过程中需要与 GitHub 交互，就不可能支持离线使用。
     本文以 Jenkins + Harbor 两个插件为例演示离线部署流程。
 
 ## 1、下载 dtm 和 DevStream Plugins
@@ -15,7 +13,13 @@
 
 ### 1.1、下载 dtm
 
-你可以在 [Release](https://github.com/devstream-io/devstream/releases/) 页面找到当前最新版本 `dtm`，然后点击下载。
+你可以直接运行如下命令完成 dtm 的下载：
+
+```shell
+sh -c "$(curl -fsSL https://download.devstream.io/download.sh)"
+```
+
+如果你希望有更多的掌控感，你可以选择手动下载，直接访问 DevStream 的 [Release](https://github.com/devstream-io/devstream/releases/) 页面找到当前最新版本 `dtm`，然后点击下载。
 需要注意的是当前 `dtm` 提供了多个版本，分别是：
 
 1. Darwin/arm64
@@ -33,7 +37,7 @@ chmod +x dtm
 
 ```shell
 $ dtm version
-0.10.0
+0.10.2
 ```
 
 ### 1.2、下载 plugins
@@ -46,7 +50,7 @@ dtm init --download-only --plugins="jenkins, harbor" -d=plugins
 
 ```shell
 $ ls
-harbor-linux-amd64_0.9.1.md5  harbor-linux-amd64_0.9.1.so  jenkins-linux-amd64_0.9.1.md5  jenkins-linux-amd64_0.9.1.so
+harbor-linux-amd64_0.10.2.md5  harbor-linux-amd64_0.10.2.so  jenkins-linux-amd64_0.10.2.md5  jenkins-linux-amd64_0.10.2.so
 ```
 
 ## 2、下载镜像
@@ -122,230 +126,26 @@ harbor-1.10.0.tgz jenkins-4.2.5.tgz
 
 这时候部署 Jenkins 和 Harbor 所需要的"物料"就准备好了。你可以准备配置文件，开始部署 Jenkins 和 Harbor。
 
-### 4.1、编写插件配置（plugin config）
 
-你可以这样编写两个插件的配置：
+```yaml title="DevStream Config"
+config:
+  state:
+    backend: local
+    options:
+      stateFile: devstream.state
 
-=== "jenkins 插件"
+vars:
+  imageRepo: harbor.devstream.io
+  jenkinsHostname: jenkins.example.com
+  harborHostname: harbor.example.com
+  harborURL: http://harbor.example.com
+  jenkinsAdminUser: admin
+  jenkinsAdminPassword: changeme
 
-    jenkins 插件的参考配置：
-
-    ```yaml title="Plugin Config with jenkins"
-    ---
-    # plugin config
-    tools:
-    - name: jenkins
-      instanceID: default
-      dependsOn: [ ]
-      options:
-        chart:
-          chartPath: "./jenkins-4.2.5.tgz"
-          valuesYaml: |
-            serviceAccount:
-              create: true
-              name: jenkins
-            persistence:
-              storageClass: ""
-            controller:
-              image: [[ imageRepo ]]/devstreamdev/jenkins
-              tag: 2.361.1-jdk11-dtm-0.1
-              imagePullPolicy: "IfNotPresent"
-              sidecars:
-                configAutoReload:
-                  image: [[ imageRepo ]]/kiwigrid/k8s-sidecar:1.15.0
-              adminUser: "admin"
-              adminPassword: "changeme"
-              ingress:
-                enabled: true
-                hostName: [[ jenkinsURL ]]
-            # Enable HTML parsing using OWASP Markup Formatter Plugin (antisamy-markup-formatter), useful with ghprb plugin.
-            enableRawHtmlMarkupFormatter: true
-            # Jenkins Configuraction as Code, refer to https://plugins.jenkins.io/configuration-as-code/ for more details
-            # notice: All configuration files that are discovered MUST be supplementary. They cannot overwrite each other's configuration values. This creates a conflict and raises a ConfiguratorException.
-            JCasC:
-              defaultConfig: true
-            agent:
-              image: [[ imageRepo ]]/jenkins/inbound-agent
-              tag: 4.11.2-4
-            backup:
-              image:
-                repository: [[ imageRepo ]]/maorfr/kube-tasks
-                tag: 0.2.0
-    ```
-
-    关于 jenkins 插件的详细文档可以看[ jenkins 插件文档](../plugins/helm-installer/helm-installer.zh.md)。
-
-=== "harbor 插件"
-
-    harbor 插件的参考配置：
-
-    ```yaml title="Plugin Config with harbor"
-    ---
-    # plugin config
-    tools:
-    - name: harbor
-      instanceID: default
-      dependsOn: [ ]
-      options:
-        chart:
-          chartPath: "./harbor-1.10.0.tgz"
-          valuesYaml: |
-            externalURL: http://[[ harborURL ]]
-            expose:
-              type: ingress
-              tls:
-                enabled: false
-              ingress:
-                hosts:
-                  core: [[ harborURL ]]
-            nginx:
-              image:
-                repository: [[ imageRepo ]]/goharbor/nginx-photon
-                tag: v2.5.3
-            portal:
-              image:
-                repository: [[ imageRepo ]]/goharbor/harbor-portal
-                tag: v2.5.3
-            core:
-              image:
-                repository: [[ imageRepo ]]/goharbor/harbor-core
-                tag: v2.5.3
-            jobservice:
-              image:
-                repository: [[ imageRepo ]]/goharbor/harbor-jobservice
-                tag: v2.5.3
-            registry:
-              registry:
-                image:
-                  repository: [[ imageRepo ]]/goharbor/registry-photon
-                  tag: v2.5.3
-              controller:
-                image:
-                  repository: [[ imageRepo ]]/goharbor/harbor-registryctl
-                  tag: v2.5.3
-            chartmuseum:
-              enabled: false
-              image:
-                repository: [[ imageRepo ]]/goharbor/chartmuseum-photon
-                tag: v2.5.3
-            trivy:
-              enabled: false
-              image:
-                repository: [[ imageRepo ]]/goharbor/trivy-adapter-photon
-                tag: v2.5.3
-            notary:
-              enabled: false
-              server:
-                image:
-                  repository: [[ imageRepo ]]/goharbor/notary-server-photon
-                  tag: v2.5.3
-              signer:
-                image:
-                  repository: [[ imageRepo ]]/goharbor/notary-signer-photon
-                  tag: v2.5.3
-            database:
-              internal:
-                image:
-                  repository: [[ imageRepo ]]/goharbor/harbor-db
-                  tag: v2.5.3
-            redis:
-              internal:
-                image:
-                  repository: [[ imageRepo ]]/goharbor/redis-photon
-                  tag: v2.5.3
-            exporter:
-              image:
-                repository: [[ imageRepo ]]/goharbor/harbor-exporter
-                tag: v2.5.3
-            persistence:
-              persistentVolumeClaim:
-                registry:
-                  storageClass: ""
-                  accessMode: ReadWriteOnce
-                  size: 5Gi
-                jobservice:
-                  storageClass: ""
-                  accessMode: ReadWriteOnce
-                  size: 1Gi
-                database:
-                  storageClass: ""
-                  accessMode: ReadWriteOnce
-                  size: 1Gi
-                redis:
-                  storageClass: ""
-                  accessMode: ReadWriteOnce
-                  size: 1Gi
-    ```    
-    关于 harbor 插件的详细文档可以看[ harbor 插件文档](../plugins/helm-installer/helm-installer.zh.md)。
-
-### 4.2、编写主配置和变量配置
-
-除了插件配置外，我们还需要准备"主配置"（core config）和"变量配置"（variable config）：
-
-最简单的 core config 是以 **local** 作为 Backend，也就是将状态保存到本地文件；
-企业 On premise 环境部署可以选择使用 **k8s** Backend 将状态通过 `kube-apiserver` 存入 etcd，两种方式配置分别如下：
-
-=== "Core Config with 'local' Backend"
-
-    ```yaml title="local Backend"
-    varFile: "" # If not empty, use the specified external variables config file
-    toolFile: "" # If not empty, use the specified external tools config file
-    state: # state config, backend can be local, s3 or k8s
-      backend: local
-      options:
-        stateFile: devstream.state
-    ```
-
-=== "Core Config with 'k8s' Backend"
-
-    ```yaml title="k8s Backend"
-    varFile: "" # If not empty, use the specified external variables config file
-    toolFile: "" # If not empty, use the specified external tools config file
-    state: # state config, backend can be local, s3 or k8s
-      backend: k8s
-      options:
-        namespace: devstream # optional, default is "devstream", will be created if not exists
-        configmap: state # optional, default is "state", will be created if not exists
-    ```
-
-同时前面插件配置里还引用了一个变量，你可以这样编写对应的变量配置：
-
-```yaml
----
-# variable config
-imageRepo: harbor.devstream.io
-jenkinsURL: jenkins.example.com
-harborURL: harbor.example.com
-```
-
-### 4.3、组装完整的配置文件
-
-这时候"主配置"、"变量配置"和"插件配置"都有了，你可以选择将其分别保存到三个不同的文件中，在"主配置"里通过`varFile`和`toolFile`去引用另外两个配置文件，
-也可以选择直接将三个配置写入一个文件，就像这样：
-
-```yaml title="config.yaml"
----
-# core config
-varFile: "" # If not empty, use the specified external variables config file
-toolFile: "" # If not empty, use the specified external tools config file
-state: # state config, backend can be local, s3 or k8s
-  backend: k8s
-  options:
-    namespace: devstream # optional, default is "devstream", will be created if not exists
-    configmap: state # optional, default is "state", will be created if not exists
-
----
-# variable config
-imageRepo: harbor.devstream.io
-jenkinsURL: jenkins.example.com
-harborURL: harbor.example.com
-
----
-# plugin config
 tools:
 - name: jenkins
   instanceID: default
-  dependsOn: [ ]
+  dependsOn: []
   options:
     chart:
       chartPath: "./jenkins-4.2.5.tgz"
@@ -362,15 +162,12 @@ tools:
           sidecars:
             configAutoReload:
               image: [[ imageRepo ]]/kiwigrid/k8s-sidecar:1.15.0
-          adminUser: "admin"
-          adminPassword: "changeme"
+          adminUser: [[ jenkinsAdminUser ]]
+          adminPassword: [[ jenkinsAdminPassword ]]
           ingress:
             enabled: true
-            hostName: [[ jenkinsURL ]]
-        # Enable HTML parsing using OWASP Markup Formatter Plugin (antisamy-markup-formatter), useful with ghprb plugin.
+            hostName: [[ jenkinsHostname ]]
         enableRawHtmlMarkupFormatter: true
-        # Jenkins Configuraction as Code, refer to https://plugins.jenkins.io/configuration-as-code/ for more details
-        # notice: All configuration files that are discovered MUST be supplementary. They cannot overwrite each other's configuration values. This creates a conflict and raises a ConfiguratorException.
         JCasC:
           defaultConfig: true
         agent:
@@ -382,19 +179,19 @@ tools:
             tag: 0.2.0
 - name: harbor
   instanceID: default
-  dependsOn: [ ]
+  dependsOn: []
   options:
     chart:
       chartPath: "./harbor-1.10.0.tgz"
       valuesYaml: |
-        externalURL: http://[[ harborURL ]]
+        externalURL: [[ harborURL ]]
         expose:
           type: ingress
           tls:
             enabled: false
           ingress:
             hosts:
-              core: [[ harborURL ]]
+              core: [[ harborHostname ]]
         nginx:
           image:
             repository: [[ imageRepo ]]/goharbor/nginx-photon
@@ -474,6 +271,10 @@ tools:
               size: 1Gi
 ```
 
+关于 jenkins 插件的详细文档可以查看[ jenkins 插件文档](../plugins/helm-installer/helm-installer.zh.md)。
+
+关于 harbor 插件的详细文档可以查看[ harbor 插件文档](../plugins/helm-installer/helm-installer.zh.md)。
+
 ## 5、开始部署
 
 现在你可以通过如下命令开始部署 Jenkins 和 Harbor 了：
@@ -489,41 +290,41 @@ dtm apply -f config.yaml -y
 如果成功执行，你可以看到类似如下日志：
 
 ```text
-2022-09-27 09:08:05 ℹ [INFO]  Apply started.
-2022-09-27 09:08:05 ℹ [INFO]  Using dir <./plugins> to store plugins.
-2022-09-27 09:08:05 ℹ [INFO]  Using configmap backend. Namespace: devstream, ConfigMap name: state.
-2022-09-27 09:08:05 ℹ [INFO]  Tool (jenkins/default) found in config but doesn't exist in the state, will be created.
-2022-09-27 09:08:05 ℹ [INFO]  Tool (harbor/default) found in config but doesn't exist in the state, will be created.
-2022-09-27 09:08:05 ℹ [INFO]  Start executing the plan.
-2022-09-27 09:08:05 ℹ [INFO]  Changes count: 2.
-2022-09-27 09:08:05 ℹ [INFO]  -------------------- [  Processing progress: 1/2.  ] --------------------
-2022-09-27 09:08:05 ℹ [INFO]  Processing: (jenkins/default) -> Create ...
-2022-09-27 09:08:05 ℹ [INFO]  The chart package already exists in the cache directory.
-2022-09-27 09:08:05 ℹ [INFO]  Creating or updating helm chart ...
-2022/09/27 09:08:06 creating 13 resource(s)
-2022/09/27 09:08:06 beginning wait for 13 resources with timeout of 5m0s
-2022/09/27 09:08:06 StatefulSet is not ready: jenkins/jenkins. 0 out of 1 expected pods are ready
+2022-11-27 09:08:05 ℹ [INFO]  Apply started.
+2022-11-27 09:08:05 ℹ [INFO]  Using dir <./plugins> to store plugins.
+2022-11-27 09:08:05 ℹ [INFO]  Using configmap backend. Namespace: devstream, ConfigMap name: state.
+2022-11-27 09:08:05 ℹ [INFO]  Tool (jenkins/default) found in config but doesn't exist in the state, will be created.
+2022-11-27 09:08:05 ℹ [INFO]  Tool (harbor/default) found in config but doesn't exist in the state, will be created.
+2022-11-27 09:08:05 ℹ [INFO]  Start executing the plan.
+2022-11-27 09:08:05 ℹ [INFO]  Changes count: 2.
+2022-11-27 09:08:05 ℹ [INFO]  -------------------- [  Processing progress: 1/2.  ] --------------------
+2022-11-27 09:08:05 ℹ [INFO]  Processing: (jenkins/default) -> Create ...
+2022-11-27 09:08:05 ℹ [INFO]  The chart package already exists in the cache directory.
+2022-11-27 09:08:05 ℹ [INFO]  Creating or updating helm chart ...
+2022/11/27 09:08:06 creating 13 resource(s)
+2022/11/27 09:08:06 beginning wait for 13 resources with timeout of 5m0s
+2022/11/27 09:08:06 StatefulSet is not ready: jenkins/jenkins. 0 out of 1 expected pods are ready
 ...
-2022/09/27 09:08:46 StatefulSet is not ready: jenkins/jenkins. 0 out of 1 expected pods are ready
-2022/09/27 09:08:48 release installed successfully: jenkins/jenkins-4.2.5
-2022-09-27 09:08:48 ✔ [SUCCESS]  Tool (jenkins/default) Create done.
-2022-09-27 09:08:48 ℹ [INFO]  -------------------- [  Processing progress: 2/2.  ] --------------------
-2022-09-27 09:08:48 ℹ [INFO]  Processing: (harbor/default) -> Create ...
-2022-09-27 09:08:48 ℹ [INFO]  The chart package already exists in the cache directory.
-2022-09-27 09:08:48 ℹ [INFO]  Creating or updating helm chart ...
-2022/09/27 09:08:49 creating 28 resource(s)
-2022/09/27 09:08:49 beginning wait for 28 resources with timeout of 10m0s
-2022/09/27 09:08:49 Deployment is not ready: harbor/harbor-core. 0 out of 1 expected pods are ready
+2022/11/27 09:08:46 StatefulSet is not ready: jenkins/jenkins. 0 out of 1 expected pods are ready
+2022/11/27 09:08:48 release installed successfully: jenkins/jenkins-4.2.5
+2022-11-27 09:08:48 ✔ [SUCCESS]  Tool (jenkins/default) Create done.
+2022-11-27 09:08:48 ℹ [INFO]  -------------------- [  Processing progress: 2/2.  ] --------------------
+2022-11-27 09:08:48 ℹ [INFO]  Processing: (harbor/default) -> Create ...
+2022-11-27 09:08:48 ℹ [INFO]  The chart package already exists in the cache directory.
+2022-11-27 09:08:48 ℹ [INFO]  Creating or updating helm chart ...
+2022/11/27 09:08:49 creating 28 resource(s)
+2022/11/27 09:08:49 beginning wait for 28 resources with timeout of 10m0s
+2022/11/27 09:08:49 Deployment is not ready: harbor/harbor-core. 0 out of 1 expected pods are ready
 ...
-2022/09/27 09:09:17 Deployment is not ready: harbor/harbor-core. 0 out of 1 expected pods are ready
-2022/09/27 09:09:19 Deployment is not ready: harbor/harbor-jobservice. 0 out of 1 expected pods are ready
+2022/11/27 09:09:17 Deployment is not ready: harbor/harbor-core. 0 out of 1 expected pods are ready
+2022/11/27 09:09:19 Deployment is not ready: harbor/harbor-jobservice. 0 out of 1 expected pods are ready
 ...
-2022/09/27 09:09:37 Deployment is not ready: harbor/harbor-jobservice. 0 out of 1 expected pods are ready
-2022/09/27 09:09:39 release installed successfully: harbor/harbor-1.10.0
-2022-09-27 09:09:39 ✔ [SUCCESS]  Tool (harbor/default) Create done.
-2022-09-27 09:09:39 ℹ [INFO]  -------------------- [  Processing done.  ] --------------------
-2022-09-27 09:09:39 ✔ [SUCCESS]  All plugins applied successfully.
-2022-09-27 09:09:39 ✔ [SUCCESS]  Apply finished.
+2022/11/27 09:09:37 Deployment is not ready: harbor/harbor-jobservice. 0 out of 1 expected pods are ready
+2022/11/27 09:09:39 release installed successfully: harbor/harbor-1.10.0
+2022-11-27 09:09:39 ✔ [SUCCESS]  Tool (harbor/default) Create done.
+2022-11-27 09:09:39 ℹ [INFO]  -------------------- [  Processing done.  ] --------------------
+2022-11-27 09:09:39 ✔ [SUCCESS]  All plugins applied successfully.
+2022-11-27 09:09:39 ✔ [SUCCESS]  Apply finished.
 ```
 
 ## 6、验证部署结果
@@ -543,7 +344,7 @@ jenkins     jenkins          nginx   jenkins.example.com   10.18.7.29   80      
 !!! Tip "说明"
 
     演示环境是一台云主机，其内部 IP 是 10.18.7.29，公网 IP 是 11.22.33.44，
-    所以下面很多地方也可以成内部 IP，但是为了方便，下文一律以公网 IP 为例。
+    所以下面很多地方也可以配置成内部 IP，但是为了更好理解，下文一律以公网 IP 为例。
 
 前面 Jenkins 和 Harbor 三个工具的配置文件里我们都设置了域名，你可以直接将这些域名与 IP 的映射关系配置到 DNS 服务器里。
 

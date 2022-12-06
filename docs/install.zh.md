@@ -11,7 +11,7 @@
 进入你的工作目录，运行：
 
 ```shell
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/devstream-io/devstream/main/hack/install/download.sh)"
+sh -c "$(curl -fsSL https://download.devstream.io/download.sh)
 ```
 
 这个命令会根据你的操作系统和芯片架构下载对应的 `dtm` 二进制文件到你的工作目录中，并赋予二进制文件执行权限。
