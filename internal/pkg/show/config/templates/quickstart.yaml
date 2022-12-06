@@ -1,5 +1,5 @@
 config:
-  state:
+  state: # state config, backend can be local, s3 or k8s
     backend: local
     options:
       stateFile: devstream.state

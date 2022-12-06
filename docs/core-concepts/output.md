@@ -57,7 +57,7 @@ tools:
       branch: main
       repoType: github
     vars:
-      ImageRepo: "ironcore864/golang-demo"
+      imageRepo: "ironcore864/golang-demo"
     sourceRepo:
       org: devstream-io
       repo: dtm-scaffolding-golang
