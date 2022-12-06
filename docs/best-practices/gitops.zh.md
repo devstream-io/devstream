@@ -1,171 +1,359 @@
-# GitOps 工具链
+# GitOps
 
-// TODO(daniel-hutao): to update according helm-installer plugin added.
+<span id="0-目标"></span>
+## 0 目标
+在本教程中，我们将尝试通过 DevStream 来实现以下目标：
 
-请参考视频demo来快速熟悉用DevStream来实施GitOps工具链的部署和整合：
-- YouTube
+1. 创建一个 Python Web 应用程序仓库，基于 [Flask](https://flask.palletsprojects.com/en/2.2.x/) 框架；
+2. 使用 GitHub Actions 为我们创建的仓库设置基本的 CI 流水线；
+3. 在 _一个已有的 Kubernetes 集群_ 中安装 [Argo CD](https://argo-cd.readthedocs.io/en/stable/) 以实现 GitOps；
+4. 创建一个 Argo CD 应用程序，用于部署第 1 步中生成的 Web 应用程序。
+
+> 注意：
+> 
+> 在第 3 步中，Argo CD 安装在一个已有的 Kubernetes 集群中。DevStream 不配置基础设施，例如 Kubernetes 集群。
+> 
+> 如果你想跟着本教程自己尝试一下，但不知道如何在本地启动和运行 Kubernetes 集群，下面的博客（也来自 DevStream）可能会有所帮助：
+> 
+> - [用 Kind 从零开始快速搭建本地 Kubernetes 测试环节](https://blog.devstream.io/posts/%E7%94%A8kind%E9%83%A8%E7%BD%B2k8s%E7%8E%AF%E5%A2%83/)
+> - [minikube结合阿里云镜像搭建本地开发测试环境](https://blog.devstream.io/posts/%E4%BD%BF%E7%94%A8minikube%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91%E9%95%9C%E5%83%8F%E5%AE%89%E8%A3%85k8s/)
+
+---
+
+## 1 太长不看版：Demo 演示
+
+如果你想看看 GitOps 的实际运行效果，可以看看下面的视频演示：
+
 <iframe width="100%" height="500" src="https://www.youtube.com/embed/q7TK3vFr1kg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-- 哔哩哔哩
+
+这个演示录制于 DevStream 的旧版本，配置文件略有不同，但你还是能从中领略 DevStream GitOps 流程的魅力与要点。我们会尽快更新 DevStream 的最新版本的视频演示，敬请期待~
+
+对于中文读者，可以看看这个：
+
 <iframe src="//player.bilibili.com/player.html?aid=426762434&bvid=BV1W3411P7oW&cid=728576152&high_quality=1&danmaku=0" allowfullscreen="allowfullscreen" width="100%" height="500" scrolling="no" frameborder="0" sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts"></iframe>
 
-## 所需插件
+光看完全不尽兴吧？跟着后面的步骤一起试一试吧！
 
-1. [repo-scaffolding](../plugins/repo-scaffolding.zh.md)
-2. [jira-github](../plugins/jira-github-integ.zh.md)
-3. [githubactions-golang](../plugins/githubactions-golang.zh.md)
-4. [argocd](../plugins/helm-installer/helm-installer.zh.md)
-5. [argocdapp](../plugins/argocdapp.zh.md)
+---
 
-这些插件的依赖关系如下（`a -> b`意味着`a依赖b`）：
+## 2 概览
 
-- `jira-github` -> `repo-scaffolding`
-- `githubactions-golang` -> `repo-scaffolding`
-- `argocdapp` -> `argocd`, `githubactions-golang` 和 `repo-scaffolding`
+DevStream 将使用下面的插件来实现[第 0 节](#0-目标)中描述的目标：
 
-**注意**：依赖并不是必须指定的，我们可以用依赖确保某个工具可以先于另外一个工具安装。我们应该根据实际的使用场景来使用`dependsOn`。
+1. [repo-scaffolding](../plugins/repo-scaffolding.md)
+2. [githubactions-golang](../plugins/githubactions-golang.md)
+3. [argocd](../plugins/helm-installer/helm-installer.md) (TODO: 此文档待更新)
+4. [argocdapp](../plugins/argocdapp.md)
 
-## 1 下载 DevStream（`dtm`）
+不过，你不需要担心这些插件，因为 DevStream 会帮你自动管理它们。
 
-进入你的工作目录，运行：
+---
+
+## 3 启程：下载 DevStream (`dtm`)
+
+为本教程创建一个临时工作目录：
+
+```bash
+mkdir test
+cd test/
+```
+
+接着，在新创建的目录下，运行下面的命令：
 
 ```shell
 sh -c "$(curl -fsSL https://download.devstream.io/download.sh)
 ```
 
-这个命令会根据你的操作系统和芯片架构下载对应的 `dtm` 二进制文件到你的工作目录中，并赋予二进制文件执行权限。
+这个脚本会根据你的操作系统来下载对应的 `dtm` 二进制文件。然后，赋予其可执行权限。
 
-> 可选：建议你将 dtm 移动到包含于 PATH 的目录下，比如 `mv dtm /usr/local/bin/`。
+如果你执行 `ls` 命令，你会看到 `dtm` 二进制文件已经被下载下来了：
 
-_更多安装方式详见[安装dtm](../install.zh.md)。_
-
-## 2 准备配置文件
-
-运行以下命令来生成 gitops 的模板配置文件 `gitops.yaml` 。
-
-```shell
-./dtm show config -t gitops > gitops.yaml
+```bash
+tiexin@mbp ~/work/devstream-io/test $ ls
+dtm
 ```
 
-然后对 `gitops.yaml` 文件做相应的修改。
+然后，出于测试目的，我们可以尝试运行它，你会看到类似下面的输出：
 
-配置文件中用到的变量的解释和示例值如下：
+```bash
+tiexin@mbp ~/work/devstream-io/test $ ./dtm
+DevStream is an open-source DevOps toolchain manager
 
-| Variable                       | Example           | Note                                            |
-| ------------------------------ | ----------------- |-------------------------------------------------|
-| defaultBranch                  | main              | 你想使用的分支名称                                       |
-| githubUsername                 | daniel-hutao      | 你的GitHub用户名（区分大小写）                              |
-| repoName                       | go-webapp         | 只要它不在你的GitHub账户下，这个名称就是合法的                      |
-| dockerhubUsername              | exploitht         | 你的DockerHub用户名（区分大小写）                           |
-| jiraID                         | merico            | 这是一个域名前缀就像https://merico.atlassian.net 中的merico |
-| jiraProjectKey                 | DT                | 项目issue key的描述性前缀，用于识别来自该项目的工作                  |
-| jiraUserEmail                  | tao.hu@merico.dev | 登录Jira的邮箱                                       |
-| argocdNameSpace                | argocd            | ArgoCD用的namespace                               |
-| argocdDeployTimeout            | 10m               | ArgoCD部署的timeout时长                              |
+######                 #####
+#     # ###### #    # #     # ##### #####  ######   ##   #    #
+#     # #      #    # #         #   #    # #       #  #  ##  ##
+#     # #####  #    #  #####    #   #    # #####  #    # # ## #
+#     # #      #    #       #   #   #####  #      ###### #    #
+#     # #       #  #  #     #   #   #   #  #      #    # #    #
+######  ######   ##    #####    #   #    # ###### #    # #    #
 
-这些插件需要设定一下环境变量：
+Usage:
+  dtm [command]
+
+Available Commands:
+  apply       Create or update DevOps tools according to DevStream configuration file
+  completion  Generate the autocompletion script for dtm for the specified shell
+  delete      Delete DevOps tools according to DevStream configuration file
+  destroy     Destroy DevOps tools deployment according to DevStream configuration file & state file
+  develop     Develop is used for develop a new plugin
+  help        Help about any command
+  init        Download needed plugins according to the config file
+  list        This command only supports listing plugins now
+  show        Show is used to print plugins' configuration templates or status
+  upgrade     Upgrade dtm to the latest release version
+  verify      Verify DevOps tools according to DevStream config file and state
+  version     Print the version number of DevStream
+
+Flags:
+      --debug   debug level log
+  -h, --help    help for dtm
+
+Use "dtm [command] --help" for more information about a command.
+```
+
+> 可选：你可以把 `dtm` 移动到 $PATH 环境变量中的某个目录下。例如：`mv dtm /usr/local/bin/`。这样，你就可以直接运行 `dtm` 而不需要再加上 `./` 前缀了。
+> 
+> 更多安装方式详见[安装 dtm](../install.zh.md)。
+
+---
+
+## 4 配置文件
+
+创建一个名为 `config.yaml` 的文件，并把下面的内容粘贴进去：
+
+```yaml
+config:
+  state:
+    backend: local
+    options:
+      stateFile: devstream.state
+vars:
+  githubUser: IronCore864
+  dockerUser: ironcore864
+  app: helloworld
+
+tools:
+- name: repo-scaffolding
+  instanceID: myapp
+  options:
+    destinationRepo:
+      owner: [[ githubUser ]]
+      repo: [[ app ]]
+      branch: main
+      repoType: github
+    sourceRepo:
+      org: devstream-io
+      repo: dtm-scaffolding-python
+      repoType: github
+    vars:
+      imageRepo: [[ dockerUser ]]/[[ app ]]
+- name: githubactions-python
+  instanceID: default
+  dependsOn: [ repo-scaffolding.myapp ]
+  options:
+    owner: [[ githubUser ]]
+    repo:  [[ app ]]
+    language:
+      name: python
+    branch: main
+    docker:
+      registry:
+        type: dockerhub
+        username: [[ dockerUser ]]
+        repository: [[ app ]]
+- name: helm-installer
+  instanceID: argocd
+- name: argocdapp
+  instanceID: default
+  dependsOn: [ "helm-installer.argocd", "githubactions-python.default" ]
+  options:
+    app:
+      name: [[ app ]]
+      namespace: argocd
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: default
+    source:
+      valuefile: values.yaml
+      path: helm/[[ app ]]
+      repoURL: ${{repo-scaffolding.myapp.outputs.repoURL}}
+```
+
+按需修改 `config.yaml` 文件中的 `vars` 部分。记得修改 `githubUser` 和 `dockerUser` 的值为你自己的用户名。
+
+在上面的例子中，我把这些变量设置成了下面的值：
+
+| 变量        | 例子         | 说明                                |
+|------------|-------------|------------------------------------|
+| githubUser | IronCore864 | 大小写敏感，请改成你的 GitHub 用户名    |
+| dockerUser | ironcore864 | 大小写敏感，请改成你的 DockerHub 用户名 |
+
+## 5 环境变量
+
+我们还需要设置以下环境变量：
 
 ```bash
 export GITHUB_TOKEN="YOUR_GITHUB_TOKEN_HERE"
-export JIRA_API_TOKEN="YOUR_JIRA_API_TOKEN_HERE"
 export DOCKERHUB_TOKEN="YOUR_DOCKERHUB_TOKEN_HERE"
 ```
 
-如果你不知道如何获取以上环境变量的值，请参考以下链接（英文）：
+> 提示：
+> 如果你不知道如何创建这两个 token，可以参考：
+> 
+> - GITHUB_TOKEN：[Manage API tokens for your Atlassian account](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+> - DOCKERHUB_TOKEN：[Manage access tokens](https://docs.docker.com/docker-hub/access-tokens/)
 
-- GITHUB_TOKEN: [Manage API tokens for your Atlassian account](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
-- JIRA_API_TOKEN: [Creating a personal access token](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/)
-- DOCKERHUB_TOKEN: [Manage access tokens](https://docs.docker.com/docker-hub/access-tokens/)
+---
 
+## 6 初始化（Init）
 
-## 3 初始化
-
-执行：
-
-```bash
-dtm init -f gitops.yaml
-```
-
-## 4 Apply
-
-执行：
+运行以下命令，以根据配置文件自动下载所需插件：
 
 ```bash
-dtm apply -f gitops.yaml
+./dtm init
 ```
 
-并且确认继续，然后你就能看到类似如下的输出：
+你会看到类似下面的输出：
+
+```bash
+2022-12-05 17:46:01 ℹ [INFO]  Using dir </Users/tiexin/.devstream/plugins> to store plugins.
+2022-12-05 17:46:01 ℹ [INFO]  -------------------- [  repo-scaffolding-darwin-arm64_0.10.1  ] --------------------
+... (略)
+... (略)
+2022-12-05 17:46:51 ✔ [SUCCESS]  Initialize finished.
+```
+
+---
+
+## 7 应用（Apply）
+
+运行：
+
+```bash
+./dtm apply -y
+```
+
+你会看到类似下面的输出：
 
 ```
-...
-2022-03-11 13:36:11 ✔ [SUCCESS]  All plugins applied successfully.
-2022-03-11 13:36:11 ✔ [SUCCESS]  Apply finished.
+2022-12-05 17:49:49 ℹ [INFO]  Apply started.
+2022-12-05 17:49:49 ℹ [INFO]  Using local backend. State file: devstream.state.
+2022-12-05 17:49:49 ℹ [INFO]  Tool (repo-scaffolding/myapp) found in config but doesn't exist in the state, will be created.
+2022-12-05 17:49:49 ℹ [INFO]  Tool (helm-installer/argocd) found in config but doesn't exist in the state, will be created.
+2022-12-05 17:49:49 ℹ [INFO]  Tool (githubactions-python/default) found in config but doesn't exist in the state, will be created.
+2022-12-05 17:49:49 ℹ [INFO]  Tool (argocdapp/default) found in config but doesn't exist in the state, will be created.
+2022-12-05 17:49:49 ℹ [INFO]  Start executing the plan.
+2022-12-05 17:49:49 ℹ [INFO]  Changes count: 4.
+... (略)
+... (略)
+2022-12-05 17:51:51 ℹ [INFO]  -------------------- [  Processing progress: 4/4.  ] --------------------
+2022-12-05 17:51:51 ℹ [INFO]  Processing: (argocdapp/default) -> Create ...
+2022-12-05 17:51:52 ℹ [INFO]  application.argoproj.io/helloworld created
+2022-12-05 17:51:52 ✔ [SUCCESS]  Tool (argocdapp/default) Create done.
+2022-12-05 17:51:52 ℹ [INFO]  -------------------- [  Processing done.  ] --------------------
+2022-12-05 17:51:52 ✔ [SUCCESS]  All plugins applied successfully.
+2022-12-05 17:51:52 ✔ [SUCCESS]  Apply finished.
 ```
 
-## 5 检查结果
+---
 
-我们接着来看`apply`命令的结果。
+## 8 查看结果
 
-### 5.1 仓库结构
+让我们来看看 `apply` 命令的结果。
 
-- 我们得到的仓库结构看起来如下：
+### 8.1 GitHub 仓库
+
+DevStream 已经通过 `repo-scaffolding` 插件自动创建了一个仓库：
 
 ![](gitops/a.png)
 
-### 5.2 Jira-Github 集成
+### 8.2 基于 GitHub Actions 的 CI 流水线
 
-- 测试Jira和Github之间的整合，让我们新创建一个issue：
+GitHub Actions 流水线已经被创建并运行：
 
 ![](gitops/b.png)
 
-- 上述issue将会自动地被重命名：
+### 8.3 Argo CD 的安装
 
-![](gitops/c.png)
-
-- 我们可以在Jira中找到这个自动同步的`Story`：
-
-![](gitops/d.png)
-
-- 如果我们在这个issue留下评论：
-
-![](gitops/d1.png)
-
-- 这个评论也会被自动同步到Jira中：
-
-![](gitops/e.png)
-
-### 5.3 为Golang设置Github Actions CI
-
-- CI在这里可以做以下事情：
-
-![](gitops/f.png)
-
-- CI流程同时也会构建Docker镜像，之后该镜像会被自动推送到DockerHub中：
-
-![](gitops/g.png)
-
-### 5.4 ArgoCD部署
-
-- ArgoCD已经被装好了：
-
-![](gitops/h.png)
-
-### 5.5 ArgoCD应用部署
-
-- 我们的代码刚刚被构建到镜像中，此时这个镜像会作为一个Pod自动部署到我们的k8s中：
-
-![](gitops/i.png)
-
-## 6 清理
-
-执行：
+Argo CD 已经被安装到了 Kubernetes 集群中：
 
 ```bash
-dtm destroy -f gitops.yaml
+tiexin@mbp ~/work/devstream-io/test $ kubectl get namespaces
+NAME                 STATUS   AGE
+argocd               Active   5m42s
+default              Active   6m28s
+kube-node-lease      Active   6m29s
+kube-public          Active   6m29s
+kube-system          Active   6m29s
+local-path-storage   Active   6m25s
+tiexin@mbp ~/work/devstream-io/test $ kubectl get pods -n argocd
+NAME                                               READY   STATUS    RESTARTS   AGE
+argocd-application-controller-0                    1/1     Running   0          5m43s
+argocd-applicationset-controller-66687659f-dsrtd   1/1     Running   0          5m43s
+argocd-dex-server-6944757486-clshl                 1/1     Running   0          5m43s
+argocd-notifications-controller-7944945879-b9878   1/1     Running   0          5m43s
+argocd-redis-7887bbdbbb-xzppj                      1/1     Running   0          5m43s
+argocd-repo-server-d4f5cc7cb-8gj24                 1/1     Running   0          5m43s
+argocd-server-5bb75c4bd9-g948r                     1/1     Running   0          5m43s
 ```
 
-然后你应该能看到类似的输出结果：
+### 8.4 使用 Argo CD 持续部署
 
+CI 流水线已经构建了一个 Docker 镜像并推送到了 Dockerhub，而 DevStream 创建的 Argo CD 应用也部署了这个应用：
+
+```bash
+tiexin@mbp ~/work/devstream-io/test $ kubectl get deployment -n default
+NAME         READY   UP-TO-DATE   AVAILABLE   AGE
+helloworld   1/1     1            1           5m16s
+tiexin@mbp ~/work/devstream-io/test $ kubectl get pods -n default
+NAME                          READY   STATUS    RESTARTS   AGE
+helloworld-69b5586b94-wjwd9   1/1     Running   0          5m18s
+tiexin@mbp ~/work/devstream-io/test $ kubectl get services -n default
+NAME         TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)   AGE
+helloworld   ClusterIP   10.96.73.97   <none>        80/TCP    5m27s
+kubernetes   ClusterIP   10.96.0.1     <none>        443/TCP   8m2s
 ```
-2022-03-11 13:39:11 ✔ [SUCCESS]  All plugins destroyed successfully.
-2022-03-11 13:39:11 ✔ [SUCCESS]  Destroy finished.
+
+我们可以通过端口转发来访问这个应用：
+
+```bash
+kubectl port-forward -n default svc/helloworld 8080:80
+```
+
+在浏览器中访问 `localhost:8080`，你可以看到应用返回了一个 "Hello, World!"。大功告成！
+
+---
+
+## 9 清理
+
+运行：
+
+```bash
+./dtm delete -y
+```
+
+你会看到如下的输出：
+
+```bash
+2022-12-05 17:59:25 ℹ [INFO]  Delete started.
+2022-12-05 17:59:26 ℹ [INFO]  Using local backend. State file: devstream.state.
+2022-12-05 17:59:26 ℹ [INFO]  Tool (argocdapp/default) will be deleted.
+2022-12-05 17:59:26 ℹ [INFO]  Tool (githubactions-python/default) will be deleted.
+2022-12-05 17:59:26 ℹ [INFO]  Tool (repo-scaffolding/myapp) will be deleted.
+2022-12-05 17:59:26 ℹ [INFO]  Tool (helm-installer/argocd) will be deleted.
+2022-12-05 17:59:26 ℹ [INFO]  Start executing the plan.
+2022-12-05 17:59:26 ℹ [INFO]  Changes count: 4.
+... (略)
+... (略)
+2022-12-05 17:59:35 ℹ [INFO]  -------------------- [  Processing done.  ] --------------------
+2022-12-05 17:59:35 ✔ [SUCCESS]  All plugins deleted successfully.
+2022-12-05 17:59:35 ✔ [SUCCESS]  Delete finished.
+```
+
+后面我们就能删除创建的所有文件了：
+
+```bash
+cd ../
+rm -rf test/
+rm -rf ~/.devstream/
 ```

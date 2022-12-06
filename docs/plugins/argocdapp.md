@@ -1,14 +1,14 @@
 # argocdapp Plugin
 
-This plugin creates an [ArgoCD Application](https://argo-cd.readthedocs.io/en/stable/core_concepts/) custom resource.
+This plugin creates an [Argo CD Application](https://argo-cd.readthedocs.io/en/stable/core_concepts/) custom resource.
 
 **Notes:**
 
-- ArgoCD itself must have been already installed before the usage of this plugin.
-  To install ArgoCD, use the [helm-installer plugin](./helm-installer/argocd.md).
+- Argo CD itself must have been already installed before the usage of this plugin.
+  To install Argo CD, use the [helm-installer plugin](./helm-installer/argocd.md).
   Or you can use both plugins(argocd+argocdapp) at the same time.
   See [GitOps Toolchain](../best-practices/gitops.md) for more info.
-- Currently, only the Helm chart is supported when creating the ArgoCD application.
+- Currently, only the Helm chart is supported when creating the Argo CD application.
 - Modify the file accordingly. Especially remember to modify `ARGOCD_TOOL_NAME`.
 
 ## Usage

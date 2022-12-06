@@ -183,10 +183,10 @@ Then modify the `vars` section in the `config.yaml` file accordingly. Please upd
 
 In the example above, I set these vars like the following:
 
-| Variable                       | Example           | Note                                                         |
-| ------------------------------ | ----------------- | ------------------------------------------------------------ |
-| githubUser                 | IronCore864      | case-sensitive, use your GitHub username strictly here |
-| dockerUser              | ironcore864         | case-sensitive, use your DockerHub username strictly here|
+| Variable   | Example     | Note                                                      |
+|------------|-------------|-----------------------------------------------------------|
+| githubUser | IronCore864 | case-sensitive, use your GitHub username strictly here    |
+| dockerUser | ironcore864 | case-sensitive, use your DockerHub username strictly here |
 
 ## 5 Environment Variables
 
@@ -199,7 +199,7 @@ export DOCKERHUB_TOKEN="YOUR_DOCKERHUB_TOKEN_HERE"
 
 > Note:
 > 
-> if you don't know how to create these three tokens, check out:
+> if you don't know how to create these two tokens, check out:
 > 
 > - GITHUB_TOKEN: [Manage API tokens for your Atlassian account](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
 > - DOCKERHUB_TOKEN: [Manage access tokens](https://docs.docker.com/docker-hub/access-tokens/)
@@ -276,7 +276,7 @@ GitHub Actions pipelines are created and executed:
 
 ![](gitops/b.png)
 
-### 8.3 ArgoCD Installation
+### 8.3 Argo CD Installation
 
 Argo CD is installed in your Kubernetes cluster:
 
@@ -300,7 +300,7 @@ argocd-repo-server-d4f5cc7cb-8gj24                 1/1     Running   0          
 argocd-server-5bb75c4bd9-g948r                     1/1     Running   0          5m43s
 ```
 
-### 8.4 Continuous Deployment with ArgoCD
+### 8.4 Continuous Deployment with Argo CD
 
 The CI pipelines build a Docker image and push it into Dockerhub, and an Argo CD application created by DevStream deploys the app already:
 
@@ -320,10 +320,10 @@ kubernetes   ClusterIP   10.96.0.1     <none>        443/TCP   8m2s
 If you do a port-forwarding:
 
 ```bash
-kubectl port-forward -n default svc/helloworld 8080:8
+kubectl port-forward -n default svc/helloworld 8080:80
 ```
 
-And accesses `localhost:8080` in your browser, you can see the deployed app return a "helloworld" to you. Hooray!
+And accesses `localhost:8080` in your browser, you can see the deployed app return a "Hello, World!" to you. Hooray!
 
 ---
 
