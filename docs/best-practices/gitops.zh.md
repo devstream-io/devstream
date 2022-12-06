@@ -273,9 +273,9 @@ GitHub Actions 流水线已经被创建并运行：
 
 ![](gitops/b.png)
 
-### 8.3 ArgoCD 的安装
+### 8.3 Argo CD 的安装
 
-ArgoCD 已经被安装到了 Kubernetes 集群中：
+Argo CD 已经被安装到了 Kubernetes 集群中：
 
 ```bash
 tiexin@mbp ~/work/devstream-io/test $ kubectl get namespaces
@@ -297,9 +297,9 @@ argocd-repo-server-d4f5cc7cb-8gj24                 1/1     Running   0          
 argocd-server-5bb75c4bd9-g948r                     1/1     Running   0          5m43s
 ```
 
-### 8.4 使用 ArgoCD 持续部署
+### 8.4 使用 Argo CD 持续部署
 
-CI 流水线已经构建了一个 Docker 镜像并推送到了 Dockerhub，而 DevStream 创建的 ArgoCD 应用也部署了这个应用：
+CI 流水线已经构建了一个 Docker 镜像并推送到了 Dockerhub，而 DevStream 创建的 Argo CD 应用也部署了这个应用：
 
 ```bash
 tiexin@mbp ~/work/devstream-io/test $ kubectl get deployment -n default

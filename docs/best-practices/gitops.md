@@ -276,9 +276,9 @@ GitHub Actions pipelines are created and executed:
 
 ![](gitops/b.png)
 
-### 8.3 ArgoCD Installation
+### 8.3 Argo CD Installation
 
-ArgoCD is installed in your Kubernetes cluster:
+Argo CD is installed in your Kubernetes cluster:
 
 ```bash
 tiexin@mbp ~/work/devstream-io/test $ kubectl get namespaces
@@ -300,7 +300,7 @@ argocd-repo-server-d4f5cc7cb-8gj24                 1/1     Running   0          
 argocd-server-5bb75c4bd9-g948r                     1/1     Running   0          5m43s
 ```
 
-### 8.4 Continuous Deployment with ArgoCD
+### 8.4 Continuous Deployment with Argo CD
 
 The CI pipelines build a Docker image and push it into Dockerhub, and an Argo CD application created by DevStream deploys the app already:
 
