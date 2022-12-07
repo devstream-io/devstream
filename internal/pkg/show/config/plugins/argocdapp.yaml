@@ -30,6 +30,7 @@ tools:
     # if repo doesn't contain path, use imageRepo to create a helm config
     imageRepo:
       # imageRepo address
-      address: IMAGE_REPO_ADDRESS
-      # image tag
-      tag: IMAGE_REPO_TAG
+      url: IMAGE_REPO_ADDRESS
+      user: IMAGE_REPO_OWNER
+      # config inital image tag
+      initalTag: IMAGE_REPO_TAG

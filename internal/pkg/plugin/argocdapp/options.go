@@ -1,6 +1,7 @@
 package argocdapp
 
 import (
+	"fmt"
 	"path/filepath"
 
 	"github.com/mitchellh/mapstructure"
@@ -19,12 +20,13 @@ type options struct {
 	App         *app         `mapstructure:"app" validate:"required"`
 	Destination *destination `mapstructure:"destination"`
 	Source      *source      `mapstructure:"source" validate:"required"`
-	ImageRepo   imageRepo    `mapstructure:"imageRepo"`
+	ImageRepo   *imageRepo   `mapstructure:"imageRepo"`
 }
 
 type imageRepo struct {
-	Address string `mapstructure:"address"`
-	Tag     string `mapstructure:"tag"`
+	URL       string `mapstructure:"url"`
+	User      string `mapstructure:"user" validate:"required"`
+	InitalTag string `mapstructure:"initalTag"`
 }
 
 // app is the struct for an ArgoCD app.
@@ -69,12 +71,16 @@ func (s *source) checkPathExist(scmClient scm.ClientOperation) (bool, error) {
 }
 
 func (o *options) getArgocdDefaultConfigFiles(configLocation downloader.ResourceLocation) (git.GitFileContentMap, error) {
-	// 1. get configs from remote url
+	// 1. check imageRepo is configured
+	if o.ImageRepo == nil {
+		return nil, fmt.Errorf("argocdapp create config need config imageRepo options")
+	}
+	// 2. get configs from remote url
 	configFiles, err := configLocation.Download()
 	if err != nil {
 		return nil, err
 	}
-	// 2. get file content
+	// 3. get file content
 	fContentFunc := func(filePath string) ([]byte, error) {
 		renderContent, err := template.New().FromLocalFile(filePath).SetDefaultRender("argocd config", o).Render()
 		if err != nil {

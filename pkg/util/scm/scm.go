@@ -68,13 +68,13 @@ func (s *SCMInfo) getRepoInfoFromURL() (*git.RepoInfo, error) {
 		}
 		gitlabBaseURL, err := gitlab.ExtractBaseURLfromRaw(apiURL)
 		if err != nil {
-			return nil, fmt.Errorf("gitlab repo extract baseURL failed: %w", err)
+			return nil, err
 		}
 		repo.BaseURL = gitlabBaseURL
 	}
 
 	if err := repo.UpdateRepoPathByCloneURL(s.CloneURL); err != nil {
-		return nil, fmt.Errorf("git extract repo info failed: %w", err)
+		return nil, err
 	}
 	// if scm.branch is not configured, just use repo's default branch
 	repo.Branch = repo.GetBranchWithDefault()

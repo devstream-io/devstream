@@ -2,8 +2,6 @@ package configmanager
 
 import (
 	"fmt"
-
-	"gopkg.in/yaml.v3"
 )
 
 // Config is a general config in DevStream.
@@ -24,19 +22,11 @@ func (c *Config) renderInstanceIDtoOptions() {
 
 func (c *Config) validate() error {
 	if c.Config.State == nil {
-		return fmt.Errorf("state is not defined")
+		return fmt.Errorf("config.state is not defined")
 	}
 
 	if err := c.Tools.validateAll(); err != nil {
 		return err
 	}
 	return nil
-}
-
-func (c *Config) String() string {
-	bs, err := yaml.Marshal(c)
-	if err != nil {
-		return err.Error()
-	}
-	return string(bs)
 }

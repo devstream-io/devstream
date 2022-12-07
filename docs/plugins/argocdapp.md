@@ -72,3 +72,32 @@ In the example above:
 - We used `repo-scaffolding.golang-github`'s output as input for the `githubactions-golang` plugin.
 
 Pay attention to the `${{ xxx }}` part in the example. `${{ TOOL_NAME.PLUGIN.outputs.var}}` is the syntax for using an output.
+
+## Automatically Create Helm Configuration
+
+This plugin can push helm configuration automatically when your source.path helm config not exist, so you can use this plugin with helm configured alreay. For example:
+
+```yaml
+---
+tools:
+- name: go-webapp-argocd-deploy
+  plugin: argocdapp
+  dependsOn: ["repo-scaffolding.golang-github"]
+  options:
+    app:
+      name: hello
+      namespace: argocd
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: default
+    source:
+      valuefile: values.yaml
+      path: charts/go-hello-http
+      repoURL: ${{repo-scaffolding.golang-github.outputs.repoURL}}
+    imageRepo:
+      url: http://test.barbor.com/library
+      user: test_owner
+      tag: "1.0.0"
+```
+
+This config will push default helm config to repo `${{repo-scaffolding.golang-github.outputs.repoURL}}`, and the generated config will use image `http://test.barbor.com/library/test_owner/hello:1.0.0` as inital image for helm.

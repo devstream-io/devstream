@@ -7,6 +7,8 @@ import (
 	"gopkg.in/yaml.v3"
 
 	"github.com/devstream-io/devstream/pkg/util/mapz"
+	"github.com/devstream-io/devstream/pkg/util/scm"
+	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
 type (
@@ -17,10 +19,19 @@ type (
 		Options      RawOptions `yaml:"options" mapstructure:"options"`
 		Vars         RawOptions `yaml:"vars" mapstructure:"vars"`
 	}
+	// pipelineTemplate is valid pipeline format
 	pipelineTemplate struct {
 		Name    string     `yaml:"name"`
 		Type    string     `yaml:"type"`
 		Options RawOptions `yaml:"options"`
+	}
+	// pipelineGlobalOption is used to pass variable between ci/cd pipeline
+	pipelineGlobalOption struct {
+		ImageRepo RawOptions
+		RepoInfo  *git.RepoInfo
+		AppSpec   *appSpec
+		Scm       *scm.SCMInfo
+		AppName   string
 	}
 )
 
@@ -79,7 +90,7 @@ func (p *pipelineRaw) newPipelineFromTemplate(templateMap map[string]string, glo
 	return &t, nil
 }
 
-func (t *pipelineTemplate) generatePipelineTool(app *app) (*Tool, error) {
+func (t *pipelineTemplate) generatePipelineTool(pipelineOption *pipelineGlobalOption) (*Tool, error) {
 	const configLocationKey = "configLocation"
 	// 1.set default options
 	if t.Options == nil {
@@ -97,6 +108,16 @@ func (t *pipelineTemplate) generatePipelineTool(app *app) (*Tool, error) {
 		}
 	}
 	// 4. generate tool options
-	pipelineFinalOptions := pipelineConfigurator.optionGeneratorFunc(t.Options, app)
-	return newTool(t.Type, app.Name, pipelineFinalOptions), nil
+	pipelineFinalOptions := pipelineConfigurator.optionGeneratorFunc(t.Options, pipelineOption)
+	return newTool(t.Type, pipelineOption.AppName, pipelineFinalOptions), nil
+}
+
+func (t *pipelineTemplate) updatePipelineVars(vars *pipelineGlobalOption) {
+	imageRepo, exist := t.Options["imageRepo"]
+	if exist {
+		imageRepoMap, ok := imageRepo.(RawOptions)
+		if ok {
+			vars.ImageRepo = imageRepoMap
+		}
+	}
 }
