@@ -187,7 +187,7 @@ var _ = Describe("PipelineTemplate struct", func() {
 		s                 *scm.SCMInfo
 		opts              map[string]any
 		appName, cloneURL string
-		a                 *app
+		globalOption      *pipelineGlobalOption
 	)
 	BeforeEach(func() {
 		appName = "test_app"
@@ -196,9 +196,9 @@ var _ = Describe("PipelineTemplate struct", func() {
 		s = &scm.SCMInfo{
 			CloneURL: cloneURL,
 		}
-		a = &app{
-			Repo: s,
-			Name: appName,
+		globalOption = &pipelineGlobalOption{
+			Scm:     s,
+			AppName: appName,
 		}
 	})
 	Context("generatePipelineTool method", func() {
@@ -207,7 +207,7 @@ var _ = Describe("PipelineTemplate struct", func() {
 				t.Type = "not_exist"
 			})
 			It("should return err", func() {
-				_, err := t.generatePipelineTool(a)
+				_, err := t.generatePipelineTool(globalOption)
 				Expect(err).Error().Should(HaveOccurred())
 				Expect(err.Error()).Should(ContainSubstring("pipeline type [not_exist] not supported for now"))
 			})
@@ -222,7 +222,7 @@ var _ = Describe("PipelineTemplate struct", func() {
 				t.Options = opts
 			})
 			It("should return tool", func() {
-				tool, err := t.generatePipelineTool(a)
+				tool, err := t.generatePipelineTool(globalOption)
 				Expect(err).Error().ShouldNot(HaveOccurred())
 				Expect(tool).Should(Equal(&Tool{
 					Name:       t.Type,
@@ -239,6 +239,26 @@ var _ = Describe("PipelineTemplate struct", func() {
 					},
 				}))
 			})
+		})
+	})
+
+	Context("updatePipelineVars method", func() {
+		var pipelineOpt *pipelineGlobalOption
+
+		BeforeEach(func() {
+			t.Options = RawOptions{
+				"imageRepo": RawOptions{
+					"user": "test_user",
+				},
+			}
+			pipelineOpt = &pipelineGlobalOption{}
+		})
+		It("should update global option", func() {
+			t.updatePipelineVars(pipelineOpt)
+			Expect(pipelineOpt.ImageRepo).ShouldNot(BeNil())
+			Expect(pipelineOpt.ImageRepo).Should(Equal(RawOptions{
+				"user": "test_user",
+			}))
 		})
 	})
 })

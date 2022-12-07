@@ -85,6 +85,11 @@ var _ = Describe("options struct", func() {
 				Path:    "test_path",
 				RepoURL: "https://test.com/owner/repo",
 			},
+			ImageRepo: &imageRepo{
+				URL:       "test.com",
+				User:      "user",
+				InitalTag: "latest",
+			},
 		}
 		pathName = "/configLoc"
 		reqPath = fmt.Sprintf("%s%s", s.URL(), pathName)
@@ -110,8 +115,12 @@ var _ = Describe("options struct", func() {
 		When("all valid", func() {
 			BeforeEach(func() {
 				configFileContent := `
-app:
-  name: [[ .App.Name ]]`
+image:
+  repository: [[ .ImageRepo.URL ]]/[[ .ImageRepo.User ]]
+  tag: [[ .ImageRepo.InitalTag ]]
+  pullPolicy: Always
+
+`
 				s.RouteToHandler("GET", pathName, ghttp.CombineHandlers(
 					ghttp.VerifyRequest("GET", pathName),
 					ghttp.RespondWith(http.StatusOK, configFileContent),

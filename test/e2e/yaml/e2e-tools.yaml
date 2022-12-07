@@ -9,6 +9,7 @@ vars:
   githubOrganization: devstream-io
   repoName: dtme2epython
   dockerRegistryUserName: dtme2etest
+  githubActionConfigLocation: https://raw.githubusercontent.com/devstream-io/ci-template/main/github-actions/workflows/main.yml
 
 tools:
 - name: repo-scaffolding
@@ -19,26 +20,26 @@ tools:
       repo: [[ repoName ]]
       branch: [[ defaultBranch ]]
       repoType: github
-    vars:
-      imageRepo: "[[ dockerRegistryUserName ]]/[[ repoName ]]"
     sourceRepo:
       org: devstream-io
-      repo: dtm-scaffolding-python
+      repo: dtm-scaffolding-flask
       repoType: github
-- name: githubactions-python
+- name: github-actions
   instanceID: default
   dependsOn: ["repo-scaffolding.python-github"]
   options:
-    org: [[ githubOrganization ]]
-    repo: [[ repoName ]]
-    language:
-      name: python
-    branch: [[ defaultBranch ]]
-    docker:
-      registry:
-        type: dockerhub
-        username: [[ dockerRegistryUserName ]]
-        repository: [[ repoName ]]
+    pipeline:
+      configLocation: [[ githubActionConfigLocation ]]
+      imageRepo:
+        user: [[ dockerRegistryUserName ]]
+      language:
+        name: python
+        framework: flask
+    scm:
+      org: [[ githubOrganization ]]
+      name: [[ repoName ]]
+      branch: [[ defaultBranch ]]
+      scmType: github
 - name: helm-installer
   instanceID: argocd
 - name: argocdapp
@@ -55,3 +56,5 @@ tools:
       valuefile: values.yaml
       path: helm/[[ repoName ]]
       repoURL: ${{repo-scaffolding.python-github.outputs.repoURL}}
+    imageRepo:
+      user: [[ dockerRegistryUserName ]]

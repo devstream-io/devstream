@@ -14,6 +14,7 @@ func Create(options configmanager.RawOptions) (statemanager.ResourceStatus, erro
 	// Initialize Operator with Operations
 	operator := &installer.Operator{
 		PreExecuteOperations: installer.PreExecuteOperations{
+			setDefault,
 			validate,
 		},
 		ExecuteOperations: installer.ExecuteOperations{

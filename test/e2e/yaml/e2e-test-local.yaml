@@ -10,7 +10,7 @@ vars:
   repoName: dtm-e2e-test-golang
   dockerRegistryUserName: DOCKERUSERNAME
   argocdNameSpace: argocd-e2e-test
-  argocdDeployTimeout: 10m
+  githubActionConfigLocation: https://raw.githubusercontent.com/devstream-io/ci-template/main/github-actions/workflows/main.yml
 
 tools:
 - name: repo-scaffolding
@@ -22,33 +22,26 @@ tools:
       repo: [[ repoName ]]
       branch: [[ defaultBranch ]]
       repoType: github
-    vars:
-      imageRepo: "[[ dockerhubUsername ]]/[[ repoName ]]"
     sourceRepo:
       org: devstream-io
-      repo: dtm-scaffolding-golang
+      repo: dtm-scaffolding-gin
       repoType: github
-- name: githubactions-golang
+- name: github-actions
   instanceID: default
   dependsOn: ["repo-scaffolding.golang-github"]
   options:
-    owner: ${{repo-scaffolding.golang-github.outputs.owner}}
-    repo: ${{repo-scaffolding.golang-github.outputs.repo}}
-    language:
-      name: go
-      version: "1.17"
-    branch: [[ defaultBranch ]]
-    build:
-      enable: True
-    test:
-      enable: True
-      coverage:
-        enable: True
-    docker:
-      enable: True
-      registry:
-        type: dockerhub
-        username: [[ dockerRegistryUserName ]]
+    pipeline:
+      configLocation: [[ githubActionConfigLocation ]]
+      imageRepo:
+        user: [[ dockerRegistryUserName ]]
+      language:
+        name: go
+        framework: gin
+    scm:
+      org: ${{repo-scaffolding.golang-github.outputs.owner}}
+      name: ${{repo-scaffolding.golang-github.outputs.repo}}
+      branch: [[ defaultBranch ]]
+      scmType: github
 - name: helm-installer
   instanceID: argocd-001
 - name: argocdapp
@@ -65,3 +58,5 @@ tools:
       valuefile: values.yaml
       path: helm/${{repo-scaffolding.golang-github.outputs.repo}}
       repoURL: ${{repo-scaffolding.golang-github.outputs.repoURL}}
+    imageRepo:
+      user: [[ dockerRegistryUserName ]]

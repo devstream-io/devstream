@@ -21,10 +21,7 @@ func (s *appSpec) merge(vars map[string]any) map[string]any {
 		log.Warnf("appspec %+v decode failed: %+v", s, err)
 		return map[string]any{}
 	}
-	if err := mergo.Merge(&specMap, vars); err != nil {
-		log.Warnf("appSpec %+v merge map failed: %+v", s, err)
-		return vars
-	}
+	_ = mergo.Merge(&specMap, vars)
 	return specMap
 }
 

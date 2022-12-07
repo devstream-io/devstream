@@ -10,6 +10,7 @@ func Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error)
 	// Initialize Operator with Operations
 	operator := &installer.Operator{
 		PreExecuteOperations: installer.PreExecuteOperations{
+			setDefault,
 			validate,
 		},
 		GetStatusOperation: getDynamicStatus,

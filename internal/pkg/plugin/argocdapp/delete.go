@@ -11,6 +11,7 @@ func Delete(options configmanager.RawOptions) (bool, error) {
 	// Initialize Operator with Operations
 	operator := &installer.Operator{
 		PreExecuteOperations: installer.PreExecuteOperations{
+			setDefault,
 			validate,
 		},
 		ExecuteOperations: installer.ExecuteOperations{

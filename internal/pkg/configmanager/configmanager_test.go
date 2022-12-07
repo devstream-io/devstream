@@ -8,7 +8,9 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-const configFileStr = `---
+var _ = Describe("Manager struct", func() {
+	var tmpWorkDir string
+	const configFileStr = `---
 config:
   state:
     backend: local
@@ -96,185 +98,183 @@ pipelineTemplates:
       repoURL: ${{repo-scaffolding.myapp.outputs.repoURL}}
 `
 
-var tmpWorkDir string
+	Context("LoadConfig method", func() {
+		tool1 := &Tool{
+			Name:       "plugin1",
+			InstanceID: "default",
+			DependsOn:  []string{},
+			Options: RawOptions{
+				"foo1":       "bar1",
+				"instanceID": "default",
+			},
+		}
 
-var _ = Describe("LoadConfig", func() {
+		tool2 := &Tool{
+			Name:       "plugin2",
+			InstanceID: "tluafed",
+			DependsOn:  []string{},
+			Options: RawOptions{
+				"instanceID": "tluafed",
+				"foo":        "bar",
+				"foo2":       123,
+			},
+		}
 
-	tool1 := &Tool{
-		Name:       "plugin1",
-		InstanceID: "default",
-		DependsOn:  []string{},
-		Options: RawOptions{
-			"foo1":       "bar1",
-			"instanceID": "default",
-		},
-	}
-
-	tool2 := &Tool{
-		Name:       "plugin2",
-		InstanceID: "tluafed",
-		DependsOn:  []string{},
-		Options: RawOptions{
-			"instanceID": "tluafed",
-			"foo":        "bar",
-			"foo2":       123,
-		},
-	}
-
-	tool3 := &Tool{
-		Name:       "github-actions",
-		InstanceID: "service-a",
-		DependsOn: []string{
-			"repo-scaffolding.service-a",
-			"plugin1.default",
-			"plugin2.tluafed",
-		},
-		Options: RawOptions{
-			"instanceID": "service-a",
-			"pipeline": RawOptions{
-				"language": RawOptions{
-					"name":      "python",
-					"framework": "django",
-				},
-				"docker": RawOptions{
-					"registry": RawOptions{
-						"repository": "service-a",
-						"type":       "dockerhub",
-						"username":   "dockerUser1",
+		tool3 := &Tool{
+			Name:       "github-actions",
+			InstanceID: "service-a",
+			DependsOn: []string{
+				"repo-scaffolding.service-a",
+				"plugin1.default",
+				"plugin2.tluafed",
+			},
+			Options: RawOptions{
+				"instanceID": "service-a",
+				"pipeline": RawOptions{
+					"language": RawOptions{
+						"name":      "python",
+						"framework": "django",
 					},
+					"docker": RawOptions{
+						"registry": RawOptions{
+							"repository": "service-a",
+							"type":       "dockerhub",
+							"username":   "dockerUser1",
+						},
+					},
+					"branch":         "main",
+					"configLocation": "https://raw.githubusercontent.com/devstream-io/ci-template/main/github-actions/workflows/main.yml",
 				},
-				"branch":         "main",
-				"configLocation": "https://raw.githubusercontent.com/devstream-io/ci-template/main/github-actions/workflows/main.yml",
+				"scm": RawOptions{
+					"apiURL":  "gitlab.com/some/path/to/your/api",
+					"owner":   "devstream-io",
+					"org":     "devstream-io",
+					"name":    "service-a",
+					"scmType": "github",
+					"url":     "https://github.com/devstream-io/service-a",
+				},
 			},
-			"scm": RawOptions{
-				"apiURL":  "gitlab.com/some/path/to/your/api",
-				"owner":   "devstream-io",
-				"org":     "devstream-io",
-				"name":    "service-a",
-				"scmType": "github",
-				"url":     "https://github.com/devstream-io/service-a",
-			},
-		},
-	}
+		}
 
-	tool4 := &Tool{
-		Name:       "argocdapp",
-		InstanceID: "service-a",
-		DependsOn: []string{
-			"repo-scaffolding.service-a",
-			"plugin1.default",
-			"plugin2.tluafed",
-		},
-		Options: RawOptions{
-			"instanceID": "service-a",
-			"destination": RawOptions{
-				"namespace": "devstream-io",
-				"server":    "https://kubernetes.default.svc",
+		tool4 := &Tool{
+			Name:       "argocdapp",
+			InstanceID: "service-a",
+			DependsOn: []string{
+				"repo-scaffolding.service-a",
+				"plugin1.default",
+				"plugin2.tluafed",
 			},
-			"app": RawOptions{
-				"namespace": "argocd",
+			Options: RawOptions{
+				"instanceID": "service-a",
+				"destination": RawOptions{
+					"namespace": "devstream-io",
+					"server":    "https://kubernetes.default.svc",
+				},
+				"app": RawOptions{
+					"namespace": "argocd",
+				},
+				"source": RawOptions{
+					"valuefile": "values.yaml",
+					"path":      "helm/service-a",
+					"repoURL":   "${{repo-scaffolding.myapp.outputs.repoURL}}",
+				},
 			},
-			"source": RawOptions{
-				"valuefile": "values.yaml",
-				"path":      "helm/service-a",
-				"repoURL":   "${{repo-scaffolding.myapp.outputs.repoURL}}",
-			},
-		},
-	}
+		}
 
-	tool5 := &Tool{
-		Name:       "repo-scaffolding",
-		InstanceID: "service-a",
-		DependsOn: []string{
-			"plugin1.default",
-			"plugin2.tluafed",
-		},
-		Options: RawOptions{
-			"instanceID": "service-a",
-			"destinationRepo": RawOptions{
-				"needAuth": true,
-				"org":      "devstream-io",
-				"repo":     "service-a",
-				"branch":   "main",
-				"repoType": "github",
-				"url":      "github.com/devstream-io/service-a",
+		tool5 := &Tool{
+			Name:       "repo-scaffolding",
+			InstanceID: "service-a",
+			DependsOn: []string{
+				"plugin1.default",
+				"plugin2.tluafed",
 			},
-			"sourceRepo": RawOptions{
-				"repoType": "github",
-				"url":      "github.com/devstream-io/dtm-scaffolding-golang",
-				"org":      "devstream-io",
-				"repo":     "dtm-scaffolding-golang",
-				"branch":   "main",
+			Options: RawOptions{
+				"instanceID": "service-a",
+				"destinationRepo": RawOptions{
+					"needAuth": true,
+					"org":      "devstream-io",
+					"repo":     "service-a",
+					"branch":   "main",
+					"repoType": "github",
+					"url":      "github.com/devstream-io/service-a",
+				},
+				"sourceRepo": RawOptions{
+					"repoType": "github",
+					"url":      "github.com/devstream-io/dtm-scaffolding-golang",
+					"org":      "devstream-io",
+					"repo":     "dtm-scaffolding-golang",
+					"branch":   "main",
+				},
+				"vars": RawOptions{},
 			},
-			"vars": RawOptions{},
-		},
-	}
+		}
 
-	BeforeEach(func() {
-		tmpWorkDir = GinkgoT().TempDir()
-		err := os.WriteFile(filepath.Join(tmpWorkDir, "config.yaml"), []byte(configFileStr), 0644)
-		Expect(err).NotTo(HaveOccurred())
-	})
-
-	When("load a config file", func() {
-		It("should return  tools", func() {
-			mgr := NewManager(filepath.Join(tmpWorkDir, "config.yaml"))
-			cfg, err := mgr.LoadConfig()
+		BeforeEach(func() {
+			tmpWorkDir = GinkgoT().TempDir()
+			err := os.WriteFile(filepath.Join(tmpWorkDir, "config.yaml"), []byte(configFileStr), 0644)
 			Expect(err).NotTo(HaveOccurred())
-			Expect(cfg).NotTo(BeNil())
+		})
 
-			GinkgoWriter.Printf("Config: %v", cfg)
+		When("load a config file", func() {
+			It("should return  tools", func() {
+				mgr := NewManager(filepath.Join(tmpWorkDir, "config.yaml"))
+				cfg, err := mgr.LoadConfig()
+				Expect(err).NotTo(HaveOccurred())
+				Expect(cfg).NotTo(BeNil())
 
-			// config/state
-			Expect(*cfg.Config.State).To(Equal(State{
-				Backend: "local",
-				Options: StateConfigOptions{
-					StateFile: "devstream.state",
-				},
-			}))
+				GinkgoWriter.Printf("Config: %v", cfg)
 
-			// vars
-			Expect(len(cfg.Vars)).To(Equal(5))
-			Expect(cfg.Vars["foo1"]).To(Equal("bar1"))
+				// config/state
+				Expect(*cfg.Config.State).To(Equal(State{
+					Backend: "local",
+					Options: StateConfigOptions{
+						StateFile: "devstream.state",
+					},
+				}))
 
-			// tools
-			Expect(len(cfg.Tools)).To(Equal(5))
-			for _, t := range cfg.Tools {
-				switch t.Name {
-				case "plugin1":
-					Expect(t).Should(Equal(tool1))
-				case "plugin2":
-					Expect(t).Should(Equal(tool2))
-				case "github-actions":
-					Expect(t).Should(Equal(tool3))
-				case "argocdapp":
-					Expect(t).Should(Equal(tool4))
-				case "repo-scaffolding":
-					Expect(t).Should(Equal(tool5))
-				default:
-					Fail("Unexpected plugin name.")
+				// vars
+				Expect(len(cfg.Vars)).To(Equal(5))
+				Expect(cfg.Vars["foo1"]).To(Equal("bar1"))
+
+				// tools
+				Expect(len(cfg.Tools)).To(Equal(5))
+				for _, t := range cfg.Tools {
+					switch t.Name {
+					case "plugin1":
+						Expect(t).Should(Equal(tool1))
+					case "plugin2":
+						Expect(t).Should(Equal(tool2))
+					case "github-actions":
+						Expect(t).Should(Equal(tool3))
+					case "argocdapp":
+						Expect(t).Should(Equal(tool4))
+					case "repo-scaffolding":
+						Expect(t).Should(Equal(tool5))
+					default:
+						Fail("Unexpected plugin name.")
+					}
 				}
-			}
+			})
 		})
 	})
-})
 
-var _ = Describe("getConfigFromFileWithGlobalVars", func() {
-	BeforeEach(func() {
-		tmpWorkDir = GinkgoT().TempDir()
-		err := os.WriteFile(filepath.Join(tmpWorkDir, "config.yaml"), []byte(configFileStr), 0644)
-		Expect(err).NotTo(HaveOccurred())
-	})
-
-	When("get config from file", func() {
-		It("should return a config", func() {
-			mgr := NewManager(filepath.Join(tmpWorkDir, "config.yaml"))
-			cfg, err := mgr.getConfigFromFileWithGlobalVars()
+	Context("getConfigFromFileWithGlobalVars method", func() {
+		BeforeEach(func() {
+			tmpWorkDir = GinkgoT().TempDir()
+			err := os.WriteFile(filepath.Join(tmpWorkDir, "config.yaml"), []byte(configFileStr), 0644)
 			Expect(err).NotTo(HaveOccurred())
-			Expect(cfg.Config.State.Backend).To(Equal("local"))
-			Expect(cfg.Vars["foo1"]).To(Equal("bar1"))
-			Expect(len(cfg.Tools)).To(Equal(5))
-			Expect(cfg.Tools[1].Name).To(Equal("plugin2"))
+		})
+
+		When("get config from file", func() {
+			It("should return a config", func() {
+				mgr := NewManager(filepath.Join(tmpWorkDir, "config.yaml"))
+				cfg, err := mgr.getConfigFromFileWithGlobalVars()
+				Expect(err).NotTo(HaveOccurred())
+				Expect(cfg.Config.State.Backend).To(Equal("local"))
+				Expect(cfg.Vars["foo1"]).To(Equal("bar1"))
+				Expect(len(cfg.Tools)).To(Equal(5))
+				Expect(cfg.Tools[1].Name).To(Equal("plugin2"))
+			})
 		})
 	})
 })

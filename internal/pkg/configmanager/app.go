@@ -5,6 +5,7 @@ import (
 
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm"
+	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
 const (
@@ -23,41 +24,49 @@ type app struct {
 	RepoTemplate *repoTemplate `yaml:"repoTemplate" mapstructure:"repoTemplate"`
 	CIRawConfigs []pipelineRaw `yaml:"ci" mapstructure:"ci"`
 	CDRawConfigs []pipelineRaw `yaml:"cd" mapstructure:"cd"`
+
+	// these two variables is used internal for convince
+	// repoInfo is generated from Repo field with setDefault method
+	repoInfo *git.RepoInfo `yaml:"-" mapstructure:"-"`
+	// repoTemplateInfo is generated from RepoTemplate field with setDefault method
+	repoTemplateInfo *git.RepoInfo `yaml:"-" mapstructure:"-"`
 }
 
 func (a *app) getTools(vars map[string]any, templateMap map[string]string) (Tools, error) {
-	// generate app repo and template repo from scmInfo
-	a.setDefault()
-	repoScaffoldingTool, err := a.getRepoTemplateTool()
-	if err != nil {
-		return nil, fmt.Errorf("app[%s] can't get valid repo config: %w", a.Name, err)
+	// 1. set app default field repoInfo and repoTemplateInfo
+	if err := a.setDefault(); err != nil {
+		return nil, err
 	}
 
-	// get ci/cd pipelineTemplates
+	// 2. get ci/cd pipelineTemplates
 	appVars := a.Spec.merge(vars)
 	tools, err := a.generateCICDTools(templateMap, appVars)
 	if err != nil {
 		return nil, fmt.Errorf("app[%s] get pipeline tools failed: %w", a.Name, err)
 	}
+
+	// 3. generate app repo and template repo from scmInfo
+	repoScaffoldingTool := a.generateRepoTemplateTool()
 	if repoScaffoldingTool != nil {
 		tools = append(tools, repoScaffoldingTool)
 	}
-
 	log.Debugf("Have got %d tools from app %s.", len(tools), a.Name)
-
 	return tools, nil
 }
 
-// getAppPipelineTool generate ci/cd tools from app config
+// generateAppPipelineTool generate ci/cd tools from app config
 func (a *app) generateCICDTools(templateMap map[string]string, appVars map[string]any) (Tools, error) {
 	allPipelineRaw := append(a.CIRawConfigs, a.CDRawConfigs...)
 	var tools Tools
+	// pipelineGlobalVars is used to pass variable from ci/cd pipelines
+	pipelineGlobalVars := a.newPipelineGlobalOptionFromApp()
 	for _, p := range allPipelineRaw {
 		t, err := p.getPipelineTemplate(templateMap, appVars)
 		if err != nil {
 			return nil, err
 		}
-		pipelineTool, err := t.generatePipelineTool(a)
+		t.updatePipelineVars(pipelineGlobalVars)
+		pipelineTool, err := t.generatePipelineTool(pipelineGlobalVars)
 		if err != nil {
 			return nil, err
 		}
@@ -67,41 +76,48 @@ func (a *app) generateCICDTools(templateMap map[string]string, appVars map[strin
 	return tools, nil
 }
 
-// getRepoTemplateTool will use repo-scaffolding plugin for app
-func (a *app) getRepoTemplateTool() (*Tool, error) {
-	if a.Repo == nil {
-		return nil, fmt.Errorf("app.repo field can't be empty")
-	}
-	appRepo, err := a.Repo.BuildRepoInfo()
-	if err != nil {
-		return nil, fmt.Errorf("configmanager[app] parse repo failed: %w", err)
-	}
-	if a.RepoTemplate != nil {
+// generateRepoTemplateTool will use repo-scaffolding plugin for app
+func (a *app) generateRepoTemplateTool() *Tool {
+	if a.repoTemplateInfo != nil {
+		templateVars := make(RawOptions)
 		// templateRepo doesn't need auth info
-		templateRepo, err := a.RepoTemplate.BuildRepoInfo()
-		templateRepo.NeedAuth = false
-		if err != nil {
-			return nil, fmt.Errorf("configmanager[app] parse repoTemplate failed: %w", err)
-		}
 		if a.RepoTemplate.Vars == nil {
-			a.RepoTemplate.Vars = make(RawOptions)
+			templateVars = make(RawOptions)
 		}
 		return newTool(
 			repoScaffoldingPluginName, a.Name, RawOptions{
-				"destinationRepo": RawOptions(appRepo.Encode()),
-				"sourceRepo":      RawOptions(templateRepo.Encode()),
-				"vars":            a.RepoTemplate.Vars,
+				"destinationRepo": RawOptions(a.repoInfo.Encode()),
+				"sourceRepo":      RawOptions(a.repoTemplateInfo.Encode()),
+				"vars":            templateVars,
 			},
-		), nil
+		)
 	}
-	return nil, nil
+	return nil
 }
 
 // setDefault will set repoName to appName if repo.name field is empty
-func (a *app) setDefault() {
-	if a.Repo != nil && a.Repo.Name == "" {
+func (a *app) setDefault() error {
+	if a.Repo == nil {
+		return fmt.Errorf("configmanager[app] is invalid, repo field must be configured")
+	}
+	if a.Repo.Name == "" {
 		a.Repo.Name = a.Name
 	}
+	appRepo, err := a.Repo.BuildRepoInfo()
+	if err != nil {
+		return fmt.Errorf("configmanager[app] parse repo failed: %w", err)
+	}
+	a.repoInfo = appRepo
+	if a.RepoTemplate != nil {
+		// templateRepo doesn't need auth info
+		templateRepo, err := a.RepoTemplate.BuildRepoInfo()
+		if err != nil {
+			return fmt.Errorf("configmanager[app] parse repoTemplate failed: %w", err)
+		}
+		templateRepo.NeedAuth = false
+		a.repoTemplateInfo = templateRepo
+	}
+	return nil
 }
 
 // since all plugin depends on code is deployed, get dependsOn for repoTemplate
@@ -112,4 +128,14 @@ func (a *app) getRepoTemplateDependants() []string {
 		dependsOn = []string{fmt.Sprintf("%s.%s", repoScaffoldingPluginName, a.Name)}
 	}
 	return dependsOn
+}
+
+// newPipelineGlobalOptionFromApp generate pipeline options used for pipeline option configuration
+func (a *app) newPipelineGlobalOptionFromApp() *pipelineGlobalOption {
+	return &pipelineGlobalOption{
+		RepoInfo: a.repoInfo,
+		AppSpec:  a.Spec,
+		Scm:      a.Repo,
+		AppName:  a.Name,
+	}
 }
