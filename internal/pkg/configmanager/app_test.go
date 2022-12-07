@@ -1,8 +1,6 @@
 package configmanager
 
 import (
-	"fmt"
-
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
@@ -29,7 +27,7 @@ var _ = Describe("app struct", func() {
 			It("should return error", func() {
 				_, err := a.getTools(vars, templateMap)
 				Expect(err).Should(HaveOccurred())
-				Expect(err.Error()).Should(ContainSubstring(fmt.Sprintf("app[%s] can't get valid repo config", appName)))
+				Expect(err.Error()).Should(ContainSubstring("configmanager[app] is invalid, repo field must be configured"))
 			})
 		})
 		When("ci/cd template is not valid", func() {
@@ -52,6 +50,57 @@ var _ = Describe("app struct", func() {
 				Expect(err.Error()).Should(ContainSubstring("not found in pipelineTemplates"))
 			})
 		})
+		When("app repo template is empty", func() {
+			BeforeEach(func() {
+				a = &app{
+					Name: appName,
+					Repo: &scm.SCMInfo{
+						CloneURL: "http://test.com/test/test_app",
+					},
+				}
+			})
+			It("should return empty tools", func() {
+				tools, err := a.getTools(vars, templateMap)
+				Expect(err).ShouldNot(HaveOccurred())
+				Expect(len(tools)).Should(Equal(0))
+			})
+		})
+		When("repo url is not valid", func() {
+			BeforeEach(func() {
+				a = &app{
+					Name: appName,
+					Repo: &scm.SCMInfo{
+						CloneURL: "not_valid_url",
+					},
+				}
+			})
+			It("should return empty tools", func() {
+				_, err := a.getTools(vars, templateMap)
+				Expect(err).Should(HaveOccurred())
+				Expect(err.Error()).Should(ContainSubstring("configmanager[app] parse repo failed"))
+			})
+		})
+		When("template repo url is not valid", func() {
+			BeforeEach(func() {
+				a = &app{
+					Name: appName,
+					RepoTemplate: &repoTemplate{
+						SCMInfo: &scm.SCMInfo{
+							CloneURL: "not_valid_url",
+						},
+					},
+					Repo: &scm.SCMInfo{
+						CloneURL: "http://test.com/test/test_app",
+					},
+				}
+			})
+			It("should return empty tools", func() {
+				_, err := a.getTools(vars, templateMap)
+				Expect(err).Should(HaveOccurred())
+				Expect(err.Error()).Should(ContainSubstring("configmanager[app] parse repoTemplate failed"))
+			})
+		})
+
 	})
 
 	Context("generateCICDTools method", func() {

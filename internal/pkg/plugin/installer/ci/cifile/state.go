@@ -26,7 +26,7 @@ func GetCIFileStatus(options configmanager.RawOptions) (statemanager.ResourceSta
 		return nil, err
 	}
 
-	statusMap := make(map[string]interface{})
+	statusMap := make(statemanager.ResourceStatus)
 	for scmPath, content := range gitMap {
 		localFileSHA := git.CalculateLocalFileSHA(content)
 		// get remote file status
@@ -34,7 +34,6 @@ func GetCIFileStatus(options configmanager.RawOptions) (statemanager.ResourceSta
 			"localSHA": localFileSHA,
 			"scm":      getSCMFileStatus(client, scmPath),
 		}
-
 	}
 	return statusMap, nil
 }
