@@ -7,14 +7,14 @@
 
 ## 一、准备证书
 
-下文域名均以 `harbor.devstream.io` 为例，你在实际执行的时候需要按需修改。
+下文域名均以 `registry.devstream.io` 为例，你在实际执行的时候需要按需修改。
 
 ```shell
 cd ~ && mkdir certs
 openssl genrsa -out certs/ca.key 2048
 openssl req -new -x509 -days 3650 -key certs/ca.key -subj "/C=CN/ST=GD/L=SZ/O=DevStream, Inc./CN=DevStream Root CA" -out certs/ca.crt
 openssl req -newkey rsa:2048 -nodes -keyout certs/domain.key -subj "/C=CN/ST=GD/L=SZ/O=DevStream, Inc./CN=*.devstream.io" -out certs/domain.csr
-openssl x509 -req -extfile <(printf "subjectAltName=DNS:devstream.io,DNS:harbor.devstream.io") \
+openssl x509 -req -extfile <(printf "subjectAltName=DNS:devstream.io,DNS:registry.devstream.io") \
   -days 3650 -in certs/domain.csr -CA certs/ca.crt -CAkey certs/ca.key -CAcreateserial -out certs/domain.crt
 ```
 
@@ -35,24 +35,24 @@ docker run -d \
 
 # 三、配置 Docker Registry
 
-1、在 `/etc/hosts` 中配置本机 IP 到自定义域名（如：harbor.devstream.io）之间的映射，如：
+1、在 `/etc/hosts` 中配置本机 IP 到自定义域名（如：registry.devstream.io）之间的映射，如：
 
 ```shell
 # docker registry
-192.168.39.100 harbor.devstream.io
+192.168.39.100 registry.devstream.io
 ```
 
-2、配置 Docker 信任刚才生成的证书（域名以 harbor.devstream.io 为例）
+2、配置 Docker 信任刚才生成的证书（域名以 registry.devstream.io 为例）
 
 ```shell
-sudo mkdir -p /etc/docker/certs.d/harbor.devstream.io
-sudo cp ~/certs/ca.crt /etc/docker/certs.d/harbor.devstream.io/ca.crt
+sudo mkdir -p /etc/docker/certs.d/registry.devstream.io
+sudo cp ~/certs/ca.crt /etc/docker/certs.d/registry.devstream.io/ca.crt
 ```
 
 3. 验证 Docker Registry 可用
 
 ```shell
 docker pull busybox
-docker tag busybox harbor.devstream.io/busybox
-docker push harbor.devstream.io/busybox
+docker tag busybox registry.devstream.io/busybox
+docker push registry.devstream.io/busybox
 ```
