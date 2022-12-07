@@ -24,7 +24,7 @@ _注意：为了简单起见，CLI被命名为`dtm`（DevOps Toolchain Manager)�
 
 `pluginengine`首先调用`configmanager`，将本地YAML配置文件读取到一个结构体中，然后调用`pluginmanager`来下载所需的插件。
 
-之后，`pluginengine`调用`statemanager`来计算congfig、状态和实际DevOps工具的状态之间的"差异"。最后，`pluginengine`根据这变更执行对应的操作，并更新状态。在执行过程中，`pluginengine`加载每个插件（`*.so`文件）并根据每个变更调用相应的接口。
+之后，`pluginengine`调用`statemanager`来计算config、状态和实际DevOps工具的状态之间的"差异"。最后，`pluginengine`根据这变更执行对应的操作，并更新状态。在执行过程中，`pluginengine`加载每个插件（`*.so`文件）并根据每个变更调用相应的接口。
 
 ## 2 插件引擎
 
