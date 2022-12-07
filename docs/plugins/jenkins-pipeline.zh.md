@@ -221,7 +221,6 @@ tools:
 
 在 `jenkins` 中 devstream 默认使用共享库来管理 jenkins 流水线的共用代码，在离线环境中因为无法连接共享库，所以 devstream 提供了单独的 `Jenkinfile` 配置。
 
-
 ### app 示例配置
 
 ```yaml
