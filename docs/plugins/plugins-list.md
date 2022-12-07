@@ -16,7 +16,7 @@
 | CI                             | gitlabci-java               | GitLab CI for Java             | [doc](gitlabci-java.md)               |
 | CI                             | gitlabci-generic            | Generic GitLab CI              | [doc](gitlabci-generic.md)            |
 | CI                             | ci-generic                  | Generic CI plugin              | [doc](ci-generic.md)                  |
-| CD/GitOps                      | argocdapp                   | ArgoCD Application creation    | [doc](argocdapp.md)                   |
+| CD/GitOps                      | argocdapp                   | Argo CD Application creation   | [doc](argocdapp.md)                   |
 | Image Repository               | harbor-docker               | Harbor Docker compose install  | [doc](harbor-docker.md)               |
 | Deployment                     | helm-installer              | Helm chart install             | [doc](helm-installer/helm-installer.md)              |
 

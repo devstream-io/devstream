@@ -35,8 +35,7 @@ func InstallRepo(options configmanager.RawOptions) error {
 		processRepoFileFunc(appName, opts.renderTplConfig()),
 	)
 	if err != nil {
-		log.Warnf("repoScaffolding render repoTemplate failed=> %+v", err)
-		return fmt.Errorf("render RepoTemplate files failed")
+		return fmt.Errorf("render RepoTemplate files failed with error: %w", err)
 	}
 
 	// 3. push repo to DestinationRepo

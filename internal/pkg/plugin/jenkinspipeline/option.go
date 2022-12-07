@@ -99,6 +99,14 @@ func (j *jobOptions) extractPlugins() []step.StepConfigAPI {
 	return stepConfigs
 }
 
+// check config need offline config
+func (j *jobOptions) needOfflineConfig() bool {
+	// since we use github as default config location
+	// we use this to check whether this pipeline need default offline Jenkinsfile
+	const githubContentHost = "raw.githubusercontent.com"
+	return j.Jenkins.Offline && strings.Contains(string(j.Pipeline.ConfigLocation), githubContentHost)
+}
+
 // jenkins jobName, can be like folder/jobName or jobName
 type jenkinsJobName string
 

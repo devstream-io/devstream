@@ -144,7 +144,7 @@ var _ = Describe("LoadConfig", func() {
 					},
 				},
 				"branch":         "main",
-				"configLocation": "git@github.com:devstream-io/ci-template.git//github-actions",
+				"configLocation": "https://raw.githubusercontent.com/devstream-io/ci-template/main/github-actions/workflows/main.yml",
 			},
 			"scm": RawOptions{
 				"apiURL":  "gitlab.com/some/path/to/your/api",

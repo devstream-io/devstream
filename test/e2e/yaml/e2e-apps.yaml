@@ -8,7 +8,6 @@ vars:
   defaultBranch: main
   repoOwner: devstream-io
   repoName: dtm-e2e-go
-  dockerRegistryUserName: dtme2etest
   imageRepoOwner: dtme2etest
 
 tools:

@@ -49,14 +49,13 @@ func (p *PipelineConfig) BuildCIFileConfig(ciType server.CIServerType, repoInfo 
 		ConfigLocation: downloader.ResourceLocation(p.ConfigLocation),
 	}
 	// update ci render variables by plugins
-	rawConfigVars := p.generateCIFileVars(repoInfo)
-	rawConfigVars.Set("AppName", repoInfo.Repo)
+	rawConfigVars := p.GenerateCIFileVars(repoInfo)
 	CIFileConfig.Vars = rawConfigVars
 	log.Debugf("gitlab-ci pipeline get render vars: %+v", CIFileConfig)
 	return CIFileConfig
 }
 
-func (p *PipelineConfig) generateCIFileVars(repoInfo *git.RepoInfo) cifile.CIFileVarsMap {
+func (p *PipelineConfig) GenerateCIFileVars(repoInfo *git.RepoInfo) cifile.CIFileVarsMap {
 	// set default command for language
 	p.setDefault()
 	varMap, _ := mapz.DecodeStructToMap(p)
@@ -67,6 +66,7 @@ func (p *PipelineConfig) generateCIFileVars(repoInfo *git.RepoInfo) cifile.CIFil
 	if err != nil {
 		log.Warnf("cifile merge CIFileVarsMap failed: %+v", err)
 	}
+	varMap["AppName"] = repoInfo.Repo
 	return varMap
 }
 

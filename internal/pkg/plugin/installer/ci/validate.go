@@ -19,7 +19,7 @@ func Validate(options configmanager.RawOptions) (configmanager.RawOptions, error
 	}
 
 	if err := opts.ProjectRepo.CheckValid(); err != nil {
-		log.Debugf("github action validate repo invalid: %+v", err)
+		log.Debugf("ci config validate repo invalid: %+v", err)
 		return nil, err
 	}
 	return options, nil
