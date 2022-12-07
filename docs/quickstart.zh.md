@@ -12,7 +12,7 @@
 进入你的工作目录，运行：
 
 ```shell
-sh -c "$(curl -fsSL https://download.devstream.io/download.sh)
+sh -c "$(curl -fsSL https://download.devstream.io/download.sh)"
 ```
 
 !!! note "提示"
