@@ -27,3 +27,9 @@ tools:
       path: charts/go-hello-http
       # Helm chart repo URL, this is only an example, do not use this
       repoURL: YOUR_CHART_REPO_URL
+    # if repo doesn't contain path, use imageRepo to create a helm config
+    imageRepo:
+      # imageRepo address
+      address: IMAGE_REPO_ADDRESS
+      # image tag
+      tag: IMAGE_REPO_TAG

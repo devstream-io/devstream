@@ -17,7 +17,8 @@ func Create(options configmanager.RawOptions) (statemanager.ResourceStatus, erro
 			validate,
 		},
 		ExecuteOperations: installer.ExecuteOperations{
-			kubectl.ProcessByContent(kubectlUtil.Create, templateFileLoc),
+			pushArgocdConfigFiles,
+			kubectl.ProcessByContent(kubectlUtil.Create, helmApplicationConfig),
 		},
 		GetStatusOperation: getStaticStatus,
 	}

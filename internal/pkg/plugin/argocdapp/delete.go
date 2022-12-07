@@ -14,7 +14,7 @@ func Delete(options configmanager.RawOptions) (bool, error) {
 			validate,
 		},
 		ExecuteOperations: installer.ExecuteOperations{
-			kubectl.ProcessByContent(kubectlUtil.Delete, templateFileLoc),
+			kubectl.ProcessByContent(kubectlUtil.Delete, helmApplicationConfig),
 		},
 	}
 

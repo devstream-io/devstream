@@ -11,7 +11,7 @@ import (
 )
 
 func getStaticStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
-	opts, err := NewOptions(options)
+	opts, err := newOptions(options)
 	if err != nil {
 		return nil, err
 	}
@@ -37,7 +37,7 @@ func getStaticStatus(options configmanager.RawOptions) (statemanager.ResourceSta
 }
 
 func getDynamicStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
-	opts, err := NewOptions(options)
+	opts, err := newOptions(options)
 	if err != nil {
 		return nil, err
 	}
