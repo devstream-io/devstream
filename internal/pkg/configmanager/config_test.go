@@ -6,31 +6,10 @@ import (
 )
 
 var _ = Describe("Config struct", func() {
-	var (
-		c                    *Config
-		toolName, instanceID string
-	)
+	var c *Config
+
 	BeforeEach(func() {
 		c = &Config{}
-		toolName = "test_tool"
-		instanceID = "test_instance"
-	})
-	Context("renderInstanceIDtoOptions method", func() {
-		When("tool option is null", func() {
-			BeforeEach(func() {
-				c.Tools = Tools{
-					{Name: toolName, InstanceID: instanceID},
-				}
-			})
-			It("should set nil to RawOptions", func() {
-				c.renderInstanceIDtoOptions()
-				Expect(len(c.Tools)).Should(Equal(1))
-				tool := c.Tools[0]
-				Expect(tool.Options).Should(Equal(RawOptions{
-					"instanceID": instanceID,
-				}))
-			})
-		})
 	})
 	Context("validate method", func() {
 		When("config state is null", func() {

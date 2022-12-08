@@ -29,7 +29,7 @@ func (m *Manager) LoadConfig() (*Config, error) {
 		return nil, err
 	}
 	// set instanceID in options
-	c.renderInstanceIDtoOptions()
+	c.Tools.renderInstanceIDtoOptions()
 
 	// step 2: check config is valid
 	if err = c.validate(); err != nil {

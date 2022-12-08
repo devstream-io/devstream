@@ -139,3 +139,29 @@ var _ = Describe("Tool struct", func() {
 		})
 	})
 })
+
+var _ = Describe("Tool struct", func() {
+	var tools Tools
+
+	const (
+		toolName   = "test_tool"
+		instanceID = "test_instance"
+	)
+	Context("renderInstanceIDtoOptions method", func() {
+		BeforeEach(func() {
+			tools = Tools{
+				{Name: toolName, InstanceID: instanceID},
+			}
+		})
+		When("tool option is null", func() {
+			It("should set nil to RawOptions", func() {
+				tools.renderInstanceIDtoOptions()
+				Expect(len(tools)).Should(Equal(1))
+				tool := tools[0]
+				Expect(tool.Options).Should(Equal(RawOptions{
+					"instanceID": instanceID,
+				}))
+			})
+		})
+	})
+})

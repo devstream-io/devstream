@@ -11,15 +11,6 @@ type Config struct {
 	Tools  Tools          `yaml:"tools"`
 }
 
-func (c *Config) renderInstanceIDtoOptions() {
-	for _, t := range c.Tools {
-		if t.Options == nil {
-			t.Options = make(RawOptions)
-		}
-		t.Options["instanceID"] = t.InstanceID
-	}
-}
-
 func (c *Config) validate() error {
 	if c.Config.State == nil {
 		return fmt.Errorf("config.state is not defined")

@@ -157,3 +157,12 @@ func (tools Tools) updateToolDepends(dependTools Tools) {
 		}
 	}
 }
+
+func (tools Tools) renderInstanceIDtoOptions() {
+	for _, t := range tools {
+		if t.Options == nil {
+			t.Options = make(RawOptions)
+		}
+		t.Options["instanceID"] = t.InstanceID
+	}
+}
