@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"strings"
 
 	"github.com/spf13/cobra"
 
@@ -23,6 +24,9 @@ func applyCMDFunc(cmd *cobra.Command, args []string) {
 	log.Info("Apply started.")
 	if err := pluginengine.Apply(configFilePath, continueDirectly); err != nil {
 		log.Errorf("Apply failed => %s.", err)
+		if strings.Contains(err.Error(), "config not valid") {
+			log.Info("It seems your config file is not valid. Please check the official documentation https://docs.devstream.io, or use the \"dtm show config\" command to get an example.")
+		}
 		os.Exit(1)
 	}
 	log.Success("Apply finished.")

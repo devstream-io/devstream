@@ -59,7 +59,7 @@ func newRawConfigFromConfigBytes(fileText []byte) (*rawConfig, error) {
 
 // validate will check config data is valid
 func (c *rawConfig) validate() error {
-	errorFmt := "configmanager can't found valid [%s], please check your config file"
+	errorFmt := "config not valid; check the [%s] section of your config file"
 	if (len(c.config)) == 0 {
 		return fmt.Errorf(errorFmt, "config")
 	}

@@ -3,6 +3,7 @@ package configmanager
 import (
 	"fmt"
 	"os"
+	"strings"
 )
 
 // Manager is used to load the config file from the ConfigFilePath and finally get the Config object.
@@ -61,15 +62,26 @@ func (m *Manager) getConfigFromFileWithGlobalVars() (*Config, error) {
 		return nil, fmt.Errorf("failed to get variables from config file. Error: %w", err)
 	}
 
+	missingVariableErrorMsg := "map has no entry for key "
+
 	// 2. tools with global variables rendered
 	tools, err := r.getToolsWithVars(vars)
 	if err != nil {
+		keyNotFoundIndex := strings.Index(err.Error(), missingVariableErrorMsg)
+		if keyNotFoundIndex != -1 {
+			return nil, fmt.Errorf("failed to process variables in the tools section. Missing variable definition: %s", err.Error()[keyNotFoundIndex+len(missingVariableErrorMsg):])
+		}
 		return nil, fmt.Errorf("failed to get tools from config file. Error: %w", err)
+
 	}
 
 	// 3. apps tools with global variables rendered
 	appTools, err := r.getAppToolsWithVars(vars)
 	if err != nil {
+		keyNotFoundIndex := strings.Index(err.Error(), "map has no entry for key ")
+		if keyNotFoundIndex != -1 {
+			return nil, fmt.Errorf("failed to process variables in the apps section. Missing variable definition: %s", err.Error()[keyNotFoundIndex+len(missingVariableErrorMsg):])
+		}
 		return nil, fmt.Errorf("failed to get apps from config file. Error: %w", err)
 	}
 	// all tools from apps should depend on the original tools,

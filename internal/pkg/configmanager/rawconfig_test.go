@@ -69,7 +69,7 @@ var _ = Describe("rawConfig struct", func() {
 			It("should return error", func() {
 				e := r.validate()
 				Expect(e).Error().Should(HaveOccurred())
-				Expect(e.Error()).Should(Equal("configmanager can't found valid [config], please check your config file"))
+				Expect(e.Error()).Should(Equal("config not valid; check the [config] section of your config file"))
 			})
 		})
 		When("apps and tools is not exist", func() {
@@ -81,7 +81,7 @@ var _ = Describe("rawConfig struct", func() {
 			It("should return error", func() {
 				e := r.validate()
 				Expect(e).Error().Should(HaveOccurred())
-				Expect(e.Error()).Should(Equal("configmanager can't found valid [tools and apps], please check your config file"))
+				Expect(e.Error()).Should(Equal("config not valid; check the [tools and apps] section of your config file"))
 			})
 		})
 	})
