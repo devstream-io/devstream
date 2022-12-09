@@ -270,10 +270,12 @@ var _ = Describe("ReadYamls func", func() {
 			const subDir = "subdir/subsubdir"
 			filePath = filepath.Join(tempDir, subDir, "test.yml")
 			err := os.MkdirAll(filepath.Dir(filePath), 0755)
+			Expect(err).Error().ShouldNot(HaveOccurred())
 			f, err := os.Create(filePath)
 			Expect(err).Error().ShouldNot(HaveOccurred())
 			defer f.Close()
 			_, err = f.WriteString(contents[len(contents)-1])
+			Expect(err).Error().ShouldNot(HaveOccurred())
 		})
 		It("should return all contents", func() {
 			filePath = tempDir

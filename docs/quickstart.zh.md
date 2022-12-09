@@ -74,7 +74,7 @@ export DOCKERHUB_USERNAME="<YOUR_DOCKER_HUB_USER_NAME_HERE>"
 运行：
 
 ```shell
-./dtm init
+./dtm init -f config.yaml
 ```
 
 !!! success "你会看到类似下面的输出"
@@ -108,7 +108,7 @@ export DOCKERHUB_USERNAME="<YOUR_DOCKER_HUB_USER_NAME_HERE>"
 运行：
 
 ```shell
-./dtm apply -y
+./dtm apply -f config.yaml -y
 ```
 
 !!! success "你会看到类似下面的输出"
@@ -156,7 +156,7 @@ DevStream 在生成仓库脚手架和创建工作流时的代码提交，已经�
 运行：
 
 ```shell
-./dtm delete
+./dtm delete -f config.yaml
 ```
 
 输入 `y` 然后回车，你会看到类似下面的输出：

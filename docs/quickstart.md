@@ -74,7 +74,7 @@ Then we run the following commands to update our config file with those env vars
 Run:
 
 ```shell
-./dtm init
+./dtm init -f config.yaml
 ```
 
 !!! success "You should see some output similar to the following"
@@ -108,7 +108,7 @@ Run:
 Run:
 
 ```shell
-./dtm apply -y
+./dtm apply -f config.yaml -y
 ```
 
 !!! success "You should see similar output to the following"
@@ -156,7 +156,7 @@ The commits (made by DevStream when scaffolding the repo and creating workflows)
 Run:
 
 ```shell
-./dtm delete
+./dtm delete -f config.yaml
 ```
 
 Input `y` then press enter to continue, and you should see similar output:
