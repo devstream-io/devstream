@@ -7,6 +7,8 @@ import (
 	"unicode"
 
 	"gopkg.in/yaml.v3"
+
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 // rawConfig respent every valid config block for devstream
@@ -46,9 +48,15 @@ func newRawConfigFromConfigBytes(fileText []byte) (*rawConfig, error) {
 		case "pipelineTemplates":
 			rawConfigData.pipelineTemplates = append(rawConfigData.pipelineTemplates, matchStr...)
 		case "config":
+			if len(rawConfigData.config) != 0 {
+				return nil, fmt.Errorf("<config> key can only be defined once")
+			}
 			rawConfigData.config = append(rawConfigData.config, matchStr...)
 		case "vars":
 			rawConfigData.vars = append(rawConfigData.vars, matchStr...)
+		default:
+			const errHint = "you may have filled in the wrong key or imported a yaml file that is not related to dtm"
+			return nil, fmt.Errorf("invalid config key <%s>, %s", string(configKey), errHint)
 		}
 	}
 	if err := rawConfigData.validate(); err != nil {
@@ -127,6 +135,10 @@ func (c *rawConfig) getTemplatePipelineMap() (map[string]string, error) {
 		if err != nil {
 			return nil, err
 		}
+		if _, ok := pipelineTemplateMap[t.Name]; ok {
+			return nil, fmt.Errorf("pipelineTemplate <%s> is duplicated", t.Name)
+		}
+		log.Infof("pipelineTemplate %s is loaded", t.Name)
 		pipelineTemplateMap[t.Name] = string(rawPipeline)
 	}
 	return pipelineTemplateMap, nil
