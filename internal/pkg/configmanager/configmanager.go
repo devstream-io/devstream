@@ -2,10 +2,10 @@ package configmanager
 
 import (
 	"fmt"
-	"path/filepath"
 	"strings"
 
 	"github.com/devstream-io/devstream/pkg/util/file"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 // Manager is used to load the config file from the ConfigFilePath and finally get the Config object.
@@ -96,7 +96,12 @@ func (m *Manager) getConfigFromFileWithGlobalVars() (*Config, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to get coreConfig from config file. Error: %w", err)
 	}
-	coreConfig.State.BaseDir = filepath.Dir(m.ConfigFilePath)
+
+	coreConfig.State.BaseDir, err = file.GetFileAbsDirPathOrDirItself(m.ConfigFilePath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get base dir of config. Error: %w", err)
+	}
+	log.Debugf("baseDir of config and state is %s", coreConfig.State.BaseDir)
 
 	return &Config{
 		Config: *coreConfig,

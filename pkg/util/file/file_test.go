@@ -83,3 +83,30 @@ var _ = Describe("GetFileAbsDirPath func", func() {
 		})
 	})
 })
+
+var _ = Describe("GetFileAbsDirPathOrDirItself func", func() {
+	var baseDir, fileName string
+	When("param if file", func() {
+		BeforeEach(func() {
+			baseDir = GinkgoT().TempDir()
+			testFile, err := os.CreateTemp(baseDir, "test")
+			Expect(err).Error().ShouldNot(HaveOccurred())
+			fileName = filepath.Base(testFile.Name())
+		})
+		It("should return parent directory of file", func() {
+			path, err := file.GetFileAbsDirPathOrDirItself(filepath.Join(baseDir, fileName))
+			Expect(err).Error().ShouldNot(HaveOccurred())
+			Expect(path).Should(Equal(baseDir))
+		})
+	})
+	When("param is dir", func() {
+		BeforeEach(func() {
+			baseDir = GinkgoT().TempDir()
+		})
+		It("should return dir itself", func() {
+			path, err := file.GetFileAbsDirPathOrDirItself(baseDir)
+			Expect(err).Error().ShouldNot(HaveOccurred())
+			Expect(path).Should(Equal(baseDir))
+		})
+	})
+})
