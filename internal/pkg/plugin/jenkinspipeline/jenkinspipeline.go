@@ -5,6 +5,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/random"
 	"github.com/devstream-io/devstream/pkg/util/scm"
+	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
 func installPipeline(options configmanager.RawOptions) error {
@@ -29,11 +30,11 @@ func installPipeline(options configmanager.RawOptions) error {
 	if err != nil {
 		return err
 	}
-	webHookConfig := opts.ProjectRepo.BuildWebhookInfo(
-		opts.Jenkins.URL, string(opts.JobName), secretToken,
-	)
-	return scmClient.AddWebhook(webHookConfig)
 
+	return scmClient.AddWebhook(&git.WebhookConfig{
+		Address:     opts.getScmWebhookAddress(),
+		SecretToken: secretToken,
+	})
 }
 
 func deletePipeline(options configmanager.RawOptions) error {
@@ -56,8 +57,9 @@ func deletePipeline(options configmanager.RawOptions) error {
 	if err != nil {
 		return err
 	}
-	webHookConfig := opts.ProjectRepo.BuildWebhookInfo(
-		opts.Jenkins.URL, string(opts.JobName), "",
-	)
-	return scmClient.DeleteWebhook(webHookConfig)
+
+	return scmClient.DeleteWebhook(&git.WebhookConfig{
+		Address:     opts.getScmWebhookAddress(),
+		SecretToken: "",
+	})
 }

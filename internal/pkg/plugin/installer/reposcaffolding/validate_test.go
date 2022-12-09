@@ -27,14 +27,16 @@ var _ = Describe("Validate func", func() {
 		BeforeEach(func() {
 			rawOpts = configmanager.RawOptions{
 				"sourceRepo": map[string]string{
-					"owner":    "test_user",
-					"repo":     "test_repo",
-					"repoType": "github",
+					"owner":   "test_user",
+					"name":    "test_repo",
+					"scmType": "github",
+					"branch":  "main",
 				},
 				"destinationRepo": map[string]string{
-					"owner":    "dst_user",
-					"repo":     "dst_repo",
-					"repoType": "github",
+					"owner":   "dst_user",
+					"name":    "dst_repo",
+					"scmType": "github",
+					"branch":  "main",
 				},
 			}
 		})

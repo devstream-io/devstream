@@ -108,13 +108,13 @@ tools:
     destinationRepo:
       owner: test_owner
       org: ""
-      repo: dtm-test-golang
+      name: dtm-test-golang
       branch: main
-      repoType: github
+      scmType: github
     sourceRepo:
       org: devstream-io
-      repo: dtm-scaffolding-golang
-      repoType: github
+      name: dtm-scaffolding-golang
+      scmType: github
     vars:
       imageRepo: dtm-test/golang-repo
 ```
@@ -131,13 +131,13 @@ tools:
     destinationRepo:
       owner: test_owner
       org: ""
-      repo: dtm-test-golang-cli
+      name: dtm-test-golang-cli
       branch: main
-      repoType: github
+      scmType: github
     sourceRepo:
       org: devstream-io
-      repo: dtm-scaffolding-golang-cli
-      repoType: github
+      name: dtm-scaffolding-golang-cli
+      scmType: github
 ```
 
 This config will create `dtm-test-golang-cli` repo for user test_owner in GitHub.
@@ -152,15 +152,15 @@ tools:
     destinationRepo:
       owner: test_owner
       org: ""
-      repo: dtm-test-java
+      name: dtm-test-java
       branch: main
       baseUrl: 127.0.0.1:30001
       visibility: public
-      repoType: gitlab
+      scmType: gitlab
     sourceRepo:
       org: spring-guides
-      repo: gs-spring-boot
-      repoType: github
+      name: gs-spring-boot
+      scmType: github
 ```
 
 this config will create `dtm-test-java` repo for user test_owner in GitHub.

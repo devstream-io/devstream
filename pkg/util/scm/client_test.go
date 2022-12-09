@@ -78,9 +78,9 @@ var _ = Describe("NewClientWithAuth func", func() {
 			r.RepoType = "not_exist"
 		})
 		It("should return error", func() {
-			_, err := scm.NewClient(r)
+			_, err := scm.NewClientWithAuth(r)
 			Expect(err).Error().Should(HaveOccurred())
-			Expect(err.Error()).Should(ContainSubstring("scaffolding not support scm type"))
+			Expect(err.Error()).Should(ContainSubstring("git scmType only support gitlab and github"))
 		})
 	})
 })

@@ -3,7 +3,6 @@ package ci
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/cifile/server"
-	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/mapz"
 	"github.com/devstream-io/devstream/pkg/util/validator"
 )
@@ -17,11 +16,6 @@ func Validate(options configmanager.RawOptions) (configmanager.RawOptions, error
 	if err = validator.StructAllError(opts); err != nil {
 		return nil, err
 	}
-
-	if err := opts.ProjectRepo.CheckValid(); err != nil {
-		log.Debugf("ci config validate repo invalid: %+v", err)
-		return nil, err
-	}
 	return options, nil
 }
 
@@ -32,12 +26,7 @@ func SetDefault(ciType server.CIServerType) func(option configmanager.RawOptions
 		if err != nil {
 			return nil, err
 		}
-		projectRepo, err := opts.SCM.BuildRepoInfo()
-		if err != nil {
-			return nil, err
-		}
-		opts.ProjectRepo = projectRepo
-		opts.CIFileConfig = opts.Pipeline.BuildCIFileConfig(ciType, projectRepo)
+		opts.CIFileConfig = opts.Pipeline.BuildCIFileConfig(ciType, opts.ProjectRepo)
 		return mapz.DecodeStructToMap(opts)
 	}
 }

@@ -22,7 +22,14 @@ func NewOptions(options configmanager.RawOptions) (*Options, error) {
 }
 
 func (opts *Options) renderTplConfig() map[string]interface{} {
-	renderConfig := opts.DestinationRepo.BuildRepoRenderConfig()
+	// default render value from repo
+	renderConfig := map[string]any{
+		"AppName": opts.DestinationRepo.Repo,
+		"Repo": map[string]string{
+			"Name":  opts.DestinationRepo.Repo,
+			"Owner": opts.DestinationRepo.GetRepoOwner(),
+		},
+	}
 	for k, v := range opts.Vars {
 		renderConfig[k] = v
 	}

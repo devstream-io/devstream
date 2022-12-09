@@ -12,7 +12,6 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/downloader"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/mapz"
-	"github.com/devstream-io/devstream/pkg/util/scm"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
@@ -27,12 +26,11 @@ type PipelineConfig struct {
 }
 
 type CIConfig struct {
-	SCM      scm.SCMInfo    `mapstructure:"scm"  validate:"required"`
-	Pipeline PipelineConfig `mapstructure:"pipeline"  validate:"required"`
+	ProjectRepo *git.RepoInfo   `mapstructure:"scm"  validate:"required"`
+	Pipeline    *PipelineConfig `mapstructure:"pipeline"  validate:"required"`
 
 	// used in package
 	CIFileConfig *cifile.CIFileConfig `mapstructure:"ci"`
-	ProjectRepo  *git.RepoInfo        `mapstructure:"projectRepo"`
 }
 
 func NewCIOptions(options configmanager.RawOptions) (*CIConfig, error) {

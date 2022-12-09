@@ -12,6 +12,10 @@ import (
 
 // InstallRepo will install repo by opts config
 func InstallRepo(options configmanager.RawOptions) error {
+	const (
+		defaultCommitMsg    = "init by devstream"
+		defaultCommitBranch = "init-by-devstream"
+	)
 	opts, err := NewOptions(options)
 	if err != nil {
 		return err
@@ -29,9 +33,10 @@ func InstallRepo(options configmanager.RawOptions) error {
 
 	// 2. render repo with variables
 	appName := opts.DestinationRepo.Repo
+	repoNameWithBranch := fmt.Sprintf("%s-%s", opts.SourceRepo.Repo, opts.SourceRepo.Branch)
 	gitMap, err := file.GetFileMapByWalkDir(
 		repoDir, filterGitFiles,
-		getRepoFileNameFunc(appName, opts.SourceRepo.GetRepoNameWithBranch()),
+		getRepoFileNameFunc(appName, repoNameWithBranch),
 		processRepoFileFunc(appName, opts.renderTplConfig()),
 	)
 	if err != nil {
@@ -44,8 +49,8 @@ func InstallRepo(options configmanager.RawOptions) error {
 		return err
 	}
 	return scm.PushInitRepo(dstClient, &git.CommitInfo{
-		CommitMsg:    scm.DefaultCommitMsg,
-		CommitBranch: scm.TransitBranch,
+		CommitMsg:    defaultCommitMsg,
+		CommitBranch: defaultCommitBranch,
 		GitFileMap:   gitMap,
 	})
 }

@@ -6,7 +6,7 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/devstream-io/devstream/pkg/util/scm"
+	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
 var _ = Describe("pipelineRaw struct", func() {
@@ -184,7 +184,7 @@ options:
 var _ = Describe("PipelineTemplate struct", func() {
 	var (
 		t                 *pipelineTemplate
-		s                 *scm.SCMInfo
+		s                 *git.RepoInfo
 		opts              map[string]any
 		appName, cloneURL string
 		globalOption      *pipelineGlobalOption
@@ -193,11 +193,11 @@ var _ = Describe("PipelineTemplate struct", func() {
 		appName = "test_app"
 		cloneURL = "http://test.com"
 		t = &pipelineTemplate{}
-		s = &scm.SCMInfo{
-			CloneURL: cloneURL,
+		s = &git.RepoInfo{
+			CloneURL: git.ScmURL(cloneURL),
 		}
 		globalOption = &pipelineGlobalOption{
-			Scm:     s,
+			Repo:    s,
 			AppName: appName,
 		}
 	})
@@ -234,7 +234,7 @@ var _ = Describe("PipelineTemplate struct", func() {
 							"configLocation": "https://raw.githubusercontent.com/devstream-io/ci-template/main/github-actions/workflows/main.yml",
 						},
 						"scm": RawOptions{
-							"url": cloneURL,
+							"url": git.ScmURL(cloneURL),
 						},
 					},
 				}))

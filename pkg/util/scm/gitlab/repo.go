@@ -79,7 +79,7 @@ func (c *Client) DescribeRepo() (*git.RepoInfo, error) {
 	log.Debugf("GitLab Project is: %#v\n", project)
 	repoInfo := &git.RepoInfo{
 		Repo:     project.Name,
-		CloneURL: project.HTTPURLToRepo,
+		CloneURL: git.ScmURL(project.HTTPURLToRepo),
 	}
 	if project.Owner != nil {
 		log.Debugf("GitLab project owner is: %#v.\n", project.Owner)

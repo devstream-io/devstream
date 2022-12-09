@@ -19,12 +19,7 @@ func setJenkinsDefault(options configmanager.RawOptions) (configmanager.RawOptio
 	if err != nil {
 		return nil, err
 	}
-	// set project and ci default
-	projectRepo, err := opts.SCM.BuildRepoInfo()
-	if err != nil {
-		return nil, err
-	}
-	opts.ProjectRepo = projectRepo
+
 	// if jenkins is offline, just use offline Jenkinsfile
 	if opts.needOfflineConfig() {
 		opts.CIFileConfig = &cifile.CIFileConfig{
@@ -32,17 +27,17 @@ func setJenkinsDefault(options configmanager.RawOptions) (configmanager.RawOptio
 			ConfigContentMap: map[string]string{
 				"Jenkinsfile": offlineJenkinsScript,
 			},
-			Vars: opts.Pipeline.GenerateCIFileVars(projectRepo),
+			Vars: opts.Pipeline.GenerateCIFileVars(opts.ProjectRepo),
 		}
 	} else {
-		opts.CIFileConfig = opts.Pipeline.BuildCIFileConfig(ciType, projectRepo)
+		opts.CIFileConfig = opts.Pipeline.BuildCIFileConfig(ciType, opts.ProjectRepo)
 	}
 	// set field value if empty
 	if opts.Jenkins.Namespace == "" {
 		opts.Jenkins.Namespace = "jenkins"
 	}
-	if opts.JobName == "" && opts.ProjectRepo != nil {
-		opts.JobName = jenkinsJobName(opts.ProjectRepo.Repo)
+	if opts.JobName == "" {
+		opts.JobName = jenkinsJobName(opts.ProjectRepo.GetRepoName())
 	}
 	return types.EncodeStruct(opts)
 }
@@ -58,15 +53,11 @@ func validateJenkins(options configmanager.RawOptions) (configmanager.RawOptions
 		return nil, err
 	}
 
-	if err := opts.ProjectRepo.CheckValid(); err != nil {
-		log.Debugf("github action validate repo invalid: %+v", err)
-		return nil, err
-	}
-
 	// check jenkins job name
 	if err := opts.JobName.checkValid(); err != nil {
 		log.Debugf("jenkins validate pipeline invalid: %+v", err)
 		return nil, err
 	}
+
 	return options, nil
 }

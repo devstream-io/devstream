@@ -133,8 +133,13 @@ var _ = Describe("validate func", func() {
 			options["jobName"] = "folder/not_exist/jobName"
 			options["pipeline"] = pipeline
 			repoType = "github"
-			projectRepo["repoType"] = repoType
-			options["projectRepo"] = projectRepo
+			projectRepo = map[string]any{
+				"scmType": repoType,
+				"name":    "test",
+				"owner":   "test_user",
+				"branch":  "main",
+			}
+			options["scm"] = projectRepo
 			os.Setenv(github.TokenEnvKey, "test_env")
 		})
 		It("should return error", func() {
@@ -147,8 +152,13 @@ var _ = Describe("validate func", func() {
 		BeforeEach(func() {
 			options["pipeline"] = pipeline
 			repoType = "github"
-			projectRepo["repoType"] = repoType
-			options["projectRepo"] = projectRepo
+			projectRepo = map[string]any{
+				"scmType": repoType,
+				"name":    "test",
+				"owner":   "test_user",
+				"branch":  "main",
+			}
+			options["scm"] = projectRepo
 			os.Setenv(github.TokenEnvKey, "test_env")
 		})
 		It("should return nil error", func() {

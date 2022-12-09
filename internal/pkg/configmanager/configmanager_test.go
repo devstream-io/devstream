@@ -6,6 +6,8 @@ import (
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+
+	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
 var _ = Describe("Manager struct", func() {
@@ -32,7 +34,6 @@ apps:
   repo:
     scmType: github
     owner: devstream-io
-    org: devstream-io # choose between owner and org
     url: github.com/devstream-io/service-a # optional，if url is specified，we can infer scm/owner/org/name from url
     apiURL: gitlab.com/some/path/to/your/api # optional, if you want to create a repo from repo template
   # if repoTemplate is not empty，we could help user to create repo from scaffoldingRepo
@@ -148,10 +149,9 @@ pipelineTemplates:
 				"scm": RawOptions{
 					"apiURL":  "gitlab.com/some/path/to/your/api",
 					"owner":   "devstream-io",
-					"org":     "devstream-io",
 					"name":    "service-a",
 					"scmType": "github",
-					"url":     "https://github.com/devstream-io/service-a",
+					"url":     git.ScmURL("github.com/devstream-io/service-a"),
 				},
 			},
 		}
@@ -191,19 +191,18 @@ pipelineTemplates:
 			Options: RawOptions{
 				"instanceID": "service-a",
 				"destinationRepo": RawOptions{
-					"needAuth": true,
-					"org":      "devstream-io",
-					"repo":     "service-a",
-					"branch":   "main",
-					"repoType": "github",
-					"url":      "github.com/devstream-io/service-a",
+					"owner":   "devstream-io",
+					"name":    "service-a",
+					"scmType": "github",
+					"apiURL":  "gitlab.com/some/path/to/your/api",
+					"url":     git.ScmURL("github.com/devstream-io/service-a"),
 				},
 				"sourceRepo": RawOptions{
-					"repoType": "github",
-					"url":      "github.com/devstream-io/dtm-scaffolding-golang",
-					"org":      "devstream-io",
-					"repo":     "dtm-scaffolding-golang",
-					"branch":   "main",
+					"scmType": "github",
+					"url":     git.ScmURL("github.com/devstream-io/dtm-scaffolding-golang"),
+					"owner":   "devstream-io",
+					"name":    "dtm-scaffolding-golang",
+					"org":     "devstream-io",
 				},
 				"vars": RawOptions{},
 			},

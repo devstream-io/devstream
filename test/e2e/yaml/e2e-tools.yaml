@@ -17,13 +17,13 @@ tools:
   options:
     destinationRepo:
       org: [[ githubOrganization ]]
-      repo: [[ repoName ]]
+      name: [[ repoName ]]
       branch: [[ defaultBranch ]]
-      repoType: github
+      scmType: github
     sourceRepo:
       org: devstream-io
-      repo: dtm-scaffolding-flask
-      repoType: github
+      name: dtm-scaffolding-flask
+      scmType: github
 - name: github-actions
   instanceID: default
   dependsOn: ["repo-scaffolding.python-github"]

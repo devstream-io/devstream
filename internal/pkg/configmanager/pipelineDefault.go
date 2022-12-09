@@ -58,7 +58,7 @@ func pipelineGeneralGenerator(options RawOptions, globalVars *pipelineGlobalOpti
 	// update image related config
 	newOption := make(RawOptions)
 	newOption["pipeline"] = options
-	newOption["scm"] = RawOptions(globalVars.Scm.Encode())
+	newOption["scm"] = RawOptions(globalVars.Repo.Encode())
 	return newOption
 }
 
@@ -82,14 +82,14 @@ func pipelineArgocdAppGenerator(options RawOptions, globalVars *pipelineGlobalOp
 	if source, sourceExist := options["source"]; sourceExist {
 		sourceMap := source.(RawOptions)
 		if _, repoURLExist := sourceMap["repoURL"]; !repoURLExist {
-			sourceMap["repoURL"] = globalVars.RepoInfo.CloneURL
+			sourceMap["repoURL"] = globalVars.Repo.GetCloneURL()
 		}
 		options["source"] = sourceMap
 	} else {
 		options["source"] = RawOptions{
 			"valuefile": "values.yaml",
 			"path":      fmt.Sprintf("helm/%s", globalVars.AppName),
-			"repoURL":   globalVars.RepoInfo.CloneURL,
+			"repoURL":   string(globalVars.Repo.GetCloneURL()),
 		}
 	}
 	// config imageRepo default options

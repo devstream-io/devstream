@@ -11,32 +11,25 @@ import (
 
 var _ = Describe("validate func", func() {
 	var (
-		options             configmanager.RawOptions
-		url, configLocation string
+		options        configmanager.RawOptions
+		configLocation string
 	)
 	BeforeEach(func() {
-		url = "git@github.com/root/test-exmaple.git"
 		configLocation = "workflows"
 		options = configmanager.RawOptions{
-			"scm": map[string]interface{}{
-				"url": url,
-			},
 			"pipeline": map[string]interface{}{
 				"configLocation": configLocation,
 			},
-			"projectRepo": map[string]interface{}{
-				"repoType": "github",
+			"scm": map[string]interface{}{
+				"scmType":  "github",
 				"owner":    "test",
-				"repo":     "gg",
+				"name":     "gg",
+				"branch":   "main",
+				"needAuth": true,
 			},
 		}
 	})
-	When("scm token is not setted", func() {
-		It("should return err", func() {
-			_, err := validate(options)
-			Expect(err).Error().Should(HaveOccurred())
-		})
-	})
+
 	When("scm repo is gitlab", func() {
 		BeforeEach(func() {
 			options["scm"] = map[string]interface{}{
