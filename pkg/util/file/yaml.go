@@ -3,6 +3,10 @@ package file
 import (
 	"bytes"
 	"fmt"
+	"io/fs"
+	"os"
+	"path/filepath"
+	"strings"
 
 	yamlUtil "github.com/goccy/go-yaml"
 	"github.com/goccy/go-yaml/ast"
@@ -83,4 +87,41 @@ func getYamlAstNode(content []byte, path string) (ast.Node, error) {
 		return nil, fmt.Errorf("yaml read node failed: %w", err)
 	}
 	return node, nil
+}
+
+// ReadYamls reads file or files from dir whose suffix is yaml or yml
+// and returns the content of the files without "---" separator
+func ReadYamls(path string) ([]byte, error) {
+	stat, err := os.Stat(path)
+	if err != nil {
+		return nil, err
+	}
+	var contents []byte
+	if stat.IsDir() {
+		filterYaml := func(path string, d fs.DirEntry, err error) error {
+			if err != nil {
+				return err
+			}
+			if d.IsDir() {
+				return nil
+			}
+			if filepath.Ext(path) == ".yaml" || filepath.Ext(path) == ".yml" {
+				content, err := os.ReadFile(path)
+				if err != nil {
+					return err
+				}
+				contents = append(contents, content...)
+			}
+			return nil
+		}
+		err = filepath.WalkDir(path, filterYaml)
+	} else {
+		contents, err = os.ReadFile(path)
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	return []byte(strings.ReplaceAll(string(contents), "\n---\n", "\n")), nil
 }

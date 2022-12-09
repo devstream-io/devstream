@@ -8,9 +8,9 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-// DirFIleFilterFunc is used to filter files when walk directory
+// DirFileFilterFunc is used to filter files when walk directory
 // if this func return false, this file's content will not return
-type DirFIleFilterFunc func(filePath string, isDir bool) bool
+type DirFileFilterFunc func(filePath string, isDir bool) bool
 
 // DirFileContentFunc is used to get file content then return this content
 type DirFileContentFunc func(filePath string) ([]byte, error)
@@ -21,7 +21,7 @@ type DirFileNameFunc func(filePath, srcPath string) string
 
 // GetFileMapByWalkDir will walk in directory return contentMap
 func GetFileMapByWalkDir(
-	srcPath string, filterFunc DirFIleFilterFunc, fileNameFunc DirFileNameFunc, processFunc DirFileContentFunc,
+	srcPath string, filterFunc DirFileFilterFunc, fileNameFunc DirFileNameFunc, processFunc DirFileContentFunc,
 ) (map[string][]byte, error) {
 	contentMap := make(map[string][]byte)
 	if err := filepath.Walk(srcPath, func(path string, info fs.FileInfo, err error) error {
@@ -54,7 +54,7 @@ func GetFileMapByWalkDir(
 // if srcPath is a directory, it will invoke GetFileMapByWalkDir to get content map
 // if srcPath is a file, it will use fileNameFunc and fileContentFunc to create a map
 func GetFileMap(
-	srcPath string, filterFunc DirFIleFilterFunc, fileNameFunc DirFileNameFunc, fileContentFunc DirFileContentFunc,
+	srcPath string, filterFunc DirFileFilterFunc, fileNameFunc DirFileNameFunc, fileContentFunc DirFileContentFunc,
 ) (map[string][]byte, error) {
 	pathInfo, err := os.Stat(srcPath)
 	if err != nil {

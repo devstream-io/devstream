@@ -2,8 +2,9 @@ package configmanager
 
 import (
 	"fmt"
-	"os"
 	"strings"
+
+	"github.com/devstream-io/devstream/pkg/util/file"
 )
 
 // Manager is used to load the config file from the ConfigFilePath and finally get the Config object.
@@ -11,10 +12,10 @@ type Manager struct {
 	ConfigFilePath string
 }
 
-// NewManager takes configFilePath, then return a *Manager object.
-func NewManager(configFilePath string) *Manager {
+// NewManager takes configFilePath(file or directory), then return a *Manager object.
+func NewManager(configPath string) *Manager {
 	return &Manager{
-		ConfigFilePath: configFilePath,
+		ConfigFilePath: configPath,
 	}
 }
 
@@ -46,7 +47,7 @@ func (m *Manager) LoadConfig() (*Config, error) {
 //  1. variables rendered must be before the yaml.Unmarshal() called for the [[ foo ]] will be treated as a two-dimensional array by the yaml parser;
 //  2. the variables used([[ foo ]]) in the Config.PipelineTemplates can be defined in the Config.Apps or Config.Vars;
 func (m *Manager) getConfigFromFileWithGlobalVars() (*Config, error) {
-	configBytes, err := os.ReadFile(m.ConfigFilePath)
+	configBytes, err := file.ReadYamls(m.ConfigFilePath)
 	if err != nil {
 		return nil, err
 	}

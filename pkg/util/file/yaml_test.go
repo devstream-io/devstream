@@ -1,6 +1,12 @@
 package file_test
 
 import (
+	"fmt"
+	"os"
+	"path/filepath"
+	"strings"
+
+	mapset "github.com/deckarep/golang-set/v2"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
@@ -200,5 +206,77 @@ tests:
 		node, err := file.GetYamlNodeStrByPath(testData, yamlPath)
 		Expect(err).Error().ShouldNot(HaveOccurred())
 		Expect(node).Should(Equal("  name: plugin1\n  instanceID: default\n  options:\n    key1: [[var]]"))
+	})
+})
+
+var _ = Describe("ReadYamls func", func() {
+	var contents = []string{
+		"test_content1\n---\ntest_content1-1\n",
+		"test_content2\n",
+		"test_content3\n",
+		"test_content4\n---\n",
+	}
+	var contentsWithoutSeprator = []string{
+		"test_content1",
+		"test_content1-1",
+		"test_content2",
+		"test_content3",
+		"test_content4",
+	}
+
+	var (
+		tempDir, filePath string
+	)
+
+	JustAfterEach(func() {
+		dataReadBytes, err := file.ReadYamls(filePath)
+		Expect(err).Error().ShouldNot(HaveOccurred())
+		dataReadStrSlice := strings.Split(strings.TrimSpace(string(dataReadBytes)), "\n")
+		Expect(mapset.NewSet(dataReadStrSlice...).
+			Equal(mapset.NewSet(contentsWithoutSeprator...))).
+			Should(BeTrue(),
+				fmt.Sprintf("dataRead: %v\noriginContent: %v", dataReadStrSlice, contentsWithoutSeprator))
+	})
+
+	Context("read from file", func() {
+		BeforeEach(func() {
+			tempDir = GinkgoT().TempDir()
+			filePath = filepath.Join(tempDir, "test.yaml")
+			f, err := os.Create(filePath)
+			Expect(err).Error().ShouldNot(HaveOccurred())
+			defer f.Close()
+			for _, content := range contents {
+				_, err := f.WriteString(content)
+				Expect(err).Error().ShouldNot(HaveOccurred())
+			}
+		})
+		It("should return all contents", func() {
+			filePath = filepath.Join(tempDir, "test.yaml")
+		})
+	})
+
+	Context("read from dir", func() {
+		BeforeEach(func() {
+			tempDir = GinkgoT().TempDir()
+			for i, content := range contents[:len(contents)-1] {
+				filePath = filepath.Join(tempDir, fmt.Sprintf("test-%d.yaml", i))
+				f, err := os.Create(filePath)
+				Expect(err).Error().ShouldNot(HaveOccurred())
+				defer f.Close()
+				_, err = f.WriteString(content)
+				Expect(err).Error().ShouldNot(HaveOccurred())
+			}
+			// test multilevel dir
+			const subDir = "subdir/subsubdir"
+			filePath = filepath.Join(tempDir, subDir, "test.yml")
+			err := os.MkdirAll(filepath.Dir(filePath), 0755)
+			f, err := os.Create(filePath)
+			Expect(err).Error().ShouldNot(HaveOccurred())
+			defer f.Close()
+			_, err = f.WriteString(contents[len(contents)-1])
+		})
+		It("should return all contents", func() {
+			filePath = tempDir
+		})
 	})
 })
