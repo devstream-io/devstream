@@ -21,5 +21,5 @@ func upgradeCMDFunc(cmd *cobra.Command, args []string) {
 }
 
 func init() {
-	upgradeCMD.Flags().BoolVarP(&continueDirectly, "yes", "y", false, "upgrade directly without confirmation")
+	addFlagContinueDirectly(upgradeCMD)
 }

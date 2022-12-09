@@ -166,7 +166,7 @@ var _ = Describe("Tool struct", func() {
 	})
 })
 
-var _ = Describe("DuplicatedCheck", func() {
+var _ = Describe("duplicatedCheck", func() {
 	var (
 		errs                   []error
 		tools                  Tools
@@ -184,7 +184,7 @@ var _ = Describe("DuplicatedCheck", func() {
 	)
 
 	JustBeforeEach(func() {
-		errs = tools.DuplicatedCheck()
+		errs = tools.duplicatedCheck()
 	})
 
 	When("tools has duplicated name and instanceID", func() {

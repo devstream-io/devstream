@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/devstream-io/devstream/internal/pkg/completion"
 	"github.com/devstream-io/devstream/internal/pkg/pluginengine"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
@@ -25,9 +24,6 @@ func verifyCMDFunc(cmd *cobra.Command, args []string) {
 }
 
 func init() {
-	verifyCMD.Flags().StringVarP(&configFilePath, configFlagName, "f", "config.yaml", "config file")
-	verifyCMD.Flags().StringVarP(&pluginDir, pluginDirFlagName, "d", defaultPluginDir, "plugins directory")
-
-	completion.FlagFilenameCompletion(verifyCMD, configFlagName)
-	completion.FlagDirnameCompletion(verifyCMD, pluginDirFlagName)
+	addFlagConfigFile(verifyCMD)
+	addFlagPluginDir(verifyCMD)
 }

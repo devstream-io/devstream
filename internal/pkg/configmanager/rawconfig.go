@@ -7,8 +7,6 @@ import (
 	"unicode"
 
 	"gopkg.in/yaml.v3"
-
-	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 // rawConfig respent every valid config block for devstream
@@ -138,7 +136,6 @@ func (c *rawConfig) getTemplatePipelineMap() (map[string]string, error) {
 		if _, ok := pipelineTemplateMap[t.Name]; ok {
 			return nil, fmt.Errorf("pipelineTemplate <%s> is duplicated", t.Name)
 		}
-		log.Infof("pipelineTemplate %s is loaded", t.Name)
 		pipelineTemplateMap[t.Name] = string(rawPipeline)
 	}
 	return pipelineTemplateMap, nil

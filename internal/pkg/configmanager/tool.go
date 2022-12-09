@@ -66,7 +66,7 @@ func (tools Tools) validate() (errs []error) {
 	for _, tool := range tools {
 		errs = append(errs, tool.validate()...)
 	}
-	errs = append(errs, tools.DuplicatedCheck()...)
+	errs = append(errs, tools.duplicatedCheck()...)
 	return
 }
 
@@ -117,11 +117,7 @@ func (t *Tool) GetPluginMD5FileNameWithOSAndArch(os, arch string) string {
 	return t.GetPluginNameWithOSAndArch(os, arch) + ".md5"
 }
 
-func (t *Tool) EqualNameAndInstanceID(other *Tool) bool {
-	return t.Name == other.Name && t.InstanceID == other.InstanceID
-}
-
-func (tools Tools) DuplicatedCheck() (errs []error) {
+func (tools Tools) duplicatedCheck() (errs []error) {
 	list := make(map[string]struct{})
 	for _, t := range tools {
 		key := t.KeyWithNameAndInstanceID()
