@@ -165,3 +165,43 @@ var _ = Describe("Tool struct", func() {
 		})
 	})
 })
+
+var _ = Describe("DuplicatedCheck", func() {
+	var (
+		errs                   []error
+		tools                  Tools
+		toolsWithoutDuplicated = Tools{
+			{Name: "test_tool", InstanceID: "0"},
+			{Name: "test_tool", InstanceID: "1"},
+			{Name: "test_tool", InstanceID: "2"},
+		}
+
+		toolsWithDuplicated = Tools{
+			{Name: "test_tool", InstanceID: "0"},
+			{Name: "test_tool", InstanceID: "1"},
+			{Name: "test_tool", InstanceID: "0"},
+		}
+	)
+
+	JustBeforeEach(func() {
+		errs = tools.DuplicatedCheck()
+	})
+
+	When("tools has duplicated name and instanceID", func() {
+		BeforeEach(func() {
+			tools = toolsWithDuplicated
+		})
+		It("should return error", func() {
+			Expect(errs).Should(HaveLen(1))
+		})
+	})
+
+	When("tools don't have duplicated name and instanceID", func() {
+		BeforeEach(func() {
+			tools = toolsWithoutDuplicated
+		})
+		It("should return nil", func() {
+			Expect(errs).Should(BeEmpty())
+		})
+	})
+})
