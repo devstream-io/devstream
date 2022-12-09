@@ -2,6 +2,7 @@ package configmanager
 
 import (
 	"fmt"
+	"path/filepath"
 	"strings"
 
 	"github.com/devstream-io/devstream/pkg/util/file"
@@ -95,6 +96,7 @@ func (m *Manager) getConfigFromFileWithGlobalVars() (*Config, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to get coreConfig from config file. Error: %w", err)
 	}
+	coreConfig.State.BaseDir = filepath.Dir(m.ConfigFilePath)
 
 	return &Config{
 		Config: *coreConfig,
