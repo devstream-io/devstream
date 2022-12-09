@@ -18,11 +18,33 @@ var _ = Describe("NewLocal func", func() {
 		tFile = "test_state_file"
 	})
 
-	When("input filename", func() {
+	When("specify dir and relative filename", func() {
 		It("should create state file", func() {
 			_, err := local.NewLocal(tempDir, tFile)
 			Expect(err).Should(Succeed())
 			_, err = os.Stat(filepath.Join(tempDir, tFile))
+			Expect(err).Error().ShouldNot(HaveOccurred())
+		})
+	})
+
+	When("current dir and multilevel file", func() {
+		It("should create state file", func() {
+			fileLoc := filepath.Join(tempDir, tFile)
+			_, err := local.NewLocal(".", fileLoc)
+			Expect(err).Should(Succeed())
+			_, err = os.Stat(fileLoc)
+			Expect(err).Error().ShouldNot(HaveOccurred())
+		})
+	})
+
+	When("specify absolute file", func() {
+		It("should create state file", func() {
+			fileLoc := filepath.Join(tempDir, tFile)
+			fileLoc, err := filepath.Abs(fileLoc)
+			Expect(err).Should(Succeed())
+			_, err = local.NewLocal("/not/active", fileLoc)
+			Expect(err).Should(Succeed())
+			_, err = os.Stat(fileLoc)
 			Expect(err).Error().ShouldNot(HaveOccurred())
 		})
 	})
@@ -38,7 +60,8 @@ var _ = Describe("Local struct", func() {
 	BeforeEach(func() {
 		tempDir = GinkgoT().TempDir()
 		tFile = "test_state_file"
-		tLocal, err = local.NewLocal(tempDir, tFile)
+		tFileLoc = filepath.Join(tempDir, tFile)
+		tLocal, err = local.NewLocal(".", tFileLoc)
 		Expect(err).ShouldNot(HaveOccurred())
 	})
 
