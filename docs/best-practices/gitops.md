@@ -42,7 +42,7 @@ DevStream will use the following plugins to achieve the goal described in [Secti
 
 1. [repo-scaffolding](../plugins/repo-scaffolding.md)
 2. [githubactions-golang](../plugins/githubactions-golang.md)
-3. [argocd](../plugins/helm-installer/helm-installer.md) (TODO: this doc needs to be updated)
+3. [helm-installer](../plugins/helm-installer/helm-installer.md)
 4. [argocdapp](../plugins/argocdapp.md)
 
 However, you do not have to worry about these plugins because DevStream will manage them automatically for you.

@@ -42,7 +42,7 @@ DevStream 将使用下面的插件来实现[第 0 节](#0-目标)中描述的目
 
 1. [repo-scaffolding](../plugins/repo-scaffolding.md)
 2. [githubactions-golang](../plugins/githubactions-golang.md)
-3. [argocd](../plugins/helm-installer/helm-installer.md) (TODO: 此文档待更新)
+3. [helm-installer](../plugins/helm-installer/helm-installer.md)
 4. [argocdapp](../plugins/argocdapp.md)
 
 不过，你不需要担心这些插件，因为 DevStream 会帮你自动管理它们。
