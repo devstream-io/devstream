@@ -183,7 +183,7 @@ apps:
     scmType: github
     owner: devstream-io
     org: devstream-io # either owner or org must exist
-    name: dtm-scaffolding-golang
+    name: dtm-repo-scaffolding-golang
     url: github.com/devstream-io/repo-name   # optional. if exists, no need for the scm/owner/org/name sections
     vars:  # optional
       foo: bar  # variables used for repoTemplate specifically
@@ -212,7 +212,7 @@ apps:
   repo:
     url: github.com/ironcore864/myapp1
   repoTemplate:
-    url: github.com/devstream-io/dtm-scaffolding-python
+    url: github.com/devstream-io/dtm-repo-scaffolding-python
   ci:
   - type: github-actions
   cd:
@@ -277,7 +277,7 @@ apps:
   repo:
     url: github.com/ironcore864/myapp1
   repoTemplate:
-    url: github.com/devstream-io/dtm-scaffolding-python
+    url: github.com/devstream-io/dtm-repo-scaffolding-python
   ci:
   - type: github-actions
   cd:

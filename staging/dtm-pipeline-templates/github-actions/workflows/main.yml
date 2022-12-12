@@ -1,0 +1,127 @@
+name: Main Branch Builder
+on:
+  push:
+    branches: [ master, main ]
+permissions: write-all
+[[ define "dingNotifyFailedBlock" ]]
+      # dingTalk Notify Block
+      - name: Post result
+        if: failure()
+        uses: zcong1993/actions-ding@master
+        with:
+          dingToken: ${{ secrets.[[ .DingTalkSecretToken ]] }}
+          secret: ${{ secrets.[[ .DingTalkSecretKey ]] }}
+          body: |
+            {
+              "msgtype": "markdown",
+              "markdown": {
+                "title": "构建通知",
+                "text": "❌❌❌❌❌❌❌❌❌\n# 构建详情\n- 构建变更: ${{ github.event.head_commit.message }} \n- 构建结果: 构建失败❌\n# 构建日志\n [日志](${{ github.repositoryUrl }})"
+              }
+            }
+[[ end -]]
+
+[[ define "dingNotifyBlock" ]]
+[[ template "dingNotifyFailedBlock" . ]]
+      # dingTalk fail Notify Block
+      - name: Post result
+        if: success()
+        uses: zcong1993/actions-ding@master
+        with:
+          dingToken: ${{ secrets.[[ .DingTalkSecretToken ]] }}
+          secret: ${{ secrets.[[ .DingTalkSecretKey ]] }}
+          body: |
+            {
+              "msgtype": "markdown",
+              "markdown": {
+                "title": "构建通知",
+                "text": "✅✅✅✅✅✅✅✅✅\n# 构建详情\n- 构建变更: ${{ github.event.head_commit.message }} \n- 构建结果: 构建成功✅\n# 构建日志\n [日志](${{ github.repositoryUrl }})"
+              }
+            }
+[[ end ]]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up [[ .language.name ]]
+        uses: actions/setup-[[ .language.name ]]@v3
+        with:
+          [[ .language.name ]]-version: [[ .language.version ]]
+  [[- if eq .language.name "java" -]]
+          cache: maven
+          distribution: adopt
+  [[- end ]]
+      - name: Test
+        run: |
+          [[ range .test.command ]]
+          [[ . -]]
+          [[ end ]]
+  [[ if .dingTalk -]]
+  [[ template "dingNotifyFailedBlock" . ]]
+  [[- end ]]
+[[ if .imageRepo ]]
+  tag:
+    name: Tag
+    needs: [test]
+    if: ${{ github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    outputs:
+      new_tag: ${{ steps.tag_version.outputs.new_tag }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Bump version and push tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          tag_prefix: ""
+    [[ if .dingTalk -]]
+    [[ template "dingNotifyFailedBlock" . ]]
+    [[- end ]]
+  image:
+    name: Build Docker Image
+    needs: [tag]
+    if: ${{ github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: [[ .imageRepo.user ]]
+          password: ${{ secrets.[[ .ImageRepoSecret ]] }}
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          tags: "[[ .imageRepo.user ]]/[[ .AppName ]]:${{needs.tag.outputs.new_tag}}"
+    [[ if .dingTalk -]]
+    [[ template "dingNotifyBlock" .]]
+    [[- end ]]
+  [[ end ]]
+  [[ if .sonarqube ]]
+  sonarqube:
+    name: SonarQube Scanner
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checking out
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Set up [[ .language.name ]]
+      uses: actions/setup-[[ .language.name ]]@v3
+      with:
+        [[ .language.name ]]-version: [[ .language.version ]]
+    - name: Build
+      run: mvn install -DskipTests
+    - name: Setup sonarqube
+      uses: warchant/setup-sonar-scanner@v4
+    - name: Sonarqube Scan
+      run: sonar-scanner
+           -Dsonar.java.binaries=target/classes
+           -Dsonar.projectKey=[[ .AppName ]]
+           -Dsonar.host.url=[[ .sonarqube.url ]]
+           -Dsonar.login=${{ secrets.[[ .SonarqubeSecretKey ]] }}
+  [[ end ]]

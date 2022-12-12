@@ -231,7 +231,7 @@ var _ = Describe("PipelineTemplate struct", func() {
 					Options: RawOptions{
 						"pipeline": RawOptions{
 							"test":           "testV",
-							"configLocation": "https://raw.githubusercontent.com/devstream-io/ci-template/main/github-actions/workflows/main.yml",
+							"configLocation": "https://raw.githubusercontent.com/devstream-io/dtm-pipeline-templates/main/github-actions/workflows/main.yml",
 						},
 						"scm": RawOptions{
 							"url": git.ScmURL(cloneURL),
