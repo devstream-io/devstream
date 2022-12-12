@@ -5,7 +5,7 @@ metadata:
   labels:
     app: [[.AppName]]
 spec:
-  replicas: [[ .Values.replicaCount ]]
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       app: [[.AppName]]
@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: [[.AppName]]
-        image: "[[.ImageRepo]]:[[ .Chart.AppVersion ]]"
+        image: "[[.imageRepo]]:{{ .Chart.AppVersion }}"
         ports:
         - containerPort: 8080

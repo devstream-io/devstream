@@ -143,7 +143,7 @@ tools:
       repoType: github
     sourceRepo:
       org: devstream-io
-      repo: dtm-scaffolding-python
+      repo: dtm-repo-scaffolding-python
       repoType: github
     vars:
       imageRepo: [[ dockerUser ]]/[[ app ]]

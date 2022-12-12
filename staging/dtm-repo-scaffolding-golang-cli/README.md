@@ -1,4 +1,4 @@
-# dtm-scaffolding-golang
+# dtm-repo-scaffolding-golang-cli
 
 This repo contains templates used by DevStream plugin "repo-scaffolding" (thereafter: the plugin).
 
@@ -26,3 +26,8 @@ Repo:
   Owner: ironcore864
   Name: my-hello-world
 ```
+
+## Where does this repo come from?
+
+`dtm-repo-scaffolding-golang-cli` is synced from https://github.com/devstream-io/devstream/blob/main/staging/dtm-repo-scaffolding-golang-cli. 
+Code changes are made in that location, merged into `devstream-io/devstream` and later synced here.

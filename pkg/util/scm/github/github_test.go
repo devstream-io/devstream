@@ -24,12 +24,12 @@ var (
 	OptNotNeedAuth = &git.RepoInfo{
 		Owner: "",
 		Org:   "devstream-io",
-		Repo:  "dtm-scaffolding-golang",
+		Repo:  "dtm-repo-scaffolding-golang",
 	}
 	OptNeedAuth = &git.RepoInfo{
 		Owner:    "",
 		Org:      "devstream-io",
-		Repo:     "dtm-scaffolding-golang",
+		Repo:     "dtm-repo-scaffolding-golang",
 		NeedAuth: true,
 	}
 )

@@ -1,4 +1,4 @@
-# dtm-scaffolding-golang
+# dtm-repo-scaffolding-golang
 
 This repo contains templates used by DevStream plugin "repo-scaffolding" (thereafter: the plugin).
 
@@ -29,3 +29,8 @@ Repo:
   Name: my-hello-world
 ImageRepo: ironcore864/my-hello-world # dockerhub
 ```
+
+## Where does this repo come from?
+
+`dtm-repo-scaffolding-golang` is synced from https://github.com/devstream-io/devstream/blob/main/staging/dtm-repo-scaffolding-golang. 
+Code changes are made in that location, merged into `devstream-io/devstream` and later synced here.

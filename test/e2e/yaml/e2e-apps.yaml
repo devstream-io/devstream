@@ -23,7 +23,7 @@ apps:
     org: [[ repoOwner ]]
     scmType: github
   repoTemplate:
-    url: github.com/devstream-io/dtm-scaffolding-gin
+    url: github.com/devstream-io/dtm-repo-scaffolding-golang-gin
   ci:
   - type: github-actions
     options:
