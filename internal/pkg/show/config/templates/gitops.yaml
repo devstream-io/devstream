@@ -13,7 +13,6 @@ vars:
   jiraProjectKey: DT
   dockerhubUsername: exploitht
   argocdNameSpace: argocd
-  argocdDeployTimeout: 10m
 
 tools:
 - name: repo-scaffolding
@@ -21,14 +20,13 @@ tools:
   options:
     destinationRepo:
       owner: [[ githubUsername ]]
-      org: ""
-      repo: [[ repoName ]]
+      name: [[ repoName ]]
       branch: [[ defaultBranch ]]
-      repoType: github
+      scmType: github
     sourceRepo:
       org: devstream-io
-      repo: dtm-scaffolding-golang
-      repoType: github
+      name: dtm-scaffolding-golang
+      scmType: github
     vars:
       imageRepo: "[[ dockerhubUsername ]]/[[ repoName ]]"
 - name: jira-github-integ
@@ -41,50 +39,27 @@ tools:
     jiraUserEmail: [[ jiraUserEmail ]]
     jiraProjectKey: [[ jiraProjectKey ]]
     branch: main
-- name: githubactions-golang
+- name: github-actions
   instanceID: default
   dependsOn: [ "repo-scaffolding.golang-github" ]
   options:
-    owner: ${{repo-scaffolding.golang-github.outputs.owner}}
-    org: ""
-    repo: ${{repo-scaffolding.golang-github.outputs.repo}}
-    language:
-      name: go
-      version: "1.18"
-    branch: [[ defaultBranch ]]
-    build:
-      enable: True
-      command: "go build ./..."
-    test:
-      enable: True
-      command: "go test ./..."
-      coverage:
-        enable: True
-        profile: "-race -covermode=atomic"
-        output: "coverage.out"
-    docker:
-      enable: True
-      registry:
-        type: dockerhub
-        username: [[ dockerhubUsername ]]
-        repository: ${{repo-scaffolding.golang-github.outputs.repo}}
-- name: argocd
-  instanceID: default
-  options:
-    repo:
-      name: argo
-      url: https://argoproj.github.io/argo-helm
-    chart:
-      chartPath: ""
-      chartName: argo/argo-cd
-      releaseName: argocd
-      namespace: [[ argocdNameSpace ]]
-      wait: true
-      timeout: [[ argocdDeployTimeout ]]
-      upgradeCRDs: true
+    scm:
+      owner: ${{repo-scaffolding.golang-github.outputs.owner}}
+      name: ${{repo-scaffolding.golang-github.outputs.repo}}
+      branch: [[ defaultBranch ]]
+      scmType: github
+    pipeline:
+      configLocation: https://raw.githubusercontent.com/devstream-io/ci-template/main/github-actions/workflows/main.yml
+      language:
+        name: go
+        framework: gin
+      imageRepo:
+        user: [[ dockerhubUsername ]]
+- name: helm-installer
+  instanceID: argocd
 - name: argocdapp
   instanceID: default
-  dependsOn: ["argocd.default", "repo-scaffolding.golang-github"]
+  dependsOn: ["helm-installer.argocd", "repo-scaffolding.golang-github"]
   options:
     app:
       name: ${{repo-scaffolding.golang-github.outputs.repo}}

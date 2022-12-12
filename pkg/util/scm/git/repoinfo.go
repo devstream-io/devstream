@@ -176,7 +176,7 @@ func (r *RepoInfo) checkValid() error {
 		return fmt.Errorf("git org and owner can't be configured at the same time")
 	}
 	if r.RepoType != "github" && r.RepoType != "gitlab" {
-		return fmt.Errorf("git scmType only support gitlab and github")
+		return fmt.Errorf("git scmType only support gitlab and github, current scm type is [%s]", r.RepoType)
 	}
 	if r.Repo == "" {
 		return fmt.Errorf("git name field must be configured")
@@ -237,8 +237,8 @@ func (u ScmURL) addGithubURLScheme() ScmURL {
 }
 
 // isGithubRepo return ture if repo is github
-func isGithubRepo(repoType string, url ScmURL) bool {
-	return repoType == "github" || strings.Contains(string(url), "github")
+func isGithubRepo(scmType string, url ScmURL) bool {
+	return scmType == "github" || strings.Contains(string(url), "github")
 }
 
 func extractBaseURLfromRaw(repoURL string) (string, error) {

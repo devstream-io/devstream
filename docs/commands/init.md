@@ -25,7 +25,7 @@ This can be used to pre-download the plugin to use `dtm` in an **offline environ
 
 command: 
 
-- download specify plugins. e.g. `dtm init --download-only --plugins="repo-scaffolding, githubactions-golang" -d=.devstream/plugins`
+- download specify plugins. e.g. `dtm init --download-only --plugins="repo-scaffolding, github-actions" -d=.devstream/plugins`
 - download all plugins. e.g. `dtm init --download-only --all -d=.devstream/plugins`
 
 ## Init Logic

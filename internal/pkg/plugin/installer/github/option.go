@@ -63,7 +63,7 @@ func (opts *GithubActionOptions) GetGithubClient() (*github.Client, error) {
 }
 
 func (opts *GithubActionOptions) RenderWorkFlow(content string) (string, error) {
-	return template.Render("githubactions", content, opts)
+	return template.Render("github-actions", content, opts)
 }
 
 func (opts *GithubActionOptions) CheckAddDockerHubToken() bool {

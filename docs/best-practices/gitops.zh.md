@@ -41,7 +41,7 @@
 DevStream 将使用下面的插件来实现[第 0 节](#0-目标)中描述的目标：
 
 1. [repo-scaffolding](../plugins/repo-scaffolding.md)
-2. [githubactions-golang](../plugins/githubactions-golang.md)
+2. [github-actions](../plugins/github-actions.md)
 3. [helm-installer](../plugins/helm-installer/helm-installer.md)
 4. [argocdapp](../plugins/argocdapp.md)
 
@@ -138,34 +138,33 @@ tools:
   options:
     destinationRepo:
       owner: [[ githubUser ]]
-      repo: [[ app ]]
+      name: [[ app ]]
       branch: main
-      repoType: github
+      scmType: github
     sourceRepo:
       org: devstream-io
-      repo: dtm-scaffolding-python
-      repoType: github
-    vars:
-      imageRepo: [[ dockerUser ]]/[[ app ]]
-- name: githubactions-python
-  instanceID: default
+      name: dtm-scaffolding-flask
+      scmType: github
+- name: github-actions
+  instanceID: flask
   dependsOn: [ repo-scaffolding.myapp ]
   options:
-    owner: [[ githubUser ]]
-    repo:  [[ app ]]
-    language:
-      name: python
-    branch: main
-    docker:
-      registry:
-        type: dockerhub
-        username: [[ dockerUser ]]
-        repository: [[ app ]]
+    scm:
+      owner: [[ githubUser ]]
+      name:  [[ app ]]
+      scmType: github
+    pipeline:
+      configLocation: https://raw.githubusercontent.com/devstream-io/ci-template/main/github-actions/workflows/main.yml
+      language:
+        name: python
+        framework: flask
+      imageRepo:
+        user: [[ dockerUser ]]
 - name: helm-installer
   instanceID: argocd
 - name: argocdapp
   instanceID: default
-  dependsOn: [ "helm-installer.argocd", "githubactions-python.default" ]
+  dependsOn: [ "helm-installer.argocd", "github-actions.flask" ]
   options:
     app:
       name: [[ app ]]
@@ -177,6 +176,8 @@ tools:
       valuefile: values.yaml
       path: helm/[[ app ]]
       repoURL: ${{repo-scaffolding.myapp.outputs.repoURL}}
+    imageRepo:
+      user: [[ dockerUser ]]
 ```
 
 按需修改 `config.yaml` 文件中的 `vars` 部分。记得修改 `githubUser` 和 `dockerUser` 的值为你自己的用户名。
@@ -194,14 +195,14 @@ tools:
 
 ```bash
 export GITHUB_TOKEN="YOUR_GITHUB_TOKEN_HERE"
-export DOCKERHUB_TOKEN="YOUR_DOCKERHUB_TOKEN_HERE"
+export IMAGE_REPO_PASSWORD="YOUR_DOCKERHUB_TOKEN_HERE"
 ```
 
 > 提示：
 > 如果你不知道如何创建这两个 token，可以参考：
 > 
 > - GITHUB_TOKEN：[Manage API tokens for your Atlassian account](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
-> - DOCKERHUB_TOKEN：[Manage access tokens](https://docs.docker.com/docker-hub/access-tokens/)
+> - IMAGE_REPO_PASSWORD：[Manage access tokens](https://docs.docker.com/docker-hub/access-tokens/)
 
 ---
 
@@ -240,7 +241,7 @@ export DOCKERHUB_TOKEN="YOUR_DOCKERHUB_TOKEN_HERE"
 2022-12-05 17:49:49 ℹ [INFO]  Using local backend. State file: devstream.state.
 2022-12-05 17:49:49 ℹ [INFO]  Tool (repo-scaffolding/myapp) found in config but doesn't exist in the state, will be created.
 2022-12-05 17:49:49 ℹ [INFO]  Tool (helm-installer/argocd) found in config but doesn't exist in the state, will be created.
-2022-12-05 17:49:49 ℹ [INFO]  Tool (githubactions-python/default) found in config but doesn't exist in the state, will be created.
+2022-12-05 17:49:49 ℹ [INFO]  Tool (github-actions/flask) found in config but doesn't exist in the state, will be created.
 2022-12-05 17:49:49 ℹ [INFO]  Tool (argocdapp/default) found in config but doesn't exist in the state, will be created.
 2022-12-05 17:49:49 ℹ [INFO]  Start executing the plan.
 2022-12-05 17:49:49 ℹ [INFO]  Changes count: 4.
@@ -338,7 +339,7 @@ kubectl port-forward -n default svc/helloworld 8080:80
 2022-12-05 17:59:25 ℹ [INFO]  Delete started.
 2022-12-05 17:59:26 ℹ [INFO]  Using local backend. State file: devstream.state.
 2022-12-05 17:59:26 ℹ [INFO]  Tool (argocdapp/default) will be deleted.
-2022-12-05 17:59:26 ℹ [INFO]  Tool (githubactions-python/default) will be deleted.
+2022-12-05 17:59:26 ℹ [INFO]  Tool (github-actions/flask) will be deleted.
 2022-12-05 17:59:26 ℹ [INFO]  Tool (repo-scaffolding/myapp) will be deleted.
 2022-12-05 17:59:26 ℹ [INFO]  Tool (helm-installer/argocd) will be deleted.
 2022-12-05 17:59:26 ℹ [INFO]  Start executing the plan.

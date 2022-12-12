@@ -48,7 +48,7 @@
 - `YOUR_DESTINATION_REPO_MAIN_BRANCH`
 - `YOUR_DESTINATION_REPO_TYPE`
 
-`owner`，`org` 和 `repo` 目前是必填的，`branch` 的默认值是  "main"，`repoType` 配置目前支持 `gitlab` 和 `github`。
+`owner`，`org` 和 `repo` 目前是必填的，`branch` 的默认值是  "main"，`scmType` 配置目前支持 `gitlab` 和 `github`。
 
 ### sourceRepo
 
@@ -58,7 +58,7 @@
 - `YOUR_TEMPLATE_REPO_NAME`
 - `YOUR_TEMPLATE_REPO_TYPE`
 
-目前这两个配置项都是必填的，`repoType` 配置目前只支持 `github`。
+目前这两个配置项都是必填的，`scmType` 配置目前只支持 `github`。
 
 ### vars
 

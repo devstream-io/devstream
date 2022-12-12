@@ -154,7 +154,7 @@ options:
 				templateMap = map[string]string{
 					templateName: fmt.Sprintf(`
 name: %s
-type: githubactions
+type: github-actions
 options:
   branch: main
   app: template

@@ -24,7 +24,7 @@ The definition of the GitHub Action is [here](https://github.com/devstream-io/de
 We have a simple e2e test that tests the following plugins:
 
 - `repo-scaffolding`
-- `githubactions-golang`
+- `github-actions`
 - `argocd`
 - `argocdapp`
 
@@ -37,7 +37,7 @@ Then, set the following environment variables:
 - GITHUB_USER
 - GITHUB_TOKEN
 - DOCKERHUB_USERNAME
-- DOCKERHUB_TOKEN
+- IMAGE_REPO_PASSWORD
 
 And execute the following command:
 

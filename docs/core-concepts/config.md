@@ -104,34 +104,35 @@ tools:
   options:
     destinationRepo:
       owner: [[ githubUser ]]
-      repo: [[ app ]]
+      name: [[ app ]]
       branch: main
-      repoType: github
+      scmType: github
     sourceRepo:
       org: devstream-io
-      repo: dtm-scaffolding-python
-      repoType: github
+      name: dtm-scaffolding-python
+      scmType: github
     vars:
       imageRepo: [[ dockerUser ]]/[[ app ]]
-- name: githubactions-python
+- name: github-actions
   instanceID: default
   dependsOn: [ repo-scaffolding.myapp ]
   options:
-    owner: [[ githubUser ]]
-    repo:  [[ app ]]
-    language:
-      name: python
-    branch: main
-    docker:
-      registry:
-        type: dockerhub
-        username: [[ dockerUser ]]
-        repository: [[ app ]]
+    scm:
+      owner: [[ githubUser ]]
+      name: [[ app ]]
+      branch: main
+      scmType: github
+    pipeline:
+      language:
+        name: python
+        framework: flask
+      imageRepo:
+        user: [[ dockerUser ]]
 - name: helm-installer
   instanceID: argocd
 - name: argocdapp
   instanceID: default
-  dependsOn: [ "helm-installer.argocd", "githubactions-python.default" ]
+  dependsOn: [ "helm-installer.argocd", "github-actions.default" ]
   options:
     app:
       name: [[ app ]]
@@ -213,7 +214,7 @@ apps:
   repoTemplate:
     url: github.com/devstream-io/dtm-scaffolding-python
   ci:
-  - type: githubactions
+  - type: github-actions
   cd:
   - type: argocdapp
 ```
@@ -227,7 +228,7 @@ You can define some pipeline templates in the pipelineTemplates section:
 ```yaml
 pipelineTemplates:
 - name: ci-pipeline-1
-  type: githubactions # corresponds to a DevStream plugin
+  type: github-actions # corresponds to a DevStream plugin
   options:
     branch: main      # optional
     docker:
@@ -278,7 +279,7 @@ apps:
   repoTemplate:
     url: github.com/devstream-io/dtm-scaffolding-python
   ci:
-  - type: githubactions
+  - type: github-actions
   cd:
   - type: argocdapp
 ```
