@@ -1,0 +1,10 @@
+replicaCount: 1
+
+image:
+  repository: [[ .ImageRepo.URL ]][[ .ImageRepo.User ]]/[[ .App.Name ]]
+  tag: [[ .ImageRepo.InitalTag ]]
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 8080

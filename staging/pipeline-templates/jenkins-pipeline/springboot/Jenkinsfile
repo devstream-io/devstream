@@ -1,3 +1,8 @@
+version="1.0.${env.BUILD_NUMBER}"
+repository="[[ .ImageRepoAddress ]]/[[ .ImageName ]]"
+tag="latest"
+image="${repository}:${version}"
+
 podTemplate(containers: [
     containerTemplate(name: 'maven', image: 'maven:3.8.6-openjdk-18', command: 'sleep', args: '99d'),
     containerTemplate(name: 'buildkit', image: 'moby/buildkit:master', ttyEnabled: true, privileged: true),
@@ -21,20 +26,9 @@ podTemplate(containers: [
             gitlabCommitStatus("build image") {
                 container('buildkit') {
                     stage('build a Maven project') {
-                        String imageRepo = "[[ .imageRepo.user ]]/[[ .AppName ]]"
-                        String imageURL = "[[ .imageRepo.url ]]"
-                        if (imageURL) {
-                            imageRepo = "${imageURL}/${imageRepo}"
-                        }
-                        if (imageRepo.contains("http://")) {
-                            opts = ",registry.insecure=true"
-                            imageRepo = imageRepo.replace("http://", "")
-                        }
-                        gitUtil = new Git()
-                        version = gitUtil.getCommitIDHead()
                         sh """
-                          buildctl build --frontend dockerfile.v0 --local context=. --local dockerfile=. --output type=image,name=${imageRepo}:${defaultTag},push=true${opts}
-                          buildctl build --frontend dockerfile.v0 --local context=. --local dockerfile=. --output type=image,name=${imageRepo}:${version},push=true${opts}
+                          buildctl build --frontend dockerfile.v0 --local context=. --local dockerfile=. --output type=image,name=${image},push=true,registry.insecure=true
+                          buildctl build --frontend dockerfile.v0 --local context=. --local dockerfile=. --output type=image,name=${repository}:${tag},push=true,registry.insecure=true
                         """
                     }
                 }
