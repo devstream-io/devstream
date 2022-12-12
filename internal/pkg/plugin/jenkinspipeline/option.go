@@ -68,12 +68,12 @@ func (j *jobOptions) createOrUpdateJob(jenkinsClient jenkins.JenkinsAPI, secretT
 	jobRenderInfo := &jenkins.JobScriptRenderInfo{
 		RepoType:          repoInfo.RepoType,
 		JobName:           j.JobName.getJobName(),
-		RepositoryURL:     repoInfo.CloneURL,
+		RepositoryURL:     string(repoInfo.CloneURL),
 		Branch:            repoInfo.Branch,
 		SecretToken:       secretToken,
 		FolderName:        j.JobName.getJobFolder(),
 		GitlabConnection:  globalConfig.GitlabConnectionID,
-		RepoURL:           repoInfo.BuildScmURL(),
+		RepoURL:           string(repoInfo.CloneURL),
 		RepoOwner:         repoInfo.GetRepoOwner(),
 		RepoName:          repoInfo.Repo,
 		RepoCredentialsId: globalConfig.CredentialID,
@@ -105,6 +105,18 @@ func (j *jobOptions) needOfflineConfig() bool {
 	// we use this to check whether this pipeline need default offline Jenkinsfile
 	const githubContentHost = "raw.githubusercontent.com"
 	return j.Jenkins.Offline && strings.Contains(string(j.Pipeline.ConfigLocation), githubContentHost)
+}
+
+func (j *jobOptions) getScmWebhookAddress() string {
+	var webHookURL string
+	switch j.ProjectRepo.RepoType {
+	case "gitlab":
+		webHookURL = fmt.Sprintf("%s/project/%s", j.Jenkins.URL, j.JobName)
+	case "github":
+		webHookURL = fmt.Sprintf("%s/github-webhook/", j.Jenkins.URL)
+	}
+	log.Debugf("jenkins config webhook is %s", webHookURL)
+	return webHookURL
 }
 
 // jenkins jobName, can be like folder/jobName or jobName

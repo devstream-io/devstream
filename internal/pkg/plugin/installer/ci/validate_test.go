@@ -9,6 +9,7 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/cifile/server"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 var _ = Describe("SetDefault func", func() {
@@ -34,7 +35,8 @@ var _ = Describe("SetDefault func", func() {
 	It("should work normal", func() {
 		opts, err := ci.SetDefault(server.CIGithubType)(options)
 		Expect(err).ShouldNot(HaveOccurred())
-		projectRepo, ok := opts["projectRepo"]
+		log.Infof("----> %+v", opts)
+		projectRepo, ok := opts["scm"]
 		Expect(ok).Should(BeTrue())
 		Expect(projectRepo).ShouldNot(BeNil())
 		CIFileConfig, ok := opts["ci"]

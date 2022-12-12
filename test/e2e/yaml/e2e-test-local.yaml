@@ -9,7 +9,7 @@ vars:
   githubUsername: GITHUBUSERNAME
   repoName: dtm-e2e-test-golang
   dockerRegistryUserName: DOCKERUSERNAME
-  argocdNameSpace: argocd-e2e-test
+  argocdNameSpace: argocd
   githubActionConfigLocation: https://raw.githubusercontent.com/devstream-io/ci-template/main/github-actions/workflows/main.yml
 
 tools:
@@ -18,14 +18,13 @@ tools:
   options:
     destinationRepo:
       owner: [[ githubUsername ]]
-      org: ""
-      repo: [[ repoName ]]
+      name: [[ repoName ]]
       branch: [[ defaultBranch ]]
-      repoType: github
+      scmType: github
     sourceRepo:
       org: devstream-io
-      repo: dtm-scaffolding-gin
-      repoType: github
+      name: dtm-scaffolding-gin
+      scmType: github
 - name: github-actions
   instanceID: default
   dependsOn: ["repo-scaffolding.golang-github"]
