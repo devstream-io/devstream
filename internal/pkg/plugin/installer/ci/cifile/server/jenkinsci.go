@@ -20,7 +20,7 @@ func (j *JenkinsPipeline) CIFilePath() string {
 }
 
 // FilterCIFilesFunc only get file with name Jenkinsfile
-func (j *JenkinsPipeline) FilterCIFilesFunc() file.DirFIleFilterFunc {
+func (j *JenkinsPipeline) FilterCIFilesFunc() file.DirFileFilterFunc {
 	return func(filePath string, isDir bool) bool {
 		// not process dir
 		if isDir {

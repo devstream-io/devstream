@@ -18,11 +18,16 @@ type Local struct {
 }
 
 // NewLocal will use DefaultStateFile as statemanager file if filename is not given.
-func NewLocal(filename string) (*Local, error) {
+func NewLocal(baseDir, filename string) (*Local, error) {
 	var lFile = filename
 	if filename == "" {
 		log.Debugf("The stateFile has not been set, default value %s will be used.", DefaultStateFile)
 		lFile = DefaultStateFile
+	}
+
+	// if state file is not absolute path, use baseDir as prefix.
+	if !filepath.IsAbs(lFile) {
+		lFile = filepath.Join(baseDir, lFile)
 	}
 
 	log.Infof("Using local backend. State file: %s.", filename)

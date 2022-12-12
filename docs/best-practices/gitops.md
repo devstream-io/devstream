@@ -211,7 +211,7 @@ export DOCKERHUB_TOKEN="YOUR_DOCKERHUB_TOKEN_HERE"
 Run:
 
 ```bash
-./dtm init
+./dtm init -f config.yaml
 ```
 
 This downloads the required plugins, according to the config file, automatically.
@@ -233,7 +233,7 @@ You'll get some outputs similar to the following:
 Run:
 
 ```bash
-./dtm apply -y
+./dtm apply -f config.yaml -y
 ```
 
 You will see similar outputs as the following:
@@ -332,7 +332,7 @@ And accesses `localhost:8080` in your browser, you can see the deployed app retu
 Run:
 
 ```bash
-./dtm delete -y
+./dtm delete -f config.yaml -y
 ```
 
 And you will get similar outputs to the following:

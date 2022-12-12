@@ -15,7 +15,7 @@ type CIServerOptions interface {
 	CIFilePath() string
 
 	// FilterCIFilesFunc returns a filter function to select ci config file
-	FilterCIFilesFunc() file.DirFIleFilterFunc
+	FilterCIFilesFunc() file.DirFileFilterFunc
 	// GetGitNameFunc returns a function to transform file path to git name of ci config file
 	GetGitNameFunc() file.DirFileNameFunc
 }

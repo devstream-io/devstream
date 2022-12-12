@@ -210,7 +210,7 @@ export DOCKERHUB_TOKEN="YOUR_DOCKERHUB_TOKEN_HERE"
 运行以下命令，以根据配置文件自动下载所需插件：
 
 ```bash
-./dtm init
+./dtm init -f config.yaml
 ```
 
 你会看到类似下面的输出：
@@ -230,7 +230,7 @@ export DOCKERHUB_TOKEN="YOUR_DOCKERHUB_TOKEN_HERE"
 运行：
 
 ```bash
-./dtm apply -y
+./dtm apply -f config.yaml -y
 ```
 
 你会看到类似下面的输出：
@@ -329,7 +329,7 @@ kubectl port-forward -n default svc/helloworld 8080:80
 运行：
 
 ```bash
-./dtm delete -y
+./dtm delete -f config.yaml -y
 ```
 
 你会看到如下的输出：

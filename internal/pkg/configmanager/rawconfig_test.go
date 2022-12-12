@@ -1,60 +1,78 @@
 package configmanager
 
 import (
+	"fmt"
+	"strings"
+
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
 
 var _ = Describe("newRawConfigFromConfigText func", func() {
 	var testText []byte
-	When("text is valid", func() {
-		BeforeEach(func() {
-			testText = []byte(`---
-config:
+	const (
+		validConfigTextWithoutKey = `
   state:
     backend: local
     options:
-      stateFile: devstream.state
-vars:
-  tests: argocd
-apps:
+      stateFile: devstream.state`
+		validVarsTextWithoutKey = `
+  tests: argocd`
+		validAppsTextWithoutKey = `
 - name: service-a
   spec:
     language: python
-    framework: [[ var1 ]]/[[ var2 ]]_gg
-not_exist: 123`)
+    framework: [[ var1 ]]/[[ var2 ]]_gg`
+	)
+	When("text is valid", func() {
+		BeforeEach(func() {
+			testText = []byte(fmt.Sprintf(`---
+config:%s
+vars:%s
+apps:%s`, validConfigTextWithoutKey, validVarsTextWithoutKey, validAppsTextWithoutKey))
 		})
 		It("should return config map", func() {
 			rawMap, err := newRawConfigFromConfigBytes(testText)
 			Expect(err).ShouldNot(HaveOccurred())
-			Expect(string(rawMap.apps)).Should(Equal(`
-- name: service-a
-  spec:
-    language: python
-    framework: [[ var1 ]]/[[ var2 ]]_gg
-`))
-			Expect(string(rawMap.config)).Should(Equal(`
-  state:
-    backend: local
-    options:
-      stateFile: devstream.state
-`))
-			Expect(string(rawMap.vars)).Should(Equal(`
-  tests: argocd
-`))
+			removeLineFeed := func(s string) string {
+				return strings.ReplaceAll(s, "\n", "")
+			}
+			Expect(removeLineFeed(string(rawMap.apps))).Should(Equal(removeLineFeed(validAppsTextWithoutKey)))
+			Expect(removeLineFeed(string(rawMap.config))).Should(Equal(removeLineFeed(validConfigTextWithoutKey)))
+			Expect(removeLineFeed(string(rawMap.vars))).Should(Equal(removeLineFeed(validVarsTextWithoutKey)))
 		})
 	})
-	When("text is not valid", func() {
-		BeforeEach(func() {
-			testText = []byte(`
-not_valid: not_exist
-`)
+	When("text is invalid", func() {
+		When("invalid keys are used", func() {
+			BeforeEach(func() {
+				testText = []byte(fmt.Sprintf(`---
+config:
+%s
+vars:
+%s
+app:
+%s`, validConfigTextWithoutKey, validVarsTextWithoutKey, validAppsTextWithoutKey))
+			})
+			It("should return error", func() {
+				_, err := newRawConfigFromConfigBytes(testText)
+				Expect(err).Should(HaveOccurred())
+			})
 		})
-		It("should return error", func() {
-			_, err := newRawConfigFromConfigBytes(testText)
-			Expect(err).Error().Should(HaveOccurred())
+
+		When("there are no enough keys", func() {
+			BeforeEach(func() {
+				testText = []byte(fmt.Sprintf(`
+config:
+%s
+`, validConfigTextWithoutKey))
+			})
+			It("should return error", func() {
+				_, err := newRawConfigFromConfigBytes(testText)
+				Expect(err).Error().Should(HaveOccurred())
+			})
 		})
 	})
+
 })
 
 var _ = Describe("rawConfig struct", func() {

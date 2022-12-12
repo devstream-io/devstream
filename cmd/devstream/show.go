@@ -60,6 +60,9 @@ func init() {
 	showCMD.AddCommand(showConfigCMD)
 	showCMD.AddCommand(showStatusCMD)
 
+	addFlagConfigFile(showConfigCMD)
+	addFlagPluginDir(showConfigCMD)
+
 	showConfigCMD.Flags().StringVarP(&plugin, "plugin", "p", "", "specify name with the plugin")
 	showConfigCMD.Flags().StringVarP(&template, "template", "t", "", "print a template config, e.g. quickstart/gitops/...")
 	completion.FlagPluginsCompletion(showConfigCMD, "plugin")
@@ -67,7 +70,4 @@ func init() {
 	showStatusCMD.Flags().StringVarP(&plugin, "plugin", "p", "", "specify name with the plugin")
 	showStatusCMD.Flags().StringVarP(&instanceID, "id", "i", "", "specify id with the plugin instance")
 	showStatusCMD.Flags().BoolVarP(&statusAllFlag, "all", "a", false, "show all instances of all plugins status")
-	showStatusCMD.Flags().StringVarP(&pluginDir, pluginDirFlagName, "d", defaultPluginDir, "plugins directory")
-	showStatusCMD.Flags().StringVarP(&configFilePath, "config-file", "f", "config.yaml", "config file")
-	completion.FlagPluginsCompletion(showStatusCMD, "plugin")
 }

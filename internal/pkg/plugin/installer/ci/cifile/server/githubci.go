@@ -22,7 +22,7 @@ func (g *GitHubWorkflow) CIFilePath() string {
 	return filepath.Join(ciGitHubWorkConfigLocation, ciGithubTempName)
 }
 
-func (g *GitHubWorkflow) FilterCIFilesFunc() file.DirFIleFilterFunc {
+func (g *GitHubWorkflow) FilterCIFilesFunc() file.DirFileFilterFunc {
 	return func(filePath string, isDir bool) bool {
 		// not process dir
 		if isDir {

@@ -6,7 +6,6 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/devstream-io/devstream/internal/pkg/completion"
 	"github.com/devstream-io/devstream/internal/pkg/pluginengine"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
@@ -21,6 +20,7 @@ DevStream will generate and execute a new plan based on the config file and the 
 }
 
 func applyCMDFunc(cmd *cobra.Command, args []string) {
+	checkConfigFile()
 	log.Info("Apply started.")
 	if err := pluginengine.Apply(configFilePath, continueDirectly); err != nil {
 		log.Errorf("Apply failed => %s.", err)
@@ -33,10 +33,7 @@ func applyCMDFunc(cmd *cobra.Command, args []string) {
 }
 
 func init() {
-	applyCMD.Flags().StringVarP(&configFilePath, configFlagName, "f", "config.yaml", "config file")
-	applyCMD.Flags().StringVarP(&pluginDir, pluginDirFlagName, "d", defaultPluginDir, "plugins directory")
-	applyCMD.Flags().BoolVarP(&continueDirectly, "yes", "y", false, "apply directly without confirmation")
-
-	completion.FlagFilenameCompletion(applyCMD, configFlagName)
-	completion.FlagDirnameCompletion(applyCMD, pluginDirFlagName)
+	addFlagConfigFile(applyCMD)
+	addFlagPluginDir(applyCMD)
+	addFlagContinueDirectly(applyCMD)
 }

@@ -66,6 +66,7 @@ func (tools Tools) validate() (errs []error) {
 	for _, tool := range tools {
 		errs = append(errs, tool.validate()...)
 	}
+	errs = append(errs, tools.duplicatedCheck()...)
 	return
 }
 
@@ -116,6 +117,18 @@ func (t *Tool) GetPluginMD5FileNameWithOSAndArch(os, arch string) string {
 	return t.GetPluginNameWithOSAndArch(os, arch) + ".md5"
 }
 
+func (tools Tools) duplicatedCheck() (errs []error) {
+	list := make(map[string]struct{})
+	for _, t := range tools {
+		key := t.KeyWithNameAndInstanceID()
+		if _, ok := list[key]; ok {
+			errs = append(errs, fmt.Errorf("tool or app <%s> is duplicated", key))
+		}
+		list[key] = struct{}{}
+	}
+	return errs
+}
+
 // validateDependsOnConfig is used to validate all tools' DependsOn config
 func (tools Tools) validateDependsOnConfig() (retErrs []error) {
 	retErrs = make([]error, 0)
@@ -137,7 +150,7 @@ func (tools Tools) validateDependsOnConfig() (retErrs []error) {
 			}
 
 			if _, ok := toolKeySet[d]; !ok {
-				errs = append(errs, fmt.Errorf("t %s's DependsOn %s doesn't exist", tool.InstanceID, d))
+				errs = append(errs, fmt.Errorf("tool %s's DependsOn %s doesn't exist", tool.InstanceID, d))
 			}
 		}
 		return
@@ -155,5 +168,14 @@ func (tools Tools) updateToolDepends(dependTools Tools) {
 		for _, dependTool := range dependTools {
 			tool.DependsOn = append(tool.DependsOn, dependTool.KeyWithNameAndInstanceID())
 		}
+	}
+}
+
+func (tools Tools) renderInstanceIDtoOptions() {
+	for _, t := range tools {
+		if t.Options == nil {
+			t.Options = make(RawOptions)
+		}
+		t.Options["instanceID"] = t.InstanceID
 	}
 }

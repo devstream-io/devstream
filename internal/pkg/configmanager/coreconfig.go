@@ -9,6 +9,7 @@ type CoreConfig struct {
 type State struct {
 	Backend string             `yaml:"backend"`
 	Options StateConfigOptions `yaml:"options"`
+	BaseDir string             `yaml:"-"` // baseDir is the base directory of the config file
 }
 
 // StateConfigOptions is the struct for reading the options of the state backend.

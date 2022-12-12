@@ -14,8 +14,8 @@ var _ = Describe("GetFileMapByWalkDir func", func() {
 	var (
 		tempDir, exepectKey    string
 		testContent            []byte
-		mockFilterSuccessFunc  file.DirFIleFilterFunc
-		mockFilterFailedFunc   file.DirFIleFilterFunc
+		mockFilterSuccessFunc  file.DirFileFilterFunc
+		mockFilterFailedFunc   file.DirFileFilterFunc
 		mockGetFileNameFunc    file.DirFileNameFunc
 		mockProcessFailedFunc  file.DirFileContentFunc
 		mockProcessSuccessFunc file.DirFileContentFunc

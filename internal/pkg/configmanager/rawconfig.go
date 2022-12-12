@@ -46,9 +46,15 @@ func newRawConfigFromConfigBytes(fileText []byte) (*rawConfig, error) {
 		case "pipelineTemplates":
 			rawConfigData.pipelineTemplates = append(rawConfigData.pipelineTemplates, matchStr...)
 		case "config":
+			if len(rawConfigData.config) != 0 {
+				return nil, fmt.Errorf("<config> key can only be defined once")
+			}
 			rawConfigData.config = append(rawConfigData.config, matchStr...)
 		case "vars":
 			rawConfigData.vars = append(rawConfigData.vars, matchStr...)
+		default:
+			const errHint = "you may have filled in the wrong key or imported a yaml file that is not related to dtm"
+			return nil, fmt.Errorf("invalid config key <%s>, %s", string(configKey), errHint)
 		}
 	}
 	if err := rawConfigData.validate(); err != nil {
@@ -126,6 +132,9 @@ func (c *rawConfig) getTemplatePipelineMap() (map[string]string, error) {
 		rawPipeline, err := yaml.Marshal(t)
 		if err != nil {
 			return nil, err
+		}
+		if _, ok := pipelineTemplateMap[t.Name]; ok {
+			return nil, fmt.Errorf("pipelineTemplate <%s> is duplicated", t.Name)
 		}
 		pipelineTemplateMap[t.Name] = string(rawPipeline)
 	}

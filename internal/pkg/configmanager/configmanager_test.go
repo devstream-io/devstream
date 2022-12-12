@@ -225,6 +225,7 @@ pipelineTemplates:
 
 				// config/state
 				Expect(*cfg.Config.State).To(Equal(State{
+					BaseDir: tmpWorkDir,
 					Backend: "local",
 					Options: StateConfigOptions{
 						StateFile: "devstream.state",
