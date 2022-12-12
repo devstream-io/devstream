@@ -48,7 +48,7 @@ tools:
       imageRepo: "[[ dockerhubUsername ]]/[[ repoName ]]"
     sourceRepo:
       org: devstream-io
-      repo: dtm-scaffolding-golang
+      repo: dtm-repo-scaffolding-golang
       repoType: github
 - name: go-webapp-argocd-deploy
   plugin: argocdapp

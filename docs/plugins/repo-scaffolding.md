@@ -93,8 +93,8 @@ These repos are official scaffolding repo to use for `sourceRepo` config, You ca
 
 | language    | org           | repo                       |
 |-------------|---------------|----------------------------|
-| Golang      | devstream-io  | dtm-scaffolding-golang     |
-| Golang      | devstream-io  | dtm-scaffolding-golang-cli |
+| Golang      | devstream-io  | dtm-repo-scaffolding-golang     |
+| Golang      | devstream-io  | dtm-repo-scaffolding-golang-cli |
 | Java Spring | spring-guides | gs-spring-boot             |
 
 
@@ -113,7 +113,7 @@ tools:
       scmType: github
     sourceRepo:
       org: devstream-io
-      name: dtm-scaffolding-golang
+      name: dtm-repo-scaffolding-golang
       scmType: github
     vars:
       imageRepo: dtm-test/golang-repo
@@ -136,7 +136,7 @@ tools:
       scmType: github
     sourceRepo:
       org: devstream-io
-      name: dtm-scaffolding-golang-cli
+      name: dtm-repo-scaffolding-golang-cli
       scmType: github
 ```
 

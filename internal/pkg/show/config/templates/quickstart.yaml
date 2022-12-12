@@ -16,7 +16,7 @@ tools:
       repoType: github
     sourceRepo:
       org: devstream-io
-      repo: dtm-scaffolding-golang
+      repo: dtm-repo-scaffolding-golang
       repoType: github
     vars:
       imageRepo: YOUR_DOCKER_USERNAME/go-webapp-devstream-demo

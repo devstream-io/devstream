@@ -22,7 +22,7 @@ tools:
       scmType: github
     sourceRepo:
       org: devstream-io
-      name: dtm-scaffolding-flask
+      name: dtm-repo-scaffolding-python-flask
       scmType: github
 - name: github-actions
   instanceID: default

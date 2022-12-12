@@ -23,7 +23,7 @@ tools:
       scmType: github
     sourceRepo:
       org: devstream-io
-      name: dtm-scaffolding-gin
+      name: dtm-repo-scaffolding-golang-gin
       scmType: github
 - name: github-actions
   instanceID: default

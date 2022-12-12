@@ -9,3 +9,8 @@ The plugin (together with this repo of templates) can create a repo in GitHub an
 - a Java Spring app example
 - directory structure
 - Dockerfile, with multistage build
+
+## Where does this repo come from?
+
+`dtm-repo-scaffolding-java-springboot` is synced from https://github.com/devstream-io/devstream/blob/main/staging/dtm-repo-scaffolding-java-springboot. 
+Code changes are made in that location, merged into `devstream-io/devstream` and later synced here.

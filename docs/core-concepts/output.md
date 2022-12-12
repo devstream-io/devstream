@@ -60,7 +60,7 @@ tools:
       imageRepo: "ironcore864/golang-demo"
     sourceRepo:
       org: devstream-io
-      repo: dtm-scaffolding-golang
+      repo: dtm-repo-scaffolding-golang
       repoType: github
 - name: argocd
   instanceID: default
