@@ -52,33 +52,20 @@ tools:
   options:
     destinationRepo:
       owner: IronCore864
-      org: ""
-      repo: golang-demo
+      name: golang-demo
       branch: main
-      repoType: github
+      scmType: github
     vars:
       imageRepo: "ironcore864/golang-demo"
     sourceRepo:
       org: devstream-io
-      repo: dtm-repo-scaffolding-golang
-      repoType: github
-- name: argocd
-  instanceID: default
-  options:
-    repo:
-      name: argo
-      url: https://argoproj.github.io/argo-helm
-    chart:
-      chartPath: ""
-      chartName: argo/argo-cd
-      releaseName: argocd
-      namespace: argocd
-      wait: true
-      timeout: 10m
-      upgradeCRDs: true
+      name: dtm-scaffolding-golang
+      scmType: github
+- name: helm-installer
+  instanceID: argocd
 - name: argocdapp
   instanceID: default
-  dependsOn: [ "argocd.default", "repo-scaffolding.golang-github" ]
+  dependsOn: [ "helm-installer.argocd", "repo-scaffolding.golang-github" ]
   options:
     app:
       name: golang-demo

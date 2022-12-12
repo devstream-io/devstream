@@ -21,10 +21,10 @@
 | ci.type                | ci type, support gitlab, github, jenkins for now                                                                 |
 | projectRepo.owner      | destination repo owner                                                                                           |
 | projectRepo.org        | destination repo org                                                                                             |
-| projectRepo.repo       | destination repo name                                                                                            |
+| projectRepo.name       | destination repo name                                                                                            |
 | projectRepo.branch     | destination repo branch                                                                                          |
-| projectRepo.repoType  | destination repo type, support github/gitlab for now                                                             |
-| projectRepo.baseURL   | if you use self-build gitlab, you can set this field to gitlab address                                           |
+| projectRepo.scmType    | destination repo type, support github/gitlab for now                                                             |
+| projectRepo.baseURL    | if you use self-build gitlab, you can set this field to gitlab address                                           |
 | projectRepo.visibility | if you use gitlab, you can set this field for repo permission                                                    |
 
 **注意事项：**
@@ -47,9 +47,9 @@ tools:
     projectRepo:
       owner: devstream
       org: ""
-      repo: test-repo
+      name: test-repo
       branch: main
-      repoType: github
+      scmType: github
 ```
 
 这个配置将会把本地当前运行环境下的 workflows 目录放置于 GitHub 的 `.github/workflows` 目录。
@@ -67,9 +67,9 @@ tools:
     projectRepo:
       owner: root
       org: ""
-      repo: test-repo
+      name: test-repo
       branch: main
-      repoType: gitlab
+      scmType: gitlab
       baseURL: http://127.0.0.1:30000
 ```
 
@@ -87,9 +87,9 @@ tools:
     projectRepo:
       owner: root
       org: ""
-      repo: test-repo
+      name: test-repo
       branch: main
-      repoType: gitlab
+      scmType: gitlab
       baseURL: http://127.0.0.1:30000
 ```
 
@@ -116,9 +116,9 @@ jobs:
       projectRepo:
         owner: test-user
         org: ""
-        repo: test-repo
+        name: test-repo
         branch: main
-        repoType: github
+        scmType: github
 ```
 
 这个配置将会在用户的Github仓库`test-user/test-repo`下创建`.github/workflows/pr.yaml`文件。

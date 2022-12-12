@@ -101,7 +101,7 @@ func (t *Tool) GetPluginNameWithOSAndArch(os, arch string) string {
 }
 
 // GetPluginFileName creates the file name based on the tool's name and version
-// If the plugin {githubactions 0.0.1}, the generated name will be "githubactions_0.0.1.so"
+// If the plugin {github-actions 0.0.1}, the generated name will be "github-actions_0.0.1.so"
 func (t *Tool) GetPluginFileName() string {
 	return t.GetPluginName() + ".so"
 }

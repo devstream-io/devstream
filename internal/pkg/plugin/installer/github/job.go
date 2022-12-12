@@ -4,20 +4,20 @@ import "fmt"
 
 type RegistryType string
 
-// Build is the struct for githubactions job.
+// Build is the struct for github-actions job.
 type Build struct {
 	Enable  bool
 	Command string
 }
 
-// Test is the struct for githubactions job.
+// Test is the struct for github-actions job.
 type Test struct {
 	Enable   bool
 	Command  string
 	Coverage Coverage
 }
 
-// Docker is the struct for githubactions job.
+// Docker is the struct for github-actions job.
 type Docker struct {
 	Enable   bool
 	Registry Registry
@@ -30,18 +30,18 @@ type Registry struct {
 	Repository string
 }
 
-// Coverage is the struct for githubactions job.
+// Coverage is the struct for github-actions job.
 type Coverage struct {
 	Enable  bool
 	Profile string
 	Output  string
 }
 
-// Tag is the struct for githubactions job.
+// Tag is the struct for github-actions job.
 type Tag struct {
 }
 
-// Image is the struct for githubactions job.
+// Image is the struct for github-actions job.
 type Image struct {
 }
 

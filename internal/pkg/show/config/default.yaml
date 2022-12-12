@@ -15,10 +15,10 @@ tools:
   destinationRepo:
     owner: [[ githubUsername ]]
     org: ""
-    repo: [[ repo ]]
+    name: [[ repo ]]
     branch: main
-    repoType: github
+    scmType: github
   sourceRepo:
     org: devstream-io
-    repo: dtm-repo-scaffolding-golang
-    repoType: github
+    name: dtm-scaffolding-golang
+    scmType: github

@@ -235,7 +235,7 @@ var _ = Describe("RepoInfo struct", func() {
 			It("should return error", func() {
 				err := repoInfo.checkValid()
 				Expect(err).Should(HaveOccurred())
-				Expect(err.Error()).Should(Equal("git scmType only support gitlab and github"))
+				Expect(err.Error()).Should(ContainSubstring("git scmType only support gitlab and github"))
 			})
 		})
 

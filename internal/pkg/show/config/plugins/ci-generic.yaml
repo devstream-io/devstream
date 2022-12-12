@@ -13,7 +13,7 @@ tools:
       type: jenkins
     projectRepo:
       owner: YOUR_REPO_OWNER
-      repo: YOUR_REPO_NAME
+      name: YOUR_REPO_NAME
       branch: YOUR_REPO_BRANCH
       # support github/gitlab for now
-      repoType: github
+      scmType: github

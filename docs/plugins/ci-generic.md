@@ -21,18 +21,18 @@ For more information on the main config, the tool file and the var file of DevSt
 | ci.type                | ci type, support gitlab, github, jenkins for now                                                                 |
 | projectRepo.owner      | destination repo owner                                                                                           |
 | projectRepo.org        | destination repo org                                                                                             |
-| projectRepo.repo       | destination repo name                                                                                            |
+| projectRepo.name       | destination repo name                                                                                            |
 | projectRepo.branch     | destination repo branch                                                                                          |
-| projectRepo.repoType  | destination repo type, support github/gitlab for now                                                             |
-| projectRepo.baseURL   | if you use self-build gitlab, you can set this field to gitlab address                                           |
+| projectRepo.scmType    | destination repo type, support github/gitlab for now                                                             |
+| projectRepo.baseURL    | if you use self-build gitlab, you can set this field to gitlab address                                           |
 | projectRepo.visibility | if you use gitlab, you can set this field for repo permission                                                    |
 
 **Notes:**
 
 - `ci.localPath` and `ci.remoteURL` can't be empty at the same time.
 - if you set both `ci.localPath` and `ci.remoteURL`, `ci.localPath` will be used.
-- if your `projectRepo.repoType` is `gitlab`, the `ci.type` is not allowed to be `github`.
-- if your `projectRepo.repoType` is `github`, the `ci.type` is not allowed to be `gitlab`.
+- if your `projectRepo.scmType` is `gitlab`, the `ci.type` is not allowed to be `github`.
+- if your `projectRepo.scmType` is `github`, the `ci.type` is not allowed to be `gitlab`.
 
 ### Example
 
@@ -49,9 +49,9 @@ tools:
     projectRepo:
       owner: devstream
       org: ""
-      repo: test-repo
+      name: test-repo
       branch: main
-      repoType: github
+      scmType: github
 ```
 
 This config will put local workflows directory to GitHub repo's .github/workflows directory.
@@ -69,9 +69,9 @@ tools:
     projectRepo:
       owner: root
       org: ""
-      repo: test-repo
+      name: test-repo
       branch: main
-      repoType: gitlab
+      scmType: gitlab
       baseURL: http://127.0.0.1:30000
 ```
 

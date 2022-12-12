@@ -41,15 +41,15 @@ tools:
     destinationRepo:
       owner: [[ githubUsername ]]
       org: ""
-      repo: [[ repoName ]]
+      name: [[ repoName ]]
       branch: [[ defaultBranch ]]
-      repoType: github
+      scmType: github
     vars:
       imageRepo: "[[ dockerhubUsername ]]/[[ repoName ]]"
     sourceRepo:
       org: devstream-io
-      repo: dtm-repo-scaffolding-golang
-      repoType: github
+      name: dtm-scaffolding-golang
+      scmType: github
 - name: go-webapp-argocd-deploy
   plugin: argocdapp
   dependsOn: ["repo-scaffolding.golang-github"]
@@ -69,7 +69,7 @@ tools:
 In the example above:
 
 - We put `repo-scaffolding.golang-github` as dependency by using the `dependsOn` keyword.
-- We used `repo-scaffolding.golang-github`'s output as input for the `githubactions-golang` plugin.
+- We used `repo-scaffolding.golang-github`'s output as input for the `github-actions` plugin.
 
 Pay attention to the `${{ xxx }}` part in the example. `${{ TOOL_NAME.PLUGIN.outputs.var}}` is the syntax for using an output.
 

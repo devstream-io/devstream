@@ -53,16 +53,16 @@ func preConfigGitlab(options configmanager.RawOptions) error {
 func repoScaffoldShareLib(repoInfo *git.RepoInfo) error {
 	repoScaffoldOptions := configmanager.RawOptions{
 		"sourceRepo": map[string]interface{}{
-			"owner":    "devstream-io",
-			"repo":     "dtm-gitlab-share-library",
-			"repoType": "github",
+			"owner":   "devstream-io",
+			"name":    "gitlab-ci-library",
+			"scmType": "github",
 		},
 		"destinationRepo": map[string]interface{}{
-			"owner":    repoInfo.GetRepoOwner(),
-			"branch":   "master",
-			"repo":     "gitlab-share-library",
-			"repoType": "gitlab",
-			"baseURL":  repoInfo.BaseURL,
+			"owner":   repoInfo.GetRepoOwner(),
+			"branch":  "master",
+			"name":    "gitlab-ci-library",
+			"scmType": "gitlab",
+			"baseURL": repoInfo.BaseURL,
 		},
 	}
 	return reposcaffolding.InstallRepo(repoScaffoldOptions)

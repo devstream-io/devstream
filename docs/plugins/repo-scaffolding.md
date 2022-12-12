@@ -50,7 +50,7 @@ This configuration is used for the target repo, it includes the following config
 
 **Please note that all parameter is case-sensitive.**
 
-Currently, `owner`, `org`, and `repo` are mandatory, `branch` has the default value "main", `repoType` support  `gitlab` and `github` for now. 
+Currently, `owner`, `org`, and `repo` are mandatory, `branch` has the default value "main", `scmType` support  `gitlab` and `github` for now. 
 
 ### sourceRepo
 
@@ -60,7 +60,7 @@ This configuration is used for the source scaffolding repoI(only supports GitHub
 - `YOUR_TEMPLATE_REPO_NAME`
 - `YOUR_TEMPLATE_REPO_TYPE`
 
-All the parameters in the example above are mandatory for now, `repoType` only support `github` for now. 
+All the parameters in the example above are mandatory for now, `scmType` only support `github` for now. 
 
 ### vars
 
