@@ -60,7 +60,7 @@ func repoScaffoldShareLib(repoInfo *git.RepoInfo) error {
 		"destinationRepo": map[string]interface{}{
 			"owner":    repoInfo.GetRepoOwner(),
 			"branch":   "master",
-			"repo":     "gitlab-ci-library",
+			"repo":     "gitlab-share-library",
 			"repoType": "gitlab",
 			"baseURL":  repoInfo.BaseURL,
 		},
