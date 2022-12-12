@@ -23,15 +23,15 @@ type pipelineOption struct {
 var (
 	// github actions pipeline options
 	githubGeneral = pipelineOption{
-		defaultConfigLocation: "https://raw.githubusercontent.com/devstream-io/ci-template/main/github-actions/workflows/main.yml",
+		defaultConfigLocation: "https://raw.githubusercontent.com/devstream-io/dtm-pipeline-templates/main/github-actions/workflows/main.yml",
 		optionGeneratorFunc:   pipelineGeneralGenerator,
 	}
 	gitlabGeneral = pipelineOption{
-		defaultConfigLocation: "https://raw.githubusercontent.com/devstream-io/ci-template/main/gitlab-ci/.gitlab-ci.yml",
+		defaultConfigLocation: "https://raw.githubusercontent.com/devstream-io/dtm-pipeline-templates/main/gitlab-ci/.gitlab-ci.yml",
 		optionGeneratorFunc:   pipelineGeneralGenerator,
 	}
 	jenkinsGeneral = pipelineOption{
-		defaultConfigLocation: "https://raw.githubusercontent.com/devstream-io/ci-template/main/jenkins-pipeline/general/Jenkinsfile",
+		defaultConfigLocation: "https://raw.githubusercontent.com/devstream-io/dtm-pipeline-templates/main/jenkins-pipeline/general/Jenkinsfile",
 		optionGeneratorFunc:   jenkinsGenerator,
 	}
 	argocdApp = pipelineOption{

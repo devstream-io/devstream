@@ -32,3 +32,4 @@ ignore: |
   **/.github/**
   **/githubactions/**
   **/workflows/**
+  **/staging/**

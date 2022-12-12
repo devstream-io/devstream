@@ -11,17 +11,15 @@ setting.configImageRepo([
 ])
 [[ end -]]
 runPipeline([
-    'repo_type': "[[ .RepoType ]]"
+    'repo_type': "[[ .RepoType ]]",
     'name': "[[ .AppName ]]",
     [[ if .sonarqube -]]
     'sonarqube_enable': true,
     [[ end -]]
-    [[ if .general -]]
-    [[ if .general.language -]]
-    'language': [[ .general.language ]],
+    [[ if .language -]]
+    'language': "[[ .language.name ]]",
     [[ end -]]
-    [[ if .general.enableTest -]]
-    'test_enable': [[ .general.enableTest ]],
-    [[ end -]]
+    [[ if .test.enable -]]
+    'test_enable': [[ .test.enable ]],
     [[ end -]]
 ])
