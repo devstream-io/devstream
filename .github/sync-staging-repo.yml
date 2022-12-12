@@ -1,0 +1,20 @@
+devstream-io/dtm-github-action-example:
+  - source: staging/dtm-github-action-example/
+    dest: .
+    deleteOrphaned: true
+devstream-io/dtm-jenkins-pipeline-example:
+  - source: staging/dtm-jenkins-pipeline-example/
+    dest: .
+    deleteOrphaned: true
+devstream-io/dtm-repo-scaffolding-golang:
+  - source: staging/dtm-repo-scaffolding-golang/
+    dest: .
+    deleteOrphaned: true
+devstream-io/dtm-repo-scaffolding-golang-cli:
+  - source: staging/dtm-repo-scaffolding-golang-cli/
+    dest: .
+    deleteOrphaned: true
+devstream-io/dtm-repo-scaffolding-java-springboot:
+  - source: staging/dtm-repo-scaffolding-java-springboot/
+    dest: .
+    deleteOrphaned: true
