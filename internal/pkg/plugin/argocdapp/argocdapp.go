@@ -38,7 +38,7 @@ func pushArgocdConfigFiles(rawOptions configmanager.RawOptions) error {
 	}
 
 	// 3. get argocd configFiles from remote
-	const configLocation = downloader.ResourceLocation("https://github.com/devstream-io/ci-template.git//argocdapp/helm")
+	const configLocation = downloader.ResourceLocation("https://github.com/devstream-io/dtm-pipeline-templates.git//argocdapp/helm")
 	gitFiles, err := opts.getArgocdDefaultConfigFiles(configLocation)
 	if err != nil {
 		return err

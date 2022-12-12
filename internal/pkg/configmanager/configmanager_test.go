@@ -144,7 +144,7 @@ pipelineTemplates:
 						},
 					},
 					"branch":         "main",
-					"configLocation": "https://raw.githubusercontent.com/devstream-io/ci-template/main/github-actions/workflows/main.yml",
+					"configLocation": "https://raw.githubusercontent.com/devstream-io/dtm-pipeline-templates/main/github-actions/workflows/main.yml",
 				},
 				"scm": RawOptions{
 					"apiURL":  "gitlab.com/some/path/to/your/api",

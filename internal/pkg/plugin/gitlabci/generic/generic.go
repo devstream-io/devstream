@@ -54,7 +54,7 @@ func repoScaffoldShareLib(repoInfo *git.RepoInfo) error {
 	repoScaffoldOptions := configmanager.RawOptions{
 		"sourceRepo": map[string]interface{}{
 			"owner":    "devstream-io",
-			"repo":     "gitlab-ci-library",
+			"repo":     "dtm-gitlab-share-library",
 			"repoType": "github",
 		},
 		"destinationRepo": map[string]interface{}{

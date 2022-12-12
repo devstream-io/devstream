@@ -1,4 +1,4 @@
-# pipeline-templates
+# dtm-pipeline-templates
 
 This Repo is used to store devstream's best pipeline practice templates, If you like the template and want to use it, a fork is welcome.
 
@@ -16,5 +16,5 @@ It support pipeline templates below for now：
 
 ## Where does this repo come from?
 
-`pipeline-templates` is synced from https://github.com/devstream-io/devstream/blob/main/staging/pipeline-templates. 
+`dtm-pipeline-templates` is synced from https://github.com/devstream-io/devstream/blob/main/staging/dtm-pipeline-templates.
 Code changes are made in that location, merged into `devstream-io/devstream` and later synced here.

@@ -1,4 +1,4 @@
-# gitlab-share-library
+# dtm-gitlab-share-library
 
 This repo contains share library used by DevStream plugin "gitlab-ci" (thereafter: the plugin). It currently has the following functions：
 - send notification to dingtalk when pipeline result is success or failed.
@@ -13,5 +13,5 @@ This repo contains share library used by DevStream plugin "gitlab-ci" (thereafte
 
 ## Where does this repo come from?
 
-`gitlab-share-library` is synced from https://github.com/devstream-io/devstream/blob/main/staging/gitlab-share-library. 
+`dtm-gitlab-share-library` is synced from https://github.com/devstream-io/devstream/blob/main/staging/dtm-gitlab-share-library.
 Code changes are made in that location, merged into `devstream-io/devstream` and later synced here.

@@ -1,4 +1,4 @@
-# jenkins-share-library
+# dtm-jenkins-share-library
 
 This repo contains share library used by DevStream plugin "jenkins-pipeline" (thereafter: the plugin). It currently has the following functions：
 - send notification to dingtalk when pipeline result is success or failed.
@@ -52,5 +52,5 @@ runPipeline([
 
 ## Where does this repo come from?
 
-`jenkins-share-library` is synced from https://github.com/devstream-io/devstream/blob/main/staging/jenkins-share-library. 
+`dtm-jenkins-share-library` is synced from https://github.com/devstream-io/devstream/blob/main/staging/dtm-jenkins-share-library.
 Code changes are made in that location, merged into `devstream-io/devstream` and later synced here.
