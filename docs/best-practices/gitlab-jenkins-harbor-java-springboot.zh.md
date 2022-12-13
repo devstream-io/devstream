@@ -34,8 +34,7 @@
 
 - **工具链搭建**
     - [`gitlab-ce-docker`](../plugins/gitlab-ce-docker.zh.md)：本地部署 GitLab 环境；
-    - [`jenkins`](../plugins/helm-installer/helm-installer.zh.md)：本地部署 Jenkins 环境；
-    - [`harbor`](../plugins/helm-installer/helm-installer.zh.md)：本地部署 Harbor 环境。
+    - [`helm-installer`](../plugins/helm-installer/helm-installer.zh.md)：本地部署 Jenkins 和 Harbor 环境。
 - **工具链使用**
     - [`repo-scaffolding`](../plugins/repo-scaffolding.zh.md)：创建 Java Spring Boot 项目脚手架；
     - [`jenkins-pipeline`](../plugins/jenkins-pipeline.zh.md)：在 Jenkins 上创建 Pipeline，并打通 GitLab 与 Jenkins，实现 GitLab 上发生 Push/Merge 等事件时触发 Jenkins Pipeline 运行，并且让 Pipeline 状态能够回写到 GitLab。
