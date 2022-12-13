@@ -134,9 +134,14 @@ func (r *RepoInfo) checkNeedUpdateFromURL() bool {
 	return r.CloneURL != "" && r.Repo == ""
 }
 
+// IsGithubRepo return ture if repo is github
+func (r *RepoInfo) IsGithubRepo() bool {
+	return r.RepoType == "github" || strings.Contains(string(r.CloneURL), "github")
+}
+
 func (r *RepoInfo) updateFieldsFromURLField() error {
 	// 1. config basic info for different repo type
-	if isGithubRepo(r.RepoType, r.CloneURL) {
+	if r.IsGithubRepo() {
 		r.RepoType = "github"
 		r.CloneURL = r.CloneURL.addGithubURLScheme()
 	} else {
@@ -234,11 +239,6 @@ func (u ScmURL) addGithubURLScheme() ScmURL {
 		return ScmURL(fmt.Sprintf("https://%s", cloneURL))
 	}
 	return u
-}
-
-// isGithubRepo return ture if repo is github
-func isGithubRepo(scmType string, url ScmURL) bool {
-	return scmType == "github" || strings.Contains(string(url), "github")
 }
 
 func extractBaseURLfromRaw(repoURL string) (string, error) {

@@ -1,0 +1,27 @@
+tools:
+# name of the tool
+- name: jira-integ
+  # id of the tool instance
+  instanceID: default
+  # format: name.instanceID; If specified, dtm will make sure the dependency is applied first before handling this tool.
+  dependsOn: [ ]
+  # options for the plugin
+  options:
+    scm:
+      # the repo's owner
+      owner: YOUR_GITHUB_USERNAME
+      # the repo's org. If you set this property, then the new repo will be created under the org you're given, and the "owner" setting above will be ignored.
+      org: YOUR_ORGANIZATION_NAME
+      # the repo where you'd like to setup GitHub Actions
+      name: YOUR_REPO_NAME
+      # the repo type, support github only for now
+      scmType: YOUR_REPO_TYPE
+      # main branch of the repo (to which branch the plugin will submit the workflows)
+      branch: main
+    integOptions:
+      # "base url: https://id.atlassian.net"
+      baseUrl: https://JIRA_ID.atlassian.net
+      # "need real user email in cloud Jira"
+      userEmail: JIRA_USER_EMAIL
+      # "get it from project url, like 'HEAP' from https://merico.atlassian.net/jira/software/projects/HEAP/pages"
+      projectKey: JIRA_PROJECT_KEY

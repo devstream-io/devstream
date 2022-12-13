@@ -45,6 +45,9 @@ var (
 	//go:embed plugins/jira-github-integ.yaml
 	JiraGithubIntegDefaultConfig string
 
+	//go:embed plugins/jira-integ.yaml
+	JiraIntegDefaultConfig string
+
 	//go:embed plugins/repo-scaffolding.yaml
 	RepoScaffoldingDefaultConfig string
 
@@ -71,6 +74,7 @@ var pluginDefaultConfigs = map[string]string{
 	"helm-installer":      HelmInstallerDefaultConfig,
 	"jenkins-pipeline":    JenkinsPipelineDefaultConfig,
 	"jira-github-integ":   JiraGithubIntegDefaultConfig,
+	"jira-integ":          JiraIntegDefaultConfig,
 	"repo-scaffolding":    RepoScaffoldingDefaultConfig,
 	"trello-github-integ": TrelloGithubIntegDefaultConfig,
 	"trello":              TrelloDefaultConfig,

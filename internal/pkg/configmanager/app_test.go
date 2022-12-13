@@ -93,4 +93,57 @@ type: not_valid`}
 			})
 		})
 	})
+
+	Context("generateLifecycleTool method", func() {
+		When("lifeCycle config is empty", func() {
+			BeforeEach(func() {
+				a = &app{}
+			})
+			It("should return nil", func() {
+				tool, err := a.generateLifecycleTool()
+				Expect(err).Should(BeNil())
+				Expect(tool).Should(BeNil())
+			})
+		})
+		When("lifeCycle config is not valid", func() {
+			BeforeEach(func() {
+				a = &app{
+					LifecycleManagement: &lifecycleManagement{
+						Type: "not_exist",
+					},
+				}
+			})
+			It("should return nil", func() {
+				_, err := a.generateLifecycleTool()
+				Expect(err).ShouldNot(BeNil())
+				Expect(err.Error()).Should(Equal("configmanager[app] lifecycle management only support jira"))
+			})
+		})
+		When("lifecycle is valid", func() {
+			BeforeEach(func() {
+				a = &app{
+					LifecycleManagement: &lifecycleManagement{
+						Type: "jira-integ",
+						Options: RawOptions{
+							"test": "true",
+						},
+					},
+					Repo: &git.RepoInfo{
+						Repo: "test",
+					},
+				}
+			})
+			It("should return tool", func() {
+				tool, err := a.generateLifecycleTool()
+				Expect(err).Should(BeNil())
+				Expect(tool).ShouldNot(BeNil())
+				integOption, exist := tool.Options["integOptions"]
+				Expect(exist).Should(BeTrue())
+				Expect(integOption).Should(Equal(RawOptions{"test": "true"}))
+				scmOptions, exist := tool.Options["scm"]
+				Expect(exist).Should(BeTrue())
+				Expect(scmOptions).Should(Equal(RawOptions{"name": "test"}))
+			})
+		})
+	})
 })

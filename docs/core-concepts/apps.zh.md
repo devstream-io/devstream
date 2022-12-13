@@ -178,3 +178,28 @@ cd:
       valuefile: values.yaml # 项目中的 helm 变量文件名
       path: charts/go-hello-http # 项目中的 helm 配置路径
 ```
+
+### 应用生命周期管理
+
+devstream 目前支持配置 [jira](https://www.atlassian.com/software/jira) 来管理同步位于 `github` 仓库提交的 issue，具体配置如下：
+
+```yaml
+apps:
+- name: testApp #应用名称
+  spec: # 该配置项用于配置应用特定的信息
+    language: java #应用所使用的编程语言
+    framework: springboot #应用所使用的编程框架
+  repo: # 该配置项用于应用的代码仓库信息
+    url: https://github.com/testUser/testApp.git
+    branch: main
+  ci:
+  - type: github-actions
+  lifecycleManagement:
+    type: jira-integ
+    options:
+      baseUrl: jiraDomainName # jira 的基础域名
+      projectKey: TEST # jira 的项目 Key
+      userEmail: test@gmail.com # jira 的用户邮箱
+```
+
+以上配置即可以实现当向 `testApp` 的 `github` 仓库提交 isuue 时，会在 `jira` 中创建一条对应的条目，从而实现在对 issue 的管理。

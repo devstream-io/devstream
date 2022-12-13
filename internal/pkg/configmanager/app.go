@@ -16,13 +16,20 @@ type repoTemplate struct {
 	Vars          RawOptions `yaml:"vars"`
 }
 
+// application lifecycle management struct
+type lifecycleManagement struct {
+	Type    string     `yaml:"type"`
+	Options RawOptions `yaml:"options"`
+}
+
 type app struct {
-	Name         string        `yaml:"name" mapstructure:"name"`
-	Spec         *appSpec      `yaml:"spec" mapstructure:"spec"`
-	Repo         *git.RepoInfo `yaml:"repo" mapstructure:"repo"`
-	RepoTemplate *repoTemplate `yaml:"repoTemplate" mapstructure:"repoTemplate"`
-	CIRawConfigs []pipelineRaw `yaml:"ci" mapstructure:"ci"`
-	CDRawConfigs []pipelineRaw `yaml:"cd" mapstructure:"cd"`
+	Name                string               `yaml:"name" mapstructure:"name"`
+	Spec                *appSpec             `yaml:"spec" mapstructure:"spec"`
+	Repo                *git.RepoInfo        `yaml:"repo" mapstructure:"repo"`
+	RepoTemplate        *repoTemplate        `yaml:"repoTemplate" mapstructure:"repoTemplate"`
+	CIRawConfigs        []pipelineRaw        `yaml:"ci" mapstructure:"ci"`
+	CDRawConfigs        []pipelineRaw        `yaml:"cd" mapstructure:"cd"`
+	LifecycleManagement *lifecycleManagement `yaml:"lifecycleManagement" mapstructure:"lifecycleManagement"`
 }
 
 func (a *app) getTools(vars map[string]any, templateMap map[string]string) (Tools, error) {
@@ -42,6 +49,15 @@ func (a *app) getTools(vars map[string]any, templateMap map[string]string) (Tool
 	repoScaffoldingTool := a.generateRepoTemplateTool()
 	if repoScaffoldingTool != nil {
 		tools = append(tools, repoScaffoldingTool)
+	}
+
+	// 4. generate app lifecycle tools
+	lifecycleTool, err := a.generateLifecycleTool()
+	if err != nil {
+		return nil, err
+	}
+	if lifecycleTool != nil {
+		tools = append(tools, lifecycleTool)
 	}
 	log.Debugf("Have got %d tools from app %s.", len(tools), a.Name)
 	return tools, nil
@@ -116,4 +132,33 @@ func (a *app) newPipelineGlobalOptionFromApp() *pipelineGlobalOption {
 		AppSpec: a.Spec,
 		AppName: a.Name,
 	}
+}
+
+// generateLifecycleTools will generate lifecycleManagement tool for app
+func (a *app) generateLifecycleTool() (*Tool, error) {
+	lifecycleConfig := a.LifecycleManagement
+	// if not configured, return return nil
+	if lifecycleConfig == nil {
+		return nil, nil
+	}
+	if err := lifecycleConfig.checkValid(); err != nil {
+		return nil, err
+	}
+	newOptions := RawOptions{"integOptions": lifecycleConfig.Options}
+	if _, scmExist := lifecycleConfig.Options["scm"]; !scmExist {
+		newOptions["scm"] = RawOptions(a.Repo.Encode())
+	}
+
+	lifecycleTool := newTool(
+		lifecycleConfig.Type, a.Name, newOptions,
+	)
+	lifecycleTool.DependsOn = a.getRepoTemplateDependants()
+	return lifecycleTool, nil
+}
+
+func (l *lifecycleManagement) checkValid() error {
+	if l.Type != "jira-integ" {
+		return fmt.Errorf("configmanager[app] lifecycle management only support jira")
+	}
+	return nil
 }
