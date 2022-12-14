@@ -1,113 +1,65 @@
-# DevStream配置
+# 配置(Config)
 
-TODO: 需要跟英文文档同步。请暂且阅读英文文档。
+DevStream使用 YAML 文件来声明 DevOps 工具链的配置。
 
-DevStream使用YAML文件来描述你的DevOps工具链配置。
+## 配置内容
 
-## 主配置文件
+正如概述中所提到的，配置包含了以下几个部分：
 
-默认情况下，`dtm` 会使用当前目录下的`config.yaml`来作为主配置。
+- `config`
+- `vars`
+- `tools`
+- `apps`
+- `pipelineTemplates`
 
-主配置包含三个部分：
+其中，`config` 必选，`tools` 和 `apps` 至少有一个不为空，其余部分可选。
 
-- `state`: 指定DevStream状态存储位置
+## 组织方式
 
-### 主配置文件示例
+DevStream 支持两种组织配置的方式：
 
-`config.yaml` 的结构通常如下：
+- 单文件：你可以把这些部分写到一个 YAML 文件中
+- 目录：也可以把它们分开放到同一个文件夹下的多个 YAML 文件中，只要这些文件的名字以 `.yaml` 或 `.yml` 结尾，且内容拼接后包含了 DevStream 所需的各个部分即可。
 
-```yaml
-varFile: variables.yaml
-toolFile: tools.yaml
-state:
-  backend: local
-  options:
-    stateFile: devstream.state
-```
+然后在执行 `init` 等命令时，加上 `-f` 或 `--config-file` 参数指定配置文件/目录的路径。
 
-### varFile
+如：
 
-变量文件是一个用`key: value`格式来定义变量的YAML文件。
+- 单文件：`dtm init -f config.yaml`
+- 目录：`dtm init -f dirname`
 
-_At the moment, nested/composite values (for example, the value is a list/dictionary) are not supported yet._
+## 主配置
 
-`variables.yaml` 的结构通常如下:
+指 DevStream 本身的配置，即 `config` 部分，比如状态存储的方式等。详见 [这里](./state.zh.md)
 
-```yaml
-githubUsername: daniel-hutao
-repoName: dtm-test-go
-defaultBranch: main
-dockerhubUsername: exploitht
-```
+## 变量语法
 
-### toolFile
+DevStream 提供了变量语法。使用 `vars` 用来定义变量的值，而后可以在 `tools`、`apps`、`pipelineTemplates` 中使用，语法是 `[[ varName ]]`。
 
-插件文件是一个包含多种插件的Yaml文件。
-
-- 插件文件只包含一个`tools`
-- `tools`是一个定义多个插件的列表
-- 列表中的每个对象都定义了一个由DevStream插件管理的工具
-    - `name`: 是一个不带下划线的字符串，用来定义插件的名称
-    - `instanceID`: 插件id
-    - 你可以在一个插件文件中重复定义`name`，也可以在一个插件文件中重复定义`instanceID`，但是`name + instanceID`组合在一个插件文件中必须是唯一的
-- 每个插件都有一个可选字段，即“选项”，它又是一个包含该特定插件参数的字典。关于插件的参数，请参见本文档的“插件”部分
-- 每个插件都有一个可选字段，即“dependsOn”。继续阅读有关依赖项的详细信息。
-
-`tools.yaml` 的结构通常如下:
+示例：
 
 ```yaml
+vars:
+  githubUsername: daniel-hutao # 定义变量
+  repoName: dtm-test-go
+  defaultBranch: main
+
 tools:
 - name: repo-scaffolding
-  instanceID: golang-github
+  instanceID: default
   options:
     destinationRepo:
-      owner: [[ githubUsername ]]
+      owner: [[ githubUsername ]] # 使用变量
       name: [[ repoName ]]
       branch: [[ defaultBranch ]]
       scmType: github
-    vars:
-      ImageRepo: "[[ dockerhubUsername ]]/[[ repoName ]]"
-    sourceRepo:
-      org: devstream-io
-      name: dtm-scaffolding-golang
-      scmType: github
-- name: jira-github-integ
-  instanceID: default
-  dependsOn: [ "repo-scaffolding.golang-github" ]
-  options:
-    owner: [[ githubUsername ]]
-    repo: [[ repoName ]]
-    jiraBaseUrl: https://xxx.atlassian.net
-    jiraUserEmail: foo@bar.com
-    jiraProjectKey: zzz
-    branch: main
+    # <后面略...>
 ```
 
-### state
+## 工具的配置
 
-`state`用来指定DevStream状态存储的位置，v0.5.0以前，DevStream仅支持状态记录存放在本地。
+`tools` 部分声明了工具链中的工具，详见 [这里](./tools.zh.md)
 
-从v0.6.0开始，我们将支持`local`和`s3`两种存储。
+## 应用与流水线模板的配置
 
-更多状态存储细节请参见[DevStream状态存储](./state.zh.md)
-
-## 默认值
-
-默认，`dtm` 使用 `config.yaml` 来作为主配置文件
-
-### 指定主配置文件
-
-你可以通过`dtm -f` or `dtm --config-file`来指定主配置文件。例如：
-
-```shell
-dtm apply -f path/to/your/config.yaml
-dtm apply --config-file path/to/your/config.yaml
-```
-
-### varFile和toolFile默认没有值
-
-对于`varFile`和`toolFile`, 默认没有任何值。
-
-如果主配置中没有指定`varFile`，`dtm`将不会使用任何var文件，即使当前目录下已经有一个名为`variables.yaml`的文件。
-
-同样，如果主配置中没有指定`toolFile`，即使当前目录下有`tools.yaml`文件，`dtm`也会抛出错误。
+`apps` 部分声明了 应用 的配置，`pipelineTemplates` 声明了 流水线模板，详见 [这里](./apps.zh.md)

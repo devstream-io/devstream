@@ -23,12 +23,15 @@ repo_name: devstream
 repo_url: https://github.com/devstream-io/devstream
 site_description: The DevStream Docs
 markdown_extensions:
+- abbr
 - toc:
     permalink: true
 - pymdownx.snippets:
     base_path:
     - "docs"
     - "docs/../internal/pkg/show/config/plugins/"
+    auto_append:
+    - includes/glossary.md
 - pymdownx.highlight:
     anchor_linenums: true
     auto_title: true
@@ -102,7 +105,8 @@ nav:
 - install*.md
 - Core Concepts:
   - core-concepts/overview*.md
-  - core-concepts/tools-apps*.md
+  - core-concepts/tools*.md
+  - core-concepts/apps*.md
   - core-concepts/state*.md
   - core-concepts/config*.md
   - core-concepts/output*.md
