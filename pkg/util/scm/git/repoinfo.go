@@ -97,6 +97,11 @@ func (r *RepoInfo) Encode() map[string]any {
 	return m
 }
 
+// IsGithubRepo return ture if repo is github
+func (r *RepoInfo) IsGithubRepo() bool {
+	return r.RepoType == "github" || strings.Contains(string(r.CloneURL), "github")
+}
+
 func (r *RepoInfo) getBranchWithDefault() string {
 	branch := r.Branch
 	if branch != "" {
@@ -131,12 +136,12 @@ func (r *RepoInfo) buildScmURL() ScmURL {
 }
 
 func (r *RepoInfo) checkNeedUpdateFromURL() bool {
-	return r.CloneURL != "" && r.Repo == ""
+	return r.CloneURL != "" && (r.RepoType == "" || r.Repo == "")
 }
 
 func (r *RepoInfo) updateFieldsFromURLField() error {
 	// 1. config basic info for different repo type
-	if isGithubRepo(r.RepoType, r.CloneURL) {
+	if r.IsGithubRepo() {
 		r.RepoType = "github"
 		r.CloneURL = r.CloneURL.addGithubURLScheme()
 	} else {
@@ -158,7 +163,7 @@ func (r *RepoInfo) updateFieldsFromURLField() error {
 	if err != nil {
 		return err
 	}
-	if r.Org == "" && r.Repo == "" {
+	if r.Org == "" && r.Owner == "" {
 		r.Owner = repoOwner
 	}
 	r.Repo = repoName
@@ -234,11 +239,6 @@ func (u ScmURL) addGithubURLScheme() ScmURL {
 		return ScmURL(fmt.Sprintf("https://%s", cloneURL))
 	}
 	return u
-}
-
-// isGithubRepo return ture if repo is github
-func isGithubRepo(scmType string, url ScmURL) bool {
-	return scmType == "github" || strings.Contains(string(url), "github")
 }
 
 func extractBaseURLfromRaw(repoURL string) (string, error) {

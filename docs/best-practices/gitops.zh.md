@@ -119,65 +119,10 @@ Use "dtm [command] --help" for more information about a command.
 
 ## 4 配置文件
 
-创建一个名为 `config.yaml` 的文件，并把下面的内容粘贴进去：
+运行以下命令来生成 gitops 的模板配置文件 `config.yaml` 。
 
-```yaml
-config:
-  state:
-    backend: local
-    options:
-      stateFile: devstream.state
-vars:
-  githubUser: IronCore864
-  dockerUser: ironcore864
-  app: helloworld
-
-tools:
-- name: repo-scaffolding
-  instanceID: myapp
-  options:
-    destinationRepo:
-      owner: [[ githubUser ]]
-      name: [[ app ]]
-      branch: main
-      scmType: github
-    sourceRepo:
-      org: devstream-io
-      name: dtm-scaffolding-flask
-      scmType: github
-- name: github-actions
-  instanceID: flask
-  dependsOn: [ repo-scaffolding.myapp ]
-  options:
-    scm:
-      owner: [[ githubUser ]]
-      name:  [[ app ]]
-      scmType: github
-    pipeline:
-      configLocation: https://raw.githubusercontent.com/devstream-io/ci-template/main/github-actions/workflows/main.yml
-      language:
-        name: python
-        framework: flask
-      imageRepo:
-        user: [[ dockerUser ]]
-- name: helm-installer
-  instanceID: argocd
-- name: argocdapp
-  instanceID: default
-  dependsOn: [ "helm-installer.argocd", "github-actions.flask" ]
-  options:
-    app:
-      name: [[ app ]]
-      namespace: argocd
-    destination:
-      server: https://kubernetes.default.svc
-      namespace: default
-    source:
-      valuefile: values.yaml
-      path: helm/[[ app ]]
-      repoURL: ${{repo-scaffolding.myapp.outputs.repoURL}}
-    imageRepo:
-      user: [[ dockerUser ]]
+```shell
+./dtm show config -t gitops > config.yaml
 ```
 
 按需修改 `config.yaml` 文件中的 `vars` 部分。记得修改 `githubUser` 和 `dockerUser` 的值为你自己的用户名。
