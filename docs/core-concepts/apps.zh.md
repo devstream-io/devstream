@@ -259,10 +259,10 @@ cd:
 - type: argocdapp
   options:
     app:
-      name: hello # argocd 引用名称
+      name: hello # argocd 应用名称
       namespace: argocd # argocd 的命名空间
     destination:
-      server: https://kubernetes.default.svc # 部署的 kubernetes 服务地址
+      server: https://kubernetes.default.svc # 部署的 Kubernetes 服务地址
       namespace: default # 应用要部署的命名空间
     source:
       valuefile: values.yaml # 项目中的 helm 变量文件名

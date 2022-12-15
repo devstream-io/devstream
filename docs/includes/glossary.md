@@ -10,9 +10,9 @@
 *[App]: A type of DevStream config, corresponding to a real-world application, for which different tools such as CI/CD can be easily configured.
 *[Apps]: A type of DevStream config, corresponding to a real-world application, for which different tools such as CI/CD can be easily configured.
 *[应用]: DevStream 配置的一种类型，对应现实中的应用程序，使用应用这种类型的配置可以简化例如 CI/CD 等工具的配置。
-*[PipelineTemplate]: TODO(introduce of pipelineTemplate)
-*[PipelineTemplates]: TODO(introduce of pipelineTemplate)
-*[流水线模板]: TODO(流水线模板的介绍)
+*[PipelineTemplate]: A CI/CD pipeline definition which can be refered to by App.
+*[PipelineTemplates]: A CI/CD pipeline definition which can be refered to by App.
+*[流水线模板]: CI/CD 流水线的定义，可被应用所引用。
 *[Output]: Each Tool can have some Output (in the format of a key/value map), so that other tools can refer to it as their input.
 *[输出]: 每个工具(Tool)可能会有些输出，这是一个 map，可以在配置其他工具时引用
 *[State]: Records the current status of your DevOps platform defined and created by DevStream.
