@@ -45,7 +45,7 @@ func (c *Client) DownloadAsset(tagName, assetName, fileName string) error {
 	}
 
 	// 3. get download url
-	// format: https://github.com/merico-dev/dtm-repo-scaffolding-golang/releases/download/v0.0.1/dtm-repo-scaffolding-golang-v0.0.1.tar.gz
+	// format: https://github.com/merico-dev/dtm-repo-scaffolding-golang-gin/releases/download/v0.0.1/dtm-repo-scaffolding-golang-gin-v0.0.1.tar.gz
 	var downloadUrl string
 	for _, a := range assets {
 		if a.GetName() == assetName {

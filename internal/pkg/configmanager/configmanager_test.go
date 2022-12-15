@@ -41,8 +41,8 @@ apps:
     scmType: github
     owner: devstream-io
     org: devstream-io # choose between owner and org
-    name: dtm-repo-scaffolding-golang
-    url: github.com/devstream-io/dtm-repo-scaffolding-golang # optional，if url is specified，we can infer scm/owner/org/name from url
+    name: dtm-repo-scaffolding-golang-gin
+    url: github.com/devstream-io/dtm-repo-scaffolding-golang-gin # optional，if url is specified，we can infer scm/owner/org/name from url
   ci:
   - type: template
     templateName: ci-pipeline-for-gh-actions
@@ -199,9 +199,9 @@ pipelineTemplates:
 				},
 				"sourceRepo": RawOptions{
 					"scmType": "github",
-					"url":     git.ScmURL("github.com/devstream-io/dtm-repo-scaffolding-golang"),
+					"url":     git.ScmURL("github.com/devstream-io/dtm-repo-scaffolding-golang-gin"),
 					"owner":   "devstream-io",
-					"name":    "dtm-repo-scaffolding-golang",
+					"name":    "dtm-repo-scaffolding-golang-gin",
 					"org":     "devstream-io",
 				},
 				"vars": RawOptions{},
