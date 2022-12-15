@@ -119,65 +119,10 @@ Use "dtm [command] --help" for more information about a command.
 
 ## 4 Config File
 
-Create a file named `config.yaml` and paste the following content into it:
+Run command below to get a valid `config.yaml` file:
 
-```yaml
-config:
-  state:
-    backend: local
-    options:
-      stateFile: devstream.state
-vars:
-  githubUser: IronCore864
-  dockerUser: ironcore864
-  app: helloworld
-
-tools:
-- name: repo-scaffolding
-  instanceID: myapp
-  options:
-    destinationRepo:
-      owner: [[ githubUser ]]
-      name: [[ app ]]
-      branch: main
-      scmType: github
-    sourceRepo:
-      org: devstream-io
-      name: dtm-scaffolding-flask
-      scmType: github
-- name: github-actions
-  instanceID: flask
-  dependsOn: [ repo-scaffolding.myapp ]
-  options:
-    scm:
-      owner: [[ githubUser ]]
-      name:  [[ app ]]
-      scmType: github
-    pipeline:
-      configLocation: https://raw.githubusercontent.com/devstream-io/ci-template/main/github-actions/workflows/main.yml
-      language:
-        name: python
-        framework: flask
-      imageRepo:
-        user: [[ dockerUser ]]
-- name: helm-installer
-  instanceID: argocd
-- name: argocdapp
-  instanceID: default
-  dependsOn: [ "helm-installer.argocd", "github-actions.flask" ]
-  options:
-    app:
-      name: [[ app ]]
-      namespace: argocd
-    destination:
-      server: https://kubernetes.default.svc
-      namespace: default
-    source:
-      valuefile: values.yaml
-      path: helm/[[ app ]]
-      repoURL: ${{repo-scaffolding.myapp.outputs.repoURL}}
-    imageRepo:
-      user: [[ dockerUser ]]
+```shell
+./dtm show config -t gitops > config.yaml
 ```
 
 Then modify the `vars` section in the `config.yaml` file accordingly. Please update the values for `githubUser` and `dockerUser` to your real users.

@@ -19,8 +19,8 @@ func validate(options configmanager.RawOptions) (configmanager.RawOptions, error
 		return nil, err
 	}
 	// check repo is valid
-	if opts.ProjectRepo.RepoType != "github" {
-		return nil, fmt.Errorf("github action don't support other repo")
+	if !opts.ProjectRepo.IsGithubRepo() {
+		return nil, fmt.Errorf("github action only support other repo")
 	}
 	return options, nil
 }
