@@ -33,9 +33,9 @@ Configurations in the main config contains multiple sections:
 
 - `config`: basic configuration of DevStream, at the moment mainly state-related settings. Read more [here](./state.md).
 - `vars`: variable definitions. Key/value pairs, which can be referred to in the tools/apps/pipelineTemplates sections.
-- `tools`: a list of DevStream _Tools_, each containing its name, instanceID (unique identifier), and options. Read more [here](./tools-apps.md).
-- `apps`: a list of _Apps_, another DevStream concept, each corresponding to a microservice. Read more [here](./tools-apps.md).
-- `pipelineTemplates`: a list of templates which can be referred to by DevStream _Apps_. Read more [here](./tools-apps.md).
+- `tools`: a list of DevStream _Tools_, each containing its name, instanceID (unique identifier), and options. Read more [here](./tools.md).
+- `apps`: a list of _Apps_, another DevStream concept, each corresponding to a microservice. Read more [here](./apps.md).
+- `pipelineTemplates`: a list of templates which can be referred to by DevStream _Apps_. Read more [here](./apps.md).
 
 ---
 

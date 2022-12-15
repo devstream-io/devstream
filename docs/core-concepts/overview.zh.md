@@ -1,63 +1,50 @@
 # 概览
 
-您需要熟知以下概念：Git 核心概念，Docker, Kubernetes, 持续集成，持续交付以及 GitOps概念. 这些都是 DevStream 的核心概念。
+## 1 构架
 
-## DevStream的构架
-
-以下构架图展示了 DevStream 大致的流程：
 ![](../images/architecture-overview.png)
 
-## 工作流程
+上面的图展示了数据如何在 dtm 的各个模块中流动。
 
-![config state resource-status workflow](../images/config_state_resource.png)
+本质上：
 
-## 配置，工具，状态和资源状态
+- DevStream 的核心(插件引擎)就像一个状态机，它根据配置和状态计算出需要执行的操作。
+- 接着 DevStream 核心调用“插件”来完成特定 DevOps 工具或它们之间的集成的 CRUD 操作。
 
-构架文档阐述了 DevStream 的基本工作原理。请确保你在阅读文档其他部分之前完成此部分的阅读。
+---
 
-### 1. 配置(Config)
+## 2 插件(Plugin)
 
-DevStream 在配置文件中定义了 DevOps 工具链。
+插件 是 DevStream 的核心，由 dtm 负责下载、管理和调用。
 
-有三种配置文件：
+每个插件拥有一定的功能，涵盖了 DevOps 工具的安装、配置和集成，用户通过自由组合插件来构建自己的 DevOps 工具链。
 
-- 主配置文件(core config)
-- 变量配置文件(variable config)
-- 工具配置文件(tool config)
+开发者可以通过编写插件来扩展 DevStream，详见 [创建插件](../development/dev/creating-a-plugin.zh.md)。
 
-主配置文件包含了以下内容：
+---
 
-- `varFile`: 变量配置文件的路径
-- `toolFile`: 工具文件的路径
-- `pluginDir`: 插件目录的路径，默认为 `~/.devstream/plugins`, 或使用 `-d` 参数指定一个目录
-- `state`: 与 State 关联的设置。更多信息，请看[这里](./state.zh.md)
+## 3 配置(Config)
 
-变量配置文件是一个包含了键值对的YAML文件，可以用于工具配置文件。
+DevStream 在配置文件中定义了 DevOps 平台的期望状态（如插件列表、DevStream 自身的配置等）。
 
-工具配置文件是一个名为 _Tools_ 的列表，其中每一个 _Tool_ 都包含了名称，实例ID（唯一标识）以及工具的选项(options)。
+配置文件可以是单个 YAML 文件，也可以是同个目录下的多个 YAML 文件，拥有以下几个部分：
 
-_注意: 你可以将多个YAML文件合并为同一个并用三个短横线(`---`)区分。更多信息见 [这里](https://stackoverflow.com/questions/50788277/why-3-dashes-hyphen-in-yaml-file) 和 [这里](https://www.javatpoint.com/yaml-structure)_。
+- `config`: DevStream 的基本配置，目前主要是与 状态 相关的设置。更多信息请参考 [这里](./state.zh.md)。
+- `vars`: 变量的定义。键值对的形式，可以在 tools/apps/pipelineTemplates 部分中引用。
+- `tools`: DevStream 工具 的列表，每个工具包含插件名称、实例 ID(唯一标识符)和 Options。更多信息请参考 [这里](./tools.zh.md)。
+- `apps`: DevStream 应用 的列表，每个应用对应一个微服务。更多信息请参考 [这里](./apps.zh.md)。
+- `pipelineTemplates`: 一个流水线模板的列表，可以被 DevStream 应用 引用。更多信息请参考 [这里](./apps.zh.md)。
 
-### 2. 工具(Tool)
+---
 
-- 每个 _Tool_ 对应一个插件, 即可用于安装和配置，也可用于整合 DevOps 的工具。
-- 每个 _Tool_ 有名称, (实例ID)InstanceID 和选项(Options), 定义在[这里](https://github.com/devstream-io/devstream/blob/main/internal/pkg/configmanager/toolconfig.go#L13)。
-- 每个 _Tool_ 可以使用`dependsOn` 字段指定其依赖项。
+## 4 状态(State)
 
- `dependsOn` 是一个字符串数组, 其中每一个元素都是一个依赖。 每个依赖项都以 "TOOL_NAME.INSTANCE_ID" 为格式命名。
-例子见[这里](https://github.com/devstream-io/devstream/blob/main/examples/quickstart.yaml#L22)。
+状态 记录了 DevStream 定义和创建的 DevOps 工具链和平台的当前状态。
 
-### 3. 状态(State)
+状态 包含了所有组件的配置和它们对应的状态，这样 DevStream 核心模块就可以依靠它计算出，达到配置中定义的状态所需要的操作。
 
-_State_ 记录了当前 DevOps 工具链的状态，包括了每个工具的配置以及当下状态。
+---
 
-- _State_ 实际上是一个记录了状态的 Map, 定义在[这里](https://github.com/devstream-io/devstream/blob/main/internal/pkg/statemanager/state.go#L24)。
-- Map 中的每一个状态都是一个包含了名称、插件、选项和资源的结构体，定义在[这里](https://github.com/devstream-io/devstream/blob/main/internal/pkg/statemanager/state.go#L16)。
+## 5 工作流
 
-### 4. 资源状态(ResourceStatus)
-
-- 我们称插件创建了 _资源(Resource)_，而插件的 `Read()` 接口返回了此资源的描述，该描述也作为资源的状态（State）的一部分保存。
-
-配置-状态-资源状态 工作流：
-
-![config state resource-status workflow](../images/config_state_resource.png)
+![配置-状态-资源状态 工作流](../images/config_state_resource.png)

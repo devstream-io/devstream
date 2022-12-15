@@ -2,9 +2,9 @@
 
 ## Introduction
 
-In DevStream's configuration file, we can use _Output_ from one _Tool_ as the options values for another _Tool_.
+In DevStream's configuration file, we can use Output from one Tool as the options values for another Tool.
 
-For example, if _Tool_ A has an output, we can use its value as _Tool_ B's options.
+For example, if Tool A has an output, we can use its value as Tool B's options.
 
 Notes:
 
@@ -31,8 +31,8 @@ tools:
     kanbanBoardName: golang-demo-board
 ```
 
-- TOOL_NAME is "trello"
-- TOOL_INSTANCE_ID is "default"
+- `TOOL_NAME` is "trello"
+- `TOOL_INSTANCE_ID` is "default"
 
 If the "trello" tool/plugin has an output key name "boardId", then we can use its value by the following syntax:
 
@@ -44,11 +44,10 @@ ${{ trello.default.outputs.boardId }}
 
 Config:
 
-```yaml
----
+```yaml hl_lines="2 3 20 31"
 tools:
 - name: repo-scaffolding
-  instanceID: default
+  instanceID: golang-github
   options:
     destinationRepo:
       owner: IronCore864
@@ -80,5 +79,6 @@ tools:
 ```
 
 In this example:
-- The "default" instance of tool `argocdapp` depends on the "default" instance of tool `repo-scaffolding` 
-- The "default" instance of tool `argocdapp` has an user option "options.source.repoURL", which uses the "default" instance of tool `repo-scaffolding`'s output "repoURL" (`${{ repo-scaffolding.golang-github.outputs.repoURL }}`)
+
+- The "default" instance of tool `argocdapp` depends on the "golang-github" instance of tool `repo-scaffolding` 
+- The "default" instance of tool `argocdapp` has a user option "options.source.repoURL", which uses the "golang-github" instance of tool `repo-scaffolding`'s output "repoURL" (`${{ repo-scaffolding.golang-github.outputs.repoURL }}`)
