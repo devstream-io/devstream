@@ -31,7 +31,7 @@ type RepoInfo struct {
 	// used for gitlab
 	Namespace     string `mapstructure:"nameSpace,omitempty"`
 	Visibility    string `mapstructure:"visibility,omitempty"`
-	BaseURL       string `mapstructure:"baseURL,omitempty"`
+	BaseURL       string `yaml:"baseURL" mapstructure:"baseURL,omitempty"`
 	SSHPrivateKey string `yaml:"sshPrivateKey" mapstructure:"sshPrivateKey,omitempty"`
 
 	// used for GitHub

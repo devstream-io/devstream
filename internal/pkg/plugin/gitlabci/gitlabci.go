@@ -1,4 +1,4 @@
-package generic
+package gitlabci
 
 import (
 	_ "embed"
@@ -7,9 +7,7 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/helminstaller"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci"
-	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/cifile/server"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/step"
-	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/reposcaffolding"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
@@ -19,8 +17,6 @@ import (
 
 //go:embed tpl/helmValue.tpl.yaml
 var helmValueTpl string
-
-var ciType = server.CIGitLabType
 
 func preConfigGitlab(options configmanager.RawOptions) error {
 	opts, err := ci.NewCIOptions(options)
@@ -42,32 +38,10 @@ func preConfigGitlab(options configmanager.RawOptions) error {
 			return err
 		}
 	}
-
-	// push shareLib to gitlab
-	if err := repoScaffoldShareLib(opts.ProjectRepo); err != nil {
-		return err
-	}
 	return createGitlabRunnerByHelm(opts.ProjectRepo)
 }
 
-func repoScaffoldShareLib(repoInfo *git.RepoInfo) error {
-	repoScaffoldOptions := configmanager.RawOptions{
-		"sourceRepo": map[string]interface{}{
-			"owner":   "devstream-io",
-			"name":    "gitlab-ci-library",
-			"scmType": "github",
-		},
-		"destinationRepo": map[string]interface{}{
-			"owner":   repoInfo.GetRepoOwner(),
-			"branch":  "master",
-			"name":    "gitlab-ci-library",
-			"scmType": "gitlab",
-			"baseURL": repoInfo.BaseURL,
-		},
-	}
-	return reposcaffolding.InstallRepo(repoScaffoldOptions)
-}
-
+// createGitlabRunnerByHelm will install gitlab runner if it's not exist
 func createGitlabRunnerByHelm(repoInfo *git.RepoInfo) error {
 	gitlabClient, err := gitlab.NewClient(repoInfo)
 	if err != nil {
@@ -91,7 +65,7 @@ func createGitlabRunnerByHelm(repoInfo *git.RepoInfo) error {
 	}
 	// 2. else create runner for this project
 	valuesYaml, err := template.New().FromContent(helmValueTpl).SetDefaultRender(
-		"gitlab-runner tpl", map[string]string{
+		"gitlab-runner tpl", map[string]any{
 			"GitlabURL":     repoInfo.BaseURL,
 			"RegisterToken": runnerToken,
 		},

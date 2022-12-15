@@ -12,12 +12,10 @@ _该插件运行依赖以下环境变量：_
 
 - [创建个人访问 token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
 
-_如果你需要推送镜像到仓库，请配置以下环境变量：_
-
-- IMAGE_REPO_PASSWORD: 该变量表示登陆仓库的密码
-
 下面的内容是一个示例配置文件用于创建 Github Workflows：
 
 ``` yaml
 --8<-- "github-actions.yaml"
 ```
+
+该插件的 `pipeline` 选项具体配置可查询[pipline配置项](pipeline.zh.md)。

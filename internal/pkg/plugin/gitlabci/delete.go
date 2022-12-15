@@ -1,18 +1,18 @@
-package golang
+package gitlabci
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
-	"github.com/devstream-io/devstream/internal/pkg/plugin/gitlabci"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/cifile"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/cifile/server"
 )
 
 func Delete(options configmanager.RawOptions) (bool, error) {
 	operator := &installer.Operator{
 		PreExecuteOperations: installer.PreExecuteOperations{
-			cifile.SetDefaultConfig(gitlabci.DefaultCIOptions),
-			setCIContent,
-			cifile.Validate,
+			ci.SetDefault(server.CIGitLabType),
+			validate,
 		},
 		ExecuteOperations: installer.ExecuteOperations{
 			cifile.DeleteCIFiles,

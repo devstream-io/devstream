@@ -1,4 +1,4 @@
-package generic
+package gitlabci
 
 import (
 	"fmt"

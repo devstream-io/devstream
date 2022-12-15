@@ -1,6 +1,8 @@
-# gitlabci-golang Plugin
+# gitlab-ci Plugin
 
-This plugin creates Golang GitLab CI workflow.
+This plugin creates GitLab CI workflow.
+
+It downloads a template of your choice, render it with provided parameters, and creates a GitLab CI file to your repo.
 
 ## Usage
 
@@ -19,7 +21,9 @@ For more information on the main config, the tool file and the var file of DevSt
 Plugin config example:
 
 ```yaml
---8<-- "gitlabci-golang.yaml"
+--8<-- "gitlab-ci.yaml"
 ```
+
+Or, run `dtm show config --plugin=gitlab-ci` to get the default config.
 
 All parameters are mandatory.
