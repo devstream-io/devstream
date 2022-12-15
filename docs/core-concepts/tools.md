@@ -1,6 +1,6 @@
-# Tools and Apps
+# Tools
 
-## 1 tools
+## 1 Tools
 
 DevStream treats everything as a concept named _Tool_:
 
@@ -14,22 +14,46 @@ Each dependency is named in the format of "TOOL_NAME.INSTANCE_ID".
 
 ---
 
-## 2 apps
+## 2 Configuration
 
-Sometimes, you have to define multiple _Tools_ for a single app/microservice. For example, for a web application, you might need to specify the following tools:
+Define your needed `tools` in DevStream config:
 
-- repository scaffolding
-- continuous integration
-- continuous deployment
+- `tools` is a list of `tool`.
+- Each element in the list defines a DevOps tool (managed by a DevStream plugin), with the following key/values:.
+    - `name`: a string without underscore, corresponds to the name of the plugin.
+    - `instanceID`: unique instance ID of a tool.
+    - Multiple tools defined with the same `name` or `instanceID` are allowd, but `name + instanceID` must be unique.
+- Each plugin has an optional setting `options`, and the options for each plugin is different. See the [list of plugins](../plugins/plugins-list.md) for more details.
+- Each plugin has an optional setting `dependsOn` which defines the dependencies of this plugin. E.g., if A depends on B and C, then dtm will only execute A after B and C.
 
-If you have multiple apps to manage, you'd have to create many _Tools_ in the config, which can be tedious and hard to read.
+An example of `tools` config:
 
-To manage multiple apps/microservices more easily, DevStream has another level of abstraction called _Apps_. You can define everything within one app (like the aforementioned repository scaffolding, CI, CD, etc.) with only a few config lines, making the config much easier to read and manage.
+```yaml
+tools:
+- name: repo-scaffolding
+  instanceID: golang-github
+  options:
+    destinationRepo:
+      owner: [[ githubUsername ]]
+      name: [[ repoName ]]
+      branch: [[ defaultBranch ]]
+      scmType: github
+    vars:
+      ImageRepo: "[[ dockerhubUsername ]]/[[ repoName ]]"
+    sourceRepo:
+      org: devstream-io
+      name: dtm-scaffolding-golang
+      scmType: github
+- name: jira-github-integ
+  instanceID: default
+  dependsOn: [ "repo-scaffolding.golang-github" ]
+  options:
+    owner: [[ githubUsername ]]
+    repo: [[ repoName ]]
+    jiraBaseUrl: https://xxx.atlassian.net
+    jiraUserEmail: foo@bar.com
+    jiraProjectKey: zzz
+    branch: main
+```
 
-Under the hood, DevStream would still convert your _Apps_ configuration into _Tools_ definition, but you do not have to worry about it.
-
----
-
-## 3 pipelineTemplates
-
-A DevStream _App_ can refer to one or multiple elements of pipelineTemplates, which are mainly CI/CD definitions. In this way, the _Apps_ definition can be shorter, sharing common CI/CD pipelines between multiple microservices.
+`[[ githubUsername ]]`, `[[ repoName ]]` (and other variables inside the double brackets) are global variables which are defined in the `vars` section of the config.
