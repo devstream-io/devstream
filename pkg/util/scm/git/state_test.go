@@ -40,11 +40,3 @@ var _ = Describe("CalculateGitHubBlobSHA func", func() {
 		Expect(git.CalculateGitHubBlobSHA([]byte(content))).Should(Equal("d9c012c6ecfcc8ce04a6538cc43490b1d5401241"))
 	})
 })
-
-var _ = Describe("CalculateLocalFileSHA func", func() {
-	var content string
-	It("should return as expect", func() {
-		content = "test Content"
-		Expect(git.CalculateLocalFileSHA([]byte(content))).Should(Equal("f73d59b513c429a33da4f7efe70c7af3"))
-	})
-})

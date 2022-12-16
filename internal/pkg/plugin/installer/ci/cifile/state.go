@@ -5,7 +5,6 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm"
-	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
 func GetCIFileStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
@@ -26,29 +25,10 @@ func GetCIFileStatus(options configmanager.RawOptions) (statemanager.ResourceSta
 		return nil, err
 	}
 
-	statusMap := make(statemanager.ResourceStatus)
-	for scmPath, content := range gitMap {
-		localFileSHA := git.CalculateLocalFileSHA(content)
-		// get remote file status
-		statusMap[scmPath] = map[string]interface{}{
-			"localSHA": localFileSHA,
-			"scm":      getSCMFileStatus(client, scmPath),
-		}
-	}
-	return statusMap, nil
-}
-
-func getSCMFileStatus(client scm.ClientOperation, scmPath string) (scmFileStatus []map[string]string) {
-	gitFileInfos, err := client.GetPathInfo(scmPath)
+	gitFileStatus, err := scm.GetGitFileStats(client, gitMap)
 	if err != nil {
-		log.Debugf("ci status get location info failed: %+v", err)
-		return scmFileStatus
+		return nil, err
 	}
-	for _, fileStatus := range gitFileInfos {
-		scmFileStatus = append(scmFileStatus, map[string]string{
-			"scmSHA":    fileStatus.SHA,
-			"scmBranch": fileStatus.Branch,
-		})
-	}
-	return scmFileStatus
+	statusMap := statemanager.ResourceStatus(gitFileStatus)
+	return statusMap, nil
 }

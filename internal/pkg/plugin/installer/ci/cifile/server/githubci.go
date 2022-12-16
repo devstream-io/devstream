@@ -10,7 +10,7 @@ import (
 
 const (
 	CIGithubType               CIServerType = "github"
-	ciGitHubWorkConfigLocation string       = ".github/workflows"
+	CiGitHubWorkConfigLocation string       = ".github/workflows"
 	ciGithubTempName           string       = "app.yaml"
 )
 
@@ -19,7 +19,7 @@ type GitHubWorkflow struct {
 
 // CIFilePath return .github/workflows/app.yml
 func (g *GitHubWorkflow) CIFilePath() string {
-	return filepath.Join(ciGitHubWorkConfigLocation, ciGithubTempName)
+	return filepath.Join(CiGitHubWorkConfigLocation, ciGithubTempName)
 }
 
 func (g *GitHubWorkflow) FilterCIFilesFunc() file.DirFileFilterFunc {
@@ -35,6 +35,6 @@ func (g *GitHubWorkflow) FilterCIFilesFunc() file.DirFileFilterFunc {
 func (g *GitHubWorkflow) GetGitNameFunc() file.DirFileNameFunc {
 	return func(filePath, _ string) string {
 		basePath := filepath.Base(filePath)
-		return path.Join(ciGitHubWorkConfigLocation, basePath)
+		return path.Join(CiGitHubWorkConfigLocation, basePath)
 	}
 }
