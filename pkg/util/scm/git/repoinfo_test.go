@@ -397,6 +397,18 @@ var _ = Describe("ScmURL type", func() {
 					Expect(err.Error()).Should(ContainSubstring("git url repo path is not valid"))
 				})
 			})
+			When("url is path doesn't have scheme", func() {
+				BeforeEach(func() {
+					cloneURL = "test.com/test_user/test_repo"
+				})
+				It("should add scheme auto", func() {
+					owner, repo, err := cloneURL.extractRepoOwnerAndName()
+					Expect(err).Error().ShouldNot(HaveOccurred())
+					Expect(owner).Should(Equal("test_user"))
+					Expect(repo).Should(Equal("test_repo"))
+				})
+			})
+
 		})
 		When("cloneURL is git ssh format", func() {
 			When("ssh format is valid", func() {
