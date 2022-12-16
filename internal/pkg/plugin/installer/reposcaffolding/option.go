@@ -24,9 +24,9 @@ func NewOptions(options configmanager.RawOptions) (*Options, error) {
 func (opts *Options) renderTplConfig() map[string]interface{} {
 	// default render value from repo
 	renderConfig := map[string]any{
-		"AppName": opts.DestinationRepo.Repo,
+		"AppName": opts.DestinationRepo.GetRepoName(),
 		"Repo": map[string]string{
-			"Name":  opts.DestinationRepo.Repo,
+			"Name":  opts.DestinationRepo.GetRepoName(),
 			"Owner": opts.DestinationRepo.GetRepoOwner(),
 		},
 	}
