@@ -26,7 +26,8 @@ var showConfigCMD = &cobra.Command{
 Examples:
   dtm show config --plugin=A-PLUGIN-NAME,
   dtm show config --template=quickstart,
-  dtm show config --template=gitops`,
+  dtm show config --template=gitops,
+  dtm show config --template=apps`,
 	Run: showConfigCMDFunc,
 }
 

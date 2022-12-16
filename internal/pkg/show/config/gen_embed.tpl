@@ -25,3 +25,6 @@ var QuickStart string
 
 //go:embed templates/gitops.yaml
 var GitOps string
+
+//go:embed templates/apps.yaml
+var Apps string
