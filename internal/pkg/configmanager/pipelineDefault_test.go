@@ -27,7 +27,7 @@ var _ = Describe("jenkinsGenerator func", func() {
 				FrameWork: "test_framework",
 			},
 			Repo: &git.RepoInfo{
-				CloneURL: "test.scm.com",
+				CloneURL: "https://test.scm.com",
 			},
 		}
 	})
@@ -47,7 +47,7 @@ var _ = Describe("jenkinsGenerator func", func() {
 				},
 			},
 			"scm": RawOptions{
-				"url": git.ScmURL("test.scm.com"),
+				"url": git.ScmURL("https://test.scm.com"),
 			},
 			"jenkins": RawOptions{
 				"url": "test.jenkins.com",
@@ -87,7 +87,7 @@ var _ = Describe("pipelineArgocdAppGenerator func", func() {
 			"source": RawOptions{
 				"valuefile": "values.yaml",
 				"path":      "helm/test_app",
-				"repoURL":   "scm.test.com",
+				"repoURL":   "https://scm.test.com",
 			},
 			"imageRepo": RawOptions{
 				"owner": "test_user",

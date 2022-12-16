@@ -66,7 +66,7 @@ var _ = Describe("RepoInfo struct", func() {
 			})
 			It("should return owner", func() {
 				result := repoInfo.GetCloneURL()
-				Expect(result).Should(Equal("exist.com"))
+				Expect(result).Should(Equal("https://exist.com"))
 			})
 		})
 		When("url field is not configured, other fields exist", func() {
