@@ -2,16 +2,8 @@ devstream-io/dtm-gitlab-share-library:
   - source: staging/dtm-gitlab-share-library/
     dest: .
     deleteOrphaned: true
-devstream-io/dtm-jenkins-share-library:
-  - source: staging/dtm-jenkins-share-library/
-    dest: .
-    deleteOrphaned: true
 devstream-io/dtm-pipeline-templates:
   - source: staging/dtm-pipeline-templates/
-    dest: .
-    deleteOrphaned: true
-devstream-io/dtm-repo-scaffolding-golang:
-  - source: staging/dtm-repo-scaffolding-golang/
     dest: .
     deleteOrphaned: true
 devstream-io/dtm-repo-scaffolding-golang-cli:
@@ -24,10 +16,6 @@ devstream-io/dtm-repo-scaffolding-golang-gin:
     deleteOrphaned: true
 devstream-io/dtm-repo-scaffolding-java-springboot:
   - source: staging/dtm-repo-scaffolding-java-springboot/
-    dest: .
-    deleteOrphaned: true
-devstream-io/dtm-repo-scaffolding-python:
-  - source: staging/dtm-repo-scaffolding-python/
     dest: .
     deleteOrphaned: true
 devstream-io/dtm-repo-scaffolding-python-flask:

@@ -91,11 +91,12 @@ This plugin has three outputs:
 
 These repos are official scaffolding repo to use for `sourceRepo` config, You can use these repo directly or just create one for yourself.
 
-| language    | org           | repo                       |
-|-------------|---------------|----------------------------|
-| Golang      | devstream-io  | dtm-repo-scaffolding-golang     |
-| Golang      | devstream-io  | dtm-repo-scaffolding-golang-cli |
-| Java Spring | spring-guides | gs-spring-boot             |
+| language    | org           | repo                                |
+|-------------|---------------|-------------------------------------|
+| Golang      | devstream-io  | dtm-repo-scaffolding-golang-gin     |
+| Golang      | devstream-io  | dtm-repo-scaffolding-golang-cli     |
+| Python      | devstream-io  | dtm-repo-scaffolding-python-flask   |
+| Java        | devstream-io  | dtm-repo-scaffolding-java-springboot|
 
 
 ### Golang
@@ -113,7 +114,7 @@ tools:
       scmType: github
     sourceRepo:
       org: devstream-io
-      name: dtm-repo-scaffolding-golang
+      name: dtm-repo-scaffolding-golang-gin
       scmType: github
     vars:
       imageRepo: dtm-test/golang-repo
@@ -158,8 +159,8 @@ tools:
       visibility: public
       scmType: gitlab
     sourceRepo:
-      org: spring-guides
-      name: gs-spring-boot
+      org: devstream-io
+      name: dtm-repo-scaffolding-java-springboot
       scmType: github
 ```
 
