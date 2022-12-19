@@ -1,32 +1,34 @@
-package cifile
+package scm_test
 
 import (
-	"errors"
-
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+
+	"errors"
 
 	"github.com/devstream-io/devstream/pkg/util/scm"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
-var _ = Describe("getSCMFileStatus func", func() {
+var _ = Describe("GetGitFileStats func", func() {
 	var (
 		mockScmClient *scm.MockScmClient
-		scmPath       string
+		gitFileMap    git.GitFileContentMap
 	)
 
 	BeforeEach(func() {
 		mockScmClient = &scm.MockScmClient{}
-		scmPath = "test"
+		gitFileMap = git.GitFileContentMap{
+			"testFile": []byte("test_Content"),
+		}
 	})
 	When("get scm pathinfo error", func() {
 		BeforeEach(func() {
 			mockScmClient.GetPathInfoError = errors.New("test")
 		})
 		It("should return empty map", func() {
-			fileList := getSCMFileStatus(mockScmClient, scmPath)
-			Expect(len(fileList)).Should(BeZero())
+			_, err := scm.GetGitFileStats(mockScmClient, gitFileMap)
+			Expect(err).Should(HaveOccurred())
 		})
 	})
 	When("get scm pathinfo return", func() {
@@ -47,15 +49,20 @@ var _ = Describe("getSCMFileStatus func", func() {
 			mockScmClient.GetPathInfoReturnValue = gitFileStatus
 		})
 		It("should return fileMap", func() {
-			fileList := getSCMFileStatus(mockScmClient, scmPath)
-			Expect(len(fileList)).Should(Equal(1))
-			file := fileList[0]
-			v, ok := file["scmSHA"]
-			Expect(ok).Should(BeTrue())
-			Expect(v).Should(Equal(sha))
-			v, ok = file["scmBranch"]
-			Expect(ok).Should(BeTrue())
-			Expect(v).Should(Equal(branch))
+			status, err := scm.GetGitFileStats(mockScmClient, gitFileMap)
+			Expect(err).ShouldNot(HaveOccurred())
+			Expect(len(status)).Should(Equal(1))
+			Expect(status).Should(Equal(map[string]any{
+				"testFile": map[string]any{
+					"localSHA": "bbed2c0c2935a0e860cd4f6212aba4d6",
+					"scm": []map[string]string{
+						{
+							"scmSHA":    "test_sha",
+							"scmBranch": "test_branch",
+						},
+					},
+				},
+			}))
 		})
 	})
 })

@@ -36,5 +36,7 @@ func setDefault(options configmanager.RawOptions) (configmanager.RawOptions, err
 			opts.ImageRepo.URL = fmt.Sprintf("%s/", opts.ImageRepo.URL)
 		}
 	}
+
+	// set ci file config
 	return mapz.DecodeStructToMap(opts)
 }
