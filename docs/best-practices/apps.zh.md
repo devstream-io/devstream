@@ -1,8 +1,8 @@
-# 使用DevStream的新功能Apps来进行GitOps
+# 使用 DevStream 的新特性 Apps 来实现 GitOps
 
 ## 0 目标
 
-在本教程中，我们会使用 DevStream 的新特性 应用（Apps），来达到与 [GitOps] 相似的效果。但它的配置更短，来展示 应用 的强大能力。如果你还没有读过原始的 GitOps 最佳实践，可以先点击前面的链接。
+在本教程中，我们会使用 DevStream 的新特性 应用（Apps），来达到与 [GitOps](gitops.zh.md) 相似的效果。但它的配置更短，来展示 应用 的强大能力。如果你还没有读过原始的 GitOps 最佳实践，可以先点击前面的链接。
 
 我们会创建两个应用程序（一个基于 Python，另一个是 Go 语言），并且创建共用的 CI/CD 流水线，即两个应用程序都会通过 Argo CD 来部署，就像前面的 GitOps 做到的那样。
 
