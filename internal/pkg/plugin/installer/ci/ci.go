@@ -84,4 +84,8 @@ func (p *PipelineConfig) setDefault() {
 			return
 		}
 	}
+	// set image default url
+	if p.ImageRepo != nil {
+		p.ImageRepo.URL = p.ImageRepo.GetImageRepoURL()
+	}
 }

@@ -1,4 +1,4 @@
-package golang
+package gitlabci
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"

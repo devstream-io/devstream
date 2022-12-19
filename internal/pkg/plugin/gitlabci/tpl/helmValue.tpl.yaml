@@ -586,14 +586,14 @@ securityContext:
 ## ref: http://kubernetes.io/docs/user-guide/security-context/
 ##
 podSecurityContext:
-  # runAsUser: 100
+  runAsUser: 100
   # runAsGroup: 65533
-  # fsGroup: 65533
+  fsGroup: 65533
   # supplementalGroups: [65533]
 
   ## Note: values for the ubuntu image:
-  runAsUser: 999
-  fsGroup: 999
+  # runAsUser: 999
+  # fsGroup: 999
 
 ## Configure resource requests and limits
 ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
@@ -636,81 +636,3 @@ tolerations: []
 # envVars:
 #   - name: RUNNER_EXECUTOR
 #     value: kubernetes
-
-## list of hosts and IPs that will be injected into the pod's hosts file
-hostAliases: []
-  # Example:
-  # - ip: "127.0.0.1"
-  #   hostnames:
-  #   - "foo.local"
-  #   - "bar.local"
-  # - ip: "10.1.2.3"
-  #   hostnames:
-  #   - "foo.remote"
-  #   - "bar.remote"
-
-## Annotations to be added to manager pod
-##
-podAnnotations: {}
-  # Example:
-  # iam.amazonaws.com/role: <my_role_arn>
-
-## Labels to be added to manager pod
-##
-podLabels: {}
-  # Example:
-  # owner.team: <my_cool_team>
-
-## HPA support for custom metrics:
-## This section enables runners to autoscale based on defined custom metrics.
-## In order to use this functionality, Need to enable a custom metrics API server by
-## implementing "custom.metrics.k8s.io" using supported third party adapter
-## Example: https://github.com/directxman12/k8s-prometheus-adapter
-##
-#hpa: {}
-  # minReplicas: 1
-  # maxReplicas: 10
-  # metrics:
-  # - type: Pods
-  #   pods:
-  #     metricName: gitlab_runner_jobs
-  #     targetAverageValue: 400m
-
-## Configure priorityClassName for manager pod. See k8s docs for more info on how pod priority works:
-##  https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/
-priorityClassName: ""
-
-## Secrets to be additionally mounted to the containers.
-## All secrets are mounted through init-runner-secrets volume
-## and placed as readonly at /init-secrets in the init container
-## and finally copied to an in-memory volume runner-secrets that is
-## mounted at /secrets.
-secrets: []
-  # Example:
-  # - name: my-secret
-  # - name: myOtherSecret
-  #   items:
-  #     - key: key_one
-  #       path: path_one
-
-## Additional config files to mount in the containers in `/configmaps`.
-##
-## Please note that a number of keys are reserved by the runner.
-## See https://gitlab.com/gitlab-org/charts/gitlab-runner/-/blob/main/templates/configmap.yaml
-## for a current list.
-configMaps: {}
-
-## Additional volumeMounts to add to the runner container
-##
-volumeMounts: []
-  # Example:
-  # - name: my-volume
-  #   mountPath: /mount/path
-
-## Additional volumes to add to the runner deployment
-##
-volumes: []
-  # Example:
-  # - name: my-volume
-  #   persistentVolumeClaim:
-  #     claimName: my-pvc

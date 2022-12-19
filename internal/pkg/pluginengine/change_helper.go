@@ -2,6 +2,7 @@ package pluginengine
 
 import (
 	"fmt"
+	"reflect"
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
@@ -80,9 +81,21 @@ func drifted(a, b map[string]interface{}) bool {
 	if cmp.Equal(a, b, cmpopts.EquateEmpty()) {
 		return false
 	}
+	// since same struct will define custom type with underlying field type is string
+	// we use this filter and Transformer to make them Equal
+	// for example, we define a type "type customStr string"
+	// with this opt, cmp.Equal("test", customStr("test"), underlyingStringEqualOpt) return return true
+	underlyingStringEqualOpt := cmp.FilterValues(func(x, y interface{}) bool {
+		isString := func(v interface{}) bool {
+			return v != nil && reflect.TypeOf(v).ConvertibleTo(reflect.TypeOf(string("")))
+		}
+		return isString(x) && isString(y)
+	}, cmp.Transformer("T", func(v interface{}) string {
+		return reflect.ValueOf(v).Convert(reflect.TypeOf(string(""))).String()
+	}))
 
-	log.Debugf("detect tool sate changed => %s", cmp.Diff(a, b))
-	return !cmp.Equal(a, b)
+	log.Debugf("detect tool sate changed => %s", cmp.Diff(a, b, underlyingStringEqualOpt))
+	return !cmp.Equal(a, b, underlyingStringEqualOpt)
 }
 
 // GetChangesForApply takes "State Manager" & "Config" then do some calculate and return a Plan.

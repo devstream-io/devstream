@@ -24,14 +24,8 @@ var (
 	//go:embed plugins/gitlab-ce-docker.yaml
 	GitlabCeDockerDefaultConfig string
 
-	//go:embed plugins/gitlabci-generic.yaml
-	GitlabciGenericDefaultConfig string
-
-	//go:embed plugins/gitlabci-golang.yaml
-	GitlabciGolangDefaultConfig string
-
-	//go:embed plugins/gitlabci-java.yaml
-	GitlabciJavaDefaultConfig string
+	//go:embed plugins/gitlab-ci.yaml
+	GitlabCiDefaultConfig string
 
 	//go:embed plugins/harbor-docker.yaml
 	HarborDockerDefaultConfig string
@@ -64,9 +58,7 @@ var pluginDefaultConfigs = map[string]string{
 	"devlake-config":      DevlakeConfigDefaultConfig,
 	"github-actions":      GithubActionsDefaultConfig,
 	"gitlab-ce-docker":    GitlabCeDockerDefaultConfig,
-	"gitlabci-generic":    GitlabciGenericDefaultConfig,
-	"gitlabci-golang":     GitlabciGolangDefaultConfig,
-	"gitlabci-java":       GitlabciJavaDefaultConfig,
+	"gitlab-ci":           GitlabCiDefaultConfig,
 	"harbor-docker":       HarborDockerDefaultConfig,
 	"helm-installer":      HelmInstallerDefaultConfig,
 	"jenkins-pipeline":    JenkinsPipelineDefaultConfig,
