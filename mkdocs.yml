@@ -109,7 +109,6 @@ nav:
   - core-concepts/apps*.md
   - core-concepts/state*.md
   - core-concepts/config*.md
-  - core-concepts/output*.md
 - Commands:
   - commands/autocomplete*.md
   - commands/*.md

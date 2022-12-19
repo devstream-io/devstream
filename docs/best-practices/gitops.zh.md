@@ -1,6 +1,5 @@
 # GitOps
 
-<span id="0-目标"></span>
 ## 0 目标
 在本教程中，我们将尝试通过 DevStream 来实现以下目标：
 
@@ -38,7 +37,7 @@
 
 ## 2 概览
 
-DevStream 将使用下面的插件来实现[第 0 节](#0-目标)中描述的目标：
+DevStream 将使用下面的插件来实现[第 0 节](#)中描述的目标：
 
 1. [repo-scaffolding](../plugins/repo-scaffolding.md)
 2. [github-actions](../plugins/github-actions.md)
