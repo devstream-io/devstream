@@ -83,7 +83,7 @@ DevStream 可以简单地以 **local** 作为 Backend，也就是将状态保存
 
 下文将以 `local` Backend 为例演示。
 
-在编写 `gitlab-ce-docker`、`jenkins` 和 `harbor` 三个插件的配置文件之前，你需要先定义一些变量，这会让工具的配置和维护变得更加简单：
+在编写 `gitlab-ce-docker` 和 `helm-installer`（用户安装 Jenkins 和 Harbor）这两个插件的配置文件之前，你需要先定义一些变量，这会让后续的配置和维护工作变得更加简单：
 
 ```yaml title="config-tools.yaml"
 config:
@@ -291,7 +291,7 @@ Stdout: 34cdd2a834a1c21be192064eacf1e29536ff45c52562956b97d6d376a5dae11b
 
 ```sh
 docker exec -it gitlab bash
-echo "44.33.22.11 gitlab.example.com" >> /etc/hosts
+echo "44.33.22.11 jenkins.example.com" >> /etc/hosts
 exit
 ```
 
@@ -399,7 +399,7 @@ pipelineTemplates:
       enableRestart: true
     imageRepo:
       user: admin
-      url: http://[[ harborURL ]]/library
+      url: [[ harborURL ]]/library
 ```
 
 可以看到这里的状态配置换成了 devstream-app.state，这里需要保证和前面 tools 所使用的状态文件不是同一个。
