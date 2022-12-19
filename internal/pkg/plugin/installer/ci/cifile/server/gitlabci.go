@@ -19,7 +19,7 @@ func (g *GitLabCI) CIFilePath() string {
 	return ciGitLabConfigLocation
 }
 
-func (g *GitLabCI) FilterCIFilesFunc() file.DirFIleFilterFunc {
+func (g *GitLabCI) FilterCIFilesFunc() file.DirFileFilterFunc {
 	return func(filePath string, isDir bool) bool {
 		// not process dir
 		if isDir {

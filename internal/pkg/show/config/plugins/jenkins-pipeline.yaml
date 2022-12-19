@@ -31,6 +31,9 @@ tools:
       jobName: test-job
       # configLocation is the location describe how to get Jenkinsfile, it can be remote or local
       configLocation: https://raw.githubusercontent.com/devstream-io/devstream/main/staging/dtm-jenkins-pipeline-example/general/Jenkinsfile
+      language:
+        framework: # support gin/flask/spring for now
+        name: LANGUAGE # support go/java/nodejs/python for now
       imageRepo:
         # image repo URL for pulling/pushing
         url: http://harbor.example.com:80

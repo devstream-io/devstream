@@ -8,10 +8,15 @@ tools:
   # options for the plugin
   options:
     # the repo's owner
-    owner: YOUR_GITHUB_USERNAME
-    # the repo's org. If you set this property, then the new repo will be created under the org you're given, and the "owner" setting above will be ignored.
-    org: YOUR_ORGANIZATION_NAME
-    # for which repo this board will be used
-    repo: YOUR_REPO_NAME
-    # the Tello board name. If empty, use owner/repo as the board's name.
-    kanbanBoardName: KANBAN_BOARD_NAME
+    board:
+      # the Tello board name. If empty, use owner/name as the board's name.
+      name: KANBAN_BOARD_NAME
+      # the Tello board description. If empty, use devstream's default description
+      description: KANBAN_DESCRIPTION
+    scm:
+      name: YOUR_PROJECT_NAME
+      owner: YOUR_REPO_OWNER
+      # support github/gitlab
+      scmType: YOUR_REPO_TYPE
+      # project branch
+      branch: YOUR_PROJECT_BRANCH

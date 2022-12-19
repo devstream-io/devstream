@@ -1,36 +1,34 @@
 package trello
 
 import (
-	"fmt"
-
-	"github.com/mitchellh/mapstructure"
-
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/cifile"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 // Create creates Tello board and lists(todo/doing/done).
 func Create(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
-	var opts Options
-
-	if err := mapstructure.Decode(options, &opts); err != nil {
-		return nil, err
+	// Initialize Operator with Operations
+	operator := &installer.Operator{
+		PreExecuteOperations: installer.PreExecuteOperations{
+			setDefault,
+			validate,
+		},
+		ExecuteOperations: installer.ExecuteOperations{
+			createBoard,
+			addTrelloSecret,
+			cifile.PushCIFiles,
+		},
+		GetStatusOperation: getState,
 	}
 
-	// validate parameters
-	if errs := validate(&opts); len(errs) != 0 {
-		for _, e := range errs {
-			log.Errorf("Options error: %s.", e)
-		}
-		return nil, fmt.Errorf("opts are illegal")
-	}
-
-	trelloIds, err := CreateTrelloBoard(&opts)
+	// Execute all Operations in Operator
+	status, err := operator.Execute(configmanager.RawOptions(options))
 	if err != nil {
 		return nil, err
 	}
-	log.Success("Creating trello board succeeded.")
-
-	return buildStatus(&opts, trelloIds), nil
+	log.Debugf("Return map: %v", status)
+	return status, nil
 }

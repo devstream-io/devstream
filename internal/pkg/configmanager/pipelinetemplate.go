@@ -7,7 +7,6 @@ import (
 	"gopkg.in/yaml.v3"
 
 	"github.com/devstream-io/devstream/pkg/util/mapz"
-	"github.com/devstream-io/devstream/pkg/util/scm"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
@@ -28,9 +27,8 @@ type (
 	// pipelineGlobalOption is used to pass variable between ci/cd pipeline
 	pipelineGlobalOption struct {
 		ImageRepo RawOptions
-		RepoInfo  *git.RepoInfo
+		Repo      *git.RepoInfo
 		AppSpec   *appSpec
-		Scm       *scm.SCMInfo
 		AppName   string
 	}
 )

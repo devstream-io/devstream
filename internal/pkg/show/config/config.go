@@ -9,6 +9,7 @@ import (
 var templates = map[string]string{
 	"quickstart": QuickStart,
 	"gitops":     GitOps,
+	"apps":       Apps,
 }
 
 //go:generate go run gen_embed_var.go

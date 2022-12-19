@@ -20,12 +20,12 @@ var _ = Describe("validate func", func() {
 					"type":           "gg",
 				},
 				"projectRepo": map[string]any{
-					"baseURL":  "http://127.0.0.1:30020",
-					"branch":   "main",
-					"org":      "",
-					"owner":    "test_user",
-					"repo":     "test",
-					"repoType": "gitlab",
+					"baseURL": "http://127.0.0.1:30020",
+					"branch":  "main",
+					"org":     "",
+					"owner":   "test_user",
+					"name":    "test",
+					"scmType": "gitlab",
 				},
 			}
 			_, err := cifile.Validate(ciTypeNotExistOptions)
@@ -40,12 +40,12 @@ var _ = Describe("validate func", func() {
 					"type":           "jenkins",
 				},
 				"projectRepo": map[string]any{
-					"baseURL":  "http://127.0.0.1:30020",
-					"branch":   "main",
-					"org":      "",
-					"owner":    "test_user",
-					"repo":     "test",
-					"repoType": "gitlab",
+					"baseURL": "http://127.0.0.1:30020",
+					"branch":  "main",
+					"org":     "",
+					"owner":   "test_user",
+					"name":    "test",
+					"scmType": "gitlab",
 				},
 			}
 		})
@@ -55,13 +55,13 @@ var _ = Describe("validate func", func() {
 					"configLocation": "http://test.com",
 					"type":           "gitlab",
 				},
-				"projectRepo": map[string]any{
-					"baseURL":  "http://127.0.0.1:30020",
-					"branch":   "main",
-					"org":      "",
-					"owner":    "test_user",
-					"repo":     "test",
-					"repoType": "gitlab",
+				"scm": map[string]any{
+					"baseURL": "http://127.0.0.1:30020",
+					"branch":  "main",
+					"org":     "",
+					"owner":   "test_user",
+					"name":    "test",
+					"scmType": "gitlab",
 				},
 			}
 			_, err := cifile.Validate(option)

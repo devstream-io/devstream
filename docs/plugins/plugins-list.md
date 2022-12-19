@@ -9,12 +9,8 @@
 | Source Code Management         | repo-scaffolding            | App scaffolding                | [doc](repo-scaffolding.md)            |
 | Source Code Management         | gitlab-ce-docker            | GitLab CE version installation | [doc](gitlab-ce-docker.md)            |
 | CI                             | jenkins-pipeline            | Jenkins pipeline creation      | [doc](jenkins-pipeline.md)            |
-| CI                             | githubactions-golang        | GitHub Actions CI for Golang   | [doc](githubactions-golang.md)        |
-| CI                             | githubactions-python        | GitHub Actions CI for Python   | [doc](githubactions-python.md)        |
-| CI                             | githubactions-nodejs        | GitHub Actions CI for Nodejs   | [doc](githubactions-nodejs.md)        |
-| CI                             | gitlabci-golang             | GitLab CI for Golang           | [doc](gitlabci-golang.md)             |
-| CI                             | gitlabci-java               | GitLab CI for Java             | [doc](gitlabci-java.md)               |
-| CI                             | gitlabci-generic            | Generic GitLab CI              | [doc](gitlabci-generic.md)            |
+| CI                             | github-actions              | GitHub Actions CI              | [doc](github-actions.md)              |
+| CI                             | gitlab-ci                   | Generic GitLab CI              | [doc](gitlab-ci.md)            |
 | CI                             | ci-generic                  | Generic CI plugin              | [doc](ci-generic.md)                  |
 | CD/GitOps                      | argocdapp                   | Argo CD Application creation   | [doc](argocdapp.md)                   |
 | Image Repository               | harbor-docker               | Harbor Docker compose install  | [doc](harbor-docker.md)               |
@@ -27,13 +23,9 @@ $ dtm list plugins
 argocdapp
 ci-generic
 devlake-config
-githubactions-golang
-githubactions-nodejs
-githubactions-python
+github-actions
 gitlab-ce-docker
-gitlabci-generic
-gitlabci-golang
-gitlabci-java
+gitlab-ci
 harbor-docker
 helm-installer
 jenkins-pipeline

@@ -1,98 +1,56 @@
 config:
-  state: # state config, backend can be local, s3 or k8s
+  state:
     backend: local
     options:
       stateFile: devstream.state
-
 vars:
-  defaultBranch: main
-  githubUsername: daniel-hutao
-  repoName: dtm-test-go
-  jiraID: merico
-  jiraUserEmail: tao.hu@merico.dev
-  jiraProjectKey: DT
-  dockerhubUsername: exploitht
-  argocdNameSpace: argocd
-  argocdDeployTimeout: 10m
+  githubUser: GITHUB_USER
+  dockerUser: DOCKERHUB_USER
+  app: helloworld
 
 tools:
 - name: repo-scaffolding
-  instanceID: golang-github
+  instanceID: myapp
   options:
     destinationRepo:
-      owner: [[ githubUsername ]]
-      org: ""
-      repo: [[ repoName ]]
-      branch: [[ defaultBranch ]]
-      repoType: github
+      owner: [[ githubUser ]]
+      name: [[ app ]]
+      branch: main
+      scmType: github
     sourceRepo:
       org: devstream-io
-      repo: dtm-scaffolding-golang
-      repoType: github
-    vars:
-      imageRepo: "[[ dockerhubUsername ]]/[[ repoName ]]"
-- name: jira-github-integ
-  instanceID: default
-  dependsOn: [ "repo-scaffolding.golang-github" ]
+      name: dtm-repo-scaffolding-python-flask
+      scmType: github
+- name: github-actions
+  instanceID: flask
+  dependsOn: [ repo-scaffolding.myapp ]
   options:
-    owner: [[ githubUsername ]]
-    repo: [[ repoName ]]
-    jiraBaseUrl: https://[[ jiraID ]].atlassian.net
-    jiraUserEmail: [[ jiraUserEmail ]]
-    jiraProjectKey: [[ jiraProjectKey ]]
-    branch: main
-- name: githubactions-golang
-  instanceID: default
-  dependsOn: [ "repo-scaffolding.golang-github" ]
-  options:
-    owner: ${{repo-scaffolding.golang-github.outputs.owner}}
-    org: ""
-    repo: ${{repo-scaffolding.golang-github.outputs.repo}}
-    language:
-      name: go
-      version: "1.18"
-    branch: [[ defaultBranch ]]
-    build:
-      enable: True
-      command: "go build ./..."
-    test:
-      enable: True
-      command: "go test ./..."
-      coverage:
-        enable: True
-        profile: "-race -covermode=atomic"
-        output: "coverage.out"
-    docker:
-      enable: True
-      registry:
-        type: dockerhub
-        username: [[ dockerhubUsername ]]
-        repository: ${{repo-scaffolding.golang-github.outputs.repo}}
-- name: argocd
-  instanceID: default
-  options:
-    repo:
-      name: argo
-      url: https://argoproj.github.io/argo-helm
-    chart:
-      chartPath: ""
-      chartName: argo/argo-cd
-      releaseName: argocd
-      namespace: [[ argocdNameSpace ]]
-      wait: true
-      timeout: [[ argocdDeployTimeout ]]
-      upgradeCRDs: true
+    scm:
+      owner: [[ githubUser ]]
+      name:  [[ app ]]
+      scmType: github
+    pipeline:
+      configLocation: https://raw.githubusercontent.com/devstream-io/dtm-pipeline-templates/main/github-actions/workflows/main.yml
+      language:
+        name: python
+        framework: flask
+      imageRepo:
+        user: [[ dockerUser ]]
+- name: helm-installer
+  instanceID: argocd
 - name: argocdapp
   instanceID: default
-  dependsOn: ["argocd.default", "repo-scaffolding.golang-github"]
+  dependsOn: [ "helm-installer.argocd", "github-actions.flask" ]
   options:
     app:
-      name: ${{repo-scaffolding.golang-github.outputs.repo}}
-      namespace: [[ argocdNameSpace ]]
+      name: [[ app ]]
+      namespace: argocd
     destination:
       server: https://kubernetes.default.svc
       namespace: default
     source:
       valuefile: values.yaml
-      path: helm/${{repo-scaffolding.golang-github.outputs.repo}}
-      repoURL: ${{repo-scaffolding.golang-github.outputs.repoURL}}
+      path: helm/[[ app ]]
+      repoURL: ${{repo-scaffolding.myapp.outputs.repoURL}}
+    imageRepo:
+      user: [[ dockerUser ]]

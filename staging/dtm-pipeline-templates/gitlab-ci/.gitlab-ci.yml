@@ -1,0 +1,44 @@
+stages:
+  - test
+  - build
+
+variables:
+  # dingding notify
+  DINGTALK_ACCESS_TOKEN: "$DINGTALK_SECURITY_TOKEN"
+  DINGTALK_SECURITY_VALUE: "$DINGTALK_SECURITY_VALUE"
+  # image repo config
+  IMAGE_REPO_URL: "[[ .imageRepo.url ]]"
+  IMAGE_REPO_USER: "[[ .imageRepo.user ]]"
+  IMAGE_REPO_PASSWORD: "$IMAGE_REPO_SECRET"
+  # general config
+  APP_NAME: "[[ .AppName ]]"
+
+
+test:
+  stage: test
+  image:
+    name: [[ .test.containerName ]]
+  script: |
+    [[ range .test.command ]]
+    [[ . -]]
+    [[ end ]]
+
+build:
+  stage: build
+  services:
+  - alias: buildkitd
+    name: moby/buildkit:rootless
+    command:
+    - "--oci-worker-no-process-sandbox"
+    - "--addr"
+    - "tcp://0.0.0.0:1234"
+  image:
+    name: moby/buildkit:master
+    entrypoint: [ "sh", "-c" ]
+  variables:
+    BUILDKIT_HOST: tcp://buildkitd:1234
+    DOCKER_CONFIG: /home/user/.docker
+  script:
+    - mkdir -p $DOCKER_CONFIG
+    - echo "{\"auths\":{\"$IMAGE_REPO_URL\":{\"auth\":\"$(printf "%s:%s" "${IMAGE_REPO_USER}" "${IMAGE_REPO_PASSWORD}" | base64 | tr -d '\n')\"}}}" > $DOCKER_CONFIG/config.json
+    - buildctl build --frontend dockerfile.v0 --local context=. --local dockerfile=. --output type=image,name=$IMAGE_REPO_USER/$APP_NAME:${CI_COMMIT_SHA:0:8},push=true

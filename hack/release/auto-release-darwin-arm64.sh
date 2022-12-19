@@ -71,3 +71,17 @@ echo "${DTM_CORE_BINARY} uploaded."
 # After downloading aws cli, you need to configure aws credentials.
 pip3 install awscli
 aws s3 cp $plugin_dir $STORAGE_URL_WITH_TAG --recursive --acl public-read
+
+# check if the number of plugins on s3 is correct
+local_plugin_nums=$(../../dtm list plugins |wc -l)
+((local_plugin_file_nums=local_plugin_nums*6))
+s3_plugin_file_total_nums=$(aws s3 ls download.devstream.io/"$tag"/|awk '{print $NF}'|uniq|wc -l)
+((s3_plugin_file_nums=s3_plugin_file_total_nums-3))
+echo "s3_plugin_file_nums:" "$s3_plugin_file_nums"
+echo "local_plugin_file_nums:" "$local_plugin_file_nums"
+if [ "$local_plugin_file_nums" -ne "$s3_plugin_file_nums" ]
+then
+  echo "Attention,Maybe the plugin uploaded to s3 is not correct."
+else
+  echo "The plugin uploaded to s3 is correct."
+fi

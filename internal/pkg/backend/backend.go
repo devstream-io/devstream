@@ -33,7 +33,7 @@ func GetBackend(state configmanager.State) (Backend, error) {
 
 	switch typeName {
 	case LocalBackend:
-		return local.NewLocal(state.Options.StateFile)
+		return local.NewLocal(state.BaseDir, state.Options.StateFile)
 	case S3Backend:
 		return s3.NewS3Backend(state.Options.Bucket, state.Options.Region, state.Options.Key)
 	case K8sBackend, K8sBackendAlias:

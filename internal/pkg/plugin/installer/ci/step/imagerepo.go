@@ -68,7 +68,7 @@ func (g *ImageRepoStepConfig) generateDockerAuthSecretData() (map[string][]byte,
 	}
 	tmpStr := fmt.Sprintf("%s:%s", g.User, imageRepoPasswd)
 	authStr := base64.StdEncoding.EncodeToString([]byte(tmpStr))
-	authURL := g.getImageRepoURL()
+	authURL := g.GetImageRepoURL()
 	log.Debugf("jenkins plugin imageRepo auth string: %s.", authStr)
 
 	configJsonStrTpl := `{
@@ -86,7 +86,7 @@ func (g *ImageRepoStepConfig) generateDockerAuthSecretData() (map[string][]byte,
 	}, nil
 }
 
-func (g *ImageRepoStepConfig) getImageRepoURL() string {
+func (g *ImageRepoStepConfig) GetImageRepoURL() string {
 	if g.URL == "" {
 		// default use docker image repo
 		return "https://index.docker.io/v1/"

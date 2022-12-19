@@ -49,7 +49,6 @@ func processRepoFileFunc(appName string, vars map[string]interface{}) file.DirFi
 		log.Debugf("Walk: found file: %s.", filePath)
 		// if file endswith tpl, render this file, else copy this file directly
 		if strings.Contains(filePath, "tpl") {
-			log.Infof("--------> %s [%+v]", filePath, vars)
 			fileContentStr, err := template.New().FromLocalFile(filePath).SetDefaultRender(appName, vars).Render()
 			if err != nil {
 				log.Warnf("repo render file failed: %s", err)

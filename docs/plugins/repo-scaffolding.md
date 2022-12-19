@@ -50,7 +50,7 @@ This configuration is used for the target repo, it includes the following config
 
 **Please note that all parameter is case-sensitive.**
 
-Currently, `owner`, `org`, and `repo` are mandatory, `branch` has the default value "main", `repoType` support  `gitlab` and `github` for now. 
+Currently, `owner`, `org`, and `repo` are mandatory, `branch` has the default value "main", `scmType` support  `gitlab` and `github` for now. 
 
 ### sourceRepo
 
@@ -60,7 +60,7 @@ This configuration is used for the source scaffolding repoI(only supports GitHub
 - `YOUR_TEMPLATE_REPO_NAME`
 - `YOUR_TEMPLATE_REPO_TYPE`
 
-All the parameters in the example above are mandatory for now, `repoType` only support `github` for now. 
+All the parameters in the example above are mandatory for now, `scmType` only support `github` for now. 
 
 ### vars
 
@@ -91,11 +91,12 @@ This plugin has three outputs:
 
 These repos are official scaffolding repo to use for `sourceRepo` config, You can use these repo directly or just create one for yourself.
 
-| language    | org           | repo                       |
-|-------------|---------------|----------------------------|
-| Golang      | devstream-io  | dtm-scaffolding-golang     |
-| Golang      | devstream-io  | dtm-scaffolding-golang-cli |
-| Java Spring | spring-guides | gs-spring-boot             |
+| language    | org           | repo                                |
+|-------------|---------------|-------------------------------------|
+| Golang      | devstream-io  | dtm-repo-scaffolding-golang-gin     |
+| Golang      | devstream-io  | dtm-repo-scaffolding-golang-cli     |
+| Python      | devstream-io  | dtm-repo-scaffolding-python-flask   |
+| Java        | devstream-io  | dtm-repo-scaffolding-java-springboot|
 
 
 ### Golang
@@ -108,13 +109,13 @@ tools:
     destinationRepo:
       owner: test_owner
       org: ""
-      repo: dtm-test-golang
+      name: dtm-test-golang
       branch: main
-      repoType: github
+      scmType: github
     sourceRepo:
       org: devstream-io
-      repo: dtm-scaffolding-golang
-      repoType: github
+      name: dtm-repo-scaffolding-golang-gin
+      scmType: github
     vars:
       imageRepo: dtm-test/golang-repo
 ```
@@ -131,13 +132,13 @@ tools:
     destinationRepo:
       owner: test_owner
       org: ""
-      repo: dtm-test-golang-cli
+      name: dtm-test-golang-cli
       branch: main
-      repoType: github
+      scmType: github
     sourceRepo:
       org: devstream-io
-      repo: dtm-scaffolding-golang-cli
-      repoType: github
+      name: dtm-repo-scaffolding-golang-cli
+      scmType: github
 ```
 
 This config will create `dtm-test-golang-cli` repo for user test_owner in GitHub.
@@ -152,15 +153,15 @@ tools:
     destinationRepo:
       owner: test_owner
       org: ""
-      repo: dtm-test-java
+      name: dtm-test-java
       branch: main
       baseUrl: 127.0.0.1:30001
       visibility: public
-      repoType: gitlab
+      scmType: gitlab
     sourceRepo:
-      org: spring-guides
-      repo: gs-spring-boot
-      repoType: github
+      org: devstream-io
+      name: dtm-repo-scaffolding-java-springboot
+      scmType: github
 ```
 
 this config will create `dtm-test-java` repo for user test_owner in GitHub.

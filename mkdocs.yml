@@ -23,12 +23,15 @@ repo_name: devstream
 repo_url: https://github.com/devstream-io/devstream
 site_description: The DevStream Docs
 markdown_extensions:
+- abbr
 - toc:
     permalink: true
 - pymdownx.snippets:
     base_path:
     - "docs"
     - "docs/../internal/pkg/show/config/plugins/"
+    auto_append:
+    - includes/glossary.md
 - pymdownx.highlight:
     anchor_linenums: true
     auto_title: true
@@ -102,10 +105,10 @@ nav:
 - install*.md
 - Core Concepts:
   - core-concepts/overview*.md
-  - core-concepts/tools-apps*.md
+  - core-concepts/tools*.md
+  - core-concepts/apps*.md
   - core-concepts/state*.md
   - core-concepts/config*.md
-  - core-concepts/output*.md
 - Commands:
   - commands/autocomplete*.md
   - commands/*.md
@@ -117,7 +120,12 @@ nav:
     - plugins/helm-installer/helm-installer*.md
     - plugins/helm-installer/*.md
   - plugins/*.md
-- Best Practices: best-practices/
+- Best Practices:
+  - best-practices/gitops*.md
+  - best-practices/apps*.md
+  - best-practices/gitlab-jenkins-harbor-java-springboot*.md
+  - best-practices/gjh-java-springboot-air-gapped-deployment*.md
+  - best-practices/image-registry*.md
 - contributing_guide*.md
 - contributor_ladder*.md
 - Governance ⧉: https://github.com/devstream-io/devstream/blob/main/GOVERNANCE.md

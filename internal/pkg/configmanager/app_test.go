@@ -4,7 +4,7 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/devstream-io/devstream/pkg/util/scm"
+	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
 var _ = Describe("app struct", func() {
@@ -33,7 +33,7 @@ var _ = Describe("app struct", func() {
 		When("ci/cd template is not valid", func() {
 			BeforeEach(func() {
 				a = &app{
-					Repo: &scm.SCMInfo{
+					Repo: &git.RepoInfo{
 						CloneURL: "http://test.com/test/test_app",
 					},
 					CIRawConfigs: []pipelineRaw{
@@ -54,7 +54,7 @@ var _ = Describe("app struct", func() {
 			BeforeEach(func() {
 				a = &app{
 					Name: appName,
-					Repo: &scm.SCMInfo{
+					Repo: &git.RepoInfo{
 						CloneURL: "http://test.com/test/test_app",
 					},
 				}
@@ -65,49 +65,13 @@ var _ = Describe("app struct", func() {
 				Expect(len(tools)).Should(Equal(0))
 			})
 		})
-		When("repo url is not valid", func() {
-			BeforeEach(func() {
-				a = &app{
-					Name: appName,
-					Repo: &scm.SCMInfo{
-						CloneURL: "not_valid_url",
-					},
-				}
-			})
-			It("should return empty tools", func() {
-				_, err := a.getTools(vars, templateMap)
-				Expect(err).Should(HaveOccurred())
-				Expect(err.Error()).Should(ContainSubstring("configmanager[app] parse repo failed"))
-			})
-		})
-		When("template repo url is not valid", func() {
-			BeforeEach(func() {
-				a = &app{
-					Name: appName,
-					RepoTemplate: &repoTemplate{
-						SCMInfo: &scm.SCMInfo{
-							CloneURL: "not_valid_url",
-						},
-					},
-					Repo: &scm.SCMInfo{
-						CloneURL: "http://test.com/test/test_app",
-					},
-				}
-			})
-			It("should return empty tools", func() {
-				_, err := a.getTools(vars, templateMap)
-				Expect(err).Should(HaveOccurred())
-				Expect(err.Error()).Should(ContainSubstring("configmanager[app] parse repoTemplate failed"))
-			})
-		})
-
 	})
 
 	Context("generateCICDTools method", func() {
 		When("template type not exist", func() {
 			BeforeEach(func() {
 				a = &app{
-					Repo: &scm.SCMInfo{
+					Repo: &git.RepoInfo{
 						CloneURL: "http://test.com/test/test_app",
 					},
 					CIRawConfigs: []pipelineRaw{

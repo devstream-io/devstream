@@ -46,7 +46,7 @@ var _ = Describe("newJobOptions func", func() {
 		Expect(err).Error().ShouldNot(HaveOccurred())
 		Expect(string(job.JobName)).Should(Equal(jobName))
 		Expect(job.Pipeline.ConfigLocation).Should(Equal(jenkinsFilePath))
-		Expect(job.SCM.CloneURL).Should(Equal(projectURL))
+		Expect(string(job.ProjectRepo.CloneURL)).Should(Equal(projectURL))
 		Expect(job.Jenkins.URL).Should(Equal(jenkinsURL))
 		Expect(job.Jenkins.User).Should(Equal(userName))
 	})
@@ -77,7 +77,7 @@ var _ = Describe("options struct", func() {
 			JobName: jenkinsJobName(jobName),
 			CIConfig: ci.CIConfig{
 				ProjectRepo: repoInfo,
-				Pipeline: ci.PipelineConfig{
+				Pipeline: &ci.PipelineConfig{
 					ConfigLocation: jenkinsFilePath,
 				},
 			},
@@ -228,6 +228,43 @@ var _ = Describe("options struct", func() {
 			It("should work normal", func() {
 				err := opts.install(j, secretToken)
 				Expect(err).ShouldNot(HaveOccurred())
+			})
+		})
+	})
+	Context("getScmWebhookAddress method", func() {
+		var (
+			testJob          *jobOptions
+			baseURL, appName string
+		)
+		BeforeEach(func() {
+			baseURL = "test.jenkins.com"
+			appName = "testApp"
+			testJob = &jobOptions{
+				CIConfig: ci.CIConfig{
+					ProjectRepo: &git.RepoInfo{},
+				},
+				Jenkins: jenkinsOption{
+					URL: baseURL,
+				},
+				JobName: jenkinsJobName(appName),
+			}
+		})
+		When("repo type is gitlab", func() {
+			BeforeEach(func() {
+				testJob.ProjectRepo.RepoType = "gitlab"
+			})
+			It("should return gitlab webhook address", func() {
+				address := testJob.getScmWebhookAddress()
+				Expect(address).Should(Equal(fmt.Sprintf("%s/project/%s", baseURL, appName)))
+			})
+		})
+		When("repo type is github", func() {
+			BeforeEach(func() {
+				testJob.ProjectRepo.RepoType = "github"
+			})
+			It("should return github webhook address", func() {
+				address := testJob.getScmWebhookAddress()
+				Expect(address).Should(Equal(fmt.Sprintf("%s/github-webhook/", baseURL)))
 			})
 		})
 	})

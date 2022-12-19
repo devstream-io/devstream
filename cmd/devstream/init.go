@@ -9,7 +9,6 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/devstream-io/devstream/cmd/devstream/list"
-	"github.com/devstream-io/devstream/internal/pkg/completion"
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/pluginmanager"
 	"github.com/devstream-io/devstream/internal/pkg/version"
@@ -117,9 +116,8 @@ func GetPluginsFromFlags() (tools configmanager.Tools, err error) {
 }
 
 func init() {
-	// flags for init from config file
-	initCMD.Flags().StringVarP(&configFilePath, configFlagName, "f", "config.yaml", "config file")
-	initCMD.Flags().StringVarP(&pluginDir, pluginDirFlagName, "d", defaultPluginDir, "plugins directory")
+	addFlagConfigFile(initCMD)
+	addFlagPluginDir(initCMD)
 
 	// downloading specific plugins from flags
 	initCMD.Flags().BoolVar(&downloadOnly, "download-only", false, "download plugins only")
@@ -127,7 +125,4 @@ func init() {
 	initCMD.Flags().BoolVarP(&downloadAll, "all", "a", false, "download all plugins")
 	initCMD.Flags().StringVar(&initOS, "os", runtime.GOOS, "download plugins for specific os")
 	initCMD.Flags().StringVar(&initArch, "arch", runtime.GOARCH, "download plugins for specific arch")
-
-	completion.FlagFilenameCompletion(initCMD, configFlagName)
-	completion.FlagDirnameCompletion(initCMD, pluginDirFlagName)
 }

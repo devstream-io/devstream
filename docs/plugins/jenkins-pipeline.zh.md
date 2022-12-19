@@ -66,14 +66,14 @@ tools:
   options:
     destinationRepo:
       owner: root
-      repo: spring-demo
+      name: spring-demo
       branch: master
-      repoType: gitlab
+      scmType: gitlab
       baseURL: YOUR_GITLAB_ADDR
     sourceRepo:
       owner:  devstream-io
-      repo: dtm-repo-scaffolding-java-springboot
-      repoType: github
+      name: dtm-repo-scaffolding-java-springboot
+      scmType: github
 - name: jenkins-pipeline
   instanceID: default
   dependsOn: [repo-scaffolding.springboot]

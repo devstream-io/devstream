@@ -41,7 +41,7 @@ However, if you are like us, who prefer to do things hands-on and get their hand
 DevStream will use the following plugins to achieve the goal described in [Section 0](#0-goal):
 
 1. [repo-scaffolding](../plugins/repo-scaffolding.md)
-2. [githubactions-golang](../plugins/githubactions-golang.md)
+2. [github-actions](../plugins/github-actions.md)
 3. [helm-installer](../plugins/helm-installer/helm-installer.md)
 4. [argocdapp](../plugins/argocdapp.md)
 
@@ -119,64 +119,10 @@ Use "dtm [command] --help" for more information about a command.
 
 ## 4 Config File
 
-Create a file named `config.yaml` and paste the following content into it:
+Run command below to get a valid `config.yaml` file:
 
-```yaml
-config:
-  state:
-    backend: local
-    options:
-      stateFile: devstream.state
-vars:
-  githubUser: IronCore864
-  dockerUser: ironcore864
-  app: helloworld
-
-tools:
-- name: repo-scaffolding
-  instanceID: myapp
-  options:
-    destinationRepo:
-      owner: [[ githubUser ]]
-      repo: [[ app ]]
-      branch: main
-      repoType: github
-    sourceRepo:
-      org: devstream-io
-      repo: dtm-scaffolding-python
-      repoType: github
-    vars:
-      imageRepo: [[ dockerUser ]]/[[ app ]]
-- name: githubactions-python
-  instanceID: default
-  dependsOn: [ repo-scaffolding.myapp ]
-  options:
-    owner: [[ githubUser ]]
-    repo:  [[ app ]]
-    language:
-      name: python
-    branch: main
-    docker:
-      registry:
-        type: dockerhub
-        username: [[ dockerUser ]]
-        repository: [[ app ]]
-- name: helm-installer
-  instanceID: argocd
-- name: argocdapp
-  instanceID: default
-  dependsOn: [ "helm-installer.argocd", "githubactions-python.default" ]
-  options:
-    app:
-      name: [[ app ]]
-      namespace: argocd
-    destination:
-      server: https://kubernetes.default.svc
-      namespace: default
-    source:
-      valuefile: values.yaml
-      path: helm/[[ app ]]
-      repoURL: ${{repo-scaffolding.myapp.outputs.repoURL}}
+```shell
+./dtm show config -t gitops > config.yaml
 ```
 
 Then modify the `vars` section in the `config.yaml` file accordingly. Please update the values for `githubUser` and `dockerUser` to your real users.
@@ -194,7 +140,7 @@ The following environment variables are required for this to work:
 
 ```bash
 export GITHUB_TOKEN="YOUR_GITHUB_TOKEN_HERE"
-export DOCKERHUB_TOKEN="YOUR_DOCKERHUB_TOKEN_HERE"
+export IMAGE_REPO_PASSWORD="YOUR_DOCKERHUB_TOKEN_HERE"
 ```
 
 > Note:
@@ -202,7 +148,7 @@ export DOCKERHUB_TOKEN="YOUR_DOCKERHUB_TOKEN_HERE"
 > if you don't know how to create these two tokens, check out:
 > 
 > - GITHUB_TOKEN: [Manage API tokens for your Atlassian account](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
-> - DOCKERHUB_TOKEN: [Manage access tokens](https://docs.docker.com/docker-hub/access-tokens/)
+> - IMAGE_REPO_PASSWORD: [Manage access tokens](https://docs.docker.com/docker-hub/access-tokens/)
 
 ---
 
@@ -211,7 +157,7 @@ export DOCKERHUB_TOKEN="YOUR_DOCKERHUB_TOKEN_HERE"
 Run:
 
 ```bash
-./dtm init
+./dtm init -f config.yaml
 ```
 
 This downloads the required plugins, according to the config file, automatically.
@@ -220,7 +166,7 @@ You'll get some outputs similar to the following:
 
 ```bash
 2022-12-05 17:46:01 ℹ [INFO]  Using dir </Users/tiexin/.devstream/plugins> to store plugins.
-2022-12-05 17:46:01 ℹ [INFO]  -------------------- [  repo-scaffolding-darwin-arm64_0.10.1  ] --------------------
+2022-12-05 17:46:01 ℹ [INFO]  -------------------- [  repo-scaffolding-darwin-arm64_0.10.2  ] --------------------
 ... (omitted)
 ... (omitted)
 2022-12-05 17:46:51 ✔ [SUCCESS]  Initialize finished.
@@ -233,7 +179,7 @@ You'll get some outputs similar to the following:
 Run:
 
 ```bash
-./dtm apply -y
+./dtm apply -f config.yaml -y
 ```
 
 You will see similar outputs as the following:
@@ -243,7 +189,7 @@ You will see similar outputs as the following:
 2022-12-05 17:49:49 ℹ [INFO]  Using local backend. State file: devstream.state.
 2022-12-05 17:49:49 ℹ [INFO]  Tool (repo-scaffolding/myapp) found in config but doesn't exist in the state, will be created.
 2022-12-05 17:49:49 ℹ [INFO]  Tool (helm-installer/argocd) found in config but doesn't exist in the state, will be created.
-2022-12-05 17:49:49 ℹ [INFO]  Tool (githubactions-python/default) found in config but doesn't exist in the state, will be created.
+2022-12-05 17:49:49 ℹ [INFO]  Tool (github-actions/flask) found in config but doesn't exist in the state, will be created.
 2022-12-05 17:49:49 ℹ [INFO]  Tool (argocdapp/default) found in config but doesn't exist in the state, will be created.
 2022-12-05 17:49:49 ℹ [INFO]  Start executing the plan.
 2022-12-05 17:49:49 ℹ [INFO]  Changes count: 4.
@@ -332,7 +278,7 @@ And accesses `localhost:8080` in your browser, you can see the deployed app retu
 Run:
 
 ```bash
-./dtm delete -y
+./dtm delete -f config.yaml -y
 ```
 
 And you will get similar outputs to the following:
@@ -341,7 +287,7 @@ And you will get similar outputs to the following:
 2022-12-05 17:59:25 ℹ [INFO]  Delete started.
 2022-12-05 17:59:26 ℹ [INFO]  Using local backend. State file: devstream.state.
 2022-12-05 17:59:26 ℹ [INFO]  Tool (argocdapp/default) will be deleted.
-2022-12-05 17:59:26 ℹ [INFO]  Tool (githubactions-python/default) will be deleted.
+2022-12-05 17:59:26 ℹ [INFO]  Tool (github-actions/flask) will be deleted.
 2022-12-05 17:59:26 ℹ [INFO]  Tool (repo-scaffolding/myapp) will be deleted.
 2022-12-05 17:59:26 ℹ [INFO]  Tool (helm-installer/argocd) will be deleted.
 2022-12-05 17:59:26 ℹ [INFO]  Start executing the plan.

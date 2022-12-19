@@ -31,14 +31,14 @@ func GetDynamicStatus(options configmanager.RawOptions) (statemanager.ResourceSt
 		"org":      repoInfo.Org,
 		"repoURL":  repoInfo.CloneURL,
 		"repoType": repoInfo.RepoType,
-		"source":   opts.SourceRepo.BuildScmURL(),
+		"source":   opts.SourceRepo.CloneURL,
 	}
 
 	resStatus.SetOutputs(statemanager.ResourceOutputs{
 		"repo":    repoInfo.Repo,
 		"org":     repoInfo.Org,
 		"owner":   repoInfo.Owner,
-		"repoURL": repoInfo.CloneURL,
+		"repoURL": string(repoInfo.CloneURL),
 	})
 	return resStatus, nil
 }

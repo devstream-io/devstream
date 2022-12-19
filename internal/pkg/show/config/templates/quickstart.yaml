@@ -4,37 +4,36 @@ config:
     options:
       stateFile: devstream.state
 
+vars:
+  RepoOwner: YOUR_GITHUB_USERNAME_CASE_SENSITIVE
+  ImageRepoUser: YOUR_DOCKER_USERNAME
+
 tools:
 - name: repo-scaffolding
   instanceID: golang-github
   options:
     destinationRepo:
-      owner: YOUR_GITHUB_USERNAME_CASE_SENSITIVE
-      org: ""
-      repo: go-webapp-devstream-demo
+      owner: [[ RepoOwner ]]
+      name: go-webapp-devstream-demo
       branch: main
-      repoType: github
+      scmType: github
     sourceRepo:
       org: devstream-io
-      repo: dtm-scaffolding-golang
-      repoType: github
-    vars:
-      imageRepo: YOUR_DOCKER_USERNAME/go-webapp-devstream-demo
-- name: githubactions-golang
+      name: dtm-repo-scaffolding-golang-gin
+      scmType: github
+- name: github-actions
   instanceID: default
   dependsOn: ["repo-scaffolding.golang-github"]
   options:
-    owner: YOUR_GITHUB_USERNAME_CASE_SENSITIVE
-    repo: go-webapp-devstream-demo
-    language:
-      name: go
-      version: "1.18"
-    branch: main
-    build:
-      enable: True
-    test:
-      enable: True
-      coverage:
-        enable: True
-    docker:
-      enable: False
+    scm:
+      owner: [[ RepoOwner ]]
+      name: go-webapp-devstream-demo
+      branch: main
+      scmType: github
+    pipeline:
+      configLocation: https://raw.githubusercontent.com/devstream-io/ci-template/main/github-actions/workflows/main.yml
+      language:
+        name: go
+        framework: gin
+      imageRepo:
+        user: [[ ImageRepoUser ]]

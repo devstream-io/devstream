@@ -37,11 +37,7 @@ sh -c "$(curl -fsSL https://download.devstream.io/download.sh)"
 curl -o dtm https://download.devstream.io/v0.10.2/dtm-linux-amd64
 ```
 
-注意：这里的版本、系统类型、CPU 架构等信息需要灵活调整。比如你用的是 arm64 的服务器，这里就需要将命令改成：
-
-```shell
-curl -o dtm https://download.devstream.io/v0.10.2/dtm-linux-arm64
-```
+注意：这里的版本、系统类型、CPU 架构等信息需要灵活调整。
 
 等 dtm 下载到你的 PC 后，你需要通过内网将其传输到某一台内部服务器上，移入包含在"$PATH"的目录里并赋予其可执行权限，比如在 Linux 上你可以执行如下命令完成这些操作：
 

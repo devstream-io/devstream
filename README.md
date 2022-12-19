@@ -91,7 +91,7 @@ I am happy to tell you that we have, and we are constantly adding more possible 
 so you are more than welcome to tell us what combinations you expect.
 
 - [GitOps Toolchain](https://docs.devstream.io/en/latest/best-practices/gitops/)
-- [GitLab, Jenkins and Harbor On Premise Toolchain (Chinese only for now)](https://docs.devstream.io/en/latest/best-practices/gitlab-jenkins-harbor.zh/)
+- [GitLab, Jenkins and Harbor On Premise Toolchain (Chinese only for now)](https://docs.devstream.io/en/latest/best-practices/gitlab-jenkins-harbor-java-springboot.zh/)
 
 ## Supported DevOps Tools
 

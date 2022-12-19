@@ -1,28 +1,26 @@
 package trello
 
 import (
-	"fmt"
-
-	"github.com/mitchellh/mapstructure"
-
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
-	"github.com/devstream-io/devstream/internal/pkg/statemanager"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
+func Read(options map[string]interface{}) (map[string]interface{}, error) {
+	// Initialize Operator with Operations
+	operator := &installer.Operator{
+		PreExecuteOperations: installer.PreExecuteOperations{
+			setDefault,
+			validate,
+		},
+		GetStatusOperation: getState,
+	}
 
-	var opts Options
-	if err := mapstructure.Decode(options, &opts); err != nil {
+	// Execute all Operations in Operator
+	status, err := operator.Execute(configmanager.RawOptions(options))
+	if err != nil {
 		return nil, err
 	}
-
-	if errs := validate(&opts); len(errs) != 0 {
-		for _, e := range errs {
-			log.Errorf("Options error: %s.", e)
-		}
-		return nil, fmt.Errorf("opts are illegal")
-	}
-
-	return buildReadStatus(&opts)
+	log.Debugf("Return map: %v", status)
+	return status, nil
 }

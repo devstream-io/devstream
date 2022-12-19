@@ -1,0 +1,25 @@
+tools:
+# name of the tool
+- name: gitlab-ci
+  # id of the tool instance
+  instanceID: default
+  # format: name.instanceID; If specified, dtm will make sure the dependency is applied first before handling this tool.
+  dependsOn: [ ]
+  # options for the plugin
+  options:
+    scm:
+      # url is the project repo location
+      url: git@gitlab.com/root/test-exmaple.git
+      # project branch, default branch will be master
+      branch: YOUR_PROJECT_BRANCH
+    pipeline:
+      # workFlowfilePath is the location of workflows, it can be remote or local
+      configLocation: .gitlabci.yml
+      language:
+        framework: # support gin/flask/spring for now
+        name: LANGUAGE # support go/java/nodejs/python for now
+      imageRepo:
+        # image repo URL for pulling/pushing
+        url: http://harbor.example.com:80
+        # image repo user name
+        user: admin

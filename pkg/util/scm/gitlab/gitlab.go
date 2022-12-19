@@ -2,8 +2,6 @@ package gitlab
 
 import (
 	"errors"
-	"fmt"
-	"net/url"
 	"os"
 
 	"github.com/xanzy/go-gitlab"
@@ -44,12 +42,4 @@ func NewClient(options *git.RepoInfo) (*Client, error) {
 
 	return c, nil
 
-}
-
-func ExtractBaseURLfromRaw(repoURL string) (string, error) {
-	u, err := url.ParseRequestURI(repoURL)
-	if err != nil {
-		return "", err
-	}
-	return fmt.Sprintf("%s://%s", u.Scheme, u.Host), nil
 }

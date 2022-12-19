@@ -1,0 +1,9 @@
+.build-docker:
+  stage: build
+  script:
+    - auth=`echo -n "$CI_REGISTRY_USER:$CI_REGISTRY_PASSWORD" | base64`
+    - mkdir -p ~/.docker
+    # - authfile=`{"auths": {"test": {"auth": "$auth"}}}`
+    # - echo $authfile > ~/.docker/config.json
+    - buildctl build --frontend dockerfile.v0 --local context=. --local dockerfile=. --output type=image,name=${imageRepo}:${defaultTag},push=true${opts}
+    - echo "SUCCESS" > .job_status

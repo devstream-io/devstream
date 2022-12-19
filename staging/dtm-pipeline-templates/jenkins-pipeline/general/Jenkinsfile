@@ -1,0 +1,25 @@
+[[ if .dingTalk -]]
+setting.configNotifyDingtalk([
+    'robot_id': "[[ .dingTalk.name ]]",
+])
+[[ end -]]
+[[ if .imageRepo -]]
+setting.configImageRepo([
+    'image_repo': "[[ .imageRepo.url ]]",
+    'user': "[[ .imageRepo.user ]]",
+    'auth_secret_name': "[[ .ImageRepoDockerSecret ]]",
+])
+[[ end -]]
+runPipeline([
+    'repo_type': "[[ .RepoType ]]",
+    'name': "[[ .AppName ]]",
+    [[ if .sonarqube -]]
+    'sonarqube_enable': true,
+    [[ end -]]
+    [[ if .language -]]
+    'language': "[[ .language.name ]]",
+    [[ end -]]
+    [[ if .test.enable -]]
+    'test_enable': [[ .test.enable ]],
+    [[ end -]]
+])

@@ -48,7 +48,7 @@
 - `YOUR_DESTINATION_REPO_MAIN_BRANCH`
 - `YOUR_DESTINATION_REPO_TYPE`
 
-`owner`，`org` 和 `repo` 目前是必填的，`branch` 的默认值是  "main"，`repoType` 配置目前支持 `gitlab` 和 `github`。
+`owner`，`org` 和 `repo` 目前是必填的，`branch` 的默认值是  "main"，`scmType` 配置目前支持 `gitlab` 和 `github`。
 
 ### sourceRepo
 
@@ -58,7 +58,7 @@
 - `YOUR_TEMPLATE_REPO_NAME`
 - `YOUR_TEMPLATE_REPO_TYPE`
 
-目前这两个配置项都是必填的，`repoType` 配置目前只支持 `github`。
+目前这两个配置项都是必填的，`scmType` 配置目前只支持 `github`。
 
 ### vars
 
@@ -105,13 +105,13 @@ tools:
       destinationRepo:
         owner: test_owner
         org: ""
-        repo: dtm-test-golang
+        name: dtm-test-golang
         branch: main
-        repoType: github
+        scmType: github
       sourceRepo:
         org: devstream-io
-        repo: dtm-scaffolding-golang
-        repoType: github
+        name: dtm-scaffolding-golang
+        scmType: github
       vars:
         ImageRepo: dtm-test/golang-repo
 ```
@@ -128,13 +128,13 @@ tools:
       destinationRepo:
         owner: test_owner
         org: ""
-        repo: dtm-test-golang-cli
+        name: dtm-test-golang-cli
         branch: main
-        repoType: github
+        scmType: github
       sourceRepo:
         org: devstream-io
-        repo: dtm-scaffolding-golang-cli
-        repoType: github
+        name: dtm-scaffolding-golang-cli
+        scmType: github
 ```
 
 这个配置在 GitHub 为用于 test_owner 创建 `dtm-test-golang-cli` 仓库，它的生成是基于 `devstream-io/dtm-scaffolding-golang-cli` 官方 Golang CLI 脚手架仓库。
@@ -149,15 +149,15 @@ tools:
       destinationRepo:
         owner: test_owner
         org: ""
-        repo: dtm-test-java
+        name: dtm-test-java
         branch: main
         baseUrl: 127.0.0.1:30001
         visibility: public
-        repoType: gitlab
+        scmType: gitlab
       sourceRepo:
         org: spring-guides
-        repo: gs-spring-boot
-        repoType: github
+        name: gs-spring-boot
+        scmType: github
 ```
 
 这个配置会在 GitLab 为用户 test_owner 创建 `dtm-test-java` 仓库，使用的是 Spring 官方的 `spring-guides/gs-spring-boot` 仓库。

@@ -6,16 +6,18 @@ When running `dtm init`, it will download plugins from the AWS S3 bucket(through
 
 There are two ways to download plugins:
 
-1. from config file: download plugins according to the tool file in the config
+1. from config file: download plugins according to `tools` and `apps` in the config
 2. from command line: download plugins according to the command line arguments
 
 ## Downloading Plugins from Config File
 
-In this way, `dtm init` will download the required plugins according to the tool file in the config.
+In this way, `dtm init` will download the required plugins according to `tools` and `apps` in the config.
 
-**command:** `dtm init` or `dtm init -f <config file>`. The default config file path is `config.yaml`.
+**command:** `dtm init -f <config file/config dir>`.
 
-For config file, tool file, see the [config](../core-concepts/config.md) section of this documentation.
+You can put all the configuration in one file, or you can spread it out into multiple files in the same directory with `yaml` or `yaml` as a suffix.
+
+For config file, tools and apps, see the [config](../core-concepts/config.md) section of this documentation.
 
 ## Downloading Plugins from Command Line
 
@@ -23,7 +25,7 @@ This can be used to pre-download the plugin to use `dtm` in an **offline environ
 
 command: 
 
-- download specify plugins. e.g. `dtm init --download-only --plugins="repo-scaffolding, githubactions-golang" -d=.devstream/plugins`
+- download specify plugins. e.g. `dtm init --download-only --plugins="repo-scaffolding, github-actions" -d=.devstream/plugins`
 - download all plugins. e.g. `dtm init --download-only --all -d=.devstream/plugins`
 
 ## Init Logic

@@ -10,7 +10,7 @@ import (
 
 type Options struct {
 	CIFileConfig *CIFileConfig `mapstructure:"ci" validate:"required"`
-	ProjectRepo  *git.RepoInfo `mapstructure:"projectRepo" validate:"required"`
+	ProjectRepo  *git.RepoInfo `mapstructure:"scm" validate:"required"`
 }
 
 func NewOptions(options configmanager.RawOptions) (*Options, error) {

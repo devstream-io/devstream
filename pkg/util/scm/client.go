@@ -1,18 +1,10 @@
 package scm
 
 import (
-	"fmt"
-	"strings"
-
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 	"github.com/devstream-io/devstream/pkg/util/scm/github"
 	"github.com/devstream-io/devstream/pkg/util/scm/gitlab"
-)
-
-const (
-	DefaultCommitMsg = "init with devstream"
-	TransitBranch    = "init-with-devstream"
 )
 
 func NewClientWithAuth(repoInfo *git.RepoInfo) (ClientOperation, error) {
@@ -21,14 +13,16 @@ func NewClientWithAuth(repoInfo *git.RepoInfo) (ClientOperation, error) {
 }
 
 func NewClient(repoInfo *git.RepoInfo) (ClientOperation, error) {
+	if err := repoInfo.SetDefault(); err != nil {
+		return nil, err
+	}
 	switch repoInfo.RepoType {
 	case "github":
 		return github.NewClient(repoInfo)
-	case "gitlab":
+	default:
+		// default use gitlab repo
 		return gitlab.NewClient(repoInfo)
 	}
-	return nil, fmt.Errorf("scaffolding not support scm type: %s", repoInfo.RepoType)
-
 }
 
 type ClientOperation interface {
@@ -68,8 +62,4 @@ func PushInitRepo(client ClientOperation, commitInfo *git.CommitInfo) error {
 	// 2. push local path to repo
 	needRollBack, err = client.PushFiles(commitInfo, false)
 	return err
-}
-
-func isGithubRepo(repoType, url string) bool {
-	return repoType == "github" || strings.Contains(url, "github")
 }

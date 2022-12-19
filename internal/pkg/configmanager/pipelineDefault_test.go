@@ -4,7 +4,6 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/devstream-io/devstream/pkg/util/scm"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
@@ -27,8 +26,8 @@ var _ = Describe("jenkinsGenerator func", func() {
 				Language:  "test_language",
 				FrameWork: "test_framework",
 			},
-			Scm: &scm.SCMInfo{
-				CloneURL: "test.scm.com",
+			Repo: &git.RepoInfo{
+				CloneURL: "https://test.scm.com",
 			},
 		}
 	})
@@ -48,7 +47,7 @@ var _ = Describe("jenkinsGenerator func", func() {
 				},
 			},
 			"scm": RawOptions{
-				"url": "test.scm.com",
+				"url": git.ScmURL("https://test.scm.com"),
 			},
 			"jenkins": RawOptions{
 				"url": "test.jenkins.com",
@@ -68,7 +67,7 @@ var _ = Describe("pipelineArgocdAppGenerator func", func() {
 			ImageRepo: map[string]any{
 				"owner": "test_user",
 			},
-			RepoInfo: &git.RepoInfo{
+			Repo: &git.RepoInfo{
 				CloneURL: "scm.test.com",
 			},
 			AppName: "test_app",
@@ -88,7 +87,7 @@ var _ = Describe("pipelineArgocdAppGenerator func", func() {
 			"source": RawOptions{
 				"valuefile": "values.yaml",
 				"path":      "helm/test_app",
-				"repoURL":   "scm.test.com",
+				"repoURL":   "https://scm.test.com",
 			},
 			"imageRepo": RawOptions{
 				"owner": "test_user",

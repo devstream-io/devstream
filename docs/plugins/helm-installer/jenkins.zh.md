@@ -303,7 +303,7 @@ workflows: |
 在上一小节我们看到了 jenkins 插件的状态中保存了一个 outputs 字段，内容是 `jenkins_url: http://jenkins.jenkins:8080`，
 所以其他插件的配置中可以通过`${{jenkins.default.outputs.jenkins_url}}` 的语法读取到 `http://jenkins.jenkins:8080`。
 
-更多关于"插件输出"的内容，请阅读[这个文档](../../core-concepts/output.zh.md)。
+更多关于"插件输出"的内容，请阅读[这个文档](../../core-concepts/config.zh.md#42-output)。
 
 ## 5、离线环境部署
 

@@ -78,3 +78,23 @@ func GetFileAbsDirPath(fileLoc string) (string, error) {
 	}
 	return filepath.Dir(fileAbs), nil
 }
+
+// GetFileAbsDirPathOrDirItself will return abs dir path,
+// for file: return its parent directory
+// for directory: return dir itself
+func GetFileAbsDirPathOrDirItself(fileLoc string) (string, error) {
+	fileAbs, err := filepath.Abs(fileLoc)
+	if err != nil {
+		return "", fmt.Errorf("%s not exists", fileLoc)
+	}
+	file, err := os.Stat(fileAbs)
+	if err != nil {
+		return "", fmt.Errorf("%s not exists", fileLoc)
+	}
+	// if it is a directory, return itself
+	if file.IsDir() {
+		return fileAbs, nil
+	}
+	// if it is a file, return its parent directory
+	return filepath.Dir(fileAbs), nil
+}

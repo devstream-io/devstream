@@ -27,7 +27,6 @@ docs/build
 
 # YAML for testings
 config*.yaml*
-app*.yaml
 variables*.yaml
 variables*.yaml.bak
 tools*.yaml
@@ -52,6 +51,9 @@ testbin/
 
 # terraform
 .terraform
+
+# test
+cov
 
 # md
 README_when_create_plugin.md

@@ -6,16 +6,18 @@
 
 `dtm` 提供了两种下载插件的方式：
 
-1. 根据配置文件：根据配置中的 tool file 下载插件
+1. 根据配置文件：根据配置中的 `tools` 和 `apps` 下载插件
 2. 根据命令行参数：根据命令行的参数下载插件
 
 ## 根据配置文件下载插件
 
-这种方式下，`dtm init` 将根据配置中的 tool file 下载需要的插件。
+这种方式下，`dtm init` 将根据配置中定义的 `tools` 和 `apps` 下载所需的插件。
 
-**命令：** `dtm init` 或 `dtm init -f <config file>`。默认的配置文件路径是 `config.yaml`。
+**命令：** `dtm init -f <config file/config dir>`。
 
-关于配置文件、tool file，详见[DevStream 配置](../core-concepts/config.zh.md)。
+你可以把所有的配置放在一个文件中，也可以把配置分散至同一个目录下的多个以 `yaml` 或 `yaml` 为后缀的文件中。
+
+关于配置文件、tools and apps，详见[DevStream 配置](../core-concepts/config.zh.md)。
 
 ## 根据命令行参数下载插件
 
@@ -23,7 +25,7 @@
 
 **命令：**
 
-- 下载指定插件，如：`dtm init --download-only --plugins="repo-scaffolding, githubactions-golang" -d=.devstream/plugins`。 
+- 下载指定插件，如：`dtm init --download-only --plugins="repo-scaffolding, github-actions" -d=.devstream/plugins`。 
 - 下载所有插件，如：`dtm init --download-only --all -d=.devstream/plugins`。
 
 

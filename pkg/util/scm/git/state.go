@@ -1,7 +1,6 @@
 package git
 
 import (
-	"crypto/md5"
 	"crypto/sha1"
 	"encoding/hex"
 	"fmt"
@@ -28,12 +27,5 @@ func CalculateGitHubBlobSHA(fileContent []byte) string {
 	h := sha1.New()
 	h.Write([]byte(p))
 	h.Write([]byte(fileContent))
-	return hex.EncodeToString(h.Sum(nil))
-}
-
-// CalculateLocalFileSHA is used to calculate file content's md5
-func CalculateLocalFileSHA(fileContent []byte) string {
-	h := md5.New()
-	h.Write(fileContent)
 	return hex.EncodeToString(h.Sum(nil))
 }

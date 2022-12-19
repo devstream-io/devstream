@@ -139,3 +139,69 @@ var _ = Describe("Tool struct", func() {
 		})
 	})
 })
+
+var _ = Describe("Tool struct", func() {
+	var tools Tools
+
+	const (
+		toolName   = "test_tool"
+		instanceID = "test_instance"
+	)
+	Context("renderInstanceIDtoOptions method", func() {
+		BeforeEach(func() {
+			tools = Tools{
+				{Name: toolName, InstanceID: instanceID},
+			}
+		})
+		When("tool option is null", func() {
+			It("should set nil to RawOptions", func() {
+				tools.renderInstanceIDtoOptions()
+				Expect(len(tools)).Should(Equal(1))
+				tool := tools[0]
+				Expect(tool.Options).Should(Equal(RawOptions{
+					"instanceID": instanceID,
+				}))
+			})
+		})
+	})
+})
+
+var _ = Describe("duplicatedCheck", func() {
+	var (
+		errs                   []error
+		tools                  Tools
+		toolsWithoutDuplicated = Tools{
+			{Name: "test_tool", InstanceID: "0"},
+			{Name: "test_tool", InstanceID: "1"},
+			{Name: "test_tool", InstanceID: "2"},
+		}
+
+		toolsWithDuplicated = Tools{
+			{Name: "test_tool", InstanceID: "0"},
+			{Name: "test_tool", InstanceID: "1"},
+			{Name: "test_tool", InstanceID: "0"},
+		}
+	)
+
+	JustBeforeEach(func() {
+		errs = tools.duplicatedCheck()
+	})
+
+	When("tools has duplicated name and instanceID", func() {
+		BeforeEach(func() {
+			tools = toolsWithDuplicated
+		})
+		It("should return error", func() {
+			Expect(errs).Should(HaveLen(1))
+		})
+	})
+
+	When("tools don't have duplicated name and instanceID", func() {
+		BeforeEach(func() {
+			tools = toolsWithoutDuplicated
+		})
+		It("should return nil", func() {
+			Expect(errs).Should(BeEmpty())
+		})
+	})
+})

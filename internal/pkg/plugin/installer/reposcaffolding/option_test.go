@@ -33,14 +33,14 @@ var _ = Describe("Options struct", func() {
 		BeforeEach(func() {
 			rawOptions = configmanager.RawOptions{
 				"sourceRepo": map[string]string{
-					"owner":    "test_user",
-					"repo":     "test_repo",
-					"repoType": "github",
+					"owner":   "test_user",
+					"name":    "test_repo",
+					"scmType": "github",
 				},
 				"destinationRepo": map[string]string{
-					"owner":    "dst_user",
-					"repo":     "dst_repo",
-					"repoType": "github",
+					"owner":   "dst_user",
+					"name":    "dst_repo",
+					"scmType": "github",
 				},
 			}
 		})
@@ -70,6 +70,9 @@ var _ = Describe("Options struct", func() {
 			appName, ok := renderConfig["AppName"]
 			Expect(ok).Should(BeTrue())
 			Expect(appName).Should(Equal(coverAppName))
+			repo, ok := renderConfig["Repo"]
+			Expect(ok).Should(BeTrue())
+			Expect(repo).Should(Equal(map[string]string{"Owner": "dst_owner", "Name": "dst_repo"}))
 		})
 	})
 })

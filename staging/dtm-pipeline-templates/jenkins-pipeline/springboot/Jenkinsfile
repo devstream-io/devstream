@@ -1,0 +1,38 @@
+version="1.0.${env.BUILD_NUMBER}"
+repository="[[ .ImageRepoAddress ]]/[[ .ImageName ]]"
+tag="latest"
+image="${repository}:${version}"
+
+podTemplate(containers: [
+    containerTemplate(name: 'maven', image: 'maven:3.8.6-openjdk-18', command: 'sleep', args: '99d'),
+    containerTemplate(name: 'buildkit', image: 'moby/buildkit:master', ttyEnabled: true, privileged: true),
+  ], volumes: [
+    secretVolume(secretName: 'docker-config', mountPath: '/root/.docker')
+  ]) {
+    node(POD_LABEL) {
+        stage("Get Project") {
+            checkout scm
+        }
+        stage('Run Maven test') {
+            gitlabCommitStatus("test") {
+                container('maven') {
+                    stage('run mvn test') {
+                        sh 'mvn -B test'
+                    }
+                }
+            }
+        }
+        stage("Build Docker image") {
+            gitlabCommitStatus("build image") {
+                container('buildkit') {
+                    stage('build a Maven project') {
+                        sh """
+                          buildctl build --frontend dockerfile.v0 --local context=. --local dockerfile=. --output type=image,name=${image},push=true,registry.insecure=true
+                          buildctl build --frontend dockerfile.v0 --local context=. --local dockerfile=. --output type=image,name=${repository}:${tag},push=true,registry.insecure=true
+                        """
+                    }
+                }
+            }
+        }
+    }
+}
