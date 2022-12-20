@@ -43,9 +43,10 @@ type destination struct {
 
 // source is the struct for the source of an ArgoCD app.
 type source struct {
-	Valuefile string `mapstructure:"valuefile"`
-	Path      string `mapstructure:"path" validate:"required"`
-	RepoURL   string `mapstructure:"repoURL" validate:"required"`
+	Valuefile  string `mapstructure:"valuefile"`
+	Path       string `mapstructure:"path" validate:"required"`
+	RepoURL    string `mapstructure:"repoURL" validate:"required"`
+	RepoBranch string `mapstructure:"repoBranch"`
 }
 
 // / newOptions create options by raw options

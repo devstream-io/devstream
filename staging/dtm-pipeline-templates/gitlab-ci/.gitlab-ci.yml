@@ -11,7 +11,7 @@ variables:
   IMAGE_REPO_USER: "[[ .imageRepo.user ]]"
   IMAGE_REPO_PASSWORD: "$IMAGE_REPO_SECRET"
   # general config
-  APP_NAME: "[[ .AppName ]]"
+  INIT_IMAGE_TAG: "0.1"
 
 
 test:
@@ -42,3 +42,4 @@ build:
     - mkdir -p $DOCKER_CONFIG
     - echo "{\"auths\":{\"$IMAGE_REPO_URL\":{\"auth\":\"$(printf "%s:%s" "${IMAGE_REPO_USER}" "${IMAGE_REPO_PASSWORD}" | base64 | tr -d '\n')\"}}}" > $DOCKER_CONFIG/config.json
     - buildctl build --frontend dockerfile.v0 --local context=. --local dockerfile=. --output type=image,name=$IMAGE_REPO_USER/$APP_NAME:${CI_COMMIT_SHA:0:8},push=true
+    - buildctl build --frontend dockerfile.v0 --local context=. --local dockerfile=. --output type=image,name=$IMAGE_REPO_USER/$APP_NAME:${INIT_IMAGE_TAG},push=true

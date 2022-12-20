@@ -40,7 +40,7 @@ func (c *Client) DeleteFiles(commitInfo *git.CommitInfo) error {
 	tree := newCommitTree(commitInfo.CommitMsg, c.Branch)
 	tree.addCommitFilesFromMap(gitlab.FileDelete, commitInfo.GitFileMap)
 	_, _, err := c.Commits.CreateCommit(c.GetRepoPath(), tree.createCommitInfo())
-	if err != nil && !pkgerror.CheckErrorMatchByMessage(err, errRepoNotFound) {
+	if err != nil && !pkgerror.CheckErrorMatchByMessage(err, errRepoNotFound, errFileNotExist) {
 		return c.newModuleError(err)
 	}
 	return nil
@@ -66,14 +66,13 @@ func (c *Client) checkFileExist(filename string) (bool, error) {
 }
 
 func (c *Client) GetPathInfo(path string) ([]*git.RepoFileStatus, error) {
+	var errCodeSet = mapset.NewSet(http.StatusBadRequest, http.StatusUnauthorized, http.StatusNotFound)
 	gitRepoFileStatus := make([]*git.RepoFileStatus, 0)
 	getFileOptions := &gitlab.GetFileOptions{
 		Ref: gitlab.String(c.Branch),
 	}
 
 	file, response, err := c.RepositoryFiles.GetFile(c.GetRepoPath(), path, getFileOptions)
-	errCodeSet := mapset.NewSet(http.StatusBadRequest, http.StatusUnauthorized, http.StatusNotFound)
-
 	if response != nil && errCodeSet.Contains(response.StatusCode) {
 		return gitRepoFileStatus, nil
 	}

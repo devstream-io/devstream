@@ -91,18 +91,18 @@ func GetPluginsFromFlags() (tools configmanager.Tools, err error) {
 		// check if plugins to download are supported by dtm
 		for _, plugin := range pluginsName {
 			if _, ok := list.PluginNamesMap()[plugin]; !ok {
-				return nil, fmt.Errorf("Plugin %s is not supported by dtm", plugin)
+				return nil, fmt.Errorf("plugin %s is not supported by dtm", plugin)
 			}
 		}
 	}
 
 	if len(pluginsName) == 0 {
-		return nil, errors.New("Please use --plugins to specify plugins to download or use --all to download all plugins.")
+		return nil, errors.New("please use --plugins to specify plugins to download or use --all to download all plugins")
 	}
 	log.Debugf("plugins to download: %v", pluginsName)
 
 	if initOS == "" || initArch == "" {
-		return nil, fmt.Errorf("Once you use the --all flag, you must specify the --os and --arch flags")
+		return nil, fmt.Errorf("once you use the --all flag, you must specify the --os and --arch flags")
 	}
 
 	log.Infof("Plugins to download: %v", pluginsName)
