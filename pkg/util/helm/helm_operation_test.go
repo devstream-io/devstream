@@ -1,169 +1,161 @@
-package helm
+package helm_test
 
 import (
-	"testing"
+	"fmt"
 	"time"
 
 	helmclient "github.com/mittwald/go-helm-client"
-	"github.com/stretchr/testify/require"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 	"helm.sh/helm/v3/pkg/repo"
+
+	"github.com/devstream-io/devstream/pkg/util/helm"
 )
 
-func TestInstallOrUpgradeChart(t *testing.T) {
-	atomic := true
-	if !*helmParam.Chart.Wait {
-		atomic = false
-	}
-	tmout, err := time.ParseDuration(helmParam.Chart.Timeout)
-	require.NoErrorf(t, err, "error: %v must be nil\n", err)
-	chartSpec := &helmclient.ChartSpec{
-		ReleaseName:      helmParam.Chart.ReleaseName,
-		ChartName:        helmParam.Chart.ChartName,
-		Namespace:        helmParam.Chart.Namespace,
-		ValuesYaml:       helmParam.Chart.ValuesYaml,
-		Version:          helmParam.Chart.Version,
-		CreateNamespace:  false,
-		DisableHooks:     false,
-		Replace:          true,
-		Wait:             *helmParam.Chart.Wait,
-		DependencyUpdate: false,
-		Timeout:          tmout,
-		GenerateName:     false,
-		NameTemplate:     "",
-		Atomic:           atomic,
-		SkipCRDs:         false,
-		UpgradeCRDs:      *helmParam.Chart.UpgradeCRDs,
-		SubNotes:         false,
-		Force:            false,
-		ResetValues:      false,
-		ReuseValues:      false,
-		Recreate:         false,
-		MaxHistory:       0,
-		CleanupOnFail:    false,
-		DryRun:           false,
-	}
+var _ = Describe("InstallOrUpgradeChart func", func() {
+	It("should work noraml", func() {
+		atomic := true
+		if !*helmParam.Chart.Wait {
+			atomic = false
+		}
+		tmout, err := time.ParseDuration(helmParam.Chart.Timeout)
+		Expect(err).ShouldNot(HaveOccurred())
+		chartSpec := &helmclient.ChartSpec{
+			ReleaseName:      helmParam.Chart.ReleaseName,
+			ChartName:        helmParam.Chart.ChartName,
+			Namespace:        helmParam.Chart.Namespace,
+			ValuesYaml:       helmParam.Chart.ValuesYaml,
+			Version:          helmParam.Chart.Version,
+			CreateNamespace:  false,
+			DisableHooks:     false,
+			Replace:          true,
+			Wait:             *helmParam.Chart.Wait,
+			DependencyUpdate: false,
+			Timeout:          tmout,
+			GenerateName:     false,
+			NameTemplate:     "",
+			Atomic:           atomic,
+			SkipCRDs:         false,
+			UpgradeCRDs:      *helmParam.Chart.UpgradeCRDs,
+			SubNotes:         false,
+			Force:            false,
+			ResetValues:      false,
+			ReuseValues:      false,
+			Recreate:         false,
+			MaxHistory:       0,
+			CleanupOnFail:    false,
+			DryRun:           false,
+		}
 
-	// ctrl := gomock.NewController(t)
-	// defer ctrl.Finish()
+		h, err := helm.NewHelm(helmParam, helm.WithChartSpec(chartSpec), helm.WithClient(&mockClient{}))
+		Expect(err).ShouldNot(HaveOccurred())
+		err = h.InstallOrUpgradeChart()
+		Expect(err).ShouldNot(HaveOccurred())
+	})
+})
 
-	// mockClient := mockhelmclient.NewMockClient(ctrl)
-	// if mockClient == nil {
-	// 	t.Fail()
-	// }
-	h, err := NewHelm(helmParam, WithChartSpec(chartSpec), WithClient(&DefaultMockClient{}))
+var _ = Describe("AddOrUpdateChartRepo func", func() {
+	It("should work noraml", func() {
+		entry := &repo.Entry{
+			Name:                  helmParam.Repo.Name,
+			URL:                   helmParam.Repo.URL,
+			Username:              "",
+			Password:              "",
+			CertFile:              "",
+			KeyFile:               "",
+			CAFile:                "",
+			InsecureSkipTLSverify: false,
+			PassCredentialsAll:    false,
+		}
+		atomic := true
+		if !*helmParam.Chart.Wait {
+			atomic = false
+		}
+		tmout, err := time.ParseDuration(helmParam.Chart.Timeout)
+		Expect(err).ShouldNot(HaveOccurred())
+		chartSpec := &helmclient.ChartSpec{
+			ReleaseName:      helmParam.Chart.ReleaseName,
+			ChartName:        helmParam.Chart.ChartName,
+			Namespace:        helmParam.Chart.Namespace,
+			ValuesYaml:       helmParam.Chart.ValuesYaml,
+			Version:          helmParam.Chart.Version,
+			CreateNamespace:  false,
+			DisableHooks:     false,
+			Replace:          true,
+			Wait:             *helmParam.Chart.Wait,
+			DependencyUpdate: false,
+			Timeout:          tmout,
+			GenerateName:     false,
+			NameTemplate:     "",
+			Atomic:           atomic,
+			SkipCRDs:         false,
+			UpgradeCRDs:      *helmParam.Chart.UpgradeCRDs,
+			SubNotes:         false,
+			Force:            false,
+			ResetValues:      false,
+			ReuseValues:      false,
+			Recreate:         false,
+			MaxHistory:       0,
+			CleanupOnFail:    false,
+			DryRun:           false,
+		}
 
-	require.NoErrorf(t, err, "error: %v\n", err)
-	// mockClient.EXPECT().InstallOrUpgradeChart(context.TODO(), chartSpec).Return(&mockedRelease, nil)
+		h, err := helm.NewHelm(helmParam, helm.WithEntry(entry), helm.WithChartSpec(chartSpec), helm.WithClient(&mockClient{}))
+		Expect(err).ShouldNot(HaveOccurred())
+		err = h.AddOrUpdateChartRepo(*entry)
+		Expect(err).ShouldNot(HaveOccurred())
+	})
+})
 
-	err = h.InstallOrUpgradeChart()
-	require.NoError(t, err)
-}
+var _ = Describe("UninstallHelmChartRelease func", func() {
+	It("should work", func() {
+		atomic := true
+		if !*helmParam.Chart.Wait {
+			atomic = false
+		}
+		tmout, err := time.ParseDuration(helmParam.Chart.Timeout)
+		Expect(err).ShouldNot(HaveOccurred())
+		chartSpec := &helmclient.ChartSpec{
+			ReleaseName:      helmParam.Chart.ReleaseName,
+			ChartName:        helmParam.Chart.ChartName,
+			Namespace:        helmParam.Chart.Namespace,
+			ValuesYaml:       helmParam.Chart.ValuesYaml,
+			Version:          helmParam.Chart.Version,
+			CreateNamespace:  false,
+			DisableHooks:     false,
+			Replace:          true,
+			Wait:             *helmParam.Chart.Wait,
+			DependencyUpdate: false,
+			Timeout:          tmout,
+			GenerateName:     false,
+			NameTemplate:     "",
+			Atomic:           atomic,
+			SkipCRDs:         false,
+			UpgradeCRDs:      *helmParam.Chart.UpgradeCRDs,
+			SubNotes:         false,
+			Force:            false,
+			ResetValues:      false,
+			ReuseValues:      false,
+			Recreate:         false,
+			MaxHistory:       0,
+			CleanupOnFail:    false,
+			DryRun:           false,
+		}
+		// base
+		h, err := helm.NewHelm(helmParam, helm.WithChartSpec(chartSpec), helm.WithClient(&mockClient{}))
+		Expect(err).ShouldNot(HaveOccurred())
 
-func TestAddOrUpdateChartRepo(t *testing.T) {
-	entry := &repo.Entry{
-		Name:                  helmParam.Repo.Name,
-		URL:                   helmParam.Repo.URL,
-		Username:              "",
-		Password:              "",
-		CertFile:              "",
-		KeyFile:               "",
-		CAFile:                "",
-		InsecureSkipTLSverify: false,
-		PassCredentialsAll:    false,
-	}
-	atomic := true
-	if !*helmParam.Chart.Wait {
-		atomic = false
-	}
-	tmout, err := time.ParseDuration(helmParam.Chart.Timeout)
-	require.NoErrorf(t, err, "error: %v must be nil\n", err)
-	chartSpec := &helmclient.ChartSpec{
-		ReleaseName:      helmParam.Chart.ReleaseName,
-		ChartName:        helmParam.Chart.ChartName,
-		Namespace:        helmParam.Chart.Namespace,
-		ValuesYaml:       helmParam.Chart.ValuesYaml,
-		Version:          helmParam.Chart.Version,
-		CreateNamespace:  false,
-		DisableHooks:     false,
-		Replace:          true,
-		Wait:             *helmParam.Chart.Wait,
-		DependencyUpdate: false,
-		Timeout:          tmout,
-		GenerateName:     false,
-		NameTemplate:     "",
-		Atomic:           atomic,
-		SkipCRDs:         false,
-		UpgradeCRDs:      *helmParam.Chart.UpgradeCRDs,
-		SubNotes:         false,
-		Force:            false,
-		ResetValues:      false,
-		ReuseValues:      false,
-		Recreate:         false,
-		MaxHistory:       0,
-		CleanupOnFail:    false,
-		DryRun:           false,
-	}
+		err = h.UninstallHelmChartRelease()
+		Expect(err).ShouldNot(HaveOccurred())
 
-	h, err := NewHelm(helmParam, WithEntry(entry), WithChartSpec(chartSpec), WithClient(&DefaultMockClient{}))
-	require.NoErrorf(t, err, "error: %v\n", err)
+		// mock error
+		h, err = helm.NewHelm(helmParam, helm.WithChartSpec(chartSpec), helm.WithClient(&mockClient{
+			UninstallReleaseByNameError: fmt.Errorf("data error"),
+		}))
+		Expect(err).ShouldNot(HaveOccurred())
 
-	err = h.AddOrUpdateChartRepo(*entry)
-	require.NoErrorf(t, err, "error: %v\n", err)
-}
-
-func TestHelm_UninstallHelmChartRelease(t *testing.T) {
-	atomic := true
-	if !*helmParam.Chart.Wait {
-		atomic = false
-	}
-	tmout, err := time.ParseDuration(helmParam.Chart.Timeout)
-	require.NoErrorf(t, err, "error: %v must be nil\n", err)
-	chartSpec := &helmclient.ChartSpec{
-		ReleaseName:      helmParam.Chart.ReleaseName,
-		ChartName:        helmParam.Chart.ChartName,
-		Namespace:        helmParam.Chart.Namespace,
-		ValuesYaml:       helmParam.Chart.ValuesYaml,
-		Version:          helmParam.Chart.Version,
-		CreateNamespace:  false,
-		DisableHooks:     false,
-		Replace:          true,
-		Wait:             *helmParam.Chart.Wait,
-		DependencyUpdate: false,
-		Timeout:          tmout,
-		GenerateName:     false,
-		NameTemplate:     "",
-		Atomic:           atomic,
-		SkipCRDs:         false,
-		UpgradeCRDs:      *helmParam.Chart.UpgradeCRDs,
-		SubNotes:         false,
-		Force:            false,
-		ResetValues:      false,
-		ReuseValues:      false,
-		Recreate:         false,
-		MaxHistory:       0,
-		CleanupOnFail:    false,
-		DryRun:           false,
-	}
-	// base
-	h, err := NewHelm(helmParam, WithChartSpec(chartSpec), WithClient(&DefaultMockClient3{}))
-	require.NoErrorf(t, err, "error: %v\n", err)
-
-	err = h.UninstallHelmChartRelease()
-	require.NoError(t, err)
-
-	// mock error not found
-	h, err = NewHelm(helmParam, WithChartSpec(chartSpec), WithClient(&DefaultMockClient{}))
-	require.NoErrorf(t, err, "error: %v\n", err)
-
-	err = h.UninstallHelmChartRelease()
-	require.NoError(t, err)
-
-	// mock error
-	h, err = NewHelm(helmParam, WithChartSpec(chartSpec), WithClient(&DefaultMockClient2{}))
-	require.NoErrorf(t, err, "error: %v\n", err)
-
-	err = h.UninstallHelmChartRelease()
-	require.Error(t, err, "error not found")
-
-	require.Equalf(t, err, NormalError, "got: %+v\n, want %+v\n", err, NormalError)
-}
+		err = h.UninstallHelmChartRelease()
+		Expect(err).Should(HaveOccurred())
+		Expect(err.Error()).Should(Equal("data error"))
+	})
+})

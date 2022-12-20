@@ -1,7 +1,7 @@
 package goclient
 
 import (
-	"errors"
+	"fmt"
 	"strings"
 
 	appsv1 "k8s.io/api/apps/v1"
@@ -27,8 +27,7 @@ func DealWithNsWhenInstall(options configmanager.RawOptions) error {
 
 	// Namespace should not be empty
 	if opts.Namespace == "" {
-		log.Debugf("No namespace is given.")
-		return errors.New("No namespace is given.")
+		return fmt.Errorf("config options should set namespace config")
 	}
 	log.Debugf("Prepare to create the namespace: %s.", opts.Namespace)
 

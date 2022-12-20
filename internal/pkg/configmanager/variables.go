@@ -8,12 +8,10 @@ import (
 func renderConfigWithVariables(fileContent string, variables map[string]interface{}) ([]byte, error) {
 	logFunc(fileContent, variables)
 
-	str, err := template.New().
-		FromContent(fileContent).
-		AddDotForVariablesInConfigProcessor().
-		AddQuoteForVariablesInConfigProcessor().
-		SetDefaultRender(fileContent, variables).
-		Render()
+	str, err := template.NewRenderClient(&template.TemplateOption{
+		Name: "configmanager",
+	}, template.ContentGetter, template.AddDotForVariablesInConfigProcessor, template.AddQuoteForVariablesInConfigProcessor,
+	).Render(fileContent, variables)
 
 	if err != nil {
 		return nil, err

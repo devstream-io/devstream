@@ -4,7 +4,6 @@ import (
 	argocdv1alpha1 "github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
-	v1 "k8s.io/api/core/v1"
 )
 
 type MockClient struct {
@@ -93,11 +92,11 @@ func (m *MockClient) IsNamespaceExists(namespace string) (bool, error) {
 	return false, nil
 }
 
-func (m *MockClient) ApplyConfigMap(name, namespace string, data, labels map[string]string) (*v1.ConfigMap, error) {
+func (m *MockClient) ApplyConfigMap(name, namespace string, data, labels map[string]string) (*corev1.ConfigMap, error) {
 	return nil, nil
 }
 
-func (m *MockClient) GetConfigMap(name, namespace string) (*v1.ConfigMap, error) {
+func (m *MockClient) GetConfigMap(name, namespace string) (*corev1.ConfigMap, error) {
 	return nil, nil
 }
 

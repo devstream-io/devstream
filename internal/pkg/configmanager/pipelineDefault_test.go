@@ -69,6 +69,7 @@ var _ = Describe("pipelineArgocdAppGenerator func", func() {
 			},
 			Repo: &git.RepoInfo{
 				CloneURL: "scm.test.com",
+				Branch:   "testBranch",
 			},
 			AppName: "test_app",
 		}
@@ -85,9 +86,10 @@ var _ = Describe("pipelineArgocdAppGenerator func", func() {
 				"namespace": "default",
 			},
 			"source": RawOptions{
-				"valuefile": "values.yaml",
-				"path":      "helm/test_app",
-				"repoURL":   "https://scm.test.com",
+				"valuefile":  "values.yaml",
+				"path":       "helm/test_app",
+				"repoURL":    "https://scm.test.com",
+				"repoBranch": "testBranch",
 			},
 			"imageRepo": RawOptions{
 				"owner": "test_user",

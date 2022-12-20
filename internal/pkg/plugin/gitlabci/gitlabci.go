@@ -64,12 +64,12 @@ func createGitlabRunnerByHelm(repoInfo *git.RepoInfo) error {
 		return err
 	}
 	// 2. else create runner for this project
-	valuesYaml, err := template.New().FromContent(helmValueTpl).SetDefaultRender(
-		"gitlab-runner tpl", map[string]any{
+	valuesYaml, err := template.NewRenderClient(&template.TemplateOption{
+		Name: "gitlab-runner"}, template.ContentGetter).Render(
+		helmValueTpl, map[string]any{
 			"GitlabURL":     repoInfo.BaseURL,
 			"RegisterToken": runnerToken,
-		},
-	).Render()
+		})
 	if err != nil {
 		return err
 	}

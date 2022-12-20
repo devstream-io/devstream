@@ -13,7 +13,6 @@ import (
 
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 	"github.com/devstream-io/devstream/pkg/util/scm/github"
-	util_github "github.com/devstream-io/devstream/pkg/util/scm/github"
 )
 
 var (
@@ -25,7 +24,7 @@ var (
 const basePath = "/api-v3"
 
 var _ = BeforeSuite(func() {
-	mux, serverURL, teardown = util_github.Setup()
+	mux, serverURL, teardown = github.Setup()
 })
 
 var _ = AfterSuite(func() {

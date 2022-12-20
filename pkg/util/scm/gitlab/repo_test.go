@@ -9,6 +9,7 @@ import (
 	"github.com/onsi/gomega/ghttp"
 	gitlabCommon "github.com/xanzy/go-gitlab"
 
+	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 	"github.com/devstream-io/devstream/pkg/util/scm/gitlab"
 )
@@ -36,7 +37,9 @@ var _ = Describe("repo methods", func() {
 			Visibility: visibility,
 		}
 		client, err := gitlabCommon.NewClient(
-			"test", gitlabCommon.WithBaseURL(server.URL()))
+			"test", gitlabCommon.WithBaseURL(server.URL()),
+			gitlabCommon.WithCustomRetryMax(0),
+		)
 		Expect(err).Error().ShouldNot(HaveOccurred())
 		gitlabClient = &gitlab.Client{
 			Client:   client,
@@ -82,6 +85,47 @@ var _ = Describe("repo methods", func() {
 		It("should return repo info", func() {
 			_, err := gitlabClient.DescribeRepo()
 			Expect(err).ShouldNot(HaveOccurred())
+		})
+	})
+
+	Context("AddWebhook method", func() {
+		var (
+			webHook    *git.WebhookConfig
+			webhookURL string
+		)
+		BeforeEach(func() {
+			webhookURL = "test.com"
+			webHook = &git.WebhookConfig{
+				Address: webhookURL,
+			}
+		})
+		When("get webhook return error", func() {
+			BeforeEach(func() {
+				reqPath = fmt.Sprintf("%sprojects/%s/%s/hooks", apiRootPath, owner, repoName)
+				server.RouteToHandler("GET", reqPath, ghttp.CombineHandlers(
+					ghttp.VerifyRequest("GET", reqPath),
+					ghttp.RespondWithJSONEncoded(http.StatusBadGateway, nil),
+				))
+			})
+			It("should return error", func() {
+				err := gitlabClient.AddWebhook(webHook)
+				Expect(err).Should(HaveOccurred())
+			})
+		})
+		When("add webhook return invalid url", func() {
+			BeforeEach(func() {
+				reqPath = fmt.Sprintf("%sprojects/%s/%s/hooks", apiRootPath, owner, repoName)
+				webhookRawBody := fmt.Sprintf(`[{"id": "test", "url": %s}]`, webhookURL)
+				server.RouteToHandler("GET", reqPath, ghttp.CombineHandlers(
+					ghttp.VerifyRequest("GET", reqPath),
+					ghttp.RespondWithJSONEncoded(http.StatusOK, webhookRawBody),
+				))
+			})
+			It("should return error", func() {
+				log.Warnf("Start=> %+v", webHook)
+				err := gitlabClient.AddWebhook(webHook)
+				Expect(err).Should(HaveOccurred())
+			})
 		})
 	})
 

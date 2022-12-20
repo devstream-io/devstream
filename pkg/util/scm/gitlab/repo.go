@@ -140,7 +140,7 @@ func (c *Client) getWebhook(webhookConfig *git.WebhookConfig) (*gitlab.ProjectHo
 	p := &gitlab.ListProjectHooksOptions{}
 	hooks, _, err := c.Projects.ListProjectHooks(c.GetRepoPath(), p)
 	if err != nil {
-		log.Debugf("gitlab DeleteWebhook list hooks failed: %s", err)
+		log.Debugf("gitlab get webhook list hooks failed: %s", err)
 		return nil, c.newModuleError(err)
 	}
 	for _, hook := range hooks {

@@ -1,5 +1,5 @@
-devstream-io/dtm-gitlab-share-library:
-  - source: staging/dtm-gitlab-share-library/
+devstream-io/dtm-jenkins-share-library:
+  - source: staging/dtm-jenkins-share-library/
     dest: .
     deleteOrphaned: true
 devstream-io/dtm-pipeline-templates:

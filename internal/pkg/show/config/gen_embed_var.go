@@ -77,10 +77,10 @@ func copyTemplates(src, dst string) error {
 
 // generate generates the code for Option `o` into a file named by `o.Path`.
 func generate(o *Option) {
-	content, err := templateUtil.New().
-		FromContent(templateCode).
-		SetDefaultRender("gen", o, o.Funcs).
-		Render()
+	content, err := templateUtil.NewRenderClient(&templateUtil.TemplateOption{
+		Name:    "gen_embed",
+		FuncMap: o.Funcs,
+	}, templateUtil.ContentGetter).Render(templateCode, o)
 
 	if err != nil {
 		log.Fatal("template Execute error:", err)

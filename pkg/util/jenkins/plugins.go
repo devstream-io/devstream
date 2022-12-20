@@ -60,7 +60,9 @@ func (j *jenkins) InstallPluginsIfNotExists(installPlugins []*JenkinsPlugin) err
 	}
 
 	enableRestart := j.BasicInfo.EnableRestart
-	pluginInstallScript, err := template.Render("jenkins-plugins-template", pluginsGroovyScript, map[string]interface{}{
+	pluginInstallScript, err := template.NewRenderClient(&template.TemplateOption{
+		Name: "jenkins-plugins-template",
+	}, template.ContentGetter).Render(pluginsGroovyScript, map[string]interface{}{
 		"JenkinsPlugins": transferPluginSliceToTplString(toInstallPlugins),
 		"EnableRestart":  enableRestart,
 	})
