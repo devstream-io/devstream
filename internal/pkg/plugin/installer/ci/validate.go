@@ -26,6 +26,10 @@ func SetDefault(ciType server.CIServerType) func(option configmanager.RawOptions
 		if err != nil {
 			return nil, err
 		}
+		// set default value of repoInfo
+		if err := opts.ProjectRepo.SetDefault(); err != nil {
+			return nil, err
+		}
 		opts.CIFileConfig = opts.Pipeline.BuildCIFileConfig(ciType, opts.ProjectRepo)
 		return mapz.DecodeStructToMap(opts)
 	}

@@ -20,6 +20,11 @@ func setJenkinsDefault(options configmanager.RawOptions) (configmanager.RawOptio
 		return nil, err
 	}
 
+	// set project default value
+	if err := opts.ProjectRepo.SetDefault(); err != nil {
+		return nil, err
+	}
+
 	// if jenkins is offline, just use offline Jenkinsfile
 	if opts.needOfflineConfig() {
 		opts.CIFileConfig = &cifile.CIFileConfig{
