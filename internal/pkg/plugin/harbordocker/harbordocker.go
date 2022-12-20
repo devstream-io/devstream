@@ -57,7 +57,9 @@ func renderConfig(options configmanager.RawOptions) (configmanager.RawOptions, e
 		return nil, err
 	}
 
-	content, err := template.New().FromContent(HarborConfigTemplate).SetDefaultRender("compose", opts).Render()
+	content, err := template.NewRenderClient(&template.TemplateOption{
+		Name: "docker-compose",
+	}, template.ContentGetter).Render(HarborConfigTemplate, opts)
 	if err != nil {
 		return nil, err
 	}

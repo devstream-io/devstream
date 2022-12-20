@@ -25,7 +25,9 @@ func ProcessByContent(action, content string) installer.BaseOperation {
 }
 
 func renderKubectlContent(content string, options configmanager.RawOptions) (io.Reader, error) {
-	content, err := template.New().FromContent(content).SetDefaultRender("kubectl", options).Render()
+	content, err := template.NewRenderClient(&template.TemplateOption{
+		Name: "kubectl",
+	}, template.ContentGetter).Render(content, options)
 	if err != nil {
 		return nil, err
 	}
@@ -38,7 +40,9 @@ func renderKubectlContent(content string, options configmanager.RawOptions) (io.
 
 func ProcessByURL(action, url string) installer.BaseOperation {
 	return func(options configmanager.RawOptions) error {
-		content, err := template.New().FromURL(url).SetDefaultRender("kubectl", options).Render()
+		content, err := template.NewRenderClient(&template.TemplateOption{
+			Name: "kubectl",
+		}, template.URLGetter).Render(url, options)
 		if err != nil {
 			return err
 		}

@@ -68,7 +68,9 @@ func (c *CIFileConfig) newCIServerClient() (ciClient server.CIServerOptions) {
 func (c *CIFileConfig) renderContent(ciFileContent string) (string, error) {
 	needRenderContent := len(c.Vars) > 0
 	if needRenderContent {
-		return template.New().FromContent(ciFileContent).SetDefaultRender(ciTemplateName, c.Vars).Render()
+		return template.NewRenderClient(&template.TemplateOption{
+			Name: fmt.Sprintf("ci-%s", ciTemplateName),
+		}, template.ContentGetter).Render(ciFileContent, c.Vars)
 	}
 	return ciFileContent, nil
 

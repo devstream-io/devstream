@@ -99,18 +99,18 @@ func (jenkins *jenkins) ExecuteScript(script string) (string, error) {
 
 func (jenkins *jenkins) ConfigCascForRepo(repoCascConfig *RepoCascConfig) error {
 	log.Info("jenkins start config casc...")
-	cascConfig, err := template.Render(
-		"jenkins-repo-casc", repoCascScript, repoCascConfig,
-	)
+	cascConfig, err := template.NewRenderClient(&template.TemplateOption{
+		Name: "jenkins-repo-casc"}, template.ContentGetter,
+	).Render(repoCascScript, repoCascConfig)
 	if err != nil {
 		log.Debugf("jenkins preinstall credentials failed: %s", err)
 		return err
 	}
-	groovyCascScript, err := template.Render(
-		"jenkins-casc", cascGroovyScript, map[string]string{
-			"CascConfig": cascConfig,
-		},
-	)
+	groovyCascScript, err := template.NewRenderClient(&template.TemplateOption{
+		Name: "jenkins-casc",
+	}, template.ContentGetter).Render(cascGroovyScript, map[string]string{
+		"CascConfig": cascConfig,
+	})
 	if err != nil {
 		log.Debugf("jenkins render casc failed: %s", err)
 		return err
