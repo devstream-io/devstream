@@ -73,9 +73,9 @@ func (j *jobOptions) createOrUpdateJob(jenkinsClient jenkins.JenkinsAPI, secretT
 		SecretToken:       secretToken,
 		FolderName:        j.JobName.getJobFolder(),
 		GitlabConnection:  globalConfig.GitlabConnectionID,
-		RepoURL:           string(repoInfo.CloneURL),
+		RepoURL:           string(repoInfo.GetCloneURL()),
 		RepoOwner:         repoInfo.GetRepoOwner(),
-		RepoName:          repoInfo.Repo,
+		RepoName:          repoInfo.GetRepoName(),
 		RepoCredentialsId: globalConfig.CredentialID,
 	}
 	jobScript, err := jenkins.BuildRenderedScript(jobRenderInfo)
