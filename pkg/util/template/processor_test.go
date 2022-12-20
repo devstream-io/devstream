@@ -1,17 +1,21 @@
-package template
+package template_test
 
 import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+
+	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/template"
 )
 
-var _ = Describe("addDotForVariablesInConfig", func() {
+var _ = Describe("AddDotForVariablesInConfigProcessor", func() {
 	var (
-		origin, gotten, expected string
+		gotten           []byte
+		origin, expected string
 	)
 
 	JustBeforeEach(func() {
-		gotten = addDotForVariablesInConfig(origin)
+		gotten = template.AddDotForVariablesInConfigProcessor([]byte(origin))
 	})
 
 	When("config is normal", func() {
@@ -20,7 +24,7 @@ var _ = Describe("addDotForVariablesInConfig", func() {
 			expected = "[[ .varNameA ]]"
 		})
 		It("should succeed", func() {
-			Expect(gotten).To(Equal(expected))
+			Expect(string(gotten)).To(Equal(expected))
 		})
 	})
 
@@ -31,7 +35,7 @@ var _ = Describe("addDotForVariablesInConfig", func() {
 		})
 
 		It("should succeed", func() {
-			Expect(gotten).To(Equal(expected))
+			Expect(string(gotten)).To(Equal(expected))
 		})
 	})
 
@@ -42,7 +46,7 @@ var _ = Describe("addDotForVariablesInConfig", func() {
 		})
 
 		It("should succeed", func() {
-			Expect(gotten).To(Equal(expected))
+			Expect(string(gotten)).To(Equal(expected))
 		})
 	})
 
@@ -53,7 +57,7 @@ var _ = Describe("addDotForVariablesInConfig", func() {
 		})
 
 		It("should succeed", func() {
-			Expect(gotten).To(Equal(expected))
+			Expect(string(gotten)).To(Equal(expected))
 		})
 	})
 
@@ -64,21 +68,19 @@ var _ = Describe("addDotForVariablesInConfig", func() {
 		})
 
 		It("should do nothing", func() {
-			Expect(gotten).To(Equal(expected))
+			Expect(string(gotten)).To(Equal(expected))
 		})
 	})
 })
 
-var _ = Describe("addQuoteForVariablesInConfig", func() {
+var _ = Describe("AddQuoteForVariablesInConfigProcessor", func() {
 	var (
-		origin, gotten, expected string
+		gotten           []byte
+		origin, expected string
 	)
 
 	JustBeforeEach(func() {
-		gotten = addQuoteForVariablesInConfig(origin)
-	})
-	AfterEach(func() {
-		Expect(gotten).To(Equal(expected))
+		gotten = template.AddQuoteForVariablesInConfigProcessor([]byte(origin))
 	})
 
 	When("config is normal", func() {
@@ -88,7 +90,7 @@ var _ = Describe("addQuoteForVariablesInConfig", func() {
 		})
 
 		It("should succeed", func() {
-			Expect(gotten).To(Equal(expected))
+			Expect(string(gotten)).To(Equal(expected))
 		})
 	})
 
@@ -99,7 +101,7 @@ var _ = Describe("addQuoteForVariablesInConfig", func() {
 		})
 
 		It("should do nothing", func() {
-			Expect(gotten).To(Equal(expected))
+			Expect(string(gotten)).To(Equal(expected))
 		})
 	})
 
@@ -110,7 +112,7 @@ var _ = Describe("addQuoteForVariablesInConfig", func() {
 		})
 
 		It("should do nothing", func() {
-			Expect(gotten).To(Equal(expected))
+			Expect(string(gotten)).To(Equal(expected))
 		})
 	})
 
@@ -121,7 +123,7 @@ var _ = Describe("addQuoteForVariablesInConfig", func() {
 		})
 
 		It("should succeed", func() {
-			Expect(gotten).To(Equal(expected))
+			Expect(string(gotten)).To(Equal(expected))
 		})
 	})
 
@@ -132,7 +134,7 @@ var _ = Describe("addQuoteForVariablesInConfig", func() {
 		})
 
 		It("should do nothing", func() {
-			Expect(gotten).To(Equal(expected))
+			Expect(string(gotten)).To(Equal(expected))
 		})
 	})
 
@@ -143,7 +145,8 @@ var _ = Describe("addQuoteForVariablesInConfig", func() {
 		})
 
 		It("should do nothing", func() {
-			Expect(gotten).To(Equal(expected))
+			log.Infof("------> %s [%s]", string(gotten), expected)
+			Expect(string(gotten)).To(Equal(expected))
 		})
 	})
 })

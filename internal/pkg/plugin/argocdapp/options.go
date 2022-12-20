@@ -82,7 +82,9 @@ func (o *options) getArgocdDefaultConfigFiles(configLocation downloader.Resource
 	}
 	// 3. get file content
 	fContentFunc := func(filePath string) ([]byte, error) {
-		renderContent, err := template.New().FromLocalFile(filePath).SetDefaultRender("argocd config", o).Render()
+		renderContent, err := template.NewRenderClient(&template.TemplateOption{
+			Name: "argocd",
+		}, template.LocalFileGetter).Render(filePath, o)
 		if err != nil {
 			return nil, err
 		}

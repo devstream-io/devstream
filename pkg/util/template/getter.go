@@ -6,36 +6,20 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/downloader"
 )
 
-// Getters
+// ContentGetter gets content from any source
+type getFunc func(string) ([]byte, error)
 
-func FromLocalFile(filepath string) ContentGetter {
-	return func() ([]byte, error) {
-		return os.ReadFile(filepath)
-	}
+// LocalFileGetter get content bytes from file
+func LocalFileGetter(filepath string) ([]byte, error) {
+	return os.ReadFile(filepath)
 }
 
-func FromContent(content string) ContentGetter {
-	return func() ([]byte, error) {
-		return []byte(content), nil
-	}
+// ContentGetter get content bytes from input content
+func ContentGetter(content string) ([]byte, error) {
+	return []byte(content), nil
 }
 
-func FromURL(url string) ContentGetter {
-	return func() ([]byte, error) {
-		return downloader.FetchContentFromURL(url)
-	}
-}
-
-// Quick Calls
-
-func (r *render) FromLocalFile(filepath string) *rendererWithGetter {
-	return r.SetContentGetter(FromLocalFile(filepath))
-}
-
-func (r *render) FromContent(content string) *rendererWithGetter {
-	return r.SetContentGetter(FromContent(content))
-}
-
-func (r *render) FromURL(url string) *rendererWithGetter {
-	return r.SetContentGetter(FromURL(url))
+// URLGetter get content bytes from remote url
+func URLGetter(url string) ([]byte, error) {
+	return downloader.FetchContentFromURL(url)
 }

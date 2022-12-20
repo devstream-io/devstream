@@ -57,7 +57,9 @@ func (jenkins *jenkins) GetFolderJob(jobName string, jobFolder string) (*gojenki
 }
 
 func BuildRenderedScript(vars any) (string, error) {
-	return template.Render("jenkins-script-template", jobGroovyScript, vars)
+	return template.NewRenderClient(
+		&template.TemplateOption{Name: "jenkins-script-template"}, template.ContentGetter,
+	).Render(jobGroovyScript, vars)
 }
 
 func IsNotFoundError(err error) bool {
