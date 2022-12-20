@@ -22,7 +22,10 @@ func pushArgocdConfigFiles(rawOptions configmanager.RawOptions) error {
 	}
 
 	// 1. init scm client for check argocdapp config exists and push argocdapp files
-	repoInfo := &git.RepoInfo{CloneURL: git.ScmURL(opts.Source.RepoURL)}
+	repoInfo := &git.RepoInfo{
+		CloneURL: git.ScmURL(opts.Source.RepoURL),
+		Branch:   opts.Source.RepoBranch,
+	}
 	scmClient, err := scm.NewClientWithAuth(repoInfo)
 	if err != nil {
 		return err

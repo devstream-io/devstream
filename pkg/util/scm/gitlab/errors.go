@@ -13,10 +13,11 @@ var (
 	errWebHookInvalid pkgerror.ErrorMessage = "invlid url given"
 	errFileExist      pkgerror.ErrorMessage = "A file with this name already exists"
 	errVariableExist  pkgerror.ErrorMessage = "has already been taken"
+	errFileNotExist   pkgerror.ErrorMessage = "file with this name doesn't exist"
 )
 
 var errorMsgMap = map[pkgerror.ErrorMessage]string{
-	errWebHookInvalid: "webhook config doesn't support local network, should config gitlab or change jenkinsURL config",
+	errWebHookInvalid: "webhook config doesn't support local networks, and you should config gitlab or change jenkinsURL config. For more info, you can refer to https://docs.gitlab.com/ee/security/webhooks.html#allow-webhook-and-service-requests-to-local-network",
 	errFileExist:      "file already exist",
 }
 

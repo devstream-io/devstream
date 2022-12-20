@@ -31,7 +31,11 @@ var _ = Describe("CreateCommitInfo method", func() {
 			Repo:    repoName,
 			Owner:   owner,
 		}
-		client, err := gitlabCommon.NewClient("test", gitlabCommon.WithBaseURL(server.URL()))
+		client, err := gitlabCommon.NewClient(
+			"test", gitlabCommon.WithBaseURL(server.URL()),
+			// don't retry http request when test
+			gitlabCommon.WithCustomRetryMax(0),
+		)
 		Expect(err).Error().ShouldNot(HaveOccurred())
 		gitlabClient = &gitlab.Client{
 			Client:   client,

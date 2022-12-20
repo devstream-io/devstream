@@ -9,7 +9,6 @@ import (
 	argocdclient "github.com/argoproj/argo-cd/v2/pkg/client/clientset/versioned"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
-	v1 "k8s.io/api/core/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/client-go/util/homedir"
@@ -47,8 +46,8 @@ type K8sAPI interface {
 	DeleteNamespace(namespace string) error
 	IsNamespaceExists(namespace string) (bool, error)
 	// configmap API
-	ApplyConfigMap(name, namespace string, data, labels map[string]string) (*v1.ConfigMap, error)
-	GetConfigMap(name, namespace string) (*v1.ConfigMap, error)
+	ApplyConfigMap(name, namespace string, data, labels map[string]string) (*corev1.ConfigMap, error)
+	GetConfigMap(name, namespace string) (*corev1.ConfigMap, error)
 	// argocd API
 	ListArgocdApplications(namespace string) ([]argocdv1alpha1.Application, error)
 	GetArgocdApplication(namespace, name string) (*argocdv1alpha1.Application, error)

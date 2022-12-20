@@ -32,7 +32,7 @@ func cacheChartPackage(chartPath string) error {
 	dFile, err := os.Stat(dFilePath)
 	if err != nil { // return err if err != nil and err != "NotExist"
 		if !os.IsNotExist(err) {
-			return fmt.Errorf("stat file failed: %s.", err)
+			return fmt.Errorf("stat file failed: %w", err)
 		}
 	} else { // err == nil -> file exists -> check if the source file equals destination file
 		if !(dFile.Mode().IsRegular()) {
@@ -45,7 +45,7 @@ func cacheChartPackage(chartPath string) error {
 		// check md5
 		equal, err := md5.FilesMD5Equal(chartPath, dFilePath)
 		if err != nil {
-			return fmt.Errorf("calc md5 failed: %s.", err)
+			return fmt.Errorf("calc md5 failed: %w", err)
 		}
 		if equal {
 			log.Infof("The chart package already exists in the cache directory.")
@@ -53,7 +53,7 @@ func cacheChartPackage(chartPath string) error {
 		}
 		// remove the destination file if its name equals to source file but their contents don't equal
 		if err = os.RemoveAll(dFilePath); err != nil {
-			return fmt.Errorf("remove destination file failed: %s.", err)
+			return fmt.Errorf("remove destination file failed: %w", err)
 		}
 	}
 
