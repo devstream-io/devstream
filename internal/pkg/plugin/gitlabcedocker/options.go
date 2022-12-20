@@ -58,7 +58,9 @@ func (opts *Options) setGitLabURL() {
 
 func showHelpMsg(options configmanager.RawOptions) error {
 	log.Infof("GitLab access URL: %s", gitlabURL)
-	log.Infof("GitLab initial root password: execute the command -> docker exec -it gitlab grep 'Password:' /etc/gitlab/initial_root_password")
+	log.Info("Execute these two command to get/set GitLab root password: ")
+	log.Info("1. docker exec -it gitlab bash")
+	log.Info(`2. gitlab-rake "gitlab:password:reset"`)
 
 	return nil
 }
