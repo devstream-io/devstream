@@ -1,5 +1,17 @@
 # 用 DevStream 搭建 GitLab + Jenkins + Harbor 工具链，管理 Java Spring Boot 项目开发生命周期全流程
 
+## 0、配套视频
+
+我们给本文流程录制了视频 demo，你可以根据自己的习惯决定先看视频版还是文字版：
+
+<div class="video-wrapper">
+    <iframe width="1280" height="500" src="https://player.bilibili.com/player.html?cid=931459808&aid=819045554&page=1&as_wide=1&high_quality=1&danmaku=0" allowfullscreen></iframe>
+</div>
+
+!!! hint "提示"
+
+    跳转到B站观看清晰度更高。
+
 ## 1、概述
 
 本文将介绍如何通过 DevStream 在本地部署 `GitLab + Jenkins + Harbor` 工具链，并且以 Java Spring Boot 项目为例，演示如何通过 DevStream 快速创建 Java Spring Boot 项目脚手架，同时在 Jenkins 上自动创建对应的 Pipeline 实现 Java Spring Boot 项目的 CI 流程。
