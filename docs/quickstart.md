@@ -92,26 +92,7 @@ Run:
 ./dtm apply -f config.yaml -y
 ```
 
-!!! success "You should see similar output to the following"
-
-    ```text title=""
-    2022-12-12 11:44:39 ℹ [INFO]  Apply started.
-    2022-12-12 11:44:39 ℹ [INFO]  Using local backend. State file: devstream.state.
-    2022-12-12 11:44:39 ℹ [INFO]  Tool (repo-scaffolding/golang-github) found in config but doesn't exist in the state, will be created.
-    2022-12-12 11:44:39 ℹ [INFO]  Tool (github-actions/default) found in config but doesn't exist in the state, will be created.
-    2022-12-12 11:44:39 ℹ [INFO]  Start executing the plan.
-    2022-12-12 11:44:39 ℹ [INFO]  Changes count: 2.
-    2022-12-12 11:44:39 ℹ [INFO]  -------------------- [  Processing progress: 1/2.  ] --------------------
-    2022-12-12 11:44:39 ℹ [INFO]  Processing: (repo-scaffolding/golang-github) -> Create ...
-    2022-12-12 11:44:39 ℹ [INFO]  github start to download repoTemplate...2022-12-12 11:44:42 ✔ [SUCCESS]  The repo go-webapp-devstream-demo has been created.
-    2022-12-12 11:44:49 ✔ [SUCCESS]  Tool (repo-scaffolding/golang-github) Create done.
-    2022-12-12 11:44:49 ℹ [INFO]  -------------------- [  Processing progress: 2/2.  ] --------------------
-    2022-12-12 11:44:49 ℹ [INFO]  Processing: (github-actions/default) -> Create ...
-    2022-12-12 11:44:57 ✔ [SUCCESS]  Tool (github-actions/default) Create done.
-    2022-12-12 11:44:57 ℹ [INFO]  -------------------- [  Processing done.  ] --------------------
-    2022-12-12 11:44:57 ✔ [SUCCESS]  All plugins applied successfully.
-    2022-12-12 11:44:57 ✔ [SUCCESS]  Apply finished.
-    ```
+<script id="asciicast-eoWGI8l6wiNZ3misK8xZjp1fv" src="https://asciinema.org/a/eoWGI8l6wiNZ3misK8xZjp1fv.js" async></script>
 
 ---
 
