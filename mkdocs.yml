@@ -68,7 +68,7 @@ plugins:
       en:
         DTM Commands Explained in Depth: "DTM Commands Explained in Depth"
         Plugins: "Plugins"
-        Best Practices: "Best Practices"
+        Use Cases: "Use Cases"
         Developer Guide: "Developer Guide"
         Core Concepts: "Core Concepts"
         Commands: "Commands"
@@ -84,7 +84,7 @@ plugins:
       zh:
         DTM Commands Explained in Depth: "DTM 命令详解"
         Plugins: "插件"
-        Best Practices: "最佳实践"
+        Use Cases: "应用场景"
         Developer Guide: "开发指导"
         Core Concepts: "核心概念"
         Commands: "命令"
@@ -114,18 +114,18 @@ nav:
   - commands/*.md
   - commands/develop*.md
   - commands/verify*.md
+- Use Cases:
+  - use-cases/gitops*.md
+  - use-cases/apps*.md
+  - use-cases/gitlab-jenkins-harbor-java-springboot*.md
+  - use-cases/gjh-java-springboot-air-gapped-deployment*.md
+  - use-cases/image-registry*.md
 - Plugins:
   - plugins/plugins-list*.md
   - Helm Installer:
     - plugins/helm-installer/helm-installer*.md
     - plugins/helm-installer/*.md
   - plugins/*.md
-- Best Practices:
-  - best-practices/gitops*.md
-  - best-practices/apps*.md
-  - best-practices/gitlab-jenkins-harbor-java-springboot*.md
-  - best-practices/gjh-java-springboot-air-gapped-deployment*.md
-  - best-practices/image-registry*.md
 - contributing_guide*.md
 - contributor_ladder*.md
 - Governance ⧉: https://github.com/devstream-io/devstream/blob/main/GOVERNANCE.md
