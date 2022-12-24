@@ -137,30 +137,67 @@ func parseVersion(old, new string) (*semver.Version, *semver.Version, error) {
 // (2) rename `dtm-tmp` to current dtm file name.
 // (3) grant new dtm file execute permission.
 // (4) remove `dtm-bak` binary file.
-// TODO(hxcGit): Support for rollback in case of error in intermediate steps
+
 func applyUpgrade(workDir string) error {
 	dtmFilePath := filepath.Join(workDir, dtmFileName)
 	dtmBakFilePath := filepath.Join(workDir, dtmBakFileName)
 	dtmTmpFilePath := filepath.Join(workDir, dtmTmpFileName)
+	updateProgress := 0
+	defer func() {
+		for ; updateProgress >= 0; updateProgress-- {
+			switch updateProgress {
+			//If the error occur when step 1 (rename dtmFileName to `dtm-bak`), delete `dtm-tmp`
+			case 0:
+				if err := os.Remove(dtmTmpFilePath); err != nil {
+					log.Debugf("Dtm upgrade rollback error: %s", err.Error())
+				}
+
+			//the error occur in the step 2
+			case 1:
+				if err := os.Rename(dtmBakFilePath, dtmFilePath); err != nil {
+					log.Debugf("Dtm upgrade rollback error: %s", err.Error())
+				}
+
+			//the error occur in the step 3
+			case 2:
+				if err := os.Rename(dtmFilePath, dtmTmpFilePath); err != nil {
+					log.Debugf("Dtm upgrade rollback error: %s", err.Error())
+				}
+
+			//the error occur in the step 4
+			case 3:
+				if err := os.Chmod(dtmFilePath, 0644); err != nil {
+					log.Debugf("Dtm upgrade rollback error: %s", err.Error())
+				}
+			case 4:
+				//Successfully completed all step
+				return
+			}
+		}
+	}()
 
 	if err := os.Rename(dtmFilePath, dtmBakFilePath); err != nil {
 		return err
 	}
+	updateProgress++
 	log.Debugf("Dtm upgrade: rename %s to dtm-bak successfully.", dtmFileName)
 
 	if err := os.Rename(dtmTmpFilePath, dtmFilePath); err != nil {
 		return err
 	}
+	updateProgress++
 	log.Debugf("Dtm upgrade: rename dtm-tmp to %s successfully.", dtmFileName)
 
 	if err := os.Chmod(dtmFilePath, 0755); err != nil {
 		return err
 	}
+	updateProgress++
 	log.Debugf("Dtm upgrade: grant %s execute permission successfully.", dtmFileName)
 
 	if err := os.Remove(dtmBakFilePath); err != nil {
 		return err
 	}
+	updateProgress++
 	log.Debug("Dtm upgrade: remove dtm-bak successfully.")
 
 	return nil
