@@ -36,4 +36,4 @@
 ## 让我们开始吧！
 
 - [快速入门](./quickstart.zh.md)
-- [最佳实践 - GitOps工具链](./best-practices/gitops.zh.md)
+- [最佳实践 - GitOps工具链](./use-cases/gitops.zh.md)
