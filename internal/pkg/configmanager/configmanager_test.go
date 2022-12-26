@@ -45,7 +45,7 @@ apps:
     url: github.com/devstream-io/dtm-repo-scaffolding-golang-gin # optional，if url is specified，we can infer scm/owner/org/name from url
   ci:
   - type: template
-    templateName: ci-pipeline-for-gh-actions
+    templateName: ci-pipeline-for-github-actions
     options: # overwrite options in pipelineTemplates
       docker:
         registry:
@@ -76,7 +76,7 @@ tools:
     foo2: [[ foo2 ]]
 
 pipelineTemplates:
-- name: ci-pipeline-for-gh-actions
+- name: ci-pipeline-for-github-actions
   type: github-actions # corresponding to a plugin
   options:
     branch: main # optional, default is main

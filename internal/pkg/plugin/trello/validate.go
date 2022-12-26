@@ -21,7 +21,7 @@ func validate(rawOptions configmanager.RawOptions) (configmanager.RawOptions, er
 	if err != nil {
 		return nil, err
 	}
-	if err := validator.StructAllError(opts); err != nil {
+	if err := validator.CheckStructError(opts).Combine(); err != nil {
 		return nil, err
 	}
 	return rawOptions, nil

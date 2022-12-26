@@ -5,6 +5,7 @@ import (
 
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
+	"github.com/devstream-io/devstream/pkg/util/validator"
 )
 
 const (
@@ -17,28 +18,32 @@ type repoTemplate struct {
 }
 
 type app struct {
-	Name         string        `yaml:"name" mapstructure:"name"`
-	Spec         *appSpec      `yaml:"spec" mapstructure:"spec"`
-	Repo         *git.RepoInfo `yaml:"repo" mapstructure:"repo"`
+	Name         string        `yaml:"name" mapstructure:"name" validate:"required"`
+	Spec         *appSpec      `yaml:"spec" mapstructure:"spec" validate:"required"`
+	Repo         *git.RepoInfo `yaml:"repo" mapstructure:"repo" validate:"required"`
 	RepoTemplate *repoTemplate `yaml:"repoTemplate" mapstructure:"repoTemplate"`
 	CIRawConfigs []pipelineRaw `yaml:"ci" mapstructure:"ci"`
 	CDRawConfigs []pipelineRaw `yaml:"cd" mapstructure:"cd"`
 }
 
 func (a *app) getTools(vars map[string]any, templateMap map[string]string) (Tools, error) {
-	// 1. set app default field repoInfo and repoTemplateInfo
+	// 1. check app config data is valid
+	if err := validator.CheckStructError(a).Combine(); err != nil {
+		return nil, err
+	}
+	// 2. set app default field repoInfo and repoTemplateInfo
 	if err := a.setDefault(); err != nil {
 		return nil, err
 	}
 
-	// 2. get ci/cd pipelineTemplates
+	// 3. get ci/cd pipelineTemplates
 	appVars := a.Spec.merge(vars)
 	tools, err := a.generateCICDTools(templateMap, appVars)
 	if err != nil {
 		return nil, fmt.Errorf("app[%s] get pipeline tools failed: %w", a.Name, err)
 	}
 
-	// 3. generate app repo and template repo from scmInfo
+	// 4. generate app repo and template repo from scmInfo
 	repoScaffoldingTool := a.generateRepoTemplateTool()
 	if repoScaffoldingTool != nil {
 		tools = append(tools, repoScaffoldingTool)
@@ -56,6 +61,9 @@ func (a *app) generateCICDTools(templateMap map[string]string, appVars map[strin
 	for _, p := range allPipelineRaw {
 		t, err := p.getPipelineTemplate(templateMap, appVars)
 		if err != nil {
+			return nil, err
+		}
+		if err := validator.CheckStructError(t).Combine(); err != nil {
 			return nil, err
 		}
 		t.updatePipelineVars(pipelineGlobalVars)
@@ -90,9 +98,6 @@ func (a *app) generateRepoTemplateTool() *Tool {
 
 // setDefault will set repoName to appName if repo.name field is empty
 func (a *app) setDefault() error {
-	if a.Repo == nil {
-		return fmt.Errorf("configmanager[app] is invalid, repo field must be configured")
-	}
 	if a.Repo.Repo == "" {
 		a.Repo.Repo = a.Name
 	}

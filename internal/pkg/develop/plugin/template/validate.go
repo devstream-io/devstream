@@ -18,12 +18,8 @@ func validate(options configmanager.RawOptions) (configmanager.RawOptions, error
 	if err != nil {
 		return nil, err
 	}
-	errs := validator.Struct(opts)
-	if len(errs) > 0 {
-		for _, e := range errs {
-			log.Errorf("Options error: %s.", e)
-		}
-		return nil, fmt.Errorf("opts are illegal")
+	if errs := validator.CheckStructError(opts).Combine(); len(errs) != 0 {
+		return nil, errs.Combine()
 	}
 	return options, nil
 }

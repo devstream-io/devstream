@@ -51,7 +51,7 @@ func (j *jenkinsOption) getBasicAuth() (*jenkins.BasicAuth, error) {
 	}
 	// 2. if not set, get user and password from secret
 	k8sClient, err := k8s.NewClient()
-	if err != nil {
+	if err == nil {
 		secretAuth := getAuthFromSecret(k8sClient, j.Namespace)
 		if secretAuth != nil && secretAuth.CheckNameMatch(j.User) {
 			log.Debugf("jenkins get auth token from secret")

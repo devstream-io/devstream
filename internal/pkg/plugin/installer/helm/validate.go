@@ -5,9 +5,9 @@ import (
 
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer"
-	"github.com/devstream-io/devstream/pkg/util/helm"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/types"
+	"github.com/devstream-io/devstream/pkg/util/validator"
 )
 
 // Validate validates the options provided by the dtm-core.
@@ -16,14 +16,16 @@ func Validate(options configmanager.RawOptions) (configmanager.RawOptions, error
 	if err != nil {
 		return nil, err
 	}
-	errs := helm.Validate(opts.GetHelmParam())
-	if len(errs) > 0 {
-		for _, e := range errs {
-			log.Errorf("Options error: %s.", e)
-		}
-		return nil, fmt.Errorf("opts are illegal")
+
+	var structErrs = validator.CheckStructError(opts)
+
+	if opts.Chart.ChartPath == "" && (opts.Repo.Name == "" || opts.Repo.URL == "" || opts.Chart.ChartName == "") {
+		log.Debugf("Repo.Name: %s, Repo.URL: %s, Chart.ChartName: %s", opts.Repo.Name, opts.Repo.URL, opts.Chart.ChartName)
+		err := fmt.Errorf("if chartPath == \"\", then the repo.Name & repo.URL & chart.chartName must be set")
+		structErrs = append(structErrs, err)
 	}
-	return options, nil
+
+	return options, structErrs.Combine()
 }
 
 // SetDefaultConfig will update options empty values base on import options

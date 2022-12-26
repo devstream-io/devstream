@@ -13,15 +13,15 @@ import (
 type (
 	// pipelineRaw is the raw format of app.ci/app.cd config
 	pipelineRaw struct {
-		Type         string     `yaml:"type" mapstructure:"type"`
-		TemplateName string     `yaml:"templateName" mapstructure:"templateName"`
+		Type         string     `yaml:"type" mapstructure:"type" validate:"required,oneof=template jenkins-pipeline github-actions gitlab-ci argocdapp"`
+		TemplateName string     `yaml:"templateName" mapstructure:"templateName" validate:"required"`
 		Options      RawOptions `yaml:"options" mapstructure:"options"`
 		Vars         RawOptions `yaml:"vars" mapstructure:"vars"`
 	}
 	// pipelineTemplate is valid pipeline format
 	pipelineTemplate struct {
-		Name    string     `yaml:"name"`
-		Type    string     `yaml:"type"`
+		Name    string     `yaml:"name" validate:"required"`
+		Type    string     `yaml:"type" validate:"required,oneof=jenkins-pipeline github-actions gitlab-ci argocdapp"`
 		Options RawOptions `yaml:"options"`
 	}
 	// pipelineGlobalOption is used to pass variable between ci/cd pipeline

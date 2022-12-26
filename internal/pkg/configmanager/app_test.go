@@ -27,7 +27,7 @@ var _ = Describe("app struct", func() {
 			It("should return error", func() {
 				_, err := a.getTools(vars, templateMap)
 				Expect(err).Should(HaveOccurred())
-				Expect(err.Error()).Should(ContainSubstring("configmanager[app] is invalid, repo field must be configured"))
+				Expect(err.Error()).Should(ContainSubstring("field app.repo is required"))
 			})
 		})
 		When("ci/cd template is not valid", func() {
@@ -47,7 +47,8 @@ var _ = Describe("app struct", func() {
 			It("should return error", func() {
 				_, err := a.getTools(vars, templateMap)
 				Expect(err).Should(HaveOccurred())
-				Expect(err.Error()).Should(ContainSubstring("not found in pipelineTemplates"))
+				Expect(err.Error()).Should(ContainSubstring("field app.name is required"))
+				Expect(err.Error()).Should(ContainSubstring("field app.spec is required"))
 			})
 		})
 		When("app repo template is empty", func() {
@@ -57,6 +58,7 @@ var _ = Describe("app struct", func() {
 					Repo: &git.RepoInfo{
 						CloneURL: "http://test.com/test/test_app",
 					},
+					Spec: &appSpec{Language: "go", FrameWork: "gin"},
 				}
 			})
 			It("should return empty tools", func() {
@@ -89,7 +91,7 @@ name: not_valid,
 type: not_valid`}
 				_, err := a.generateCICDTools(templateMap, vars)
 				Expect(err).Should(HaveOccurred())
-				Expect(err.Error()).Should(ContainSubstring("pipeline type [not_valid] not supported for now"))
+				Expect(err.Error()).Should(ContainSubstring("field pipelineTemplate.type must be one of"))
 			})
 		})
 	})
