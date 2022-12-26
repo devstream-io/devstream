@@ -210,13 +210,13 @@ export IMAGE_REPO_PASSWORD="YOUR_DOCKERHUB_TOKEN_HERE"
 
 DevStream 已经通过 `repo-scaffolding` 插件自动创建了一个仓库：
 
-![](gitops/a.png)
+![](../images/gitops-a.png)
 
 ### 8.2 基于 GitHub Actions 的 CI 流水线
 
 GitHub Actions 流水线已经被创建并运行：
 
-![](gitops/b.png)
+![](../images/gitops-b.png)
 
 ### 8.3 Argo CD 的安装
 
