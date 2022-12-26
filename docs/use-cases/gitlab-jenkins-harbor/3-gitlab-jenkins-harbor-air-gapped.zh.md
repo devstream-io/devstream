@@ -1,17 +1,15 @@
-# 在离线环境使用 DevStream 搭建 GitLab + Jenkins + Harbor 工具链，管理 Java Spring Boot 项目开发生命周期全流程
+# 离线环境快速部署 GitLab + Jenkins + Harbor 工具链
 
-在“[这个文档](./gitlab-jenkins-harbor-java-springboot.zh.md)”里我们介绍了怎样通过 DevStream 在本地部署 `GitLab + Jenkins + Harbor` 工具链，并且以 Java Spring Boot 项目为例，演示如何使用 DevStream 快速创建 Java Spring Boot 项目脚手架，同时在 Jenkins 上自动创建对应的 Pipeline 实现 Java Spring Boot 项目的 CI 流程。
+在“[这个文档](./2-gitlab-jenkins-harbor.zh.md)”里我们介绍了怎样通过 DevStream 在本地快速部署 `GitLab + Jenkins + Harbor` 工具链。
 
-本文将要演示的流水线最终效果与上面这个文档中介绍的几乎完全一致，唯一的区别就是本文假设你的服务器是离线的，你只有一台可以访问互联网的 PC，这台 PC 可以通过企业内部网络访问到你要使用 DevStream 的服务器，类似下图这样：
+但是如果你的服务器是离线的，你只有一台可以访问互联网的 PC，这台 PC 可以通过企业内部网络访问到你要用来部署 `GitLab + Jenkins + Harbor` 工具链服务器，类似下图这样：
 
 <figure markdown>
-  ![GitLab token](./air-gapped-deployment/air-gapped-env.png){ width="500" }
+  ![GitLab token](./gitlab-jenkins-harbor-air-gapped/air-gapped-env.png){ width="500" }
   <figcaption></figcaption>
 </figure>
 
-!!! info "提醒"
-
-    关于本文最终将要搭建的流水线及其工作效果，请查看“[这个文档](./gitlab-jenkins-harbor-java-springboot.zh.md)”。
+这时候，你就需要用到 DevStream 的工具链离线部署能力了。
 
 ## 1、下载 dtm 和 DevStream Plugins
 
@@ -34,7 +32,7 @@ sh -c "$(curl -fsSL https://download.devstream.io/download.sh)"
 这时候，相信你可以很容易拼接出类似下面这个命令：
 
 ```shell
-curl -o dtm https://download.devstream.io/v0.10.2/dtm-linux-amd64
+curl -o dtm https://download.devstream.io/v0.10.3/dtm-linux-amd64
 ```
 
 注意：这里的版本、系统类型、CPU 架构等信息需要灵活调整。
@@ -50,7 +48,7 @@ mv dtm /usr/local/bin/
 
 ```shell
 $ dtm version
-0.10.2
+0.10.3
 ```
 
 ### 1.2、下载 plugins
@@ -58,30 +56,26 @@ $ dtm version
 继续在你的 PC 上执行如下命令来下载 DevStream plugins：
 
 ```shell
-dtm init --download-only --plugins="gitlab-ce-docker, helm-installer, repo-scaffolding, jenkins-pipeline" -d=plugins
+dtm init --download-only --plugins="gitlab-ce-docker, helm-installer" -d=plugins
 ```
 
 这条命令执行成功后，你可以在本地 plugins 目录下看到如下文件：
 
 ```shell
 $ ls plugins/
-gitlab-ce-docker-linux-amd64_0.10.2.md5
-helm-installer-linux-amd64_0.10.2.md5
-jenkins-pipeline-linux-amd64_0.10.2.md5
-repo-scaffolding-linux-amd64_0.10.2.md5
-gitlab-ce-docker-linux-amd64_0.10.2.so
-helm-installer-linux-amd64_0.10.2.so
-jenkins-pipeline-linux-amd64_0.10.2.so
-repo-scaffolding-linux-amd64_0.10.2.so
+gitlab-ce-docker-linux-amd64_0.10.3.md5
+helm-installer-linux-amd64_0.10.3.md5
+gitlab-ce-docker-linux-amd64_0.10.3.so
+helm-installer-linux-amd64_0.10.3.so
 ```
 
 ## 2、下载镜像
 
 因为 DevStream 需要使用容器化方式部署 GitLab、Jenkins 和 Harbor，那么在开始离线部署前，你需要先下载这几个工具对应的容器镜像。DevStream 提供了这几个工具对应的镜像列表，并且帮你准备了工具脚本从而更加容易地完成镜像离线工作：
 
-1. [GitLab CE images](../plugins/gitlab-ce-docker/gitlab-ce-images.txt)
-2. [Jenkins images](../plugins/helm-installer/jenkins/jenkins-images.txt)
-3. [Harbor images](../plugins/helm-installer/harbor/harbor-images.txt)
+1. [GitLab CE images](../../plugins/gitlab-ce-docker/gitlab-ce-images.txt)
+2. [Jenkins images](../../plugins/helm-installer/jenkins/jenkins-images.txt)
+3. [Harbor images](../../plugins/helm-installer/harbor/harbor-images.txt)
 
 你可以通过如下命令将镜像列表下载到本地：
 
@@ -98,7 +92,7 @@ curl -o image-pull-push.sh https://raw.githubusercontent.com/devstream-io/devstr
 chmod +x image-pull-push.sh
 ```
 
-如果你还没有一个私有镜像仓库，可以参考[这篇文章](./image-registry.zh.md)快速部署一个 Docker Registry。
+如果你还没有一个私有镜像仓库，可以参考[这篇文章](../image-registry.zh.md)快速部署一个 Docker Registry。
 
 接下来，你就可以通过下述命令快速完成镜像的下载和上传了：
 
@@ -299,12 +293,22 @@ tools:
             size: 1Gi
 ```
 
+你可以将这个配置文件保存为 `config.yaml`
+
 ## 5、开始部署
 
-现在你可以通过如下命令开始部署 Jenkins 和 Harbor 了：
+现在你可以通过如下命令开始部署 GitLab、Jenkins 和 Harbor 了：
 
 ```shell
 dtm apply -f config.yaml -y
 ```
 
-剩下的步骤就联网部署没有什么区别了，你可以查看“[这个文档](./gitlab-jenkins-harbor-java-springboot.zh.md)”继续学习如何验证或清理这条工具链。
+完成部署后，你可以参考[这篇文档](./2-gitlab-jenkins-harbor.zh.md)继续学习如何访问 GitLab、Jenkins 和 Harbor 三个工具。
+
+## 6、环境清理
+
+你可以通过如下命令清理环境：
+
+```shell title="环境清理命令"
+dtm delete -f config.yaml -y
+```

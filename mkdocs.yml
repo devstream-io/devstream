@@ -81,6 +81,7 @@ plugins:
         Environment Setup and Development: "Environment Setup and Development"
         Docs Contribution: "Docs Contribution"
         Helm Installer: "Helm Installer"
+        GitLab + Jenkins + Harbor Toolchain Management: "GitLab + Jenkins + Harbor Toolchain Management"
       zh:
         DTM Commands Explained in Depth: "DTM 命令详解"
         Plugins: "插件"
@@ -97,6 +98,7 @@ plugins:
         Environment Setup and Development: "环境搭建与开发"
         Docs Contribution: "文档类贡献"
         Helm Installer: "Helm 安装器"
+        GitLab + Jenkins + Harbor Toolchain Management: "GitLab + Jenkins + Harbor 工具链管理"
 - literate-nav
 nav:
 - Overview: .
@@ -115,12 +117,12 @@ nav:
   - commands/develop*.md
   - commands/verify*.md
 - Use Cases:
-  - use-cases/gitops*.md
+  - GitLab + Jenkins + Harbor Toolchain Management:
+    - use-cases/gitlab-jenkins-harbor/*.md
   - GitOps with Python Flask:
     - use-cases/gitops-python-flask/*.md
+  - use-cases/gitops*.md  
   - use-cases/apps*.md
-  - use-cases/gitlab-jenkins-harbor-java-springboot*.md
-  - use-cases/gjh-java-springboot-air-gapped-deployment*.md
   - use-cases/image-registry*.md
 - Plugins:
   - plugins/plugins-list*.md
