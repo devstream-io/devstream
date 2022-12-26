@@ -12,6 +12,7 @@ variables:
   IMAGE_REPO_PASSWORD: "$IMAGE_REPO_SECRET"
   # general config
   INIT_IMAGE_TAG: "0.1"
+  APP_NAME: "[[ .AppName ]]"
 
 
 test:
