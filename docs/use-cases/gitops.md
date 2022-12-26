@@ -214,13 +214,13 @@ Let's continue to look at the results of the `apply` command.
 
 The repository is created automatically by DevStream with scaffolding code:
 
-![](gitops/a.png)
+![](../images/gitops-a.png)
 
 ### 8.2 CI Pipelines with GitHub Actions
 
 GitHub Actions pipelines are created and executed:
 
-![](gitops/b.png)
+![](../images/gitops-b.png)
 
 ### 8.3 Argo CD Installation
 

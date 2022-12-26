@@ -116,6 +116,8 @@ nav:
   - commands/verify*.md
 - Use Cases:
   - use-cases/gitops*.md
+  - GitOps with Python Flask:
+    - use-cases/gitops-python-flask/*.md
   - use-cases/apps*.md
   - use-cases/gitlab-jenkins-harbor-java-springboot*.md
   - use-cases/gjh-java-springboot-air-gapped-deployment*.md
