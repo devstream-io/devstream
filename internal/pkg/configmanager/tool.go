@@ -5,7 +5,6 @@ import (
 	"runtime"
 	"strings"
 
-	"go.uber.org/multierr"
 	"gopkg.in/yaml.v3"
 
 	"github.com/devstream-io/devstream/internal/pkg/version"
@@ -56,22 +55,13 @@ func (t *Tool) String() string {
 type Tools []*Tool
 
 func (tools Tools) validateAll() error {
-	var errs []error
-	errs = append(errs, tools.validate()...)
-	errs = append(errs, tools.validateDependsOnConfig()...)
-	return multierr.Combine(errs...)
-}
-
-func (tools Tools) validate() (errs []error) {
+	var errs validator.StructFieldErrors
 	for _, tool := range tools {
-		errs = append(errs, tool.validate()...)
+		errs = append(errs, validator.CheckStructError(tool)...)
 	}
+	errs = append(errs, tools.validateDependsOnConfig()...)
 	errs = append(errs, tools.duplicatedCheck()...)
-	return
-}
-
-func (t *Tool) validate() []error {
-	return validator.Struct(t)
+	return errs.Combine()
 }
 
 func (t *Tool) DeepCopy() *Tool {

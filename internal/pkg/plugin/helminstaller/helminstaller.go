@@ -9,6 +9,7 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/helm"
 	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/mapz"
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
@@ -30,7 +31,7 @@ func renderDefaultConfig(options configmanager.RawOptions) (configmanager.RawOpt
 	helmOptions.FillDefaultValue(defaultHelmOptions)
 	log.Debugf("Options with default config filled: %v.", helmOptions)
 
-	return types.EncodeStruct(helmOptions)
+	return mapz.DecodeStructToMap(helmOptions)
 }
 
 // renderValuesYaml renders options.valuesYaml to options.chart.valuesYaml;

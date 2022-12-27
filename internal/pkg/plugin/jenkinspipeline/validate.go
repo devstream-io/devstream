@@ -54,7 +54,7 @@ func validateJenkins(options configmanager.RawOptions) (configmanager.RawOptions
 		return nil, err
 	}
 
-	if err = validator.StructAllError(opts); err != nil {
+	if err = validator.CheckStructError(opts).Combine(); err != nil {
 		return nil, err
 	}
 

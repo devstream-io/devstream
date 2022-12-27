@@ -1,15 +1,13 @@
 package jiragithub
 
 import (
-	"fmt"
-
 	"github.com/mitchellh/mapstructure"
 
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
-	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 	"github.com/devstream-io/devstream/pkg/util/scm/github"
+	"github.com/devstream-io/devstream/pkg/util/validator"
 )
 
 // Read get jira-github-integ workflows.
@@ -20,11 +18,8 @@ func Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error)
 		return nil, err
 	}
 
-	if errs := validate(&opts); len(errs) != 0 {
-		for _, e := range errs {
-			log.Errorf("Options error: %s.", e)
-		}
-		return nil, fmt.Errorf("options are illegal")
+	if err := validator.CheckStructError(&opts).Combine(); err != nil {
+		return nil, err
 	}
 
 	ghOptions := &git.RepoInfo{

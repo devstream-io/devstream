@@ -4,7 +4,6 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/template"
 )
 
@@ -145,7 +144,6 @@ var _ = Describe("AddQuoteForVariablesInConfigProcessor", func() {
 		})
 
 		It("should do nothing", func() {
-			log.Infof("------> %s [%s]", string(gotten), expected)
 			Expect(string(gotten)).To(Equal(expected))
 		})
 	})

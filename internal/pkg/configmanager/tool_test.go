@@ -67,20 +67,20 @@ var _ = Describe("validateDependsOnConfig", func() {
 	})
 })
 
-var _ = Describe("Tool Validation", func() {
+var _ = Describe("Tool Validation all", func() {
 	It("should return empty error array if tools all valid", func() {
 		tools := Tools{
 			{Name: "test_tool", InstanceID: "0", DependsOn: []string{}},
 		}
-		errors := tools.validate()
-		Expect(errors).Should(BeEmpty())
+		err := tools.validateAll()
+		Expect(err).ShouldNot(HaveOccurred())
 	})
 	It("should return error if tool not valid", func() {
 		tools := Tools{
 			{Name: "", InstanceID: "", DependsOn: []string{}},
 		}
-		errors := tools.validate()
-		Expect(errors).ShouldNot(BeEmpty())
+		err := tools.validateAll()
+		Expect(err).Should(HaveOccurred())
 	})
 
 })

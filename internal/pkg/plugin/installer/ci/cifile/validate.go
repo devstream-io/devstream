@@ -13,8 +13,7 @@ func Validate(options configmanager.RawOptions) (configmanager.RawOptions, error
 	if err != nil {
 		return nil, err
 	}
-	fieldErr := validator.StructAllError(opts)
-	if fieldErr != nil {
+	if fieldErr := validator.CheckStructError(opts).Combine(); fieldErr != nil {
 		return nil, fieldErr
 	}
 	return options, nil

@@ -9,7 +9,6 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/validator"
 )
 
@@ -22,16 +21,13 @@ func validateAndDefault(options configmanager.RawOptions) (*Options, error) {
 	opts.Defaults()
 
 	// validate
-	errs := validator.Struct(opts)
+	errs := validator.CheckStructError(opts)
 	// volume directory must be absolute path
 	if !filepath.IsAbs(opts.GitLabHome) {
-		errs = append(errs, fmt.Errorf("GitLabHome must be an absolute path"))
+		errs = append(errs, fmt.Errorf("field gitLabHome must be an absolute path"))
 	}
-	if len(errs) > 0 {
-		for _, e := range errs {
-			log.Errorf("Options error: %s.", e)
-		}
-		return nil, fmt.Errorf("opts are illegal")
+	if len(errs) != 0 {
+		return nil, errs.Combine()
 	}
 
 	if err := os.MkdirAll(opts.GitLabHome, 0755); err != nil {

@@ -13,6 +13,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/mapz"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 	"github.com/devstream-io/devstream/pkg/util/scm/github"
+	"github.com/devstream-io/devstream/pkg/util/validator"
 )
 
 type TrelloGithub struct {
@@ -37,11 +38,8 @@ func NewTrelloGithub(options configmanager.RawOptions) (*TrelloGithub, error) {
 		return nil, err
 	}
 
-	if errs := validate(&opts); len(errs) != 0 {
-		for _, e := range errs {
-			log.Errorf("Param error: %s.", e)
-		}
-		return nil, fmt.Errorf("params are illegal")
+	if err := validator.CheckStructError(&opts).Combine(); err != nil {
+		return nil, err
 	}
 
 	ghOptions := &git.RepoInfo{

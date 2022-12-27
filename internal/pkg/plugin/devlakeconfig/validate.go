@@ -1,10 +1,7 @@
 package devlakeconfig
 
 import (
-	"fmt"
-
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
-	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/validator"
 )
 
@@ -14,12 +11,8 @@ func validate(options configmanager.RawOptions) (configmanager.RawOptions, error
 	if err != nil {
 		return nil, err
 	}
-	errs := validator.Struct(opts)
-	if len(errs) > 0 {
-		for _, e := range errs {
-			log.Errorf("Options error: %s.", e)
-		}
-		return nil, fmt.Errorf("opts are illegal")
+	if err := validator.CheckStructError(opts).Combine(); err != nil {
+		return nil, err
 	}
 	return options, nil
 }

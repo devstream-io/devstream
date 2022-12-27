@@ -10,8 +10,8 @@ import (
 // appSpec is app special options
 type appSpec struct {
 	// language config
-	Language  string `yaml:"language" mapstructure:"language"`
-	FrameWork string `yaml:"framework" mapstructure:"framework"`
+	Language  string `yaml:"language" mapstructure:"language" validate:"required"`
+	FrameWork string `yaml:"framework" mapstructure:"framework" validate:"required"`
 }
 
 // merge will merge vars and appSpec

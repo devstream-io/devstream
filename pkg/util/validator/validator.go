@@ -1,8 +1,10 @@
 package validator
 
 import (
-	"errors"
+	"fmt"
 	"log"
+	"reflect"
+	"strings"
 
 	"gopkg.in/yaml.v3"
 
@@ -11,6 +13,19 @@ import (
 )
 
 var v *validator.Validate
+
+type StructFieldErrors []error
+
+func (errs StructFieldErrors) Combine() error {
+	if len(errs) == 0 {
+		return nil
+	}
+	var totalErr = "config options are not valid:\n"
+	for _, fieldErr := range errs {
+		totalErr = fmt.Sprintf("%s  %s\n", totalErr, fieldErr)
+	}
+	return fmt.Errorf(strings.TrimSpace(totalErr))
+}
 
 func init() {
 	v = validator.New()
@@ -28,21 +43,29 @@ func init() {
 			log.Fatal(err)
 		}
 	}
+	v.RegisterTagNameFunc(getMapstructureOrYamlTagName)
 }
 
-func Struct(s interface{}) []error {
+// CheckStructError will check s, and return StructValidationError if this struct is not valid
+func CheckStructError(s interface{}) StructFieldErrors {
+	fieldErrs := make(StructFieldErrors, 0)
 	if err := v.Struct(s); err != nil {
-		errs := make([]error, 0)
-		for _, e := range err.(validator.ValidationErrors) {
-			errs = append(errs, errors.New(e.Error()))
+		for _, fieldErr := range err.(validator.ValidationErrors) {
+			var fieldCustomErr error
+			switch fieldErr.Tag() {
+			case "required":
+				fieldCustomErr = fmt.Errorf("field %s is required", fieldErr.Namespace())
+			case "url":
+				fieldCustomErr = fmt.Errorf("field %s is a not valid url", fieldErr.Namespace())
+			case "oneof":
+				fieldCustomErr = fmt.Errorf("field %s must be one of [%s]", fieldErr.Namespace(), fieldErr.Param())
+			default:
+				fieldCustomErr = fmt.Errorf("field %s validation failed on the '%s' tag", fieldErr.Namespace(), fieldErr.Tag())
+			}
+			fieldErrs = append(fieldErrs, fieldCustomErr)
 		}
-		return errs
 	}
-	return nil
-}
-
-func StructAllError(s interface{}) error {
-	return v.Struct(s)
+	return fieldErrs
 }
 
 func dns1123SubDomain(fl validator.FieldLevel) bool {
@@ -51,4 +74,18 @@ func dns1123SubDomain(fl validator.FieldLevel) bool {
 
 func isYaml(fl validator.FieldLevel) bool {
 	return yaml.Unmarshal([]byte(fl.Field().String()), &struct{}{}) == nil
+}
+
+func getMapstructureOrYamlTagName(fld reflect.StructField) string {
+	// 1. get tag name from mapstructure or yaml
+	tagName := fld.Tag.Get("mapstructure")
+	if tagName == "" {
+		tagName = fld.Tag.Get("yaml")
+	}
+	// 2. else get yaml tag name
+	name := strings.SplitN(tagName, ",", 2)[0]
+	if name == "-" {
+		return ""
+	}
+	return name
 }
