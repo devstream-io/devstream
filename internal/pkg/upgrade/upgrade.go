@@ -151,7 +151,7 @@ func applyUpgrade(workDir string) error {
 	dtmTmpFilePath := filepath.Join(workDir, dtmTmpFileName)
 	updateProgress := STEP1
 	defer func() {
-		for ; updateProgress >= 0; updateProgress-- {
+		for ; updateProgress >= STEP1; updateProgress-- {
 			switch updateProgress {
 			//If the error occur when step 1 (rename dtmFileName to `dtm-bak`), delete `dtm-tmp`
 			case STEP1:
