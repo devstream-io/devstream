@@ -11,4 +11,4 @@ COPY ./app /code/app
 
 USER 1000
 
-CMD ["gunicorn", "--conf", "app/gunicorn.conf.py", "--bind", "0.0.0.0:8080", "wsgi:app"]
+CMD ["gunicorn", "--conf", "app/gunicorn.conf.py", "--bind", "0.0.0.0:80", "wsgi:app"]
