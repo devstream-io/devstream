@@ -1,9 +1,9 @@
 # 快速开始
 
-我们将在本文使用 DevStream 自动完成以下操作：
+在这个“快速开始”流程中，你将使用 DevStream 自动化地完成以下工作：
 
-- 创建一个包含了 web 应用程序的 GitHub 仓库，代码基于 [gin](https://github.com/gin-gonic/gin) 框架（用Go语言编写）自动生成；
-- 为前面创建的仓库设置 GitHub Actions 工作流。
+- 在 GitHub 上创建一个包含了自动生成的 Golang [Gin](https://github.com/gin-gonic/gin) 框架代码的 web 应用代码库；
+- 为这个代码库配置好 GitHub Actions 工作流。
 
 ---
 
@@ -18,10 +18,10 @@ sh -c "$(curl -fsSL https://download.devstream.io/download.sh)"
 !!! note "提示"
     上面的命令会做以下事情：
 
-    - 检测你的操作系统和芯片架构
-    - 找到最新版本的 `dtm` 二进制文件
-    - 根据操作系统和架构下载正确的 `dtm` 二进制文件
-    - 授予二进制文件执行权限
+    - 检测你的操作系统和芯片架构；
+    - 找到最新版本的 `dtm` 二进制文件；
+    - 根据操作系统和架构下载正确的 `dtm` 二进制文件；
+    - 授予二进制文件执行权限。
 
 !!! quote "可选"
     你可以将 `dtm` 移到 PATH 中。例如：`mv dtm /usr/local/bin/`。
@@ -42,18 +42,19 @@ sh -c "$(curl -fsSL https://download.devstream.io/download.sh)"
 
 ```shell
 export GITHUB_USER="<YOUR_GITHUB_USER_NAME_HERE>"
-export GITHUB_TOKEN="<YOUR_GITHUB_PERSONAL_ACCESS_TOKEN_HERE>"
 export DOCKERHUB_USERNAME="<YOUR_DOCKER_HUB_USER_NAME_HERE>"
+export IMAGE_REPO_PASSWORD="<YOUR_DOCKER_HUB_USER_NAME_HERE>"
+export GITHUB_TOKEN="<YOUR_GITHUB_PERSONAL_ACCESS_TOKEN_HERE>"
 ```
 
 !!! tip "提示"
-    前往 [Personal Access Token](https://github.com/settings/tokens/new) 为 `dtm` 生成新的 `GITHUB_TOKEN`。
+    参考 [Personal Access Token](https://github.com/settings/tokens/new) 为 `dtm` 生成新的 `GITHUB_TOKEN`。
 
-    对于“快速开始”，我们只需要勾选 `repo`、`workflow`、`delete_repo` 权限。
+    对于“快速开始”，你只需要勾选 `repo`、`workflow`、`delete_repo` 权限。
 
-接着，让我们运行以下命令，以使用环境变量来修改配置文件：
+接着，你可以运行以下命令，以使用环境变量来修改配置文件：
 
-===  "**macOS** 或 基于 **FreeBSD** 的操作系统"
+===  "**macOS** 或基于 **FreeBSD** 的操作系统"
 
     ```shell title=""
     sed -i.bak "s@YOUR_GITHUB_USERNAME_CASE_SENSITIVE@${GITHUB_USER}@g" config.yaml
@@ -69,7 +70,7 @@ export DOCKERHUB_USERNAME="<YOUR_DOCKER_HUB_USER_NAME_HERE>"
 
 ---
 
-## 3 初始化
+## 3 初始化（Init）
 
 运行：
 

@@ -1,8 +1,8 @@
 # Quick Start
 
-In this quickstart, we will do the following automatically with DevStream:
+In this quickstart, you will do the following automatically with DevStream:
 
-- create a GitHub repository with automatically generated code for a web application written in Golang with the [gin](https://github.com/gin-gonic/gin) framework;
+- create a GitHub repository with automatically generated code for a web application written in Golang with the [Gin](https://github.com/gin-gonic/gin) framework;
 - set up GitHub Actions workflow for the app created in the previous step.
 
 ---
@@ -20,9 +20,9 @@ sh -c "$(curl -fsSL https://download.devstream.io/download.sh)"
 !!! note "Note"
     The command above does the following:
  
-    - find out your OS and chip architecture
-    - find the latest version of the `dtm` binary
-    - download the correct `dtm` according to OS/architecture
+    - find out your OS and chip architecture;
+    - find the latest version of the `dtm` binary;
+    - download the correct `dtm` according to OS/architecture;
     - grant the binary execution permission.
 
 !!! quote "Optional"
@@ -43,16 +43,18 @@ Run the following command to generate the template configuration file `config.ya
 Then set the following environment variables by running (replace values within the double quotes):
 
 ```shell
-export GITHUB_TOKEN="<YOUR_GITHUB_PERSONAL_ACCESS_TOKEN_HERE>"
+export GITHUB_USER="<YOUR_GITHUB_USER_NAME_HERE>"
+export DOCKERHUB_USERNAME="<YOUR_DOCKER_HUB_USER_NAME_HERE>"
 export IMAGE_REPO_PASSWORD="<YOUR_DOCKER_HUB_USER_NAME_HERE>"
+export GITHUB_TOKEN="<YOUR_GITHUB_PERSONAL_ACCESS_TOKEN_HERE>"
 ```
 
 !!! tip "Tip"
     Go to [Personal Access Token](https://github.com/settings/tokens/new) to generate a new `GITHUB_TOKEN` for `dtm`.
     
-    For "Quick Start", we only need `repo`,`workflow`,`delete_repo` permissions.
+    For "Quick Start", you only need `repo`,`workflow`,`delete_repo` permissions.
 
-Then we run the following commands to update our config file with those env vars:
+Then you should run the following commands to update our config file with those env vars:
 
 ===  "**macOS** or **FreeBSD** based systems"
 
