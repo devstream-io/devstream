@@ -16,6 +16,13 @@ import (
 )
 
 const (
+	//the rollback step for the applyUpgrade function
+	STEP1 = iota
+	STEP2
+	STEP3
+	STEP4
+	COMPLETED
+
 	assetName      = "dtm-" + runtime.GOOS + "-" + runtime.GOARCH
 	dtmTmpFileName = "dtm-tmp"
 	dtmBakFileName = "dtm-bak"
@@ -142,34 +149,34 @@ func applyUpgrade(workDir string) error {
 	dtmFilePath := filepath.Join(workDir, dtmFileName)
 	dtmBakFilePath := filepath.Join(workDir, dtmBakFileName)
 	dtmTmpFilePath := filepath.Join(workDir, dtmTmpFileName)
-	updateProgress := 0
+	updateProgress := STEP1
 	defer func() {
 		for ; updateProgress >= 0; updateProgress-- {
 			switch updateProgress {
 			//If the error occur when step 1 (rename dtmFileName to `dtm-bak`), delete `dtm-tmp`
-			case 0:
+			case STEP1:
 				if err := os.Remove(dtmTmpFilePath); err != nil {
 					log.Debugf("Dtm upgrade rollback error: %s", err.Error())
 				}
 
 			//the error occur in the step 2
-			case 1:
+			case STEP2:
 				if err := os.Rename(dtmBakFilePath, dtmFilePath); err != nil {
 					log.Debugf("Dtm upgrade rollback error: %s", err.Error())
 				}
 
 			//the error occur in the step 3
-			case 2:
+			case STEP3:
 				if err := os.Rename(dtmFilePath, dtmTmpFilePath); err != nil {
 					log.Debugf("Dtm upgrade rollback error: %s", err.Error())
 				}
 
 			//the error occur in the step 4
-			case 3:
+			case STEP4:
 				if err := os.Chmod(dtmFilePath, 0644); err != nil {
 					log.Debugf("Dtm upgrade rollback error: %s", err.Error())
 				}
-			case 4:
+			case COMPLETED:
 				//Successfully completed all step
 				return
 			}
