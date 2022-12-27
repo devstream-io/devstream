@@ -84,6 +84,7 @@ func pipelineArgocdAppGenerator(options RawOptions, globalVars *pipelineGlobalOp
 		if _, repoURLExist := sourceMap["repoURL"]; !repoURLExist {
 			sourceMap["repoURL"] = globalVars.Repo.GetCloneURL()
 			sourceMap["repoBranch"] = globalVars.Repo.Branch
+			sourceMap["token"] = globalVars.Repo.Token
 		}
 		options["source"] = sourceMap
 	} else {
@@ -92,6 +93,7 @@ func pipelineArgocdAppGenerator(options RawOptions, globalVars *pipelineGlobalOp
 			"path":       fmt.Sprintf("helm/%s", globalVars.AppName),
 			"repoURL":    string(globalVars.Repo.GetCloneURL()),
 			"repoBranch": globalVars.Repo.Branch,
+			"token":      globalVars.Repo.Token,
 		}
 	}
 	// config imageRepo default options

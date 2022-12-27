@@ -2,7 +2,6 @@ package gitlab
 
 import (
 	"errors"
-	"os"
 
 	"github.com/xanzy/go-gitlab"
 
@@ -11,7 +10,6 @@ import (
 
 const (
 	DefaultGitlabHost = "https://gitlab.com"
-	TokenEnvKey       = "GITLAB_TOKEN"
 )
 
 type Client struct {
@@ -20,9 +18,8 @@ type Client struct {
 }
 
 func NewClient(options *git.RepoInfo) (*Client, error) {
-	token := os.Getenv(TokenEnvKey)
-	if token == "" {
-		return nil, errors.New("failed to read GITLAB_TOKEN from environment variable")
+	if options.Token == "" {
+		return nil, errors.New("config field scm.token is not setted")
 	}
 
 	c := &Client{}
@@ -30,9 +27,9 @@ func NewClient(options *git.RepoInfo) (*Client, error) {
 	var err error
 
 	if options.BaseURL == "" {
-		c.Client, err = gitlab.NewClient(token)
+		c.Client, err = gitlab.NewClient(options.Token)
 	} else {
-		c.Client, err = gitlab.NewClient(token, gitlab.WithBaseURL(options.BaseURL))
+		c.Client, err = gitlab.NewClient(options.Token, gitlab.WithBaseURL(options.BaseURL))
 	}
 	c.RepoInfo = options
 

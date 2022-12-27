@@ -54,8 +54,9 @@ var _ = Describe("action struct", func() {
 				"ImageRepoDockerSecret": "image-repo-auth",
 				"RepoType":              "gitlab",
 				"imageRepo": map[string]interface{}{
-					"url":  "exmaple.com",
-					"user": "test_user",
+					"url":      "exmaple.com",
+					"user":     "test_user",
+					"password": "",
 				},
 				"dingTalk":            nilDingTalkConfig,
 				"DingTalkSecretKey":   "DINGTALK_SECURITY_VALUE",

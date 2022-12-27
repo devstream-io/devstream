@@ -16,6 +16,8 @@ tools:
       namespace: jenkins
       # restart jenkins if true for plugin install
       enableRestart: false
+      # jenkins login password
+      password: JENKINS_PASSWORD
       # if offline is true, jenkins-pipeline will not install jenkins plugins and share library
       # it will use a local Jenkinsfile for jenkins-pipeline
       offline: false
@@ -26,6 +28,8 @@ tools:
       apiURL: http://gitlab.example.com
       # project branch, if your repo type is github, default branch will be main. if your repo type is gitlab, default branch will be master
       branch: YOUR_PROJECT_BRANCH
+      # scm repo token
+      token: YOUR_REPO_TOKEN
     pipeline:
       # jobName is jenkins's job name; <jobFolder/jobName> or <jobName>; e.g. jobs/test-job, test-job, jobs2/test-job
       jobName: test-job
@@ -39,6 +43,8 @@ tools:
         url: http://harbor.example.com:80
         # image repo user name
         user: admin
+        # image repo password
+        password: YOUR_IMAGE_REPO_PASSWORD
       dingTalk:
         # dingtalk robot name
         name: YOUR_DINGTALK_ROBOT_NAME

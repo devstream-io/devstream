@@ -2,7 +2,6 @@ package git
 
 import (
 	"fmt"
-	"os"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -157,61 +156,6 @@ var _ = Describe("RepoInfo struct", func() {
 	})
 
 	Context("checkValid method", func() {
-		var (
-			gitlabEnv, githubEnv string
-		)
-		BeforeEach(func() {
-			gitlabEnv = os.Getenv("GITLAB_TOKEN")
-			githubEnv = os.Getenv("GITHUB_TOKEN")
-			os.Unsetenv("GITLAB_TOKEN")
-			os.Unsetenv("GITHUB_TOKEN")
-		})
-		When("gitlab token is not configured", func() {
-			BeforeEach(func() {
-				repoInfo = &RepoInfo{
-					Owner:    "test",
-					RepoType: "gitlab",
-					NeedAuth: true,
-					Repo:     "test",
-				}
-			})
-			It("should return err", func() {
-				err := repoInfo.checkValid()
-				Expect(err).Error().Should(HaveOccurred())
-				Expect(err.Error()).Should(ContainSubstring("gitlab repo should set env GITLAB_TOKEN"))
-			})
-		})
-		When("github token is not configured", func() {
-			BeforeEach(func() {
-				repoInfo = &RepoInfo{
-					Owner:    "test",
-					RepoType: "github",
-					NeedAuth: true,
-					Repo:     "test",
-				}
-			})
-			It("should return err", func() {
-				err := repoInfo.checkValid()
-				Expect(err).Error().Should(HaveOccurred())
-				Expect(err.Error()).Should(ContainSubstring("github repo should set env GITHUB_TOKEN"))
-			})
-		})
-		When("token is configured", func() {
-			BeforeEach(func() {
-				repoInfo = &RepoInfo{
-					Owner:    "test",
-					RepoType: "github",
-					NeedAuth: true,
-					Repo:     "test",
-				}
-				os.Setenv("GITHUB_TOKEN", "test")
-			})
-			It("should return err", func() {
-				err := repoInfo.checkValid()
-				Expect(err).Error().ShouldNot(HaveOccurred())
-			})
-		})
-
 		When("org and owner are all exist", func() {
 			BeforeEach(func() {
 				repoInfo = &RepoInfo{
@@ -239,14 +183,6 @@ var _ = Describe("RepoInfo struct", func() {
 			})
 		})
 
-		AfterEach(func() {
-			if githubEnv != "" {
-				os.Setenv("GITHUB_TOKEN", githubEnv)
-			}
-			if gitlabEnv != "" {
-				os.Setenv("GITLAB_TOKEN", gitlabEnv)
-			}
-		})
 	})
 
 	Context("Encode method", func() {

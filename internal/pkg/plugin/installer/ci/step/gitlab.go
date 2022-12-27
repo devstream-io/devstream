@@ -1,8 +1,6 @@
 package step
 
 import (
-	"os"
-
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm"
@@ -18,6 +16,7 @@ type GitlabStepConfig struct {
 	SSHPrivateKey string `mapstructure:"sshPrivateKey"`
 	RepoOwner     string `mapstructure:"repoOwner"`
 	BaseURL       string `mapstructure:"baseURL"`
+	Token         string `mapstructure:"token"`
 }
 
 func (g *GitlabStepConfig) GetJenkinsPlugins() []*jenkins.JenkinsPlugin {
@@ -42,7 +41,7 @@ func (g *GitlabStepConfig) ConfigJenkins(jenkinsClient jenkins.JenkinsAPI) (*jen
 		}
 	}
 	// 2. create gitlab connection by casc
-	err := jenkinsClient.CreateGiltabCredential(gitlabCredentialName, os.Getenv("GITLAB_TOKEN"))
+	err := jenkinsClient.CreateGiltabCredential(gitlabCredentialName, g.Token)
 	if err != nil {
 		log.Debugf("jenkins preinstall gitlab credentials failed: %s", err)
 		return nil, err
@@ -65,5 +64,6 @@ func newGitlabStep(config *StepGlobalOption) *GitlabStepConfig {
 		SSHPrivateKey: config.RepoInfo.SSHPrivateKey,
 		RepoOwner:     config.RepoInfo.GetRepoOwner(),
 		BaseURL:       config.RepoInfo.BaseURL,
+		Token:         config.RepoInfo.Token,
 	}
 }

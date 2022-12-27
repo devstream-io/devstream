@@ -2,7 +2,6 @@ package step
 
 import (
 	"fmt"
-	"os"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -32,29 +31,26 @@ var _ = Describe("ImageRepoStepConfig", func() {
 	})
 
 	Context("generateDockerAuthSecretData method", func() {
-		var (
-			existImageEnv   string
-			testImageEnvVar string
-		)
-		BeforeEach(func() {
-			existImageEnv = os.Getenv("IMAGE_REPO_PASSWORD")
-			if existImageEnv != "" {
-				err := os.Unsetenv("IMAGE_REPO_PASSWORD")
-				Expect(err).Error().ShouldNot(HaveOccurred())
-			}
-		})
 		When("image env is not set", func() {
+			BeforeEach(func() {
+				c = &ImageRepoStepConfig{
+					URL:  url,
+					User: user,
+				}
+			})
 			It("should return error", func() {
 				_, err := c.generateDockerAuthSecretData()
 				Expect(err).Error().Should(HaveOccurred())
-				Expect(err.Error()).Should(Equal("the environment variable IMAGE_REPO_PASSWORD is not set"))
+				Expect(err.Error()).Should(Equal("config field password is not set"))
 			})
 		})
 		When("image env is set", func() {
 			BeforeEach(func() {
-				testImageEnvVar = "test_image_repo_env"
-				err := os.Setenv("IMAGE_REPO_PASSWORD", testImageEnvVar)
-				Expect(err).Error().ShouldNot(HaveOccurred())
+				c = &ImageRepoStepConfig{
+					URL:      url,
+					User:     user,
+					Password: "test",
+				}
 			})
 			It("should return image auth data", func() {
 				d, err := c.generateDockerAuthSecretData()
@@ -69,7 +65,7 @@ var _ = Describe("ImageRepoStepConfig", func() {
       "auth": "%s"
     }
   }
-}`, c.URL, "dGVzdF91c2VyOnRlc3RfaW1hZ2VfcmVwb19lbnY=")
+}`, c.URL, "dGVzdF91c2VyOnRlc3Q=")
 				Expect(string(configJson)).Should(Equal(expectStr))
 			})
 		})
@@ -77,40 +73,35 @@ var _ = Describe("ImageRepoStepConfig", func() {
 
 	Context("ConfigSCM method", func() {
 		var (
-			scmClient             *scm.MockScmClient
-			errMsg, existImageEnv string
+			scmClient *scm.MockScmClient
 		)
-		BeforeEach(func() {
-			existImageEnv = os.Getenv("IMAGE_REPO_PASSWORD")
-			if existImageEnv != "" {
-				err := os.Unsetenv("IMAGE_REPO_PASSWORD")
-				Expect(err).Error().ShouldNot(HaveOccurred())
-			}
-		})
 		When("imageRepoPassword is not valid", func() {
 			BeforeEach(func() {
-				errMsg = "the environment variable IMAGE_REPO_PASSWORD is not set"
+				c = &ImageRepoStepConfig{
+					URL:  url,
+					User: user,
+				}
 				scmClient = &scm.MockScmClient{}
 			})
 			It("should return error", func() {
 				err := c.ConfigSCM(scmClient)
 				Expect(err).Error().Should(HaveOccurred())
-				Expect(err.Error()).Should(Equal(errMsg))
+				Expect(err.Error()).Should(Equal("config field password is not set"))
 			})
 		})
 		When("all valid", func() {
 			BeforeEach(func() {
 				scmClient = &scm.MockScmClient{}
-				os.Setenv("IMAGE_REPO_PASSWORD", "test")
+				c = &ImageRepoStepConfig{
+					URL:      url,
+					User:     user,
+					Password: "test",
+				}
 			})
 			It("should return nil", func() {
 				err := c.ConfigSCM(scmClient)
 				Expect(err).Error().ShouldNot(HaveOccurred())
 			})
 		})
-		AfterEach(func() {
-			os.Setenv("IMAGE_REPO_PASSWORD", existImageEnv)
-		})
 	})
-
 })

@@ -2,7 +2,6 @@ package jenkinspipeline
 
 import (
 	"errors"
-	"os"
 
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 	"github.com/devstream-io/devstream/pkg/util/k8s"
@@ -18,7 +17,8 @@ const (
 
 type jenkinsOption struct {
 	URL           string `mapstructure:"url" validate:"required,url"`
-	User          string `mapstructure:"user"`
+	User          string `mapstructure:"user" validate:"required"`
+	Password      string `mapstructure:"password" validate:"required"`
 	Namespace     string `mapstructure:"namespace"`
 	EnableRestart bool   `mapstructure:"enableRestart"`
 	Offline       bool   `mapstructure:"offline"`
@@ -40,13 +40,12 @@ func (j *jenkinsOption) newClient() (jenkins.JenkinsAPI, error) {
 }
 
 func (j *jenkinsOption) getBasicAuth() (*jenkins.BasicAuth, error) {
-	jenkinsPassword := os.Getenv(jenkinsPasswordEnvKey)
 	// 1. check username is set and has env password
-	if j.User != "" && jenkinsPassword != "" {
+	if j.User != "" && j.Password != "" {
 		log.Debugf("jenkins get auth token from env")
 		return &jenkins.BasicAuth{
 			Username: j.User,
-			Password: jenkinsPassword,
+			Password: j.Password,
 		}, nil
 	}
 	// 2. if not set, get user and password from secret

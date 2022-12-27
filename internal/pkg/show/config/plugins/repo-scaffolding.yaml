@@ -15,6 +15,8 @@ tools:
       branch: YOUR_DESTINATION_REPO_MAIN_BRANCH
       # scmType is the type of repo to push, support github|gitlab
       scmType: YOUR_DESTINATION_REPO_TYPE
+      # scm repo token
+      token: YOUR_REPO_TOKEN
     # sourceRepo is the template repo location, support github only
     sourceRepo:
       org: YOUR_TEMPLATE_REPO_ORG

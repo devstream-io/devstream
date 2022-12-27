@@ -3,7 +3,6 @@ package step
 import (
 	"encoding/base64"
 	"fmt"
-	"os"
 
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 	"github.com/devstream-io/devstream/pkg/util/k8s"
@@ -12,7 +11,6 @@ import (
 )
 
 const (
-	imageRepoPasswordEnv = "IMAGE_REPO_PASSWORD"
 	// imageRepoDockerSecretName is used for creating k8s secret
 	// and it will be used by jenkins for mount
 	imageRepoDockerSecretName = "image-repo-auth"
@@ -22,8 +20,9 @@ const (
 )
 
 type ImageRepoStepConfig struct {
-	URL  string `mapstructure:"url"`
-	User string `mapstructure:"user"`
+	URL      string `mapstructure:"url"`
+	User     string `mapstructure:"user"`
+	Password string `mapstructure:"password"`
 }
 
 func (g *ImageRepoStepConfig) GetJenkinsPlugins() []*jenkins.JenkinsPlugin {
@@ -50,23 +49,21 @@ func (g *ImageRepoStepConfig) ConfigJenkins(jenkinsClient jenkins.JenkinsAPI) (*
 }
 
 func (g *ImageRepoStepConfig) ConfigSCM(client scm.ClientOperation) error {
-	imageRepoPasswd := os.Getenv(imageRepoPasswordEnv)
-	if imageRepoPasswd == "" {
-		return fmt.Errorf("the environment variable IMAGE_REPO_PASSWORD is not set")
+	if g.Password == "" {
+		return fmt.Errorf("config field password is not set")
 	}
 
 	if err := client.AddRepoSecret(imageRepoUserName, g.User); err != nil {
 		return err
 	}
-	return client.AddRepoSecret(imageRepoSecretName, imageRepoPasswd)
+	return client.AddRepoSecret(imageRepoSecretName, g.Password)
 }
 
 func (g *ImageRepoStepConfig) generateDockerAuthSecretData() (map[string][]byte, error) {
-	imageRepoPasswd := os.Getenv(imageRepoPasswordEnv)
-	if imageRepoPasswd == "" {
-		return nil, fmt.Errorf("the environment variable IMAGE_REPO_PASSWORD is not set")
+	if g.Password == "" {
+		return nil, fmt.Errorf("config field password is not set")
 	}
-	tmpStr := fmt.Sprintf("%s:%s", g.User, imageRepoPasswd)
+	tmpStr := fmt.Sprintf("%s:%s", g.User, g.Password)
 	authStr := base64.StdEncoding.EncodeToString([]byte(tmpStr))
 	authURL := g.GetImageRepoURL()
 	log.Debugf("jenkins plugin imageRepo auth string: %s.", authStr)

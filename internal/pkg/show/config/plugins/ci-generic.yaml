@@ -17,3 +17,5 @@ tools:
       branch: YOUR_REPO_BRANCH
       # support github/gitlab for now
       scmType: github
+      # scm repo token
+      token: YOUR_REPO_TOKEN

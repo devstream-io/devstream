@@ -3,7 +3,6 @@ package git
 import (
 	"fmt"
 	"net/url"
-	"os"
 	"strings"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
@@ -12,10 +11,6 @@ import (
 
 type ScmURL string
 
-const (
-	privateSSHKeyEnv = "REPO_SSH_PRIVATEKEY"
-)
-
 type RepoInfo struct {
 	// repo detail fields
 	Owner    string `yaml:"owner" mapstructure:"owner,omitempty"`
@@ -23,6 +18,7 @@ type RepoInfo struct {
 	Repo     string `yaml:"name" mapstructure:"name,omitempty"`
 	Branch   string `yaml:"branch" mapstructure:"branch,omitempty"`
 	RepoType string `yaml:"scmType" mapstructure:"scmType,omitempty"`
+	Token    string `yaml:"token" mapstructure:"token,omitempty"`
 
 	// url fields
 	APIURL   string `yaml:"apiURL" mapstructure:"apiURL,omitempty"`
@@ -179,9 +175,6 @@ func (r *RepoInfo) updateFieldsFromURLField() error {
 	r.Repo = repoName
 	// 3. if scm.branch is not configured, just use repo's default branch
 	r.Branch = r.getBranchWithDefault()
-	if r.SSHPrivateKey == "" {
-		r.SSHPrivateKey = os.Getenv(privateSSHKeyEnv)
-	}
 	return nil
 }
 
@@ -195,19 +188,6 @@ func (r *RepoInfo) checkValid() error {
 	}
 	if r.Repo == "" {
 		return fmt.Errorf("git name field must be configured")
-	}
-	// check token is configured
-	if r.NeedAuth {
-		switch r.RepoType {
-		case "gitlab":
-			if os.Getenv("GITLAB_TOKEN") == "" {
-				return fmt.Errorf("gitlab repo should set env GITLAB_TOKEN")
-			}
-		case "github":
-			if os.Getenv("GITHUB_TOKEN") == "" {
-				return fmt.Errorf("github repo should set env GITHUB_TOKEN")
-			}
-		}
 	}
 	return nil
 }

@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
-	"os"
 	"testing"
 
 	. "github.com/onsi/ginkgo/v2"
@@ -18,20 +17,6 @@ const (
 	// BaseURLPath is a non-empty Client.BaseURL path to use during tests,
 	// to ensure relative URLs are used for all endpoints.
 	BaseURLPath = "/api-v3"
-)
-
-var (
-	OptNotNeedAuth = &git.RepoInfo{
-		Owner: "",
-		Org:   "devstream-io",
-		Repo:  "dtm-repo-scaffolding-golang-gin",
-	}
-	OptNeedAuth = &git.RepoInfo{
-		Owner:    "",
-		Org:      "devstream-io",
-		Repo:     "dtm-repo-scaffolding-golang-gin",
-		NeedAuth: true,
-	}
 )
 
 type BaseTest struct {
@@ -106,18 +91,41 @@ func NewClientWithOption(opt *git.RepoInfo, severUrl string) (*Client, error) {
 }
 
 var _ = Describe("GitHub", func() {
+	var (
+		optNotNeedAuth, optNeedAuth, optNeedAuthWithToken *git.RepoInfo
+	)
+	BeforeEach(func() {
+		optNotNeedAuth = &git.RepoInfo{
+			Owner: "",
+			Org:   "devstream-io",
+			Repo:  "dtm-repo-scaffolding-golang-gin",
+		}
+		optNeedAuth = &git.RepoInfo{
+			Owner:    "",
+			Org:      "devstream-io",
+			Repo:     "dtm-repo-scaffolding-golang-gin",
+			NeedAuth: true,
+		}
+		optNeedAuthWithToken = &git.RepoInfo{
+			Owner:    "",
+			Org:      "devstream-io",
+			Repo:     "dtm-repo-scaffolding-golang-gin",
+			NeedAuth: true,
+			Token:    "token",
+		}
+	})
 	Context("Client with cacahe", func() {
 		var ghClient *Client
 		var err error
 
 		BeforeEach(func() {
-			ghClient, err = NewClient(OptNotNeedAuth)
+			ghClient, err = NewClient(optNotNeedAuth)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(ghClient).NotTo(Equal(nil))
 		})
 
 		It("with cacahe client", func() {
-			ghClient, err = NewClient(OptNotNeedAuth)
+			ghClient, err = NewClient(optNotNeedAuth)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(ghClient).NotTo(Equal(nil))
 		})
@@ -127,44 +135,24 @@ var _ = Describe("GitHub", func() {
 		var ghClient *Client
 		var err error
 		It("", func() {
-			ghClient, err = NewClient(OptNotNeedAuth)
+			ghClient, err = NewClient(optNotNeedAuth)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(ghClient).NotTo(Equal(nil))
 		})
 	})
 
 	Context("Client with auth enabled but not github token", func() {
-		var existToken string
-		BeforeEach(func() {
-			existToken = os.Getenv("GITHUB_TOKEN")
-			err := os.Unsetenv("GITHUB_TOKEN")
-			Expect(err).NotTo(HaveOccurred())
-		})
-		It("", func() {
-			_, err := NewClient(OptNeedAuth)
+		It("should return err", func() {
+			_, err := NewClient(optNeedAuth)
 			Expect(err).To(HaveOccurred())
-		})
-		AfterEach(func() {
-			if existToken != "" {
-				err := os.Setenv("GITHUB_TOKEN", existToken)
-				Expect(err).NotTo(HaveOccurred())
-			}
 		})
 	})
 
 	Context("Client with auth enabled and github token", func() {
-		var ghClient *Client
-		var err error
-		BeforeEach(func() {
-			os.Setenv("GITHUB_TOKEN", "GITHUB_TOKEN")
-		})
-		It("", func() {
-			ghClient, err = NewClient(OptNeedAuth)
+		It("should return client", func() {
+			ghClient, err := NewClient(optNeedAuthWithToken)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(ghClient).NotTo(Equal(nil))
-		})
-		AfterEach(func() {
-			os.Unsetenv("GITHUB_TOKEN")
 		})
 	})
 })

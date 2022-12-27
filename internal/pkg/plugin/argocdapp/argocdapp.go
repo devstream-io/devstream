@@ -25,6 +25,7 @@ func pushArgocdConfigFiles(rawOptions configmanager.RawOptions) error {
 	repoInfo := &git.RepoInfo{
 		CloneURL: git.ScmURL(opts.Source.RepoURL),
 		Branch:   opts.Source.RepoBranch,
+		Token:    opts.Source.Token,
 	}
 	scmClient, err := scm.NewClientWithAuth(repoInfo)
 	if err != nil {

@@ -25,30 +25,21 @@ var _ = Describe("jenkinsOption struct", func() {
 			URL:       url,
 			User:      user,
 			Namespace: namespace,
+			Password:  "changeme",
 		}
 	})
 	var (
-		existEnvPassword, testPassword string
+		testPassword string
 	)
 
-	BeforeEach(func() {
-		existEnvPassword = os.Getenv(jenkinsPasswordEnvKey)
-		err := os.Unsetenv(jenkinsPasswordEnvKey)
-		Expect(err).Error().ShouldNot(HaveOccurred())
-		testPassword = "test"
-	})
-
 	Context("getBasicAuth method", func() {
-		BeforeEach(func() {
-			os.Setenv(jenkinsPasswordEnvKey, testPassword)
-		})
 		When("env password is setted", func() {
 			It("should work normal", func() {
 				auth, err := opt.getBasicAuth()
 				Expect(err).Error().ShouldNot(HaveOccurred())
 				Expect(auth).ShouldNot(BeNil())
 				Expect(auth.Username).Should(Equal(user))
-				Expect(auth.Password).Should(Equal(testPassword))
+				Expect(auth.Password).Should(Equal("changeme"))
 			})
 		})
 	})
@@ -135,10 +126,5 @@ var _ = Describe("jenkinsOption struct", func() {
 				Expect(auth.Password).Should(Equal("test_pass"))
 			})
 		})
-	})
-	AfterEach(func() {
-		if existEnvPassword != "" {
-			os.Setenv(jenkinsPasswordEnvKey, existEnvPassword)
-		}
 	})
 })
