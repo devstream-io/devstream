@@ -9,4 +9,4 @@ WORKDIR /app
 COPY --from=build-env /go/src/github.com/[[.Repo.Owner]]/[[.Repo.Name]]/app /app/
 CMD ["./app"]
 USER 1000
-EXPOSE 8080/tcp
+EXPOSE 80/tcp
