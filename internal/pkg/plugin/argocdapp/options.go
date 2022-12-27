@@ -47,6 +47,7 @@ type source struct {
 	Path       string `mapstructure:"path" validate:"required"`
 	RepoURL    string `mapstructure:"repoURL" validate:"required"`
 	RepoBranch string `mapstructure:"repoBranch"`
+	Token      string `mapstructure:"token"`
 }
 
 // / newOptions create options by raw options

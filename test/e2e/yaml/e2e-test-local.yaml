@@ -21,6 +21,7 @@ tools:
       name: [[ repoName ]]
       branch: [[ defaultBranch ]]
       scmType: github
+      token: [[ env GITHUB_TOKEN ]]
     sourceRepo:
       org: devstream-io
       name: dtm-repo-scaffolding-golang-gin
@@ -33,6 +34,7 @@ tools:
       configLocation: [[ githubActionConfigLocation ]]
       imageRepo:
         user: [[ dockerRegistryUserName ]]
+        password: [[ env IMAGE_REPO_PASSWORD ]]
       language:
         name: go
         framework: gin
@@ -40,6 +42,7 @@ tools:
       org: ${{repo-scaffolding.golang-github.outputs.owner}}
       name: ${{repo-scaffolding.golang-github.outputs.repo}}
       branch: [[ defaultBranch ]]
+      token: [[ env GITHUB_TOKEN ]]
       scmType: github
 - name: helm-installer
   instanceID: argocd-001
@@ -57,5 +60,6 @@ tools:
       valuefile: values.yaml
       path: helm/${{repo-scaffolding.golang-github.outputs.repo}}
       repoURL: ${{repo-scaffolding.golang-github.outputs.repoURL}}
+      token: [[ env GITHUB_TOKEN ]]
     imageRepo:
       user: [[ dockerRegistryUserName ]]

@@ -90,6 +90,7 @@ var _ = Describe("pipelineArgocdAppGenerator func", func() {
 				"path":       "helm/test_app",
 				"repoURL":    "https://scm.test.com",
 				"repoBranch": "testBranch",
+				"token":      "",
 			},
 			"imageRepo": RawOptions{
 				"owner": "test_user",

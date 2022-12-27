@@ -6,9 +6,6 @@ import (
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
-
-	"github.com/devstream-io/devstream/pkg/util/scm/github"
-	"github.com/devstream-io/devstream/pkg/util/scm/gitlab"
 )
 
 var _ = Describe("setDefault func", func() {
@@ -62,33 +59,15 @@ var _ = Describe("setDefault func", func() {
 
 var _ = Describe("validate func", func() {
 	var (
-		githubToken, gitlabToken string
-	)
-	BeforeEach(func() {
-		githubToken = os.Getenv(github.TokenEnvKey)
-		gitlabToken = os.Getenv(gitlab.TokenEnvKey)
-		err := os.Unsetenv(github.TokenEnvKey)
-		Expect(err).Error().ShouldNot(HaveOccurred())
-		err = os.Unsetenv(gitlab.TokenEnvKey)
-		Expect(err).Error().ShouldNot(HaveOccurred())
-	})
-	AfterEach(func() {
-		if githubToken != "" {
-			os.Setenv(github.TokenEnvKey, githubToken)
-		}
-		if gitlabToken != "" {
-			os.Setenv(gitlab.TokenEnvKey, gitlabToken)
-		}
-	})
-	var (
-		jenkinsUser, jenkinsURL, jenkinsFilePath, projectURL, repoType string
-		options, projectRepo, pipeline                                 map[string]interface{}
+		jenkinsUser, jenkinsURL, jenkinsFilePath, projectURL, repoType, githubToken string
+		options, projectRepo, pipeline                                              map[string]interface{}
 	)
 	BeforeEach(func() {
 		jenkinsUser = "test"
 		jenkinsURL = "http://test.jenkins.com/"
 		projectURL = "https://test.gitlab.com/test/test_project"
 		jenkinsFilePath = "http://raw.content.com/Jenkinsfile"
+		githubToken = "github_token"
 		pipeline = map[string]interface{}{
 			"configLocation": jenkinsFilePath,
 		}
@@ -100,11 +79,13 @@ var _ = Describe("validate func", func() {
 		options = map[string]interface{}{
 			"jobName": "test",
 			"jenkins": map[string]interface{}{
-				"url":  jenkinsURL,
-				"user": jenkinsUser,
+				"url":      jenkinsURL,
+				"user":     jenkinsUser,
+				"password": "changeme",
 			},
 			"scm": map[string]interface{}{
-				"url": projectURL,
+				"url":   projectURL,
+				"token": githubToken,
 			},
 			"pipeline":    pipeline,
 			"projectRepo": projectRepo,
@@ -138,9 +119,9 @@ var _ = Describe("validate func", func() {
 				"name":    "test",
 				"owner":   "test_user",
 				"branch":  "main",
+				"token":   githubToken,
 			}
 			options["scm"] = projectRepo
-			os.Setenv(github.TokenEnvKey, "test_env")
 		})
 		It("should return error", func() {
 			_, err := validateJenkins(options)
@@ -157,9 +138,9 @@ var _ = Describe("validate func", func() {
 				"name":    "test",
 				"owner":   "test_user",
 				"branch":  "main",
+				"token":   githubToken,
 			}
 			options["scm"] = projectRepo
-			os.Setenv(github.TokenEnvKey, "test_env")
 		})
 		It("should return nil error", func() {
 			_, err := validateJenkins(options)

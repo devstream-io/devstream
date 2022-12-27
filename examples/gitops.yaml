@@ -17,6 +17,7 @@ tools:
       name: [[ app ]]
       branch: main
       scmType: github
+      token: [[ env GITHUB_TOKEN ]]
     sourceRepo:
       org: devstream-io
       name: dtm-repo-scaffolding-python-flask
@@ -29,6 +30,7 @@ tools:
       owner: [[ githubUser ]]
       name:  [[ app ]]
       scmType: github
+      token: [[ env GITHUB_TOKEN ]]
     pipeline:
       configLocation: https://raw.githubusercontent.com/devstream-io/dtm-pipeline-templates/main/github-actions/workflows/main.yml
       language:
@@ -36,6 +38,7 @@ tools:
         framework: flask
       imageRepo:
         user: [[ dockerUser ]]
+        password: [[ env IMAGE_REPO_PASSWORD ]]
 - name: helm-installer
   instanceID: argocd
 - name: argocdapp
@@ -52,5 +55,6 @@ tools:
       valuefile: values.yaml
       path: helm/[[ app ]]
       repoURL: ${{repo-scaffolding.myapp.outputs.repoURL}}
+      token: [[ env GITHUB_TOKEN ]]
     imageRepo:
       user: [[ dockerUser ]]

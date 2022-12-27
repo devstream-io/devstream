@@ -12,6 +12,8 @@ tools:
       url: git@gitlab.com/root/test-exmaple.git
       # project branch, default branch will be master
       branch: YOUR_PROJECT_BRANCH
+      # scm repo token
+      token: YOUR_REPO_TOKEN
     pipeline:
       # workFlowfilePath is the location of workflows, it can be remote or local
       configLocation: .gitlabci.yml
@@ -23,3 +25,5 @@ tools:
         url: http://harbor.example.com:80
         # image repo user name
         user: admin
+        # image repo password
+        password: YOUR_IMAGE_REPO_PASSWORD

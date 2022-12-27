@@ -22,6 +22,7 @@ apps:
   repo:
     org: [[ repoOwner ]]
     scmType: github
+    token: [[ env GITHUB_TOKEN ]]
   repoTemplate:
     url: github.com/devstream-io/dtm-repo-scaffolding-golang-gin
   ci:
@@ -29,5 +30,6 @@ apps:
     options:
       imageRepo:
         user: [[ imageRepoOwner ]]
+        password: [[ env IMAGE_REPO_PASSWORD ]]
   cd:
   - type: argocdapp

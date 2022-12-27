@@ -17,6 +17,7 @@ tools:
       name: go-webapp-devstream-demo
       branch: main
       scmType: github
+      token: [[ env GITHUB_TOKEN ]]
     sourceRepo:
       org: devstream-io
       name: dtm-repo-scaffolding-golang-gin
@@ -30,6 +31,7 @@ tools:
       name: go-webapp-devstream-demo
       branch: main
       scmType: github
+      token: [[ env GITHUB_TOKEN ]]
     pipeline:
       configLocation: https://raw.githubusercontent.com/devstream-io/dtm-pipeline-templates/main/github-actions/workflows/main.yml
       language:
@@ -37,3 +39,4 @@ tools:
         framework: gin
       imageRepo:
         user: [[ ImageRepoUser ]]
+        password: [[ env IMAGE_REPO_PASSWORD ]]

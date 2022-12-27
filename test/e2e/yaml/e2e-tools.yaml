@@ -19,6 +19,7 @@ tools:
       org: [[ githubOrganization ]]
       name: [[ repoName ]]
       branch: [[ defaultBranch ]]
+      token: [[ env GITHUB_TOKEN ]]
       scmType: github
     sourceRepo:
       org: devstream-io
@@ -32,11 +33,13 @@ tools:
       configLocation: [[ githubActionConfigLocation ]]
       imageRepo:
         user: [[ dockerRegistryUserName ]]
+        password: [[ env IMAGE_REPO_PASSWORD ]]
       language:
         name: python
         framework: flask
     scm:
       org: [[ githubOrganization ]]
+      token: [[ env GITHUB_TOKEN ]]
       name: [[ repoName ]]
       branch: [[ defaultBranch ]]
       scmType: github
@@ -56,5 +59,6 @@ tools:
       valuefile: values.yaml
       path: helm/[[ repoName ]]
       repoURL: ${{repo-scaffolding.python-github.outputs.repoURL}}
+      token: [[ env GITHUB_TOKEN ]]
     imageRepo:
       user: [[ dockerRegistryUserName ]]

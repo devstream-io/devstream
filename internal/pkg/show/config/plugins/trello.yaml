@@ -20,3 +20,5 @@ tools:
       scmType: YOUR_REPO_TYPE
       # project branch
       branch: YOUR_PROJECT_BRANCH
+      # scm repo token
+      token: YOUR_REPO_TOKEN

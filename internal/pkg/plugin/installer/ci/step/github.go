@@ -1,12 +1,9 @@
 package step
 
 import (
-	"os"
-
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm"
-	"github.com/devstream-io/devstream/pkg/util/scm/github"
 )
 
 const (
@@ -15,6 +12,7 @@ const (
 
 type GithubStepConfig struct {
 	RepoOwner string `mapstructure:"repoOwner"`
+	Token     string `mapstructure:"token"`
 }
 
 func (g *GithubStepConfig) GetJenkinsPlugins() []*jenkins.JenkinsPlugin {
@@ -31,7 +29,7 @@ func (g *GithubStepConfig) ConfigJenkins(jenkinsClient jenkins.JenkinsAPI) (*jen
 	err := jenkinsClient.CreatePasswordCredential(
 		githubCredentialName,
 		g.RepoOwner,
-		os.Getenv(github.TokenEnvKey),
+		g.Token,
 	)
 	if err != nil {
 		log.Debugf("jenkins preinstall github credentials failed: %s", err)
@@ -52,5 +50,6 @@ func (g *GithubStepConfig) ConfigSCM(client scm.ClientOperation) error {
 func newGithubStep(config *StepGlobalOption) *GithubStepConfig {
 	return &GithubStepConfig{
 		RepoOwner: config.RepoInfo.GetRepoOwner(),
+		Token:     config.RepoInfo.Token,
 	}
 }

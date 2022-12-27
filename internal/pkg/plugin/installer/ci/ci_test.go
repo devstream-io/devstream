@@ -52,8 +52,9 @@ var _ = Describe("PipelineConfig struct", func() {
 				"ImageRepoSecret":       "IMAGE_REPO_SECRET",
 				"ImageRepoDockerSecret": "image-repo-auth",
 				"imageRepo": map[string]interface{}{
-					"url":  "exmaple.com",
-					"user": "test_user",
+					"url":      "exmaple.com",
+					"user":     "test_user",
+					"password": "",
 				},
 				"dingTalk":            nilDingTalkConfig,
 				"DingTalkSecretKey":   "DINGTALK_SECURITY_VALUE",
@@ -94,8 +95,9 @@ var _ = Describe("PipelineConfig struct", func() {
 			"StepGlobalVars":        "",
 			"RepoType":              "gitlab",
 			"imageRepo": map[string]interface{}{
-				"url":  "exmaple.com",
-				"user": "test_user",
+				"url":      "exmaple.com",
+				"user":     "test_user",
+				"password": "",
 			},
 			"dingTalk":           emptyDingtalk,
 			"sonarqube":          emptySonar,
