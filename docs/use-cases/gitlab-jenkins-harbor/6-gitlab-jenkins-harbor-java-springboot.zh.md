@@ -1,4 +1,4 @@
-# 用 DevStream 搭建 GitLab + Jenkins + Harbor 工具链，管理 Java Spring Boot 项目开发生命周期全流程
+# 搭建 GitLab + Jenkins + Harbor 工具链，管理 Java Spring Boot 项目开发生命周期全流程
 
 ## 0、配套视频
 
@@ -25,7 +25,7 @@
 本文最终将实现的工具链相关工作流如下图所示：
 
 <figure markdown>
-  ![Workflow](./gitlab-jenkins-harbor/workflow.png){ width="1000" }
+  ![Workflow](./gitlab-jenkins-harbor-java-springboot/workflow.png){ width="1000" }
   <figcaption>GitLab + Jenkins + Harbor Toolchain Workflow</figcaption>
 </figure>
 
@@ -45,11 +45,11 @@
 当前工具链主要涉及如下 DevStream 插件：
 
 - **工具链搭建**
-    - [`gitlab-ce-docker`](../plugins/gitlab-ce-docker.zh.md)：本地部署 GitLab 环境；
-    - [`helm-installer`](../plugins/helm-installer/helm-installer.zh.md)：本地部署 Jenkins 和 Harbor 环境。
+    - [`gitlab-ce-docker`](../../plugins/gitlab-ce-docker.zh.md)：本地部署 GitLab 环境；
+    - [`helm-installer`](../../plugins/helm-installer/helm-installer.zh.md)：本地部署 Jenkins 和 Harbor 环境。
 - **工具链使用**
-    - [`repo-scaffolding`](../plugins/repo-scaffolding.zh.md)：创建 Java Spring Boot 项目脚手架；
-    - [`jenkins-pipeline`](../plugins/jenkins-pipeline.zh.md)：在 Jenkins 上创建 Pipeline，并打通 GitLab 与 Jenkins，实现 GitLab 上发生 Push/Merge 等事件时触发 Jenkins Pipeline 运行，并且让 Pipeline 状态能够回写到 GitLab。
+    - [`repo-scaffolding`](../../plugins/repo-scaffolding.zh.md)：创建 Java Spring Boot 项目脚手架；
+    - [`jenkins-pipeline`](../../plugins/jenkins-pipeline.zh.md)：在 Jenkins 上创建 Pipeline，并打通 GitLab 与 Jenkins，实现 GitLab 上发生 Push/Merge 等事件时触发 Jenkins Pipeline 运行，并且让 Pipeline 状态能够回写到 GitLab。
 
 !!! hint "提示"
 
@@ -312,7 +312,7 @@ exit
 你可以在自己的 PC 里配置 `44.33.22.11 gitlab.example.com` 静态域名解析记录，然后在浏览器里通过 `http://gitlab.example.com:30080` 访问到 GitLab：
 
 <figure markdown>
-  ![GitLab login](./gitlab-jenkins-harbor/gitlab-login.png){ width="1000" }
+  ![GitLab login](./gitlab-jenkins-harbor-java-springboot/gitlab-login.png){ width="1000" }
   <figcaption>GitLab login page</figcaption>
 </figure>
 
@@ -326,7 +326,7 @@ gitlab-rake "gitlab:password:reset" # 执行后按照提示输入用户名 root�
 拿到 root 密码后，你可以尝试用 root/YOUR_PASSWORD 来登录 GitLab。因为后面你还需要用到 GitLab 的 token，所以这时候你可以顺手先创建一个 token：
 
 <figure markdown>
-  ![GitLab token](./gitlab-jenkins-harbor/gitlab-token.png){ width="1000" }
+  ![GitLab token](./gitlab-jenkins-harbor-java-springboot/gitlab-token.png){ width="1000" }
   <figcaption>Generate GitLab token</figcaption>
 </figure>
 
@@ -337,14 +337,14 @@ gitlab-rake "gitlab:password:reset" # 执行后按照提示输入用户名 root�
 接着在浏览器里通过 `http://jenkins.example.com` 就可以访问到 Jenkins 了：
 
 <figure markdown>
-  ![Jenkins login](./gitlab-jenkins-harbor/jenkins-login.png){ width="1000" }
+  ![Jenkins login](./gitlab-jenkins-harbor-java-springboot/jenkins-login.png){ width="1000" }
   <figcaption>Jenkins login page</figcaption>
 </figure>
 
 Jenkins 的 admin 用户初始登录密码是 `changeme`，如果你仔细看了前面 dtm 使用的配置文件，可以发现这是在配置文件里指定的。你可以尝试用 `admin/changeme` 登录 Jenkins 检查功能是否正常，不过当前你不需要在 Jenkins 上进行任何额外的操作。
 
 <figure markdown>
-  ![Jenkins dashboard](./gitlab-jenkins-harbor/jenkins-dashboard.png){ width="1000" }
+  ![Jenkins dashboard](./gitlab-jenkins-harbor-java-springboot/jenkins-dashboard.png){ width="1000" }
   <figcaption>Jenkins dashboard</figcaption>
 </figure>
 
@@ -357,14 +357,14 @@ Jenkins 的 admin 用户初始登录密码是 `changeme`，如果你仔细看了
 接着你可以在浏览器里通过 `http://harbor.example.com` 访问到 Harbor：
 
 <figure markdown>
-  ![Harbor login](./gitlab-jenkins-harbor/harbor-login.png){ width="1000" }
+  ![Harbor login](./gitlab-jenkins-harbor-java-springboot/harbor-login.png){ width="1000" }
   <figcaption>Harbor login page</figcaption>
 </figure>
 
 Harbor 的 admin 用户初始登录密码是 `Harbor12345`，你可以尝试用 `admin/Harbor12345` 登录 Harbor 检查功能是否正常，不过当前你同样也不需要在 Harbor 上进行任何额外的操作。
 
 <figure markdown>
-  ![Harbor dashboard](./gitlab-jenkins-harbor/harbor-dashboard.png){ width="1000" }
+  ![Harbor dashboard](./gitlab-jenkins-harbor-java-springboot/harbor-dashboard.png){ width="1000" }
   <figcaption>Harbor dashboard</figcaption>
 </figure>
 
@@ -498,21 +498,21 @@ root@dtm-realk8sdev:~# ./dtm apply -y -f config-apps.yaml
 这时候你可以在 GitLab 上看到 dtm 为你准备的 Java Spring Boot 项目脚手架：
 
 <figure markdown>
-  ![Repo Scaffolding](./gitlab-jenkins-harbor/repo-scaffolding.png){ width="1000" }
+  ![Repo Scaffolding](./gitlab-jenkins-harbor-java-springboot/repo-scaffolding.png){ width="1000" }
   <figcaption>Repo scaffolding</figcaption>
 </figure>
 
 接着你可以登录 Jenkins，查看 dtm 为你创建的 Pipeline：
 
 <figure markdown>
-  ![Jenkins Pipeline](./gitlab-jenkins-harbor/jenkins-pipeline.png){ width="1000" }
+  ![Jenkins Pipeline](./gitlab-jenkins-harbor-java-springboot/jenkins-pipeline.png){ width="1000" }
   <figcaption>Jenkins pipeline</figcaption>
 </figure>
 
 这个 Pipeline 会自动执行一次，执行完成后回到 GitLab，你可以看到 Jenkins 回写的 Pipeline 状态：
 
 <figure markdown>
-  ![GitLab Status](./gitlab-jenkins-harbor/gitlab-status.png){ width="1000" }
+  ![GitLab Status](./gitlab-jenkins-harbor-java-springboot/gitlab-status.png){ width="1000" }
   <figcaption>GitLab Status</figcaption>
 </figure>
 
@@ -521,7 +521,7 @@ root@dtm-realk8sdev:~# ./dtm apply -y -f config-apps.yaml
 当然，在 Harbor 上你可以找到 CI 流程构建出来的容器镜像：
 
 <figure markdown>
-  ![GitLab Status](./gitlab-jenkins-harbor/harbor-image.png){ width="1000" }
+  ![GitLab Status](./gitlab-jenkins-harbor-java-springboot/harbor-image.png){ width="1000" }
   <figcaption>Image in Harbor</figcaption>
 </figure>
 
