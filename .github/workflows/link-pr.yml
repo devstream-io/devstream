@@ -18,6 +18,13 @@ jobs:
         run: |
           sed -i 's|https://docs.devstream.io|http://localhost|g' mkdocs.yml
 
+      # disable "edit this page" link
+      # see https://github.com/devstream-io/devstream/issues/1386 for more details
+      - name: Disable Edit This Page
+        run: |
+          # edit_uri: edit/main/docs -> edit_uri: ""
+          sed -i 's|edit_uri: edit/main/docs|edit_uri: ""|g' mkdocs.yml
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
