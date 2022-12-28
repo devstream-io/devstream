@@ -395,6 +395,7 @@ apps:
   repo:
     url: [[ gitlabURL ]]/root/[[ appName ]].git
     branch: main
+    token: [[ env GITLAB_TOKEN ]]
   repoTemplate:
     url: https://github.com/devstream-io/dtm-repo-scaffolding-java-springboot.git
   ci:
@@ -409,9 +410,11 @@ pipelineTemplates:
       url: [[ jenkinsURL ]]
       user: admin
       enableRestart: true
+      password: [[ env JENKINS_PASSWORD ]]
     imageRepo:
       user: admin
       url: [[ harborURL ]]/library
+      password: [[ env IMAGE_REPO_PASSWORD ]]
 ```
 
 可以看到这里的状态配置换成了 devstream-app.state，这里需要保证和前面 tools 所使用的状态文件不是同一个。
