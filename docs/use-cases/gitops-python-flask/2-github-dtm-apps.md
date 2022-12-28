@@ -35,6 +35,7 @@ apps:
     framework: django
   repo:
     url: github.com/[[ GITHUB_USER ]]/myapp1
+    token: [[ env GITHUB_TOKEN ]]
   repoTemplate:
     url: github.com/devstream-io/dtm-repo-scaffolding-python-flask
   ci:
@@ -42,6 +43,7 @@ apps:
     options:
       imageRepo:
         user: [[ DOCKERHUB_USER ]]
+        password: [[ env IMAGE_REPO_PASSWORD ]]
   cd:
   - type: argocdapp
 ```

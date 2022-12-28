@@ -6,13 +6,15 @@
 
 这个插件基于你使用的代码仓库类型需要设置以下配置：
 
+使用该插件前去要获取对应 Scm（Github/Gitlab） 的 token，如果你不知道如何去获取这个 token，可以查看以下不同的 Scm 的获取方式
+
 ### GitHub
 
-- GITHUB_TOKEN: 在使用插件之前请先设置这个环境变量，如果你不知道如何获取这个 token，可以查看文档 [Creating a personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)。
+- [Creating a personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)。
 
 ### GitLab
 
-- GITLAB_TOKEN： 在使用插件之前请先设置这个环境变量，如果你不知道如何获取这个 token，可以查看文档 [Personal access tokens](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html)。
+- [Personal access tokens](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html)。
 - `destinationRepo.baseUrl`：如果你使用的是自建的 GitLab 仓库，需要将该配置设置为自建 GItLab 的 URL 地址。
 - `destinationRepo.visibility`：此配置用于设置新建仓库的权限，支持的选项有 `public`, `private` 和 `internal`。
 

@@ -85,6 +85,7 @@ apps:
   repo:
     url: [[ gitlabURL ]]/root/[[ appName ]].git
     branch: main
+    token: [[ env GITLAB_TOKEN ]]
   repoTemplate:
     url: https://github.com/devstream-io/dtm-repo-scaffolding-java-springboot.git
   ci:
@@ -99,9 +100,11 @@ pipelineTemplates:
       url: [[ jenkinsURL ]]
       user: admin
       enableRestart: true
+      password: [[ env JENKINS_PASSWORD ]]
     imageRepo:
       user: admin
       url: [[ harborURL ]]/library
+      password: [[ env IMAGE_REPO_PASSWORD ]]
 ```
 
 你可以将这个配置文件放到服务器上的某一个路径内，比如 `~/devstream-test/config-apps.yaml`。
