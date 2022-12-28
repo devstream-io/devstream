@@ -9,8 +9,12 @@ DevStream 是一个开源的 DevOps 工具链管理器，因开发者而生，�
 TL;DR：只需观看以下演示:
 
 <div class="video-wrapper">
-    <iframe width="1280" height="500" src="https://player.bilibili.com/player.html?cid=728576152&aid=426762434&page=1&as_wide=1&high_quality=1&danmaku=0" allowfullscreen></iframe>
+    <iframe width="1280" height="500" src="https://player.bilibili.com/player.html?cid=931459808&aid=819045554&page=1&as_wide=1&high_quality=1&danmaku=0" allowfullscreen></iframe>
 </div>
+
+!!! hint "提示"
+
+    跳转到B站观看清晰度更高。
 
 ## DevStream 做了什么？
 

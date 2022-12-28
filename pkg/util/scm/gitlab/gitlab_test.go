@@ -2,7 +2,6 @@ package gitlab_test
 
 import (
 	"fmt"
-	"os"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -13,30 +12,31 @@ import (
 
 var _ = Describe("NewClient func", func() {
 	var (
-		gitlabToken string
-		repoInfo    git.RepoInfo
+		repoInfo *git.RepoInfo
 	)
 	When("gitlab Token is not set", func() {
 		BeforeEach(func() {
-			gitlabToken = os.Getenv("GITLAB_TOKEN")
-			Expect(gitlabToken).Should(BeEmpty())
+			repoInfo = &git.RepoInfo{
+				BaseURL: "test",
+				Repo:    "no_token",
+			}
 		})
 		It("should return error", func() {
-			_, err := gitlab.NewClient(&repoInfo)
+			_, err := gitlab.NewClient(repoInfo)
 			Expect(err).Error().Should(HaveOccurred())
-			Expect(err.Error()).Should(Equal("failed to read GITLAB_TOKEN from environment variable"))
+			Expect(err.Error()).Should(Equal("config field scm.token is not setted"))
 		})
 	})
 	When("gitlab token is set", func() {
-		BeforeEach(func() {
-			os.Setenv("GITLAB_TOKEN", "test")
-		})
 		When("repoInfo field baseURL is empty", func() {
 			BeforeEach(func() {
-				repoInfo.BaseURL = ""
+				repoInfo = &git.RepoInfo{
+					BaseURL: "",
+					Token:   "exist_token",
+				}
 			})
 			It("should return client with gitlab url", func() {
-				client, err := gitlab.NewClient(&repoInfo)
+				client, err := gitlab.NewClient(repoInfo)
 				Expect(err).ShouldNot(HaveOccurred())
 				Expect(client.Client.BaseURL().Host).Should(Equal("gitlab.com"))
 			})
@@ -45,19 +45,16 @@ var _ = Describe("NewClient func", func() {
 			var baseURL string
 			BeforeEach(func() {
 				baseURL = "test.com"
-				repoInfo.BaseURL = fmt.Sprintf("http://%s", baseURL)
+				repoInfo = &git.RepoInfo{
+					BaseURL: fmt.Sprintf("http://%s", baseURL),
+					Token:   "exist",
+				}
 			})
 			It("should return self host url", func() {
-				client, err := gitlab.NewClient(&repoInfo)
+				client, err := gitlab.NewClient(repoInfo)
 				Expect(err).ShouldNot(HaveOccurred())
 				Expect(client.Client.BaseURL().Host).Should(Equal(baseURL))
 			})
-			AfterEach(func() {
-				repoInfo.BaseURL = ""
-			})
-		})
-		AfterEach(func() {
-			os.Unsetenv("GITLAB_TOKEN")
 		})
 	})
 })

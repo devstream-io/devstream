@@ -3,7 +3,7 @@ on: [ push, pull_request ]
 
 jobs:
   lint-commit-message:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, X64]
     steps:
       - uses: actions/checkout@v3
         with:

@@ -1,12 +1,12 @@
 package backend
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/devstream-io/devstream/internal/pkg/backend/k8s"
 	"github.com/devstream-io/devstream/internal/pkg/backend/local"
 	"github.com/devstream-io/devstream/internal/pkg/backend/s3"
-	"github.com/devstream-io/devstream/internal/pkg/backend/types"
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 )
 
@@ -18,18 +18,27 @@ type Backend interface {
 	Write(data []byte) error
 }
 
+type Type string
+
+const (
+	LocalBackend    Type = "local"
+	S3Backend       Type = "s3"
+	K8sBackend      Type = "k8s"
+	K8sBackendAlias Type = "kubernetes"
+)
+
 // GetBackend will return a Backend by the given name.
 func GetBackend(state configmanager.State) (Backend, error) {
-	typeName := types.Type(strings.ToLower(state.Backend))
+	typeName := Type(strings.ToLower(string(state.Backend)))
 
 	switch typeName {
-	case types.Local:
-		return local.NewLocal(state.Options.StateFile)
-	case types.S3:
+	case LocalBackend:
+		return local.NewLocal(state.BaseDir, state.Options.StateFile)
+	case S3Backend:
 		return s3.NewS3Backend(state.Options.Bucket, state.Options.Region, state.Options.Key)
-	case types.K8s, types.K8sAlias:
+	case K8sBackend, K8sBackendAlias:
 		return k8s.NewBackend(state.Options.Namespace, state.Options.ConfigMap)
 	default:
-		return nil, types.NewInvalidBackendErr(state.Backend)
+		return nil, fmt.Errorf("the backend type < %s > is illegal", state.Backend)
 	}
 }

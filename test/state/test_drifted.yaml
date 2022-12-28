@@ -1,19 +1,15 @@
----
-# core config
-varFile: "" # If not empty, use the specified external variables config file
-toolFile: "" # If not empty, use the specified external tools config file
-state: # state config, backend can be local or s3
-  backend: local
-  options:
-    stateFile: test_drifted.state
-
----
-tools:
-  # name of the tool
-  - name: gitlab-ce-docker
-    # id of the tool instance
-    instanceID: default
-    # format: name.instanceID; If specified, dtm will make sure the dependency is applied first before handling this tool.
-    dependsOn: [ ]
-    # options for the plugin
+config:
+  state: # state config, backend can be local or s3
+    backend: local
     options:
+      stateFile: test_drifted.state
+
+tools:
+# name of the tool
+- name: gitlab-ce-docker
+  # id of the tool instance
+  instanceID: default
+  # format: name.instanceID; If specified, dtm will make sure the dependency is applied first before handling this tool.
+  dependsOn: [ ]
+  # options for the plugin
+  options:

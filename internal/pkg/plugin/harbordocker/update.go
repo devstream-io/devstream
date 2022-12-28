@@ -1,26 +1,28 @@
 package harbordocker
 
 import (
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
-	dockerInstaller "github.com/devstream-io/devstream/internal/pkg/plugininstaller/docker"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer"
+	dockerInstaller "github.com/devstream-io/devstream/internal/pkg/plugin/installer/docker"
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func Update(options map[string]interface{}) (map[string]interface{}, error) {
+func Update(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	// Initialize Operator with Operations
-	operator := &plugininstaller.Operator{
-		PreExecuteOperations: plugininstaller.PreExecuteOperations{
+	operator := &installer.Operator{
+		PreExecuteOperations: installer.PreExecuteOperations{
 			renderConfig,
 		},
-		ExecuteOperations: plugininstaller.ExecuteOperations{
+		ExecuteOperations: installer.ExecuteOperations{
 			dockerInstaller.ComposeDown,
 			dockerInstaller.ComposeUp,
 		},
-		GetStateOperation: dockerInstaller.ComposeState,
+		GetStatusOperation: dockerInstaller.ComposeStatus,
 	}
 
 	// Execute all Operations in Operator
-	state, err := operator.Execute(plugininstaller.RawOptions(options))
+	state, err := operator.Execute(options)
 	if err != nil {
 		return nil, err
 	}

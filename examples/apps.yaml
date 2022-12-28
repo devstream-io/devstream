@@ -1,0 +1,49 @@
+config:
+  state:
+    backend: local
+    options:
+      stateFile: devstream.state
+
+vars:
+  GITHUB_USER: YOUR_GITHUB_USER
+  DOCKERHUB_USER: YOUR_DOCKERHUB_USER
+
+tools:
+- name: helm-installer
+  instanceID: argocd
+
+apps:
+- name: myapp1
+  spec:
+    language: python
+    framework: django
+  repo:
+    url: github.com/[[ GITHUB_USER ]]/myapp1
+    token: [[ env GITHUB_TOKEN ]]
+  repoTemplate:
+    url: github.com/devstream-io/dtm-repo-scaffolding-python-flask
+  ci:
+  - type: github-actions
+    options:
+      imageRepo:
+        user: [[ DOCKERHUB_USER ]]
+        password: [[ env IMAGE_REPO_PASSWORD ]]
+  cd:
+  - type: argocdapp
+- name: myapp2
+  spec:
+    language: golang
+    framework: gin
+  repo:
+    url: github.com/[[ GITHUB_USER ]]/myapp2
+    token: [[ env GITHUB_TOKEN ]]
+  repoTemplate:
+    url: github.com/devstream-io/dtm-repo-scaffolding-golang-gin
+  ci:
+  - type: github-actions
+    options:
+      imageRepo:
+        user: [[ DOCKERHUB_USER ]]
+        password: [[ env IMAGE_REPO_PASSWORD ]]
+  cd:
+  - type: argocdapp

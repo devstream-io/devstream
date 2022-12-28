@@ -5,7 +5,9 @@ var mainGoDirTpl = "cmd/plugin/[[ .Name ]]/"
 var mainGoContentTpl = `package main
 
 import (
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/[[ .Name | format ]]"
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -16,22 +18,22 @@ const NAME = "[[ .Name ]]"
 type Plugin string
 
 // Create implements the create of [[ .Name ]].
-func (p Plugin) Create(options map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Create(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return [[ .Name | format ]].Create(options)
 }
 
 // Update implements the update of [[ .Name ]].
-func (p Plugin) Update(options map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Update(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return [[ .Name | format ]].Update(options)
 }
 
 // Delete implements the delete of [[ .Name ]].
-func (p Plugin) Delete(options map[string]interface{}) (bool, error) {
+func (p Plugin) Delete(options configmanager.RawOptions) (bool, error) {
 	return [[ .Name | format ]].Delete(options)
 }
 
 // Read implements the read of [[ .Name ]].
-func (p Plugin) Read(options map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return [[ .Name | format ]].Read(options)
 }
 

@@ -1,58 +1,72 @@
 package gitlab
 
 import (
+	"github.com/imdario/mergo"
 	"github.com/xanzy/go-gitlab"
 
-	"github.com/devstream-io/devstream/pkg/util/pkgerror"
+	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
-func (c *Client) PushLocalFileToRepo(commitInfo *git.CommitInfo, checkUpdate bool) (bool, error) {
-	// if checkUpdate is true, check files to update first
-	if checkUpdate {
-		updateCommitInfo := &git.CommitInfo{
-			CommitMsg:    commitInfo.CommitMsg,
-			CommitBranch: commitInfo.CommitBranch,
-		}
-		commitMap := make(git.GitFileContentMap)
-		for filePath, content := range commitInfo.GitFileMap {
-			fileExist, err := c.FileExists(filePath)
-			if err != nil {
-				return false, err
-			}
-			if fileExist {
-				commitMap[filePath] = content
-				delete(commitInfo.GitFileMap, filePath)
-			}
-		}
-		if len(commitMap) > 0 {
-			err := c.UpdateFiles(updateCommitInfo)
-			if err != nil {
-				return true, err
-			}
-		}
-	}
-	createCommitOptions := c.CreateCommitInfo(gitlab.FileCreate, commitInfo)
-	_, _, err := c.Commits.CreateCommit(c.GetRepoPath(), createCommitOptions)
-	if err != nil && !pkgerror.CheckSlientErrorByMessage(err, errFileExist) {
-		return true, c.newModuleError(err)
-	}
-	return false, nil
+type commitTree struct {
+	commitMessage string
+	commitBranch  string
+	gitlabFileMap map[gitlab.FileActionValue]git.GitFileContentMap
 }
 
-func (c *Client) CreateCommitInfo(action gitlab.FileActionValue, commitInfo *git.CommitInfo) *gitlab.CreateCommitOptions {
-	var commitActionsOptions = make([]*gitlab.CommitActionOptions, 0, len(commitInfo.GitFileMap))
+func newCommitTree(commitMessage string, branch string) *commitTree {
+	return &commitTree{
+		commitMessage: commitMessage,
+		commitBranch:  branch,
+		gitlabFileMap: make(map[gitlab.FileActionValue]git.GitFileContentMap),
+	}
+}
 
-	for fileName, content := range commitInfo.GitFileMap {
-		commitActionsOptions = append(commitActionsOptions, &gitlab.CommitActionOptions{
-			Action:   gitlab.FileAction(action),
-			FilePath: gitlab.String(fileName),
-			Content:  gitlab.String(string(content)),
-		})
+func (t *commitTree) addCommitFile(action gitlab.FileActionValue, scmPath string, content []byte) {
+	actionMap, ok := t.gitlabFileMap[action]
+	if !ok {
+		t.gitlabFileMap[action] = git.GitFileContentMap{
+			scmPath: content,
+		}
+	} else {
+		actionMap[scmPath] = content
+	}
+}
+
+func (t *commitTree) addCommitFilesFromMap(action gitlab.FileActionValue, gitMap git.GitFileContentMap) {
+	actionMap, ok := t.gitlabFileMap[action]
+	if !ok {
+		t.gitlabFileMap[action] = gitMap
+	} else {
+		err := mergo.Merge(&actionMap, gitMap, mergo.WithOverride)
+		if err != nil {
+			log.Debugf("gitlab add commit files failed: %+v", err)
+		}
+	}
+}
+
+func (t *commitTree) getFilesCount() int {
+	var fileCount int
+	for _, files := range t.gitlabFileMap {
+		fileCount += len(files)
+	}
+	return fileCount
+}
+
+func (t *commitTree) createCommitInfo() *gitlab.CreateCommitOptions {
+	var commitActionsOptions = make([]*gitlab.CommitActionOptions, 0, t.getFilesCount())
+	for action, fileMap := range t.gitlabFileMap {
+		for fileName, content := range fileMap {
+			commitActionsOptions = append(commitActionsOptions, &gitlab.CommitActionOptions{
+				Action:   gitlab.FileAction(action),
+				FilePath: gitlab.String(fileName),
+				Content:  gitlab.String(string(content)),
+			})
+		}
 	}
 	return &gitlab.CreateCommitOptions{
-		Branch:        gitlab.String(c.Branch),
-		CommitMessage: gitlab.String(commitInfo.CommitMsg),
+		Branch:        gitlab.String(t.commitBranch),
+		CommitMessage: gitlab.String(t.commitMessage),
 		Actions:       commitActionsOptions,
 	}
 }

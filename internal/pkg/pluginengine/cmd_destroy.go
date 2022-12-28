@@ -7,7 +7,7 @@ import (
 
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
-	"github.com/devstream-io/devstream/pkg/util/file"
+	"github.com/devstream-io/devstream/pkg/util/interact"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -20,11 +20,7 @@ func Destroy(configFile string, continueDirectly bool, isForceDestroy bool) erro
 		return fmt.Errorf("failed to load the config file")
 	}
 
-	if err := file.SetPluginDir(cfg.PluginDir); err != nil {
-		log.Errorf("Error: %s.", err)
-	}
-
-	smgr, err := statemanager.NewManager(*cfg.State)
+	smgr, err := statemanager.NewManager(*cfg.Config.State)
 	if err != nil {
 		log.Debugf("Failed to get the manager: %s.", err)
 		return err
@@ -45,8 +41,8 @@ func Destroy(configFile string, continueDirectly bool, isForceDestroy bool) erro
 	}
 
 	if !continueDirectly {
-		userInput := readUserInput()
-		if userInput == "n" {
+		continued := interact.AskUserIfContinue(askUserIfContinue)
+		if !continued {
 			os.Exit(0)
 		}
 	}

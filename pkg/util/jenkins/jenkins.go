@@ -2,7 +2,6 @@ package jenkins
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"net/http/cookiejar"
 	"strings"
@@ -21,41 +20,34 @@ const (
 
 type jenkins struct {
 	gojenkins.Jenkins
-	ctx context.Context
+	ctx       context.Context
+	BasicInfo *JenkinsConfigOption
+}
+
+type JenkinsConfigOption struct {
+	URL           string
+	Namespace     string
+	EnableRestart bool
+	Offline       bool
+	BasicAuth     *BasicAuth
 }
 
 type JenkinsAPI interface {
 	ExecuteScript(script string) (string, error)
 	GetFolderJob(jobName, jobFolder string) (*gojenkins.Job, error)
 	DeleteJob(ctx context.Context, name string) (bool, error)
-	InstallPluginsIfNotExists(plugin []*JenkinsPlugin, enableRestart bool) error
+	InstallPluginsIfNotExists(plugin []*JenkinsPlugin) error
 	CreateGiltabCredential(id, token string) error
 	CreateSSHKeyCredential(id, userName, privateKey string) error
 	CreateSecretCredential(id, secretText string) error
 	CreatePasswordCredential(id, userName, password string) error
 	ConfigCascForRepo(repoCascConfig *RepoCascConfig) error
 	ApplyDingTalkBot(config dingtalk.BotConfig) error
+	GetBasicInfo() *JenkinsConfigOption
 }
 
-type setBearerToken struct {
-	rt    http.RoundTripper
-	token string
-}
-
-func (t *setBearerToken) transport() http.RoundTripper {
-	if t.rt != nil {
-		return t.rt
-	}
-	return http.DefaultTransport
-}
-
-func (t *setBearerToken) RoundTrip(r *http.Request) (*http.Response, error) {
-	r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", t.token))
-	return t.transport().RoundTrip(r)
-}
-
-func NewClient(url string, basicAuthInfo *BasicAuth) (JenkinsAPI, error) {
-	url = strings.TrimSuffix(url, "/")
+func NewClient(configOption *JenkinsConfigOption) (JenkinsAPI, error) {
+	url := strings.TrimSuffix(configOption.URL, "/")
 	jenkinsClient := &jenkins{}
 	jenkinsClient.Server = url
 
@@ -70,6 +62,7 @@ func NewClient(url string, basicAuthInfo *BasicAuth) (JenkinsAPI, error) {
 		Timeout: 10 * time.Second,
 	}
 
+	basicAuthInfo := configOption.BasicAuth
 	if basicAuthInfo.usePassWordAuth() {
 		basicAuth = &gojenkins.BasicAuth{
 			Username: basicAuthInfo.Username, Password: basicAuthInfo.Password,
@@ -96,13 +89,14 @@ func NewClient(url string, basicAuthInfo *BasicAuth) (JenkinsAPI, error) {
 		return nil, errors.Errorf("couldn't poll data from Jenkins API, invalid status code returned: %d", status)
 	}
 	jenkinsClient.ctx = context.TODO()
+	jenkinsClient.BasicInfo = configOption
 	return jenkinsClient, nil
 }
 
-func (a *BasicAuth) IsNameMatch(userName string) bool {
-	return userName == "" || userName == a.Username
+func (j *jenkins) GetBasicInfo() *JenkinsConfigOption {
+	return j.BasicInfo
 }
 
-func (a *BasicAuth) usePassWordAuth() bool {
-	return len(a.Username) > 0 && len(a.Password) > 0
+func (o *JenkinsConfigOption) IsOffline() bool {
+	return o.Offline
 }

@@ -1,19 +1,32 @@
 package github
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
 	"github.com/google/go-github/v42/github"
 
+	"github.com/devstream-io/devstream/pkg/util/downloader"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/pkgerror"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
 const (
-	webhookName = "devstream_webhook"
+	webhookName                               = "devstream_webhook"
+	defaultLatestCodeZipfileDownloadUrlFormat = "https://codeload.github.com/%s/%s/zip/refs/heads/%s?archive=zip"
 )
+
+// DownloadRepo will download repo, return repo local path and error
+func (c *Client) DownloadRepo() (string, error) {
+	latestCodeZipfileDownloadLocation := downloader.ResourceLocation(fmt.Sprintf(
+		defaultLatestCodeZipfileDownloadUrlFormat, c.GetRepoOwner(), c.Repo, c.Branch,
+	))
+	log.Debugf("github get repo download url: %s.", latestCodeZipfileDownloadLocation)
+	log.Info("github start to download repoTemplate...")
+	return latestCodeZipfileDownloadLocation.Download()
+}
 
 func (c *Client) CreateRepo(org, defaultBranch string) error {
 	repo := &github.Repository{
@@ -49,7 +62,7 @@ func (c *Client) DeleteRepo() error {
 	return nil
 }
 
-func (c *Client) DescribeRepo() (*github.Repository, error) {
+func (c *Client) DescribeRepo() (*git.RepoInfo, error) {
 	repo, resp, err := c.Client.Repositories.Get(
 		c.Context,
 		c.GetRepoOwner(),
@@ -62,69 +75,24 @@ func (c *Client) DescribeRepo() (*github.Repository, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	return repo, nil
-}
-
-// PushLocalPathToBranch will push local change to remote repo
-// return boolean value is for control whether to rollout if encounter error
-func (c *Client) PushLocalFileToRepo(commitInfo *git.CommitInfo, checkChange bool) (bool, error) {
-	// 1. create new branch from main
-	ref, err := c.NewBranch(commitInfo.CommitBranch)
-	if err != nil {
-		log.Debugf("Failed to create transit branch: %s", err)
-		return false, err
+	repoInfo := &git.RepoInfo{
+		Repo:     repo.GetName(),
+		Owner:    repo.GetOwner().GetLogin(),
+		Org:      repo.GetOrganization().GetLogin(),
+		RepoType: "github",
+		CloneURL: git.ScmURL(repo.GetCloneURL()),
 	}
-	// delete new branch after func exit
-	defer func() {
-		err = c.DeleteBranch(commitInfo.CommitBranch)
-		if err != nil {
-			log.Warnf("Failed to delete transit branch: %s", err)
-		}
-	}()
-	tree, err := c.BuildCommitTree(ref, commitInfo, checkChange)
-	if err != nil {
-		log.Debugf("Failed to build commit tree: %s.", err)
-		return true, err
-	}
-	// if no new files to commit, just return
-	if tree == nil {
-		log.Successf("Github file all not change, pass...")
-		return false, nil
-	}
-
-	// 2. push local file change to new branch
-	if err := c.PushLocalPath(ref, tree, commitInfo); err != nil {
-		log.Debugf("Failed to walk local repo-path: %s.", err)
-		return true, err
-	}
-
-	// 3. merge new branch to main
-	if err = c.MergeCommits(commitInfo); err != nil {
-		log.Debugf("Failed to merge commits: %s.", err)
-		return true, err
-	}
-	// 4. delete placeholder file
-	if err = c.DeleteFiles(&git.CommitInfo{
-		CommitMsg:    "delete placeholder file",
-		CommitBranch: c.Branch,
-		GitFileMap: git.GitFileContentMap{
-			repoPlaceHolderFileName: []byte{},
-		},
-	}); err != nil {
-		log.Debugf("github delete init file failed: %s", err)
-	}
-	return false, nil
+	return repoInfo, nil
 }
 
 func (c *Client) InitRepo() error {
-	// It's ok to give the opts.Org to CreateRepo() when create a repository for a authenticated user.
+	// It's ok to give the opts.Org to CreateRepo() when create a repository for an authenticated user.
 	if err := c.CreateRepo(c.Org, c.Branch); err != nil {
 		// recreate if set tryTime
 		log.Errorf("Failed to create repo: %s.", err)
 		return err
 	}
-	log.Infof("The repo %s has been created.", c.Repo)
+	log.Successf("The repo %s has been created.", c.Repo)
 
 	//	upload a placeholder file to make repo not empty
 	if err := c.CreateFile([]byte(" "), repoPlaceHolderFileName, c.Branch); err != nil {
@@ -152,7 +120,7 @@ func (c *Client) ProtectBranch(branch string) error {
 		return err
 	}
 
-	_, _, err = c.Repositories.UpdateBranchProtection(c.Context, repo.GetOwner().GetLogin(), repo.GetName(), branch, req)
+	_, _, err = c.Repositories.UpdateBranchProtection(c.Context, repo.Owner, repo.Repo, branch, req)
 	if err != nil {
 		return err
 	}
@@ -169,7 +137,7 @@ func (c *Client) AddWebhook(webhookConfig *git.WebhookConfig) error {
 	hook.Config["url"] = webhookConfig.Address
 	hook.Config["content_type"] = "json"
 	_, _, err := client.Repositories.CreateHook(c.Context, c.Owner, c.Repo, hook)
-	if err != nil && !pkgerror.CheckSlientErrorByMessage(err, errHookAlreadyExist) {
+	if err != nil && !pkgerror.CheckErrorMatchByMessage(err, errHookAlreadyExist) {
 		return err
 	}
 	return nil

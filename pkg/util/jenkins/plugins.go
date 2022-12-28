@@ -52,14 +52,17 @@ var basicPlugins = []*JenkinsPlugin{
 //go:embed tpl/plugins.tpl.groovy
 var pluginsGroovyScript string
 
-func (j *jenkins) InstallPluginsIfNotExists(installPlugins []*JenkinsPlugin, enableRestart bool) error {
+func (j *jenkins) InstallPluginsIfNotExists(installPlugins []*JenkinsPlugin) error {
 	plugins := append(installPlugins, basicPlugins...)
 	toInstallPlugins := j.getToInstallPluginList(plugins)
 	if len(toInstallPlugins) == 0 {
 		return nil
 	}
 
-	pluginInstallScript, err := template.Render("jenkins-plugins-template", pluginsGroovyScript, map[string]interface{}{
+	enableRestart := j.BasicInfo.EnableRestart
+	pluginInstallScript, err := template.NewRenderClient(&template.TemplateOption{
+		Name: "jenkins-plugins-template",
+	}, template.ContentGetter).Render(pluginsGroovyScript, map[string]interface{}{
 		"JenkinsPlugins": transferPluginSliceToTplString(toInstallPlugins),
 		"EnableRestart":  enableRestart,
 	})

@@ -5,26 +5,47 @@ import (
 	"fmt"
 	"sort"
 
-	"gopkg.in/yaml.v3"
+	"golang.org/x/exp/maps"
 
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
+
+	"gopkg.in/yaml.v3"
+
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/mapz/concurrentmap"
 )
 
+// We call what the plugin created a ResourceStatus, and which is stored as part of the state.
+type ResourceStatus map[string]interface{}
+
+type ResourceOutputs map[string]interface{}
+
 // State is the single component's state.
 type State struct {
-	Name       string
-	InstanceID string
-	DependsOn  []string
-	Options    map[string]interface{}
-	Resource   map[string]interface{}
+	Name           string                   `yaml:"name"`
+	InstanceID     string                   `yaml:"instanceID"`
+	DependsOn      []string                 `yaml:"dependsOn"`
+	Options        configmanager.RawOptions `yaml:"options"`
+	ResourceStatus ResourceStatus           `yaml:"resourceStatus"`
 }
 
-type ResourceState map[string]interface{}
+func (rs ResourceStatus) SetOutputs(outputs ResourceOutputs) {
+	(rs)["outputs"] = outputs
+}
 
-func (rs *ResourceState) SetOutputs(outputs map[string]interface{}) {
-	(*rs)["outputs"] = outputs
+func (rs ResourceStatus) GetOutputs() ResourceOutputs {
+	outputs, ok := (rs)["outputs"]
+	if !ok {
+		return nil
+	}
+	outputStatus, isStatus := outputs.(ResourceStatus)
+	if !isStatus {
+		return outputs.(ResourceOutputs)
+	}
+	// if outputs type is ResourceStatus, transfer this type to ResourceOutputs
+	outputData := ResourceOutputs{}
+	maps.Copy(outputData, outputStatus)
+	return outputData
 }
 
 type StatesMap struct {
@@ -85,13 +106,9 @@ func (s StatesMap) Format() []byte {
 	return buf.Bytes()
 }
 
-// Note: Please use the StateKeyGenerateFunc function to generate StateKey instance.
+// Note: Please use the GenerateStateKeyByToolNameAndInstanceID function to generate StateKey instance.
 type StateKey string
 
-func StateKeyGenerateFunc(t *configmanager.Tool) StateKey {
-	return StateKey(fmt.Sprintf("%s_%s", t.Name, t.InstanceID))
-}
-
-func GenerateStateKeyByToolNameAndPluginKind(toolName string, instanceID string) StateKey {
+func GenerateStateKeyByToolNameAndInstanceID(toolName string, instanceID string) StateKey {
 	return StateKey(fmt.Sprintf("%s_%s", toolName, instanceID))
 }

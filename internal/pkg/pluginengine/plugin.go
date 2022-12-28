@@ -1,24 +1,28 @@
 package pluginengine
 
 import (
-	"github.com/spf13/viper"
-
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
+	"github.com/devstream-io/devstream/internal/pkg/pluginmanager"
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 )
 
 // DevStreamPlugin is a struct, on which Create/Read/Update/Delete interfaces are defined.
 type DevStreamPlugin interface {
 	// Create, Read, and Update return two results, the first being the "state"
-	Create(map[string]interface{}) (map[string]interface{}, error)
-	Read(map[string]interface{}) (map[string]interface{}, error)
-	Update(map[string]interface{}) (map[string]interface{}, error)
+	Create(configmanager.RawOptions) (statemanager.ResourceStatus, error)
+	Read(configmanager.RawOptions) (statemanager.ResourceStatus, error)
+	Update(configmanager.RawOptions) (statemanager.ResourceStatus, error)
 	// Delete returns (true, nil) if there is no error; otherwise it returns (false, error)
-	Delete(map[string]interface{}) (bool, error)
+	Delete(configmanager.RawOptions) (bool, error)
 }
 
 // Create loads the plugin and calls the Create method of that plugin.
-func Create(tool *configmanager.Tool) (map[string]interface{}, error) {
-	pluginDir := viper.GetString("plugin-dir")
+func Create(tool *configmanager.Tool) (statemanager.ResourceStatus, error) {
+	pluginDir, err := pluginmanager.GetPluginDir()
+	if err != nil {
+		return nil, err
+	}
+
 	p, err := loadPlugin(pluginDir, tool)
 	if err != nil {
 		return nil, err
@@ -27,8 +31,12 @@ func Create(tool *configmanager.Tool) (map[string]interface{}, error) {
 }
 
 // Update loads the plugin and calls the Update method of that plugin.
-func Update(tool *configmanager.Tool) (map[string]interface{}, error) {
-	pluginDir := viper.GetString("plugin-dir")
+func Update(tool *configmanager.Tool) (statemanager.ResourceStatus, error) {
+	pluginDir, err := pluginmanager.GetPluginDir()
+	if err != nil {
+		return nil, err
+	}
+
 	p, err := loadPlugin(pluginDir, tool)
 	if err != nil {
 		return nil, err
@@ -36,8 +44,12 @@ func Update(tool *configmanager.Tool) (map[string]interface{}, error) {
 	return p.Update(tool.Options)
 }
 
-func Read(tool *configmanager.Tool) (map[string]interface{}, error) {
-	pluginDir := viper.GetString("plugin-dir")
+func Read(tool *configmanager.Tool) (statemanager.ResourceStatus, error) {
+	pluginDir, err := pluginmanager.GetPluginDir()
+	if err != nil {
+		return nil, err
+	}
+
 	p, err := loadPlugin(pluginDir, tool)
 	if err != nil {
 		return nil, err
@@ -47,7 +59,11 @@ func Read(tool *configmanager.Tool) (map[string]interface{}, error) {
 
 // Delete loads the plugin and calls the Delete method of that plugin.
 func Delete(tool *configmanager.Tool) (bool, error) {
-	pluginDir := viper.GetString("plugin-dir")
+	pluginDir, err := pluginmanager.GetPluginDir()
+	if err != nil {
+		return false, err
+	}
+
 	p, err := loadPlugin(pluginDir, tool)
 	if err != nil {
 		return false, err

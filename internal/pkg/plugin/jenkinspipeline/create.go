@@ -1,30 +1,29 @@
 package jenkinspipeline
 
 import (
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/ci"
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller/jenkins"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/cifile"
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func Create(options map[string]interface{}) (map[string]interface{}, error) {
+func Create(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	// Initialize Operator with Operations
-	operator := &plugininstaller.Operator{
-		PreExecuteOperations: plugininstaller.PreExecuteOperations{
-			jenkins.SetJobDefaultConfig,
-			jenkins.ValidateJobConfig,
+	operator := &installer.Operator{
+		PreExecuteOperations: installer.PreExecuteOperations{
+			setJenkinsDefault,
+			validateJenkins,
 		},
-		ExecuteOperations: plugininstaller.ExecuteOperations{
-			jenkins.PreInstall,
-			jenkins.CreateOrUpdateJob,
-			jenkins.ConfigRepo,
-			ci.PushCIFiles,
+		ExecuteOperations: installer.ExecuteOperations{
+			installPipeline,
+			cifile.PushCIFiles,
 		},
-		GetStateOperation: jenkins.GetStatus,
+		GetStatusOperation: getStatus,
 	}
 
 	// Execute all Operations in Operator
-	status, err := operator.Execute(plugininstaller.RawOptions(options))
+	status, err := operator.Execute(options)
 	if err != nil {
 		return nil, err
 	}

@@ -1,4 +1,3 @@
-
 SELF_DIR=$(dir $(lastword $(MAKEFILE_LIST)))
 GOOS=$(shell go env GOOS)
 GOPATH=$(shell go env GOPATH)
@@ -65,7 +64,7 @@ build-core: generate fmt lint vet mod-tidy ## Build dtm core only, without plugi
 .PHONY: build-plugin.%
 build-plugin.%: generate fmt lint vet mod-tidy ## Build one dtm plugin, like "make build-plugin.argocd".
 	$(eval plugin_name := $(strip $*))
-	@[ -d  $(ROOT_DIR)/cmd/plugin/$(plugin_name) ] || { echo -e "\n${RED}✘ Plugin '$(plugin_name)' not found!${RESET} The valid plugin name is as follows (Eg. You can use  ${YELLOW}make build-plugin.argocd${RESET} to build argocd plugin): \n\n$(shell ls ./cmd/plugin/)\n"; exit 1; }
+	@[ -d  $(ROOT_DIR)/cmd/plugin/$(plugin_name) ] || { echo -e "\n${RED}✘ Plugin '$(plugin_name)' not found!${RESET} The valid plugin name is as follows (Eg. You can use  ${YELLOW}make build-plugin.argocdapp${RESET} to build argocdapp plugin): \n\n$(shell ls ./cmd/plugin/)\n"; exit 1; }
 	@echo "$(YELLOW)Building plugin '$(plugin_name)'$(RESET)"
 	${GO_PLUGIN_BUILD} -o ${PLUGINS_DIR}/${plugin_name}-${PLUGIN_SUFFIX}.so ${ROOT_DIR}/cmd/plugin/${plugin_name}
 	@$(MAKE) md5-plugin.$(plugin_name)

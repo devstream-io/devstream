@@ -7,14 +7,11 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 
 	"github.com/devstream-io/devstream/cmd/devstream/list"
-	"github.com/devstream-io/devstream/internal/pkg/completion"
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/pluginmanager"
 	"github.com/devstream-io/devstream/internal/pkg/version"
-	"github.com/devstream-io/devstream/pkg/util/file"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -39,24 +36,29 @@ func initCMDFunc(_ *cobra.Command, _ []string) {
 	}
 
 	var (
-		realPluginDir string
-		tools         []configmanager.Tool
-		err           error
+		tools configmanager.Tools
+		err   error
 	)
 
 	if downloadOnly {
 		// download plugins from flags
-		tools, realPluginDir, err = GetPluginsAndPluginDirFromFlags()
+		tools, err = GetPluginsFromFlags()
 	} else {
 		// download plugins according to the config file
-		tools, realPluginDir, err = GetPluginsAndPluginDirFromConfig()
+		tools, err = GetPluginsFromConfig()
 	}
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	if err := pluginmanager.DownloadPlugins(tools, realPluginDir, initOS, initArch); err != nil {
+	pluginDir, err = pluginmanager.GetPluginDir()
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Debugf("Plugin directory: %s.", pluginDir)
+
+	if err = pluginmanager.DownloadPlugins(tools, pluginDir, initOS, initArch); err != nil {
 		log.Fatal(err)
 	}
 
@@ -64,21 +66,16 @@ func initCMDFunc(_ *cobra.Command, _ []string) {
 	log.Success("Initialize finished.")
 }
 
-func GetPluginsAndPluginDirFromConfig() (tools []configmanager.Tool, pluginDir string, err error) {
-	cfg, err := configmanager.NewManager(configFile).LoadConfig()
+func GetPluginsFromConfig() (tools configmanager.Tools, err error) {
+	cfg, err := configmanager.NewManager(configFilePath).LoadConfig()
 	if err != nil {
-		return nil, "", err
+		return nil, err
 	}
 
-	// combine plugin dir from config file and flag
-	if err := file.SetPluginDir(cfg.PluginDir); err != nil {
-		return nil, "", err
-	}
-
-	return cfg.Tools, viper.GetString(pluginDirFlagName), nil
+	return cfg.Tools, nil
 }
 
-func GetPluginsAndPluginDirFromFlags() (tools []configmanager.Tool, pluginDir string, err error) {
+func GetPluginsFromFlags() (tools configmanager.Tools, err error) {
 	// 1. get plugins from flags
 	var pluginsName []string
 	if downloadAll {
@@ -94,39 +91,33 @@ func GetPluginsAndPluginDirFromFlags() (tools []configmanager.Tool, pluginDir st
 		// check if plugins to download are supported by dtm
 		for _, plugin := range pluginsName {
 			if _, ok := list.PluginNamesMap()[plugin]; !ok {
-				return nil, "", fmt.Errorf("Plugin %s is not supported by dtm", plugin)
+				return nil, fmt.Errorf("plugin %s is not supported by dtm", plugin)
 			}
 		}
 	}
 
 	if len(pluginsName) == 0 {
-		return nil, "", errors.New("Please use --plugins to specify plugins to download or use --all to download all plugins.")
+		return nil, errors.New("please use --plugins to specify plugins to download or use --all to download all plugins")
 	}
 	log.Debugf("plugins to download: %v", pluginsName)
 
 	if initOS == "" || initArch == "" {
-		return nil, "", fmt.Errorf("Once you use the --all flag, you must specify the --os and --arch flags")
+		return nil, fmt.Errorf("once you use the --all flag, you must specify the --os and --arch flags")
 	}
 
 	log.Infof("Plugins to download: %v", pluginsName)
 
 	// build the plugin list
 	for _, pluginName := range pluginsName {
-		tools = append(tools, configmanager.Tool{Name: pluginName})
+		tools = append(tools, &configmanager.Tool{Name: pluginName})
 	}
 
-	// 2. handle plugin dir
-	if err := file.SetPluginDir(""); err != nil {
-		return nil, "", err
-	}
-
-	return tools, viper.GetString(pluginDirFlagName), nil
+	return tools, nil
 }
 
 func init() {
-	// flags for init from config file
-	initCMD.Flags().StringVarP(&configFile, configFlagName, "f", "config.yaml", "config file")
-	initCMD.Flags().StringVarP(&pluginDir, pluginDirFlagName, "d", "", "plugins directory")
+	addFlagConfigFile(initCMD)
+	addFlagPluginDir(initCMD)
 
 	// downloading specific plugins from flags
 	initCMD.Flags().BoolVar(&downloadOnly, "download-only", false, "download plugins only")
@@ -134,7 +125,4 @@ func init() {
 	initCMD.Flags().BoolVarP(&downloadAll, "all", "a", false, "download all plugins")
 	initCMD.Flags().StringVar(&initOS, "os", runtime.GOOS, "download plugins for specific os")
 	initCMD.Flags().StringVar(&initArch, "arch", runtime.GOARCH, "download plugins for specific arch")
-
-	completion.FlagFilenameCompletion(initCMD, configFlagName)
-	completion.FlagDirnameCompletion(initCMD, pluginDirFlagName)
 }

@@ -5,7 +5,7 @@
 
 # DevStream
 
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat&logo=github&color=2370ff&labelColor=454545)](http://makeapullrequest.com)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat&logo=github&color=2370ff&labelColor=454545)](https://makeapullrequest.com)
 ![Test](https://github.com/devstream-io/devstream/actions/workflows/main.yml/badge.svg)
 [![Go Report Card](https://goreportcard.com/badge/github.com/devstream-io/devstream)](https://goreportcard.com/report/github.com/devstream-io/devstream)
 [![Downloads](https://img.shields.io/github/downloads/devstream-io/devstream/total.svg)](https://github.com/devstream-io/devstream/releases)
@@ -78,7 +78,7 @@ Want to remove or reinstall a specific piece in the workflow? DevStream has got 
 
 ## Quick Start
 
-If you want to get a quick start, follow our [quick start](./docs/quickstart.md) doc now.
+If you want to get a quick start, follow our [quick start](https://docs.devstream.io/en/latest/quickstart/) doc now.
 
 ## Best Practices Toolchain Integration
 
@@ -91,6 +91,7 @@ I am happy to tell you that we have, and we are constantly adding more possible 
 so you are more than welcome to tell us what combinations you expect.
 
 - [GitOps Toolchain](https://docs.devstream.io/en/latest/best-practices/gitops/)
+- [GitLab, Jenkins and Harbor On Premise Toolchain (Chinese only for now)](https://docs.devstream.io/en/latest/best-practices/gitlab-jenkins-harbor-java-springboot.zh/)
 
 ## Supported DevOps Tools
 
@@ -105,13 +106,13 @@ Alternatively, run `dtm list plugins` and it will show you all the available plu
 - Git
 - Go (1.18+)
 
-### Build
+### Development Guide
 
-See the [build](https://docs.devstream.io/en/latest/development/build/) doc under the "development" section of the documentation website.
-
-### Test
-
-See the [test](https://docs.devstream.io/en/latest/development/test/) doc under the "development" section of the documentation website.
+- [Development Environment Setup](https://docs.devstream.io/en/latest/development/dev/dev-env-setup)
+- [Code linter](https://docs.devstream.io/en/latest/development/dev/lint)
+- [Build the source code](https://docs.devstream.io/en/latest/development/dev/build)
+- [Test the source code: unit test, e2e test](https://docs.devstream.io/en/latest/development/dev/test)
+- [Create a plugin](https://docs.devstream.io/en/latest/development/dev/creating-a-plugin)
 
 ## Contribute
 

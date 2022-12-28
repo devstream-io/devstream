@@ -21,9 +21,9 @@ If not, it tries to give you a hint that maybe you forgot to run `dtm init` firs
 
 `dtm verify` also tries to create a state manager that operates a backend. If something is wrong with the state, it generates an error telling you what exactly the error is.
 
-## 4 Config / State / Resource
+## 4 Config / State / ResourceStatus
 
-For definitions of _Config_, _State_, and _Resource_, see [Core Concepts](../core-concepts/core-concepts.md).
+For definitions of _Config_, _State_, and _ResourceStatus_, see [Core Concepts](../core-concepts/overview.md).
 
 `dtm verify` tries to see if the _Config_ matches the _State_ and the _Resource_ or not. If not, it tells you what exactly is not the same, and what would happen if you run `dtm apply`.
 

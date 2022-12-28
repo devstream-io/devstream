@@ -29,10 +29,10 @@ var _ = Describe("Statemanager", func() {
 		Expect(smgr).NotTo(BeNil())
 		testKey = statemanager.StateKey("name_githubactions")
 		testState = statemanager.State{
-			InstanceID: "name",
-			Name:       "githubactions",
-			Options:    map[string]interface{}{"a": "value"},
-			Resource:   map[string]interface{}{"a": "value"},
+			InstanceID:     "name",
+			Name:           "githubactions",
+			Options:        configmanager.RawOptions{"a": "value"},
+			ResourceStatus: statemanager.ResourceStatus{"a": "value"},
 		}
 	})
 
@@ -56,30 +56,30 @@ var _ = Describe("Statemanager", func() {
 			// List order should be: A,B,C
 			key := statemanager.StateKey("a_githubactions")
 			stateA := statemanager.State{
-				InstanceID: "a",
-				Name:       "githubactions",
-				Options:    map[string]interface{}{"a": "value"},
-				Resource:   map[string]interface{}{"a": "value"},
+				InstanceID:     "a",
+				Name:           "githubactions",
+				Options:        map[string]interface{}{"a": "value"},
+				ResourceStatus: map[string]interface{}{"a": "value"},
 			}
 			err = smgr.AddState(key, stateA)
 			Expect(err).NotTo(HaveOccurred())
 
 			key = statemanager.StateKey("c_githubactions")
 			stateC := statemanager.State{
-				InstanceID: "c",
-				Name:       "githubactions",
-				Options:    map[string]interface{}{"c": "value"},
-				Resource:   map[string]interface{}{"c": "value"},
+				InstanceID:     "c",
+				Name:           "githubactions",
+				Options:        configmanager.RawOptions{"c": "value"},
+				ResourceStatus: statemanager.ResourceStatus{"c": "value"},
 			}
 			err = smgr.AddState(key, stateC)
 			Expect(err).NotTo(HaveOccurred())
 
 			key = statemanager.StateKey("b_githubactions")
 			stateB := statemanager.State{
-				InstanceID: "b",
-				Name:       "githubactions",
-				Options:    map[string]interface{}{"b": "value"},
-				Resource:   map[string]interface{}{"b": "value"},
+				InstanceID:     "b",
+				Name:           "githubactions",
+				Options:        configmanager.RawOptions{"b": "value"},
+				ResourceStatus: statemanager.ResourceStatus{"b": "value"},
 			}
 			err = smgr.AddState(key, stateB)
 			Expect(err).NotTo(HaveOccurred())

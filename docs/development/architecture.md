@@ -6,7 +6,7 @@ This document summarizes the main components of DevStream and how data flows bet
 
 The following diagram shows an approximation of how DevStream executes a user command:
 
-![DevStream Architecture Diagram](../images/architecture-overview.png)
+![DevStream Architecture Diagram](../../images/architecture-overview.png)
 
 There are three major parts:
 
@@ -40,7 +40,7 @@ It achieves the goal by calling the following modules:
 
 ### 2.1 Config Manager
 
-Model types in package [`configmanager`](https://github.com/devstream-io/devstream/blob/main/internal/pkg/configmanager/config.go#L23) represent the top-level configuration structure.
+Model types in package [`configmanager`](https://github.com/devstream-io/devstream/blob/main/internal/pkg/configmanager/configmanager.go#L23) represent the top-level configuration structure.
 
 ### 2.2 Plugin Manager
 
@@ -64,4 +64,4 @@ A _plugin_ implements the aforementioned, predefined interfaces.
 
 It executes operations like `Create`, `Read`, `Update`, and `Delete`.
 
-To develop a new plugin, see [creating a plugin](./creating-a-plugin.md).
+To develop a new plugin, see [creating a plugin](dev/creating-a-plugin.md).

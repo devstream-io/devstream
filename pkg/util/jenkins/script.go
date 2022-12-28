@@ -22,12 +22,6 @@ var cascGroovyScript string
 //go:embed tpl/repo-casc.tpl.yaml
 var repoCascScript string
 
-type BasicAuth struct {
-	Username string
-	Password string
-	Token    string
-}
-
 type scriptError struct {
 	output   string
 	errorMsg string
@@ -37,6 +31,7 @@ type RepoCascConfig struct {
 	// common variables
 	RepoType     string
 	CredentialID string
+	Offline      bool
 	// gitlab variables
 	GitLabConnectionName string
 	GitlabURL            string
@@ -83,7 +78,6 @@ func (jenkins *jenkins) ExecuteScript(script string) (string, error) {
 			errorMsg: err.Error(),
 		}
 	}
-	log.Debugf("------> %s\n%s", output, script)
 	defer r.Body.Close()
 
 	if r.StatusCode != http.StatusOK {
@@ -104,18 +98,19 @@ func (jenkins *jenkins) ExecuteScript(script string) (string, error) {
 }
 
 func (jenkins *jenkins) ConfigCascForRepo(repoCascConfig *RepoCascConfig) error {
-	cascConfig, err := template.Render(
-		"jenkins-repo-casc", repoCascScript, repoCascConfig,
-	)
+	log.Info("jenkins start config casc...")
+	cascConfig, err := template.NewRenderClient(&template.TemplateOption{
+		Name: "jenkins-repo-casc"}, template.ContentGetter,
+	).Render(repoCascScript, repoCascConfig)
 	if err != nil {
 		log.Debugf("jenkins preinstall credentials failed: %s", err)
 		return err
 	}
-	groovyCascScript, err := template.Render(
-		"jenkins-casc", cascGroovyScript, map[string]string{
-			"CascConfig": cascConfig,
-		},
-	)
+	groovyCascScript, err := template.NewRenderClient(&template.TemplateOption{
+		Name: "jenkins-casc",
+	}, template.ContentGetter).Render(cascGroovyScript, map[string]string{
+		"CascConfig": cascConfig,
+	})
 	if err != nil {
 		log.Debugf("jenkins render casc failed: %s", err)
 		return err

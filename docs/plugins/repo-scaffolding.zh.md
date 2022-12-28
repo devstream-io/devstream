@@ -26,11 +26,15 @@
 
 ## 使用方法
 
-**请注意这里的设置参数都是大小写敏感的**
+下面的配置文件展示的是"tool file"的内容。
+
+关于更多关于DevStream的主配置、tool file、var file的信息，请阅读[核心概念概览](../core-concepts/overview.zh.md)和[DevStream配置](../core-concepts/config.zh.md).
 
 ```yaml
 --8<-- "repo-scaffolding.yaml"
 ```
+
+**请注意这里的设置参数都是大小写敏感的**
 
 在配置文件中替换以下配置：
 
@@ -44,7 +48,7 @@
 - `YOUR_DESTINATION_REPO_MAIN_BRANCH`
 - `YOUR_DESTINATION_REPO_TYPE`
 
-`owner`，`org` 和 `repo` 目前是必填的，`branch` 的默认值是  "main"，`repoType` 配置目前支持 `gitlab` 和 `github`。
+`owner`，`org` 和 `repo` 目前是必填的，`branch` 的默认值是  "main"，`scmType` 配置目前支持 `gitlab` 和 `github`。
 
 ### sourceRepo
 
@@ -54,7 +58,7 @@
 - `YOUR_TEMPLATE_REPO_NAME`
 - `YOUR_TEMPLATE_REPO_TYPE`
 
-目前这两个配置项都是必填的，`repoType` 配置目前只支持 `github`。
+目前这两个配置项都是必填的，`scmType` 配置目前只支持 `github`。
 
 ### vars
 
@@ -70,16 +74,25 @@
 }
 ```
 
+## Outputs
+
+这个插件有以下三个输出：
+
+- `owner`
+- `repo`
+- `repoURL`
+
 ## 示例 
 
 ### 官方支持脚手架项目
 
 以下仓库是用于在 `sourceRepo` 设置的官方脚手架仓库，你可以使用这些仓库或者创建自己的脚手架仓库。
 
-| language | org | repo |
-|  ----  | ----  |----  |
-| Golang | devstream-io | dtm-scaffolding-golang |
-| Java Spring | spring-guides | gs-spring-boot |
+| language    | org           | repo                       |
+|-------------|---------------|----------------------------|
+| Golang      | devstream-io  | dtm-scaffolding-golang     |
+| Golang      | devstream-io  | dtm-scaffolding-golang-cli |
+| Java Spring | spring-guides | gs-spring-boot             |
 
 
 ### Golang
@@ -92,18 +105,39 @@ tools:
       destinationRepo:
         owner: test_owner
         org: ""
-        repo: dtm-test-golang
+        name: dtm-test-golang
         branch: main
-        repoType: github
+        scmType: github
       sourceRepo:
         org: devstream-io
-        repo: dtm-scaffolding-golang
-        repoType: github
+        name: dtm-scaffolding-golang
+        scmType: github
       vars:
         ImageRepo: dtm-test/golang-repo
 ```
 
 这个配置在 GitHub 为用于 test_owner 创建 `dtm-test-golang` 仓库，它的生成是基于 `devstream-io/dtm-scaffolding-golang` 官方 Golang 脚手架仓库和传入的变量 `ImageRepo`。
+
+### Golang CLI
+
+```yaml
+tools:
+  - name: repo-scaffolding
+    instanceID: golang-cli-scaffolding
+    options:
+      destinationRepo:
+        owner: test_owner
+        org: ""
+        name: dtm-test-golang-cli
+        branch: main
+        scmType: github
+      sourceRepo:
+        org: devstream-io
+        name: dtm-scaffolding-golang-cli
+        scmType: github
+```
+
+这个配置在 GitHub 为用于 test_owner 创建 `dtm-test-golang-cli` 仓库，它的生成是基于 `devstream-io/dtm-scaffolding-golang-cli` 官方 Golang CLI 脚手架仓库。
 
 ### Java Spring
 
@@ -115,23 +149,15 @@ tools:
       destinationRepo:
         owner: test_owner
         org: ""
-        repo: dtm-test-java
+        name: dtm-test-java
         branch: main
         baseUrl: 127.0.0.1:30001
         visibility: public
-        repoType: gitlab
+        scmType: gitlab
       sourceRepo:
         org: spring-guides
-        repo: gs-spring-boot
-        repoType: github
+        name: gs-spring-boot
+        scmType: github
 ```
 
 这个配置会在 GitLab 为用户 test_owner 创建 `dtm-test-java` 仓库，使用的是 Spring 官方的 `spring-guides/gs-spring-boot` 仓库。
-
-## Outputs
-
-这个插件有以下三个输出：
-
-- `owner`
-- `repo`
-- `repoURL`

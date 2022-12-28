@@ -5,46 +5,46 @@ import (
 
 	"github.com/cenkalti/backoff"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/k8s"
 )
 
-func getStaticState(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
-	opts, err := NewOptions(options)
+func getStaticStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
+	opts, err := newOptions(options)
 	if err != nil {
 		return nil, err
 	}
-	res := make(map[string]interface{})
+	resStatus := make(statemanager.ResourceStatus)
 
-	res["app"] = map[string]interface{}{
+	resStatus["app"] = map[string]interface{}{
 		"name":      opts.App.Name,
 		"namespace": opts.App.Namespace,
 	}
 
-	res["src"] = map[string]interface{}{
+	resStatus["src"] = map[string]interface{}{
 		"repoURL":   opts.Source.RepoURL,
 		"path":      opts.Source.Path,
 		"valueFile": opts.Source.Valuefile,
 	}
 
-	res["dest"] = map[string]interface{}{
+	resStatus["dest"] = map[string]interface{}{
 		"server":    opts.Destination.Server,
 		"namespace": opts.Destination.Namespace,
 	}
 
-	return res, nil
+	return resStatus, nil
 }
 
-func getDynamicState(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
-	opts, err := NewOptions(options)
+func getDynamicStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
+	opts, err := newOptions(options)
 	if err != nil {
 		return nil, err
 	}
 
-	state := make(map[string]interface{})
+	retStatus := make(statemanager.ResourceStatus)
 	operation := func() error {
-		err := getArgoCDAppFromK8sAndSetState(state, opts.App.Name, opts.App.Namespace)
+		err := getArgoCDAppFromK8sAndSetStatus(retStatus, opts.App.Name, opts.App.Namespace)
 		if err != nil {
 			return err
 		}
@@ -56,10 +56,10 @@ func getDynamicState(options plugininstaller.RawOptions) (statemanager.ResourceS
 	if err != nil {
 		return nil, err
 	}
-	return state, nil
+	return retStatus, nil
 }
 
-func getArgoCDAppFromK8sAndSetState(state map[string]interface{}, name, namespace string) error {
+func getArgoCDAppFromK8sAndSetStatus(status statemanager.ResourceStatus, name, namespace string) error {
 	kubeClient, err := k8s.NewClient()
 	if err != nil {
 		return err
@@ -71,9 +71,9 @@ func getArgoCDAppFromK8sAndSetState(state map[string]interface{}, name, namespac
 	}
 
 	d := kubeClient.DescribeArgocdApp(app)
-	state["app"] = d["app"]
-	state["src"] = d["src"]
-	state["dest"] = d["dest"]
+	status["app"] = d["app"]
+	status["src"] = d["src"]
+	status["dest"] = d["dest"]
 
 	return nil
 }

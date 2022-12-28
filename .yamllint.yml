@@ -1,0 +1,35 @@
+extends: default
+rules:
+  brackets: disable # do not check brackets
+  comments:
+    require-starting-space: true
+    min-spaces-from-content: 1 # at leaset 1 space between comment and content
+  document-start: disable  # whether the document must start with '---' is optional
+  indentation:
+    spaces: 2
+    # block sequences should not be indented
+    # e.g.:
+    # OK:
+    # key:
+    # - value1
+    # - value2
+    # NOT OK:
+    # key:
+    #   - value1
+    #   - value2
+    indent-sequences: false
+  line-length: disable
+  new-line-at-end-of-file: enable # must have a new line at the end of file
+  trailing-spaces: disable # do not check trailing spaces
+  truthy: disable # do not check truthy
+ignore: |
+  *.tpl.yaml
+  *.tpl.yml
+  *tmpl.yaml
+  *tmpl.yml
+  *template.yml
+  *template.yaml
+  **/.github/**
+  **/githubactions/**
+  **/workflows/**
+  **/staging/**

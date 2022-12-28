@@ -6,7 +6,9 @@ https://fonts.gstatic.com/
 .*foo.*
 .*bar.*
 .*xxx.*
+.*changeme.*
 .*example.*
+.*test.*
 .*YOUR_.*
 https://id.atlassian.net
 https://JIRA_ID.atlassian.net

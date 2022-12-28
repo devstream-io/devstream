@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
+
 	mapset "github.com/deckarep/golang-set/v2"
 	"github.com/mitchellh/mapstructure"
 
@@ -11,6 +13,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/mapz"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 	"github.com/devstream-io/devstream/pkg/util/scm/github"
+	"github.com/devstream-io/devstream/pkg/util/validator"
 )
 
 type TrelloGithub struct {
@@ -26,7 +29,7 @@ type TrelloItemId struct {
 	doneListId  string
 }
 
-func NewTrelloGithub(options map[string]interface{}) (*TrelloGithub, error) {
+func NewTrelloGithub(options configmanager.RawOptions) (*TrelloGithub, error) {
 	ctx := context.Background()
 
 	var opts Options
@@ -35,11 +38,8 @@ func NewTrelloGithub(options map[string]interface{}) (*TrelloGithub, error) {
 		return nil, err
 	}
 
-	if errs := validate(&opts); len(errs) != 0 {
-		for _, e := range errs {
-			log.Errorf("Param error: %s.", e)
-		}
-		return nil, fmt.Errorf("params are illegal")
+	if err := validator.CheckStructError(&opts).Combine(); err != nil {
+		return nil, err
 	}
 
 	ghOptions := &git.RepoInfo{

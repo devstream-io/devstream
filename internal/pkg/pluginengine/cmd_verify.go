@@ -4,7 +4,6 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/pluginmanager"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
-	"github.com/devstream-io/devstream/pkg/util/file"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -20,19 +19,15 @@ func Verify(configFile string) bool {
 		return false
 	}
 
-	if err := file.SetPluginDir(cfg.PluginDir); err != nil {
-		log.Errorf("Error: %s.", err)
-	}
-
 	// 2. according to the config, all needed plugins exist
-	err = pluginmanager.CheckLocalPlugins(cfg)
+	err = pluginmanager.CheckLocalPlugins(cfg.Tools)
 	if err != nil {
 		log.Info(err)
 		log.Info(`Maybe you forgot to run "dtm init" first?`)
 		return false
 	}
 	// 3. can successfully create the state
-	smgr, err := statemanager.NewManager(*cfg.State)
+	smgr, err := statemanager.NewManager(*cfg.Config.State)
 	if err != nil {
 		log.Errorf("Something is wrong with the state: %s.", err)
 		return false

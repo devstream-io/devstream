@@ -11,16 +11,18 @@ tools:
     destinationRepo:
       owner: YOUR_DESTINATION_USERNAME
       org: YOUR_DESTINATION_ORGANIZATION_NAME
-      repo: YOUR_DESTINATION_REPO_NAME
+      name: YOUR_DESTINATION_REPO_NAME
       branch: YOUR_DESTINATION_REPO_MAIN_BRANCH
-      # repoType is the type of repo to push, support github|gitlab
-      repoType: YOUR_DESTINATION_REPO_TYPE
-    # sourceTepo is the template repo location, support github only
-    sourceTepo:
+      # scmType is the type of repo to push, support github|gitlab
+      scmType: YOUR_DESTINATION_REPO_TYPE
+      # scm repo token
+      token: YOUR_REPO_TOKEN
+    # sourceRepo is the template repo location, support github only
+    sourceRepo:
       org: YOUR_TEMPLATE_REPO_ORG
-      repo: YOUR_TEMPLATE_REPO_NAME
-      # repoType is the type of repo to get template, support github only
-      repoType: YOUR_TEMPLATE_REPO_TYPE
+      name: YOUR_TEMPLATE_REPO_NAME
+      # scmType is the type of repo to get template, support github only
+      scmType: YOUR_TEMPLATE_REPO_TYPE
     # this is used for template render
     vars:
-      ImageRepo: YOUR_DOCKERHUB_REPOSITORY
+      imageRepo: YOUR_DOCKERHUB_REPOSITORY

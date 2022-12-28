@@ -1,0 +1,23 @@
+name: Yaml Lint
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - '**.yaml'
+      - '**.yml'
+
+jobs:
+  yamlLint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Remove All Strings In Square Brackets
+        run: |
+          # remove strings in "[[]]" in .yml or .yaml files, or yaml lint will fail
+          sed -i "s/\[\[.*\]\]//g" `grep "\[\[.*\]\]" -rl --include="*.yml" --include="*.yaml" .`
+      - name: Yaml Lint
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          file_or_dir: .
+          config_file: .yamllint.yml

@@ -10,7 +10,6 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/pluginengine"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
-	"github.com/devstream-io/devstream/pkg/util/file"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -36,11 +35,7 @@ func Show(configFile string) error {
 		return fmt.Errorf("failed to load the config file")
 	}
 
-	if err := file.SetPluginDir(cfg.PluginDir); err != nil {
-		log.Errorf("Error: %s.", err)
-	}
-
-	smgr, err := statemanager.NewManager(*cfg.State)
+	smgr, err := statemanager.NewManager(*cfg.Config.State)
 	if err != nil {
 		log.Debugf("Failed to get State Manager: %s.", err)
 		return err
@@ -84,7 +79,7 @@ func showAll(smgr statemanager.Manager) error {
 func showOne(smgr statemanager.Manager, id, plugin string) error {
 	// get state from statemanager
 	state := smgr.GetState(
-		statemanager.GenerateStateKeyByToolNameAndPluginKind(plugin, id),
+		statemanager.GenerateStateKeyByToolNameAndInstanceID(plugin, id),
 	)
 	if state == nil {
 		return fmt.Errorf("state with (id: %s, plugin: %s) not found", id, plugin)
@@ -97,7 +92,7 @@ func showOne(smgr statemanager.Manager, id, plugin string) error {
 		DependsOn:  state.DependsOn,
 		Options:    state.Options,
 	}
-	stateFromRead, err := pluginengine.Read(tool)
+	resourceStatusFromRead, err := pluginengine.Read(tool)
 	if err != nil {
 		log.Debugf("Failed to get the resource state with %s.%s. Error: %s.", id, plugin, err)
 		return err
@@ -105,15 +100,15 @@ func showOne(smgr statemanager.Manager, id, plugin string) error {
 
 	// assemble the status
 	var status = &Status{}
-	if reflect.DeepEqual(state.Resource, stateFromRead) {
-		status.InlineStatus = state.Resource
+	if reflect.DeepEqual(state.ResourceStatus, resourceStatusFromRead) {
+		status.InlineStatus = state.ResourceStatus
 		// set-to-nil has no effect, but make the logic more readable. Same as below.
-		status.State = nil
-		status.Resource = nil
+		status.ResourceStatusInState = nil
+		status.ResourceStatusFromRead = nil
 	} else {
 		status.InlineStatus = nil
-		status.State = state.Resource
-		status.Resource = stateFromRead
+		status.ResourceStatusInState = state.ResourceStatus
+		status.ResourceStatusFromRead = resourceStatusFromRead
 	}
 
 	// get the output

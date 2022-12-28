@@ -5,31 +5,32 @@ var updateGoDirTpl = "internal/pkg/plugin/[[ .Name | dirFormat ]]/"
 var updateGoContentTpl = `package [[ .Name | format ]]
 
 import (
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func Update(options map[string]interface{}) (map[string]interface{}, error) {
+func Update(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	// Initialize Operator with Operations
-	operator := &plugininstaller.Operator{
-		PreExecuteOperations: plugininstaller.PreExecuteOperations{
+	operator := &installer.Operator{
+		PreExecuteOperations: installer.PreExecuteOperations{
 			// TODO(dtm): Add your PreExecuteOperations here.
 		},
-		ExecuteOperations: plugininstaller.ExecuteOperations{
+		ExecuteOperations: installer.ExecuteOperations{
 			// TODO(dtm): Add your ExecuteOperations here.
 		},
-		TerminateOperations: plugininstaller.TerminateOperations{
+		TerminateOperations: installer.TerminateOperations{
 			// TODO(dtm): Add your TerminateOperations here.
 		},
-		GetStateOperation: func(options plugininstaller.RawOptions) (statemanager.ResourceState, error) {
-			// TODO(dtm): Add your GetStateOperation here.
+		GetStatusOperation: func(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
+			// TODO(dtm): Add your GetStatusOperation here.
 			return nil, nil
 		},
 	}
 
 	// Execute all Operations in Operator
-	status, err := operator.Execute(plugininstaller.RawOptions(options))
+	status, err := operator.Execute(options)
 	if err != nil {
 		return nil, err
 	}

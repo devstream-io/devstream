@@ -28,7 +28,7 @@ type Manager interface {
 	AddState(key StateKey, state State) error
 	UpdateState(key StateKey, state State) error
 	DeleteState(key StateKey) error
-	GetOutputs(key StateKey) (interface{}, error)
+	GetOutputs(key StateKey) (ResourceOutputs, error)
 }
 
 // manager is the default implement with Manager
@@ -117,13 +117,13 @@ func (m *manager) DeleteState(key StateKey) error {
 }
 
 // GetOutputs is used to get the origin outputs of a toolName_InstanceID
-func (m *manager) GetOutputs(key StateKey) (interface{}, error) {
+func (m *manager) GetOutputs(key StateKey) (ResourceOutputs, error) {
 	state := m.GetState(key)
 	if state == nil {
 		return nil, fmt.Errorf(`key (%s) not in state, it may be failed when "Create"`, key)
 	}
 
-	if value, ok := state.Resource["outputs"]; ok {
+	if value := state.ResourceStatus.GetOutputs(); value != nil {
 		return value, nil
 	}
 

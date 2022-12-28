@@ -1,11 +1,13 @@
 package gitlabcedocker
 
 import (
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
-	dockerInstaller "github.com/devstream-io/devstream/internal/pkg/plugininstaller/docker"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer"
+	dockerInstaller "github.com/devstream-io/devstream/internal/pkg/plugin/installer/docker"
+	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
-func Delete(options map[string]interface{}) (bool, error) {
+func Delete(options configmanager.RawOptions) (bool, error) {
 	// 1. create config and pre-handle operations
 	opts, err := validateAndDefault(options)
 	if err != nil {
@@ -13,17 +15,17 @@ func Delete(options map[string]interface{}) (bool, error) {
 	}
 
 	// 2. config delete operations
-	operator := &plugininstaller.Operator{
-		PreExecuteOperations: plugininstaller.PreExecuteOperations{
+	operator := &installer.Operator{
+		PreExecuteOperations: installer.PreExecuteOperations{
 			dockerInstaller.Validate,
 		},
-		ExecuteOperations: plugininstaller.ExecuteOperations{
+		ExecuteOperations: installer.ExecuteOperations{
 			dockerInstaller.DeleteAll,
 		},
 	}
 
 	// 3. delete and get status
-	rawOptions, err := buildDockerOptions(opts).Encode()
+	rawOptions, err := types.EncodeStruct(buildDockerOptions(opts))
 	if err != nil {
 		return false, err
 	}

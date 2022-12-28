@@ -7,7 +7,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
-func dependencyResolved(tool configmanager.Tool, unprocessedNodeSet map[string]bool) bool {
+func dependencyResolved(tool *configmanager.Tool, unprocessedNodeSet map[string]bool) bool {
 	res := true
 
 	for _, dep := range tool.DependsOn {
@@ -23,26 +23,26 @@ func dependencyResolved(tool configmanager.Tool, unprocessedNodeSet map[string]b
 	return res
 }
 
-func topologicalSort(tools []configmanager.Tool) ([][]configmanager.Tool, error) {
+func topologicalSort(tools configmanager.Tools) ([]configmanager.Tools, error) {
 	// the final result that contains sorted Tools
 	// it's a sorted/ordered slice,
 	// each element is a slice of Tools that can run parallel without any particular order
-	res := make([][]configmanager.Tool, 0)
+	res := make([]configmanager.Tools, 0)
 
 	// a "graph", which contains "nodes" that haven't been processed yet
 	unprocessedNodeSet := make(map[string]bool)
 	for _, tool := range tools {
-		unprocessedNodeSet[tool.Key()] = true
+		unprocessedNodeSet[tool.KeyWithNameAndInstanceID()] = true
 	}
 
 	// while there is still a node in the graph left to be processed:
 	for len(unprocessedNodeSet) > 0 {
 		// the next batch of tools that can run in parallel
-		batch := make([]configmanager.Tool, 0)
+		batch := make(configmanager.Tools, 0)
 
 		for _, tool := range tools {
 			// if the tool has already been processed (not in the unprocessedNodeSet anymore), pass
-			if _, ok := unprocessedNodeSet[tool.Key()]; !ok {
+			if _, ok := unprocessedNodeSet[tool.KeyWithNameAndInstanceID()]; !ok {
 				continue
 			}
 
@@ -68,7 +68,7 @@ func topologicalSort(tools []configmanager.Tool) ([][]configmanager.Tool, error)
 
 		// remove tools from the unprocessedNodeSet because they have been added to the batch
 		for _, tool := range batch {
-			delete(unprocessedNodeSet, tool.Key())
+			delete(unprocessedNodeSet, tool.KeyWithNameAndInstanceID())
 		}
 
 		// add the batch to the final result

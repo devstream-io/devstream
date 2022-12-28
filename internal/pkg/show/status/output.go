@@ -4,7 +4,11 @@ import (
 	"bytes"
 	"fmt"
 
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
+
 	"gopkg.in/yaml.v3"
+
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 )
 
 type Output struct {
@@ -16,14 +20,16 @@ type Output struct {
 }
 
 type Status struct {
-	InlineStatus map[string]interface{} `yaml:",inline,omitempty"`
-	State        map[string]interface{} `yaml:"State,omitempty"`
-	Resource     map[string]interface{} `yaml:"Resource,omitempty"`
+	// if ResourceStatusInState == ResourceStatusFromRead,
+	// then InlineStatus is set to equals ResourceStatusInState and ResourceStatusFromRead.
+	InlineStatus           statemanager.ResourceStatus `yaml:",inline,omitempty"`
+	ResourceStatusInState  statemanager.ResourceStatus `yaml:"statusInState,omitempty"`
+	ResourceStatusFromRead statemanager.ResourceStatus `yaml:"statusNow,omitempty"`
 }
 
-// If the resource has drifted, status.State & status.Resource must NOT be nil and status.InlineStatus should be nil.
-// If the resource hasn't drifted, status.State & status.Resource should be nil and status.InlineStatus must NOT be nil.
-func NewOutput(instanceID, plugin string, options map[string]interface{}, status *Status) (*Output, error) {
+// If the resource has drifted, status.ResourceStatusInState & status.ResourceStatusFromRead must NOT be nil and status.InlineStatus should be nil.
+// If the resource hasn't drifted, status.ResourceStatusInState & status.ResourceStatusFromRead should be nil and status.InlineStatus must NOT be nil.
+func NewOutput(instanceID, plugin string, options configmanager.RawOptions, status *Status) (*Output, error) {
 	if ok, err := validateParams(instanceID, plugin, options, status); !ok {
 		return nil, err
 	}
@@ -57,7 +63,7 @@ func (o *Output) Print() error {
 	return nil
 }
 
-func validateParams(instanceID, plugin string, options map[string]interface{}, status *Status) (bool, error) {
+func validateParams(instanceID, plugin string, options configmanager.RawOptions, status *Status) (bool, error) {
 	if instanceID == "" || plugin == "" {
 		return false, fmt.Errorf("instanceID or plugin cannot be nil")
 	}
@@ -68,10 +74,10 @@ func validateParams(instanceID, plugin string, options map[string]interface{}, s
 	if status == nil {
 		return false, fmt.Errorf("status cannot be nil")
 	}
-	if status.InlineStatus != nil && (status.State != nil || status.Resource != nil) {
+	if status.InlineStatus != nil && (status.ResourceStatusInState != nil || status.ResourceStatusFromRead != nil) {
 		return false, fmt.Errorf("illegal status content")
 	}
-	if status.InlineStatus == nil && (status.State == nil || status.Resource == nil) {
+	if status.InlineStatus == nil && (status.ResourceStatusInState == nil || status.ResourceStatusFromRead == nil) {
 		return false, fmt.Errorf("illegal status content")
 	}
 

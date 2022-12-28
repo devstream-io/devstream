@@ -1,46 +1,42 @@
----
-# core config
-varFile: "" # If not empty, use the specified external variables config file
-toolFile: "" # If not empty, use the specified external tools config file
-pluginDir: "" # If empty, use the default value: ~/.devstream/plugins, or use -d flag to specify a directory
-state: # state config, backend can be local, s3 or k8s
-  backend: local
-  options:
-    stateFile: devstream.state
+config:
+  state: # state config, backend can be local, s3 or k8s
+    backend: local
+    options:
+      stateFile: devstream.state
 
----
-# plugins config
+vars:
+  RepoOwner: YOUR_GITHUB_USERNAME_CASE_SENSITIVE
+  ImageRepoUser: YOUR_DOCKER_USERNAME
+
 tools:
-  - name: repo-scaffolding
-    instanceID: golang-github
-    options:
-      destinationRepo:
-        owner: YOUR_GITHUB_USERNAME_CASE_SENSITIVE
-        org: ""
-        repo: go-webapp-devstream-demo
-        branch: main
-        repoType: github
-      sourceRepo:
-        org: devstream-io
-        repo: dtm-scaffolding-golang
-        repoType: github
-      vars:
-        ImageRepo: YOUR_DOCKER_USERNAME/go-webapp-devstream-demo
-  - name: githubactions-golang
-    instanceID: default
-    dependsOn: ["repo-scaffolding.golang-github"]
-    options:
-      owner: YOUR_GITHUB_USERNAME_CASE_SENSITIVE
-      repo: go-webapp-devstream-demo
+- name: repo-scaffolding
+  instanceID: golang-github
+  options:
+    destinationRepo:
+      owner: [[ RepoOwner ]]
+      name: go-webapp-devstream-demo
+      branch: main
+      scmType: github
+      token: [[ env GITHUB_TOKEN ]]
+    sourceRepo:
+      org: devstream-io
+      name: dtm-repo-scaffolding-golang-gin
+      scmType: github
+- name: github-actions
+  instanceID: default
+  dependsOn: ["repo-scaffolding.golang-github"]
+  options:
+    scm:
+      owner: [[ RepoOwner ]]
+      name: go-webapp-devstream-demo
+      branch: main
+      scmType: github
+      token: [[ env GITHUB_TOKEN ]]
+    pipeline:
+      configLocation: https://raw.githubusercontent.com/devstream-io/dtm-pipeline-templates/main/github-actions/workflows/main.yml
       language:
         name: go
-        version: "1.18"
-      branch: main
-      build:
-        enable: True
-      test:
-        enable: True
-        coverage:
-          enable: True
-      docker:
-        enable: False
+        framework: gin
+      imageRepo:
+        user: [[ ImageRepoUser ]]
+        password: [[ env IMAGE_REPO_PASSWORD ]]

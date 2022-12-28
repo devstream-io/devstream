@@ -22,7 +22,7 @@ func (f *RepoFileStatus) EncodeToGitHubContentOption(commitMsg string) *github.R
 	}
 }
 
-func CaluateGitHubBlobSHA(fileContent string) string {
+func CalculateGitHubBlobSHA(fileContent []byte) string {
 	p := fmt.Sprintf("blob %d\x00", len(fileContent))
 	h := sha1.New()
 	h.Write([]byte(p))

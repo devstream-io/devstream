@@ -1,6 +1,10 @@
 package k8s
 
 import (
+	"bytes"
+
+	"gopkg.in/yaml.v3"
+
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -16,8 +20,8 @@ type AllResourceStatus struct {
 }
 
 // GetResourceStatus get all resource state by input nameSpace and filtermap
-func (c *Client) GetResourceStatus(nameSpace string, anFilter, labelFilter map[string]string) (AllResourceStatus, error) {
-	stateMap := AllResourceStatus{}
+func (c *Client) GetResourceStatus(nameSpace string, anFilter, labelFilter map[string]string) (*AllResourceStatus, error) {
+	stateMap := &AllResourceStatus{}
 	// 1. list deploy resource
 	dps, err := c.ListDeploymentsWithLabel(nameSpace, labelFilter)
 	if err != nil {
@@ -87,4 +91,20 @@ func filterByAnnotation(anInfo map[string]string, anFilter map[string]string) bo
 		}
 	}
 	return true
+}
+
+func (s *AllResourceStatus) ToStringInterfaceMap() (map[string]interface{}, error) {
+	var buf bytes.Buffer
+	encoder := yaml.NewEncoder(&buf)
+	defer encoder.Close()
+	encoder.SetIndent(2)
+	err := encoder.Encode(s)
+	if err != nil {
+		return nil, err
+	}
+	wfs := buf.String()
+
+	return map[string]interface{}{
+		"workflows": wfs,
+	}, nil
 }

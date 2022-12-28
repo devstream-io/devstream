@@ -1,15 +1,15 @@
 package upgrade
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 
 	"github.com/Masterminds/semver"
-	"github.com/tcnksm/go-input"
 
 	"github.com/devstream-io/devstream/internal/pkg/version"
+	"github.com/devstream-io/devstream/pkg/util/interact"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 	"github.com/devstream-io/devstream/pkg/util/scm/github"
@@ -39,11 +39,6 @@ func Upgrade(continueDirectly bool) error {
 		log.Info("Dtm upgrade: do not support to upgrade dtm in development version.")
 		os.Exit(0)
 	}
-	workDir, err := os.Getwd()
-	if err != nil {
-		return err
-	}
-	log.Debugf("Dtm upgrade: work path is : %v", workDir)
 
 	// get dtm bin file path like `/usr/local/bin/dtm-linux-amd64`
 	binFilePath, err := os.Executable()
@@ -54,6 +49,12 @@ func Upgrade(continueDirectly bool) error {
 	_, dtmFileName = filepath.Split(binFilePath)
 
 	log.Debugf("Dtm upgrade: dtm file name is : %v", dtmFileName)
+
+	workDir := strings.Trim(binFilePath, dtmFileName)
+	if err != nil {
+		return err
+	}
+	log.Debugf("Dtm upgrade: work path is : %v", workDir)
 
 	// 1. Get the latest release version
 	ghOptions := &git.RepoInfo{
@@ -76,23 +77,22 @@ func Upgrade(continueDirectly bool) error {
 
 	// 2. Check whether Upgrade is needed
 	// Use Semantic Version to judge. "https://semver.org/"
-	ok, err := checkUpgrade(version.Version, ltstReleaseTagName)
+	shouldUpgrade, err := checkUpgrade(version.Version, ltstReleaseTagName)
 	if err != nil {
 		return err
 	}
 
-	if ok {
+	if shouldUpgrade {
 		log.Infof("Dtm upgrade: new dtm version: %v is available.", ltstReleaseTagName)
 		if !continueDirectly {
-			userInput := readUserInput()
-			if userInput == "n" {
+			continued := interact.AskUserIfContinue("Would you like to Upgrade? [y/n]")
+			if !continued {
 				os.Exit(0)
 			}
 		}
 
 		// 3. Download the latest release version of dtm
 		log.Info("Dtm upgrade: downloading the latest release version of dtm, please wait for a while.")
-		// TODO(hxcGit): add download progress bar
 		if err = ghClient.DownloadAsset(ltstReleaseTagName, assetName, dtmTmpFileName); err != nil {
 			log.Debugf("Failed to download dtm: %v-%v.", ltstReleaseTagName, assetName)
 			return err
@@ -208,29 +208,4 @@ func applyUpgrade(workDir string) error {
 	log.Debug("Dtm upgrade: remove dtm-bak successfully.")
 
 	return nil
-}
-
-// TODO(hxcGit): reuse pluginengine.readUserInput()
-func readUserInput() string {
-	ui := &input.UI{
-		Writer: os.Stdout,
-		Reader: os.Stdin,
-	}
-
-	query := "Would you like to Upgrade? [y/n]"
-	userInput, err := ui.Ask(query, &input.Options{
-		Required: true,
-		Default:  "n",
-		Loop:     true,
-		ValidateFunc: func(s string) error {
-			if s != "y" && s != "n" {
-				return fmt.Errorf("input must be y or n")
-			}
-			return nil
-		},
-	})
-	if err != nil {
-		log.Fatal(err)
-	}
-	return userInput
 }

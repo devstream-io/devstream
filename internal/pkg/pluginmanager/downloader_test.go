@@ -1,81 +1,82 @@
 package pluginmanager
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 
-	"github.com/go-resty/resty/v2"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 )
 
-var _ = Describe("DownloadClient", Ordered, func() {
-	// mock download success func
-	mockPlugSuccessGetter := func(reqClient *resty.Client, url, plugName string) error {
-		return nil
-	}
-	// mock download failed func
-	mockPlugNotFoundGetter := func(reqClient *resty.Client, url, plugName string) error {
-		return fmt.Errorf("downloading plugin %s from %s status code %d", plugName, url, 404)
-	}
+var _ = Describe("downloader", func() {
 	var (
+		server  *mockPluginServer
+		pdc     *PluginDownloadClient
 		tempDir string
 	)
 
 	const (
-		validPlugName    = "argocdapp_0.0.1-rc1.so"
-		notExistPlugName = "argocdapp_not_exist.so"
-		version          = "0.0.1-ut-do-not-delete"
+		pluginName    = "test_plugin"
+		pluginVersion = "0.1.0"
 	)
 
-	BeforeAll(func() {
+	BeforeEach(func() {
 		tempDir = GinkgoT().TempDir()
-
+		server = newMockPluginServer()
+		pdc = NewPluginDownloadClient(server.URL())
 	})
 
-	Describe("download method failed", func() {
-		var testTable = []struct {
-			downloadFunc     func(reqClient *resty.Client, url, plugName string) error
-			plugName         string
-			expectedErrorMsg string
-			describeMsg      string
-		}{
-			{
-				downloadFunc: mockPlugSuccessGetter, plugName: notExistPlugName, expectedErrorMsg: "no such file or directory",
-				describeMsg: "should return file not exist if plugin not normal download",
-			},
-			{
-				downloadFunc: mockPlugNotFoundGetter, plugName: validPlugName, expectedErrorMsg: "404",
-				describeMsg: "should return 404 if plugin not exist",
-			},
-		}
-
-		for _, testcase := range testTable {
-			It(testcase.describeMsg, func() {
-				c := NewDownloadClient()
-				c.pluginGetter = testcase.downloadFunc
-				err := c.download(tempDir, testcase.plugName, version)
-				Expect(err).Error().Should(HaveOccurred())
-				Expect(err.Error()).Should(ContainSubstring(testcase.expectedErrorMsg))
+	Describe("download func", func() {
+		When("server return err code", func() {
+			BeforeEach(func() {
+				server.registerPluginNotFound(pluginName, pluginVersion, runtime.GOOS, runtime.GOARCH)
 			})
-		}
+
+			It("should return err for download from url error", func() {
+				tool := &configmanager.Tool{Name: pluginName}
+				pluginFileName := tool.GetPluginFileNameWithOSAndArch(runtime.GOOS, runtime.GOARCH)
+				err := pdc.download(tempDir, pluginFileName, pluginVersion)
+				Expect(err).Error().Should(HaveOccurred())
+				Expect(err.Error()).Should(ContainSubstring("404"))
+			})
+		})
+
+		When("response return success", func() {
+			var testContent string
+
+			BeforeEach(func() {
+				testContent = "test"
+				server.registerPluginOK(pluginName, testContent, pluginVersion, runtime.GOOS, runtime.GOARCH)
+			})
+
+			It("should download plugins successfully", func() {
+				// plugin file name and md5 file name
+				tool := &configmanager.Tool{Name: pluginName}
+				pluginFileName := tool.GetPluginFileNameWithOSAndArch(runtime.GOOS, runtime.GOARCH)
+				pluginMD5FileName := tool.GetPluginMD5FileNameWithOSAndArch(runtime.GOOS, runtime.GOARCH)
+
+				// download .so file
+				err := pdc.download(tempDir, pluginFileName, pluginVersion)
+				Expect(err).ShouldNot(HaveOccurred())
+				// check plugin file is downloaded
+				fileContent, err := os.ReadFile(filepath.Join(tempDir, pluginFileName))
+				Expect(err).ShouldNot(HaveOccurred())
+				Expect(string(fileContent)).Should(Equal(testContent))
+
+				// download .md5 file
+				err = pdc.download(tempDir, pluginMD5FileName, pluginVersion)
+				Expect(err).ShouldNot(HaveOccurred())
+				md5Matched, err := ifPluginAndMD5Match(tempDir, pluginFileName, pluginMD5FileName)
+				Expect(err).ShouldNot(HaveOccurred())
+				Expect(md5Matched).Should(BeTrue())
+			})
+		})
 	})
 
-	Describe("download method success", func() {
-		It("should reanme file if download success", func() {
-			tmpFilePath := filepath.Join(tempDir, fmt.Sprintf("%s.tmp", validPlugName))
-			f, err := os.Create(tmpFilePath)
-			defer os.Remove(tmpFilePath)
-			defer f.Close()
-			Expect(err).NotTo(HaveOccurred())
-			c := NewDownloadClient()
-			c.pluginGetter = mockPlugSuccessGetter
-			err = c.download(tempDir, validPlugName, version)
-			Expect(err).ShouldNot(HaveOccurred())
-			renamedFilePath := filepath.Join(tempDir, validPlugName)
-			_, err = os.Stat(renamedFilePath)
-			Expect(err).ShouldNot(HaveOccurred())
-		})
+	AfterEach(func() {
+		server.Close()
 	})
 })

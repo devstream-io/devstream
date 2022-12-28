@@ -3,6 +3,9 @@ package github_test
 import (
 	"fmt"
 	"net/http"
+	"os"
+	"strconv"
+	"strings"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -18,6 +21,7 @@ var _ = Describe("Github files methods", func() {
 		s                                *ghttp.Server
 		repoName, owner, branch, reqPath string
 		c                                *github.Client
+		commitInfo                       *git.CommitInfo
 	)
 	BeforeEach(func() {
 		repoName = "test_repo"
@@ -28,6 +32,13 @@ var _ = Describe("Github files methods", func() {
 			Repo:   repoName,
 			Branch: branch,
 			Owner:  owner,
+		}
+		commitInfo = &git.CommitInfo{
+			CommitMsg:    "test",
+			CommitBranch: branch,
+			GitFileMap: map[string][]byte{
+				"srcPath": []byte("test data"),
+			},
 		}
 		c = newTestClient(s.URL(), repoInfo)
 	})
@@ -57,7 +68,7 @@ var _ = Describe("Github files methods", func() {
 				))
 			})
 			It("should work", func() {
-				info, err := c.GetLocationInfo(testFile)
+				info, err := c.GetPathInfo(testFile)
 				Expect(err).ShouldNot(HaveOccurred())
 				Expect(info).ShouldNot(BeNil())
 				Expect(len(info)).Should(Equal(1))
@@ -79,10 +90,40 @@ var _ = Describe("Github files methods", func() {
 				))
 			})
 			It("should return empty list", func() {
-				info, err := c.GetLocationInfo(testFile)
+				info, err := c.GetPathInfo(testFile)
 				Expect(err).ShouldNot(HaveOccurred())
 				Expect(len(info)).Should(Equal(0))
 			})
 		})
 	})
+
+	Context("PushLocalPathToRepo", func() {
+		BeforeEach(func() {
+			s.Reset()
+			s.SetAllowUnhandledRequests(true)
+		})
+
+		It("1. create new branch from main", func() {
+			s.SetUnhandledRequestStatusCode(http.StatusInternalServerError)
+			r, err := c.PushFiles(commitInfo, false)
+			Expect(err).NotTo(Succeed())
+			Expect(err.Error()).To(ContainSubstring(strconv.Itoa(http.StatusInternalServerError)))
+			Expect(r).To(Equal(false))
+		})
+		It("2. create new branch from main", func() {
+			// u := fmt.Sprintf("/repos/%v/%v/git/ref/heads/%s", org, repo, filePath)
+			u := fmt.Sprintf("/repos/%s/%s/contents/%s", owner, repoName, strings.Trim(os.TempDir(), "/"))
+			s.Reset()
+			s.SetAllowUnhandledRequests(true)
+			s.SetUnhandledRequestStatusCode(http.StatusInternalServerError)
+			s.RouteToHandler("GET", u, func(w http.ResponseWriter, r *http.Request) {
+				fmt.Fprint(w, "")
+			})
+			r, err := c.PushFiles(commitInfo, false)
+			Expect(err).NotTo(Succeed())
+			Expect(err.Error()).To(ContainSubstring(strconv.Itoa(http.StatusInternalServerError)))
+			Expect(r).To(Equal(false))
+		})
+	})
+
 })

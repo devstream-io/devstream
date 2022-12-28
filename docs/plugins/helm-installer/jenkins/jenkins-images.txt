@@ -1,0 +1,5 @@
+##jenkins-images
+devstreamdev/jenkins:2.361.1-jdk11-dtm-0.2
+kiwigrid/k8s-sidecar:1.15.0
+jenkins/inbound-agent:4.11.2-4
+maorfr/kube-tasks:0.2.0

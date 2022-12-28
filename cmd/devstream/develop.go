@@ -4,6 +4,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/devstream-io/devstream/internal/pkg/develop"
+	"github.com/devstream-io/devstream/pkg/util/cli"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -11,6 +12,11 @@ var (
 	name string
 	all  bool
 )
+
+var validatePluginFlagNames = []string{
+	"name",
+	"all",
+}
 
 var developCMD = &cobra.Command{
 	Use:   "develop",
@@ -33,7 +39,8 @@ var developValidatePluginCMD = &cobra.Command{
 Examples:
   dtm develop validate-plugin --name=YOUR-PLUGIN-NAME,
   dtm develop validate-plugin --all`,
-	Run: developValidateCMDFunc,
+	Run:    developValidateCMDFunc,
+	PreRun: cli.BindPFlags(validatePluginFlagNames),
 }
 
 func developCreateCMDFunc(cmd *cobra.Command, args []string) {

@@ -11,7 +11,7 @@ import (
 )
 
 var _ = Describe("Statemanager.state", func() {
-	Describe("GenerateStateKeyByToolNameAndPluginKind func", func() {
+	Describe("GenerateStateKeyByToolNameAndInstanceID func", func() {
 		It("should ouput state key base on toolName and plugin kind", func() {
 			var testCases = []struct {
 				toolName       string
@@ -22,7 +22,7 @@ var _ = Describe("Statemanager.state", func() {
 				{"123", "1", "123_1"},
 			}
 			for _, t := range testCases {
-				funcResult := GenerateStateKeyByToolNameAndPluginKind(t.toolName, t.plugKind)
+				funcResult := GenerateStateKeyByToolNameAndInstanceID(t.toolName, t.plugKind)
 				Expect(funcResult).Should(Equal(t.expectStateKey))
 			}
 		})
@@ -81,7 +81,7 @@ var _ = Describe("Statemanager.state", func() {
 				testMap.Store(testStateKey, testStateVal)
 				formatedInfo := testMap.Format()
 				formatResult := fmt.Sprintf(
-					"test_key:\n  name: %s\n  instanceid: %s\n  dependson: []\n  options: {}\n  resource: {}\n",
+					"test_key:\n  name: %s\n  instanceID: %s\n  dependsOn: []\n  options: {}\n  resourceStatus: {}\n",
 					testStateVal.Name, testStateVal.InstanceID,
 				)
 				Expect(string(formatedInfo)).Should(Equal(formatResult))

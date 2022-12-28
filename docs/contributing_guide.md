@@ -41,8 +41,8 @@ Absolutely everyone is welcome to come to any of our meetings. You never need an
 
 We have good first issues for new contributors and help wanted issues suitable for any contributor.
 
-- [good first issue](https://github.com/devstream-io/devstream/labels/good%20first%20issue) has extra information to help you make your first contribution. If you are new to DevStream (or even new to open-source,) this is a good place to get yourself started. For more information, see the [good first issues doc](./development/good-first-issues.md).
-- [help wanted](https://github.com/devstream-io/devstream/labels/help%20wanted) are issues suitable for someone who isn't a core maintainer and is good to move onto after your "good first issue."
+- [good first issue](https://github.com/devstream-io/devstream/labels/good%20first%20issue) has extra information to help you make your first contribution. If you are new to DevStream (or even new to open-source,) this is a good place to get yourself started. For more information, see the [good first issues doc](development/git-workflow/good-first-issues.md).
+- [help wanted](https://github.com/devstream-io/devstream/labels/help%20wanted) are issues suitable for someone who isn't a core maintainer and is good to move onto after your "good first issue." For more information, see the [help wanted doc](development/git-workflow/help-wanted.md).
 - Sometimes there won’t be any issues with these labels. That’s ok! There is likely still something for you to work on. If you want to contribute but you don’t know where to start or can't find a suitable issue, you can reach out to us on our [Slack channel](https://cloud-native.slack.com/archives/C03LA2B8K0A) and ask for an issue to work on.
 
 Once you see an issue that you'd like to work on, please post a comment saying that you want to work on it. Something like "I want to work on this" is fine.
@@ -72,17 +72,26 @@ The unwritten rules (heck, we are writing them anyways) for PRs, contributors, a
 - Currently, we don't release regularly, so there isn't any guarantee about when your PR will be included in the next release. However, we are trying our best to make releases as frequent as possible.
 - As an encouragement to contributors, it's fine to close an issue or merge a PR even if the originally designed features aren't 100% implemented. In cases like this, please encourage contributors to create a follow-up issue and PR to further implement that. Do not make the PR process last too long because it might discourage contributors.
 
-## Development Environment Setup
+For more documentation on GitHub collaboration, see the [GitHub Collaboration Process Guidelines](./development/git-workflow/git-workflow.md).
 
-- linter: [golangci-lint](https://github.com/golangci/golangci-lint)
-- recommended IDE: [Visual Studio Code](https://code.visualstudio.com/), [GoLand](https://www.jetbrains.com/go/).
-- [docs](https://docs.devstream.io/en/latest/)
-- [quick start](./quickstart.md)
-- Get the source code: https://github.com/devstream-io/devstream
-- [Build the source code](./development/build.md)
-- [Test the source code, unit](./development/test.md)
-- TODO: Test the source code, integration/end-to-end
-- TODO: Generate and preview the documentation locally
+## Development
+
+- Recommended IDEs: [Visual Studio Code](https://code.visualstudio.com/), [GoLand](https://www.jetbrains.com/go/)
+- [Development Environment Setup](./development/dev/dev-env-setup.md)
+- [Code linter](./development/dev/lint.md)
+- [Build the source code](./development/dev/build.md)
+- [Test the source code: unit test, e2e test](./development/dev/test.md)
+- [Create a plugin](./development/dev/creating-a-plugin.md)
+
+## DevStream Architecture
+
+- [Architecture Overall](development/architecture.md)
+- [Project Layout](development/project-layout.md)
+
+## Documentation Contribution
+
+- [Create documentation for DevStream](./development/docs-contribution/mkdocs.md)
+- [Document translation](./development/docs-contribution/translation.md)
 
 ## Sign Your Commits
 
@@ -108,7 +117,7 @@ When you submit your pull request, or you push new commits to it, our automated 
 
 - Lint your code. Although this will be checked by our CI, linting it yourself locally first before creating a PR will save you some time and effort.
 - Build/test your code. Same as above.
-- Double-check your commit messages. See if they meet the [conventional commits specification](https://www.conventionalcommits.org/en/v1.0.0/). Again, this will also be validated by our CI, but checking it yourself beforehand will speed things up drastically.
+- Double-check your commit messages. More details in the [commit message guidelines](./development/git-workflow/commit-messages.md).
 
 ## Maintainer Team at Merico
 

@@ -11,19 +11,17 @@ This plugin installs [ZenTao](https://zentao.net/) in an existing Kubernetes clu
 
 ## Usage
 
-```yaml
----
-# core config
-varFile: ''
-toolFile: ''
-pluginDir: ''
-state: # state config, backend can be local or s3
-  backend: local
-  options:
-    stateFile: devstream.state
+The following content is an example of the "tool file".
 
----
-# plugins config
+For more information on the main config, the tool file and the var file of DevStream, see [Core Concepts Overview](../core-concepts/overview.md) and [DevStream Configuration](../core-concepts/config.md).
+
+```yaml
+config:
+  state:
+    backend: local
+    options:
+      stateFile: devstream.state
+
 tools:
   # name of the tool
   - name: zentao

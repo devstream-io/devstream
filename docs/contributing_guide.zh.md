@@ -19,7 +19,7 @@
 - Bug 修复
 - 文档
 - Issue 分类、发起、回复、管理、维护等（Issue Triage）
-- 在 微信群、Sack、邮件列表解答问题
+- 在 微信群、Slack、邮件列表解答问题
 - 网站页面设计
 - 在各种媒体、博客文章宣传 DevStream
 - 发版管理
@@ -38,12 +38,12 @@ DevStream 真诚地欢迎每一个人参与我们的会议，不需要被邀请�
 ## 寻找 Issue
 你可以在 Issue 列表找到这样两个标签： `good first issue` 表示仅向新贡献者开放，`help wanted` 适合于所有贡献者。
 
-- [good first issue](https://github.com/devstream-io/devstream/labels/good%20first%20issue) 含有更多的描述信息与指导，往往只涉及一小部分，完成它不需要你熟悉整个项目。如果你是第一次参与 DevStream（甚至是第一次参与开源），非常推荐你从 good first issue 开始共建之旅。更多信息，请参阅 [good first issue 文档](./development/good-first-issues.zh.md)。
-- [help wanted](https://github.com/devstream-io/devstream/labels/help%20wanted) 指引了你在完成了 good first issue 后，适合继续贡献的地方。带有这个标签的 issue，除了核心贡献者外的任何人都可参与。
+- [good first issue](https://github.com/devstream-io/devstream/labels/good%20first%20issue) 含有更多的描述信息与指导，往往只涉及一小部分，完成它不需要你熟悉整个项目。如果你是第一次参与 DevStream（甚至是第一次参与开源），非常推荐你从 good first issue 开始共建之旅。更多信息，请参阅 [good first issue 文档](development/git-workflow/good-first-issues.zh.md)。
+- [help wanted](https://github.com/devstream-io/devstream/labels/help%20wanted) 指引了你在完成了 good first issue 后，适合继续贡献的地方。带有这个标签的 issue，除了核心贡献者外的任何人都可参与。更多信息，请参阅 [help wanted 文档](development/git-workflow/help-wanted.zh.md)。
 - 你不需要拘泥于带有这两个标签的 issue，其他任何你感兴趣的 issue，都可以直接参与，无论是方案修改建议、讨论与回复、还是代码。
 - 有时 good first issue 或 help wanted 因为社区过于热情导致暂时没有空余，只要你愿意，你仍可以参与贡献！直接在 [Slack](https://join.slack.com/t/devstream-io/shared_invite/zt-16tb0iwzr-krcFGYRN7~Vv1suGZjdv4) 或 [微信群](https://raw.githubusercontent.com/devstream-io/devstream/main/docs/images/wechat-group-qr-code.png) 联系我们，告诉我们你愿意参与！
 
-若你想负责某个 issue，请在 issue 内留下评论，例如："I want to work on this"。
+如果你对某个 issue 有兴趣，想完成对应内容，请在 issue 内留下评论，例如："I want to work on this"。
 
 ## 寻求帮助
 在贡献时，向我们提问的最好的方式如下：
@@ -69,18 +69,29 @@ DevStream 真诚地欢迎每一个人参与我们的会议，不需要被邀请�
 - 目前，我们不会定期发布，因此无法保证你的 PR 何时包含在下一个版本中。但是，我们正在尽最大努力使发布尽可能频繁。
 - 为了鼓励贡献者，你可以在未100%完成原有设计的情况下，完成相应的任务，即关闭 issue 与合并 PR。在这种情况下，你可以再创建个新的 issue，并提交个新的 PR 来完成之前遗漏的工作。我们不希望你在一个 PR 上耗时太久，这会打击你的兴趣。
 
-## 开发环境搭建
-- 代码格式检查：[golangci-lint](https://github.com/golangci/golangci-lint)
+更多关于 GitHub 协作的文档，可参考 [GitHub 协作流程指引](./development/git-workflow/git-workflow.md)。
+
+## 开发
+
 - 推荐的 IDE：[Visual Studio Code](https://code.visualstudio.com/), [GoLand](https://www.jetbrains.com/go/)
-- [文档](https://docs.devstream.io/en/latest/index.zh/)
-- [快速开始](https://docs.devstream.io/en/latest/quickstart.zh/)
-- [源码](https://github.com/devstream-io/devstream)
-- [源码构建](https://docs.devstream.io/en/latest/development/build.zh/)
-- [代码测试：单元测试(unit test)、端到端测试(e2e test)](https://docs.devstream.io/en/latest/development/test.zh/)
-- TODO: 源码测试, 集成/端到端测试
-- TODO: 生成本地文档预览
+- [开发环境搭建](./development/dev/dev-env-setup.zh.md)
+- [代码格式检查](./development/dev/lint.zh.md)
+- [源码构建](./development/dev/build.zh.md)
+- [代码测试：单元测试(unit test)、端到端测试(e2e test)](./development/dev/test.zh.md)
+- [开发新插件](./development/dev/creating-a-plugin.zh.md)
+
+## 架构解读
+
+- [整体架构](development/architecture.zh.md)
+- [项目组织结构](development/project-layout.zh.md)
+
+## 文档类贡献
+
+- [为DevStream创建文档](./development/docs-contribution/mkdocs.zh.md)
+- [文档翻译](./development/docs-contribution/translation.zh.md)
 
 ## 代码提交署名（Sign Off）
+
 授权与认证（licensing) 对于开源项目非常重要，它确保了软件能基于作者提供的条款继续运作。我们需要你在贡献代码的时候署名你的提交，[Developer Certificate of Origin (DCO)](https://developercertificate.org/) 是一种认证你编写了此段代码，并表明你持有这段代码的方式。
 
 你可以通过在提交信息（Git Commit Message）中附加这段信息。注意，你的署名必须与 Git 的用户名和邮箱对应。
@@ -103,7 +114,7 @@ Git 有一个 `-s` 的命令行选项可以帮助你自动署名:
 
 - 检查代码格式问题([golangci-lint](https://github.com/golangci/golangci-lint)): 虽然我们的 CI 会在提交代码时自动运行 lint，但在本地先执行 lint 确保无误后再提交能节省你更多的精力与时间。
 - 构建/测试 代码，同上。
-- 仔细检查你的提交信息（Commit Message）：确认它们符合 [约定式提交](https://www.conventionalcommits.org/zh-hans/v1.0.0/) 规范。同样的，CI 也会执行这一检查，但若你在提交代码前先行检查能加快 PR 合并速度。
+- 仔细检查你的提交信息（Commit Message）：详见 [提交信息规范](./development/git-workflow/commit-messages.zh.md)。
 
 ## Maintainer 团队
 

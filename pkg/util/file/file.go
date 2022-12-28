@@ -1,68 +1,13 @@
 package file
 
 import (
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
-	"strings"
-
-	"github.com/mitchellh/go-homedir"
-	"github.com/spf13/viper"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
-
-var DefaultPluginDir string
-
-func init() {
-	homeDir, err := homedir.Dir()
-	if err != nil {
-		log.Fatalf("failed to get home dir: %s", err)
-	}
-	DefaultPluginDir = filepath.Join(homeDir, ".devstream", "plugins")
-}
-
-func GetPluginDir(conf string) (string, error) {
-	pluginDir := viper.GetString("plugin-dir")
-	if pluginDir == "" {
-		pluginDir = conf
-	}
-
-	if pluginDir == "" {
-		return DefaultPluginDir, nil
-	}
-
-	pluginRealDir, err := HandlePathWithHome(pluginDir)
-	if err != nil {
-		return "", err
-	}
-	return pluginRealDir, nil
-}
-
-// HandlePathWithHome deal with "~" in the filePath
-func HandlePathWithHome(filePath string) (string, error) {
-	if !strings.Contains(filePath, "~") {
-		return filePath, nil
-	}
-
-	homeDir, err := os.UserHomeDir()
-	if err != nil {
-		return "", err
-	}
-	retPath := filepath.Join(homeDir, strings.TrimPrefix(filePath, "~"))
-	log.Debugf("real path: %s.", retPath)
-
-	return retPath, nil
-}
-
-func SetPluginDir(conf string) error {
-	pluginDir, err := GetPluginDir(conf)
-	if err != nil {
-		return err
-	}
-	viper.Set("plugin-dir", pluginDir)
-	return nil
-}
 
 func CopyFile(srcFile, dstFile string) (err error) {
 	// prepare source file
@@ -98,4 +43,58 @@ func CopyFile(srcFile, dstFile string) (err error) {
 		return nil
 	}
 	return dFile.Sync()
+}
+
+// GenerateAbsFilePath return all the path with a given file name
+func GenerateAbsFilePath(baseDir, file string) (string, error) {
+	file = filepath.Join(baseDir, file)
+
+	fileExist := func(path string) bool {
+		if _, err := os.Stat(file); err != nil {
+			log.Errorf("File %s not exists. Error: %s", file, err)
+			return false
+		}
+		return true
+	}
+
+	absFilePath, err := filepath.Abs(file)
+	if err != nil {
+		log.Errorf(`Failed to get absolute path fo "%s".`, file)
+		return "", err
+	}
+	log.Debugf("Abs path is %s.", absFilePath)
+	if fileExist(absFilePath) {
+		return absFilePath, nil
+	} else {
+		return "", fmt.Errorf("file %s not exists", absFilePath)
+	}
+}
+
+// GetFileAbsDirPath will return abs dir path for file
+func GetFileAbsDirPath(fileLoc string) (string, error) {
+	fileAbs, err := filepath.Abs(fileLoc)
+	if err != nil {
+		return "", fmt.Errorf("%s not exists", fileLoc)
+	}
+	return filepath.Dir(fileAbs), nil
+}
+
+// GetFileAbsDirPathOrDirItself will return abs dir path,
+// for file: return its parent directory
+// for directory: return dir itself
+func GetFileAbsDirPathOrDirItself(fileLoc string) (string, error) {
+	fileAbs, err := filepath.Abs(fileLoc)
+	if err != nil {
+		return "", fmt.Errorf("%s not exists", fileLoc)
+	}
+	file, err := os.Stat(fileAbs)
+	if err != nil {
+		return "", fmt.Errorf("%s not exists", fileLoc)
+	}
+	// if it is a directory, return itself
+	if file.IsDir() {
+		return fileAbs, nil
+	}
+	// if it is a file, return its parent directory
+	return filepath.Dir(fileAbs), nil
 }

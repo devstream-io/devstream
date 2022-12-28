@@ -5,7 +5,6 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/devstream-io/devstream/internal/pkg/completion"
 	"github.com/devstream-io/devstream/internal/pkg/pluginengine"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
@@ -21,8 +20,9 @@ DevStream will delete everything defined in the config file, regardless of the s
 }
 
 func deleteCMDFunc(cmd *cobra.Command, args []string) {
+	checkConfigFile()
 	log.Info("Delete started.")
-	if err := pluginengine.Remove(configFile, continueDirectly, isForceDelete); err != nil {
+	if err := pluginengine.Remove(configFilePath, continueDirectly, isForceDelete); err != nil {
 		log.Errorf("Delete error: %s.", err)
 		os.Exit(1)
 	}
@@ -31,11 +31,9 @@ func deleteCMDFunc(cmd *cobra.Command, args []string) {
 }
 
 func init() {
-	deleteCMD.Flags().BoolVarP(&isForceDelete, "force", "", false, "force delete by config")
-	deleteCMD.Flags().StringVarP(&configFile, configFlagName, "f", "config.yaml", "config file")
-	deleteCMD.Flags().StringVarP(&pluginDir, pluginDirFlagName, "d", "", "plugins directory")
-	deleteCMD.Flags().BoolVarP(&continueDirectly, "yes", "y", false, "delete directly without confirmation")
+	addFlagConfigFile(deleteCMD)
+	addFlagPluginDir(deleteCMD)
+	addFlagContinueDirectly(deleteCMD)
 
-	completion.FlagFilenameCompletion(deleteCMD, configFlagName)
-	completion.FlagDirnameCompletion(deleteCMD, pluginDirFlagName)
+	deleteCMD.Flags().BoolVarP(&isForceDelete, "force", "", false, "force delete by config")
 }

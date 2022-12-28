@@ -3,7 +3,6 @@ package github
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/google/go-github/v42/github"
 	"golang.org/x/oauth2"
@@ -13,12 +12,10 @@ import (
 )
 
 const (
-	defaultWorkPath                           = ".github-workpath"
-	defaultCommitAuthor                       = "devstream"
-	defaultCommitAuthorEmail                  = "devstream@merico.dev"
-	repoPlaceHolderFileName                   = ".placeholder"
-	DefaultLatestCodeZipfileDownloadUrlFormat = "https://codeload.github.com/%s/%s/zip/refs/heads/%s"
-	TokenEnvKey                               = "GITHUB_TOKEN"
+	defaultWorkPath          = ".github-workpath"
+	defaultCommitAuthor      = "devstream"
+	defaultCommitAuthorEmail = "devstream@merico.dev"
+	repoPlaceHolderFileName  = ".placeholder"
 )
 
 var (
@@ -67,23 +64,18 @@ func NewClient(option *git.RepoInfo) (*Client, error) {
 	// Don't use `token := viper.GetString("github_token")` here,
 	// it will fail without calling `viper.BindEnv("github_token")` first.
 	// os.Getenv() function is more clear and reasonable here.
-	token := os.Getenv(TokenEnvKey)
-	if token == "" {
-		// github_token works well as GITHUB_TOKEN.
-		token = os.Getenv("github_token")
-	}
-	if token == "" {
-		retErr = fmt.Errorf("environment variable GITHUB_TOKEN is not set. Failed to initialize GitHub token. More info - " +
+	if option.Token == "" {
+		retErr = fmt.Errorf("config field scm.token is not set. Failed to initialize GitHub token. More info - " +
 			"https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token")
 		return nil, retErr
 	}
-	log.Debugf("Token: %s.", token)
+	log.Debugf("Token: %s.", option.Token)
 
 	tc := oauth2.NewClient(
 		context.TODO(),
 		oauth2.StaticTokenSource(
 			&oauth2.Token{
-				AccessToken: token,
+				AccessToken: option.Token,
 			},
 		),
 	)

@@ -4,43 +4,47 @@ import (
 	"fmt"
 	"regexp"
 
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
+	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 // HandleOutputsReferences renders outputs references in config file recursively.
 // The parameter options will be changed.
-func HandleOutputsReferences(smgr statemanager.Manager, options map[string]interface{}) []error {
+func HandleOutputsReferences(smgr statemanager.Manager, options configmanager.RawOptions) []error {
 	errorsList := make([]error, 0)
 
-	for optionKey, optionValue := range options {
+	for optionKey, optionInterface := range options {
+		switch optionValue := optionInterface.(type) {
 		// only process string values in the options
 		// since all outputs references are strings, not ints, not booleans, not maps
-		if optionValueStr, ok := optionValue.(string); ok {
-			match, toolName, instanceID, outputReferenceKey := getToolNamePluginOutputKey(optionValueStr)
+		case string:
+			log.Debugf("Before: %s: %s", optionKey, optionValue)
+			match, toolName, instanceID, outputReferenceKey := getToolNamePluginOutputKey(optionValue)
 			// do nothing, if the value string isn't in the format of a valid output reference
 			if !match {
 				continue
 			}
-
-			outputs, err := smgr.GetOutputs(statemanager.GenerateStateKeyByToolNameAndPluginKind(toolName, instanceID))
+			outputs, err := smgr.GetOutputs(statemanager.GenerateStateKeyByToolNameAndInstanceID(toolName, instanceID))
 			if err != nil {
 				errorsList = append(errorsList, err)
 				continue
 			}
-
-			if val, ok := outputs.(map[string]interface{})[outputReferenceKey]; ok {
-				options[optionKey] = replaceOutputKeyWithValue(optionValueStr, val.(string))
+			if val, ok := outputs[outputReferenceKey]; ok {
+				options[optionKey] = replaceOutputKeyWithValue(optionValue, val.(string))
+				log.Debugf("After: %s: %s", optionKey, options[optionKey])
 			} else {
 				errorsList = append(errorsList, fmt.Errorf("can't find Output reference key %s", outputReferenceKey))
 			}
-		}
-
-		// recursive if the value is a map (which means Tool.Option is a nested map)
-		optionValueMap, ok := optionValue.(map[string]interface{})
-		if ok {
-			errorsList = append(errorsList, HandleOutputsReferences(smgr, optionValueMap)...)
+		case configmanager.RawOptions:
+			// recursive if the value is a map (which means Tool.Option is a nested map)
+			log.Debugf("Got nested map: %v", optionValue)
+			errorsList = append(errorsList, HandleOutputsReferences(smgr, optionValue)...)
 		}
 	}
+
+	log.Debugf("Final options: %v.", options)
+
 	return errorsList
 }
 

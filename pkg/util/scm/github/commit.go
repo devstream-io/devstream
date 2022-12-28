@@ -3,11 +3,10 @@ package github
 import (
 	"fmt"
 
-	"github.com/devstream-io/devstream/pkg/util/scm/git"
-
 	"github.com/google/go-github/v42/github"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
+	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
 func (c *Client) GetLastCommit() (*github.RepositoryCommit, error) {
@@ -27,10 +26,9 @@ func (c *Client) GetLastCommit() (*github.RepositoryCommit, error) {
 }
 
 func (c *Client) BuildCommitTree(ref *github.Reference, commitInfo *git.CommitInfo, checkChange bool) (*github.Tree, error) {
-	entries := []*github.TreeEntry{}
+	var entries []*github.TreeEntry
 	for githubPath, content := range commitInfo.GitFileMap {
-		contentString := string(content)
-		if checkChange && !c.checkFileChange(githubPath, contentString) {
+		if checkChange && !c.checkFileChange(githubPath, content) {
 			log.Debugf("Github File [%s] content not changed, not commit", githubPath)
 			continue
 		}

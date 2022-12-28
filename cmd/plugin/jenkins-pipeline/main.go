@@ -1,7 +1,9 @@
 package main
 
 import (
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/jenkinspipeline"
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -12,22 +14,22 @@ const NAME = "jenkins-pipeline"
 type Plugin string
 
 // Create implements the create of jenkins-pipeline.
-func (p Plugin) Create(options map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Create(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return jenkinspipeline.Create(options)
 }
 
 // Update implements the update of jenkins-pipeline.
-func (p Plugin) Update(options map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Update(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return jenkinspipeline.Update(options)
 }
 
 // Delete implements the delete of jenkins-pipeline.
-func (p Plugin) Delete(options map[string]interface{}) (bool, error) {
+func (p Plugin) Delete(options configmanager.RawOptions) (bool, error) {
 	return jenkinspipeline.Delete(options)
 }
 
 // Read implements the read of jenkins-pipeline.
-func (p Plugin) Read(options map[string]interface{}) (map[string]interface{}, error) {
+func (p Plugin) Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return jenkinspipeline.Read(options)
 }
 

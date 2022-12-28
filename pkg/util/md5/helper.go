@@ -15,8 +15,15 @@ func CalcFileMD5(filename string) (string, error) {
 	}
 	defer f.Close()
 
+	return CalcMD5(f)
+}
+
+func CalcMD5(r io.Reader) (string, error) {
+	if r == nil {
+		return "", fmt.Errorf("reader is nil")
+	}
 	md5Handle := md5.New()
-	if _, err := io.Copy(md5Handle, f); nil != err {
+	if _, err := io.Copy(md5Handle, r); nil != err {
 		return "", err
 	}
 	md := md5Handle.Sum(nil)

@@ -3,11 +3,8 @@ package github_test
 import (
 	"fmt"
 	"net/http"
-	"os"
 	"strconv"
-	"strings"
 
-	githubCommon "github.com/google/go-github/v42/github"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/ghttp"
@@ -21,11 +18,9 @@ var _ = Describe("Repo", func() {
 		s                        *ghttp.Server
 		rightClient, wrongClient *github.Client
 		owner, repoName, org     = "o", "r", "or"
-		commitInfo               *git.CommitInfo
 	)
 	// var rep *go_github.Repository
 	defaultBranch := "db"
-	mergeBranch := "mb"
 	mainBranch := "mab"
 	rightOpt := &git.RepoInfo{
 		Owner:  owner,
@@ -44,13 +39,6 @@ var _ = Describe("Repo", func() {
 		Expect(rightClient).NotTo(Equal(nil))
 		wrongClient, _ = github.NewClientWithOption(wrongOpt, s.URL())
 		Expect(wrongClient).NotTo(Equal(nil))
-		commitInfo = &git.CommitInfo{
-			CommitMsg:    "test",
-			CommitBranch: mergeBranch,
-			GitFileMap: map[string][]byte{
-				"srcPath": []byte("test data"),
-			},
-		}
 	})
 
 	AfterEach(func() {
@@ -109,7 +97,7 @@ var _ = Describe("Repo", func() {
 			r, err := rightClient.DescribeRepo()
 			Expect(err).NotTo(Succeed())
 			Expect(err.Error()).To(ContainSubstring(strconv.Itoa(http.StatusInternalServerError)))
-			var wantR *githubCommon.Repository
+			var wantR *git.RepoInfo
 			Expect(r).To(Equal(wantR))
 		})
 		It("GetRepoDescription with no error and status 200", func() {
@@ -120,37 +108,10 @@ var _ = Describe("Repo", func() {
 			})
 			r, err := rightClient.DescribeRepo()
 			Expect(err).To(Succeed())
-			var wantR *githubCommon.Repository = &githubCommon.Repository{}
+			wantR := &git.RepoInfo{
+				RepoType: "github",
+			}
 			Expect(r).To(Equal(wantR))
-		})
-	})
-
-	Context("PushLocalPathToRepo", func() {
-		BeforeEach(func() {
-			s.Reset()
-			s.SetAllowUnhandledRequests(true)
-		})
-
-		It("1. create new branch from main", func() {
-			s.SetUnhandledRequestStatusCode(http.StatusInternalServerError)
-			r, err := rightClient.PushLocalFileToRepo(commitInfo, false)
-			Expect(err).NotTo(Succeed())
-			Expect(err.Error()).To(ContainSubstring(strconv.Itoa(http.StatusInternalServerError)))
-			Expect(r).To(Equal(false))
-		})
-		It("2. create new branch from main", func() {
-			// u := fmt.Sprintf("/repos/%v/%v/git/ref/heads/%s", org, repo, filePath)
-			u := fmt.Sprintf("/repos/%s/%s/contents/%s", org, repoName, strings.Trim(os.TempDir(), "/"))
-			s.Reset()
-			s.SetAllowUnhandledRequests(true)
-			s.SetUnhandledRequestStatusCode(http.StatusInternalServerError)
-			s.RouteToHandler("GET", u, func(w http.ResponseWriter, r *http.Request) {
-				fmt.Fprint(w, "")
-			})
-			r, err := rightClient.PushLocalFileToRepo(commitInfo, false)
-			Expect(err).NotTo(Succeed())
-			Expect(err.Error()).To(ContainSubstring(strconv.Itoa(http.StatusInternalServerError)))
-			Expect(r).To(Equal(false))
 		})
 	})
 

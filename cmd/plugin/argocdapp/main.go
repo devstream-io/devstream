@@ -1,7 +1,9 @@
 package main
 
 import (
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/argocdapp"
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
@@ -11,23 +13,23 @@ const NAME = "argocdapp"
 // Plugin is the type used by DevStream core. It's a string.
 type Plugin string
 
-// Create implements the installation of an ArgoCD app.
-func (p Plugin) Create(options map[string]interface{}) (map[string]interface{}, error) {
+// Create implements the create of an argocdapp.
+func (p Plugin) Create(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return argocdapp.Create(options)
 }
 
-// Update implements the installation of an ArgoCD app.
-func (p Plugin) Update(options map[string]interface{}) (map[string]interface{}, error) {
+// Update implements the update of an argocdapp.
+func (p Plugin) Update(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return argocdapp.Update(options)
 }
 
-// Read implements the healthy check of ArgoCD app.
-func (p Plugin) Read(options map[string]interface{}) (map[string]interface{}, error) {
+// Read implements the read of argocdapp.
+func (p Plugin) Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	return argocdapp.Read(options)
 }
 
-// Delete Deletes the installation of an ArgoCD app.
-func (p Plugin) Delete(options map[string]interface{}) (bool, error) {
+// Delete implements the delete of argocdapp.
+func (p Plugin) Delete(options configmanager.RawOptions) (bool, error) {
 	return argocdapp.Delete(options)
 }
 

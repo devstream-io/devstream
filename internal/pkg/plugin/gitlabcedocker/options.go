@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugininstaller"
-	dockerInstaller "github.com/devstream-io/devstream/internal/pkg/plugininstaller/docker"
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
+	dockerInstaller "github.com/devstream-io/devstream/internal/pkg/plugin/installer/docker"
 	"github.com/devstream-io/devstream/pkg/util/docker"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
@@ -56,9 +56,11 @@ func (opts *Options) setGitLabURL() {
 	gitlabURL = fmt.Sprintf("http://%s:%d", opts.Hostname, opts.HTTPPort)
 }
 
-func showHelpMsg(options plugininstaller.RawOptions) error {
+func showHelpMsg(options configmanager.RawOptions) error {
 	log.Infof("GitLab access URL: %s", gitlabURL)
-	log.Infof("GitLab initial root password: execute the command -> docker exec -it gitlab grep 'Password:' /etc/gitlab/initial_root_password")
+	log.Info("Execute these two command to get/set GitLab root password: ")
+	log.Info("1. docker exec -it gitlab bash")
+	log.Info(`2. gitlab-rake "gitlab:password:reset"`)
 
 	return nil
 }

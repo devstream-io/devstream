@@ -18,7 +18,7 @@ env:
 jobs:
   golang-lint:
     name: Golang lint
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, X64]
     permissions:
       contents: read
     steps:
@@ -41,7 +41,7 @@ jobs:
         go: [1.18.x]
         include:
           - os: ubuntu-latest
-    runs-on: ${{ matrix.os }}
+    runs-on: [self-hosted, linux, X64]
     name: build-test-${{ matrix.os }}
     steps:
       - name: Checkout

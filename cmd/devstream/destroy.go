@@ -5,7 +5,6 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/devstream-io/devstream/internal/pkg/completion"
 	"github.com/devstream-io/devstream/internal/pkg/pluginengine"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
@@ -20,8 +19,9 @@ var destroyCMD = &cobra.Command{
 }
 
 func destroyCMDFunc(cmd *cobra.Command, args []string) {
+	checkConfigFile()
 	log.Info("Destroy started.")
-	if err := pluginengine.Destroy(configFile, continueDirectly, isForceDestroy); err != nil {
+	if err := pluginengine.Destroy(configFilePath, continueDirectly, isForceDestroy); err != nil {
 		log.Errorf("Destroy failed => %s.", err)
 		os.Exit(1)
 	}
@@ -29,10 +29,9 @@ func destroyCMDFunc(cmd *cobra.Command, args []string) {
 }
 
 func init() {
-	destroyCMD.Flags().BoolVarP(&isForceDestroy, "force", "", false, "force destroy by config")
-	destroyCMD.Flags().StringVarP(&configFile, configFlagName, "f", "config.yaml", "config file")
-	destroyCMD.Flags().StringVarP(&pluginDir, pluginDirFlagName, "d", "", "plugins directory")
-	destroyCMD.Flags().BoolVarP(&continueDirectly, "yes", "y", false, "destroy directly without confirmation")
+	addFlagConfigFile(destroyCMD)
+	addFlagPluginDir(destroyCMD)
+	addFlagContinueDirectly(destroyCMD)
 
-	completion.FlagFilenameCompletion(destroyCMD, configFlagName)
+	destroyCMD.Flags().BoolVarP(&isForceDestroy, "force", "", false, "force destroy by config")
 }

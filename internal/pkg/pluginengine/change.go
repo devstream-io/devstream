@@ -22,7 +22,7 @@ type ChangeResult struct {
 	Succeeded   bool
 	Error       error
 	Time        string
-	ReturnValue map[string]interface{}
+	ReturnValue statemanager.ResourceStatus
 }
 
 func (c *Change) String() string {
@@ -30,54 +30,7 @@ func (c *Change) String() string {
 		c.ActionName, c.Tool.Name, c.Tool.InstanceID)
 }
 
-type CommandType string
-
-const (
-	CommandApply  CommandType = "apply"
-	CommandDelete CommandType = "delete"
-)
-
-// GetChangesForApply takes "State Manager" & "Config" then do some calculate and return a Plan.
-// All actions should be executed is included in this Plan.changes.
-func GetChangesForApply(smgr statemanager.Manager, cfg *configmanager.Config) ([]*Change, error) {
-	return getChanges(smgr, cfg, CommandApply, false)
-}
-
-// GetChangesForDelete takes "State Manager" & "Config" then do some calculation and return a Plan to delete all plugins in the Config.
-// All actions should be executed is included in this Plan.changes.
-func GetChangesForDelete(smgr statemanager.Manager, cfg *configmanager.Config, isForceDelete bool) ([]*Change, error) {
-	return getChanges(smgr, cfg, CommandDelete, isForceDelete)
-}
-
-func getChanges(smgr statemanager.Manager, cfg *configmanager.Config, commandType CommandType, isForceDelete bool) ([]*Change, error) {
-	if cfg == nil {
-		return make([]*Change, 0), nil
-	}
-	log.Debug("isForce:", isForceDelete)
-	// calculate changes from config and state
-	var changes []*Change
-	var err error
-	if commandType == CommandApply {
-		changes, err = changesForApply(smgr, cfg)
-	} else if commandType == CommandDelete {
-		changes, err = changesForDelete(smgr, cfg, isForceDelete)
-	} else {
-		log.Fatalf("That's impossible!")
-	}
-
-	if err != nil {
-		return nil, err
-	}
-
-	log.Debugf("Changes for the plan:")
-	for i, c := range changes {
-		log.Debugf("Change - %d/%d -> %s", i+1, len(changes), c.String())
-	}
-
-	return changes, nil
-}
-
-// execute changes in the plan in batch.
+// execute changes the plan in batch.
 // If any error occurs, it will stop executing the next batches and return the error.
 func execute(smgr statemanager.Manager, changes []*Change, reverse bool) map[string]error {
 	errorsMap := make(map[string]error)
@@ -114,7 +67,7 @@ func execute(smgr statemanager.Manager, changes []*Change, reverse bool) map[str
 
 			var succeeded bool
 			var err error
-			var returnValue map[string]interface{}
+			var returnValue statemanager.ResourceStatus
 
 			log.Debugf("Tool's raw changes are: %v.", c.Tool.Options)
 
@@ -130,7 +83,6 @@ func execute(smgr statemanager.Manager, changes []*Change, reverse bool) map[str
 				// not executing this change since its input isn't valid
 				continue
 			}
-
 			switch c.ActionName {
 			case statemanager.ActionCreate:
 				if returnValue, err = Create(c.Tool); err == nil {
@@ -143,9 +95,9 @@ func execute(smgr statemanager.Manager, changes []*Change, reverse bool) map[str
 			case statemanager.ActionDelete:
 				succeeded, err = Delete(c.Tool)
 			}
-
 			if err != nil {
-				key := fmt.Sprintf("%s/%s-%s", c.Tool.Name, c.Tool.InstanceID, c.ActionName)
+				key := fmt.Sprintf("%s/%s/%s", c.Tool.Name, c.Tool.InstanceID, c.ActionName)
+				log.Errorf("%s/%s %s failed with error: %s", c.Tool.Name, c.Tool.InstanceID, c.ActionName, err)
 				errorsMap[key] = err
 			}
 
@@ -190,7 +142,7 @@ func handleResult(smgr statemanager.Manager, change *Change) error {
 	}
 
 	if change.ActionName == statemanager.ActionDelete {
-		key := statemanager.StateKeyGenerateFunc(change.Tool)
+		key := statemanager.GenerateStateKeyByToolNameAndInstanceID(change.Tool.Name, change.Tool.InstanceID)
 		log.Infof("Prepare to delete '%s' from States.", key)
 		err := smgr.DeleteState(key)
 		if err != nil {
@@ -201,13 +153,13 @@ func handleResult(smgr statemanager.Manager, change *Change) error {
 		return nil
 	}
 
-	key := statemanager.StateKeyGenerateFunc(change.Tool)
+	key := statemanager.GenerateStateKeyByToolNameAndInstanceID(change.Tool.Name, change.Tool.InstanceID)
 	state := statemanager.State{
-		Name:       change.Tool.Name,
-		InstanceID: change.Tool.InstanceID,
-		DependsOn:  change.Tool.DependsOn,
-		Options:    change.Tool.Options,
-		Resource:   change.Result.ReturnValue,
+		Name:           change.Tool.Name,
+		InstanceID:     change.Tool.InstanceID,
+		DependsOn:      change.Tool.DependsOn,
+		Options:        change.Tool.Options,
+		ResourceStatus: change.Result.ReturnValue,
 	}
 	err := smgr.AddState(key, state)
 	if err != nil {

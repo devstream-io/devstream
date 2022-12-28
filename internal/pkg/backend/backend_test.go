@@ -8,7 +8,6 @@ import (
 
 	"github.com/devstream-io/devstream/internal/pkg/backend"
 	"github.com/devstream-io/devstream/internal/pkg/backend/local"
-	"github.com/devstream-io/devstream/internal/pkg/backend/types"
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 )
 
@@ -32,7 +31,6 @@ var _ = Describe("GetBackend", func() {
 			state := configmanager.State{Backend: "not_exist_plug"}
 			_, err := backend.GetBackend(state)
 			Expect(err).Error().Should(HaveOccurred())
-			Expect(types.IsInvalidBackendErr(err)).To(BeTrue())
 		})
 	})
 
@@ -41,7 +39,6 @@ var _ = Describe("GetBackend", func() {
 			state := configmanager.State{Backend: "s3"}
 			_, err := backend.GetBackend(state)
 			Expect(err).Error().Should(HaveOccurred())
-			Expect(types.IsBackendOptionErr(err)).To(BeTrue())
 		})
 	})
 })

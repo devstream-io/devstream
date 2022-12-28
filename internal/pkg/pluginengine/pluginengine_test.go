@@ -49,7 +49,7 @@ var _ = Describe("Pluginengine", func() {
 		name := "tool-a"
 
 		cfg := &configmanager.Config{
-			Tools: []configmanager.Tool{*getTool(name, instanceID)},
+			Tools: configmanager.Tools{getTool(name, instanceID)},
 		}
 		changes, _ := pluginengine.GetChangesForApply(smgr, cfg)
 		GinkgoWriter.Print(changes)
@@ -64,7 +64,7 @@ var _ = Describe("Pluginengine", func() {
 		name1, name2 := "tool-a", "too-b"
 
 		cfg := &configmanager.Config{
-			Tools: []configmanager.Tool{*getTool(name1, instanceID1), *getTool(name2, instanceID2)},
+			Tools: configmanager.Tools{getTool(name1, instanceID1), getTool(name2, instanceID2)},
 		}
 		changes, _ := pluginengine.GetChangesForApply(smgr, cfg)
 
@@ -85,7 +85,7 @@ var _ = Describe("Pluginengine", func() {
 		name := "tool-a"
 
 		cfg := &configmanager.Config{
-			Tools: []configmanager.Tool{*getTool(name, instanceID)},
+			Tools: configmanager.Tools{getTool(name, instanceID)},
 		}
 
 		err = smgr.AddState(statemanager.StateKey(fmt.Sprintf("%s_%s", name, instanceID)), statemanager.State{})
@@ -100,25 +100,25 @@ var _ = Describe("Pluginengine", func() {
 	})
 
 	It("should handle outputs correctly", func() {
-		resState := &statemanager.ResourceState{}
-		resState.SetOutputs(map[string]interface{}{
+		resStatus := &statemanager.ResourceStatus{}
+		resStatus.SetOutputs(statemanager.ResourceOutputs{
 			"boardId":    expectedBoardId,
 			"todoListId": expectedTodoListId,
 		})
 		trelloState := statemanager.State{
-			InstanceID: "mytrelloboard",
-			Name:       "trello",
-			Options:    map[string]interface{}{},
-			Resource:   *resState,
+			InstanceID:     "mytrelloboard",
+			Name:           "trello",
+			Options:        configmanager.RawOptions{},
+			ResourceStatus: *resStatus,
 		}
 		err = smgr.AddState(trelloKey, trelloState)
 		Expect(err).NotTo(HaveOccurred())
 
-		dependantOptions := map[string]interface{}{
+		dependantOptions := configmanager.RawOptions{
 			"boardId":    fmt.Sprintf("${{ %s.%s.outputs.boardId }}", trelloName, trelloInstance),
 			"todoListId": fmt.Sprintf("${{ %s.%s.outputs.todoListId }}", trelloName, trelloInstance),
 		}
-		expectResult := map[string]interface{}{
+		expectResult := configmanager.RawOptions{
 			"boardId":    expectedBoardId,
 			"todoListId": expectedTodoListId,
 		}
@@ -131,9 +131,9 @@ var _ = Describe("Pluginengine", func() {
 		trelloState := statemanager.State{
 			InstanceID: "mytrelloboard",
 			Name:       "trello",
-			Options:    map[string]interface{}{},
-			Resource: map[string]interface{}{
-				"outputs": map[string]interface{}{
+			Options:    configmanager.RawOptions{},
+			ResourceStatus: statemanager.ResourceStatus{
+				"outputs": statemanager.ResourceOutputs{
 					"boardId": expectedBoardId,
 				},
 			},
@@ -154,10 +154,10 @@ var _ = Describe("Pluginengine", func() {
 
 	It("should give an error when output doesn't exist in the state", func() {
 		trelloState := statemanager.State{
-			Name:       "trello",
-			InstanceID: "mytrelloboard",
-			Options:    map[string]interface{}{},
-			Resource:   map[string]interface{}{},
+			Name:           "trello",
+			InstanceID:     "mytrelloboard",
+			Options:        map[string]interface{}{},
+			ResourceStatus: map[string]interface{}{},
 		}
 		err = smgr.AddState(trelloKey, trelloState)
 		Expect(err).NotTo(HaveOccurred())
@@ -177,9 +177,9 @@ var _ = Describe("Pluginengine", func() {
 		trelloState := statemanager.State{
 			Name:       "trello",
 			InstanceID: "mytrelloboard",
-			Options:    map[string]interface{}{},
-			Resource: map[string]interface{}{
-				"outputs": map[string]interface{}{
+			Options:    configmanager.RawOptions{},
+			ResourceStatus: statemanager.ResourceStatus{
+				"outputs": statemanager.ResourceOutputs{
 					"boardId":    expectedBoardId,
 					"todoListId": expectedTodoListId,
 				},
@@ -205,11 +205,11 @@ var _ = Describe("Pluginengine", func() {
 
 	It("should work for nested maps", func() {
 		trelloState := statemanager.State{
-			Name:       "trello",
-			InstanceID: "mytrelloboard",
-			Options:    map[string]interface{}{},
-			Resource: map[string]interface{}{
-				"outputs": map[string]interface{}{
+			Name:       trelloName,
+			InstanceID: trelloInstance,
+			Options:    configmanager.RawOptions{},
+			ResourceStatus: statemanager.ResourceStatus{
+				"outputs": statemanager.ResourceOutputs{
 					"boardId": expectedBoardId,
 				},
 			},
@@ -217,13 +217,13 @@ var _ = Describe("Pluginengine", func() {
 		err = smgr.AddState(trelloKey, trelloState)
 		Expect(err).NotTo(HaveOccurred())
 
-		dependantOptions := map[string]interface{}{
-			"outerKey": map[string]interface{}{
+		dependantOptions := configmanager.RawOptions{
+			"outerKey": configmanager.RawOptions{
 				"innerKey": fmt.Sprintf("${{ %s.%s.outputs.boardId }}", trelloName, trelloInstance),
 			},
 		}
-		expectResult := map[string]interface{}{
-			"outerKey": map[string]interface{}{
+		expectResult := configmanager.RawOptions{
+			"outerKey": configmanager.RawOptions{
 				"innerKey": expectedBoardId,
 			},
 		}

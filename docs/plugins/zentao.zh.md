@@ -10,19 +10,17 @@
 
 ## 用法示例
 
-```yaml
----
-# core config
-varFile: ''
-toolFile: ''
-pluginDir: ''
-state: # state config, backend can be local or s3
-  backend: local
-  options:
-    stateFile: devstream.state
+下面的配置文件展示的是"tool file"的内容。
 
----
-# plugins config
+关于更多关于DevStream的主配置、tool file、var file的信息，请阅读[核心概念概览](../core-concepts/overview.zh.md)和[DevStream配置](../core-concepts/config.zh.md).
+
+```yaml
+config:
+  state:
+    backend: local
+    options:
+      stateFile: devstream.state
+
 tools:
   # name of the tool
   - name: zentao

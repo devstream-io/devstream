@@ -53,19 +53,19 @@ var _ = Describe("commit method", func() {
 			RepoInfo: repoInfo,
 		}
 	})
-	Context("CreateCommitInfo method", func() {
-		It("should return gitlab commit options", func() {
-			commitInfoData := gitlabClient.CreateCommitInfo(gitlabCommon.FileCreate, commitInfo)
-			Expect(*commitInfoData.Branch).Should(Equal(branch))
-			Expect(*commitInfoData.CommitMessage).Should(Equal(commitMsg))
-			actions := commitInfoData.Actions
-			Expect(len(actions)).Should(Equal(1))
-			action := actions[0]
-			Expect(*action.Action).Should(Equal(gitlabCommon.FileCreate))
-			Expect(*action.FilePath).Should(Equal(gitFile))
-			Expect(*action.Content).Should(Equal(gitFileContent))
-		})
-	})
+	// Context("CreateCommitInfo method", func() {
+	// It("should return gitlab commit options", func() {
+	// commitInfoData := gitlabClient.CreateCommitInfo(gitlabCommon.FileCreate, commitInfo)
+	// Expect(*commitInfoData.Branch).Should(Equal(branch))
+	// Expect(*commitInfoData.CommitMessage).Should(Equal(commitMsg))
+	// actions := commitInfoData.Actions
+	// Expect(len(actions)).Should(Equal(1))
+	// action := actions[0]
+	// Expect(*action.Action).Should(Equal(gitlabCommon.FileCreate))
+	// Expect(*action.FilePath).Should(Equal(gitFile))
+	// Expect(*action.Content).Should(Equal(gitFileContent))
+	// })
+	// })
 
 	Context("CommitActions method", func() {
 		BeforeEach(func() {
@@ -75,12 +75,10 @@ var _ = Describe("commit method", func() {
 			))
 		})
 		It("should work normal", func() {
-			needRollBack, err := gitlabClient.PushLocalFileToRepo(commitInfo, false)
+			needRollBack, err := gitlabClient.PushFiles(commitInfo, false)
 			Expect(err).Error().ShouldNot(HaveOccurred())
 			Expect(needRollBack).Should(BeFalse())
 			err = gitlabClient.DeleteFiles(commitInfo)
-			Expect(err).Error().ShouldNot(HaveOccurred())
-			err = gitlabClient.UpdateFiles(commitInfo)
 			Expect(err).Error().ShouldNot(HaveOccurred())
 		})
 	})

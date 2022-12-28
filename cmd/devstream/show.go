@@ -16,7 +16,7 @@ var template string
 
 var showCMD = &cobra.Command{
 	Use:   "show",
-	Short: "Show is used to print plugins' configuration templates or status.",
+	Short: "Show is used to print plugins' configuration templates or status",
 }
 
 var showConfigCMD = &cobra.Command{
@@ -26,7 +26,8 @@ var showConfigCMD = &cobra.Command{
 Examples:
   dtm show config --plugin=A-PLUGIN-NAME,
   dtm show config --template=quickstart,
-  dtm show config --template=gitops`,
+  dtm show config --template=gitops,
+  dtm show config --template=apps`,
 	Run: showConfigCMDFunc,
 }
 
@@ -51,7 +52,7 @@ func showConfigCMDFunc(_ *cobra.Command, _ []string) {
 
 func showStatusCMDFunc(_ *cobra.Command, _ []string) {
 	log.Debug("Show status information.")
-	if err := status.Show(configFile); err != nil {
+	if err := status.Show(configFilePath); err != nil {
 		log.Fatal(err)
 	}
 }
@@ -60,6 +61,9 @@ func init() {
 	showCMD.AddCommand(showConfigCMD)
 	showCMD.AddCommand(showStatusCMD)
 
+	addFlagConfigFile(showConfigCMD)
+	addFlagPluginDir(showConfigCMD)
+
 	showConfigCMD.Flags().StringVarP(&plugin, "plugin", "p", "", "specify name with the plugin")
 	showConfigCMD.Flags().StringVarP(&template, "template", "t", "", "print a template config, e.g. quickstart/gitops/...")
 	completion.FlagPluginsCompletion(showConfigCMD, "plugin")
@@ -67,7 +71,4 @@ func init() {
 	showStatusCMD.Flags().StringVarP(&plugin, "plugin", "p", "", "specify name with the plugin")
 	showStatusCMD.Flags().StringVarP(&instanceID, "id", "i", "", "specify id with the plugin instance")
 	showStatusCMD.Flags().BoolVarP(&statusAllFlag, "all", "a", false, "show all instances of all plugins status")
-	showStatusCMD.Flags().StringVarP(&pluginDir, "plugin-dir", "d", "", "plugins directory")
-	showStatusCMD.Flags().StringVarP(&configFile, "config-file", "f", "config.yaml", "config file")
-	completion.FlagPluginsCompletion(showStatusCMD, "plugin")
 }

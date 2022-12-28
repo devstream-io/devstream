@@ -1,122 +1,162 @@
-# DevStream Configuration
+# Config
 
-DevStream uses YAML files to describe your DevOps toolchain configuration.
+DevStream uses YAML files to define your DevOps platform.
 
-## Main Config File
+## 1 Sections Overview
 
-By default, `dtm` tries to use `./config.yaml` (under your current directory) as the main config.
+As aforementioned in the overview, there are several sections in the config:
 
-The main config contains three sections:
+- `config`
+- `tools`
+- `apps`
+- `pipelineTemplates`
+- `vars`
 
-- `varFile`: the path/to/your/variables file
-- `toolFile`: the path/to/your/tools configuration file
-- `pluginDir`: the path/to/your/plugins directory, default: `~/.devstream/plugins`, or use `-d` flag to specify a directory
-- `state`: configuration of DevStream state. For example, 
+Among which, `config` is mandatory, and you should have at least either `tools` or `apps`. Others are optional.
 
-### Example Main Config File
+## 2 Config File V.S. Config Folder
 
-See the `config.yaml` example below:
+DevStream supports both:
+
+- a single config file: put all sections of the config into one YAML file
+- a directory: put multiple files in one directory, as long as the file names end with `.yaml` or `.yml`
+
+When you run the `init` (or other commands), add `-f` or `--config-file`.
+
+Examples:
+
+- single file: `dtm init -f config.yaml`
+- directory: `dtm init -f dirname`
+
+## 3 Sections Detail
+
+### 3.1 The Main Config
+
+DevStream's own config, the `config` section, contains where to store the state. See [here](./state.md) for more details.
+
+
+### 3.2 Tools Config
+
+The `tools` section defines DevOps tools. Read [this](./tools.md) for all the detail.
+
+### 3.3 Apps/pipelineTemplates Config
+
+The `apps` section defines Apps and the `pipelineTemplates` defines templates for pipelines. See [here](./apps.md) for more detail.
+
+### 3.4 Variables
+
+DevStream supports variables. Define key/values in the `vars` section and refer to it in the `tools`, `apps` and `pipelineTemplates` sections.
+
+Use double square brackets when referring to a variable: `[[ varName ]]`.
+
+example:
 
 ```yaml
-varFile: variables.yaml
+vars:
+  githubUsername: daniel-hutao # define a variable
+  repoName: dtm-test-go
+  defaultBranch: main
 
-toolFile: tools.yaml
-
-pluginDir: /usr/local/devstream/plugins # optional
-
-state:
-  backend: local
+tools:
+- name: repo-scaffolding
+  instanceID: default
   options:
-    stateFile: devstream.state
+    destinationRepo:
+      owner: [[ githubUsername ]] # refer to the pre-defined variable
+      name: [[ repoName ]]
+      branch: [[ defaultBranch ]]
+      scmType: github
+    # ...
 ```
 
-### Variables File
+## 4 Expanded Features
 
-The var file is a YAML file containing key-value pairs.
+### 4.1 Environment Variables
 
-_At the moment, nested/composite values (for example, the value is a list/dictionary) are not supported yet._
+Similar to "variables", you can use `[[env "env_key"]]` to refer to environment variables.
 
-See the `variables.yaml` example below:
+### 4.2 Output
 
-```yaml
-githubUsername: daniel-hutao
-repoName: dtm-test-go
-defaultBranch: main
-dockerhubUsername: exploitht
+#### Introduction
+
+In DevStream's configuration file, we can use Output from one Tool as the options values for another Tool.
+
+For example, if Tool A has an output, we can use its value as Tool B's options.
+
+Notes:
+
+- At the moment, B using A's output doesn't mean B "depends on" A.
+- If B needs to "depend on" A, i.e., we want to make sure A runs first before B runs, we still need to use the `dependsOn` keyword (see the previous section "[Core Concepts](overview.md)" for more details.)
+
+#### Syntax
+
+To use the output, follow this format:
+
+```
+${{ TOOL_NAME.TOOL_INSTANCE_ID.outputs.OUTPUT_KEY }}
 ```
 
-### Tool File
-
-Tool file contains a list of tools.
-
-The tool file contains:
-
-- Only one section (at the moment), which is `tools`.
-- `tools` is a list of dictionaries.
-- Each dictionary defines a DevOps "tool" which is managed by a DevStream plugin
-- Each dictionary (tool) has the following mandatory fields:
-    - `name`: the name of the tool/plugin, string, without underscore
-    - `instanceID`: the id of this tool instance
-    - you can have duplicated `name` in one config file, and you can also have duplicated `instanceID` in one config file, but the `name + instanceID` combination must be unique in one config file
-- Each dictionary (tool) has an optional field which is `options`, which in turn is a dictionary containing parameters for that specific plugin. For plugins' parameters, see the "plugins" section of this document.
-- Each directory (tool) has an optional field which is `dependsOn`. Continue reading for detail about dependencies.
-
-See the `tools.yaml` example down below:
+For example, given config:
 
 ```yaml
+tools:
+- name: trello
+  instanceID: default
+  options:
+    owner: IronCore864
+    repo: golang-demo
+    kanbanBoardName: golang-demo-board
+```
+
+- `TOOL_NAME` is "trello"
+- `TOOL_INSTANCE_ID` is "default"
+
+If the "trello" tool/plugin has an output key name "boardId", then we can use its value by the following syntax:
+
+```
+${{ trello.default.outputs.boardId }}
+```
+
+#### Real-World Usage Example
+
+Config:
+
+```yaml hl_lines="2 3 20 31"
 tools:
 - name: repo-scaffolding
   instanceID: golang-github
   options:
     destinationRepo:
-      owner: [[ githubUsername ]]
-      org: ""
-      repo: [[ repoName ]]
-      branch: [[ defaultBranch ]]
-      repoType: github
+      owner: IronCore864
+      name: golang-demo
+      branch: main
+      scmType: github
     vars:
-      ImageRepo: "[[ dockerhubUsername ]]/[[ repoName ]]"
+      imageRepo: "ironcore864/golang-demo"
     sourceRepo:
       org: devstream-io
-      repo: dtm-scaffolding-golang
-      repoType: github
-- name: jira-github-integ
+      name: dtm-scaffolding-golang
+      scmType: github
+- name: helm-installer
+  instanceID: argocd
+- name: argocdapp
   instanceID: default
-  dependsOn: [ "repo-scaffolding.golang-github" ]
+  dependsOn: [ "helm-installer.argocd", "repo-scaffolding.golang-github" ]
   options:
-    owner: [[ githubUsername ]]
-    repo: [[ repoName ]]
-    jiraBaseUrl: https://xxx.atlassian.net
-    jiraUserEmail: foo@bar.com
-    jiraProjectKey: zzz
-    branch: main
+    app:
+      name: golang-demo
+      namespace: argocd
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: default
+    source:
+      valuefile: values.yaml
+      path: helm/golang-demo
+      repoURL: ${{ repo-scaffolding.golang-github.outputs.repoURL }} # pay attention here
 ```
 
-### State
+In this example:
 
-The `state` section specifies where to store DevStream state. As of now (v0.5.0), we only support local backend.
+- The "default" instance of tool `argocdapp` depends on the "golang-github" instance of tool `repo-scaffolding`
+- The "default" instance of tool `argocdapp` has a user option "options.source.repoURL", which uses the "golang-github" instance of tool `repo-scaffolding`'s output "repoURL" (`${{ repo-scaffolding.golang-github.outputs.repoURL }}`)
 
-From v0.6.0 on, we will support both "local" and "s3" backend store the DevStream state.
-
-Read the section [The State Section in the Main Config](./stateconfig.md) for more details.
-
-## Default Values
-
-By default, `dtm` uses `config.yaml` as the main config file.
-
-### Specifying a Main Config File Explicitly 
-
-You can override the default value with `-f` or `--config-file`. Examples:
-
-```shell
-dtm apply -f path/to/your/config.yaml
-dtm apply --config-file path/to/your/config.yaml
-```
-
-### No Defaults for varFile and toolFile
-
-For `varFile` and `toolFile`, no default values are provided.
-
-If `varFile` isn't specified in the main config, `dtm` will not use any var files, even if there is already a file named `variables.yaml` under the current directory.
-
-Similarly, if `toolFile` isn't specified in the main config, `dtm` will throw an error, even if there is a `tools.yaml` file under the current directory.

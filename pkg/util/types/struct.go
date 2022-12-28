@@ -2,8 +2,13 @@ package types
 
 import (
 	"reflect"
+
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
+
+	"github.com/mitchellh/mapstructure"
 )
 
+// FillStructDefaultValue will fill structData filed value by defaultStructData field value if they are empty
 func FillStructDefaultValue(structData, defaultStructData any) {
 	if defaultStructData == nil {
 		return
@@ -29,4 +34,13 @@ func FillStructDefaultValue(structData, defaultStructData any) {
 			}
 		}
 	}
+}
+
+// EncodeStruct will get structData and encode this data to map
+func EncodeStruct(structData any) (configmanager.RawOptions, error) {
+	var options configmanager.RawOptions
+	if err := mapstructure.Decode(structData, &options); err != nil {
+		return nil, err
+	}
+	return options, nil
 }

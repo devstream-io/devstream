@@ -45,6 +45,8 @@ type JenkinsFileRenderInfo struct {
 	DingtalkAtUser  string `mapstructure:"DingtalkAtUser"`
 	// sonarqube variables
 	SonarqubeEnable bool `mapstructure:"SonarqubeEnable"`
+	// custom variables
+	Custom map[string]interface{} `mapstructure:"Custom"`
 }
 
 func (jenkins *jenkins) GetFolderJob(jobName string, jobFolder string) (*gojenkins.Job, error) {
@@ -55,7 +57,9 @@ func (jenkins *jenkins) GetFolderJob(jobName string, jobFolder string) (*gojenki
 }
 
 func BuildRenderedScript(vars any) (string, error) {
-	return template.Render("jenkins-script-template", jobGroovyScript, vars)
+	return template.NewRenderClient(
+		&template.TemplateOption{Name: "jenkins-script-template"}, template.ContentGetter,
+	).Render(jobGroovyScript, vars)
 }
 
 func IsNotFoundError(err error) bool {

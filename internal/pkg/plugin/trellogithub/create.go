@@ -1,11 +1,13 @@
 package trellogithub
 
 import (
+	"github.com/devstream-io/devstream/internal/pkg/configmanager"
+	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 // Create sets up trello-github-integ workflows.
-func Create(options map[string]interface{}) (map[string]interface{}, error) {
+func Create(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	tg, err := NewTrelloGithub(options)
 	if err != nil {
 		return nil, err
@@ -30,5 +32,5 @@ func Create(options map[string]interface{}) (map[string]interface{}, error) {
 
 	log.Success("Adding secret keys for trello succeeded.")
 
-	return buildState(tg), nil
+	return buildStatus(tg), nil
 }

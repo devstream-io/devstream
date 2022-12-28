@@ -6,7 +6,7 @@ import (
 	"k8s.io/utils/strings"
 )
 
-const md5_length = 32
+const md5Length = 32
 
 // FileMatchesMD5 checks current PlugIn MD5 matches with .md5 file
 func FileMatchesMD5(fileName, md5FileName string) (bool, error) {
@@ -20,7 +20,7 @@ func FileMatchesMD5(fileName, md5FileName string) (bool, error) {
 		return false, err
 	}
 	// intercept string, md5 code length is 32
-	md5Content := strings.ShortenString(string(md5ContentBytes), md5_length)
+	md5Content := strings.ShortenString(string(md5ContentBytes), md5Length)
 
 	return currentPlugInMD5 == md5Content, nil
 }
@@ -31,7 +31,7 @@ func FilesMD5Equal(file1, file2 string) (bool, error) {
 		return false, err
 	}
 
-	file2MD5, err := CalcFileMD5(file1)
+	file2MD5, err := CalcFileMD5(file2)
 	if err != nil {
 		return false, err
 	}
