@@ -103,9 +103,12 @@ tools:
 - name: trello
   instanceID: default
   options:
-    owner: IronCore864
-    repo: golang-demo
-    kanbanBoardName: golang-demo-board
+    scm:
+      owner: IronCore864
+      name: golang-demo
+      scmType: github
+    borad:
+      name: golang-demo-board
 ```
 
 - `TOOL_NAME` is "trello"
