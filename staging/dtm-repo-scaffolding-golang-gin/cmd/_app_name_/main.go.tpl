@@ -13,5 +13,5 @@ func main() {
 	router.GET("/albums/:id", album.GetAlbumByID)
 	router.POST("/albums", album.PostAlbums)
 
-	router.Run("localhost:80")
+	router.Run("localhost:8080")
 }
