@@ -3,9 +3,8 @@ package template
 import (
 	"bytes"
 	"fmt"
+	"os"
 	"text/template"
-
-	"github.com/Masterminds/sprig/v3"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
@@ -82,10 +81,22 @@ func (c *renderClient) newTemplateClient() *template.Template {
 	if !c.Option.IgnoreMissKeyError {
 		t = t.Option("missingkey=error")
 	}
-	// use sprig functions such as "env"
-	t.Funcs(sprig.TxtFuncMap())
+	t.Funcs(defaultFuncMap)
 	if c.Option.FuncMap != nil {
 		t.Funcs(c.Option.FuncMap)
 	}
 	return t
+}
+
+// defaultFuncMap is the default logic for templatge render func
+var defaultFuncMap = map[string]any{
+	"env": getEnvInTemplate,
+}
+
+func getEnvInTemplate(envKey string) (string, error) {
+	envVal := os.Getenv(envKey)
+	if envVal == "" {
+		return "", fmt.Errorf("template can't get environment variable %s, maybe you should set this environment first", envKey)
+	}
+	return envVal, nil
 }
