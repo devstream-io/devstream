@@ -2,8 +2,7 @@
 
 | Type                           | Plugin                      | Note                           | Usage/Doc                             |
 |--------------------------------|-----------------------------|--------------------------------|---------------------------------------|
-| Issue Tracking                 | trello-github-integ         | Trello/GitHub integration      | [doc](trello-github-integ.md)         |
-| Issue Tracking                 | trello                      | Trello                         | [doc](trello.md)                      |
+| Issue Tracking                 | trello                      | Trello Configuration           | [doc](trello.md)                      |
 | Issue Tracking                 | jira-github-integ           | Jira/GitHub integration        | [doc](jira-github-integ.md)           |
 | Issue Tracking                 | zentao                      | Zentao installation            | [doc](zentao.md)                      |
 | Source Code Management         | repo-scaffolding            | App scaffolding                | [doc](repo-scaffolding.md)            |
@@ -32,6 +31,5 @@ jenkins-pipeline
 jira-github-integ
 repo-scaffolding
 trello
-trello-github-integ
 zentao
 ```

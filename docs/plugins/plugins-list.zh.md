@@ -3,7 +3,6 @@
 
 | Type                   | Plugin              | Note                            | Usage/Doc                               |
 | ---------------------- | ------------------- | ------------------------------- | --------------------------------------- |
-| Issue Tracking         | trello-github-integ | Trello/GitHub 整合              | [doc](trello-github-integ.md)           |
 | Issue Tracking         | trello              | Trello 配置                     | [doc](trello.md)                        |
 | Issue Tracking         | jira-github-integ   | Jira/GitHub 整合                | [doc](jira-github-integ.md)             |
 | Issue Tracking         | zentao              | Zentao 安装                     | [doc](zentao.md)                        |
@@ -33,6 +32,5 @@ jenkins-pipeline
 jira-github-integ
 repo-scaffolding
 trello
-trello-github-integ
 zentao
 ```
