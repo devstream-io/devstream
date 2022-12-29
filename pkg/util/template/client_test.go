@@ -2,6 +2,7 @@ package template
 
 import (
 	"fmt"
+	"os"
 	"strings"
 	"text/template"
 
@@ -106,5 +107,48 @@ var _ = Describe("renderClient", func() {
 			Expect(err.Error()).Should(ContainSubstring("render template: default_template"))
 		})
 	})
+})
 
+var _ = Describe("template default funcs", func() {
+	Context("getEnvInTemplate func", func() {
+		var (
+			tokenKey string
+			existVal string
+		)
+		BeforeEach(func() {
+			tokenKey = "TEMPLATE_ENV_TEST"
+			existVal = os.Getenv(tokenKey)
+			if existVal != "" {
+				err := os.Unsetenv(tokenKey)
+				Expect(err).ShouldNot(HaveOccurred())
+			}
+		})
+		When("env not exist", func() {
+			BeforeEach(func() {
+				err := os.Unsetenv(tokenKey)
+				Expect(err).ShouldNot(HaveOccurred())
+			})
+			It("should return err", func() {
+				_, err := getEnvInTemplate(tokenKey)
+				Expect(err).Should(HaveOccurred())
+				Expect(err.Error()).Should(Equal("template can't get environment variable TEMPLATE_ENV_TEST, maybe you should set this environment first"))
+			})
+		})
+		When("env exist", func() {
+			BeforeEach(func() {
+				err := os.Setenv(tokenKey, "test")
+				Expect(err).ShouldNot(HaveOccurred())
+			})
+			It("should return err", func() {
+				data, err := getEnvInTemplate(tokenKey)
+				Expect(err).ShouldNot(HaveOccurred())
+				Expect(data).Should(Equal("test"))
+			})
+		})
+		AfterEach(func() {
+			if existVal != "" {
+				os.Setenv(tokenKey, existVal)
+			}
+		})
+	})
 })
