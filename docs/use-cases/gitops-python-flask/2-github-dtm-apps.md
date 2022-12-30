@@ -22,7 +22,7 @@ config:
 
 vars:
   GITHUB_USER: YOUR_GITHUB_USER
-  DOCKERHUB_USER: YOUR_DOCKERHUB_USER    
+  DOCKERHUB_USER: YOUR_DOCKERHUB_USER
 
 tools:
 - name: helm-installer
