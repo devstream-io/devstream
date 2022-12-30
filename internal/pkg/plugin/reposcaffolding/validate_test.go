@@ -1,14 +1,13 @@
-package reposcaffolding_test
+package reposcaffolding
 
 import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
-	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/reposcaffolding"
 )
 
-var _ = Describe("Validate func", func() {
+var _ = Describe("validate func", func() {
 	var (
 		rawOpts configmanager.RawOptions
 	)
@@ -19,7 +18,7 @@ var _ = Describe("Validate func", func() {
 			}
 		})
 		It("should return err", func() {
-			_, err := reposcaffolding.Validate(rawOpts)
+			_, err := validate(rawOpts)
 			Expect(err).Should(HaveOccurred())
 		})
 	})
@@ -41,7 +40,7 @@ var _ = Describe("Validate func", func() {
 			}
 		})
 		It("should return noraml", func() {
-			_, err := reposcaffolding.Validate(rawOpts)
+			_, err := validate(rawOpts)
 			Expect(err).Error().ShouldNot(HaveOccurred())
 		})
 	})

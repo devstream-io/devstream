@@ -3,7 +3,6 @@ package reposcaffolding
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer"
-	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/reposcaffolding"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
@@ -11,9 +10,9 @@ import (
 func Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
 	operator := &installer.Operator{
 		PreExecuteOperations: installer.PreExecuteOperations{
-			reposcaffolding.Validate,
+			validate,
 		},
-		GetStatusOperation: reposcaffolding.GetDynamicStatus,
+		GetStatusOperation: getDynamicStatus,
 	}
 
 	status, err := operator.Execute(options)
