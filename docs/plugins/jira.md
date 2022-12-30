@@ -1,4 +1,4 @@
-# jira-github-integ Plugin
+# jira Plugin
 
 This plugin integrates Jira with your GitHub repo.
 
@@ -9,10 +9,10 @@ _Please confirm the preconditions:_
 - Jira language must be English
 - There should be an existing Jira project
 
-_This plugin depends on the following two environment variables:_
+_This plugin depends on the following two config variables:_
 
-- JIRA_API_TOKEN
-- GITHUB_TOKEN
+- jira.token
+- scm.token
 
 Set the values accordingly before using this plugin.
 
@@ -25,7 +25,7 @@ The following content is an example of the "tool file".
 For more information on the main config, the tool file and the var file of DevStream, see [Core Concepts Overview](../core-concepts/overview.md) and [DevStream Configuration](../core-concepts/config.md).
 
 ```yaml
---8<-- "jira-github-integ.yaml"
+--8<-- "jira.yaml"
 ```
 
 Currently, all the parameters in the example above are mandatory.
