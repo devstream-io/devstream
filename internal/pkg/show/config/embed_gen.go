@@ -36,8 +36,8 @@ var (
 	//go:embed plugins/jenkins-pipeline.yaml
 	JenkinsPipelineDefaultConfig string
 
-	//go:embed plugins/jira-github-integ.yaml
-	JiraGithubIntegDefaultConfig string
+	//go:embed plugins/jira.yaml
+	JiraDefaultConfig string
 
 	//go:embed plugins/repo-scaffolding.yaml
 	RepoScaffoldingDefaultConfig string
@@ -50,19 +50,19 @@ var (
 )
 
 var pluginDefaultConfigs = map[string]string{
-	"argocdapp":         ArgocdappDefaultConfig,
-	"ci-generic":        CiGenericDefaultConfig,
-	"devlake-config":    DevlakeConfigDefaultConfig,
-	"github-actions":    GithubActionsDefaultConfig,
-	"gitlab-ce-docker":  GitlabCeDockerDefaultConfig,
-	"gitlab-ci":         GitlabCiDefaultConfig,
-	"harbor-docker":     HarborDockerDefaultConfig,
-	"helm-installer":    HelmInstallerDefaultConfig,
-	"jenkins-pipeline":  JenkinsPipelineDefaultConfig,
-	"jira-github-integ": JiraGithubIntegDefaultConfig,
-	"repo-scaffolding":  RepoScaffoldingDefaultConfig,
-	"trello":            TrelloDefaultConfig,
-	"zentao":            ZentaoDefaultConfig,
+	"argocdapp":        ArgocdappDefaultConfig,
+	"ci-generic":       CiGenericDefaultConfig,
+	"devlake-config":   DevlakeConfigDefaultConfig,
+	"github-actions":   GithubActionsDefaultConfig,
+	"gitlab-ce-docker": GitlabCeDockerDefaultConfig,
+	"gitlab-ci":        GitlabCiDefaultConfig,
+	"harbor-docker":    HarborDockerDefaultConfig,
+	"helm-installer":   HelmInstallerDefaultConfig,
+	"jenkins-pipeline": JenkinsPipelineDefaultConfig,
+	"jira":             JiraDefaultConfig,
+	"repo-scaffolding": RepoScaffoldingDefaultConfig,
+	"trello":           TrelloDefaultConfig,
+	"zentao":           ZentaoDefaultConfig,
 }
 
 //go:embed templates/quickstart.yaml

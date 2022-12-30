@@ -1,6 +1,4 @@
-package jiragithub
-
-var jiraIssuesBuilder = `name: jira-github-integ Builder
+name: jira-integ Builder
 on:
   issues:
     types: [opened, reopened, edited, closed]
@@ -15,8 +13,8 @@ jobs:
     - name: Login
       uses: atlassian/gajira-login@master
       env:
-        JIRA_BASE_URL: [[.JiraBaseUrl]]
-        JIRA_USER_EMAIL: [[.JiraUserEmail]]
+        JIRA_BASE_URL: [[.jira.baseURL]]
+        JIRA_USER_EMAIL: [[.jira.userEmail]]
         JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
 
     - name: Create new Jira issue
@@ -24,7 +22,7 @@ jobs:
       if: ${{ github.event.action == 'opened' }}
       uses: atlassian/gajira-create@master
       with:
-        project: [[.JiraProjectKey]]
+        project: [[.jira.projectKey]]
         issuetype: Task
         summary: ${{ github.event.issue.title }}
         description: ${{ github.event.issue.body }}
@@ -54,7 +52,7 @@ jobs:
       uses: atlassian/gajira-transition@master
       with:
         issue: ${{ steps.find.outputs.issue }}
-        transition: "In Progress"
+        transition: "Start progress"
 
     - name: Transition issue to Done
       id: transition_done
@@ -80,8 +78,8 @@ jobs:
     - name: Login
       uses: atlassian/gajira-login@master
       env:
-        JIRA_BASE_URL: [[.JiraBaseUrl]]
-        JIRA_USER_EMAIL: [[.JiraUserEmail]]
+        JIRA_BASE_URL: [[.jira.baseURL]]
+        JIRA_USER_EMAIL: [[.jira.userEmail]]
         JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
     - name: Find Issue Key
       id: find
@@ -111,4 +109,3 @@ jobs:
       with:
         issue: ${{ steps.find.outputs.issue }}
         comment: "deleted: ${{ github.event.comment.body }}"
-`

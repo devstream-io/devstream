@@ -40,16 +40,20 @@ tools:
       org: devstream-io
       name: dtm-scaffolding-golang
       scmType: github
-- name: jira-github-integ
+- name: jira
   instanceID: default
   dependsOn: [ "repo-scaffolding.golang-github" ]
   options:
-    owner: [[ githubUsername ]]
-    repo: [[ repoName ]]
-    jiraBaseUrl: https://xxx.atlassian.net
-    jiraUserEmail: foo@bar.com
-    jiraProjectKey: zzz
-    branch: main
+    scm:
+      owner: [[ githubUsername ]]
+      name: [[ repoName ]]
+      scmType: github
+      branch: main
+    jira:
+      baseUrl: https://xxx.atlassian.net
+      userEmail: foo@bar.com
+      projectKey: zzz
+      token: [[ env JIRA_TOKEN ]]
 ```
 
 其中，[[ githubUsername ]]、[[ repoName ]] 等是全局变量，它们的值可以在 `vars` 字段中定义。

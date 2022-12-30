@@ -4,7 +4,7 @@
 | Type                   | Plugin              | Note                            | Usage/Doc                               |
 | ---------------------- | ------------------- | ------------------------------- | --------------------------------------- |
 | Issue Tracking         | trello              | Trello 配置                     | [doc](trello.md)                        |
-| Issue Tracking         | jira-github-integ   | Jira/GitHub 整合                | [doc](jira-github-integ.md)             |
+| Issue Tracking         | jira                | Jira 配置                       | [doc](jira.md)             |
 | Issue Tracking         | zentao              | Zentao 安装                     | [doc](zentao.md)                        |
 | Source Code Management | repo-scaffolding    | 应用仓库脚手架                  | [doc](repo-scaffolding.md)              |
 | Source Code Management | gitlab-ce-docker    | 使用 docker 安装 GitLab CE 版本 | [doc](gitlab-ce-docker.md)              |
@@ -29,7 +29,7 @@ gitlab-ci
 harbor-docker
 helm-installer
 jenkins-pipeline
-jira-github-integ
+jira
 repo-scaffolding
 trello
 zentao

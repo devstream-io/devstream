@@ -2,35 +2,35 @@ package main
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
-	"github.com/devstream-io/devstream/internal/pkg/plugin/jiragithub"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/jira"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 // NAME is the name of this DevStream plugin.
-const NAME = "jira-github-integ"
+const NAME = "jira"
 
 // Plugin is the type used by DevStream core. It's a string.
 type Plugin string
 
 // Create implements the installation of some jira-github-integ workflows.
 func (p Plugin) Create(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
-	return jiragithub.Create(options)
+	return jira.Create(options)
 }
 
 // Update implements the installation of some jira-github-integ workflows.
 func (p Plugin) Update(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
-	return jiragithub.Update(options)
+	return jira.Update(options)
 }
 
 // Read implements the healthy check of jira-github-integ workflows.
 func (p Plugin) Read(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
-	return jiragithub.Read(options)
+	return jira.Read(options)
 }
 
 // Delete implements the installation of some jira-github-integ workflows.
 func (p Plugin) Delete(options configmanager.RawOptions) (bool, error) {
-	return jiragithub.Delete(options)
+	return jira.Delete(options)
 }
 
 // DevStreamPlugin is the exported variable used by the DevStream core.

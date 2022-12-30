@@ -3,7 +3,7 @@
 | Type                           | Plugin                      | Note                           | Usage/Doc                             |
 |--------------------------------|-----------------------------|--------------------------------|---------------------------------------|
 | Issue Tracking                 | trello                      | Trello Configuration           | [doc](trello.md)                      |
-| Issue Tracking                 | jira-github-integ           | Jira/GitHub integration        | [doc](jira-github-integ.md)           |
+| Issue Tracking                 | jira                        | Jira Configuration        | [doc](jira.md)           |
 | Issue Tracking                 | zentao                      | Zentao installation            | [doc](zentao.md)                      |
 | Source Code Management         | repo-scaffolding            | App scaffolding                | [doc](repo-scaffolding.md)            |
 | Source Code Management         | gitlab-ce-docker            | GitLab CE version installation | [doc](gitlab-ce-docker.md)            |
@@ -28,7 +28,7 @@ gitlab-ci
 harbor-docker
 helm-installer
 jenkins-pipeline
-jira-github-integ
+jira
 repo-scaffolding
 trello
 zentao
