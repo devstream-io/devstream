@@ -25,6 +25,8 @@ var _ = Describe("setDefault method", func() {
 			Expect(data["board"]).Should(Equal(map[string]any{
 				"name":        "test_user/test",
 				"description": "Description is managed by DevStream, please don't modify. test_user/test",
+				"apiKey":      "",
+				"token":       "",
 			}))
 			Expect(data["scm"]).Should(Equal(map[string]any{
 				"owner":   "test_user",

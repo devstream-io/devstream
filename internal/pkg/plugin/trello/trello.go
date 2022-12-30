@@ -13,7 +13,7 @@ func createBoard(rawOptions configmanager.RawOptions) error {
 	if err != nil {
 		return err
 	}
-	c, err := trello.NewClient()
+	c, err := trello.NewClient(opts.Board.APIKey, opts.Board.Token)
 	if err != nil {
 		return err
 	}
@@ -27,7 +27,7 @@ func deleteBoard(rawOptions configmanager.RawOptions) error {
 	if err != nil {
 		return err
 	}
-	c, err := trello.NewClient()
+	c, err := trello.NewClient(opts.Board.APIKey, opts.Board.Token)
 	if err != nil {
 		return err
 	}
@@ -48,7 +48,7 @@ func addTrelloSecret(rawOptions configmanager.RawOptions) error {
 	}
 
 	// 2. init trello client
-	trelloClient, err := trello.NewClient()
+	trelloClient, err := trello.NewClient(opts.Board.APIKey, opts.Board.Token)
 	if err != nil {
 		return err
 	}

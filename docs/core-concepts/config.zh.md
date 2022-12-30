@@ -100,10 +100,15 @@ tools:
 - name: trello
   instanceID: default
   options:
-    owner: IronCore864
-    repo: golang-demo
-    kanbanBoardName: golang-demo-board
-```
+    board:
+      name: golang-demo-board
+      apikey: xxx
+      token: xxx
+    scm:
+      owner: IronCore864
+      repo: golang-demo
+      scmType: github
+ ```
 
 - `TOOL_NAME` 是 "trello"
 - `TOOL_INSTANCE_ID` 是 "default"

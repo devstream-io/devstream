@@ -101,15 +101,17 @@ For example, given config:
 ```yaml
 tools:
 - name: trello
-  instanceID: default
-  options:
-    scm:
-      owner: IronCore864
-      name: golang-demo
-      scmType: github
-    borad:
-      name: golang-demo-board
-```
+instanceID: default
+options:
+  board:
+    name: golang-demo-board
+    apikey: xxx
+    token: xxx
+  scm:
+    owner: IronCore864
+    repo: golang-demo
+    scmType: github
+ ```
 
 - `TOOL_NAME` is "trello"
 - `TOOL_INSTANCE_ID` is "default"

@@ -32,7 +32,7 @@ func setDefault(rawOptions configmanager.RawOptions) (configmanager.RawOptions, 
 	if err != nil {
 		return nil, err
 	}
-	// set board dedefault value
+	// set board default value
 	var boardDefaultConfig = &board{
 		Name:        fmt.Sprintf("%s/%s", opts.Scm.GetRepoOwner(), opts.Scm.GetRepoName()),
 		Description: fmt.Sprintf("Description is managed by DevStream, please don't modify. %s/%s", opts.Scm.GetRepoOwner(), opts.Scm.GetRepoName()),

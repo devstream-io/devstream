@@ -18,5 +18,8 @@ tools:
       org: [[ githubOrganization ]]
       name: [[ repoName ]]
       scmType: github
+      token: [[ env GITHUB_TOKEN ]]
     board:
       name: [[ kanbanBoardName ]]
+      apikey: [[ env TRELLO_API_KEY ]]
+      token: [[ env TRELLO_TOKEN ]]

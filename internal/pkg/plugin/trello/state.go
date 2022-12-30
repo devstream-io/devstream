@@ -16,7 +16,7 @@ func getState(rawOptions configmanager.RawOptions) (statemanager.ResourceStatus,
 		return nil, err
 	}
 
-	c, err := trello.NewClient()
+	c, err := trello.NewClient(opts.Board.APIKey, opts.Board.Token)
 	if err != nil {
 		return nil, err
 	}
