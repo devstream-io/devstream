@@ -38,5 +38,3 @@ This plugin has four outputs:
 - `todoListId`
 - `doingListId`
 - `doneListId`
-
-which can be used by the `trello-github-integ` plugin. Refer to the [`trello-github-integ` plugin doc](./trello-github-integ.md) for more details.
