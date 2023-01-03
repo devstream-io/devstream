@@ -4,16 +4,15 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 )
 
 var _ = Describe("Options struct", func() {
 	var (
-		opts *Options
+		opts *options
 	)
 	BeforeEach(func() {
-		opts = &Options{
+		opts = &options{
 			SourceRepo: &git.RepoInfo{
 				Repo:     "source_repo",
 				Owner:    "source_owner",
@@ -25,33 +24,6 @@ var _ = Describe("Options struct", func() {
 				RepoType: "github",
 			},
 		}
-	})
-	Context("NewOptions method", func() {
-		var (
-			rawOptions configmanager.RawOptions
-		)
-		BeforeEach(func() {
-			rawOptions = configmanager.RawOptions{
-				"sourceRepo": map[string]string{
-					"owner":   "test_user",
-					"name":    "test_repo",
-					"scmType": "github",
-				},
-				"destinationRepo": map[string]string{
-					"owner":   "dst_user",
-					"name":    "dst_repo",
-					"scmType": "github",
-				},
-			}
-		})
-		It("should work normal", func() {
-			opts, err := NewOptions(rawOptions)
-			Expect(err).Error().ShouldNot(HaveOccurred())
-			Expect(opts.SourceRepo.Owner).Should(Equal("test_user"))
-			Expect(opts.SourceRepo.Repo).Should(Equal("test_repo"))
-			Expect(opts.DestinationRepo.Owner).Should(Equal("dst_user"))
-			Expect(opts.DestinationRepo.Repo).Should(Equal("dst_repo"))
-		})
 	})
 
 	Context("renderTplConfig method", func() {
