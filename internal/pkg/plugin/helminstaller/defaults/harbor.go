@@ -8,7 +8,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
-var toolHarbor = "harbor"
+const toolHarbor = "harbor"
 
 var DefaultConfigWithHarbor = helm.Options{
 	Chart: helmCommon.Chart{
@@ -28,8 +28,7 @@ var DefaultConfigWithHarbor = helm.Options{
 }
 
 func init() {
-	DefaultOptionsMap[toolHarbor] = &DefaultConfigWithHarbor
-	StatusGetterFuncMap[toolHarbor] = GetHarborStatus
+	RegisterDefaultHelmAppInstance(toolHarbor, &DefaultConfigWithHarbor, GetHarborStatus)
 }
 
 func GetHarborStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {

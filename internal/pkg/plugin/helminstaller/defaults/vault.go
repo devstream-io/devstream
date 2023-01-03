@@ -8,7 +8,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
-var toolVault = "vault"
+const toolVault = "vault"
 
 var DefaultConfigWithVault = helm.Options{
 	Chart: helmCommon.Chart{
@@ -28,8 +28,7 @@ var DefaultConfigWithVault = helm.Options{
 }
 
 func init() {
-	DefaultOptionsMap[toolVault] = &DefaultConfigWithVault
-	StatusGetterFuncMap[toolVault] = GetVaultStatus
+	RegisterDefaultHelmAppInstance(toolVault, &DefaultConfigWithVault, GetVaultStatus)
 }
 
 func GetVaultStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {

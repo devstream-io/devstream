@@ -8,7 +8,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
-var toolOpenLDAP = "openldap"
+const toolOpenLDAP = "openldap"
 
 var DefaultConfigWithOpenLDAP = helm.Options{
 	Chart: helmCommon.Chart{
@@ -28,8 +28,7 @@ var DefaultConfigWithOpenLDAP = helm.Options{
 }
 
 func init() {
-	DefaultOptionsMap[toolOpenLDAP] = &DefaultConfigWithOpenLDAP
-	StatusGetterFuncMap[toolOpenLDAP] = GetOpenLDAPStatus
+	RegisterDefaultHelmAppInstance(toolOpenLDAP, &DefaultConfigWithOpenLDAP, GetOpenLDAPStatus)
 }
 
 func GetOpenLDAPStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {

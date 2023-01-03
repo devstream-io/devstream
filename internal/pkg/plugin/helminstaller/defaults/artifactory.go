@@ -8,7 +8,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
-var toolArtifactory = "artifactory"
+const toolArtifactory = "artifactory"
 
 var DefaultConfigWithArtifactory = helm.Options{
 	Chart: helmCommon.Chart{
@@ -28,8 +28,7 @@ var DefaultConfigWithArtifactory = helm.Options{
 }
 
 func init() {
-	DefaultOptionsMap[toolArtifactory] = &DefaultConfigWithArtifactory
-	StatusGetterFuncMap[toolArtifactory] = GetArtifactoryStatus
+	RegisterDefaultHelmAppInstance(toolArtifactory, &DefaultConfigWithArtifactory, GetArtifactoryStatus)
 }
 
 func GetArtifactoryStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {

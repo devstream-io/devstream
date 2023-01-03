@@ -8,7 +8,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
-var toolSonarQube = "sonarqube"
+const toolSonarQube = "sonarqube"
 
 var DefaultConfigWithSonarQube = helm.Options{
 	Chart: helmCommon.Chart{
@@ -27,8 +27,7 @@ var DefaultConfigWithSonarQube = helm.Options{
 }
 
 func init() {
-	DefaultOptionsMap[toolSonarQube] = &DefaultConfigWithSonarQube
-	StatusGetterFuncMap[toolSonarQube] = GetSonarQubeStatus
+	RegisterDefaultHelmAppInstance(toolSonarQube, &DefaultConfigWithSonarQube, GetSonarQubeStatus)
 }
 
 func GetSonarQubeStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
