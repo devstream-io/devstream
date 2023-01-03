@@ -11,7 +11,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
-var toolJenkins = "jenkins"
+const toolJenkins = "jenkins"
 
 var DefaultConfigWithJenkins = helm.Options{
 	Chart: helmCommon.Chart{
@@ -31,8 +31,7 @@ var DefaultConfigWithJenkins = helm.Options{
 }
 
 func init() {
-	DefaultOptionsMap[toolJenkins] = &DefaultConfigWithJenkins
-	StatusGetterFuncMap[toolJenkins] = GetJenkinsStatus
+	RegisterDefaultHelmAppInstance(toolJenkins, &DefaultConfigWithJenkins, GetJenkinsStatus)
 }
 
 func GetJenkinsStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {

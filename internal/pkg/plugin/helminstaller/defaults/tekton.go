@@ -8,7 +8,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
-var toolTekton = "tekton"
+const toolTekton = "tekton"
 
 var DefaultConfigWithTekton = helm.Options{
 	Chart: helmCommon.Chart{
@@ -28,8 +28,7 @@ var DefaultConfigWithTekton = helm.Options{
 }
 
 func init() {
-	DefaultOptionsMap[toolTekton] = &DefaultConfigWithTekton
-	StatusGetterFuncMap[toolTekton] = GetTektonStatus
+	RegisterDefaultHelmAppInstance(toolTekton, &DefaultConfigWithTekton, GetTektonStatus)
 }
 
 func GetTektonStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {

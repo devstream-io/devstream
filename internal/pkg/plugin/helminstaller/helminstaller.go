@@ -20,22 +20,22 @@ func renderDefaultConfig(options configmanager.RawOptions) (configmanager.RawOpt
 	}
 
 	instanceID := helmOptions.InstanceID
-	defaultHelmOptions := getDefaultOptionsByInstanceID(instanceID)
 
-	if defaultHelmOptions == nil {
+	defaultIns := defaults.GetDefaultHelmAppInstanceByInstanceID(instanceID)
+	if defaultIns == nil {
 		log.Debugf("Default config for %s wasn't found.", instanceID)
 		return options, nil
 	}
 
 	log.Infof("Filling default config with instance: %s.", instanceID)
-	helmOptions.FillDefaultValue(defaultHelmOptions)
+	helmOptions.FillDefaultValue(defaultIns.HelmOptions)
 	log.Debugf("Options with default config filled: %v.", helmOptions)
 
 	return mapz.DecodeStructToMap(helmOptions)
 }
 
 // renderValuesYaml renders options.valuesYaml to options.chart.valuesYaml;
-// If options.valuesYaml don't contains ":", it should be a path like "./values.yaml", then read it and transfer to options.chart.valuesYaml
+// If options.valuesYaml doesn't contain ":", it should be a path like "./values.yaml", then read it and transfer to options.chart.valuesYaml
 func renderValuesYaml(options configmanager.RawOptions) (configmanager.RawOptions, error) {
 	helmOptions, err := helm.NewOptions(options)
 	if err != nil {
@@ -72,50 +72,11 @@ func indexStatusGetterFunc(options configmanager.RawOptions) installer.StatusGet
 		return helm.GetAllResourcesStatus
 	}
 
-	instanceID := helmOptions.InstanceID
-	statusGetterFunc := getStatusGetterFuncByInstanceID(instanceID)
+	defaultIns := defaults.GetDefaultHelmAppInstanceByInstanceID(helmOptions.InstanceID)
 
-	if statusGetterFunc == nil {
+	if defaultIns == nil {
 		return helm.GetAllResourcesStatus
 	}
 
-	return statusGetterFunc
-}
-
-// e.g. instanceID="argocd-config-001", "argocd" and "argocd-config" both are supported helm charts,
-// then DefaultOptionsMap["argocd-config"] needs to be returned.
-func getDefaultOptionsByInstanceID(instanceID string) *helm.Options {
-	// if string instanceID contains a name, that name is a matched name.
-	// e.g. argocd-config-001 contains argocd and argocd-config, so the argocd and argocd-config both are matched name.
-	var matchedNames = make([]string, 0)
-	for name := range defaults.DefaultOptionsMap {
-		if strings.HasPrefix(instanceID, name) {
-			matchedNames = append(matchedNames, name)
-		}
-	}
-
-	if len(matchedNames) == 1 {
-		return defaults.DefaultOptionsMap[matchedNames[0]]
-	}
-
-	return defaults.DefaultOptionsMap[getLongestMatchedName(matchedNames)]
-}
-
-func getLongestMatchedName(nameList []string) string {
-	var retStr string
-	for _, name := range nameList {
-		if len(name) > len(retStr) {
-			retStr = name
-		}
-	}
-	return retStr
-}
-
-func getStatusGetterFuncByInstanceID(instanceID string) installer.StatusGetterOperation {
-	for name, fn := range defaults.StatusGetterFuncMap {
-		if strings.Contains(instanceID, name+"-") {
-			return fn
-		}
-	}
-	return nil
+	return defaultIns.StatusGetter
 }

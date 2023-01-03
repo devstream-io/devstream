@@ -8,7 +8,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
-var toolArgoCD = "argocd"
+const toolArgoCD = "argocd"
 
 var DefaultConfigWithArgoCD = helm.Options{
 	Chart: helmCommon.Chart{
@@ -28,8 +28,7 @@ var DefaultConfigWithArgoCD = helm.Options{
 }
 
 func init() {
-	DefaultOptionsMap[toolArgoCD] = &DefaultConfigWithArgoCD
-	StatusGetterFuncMap[toolArgoCD] = GetArgoCDStatus
+	RegisterDefaultHelmAppInstance(toolArgoCD, &DefaultConfigWithArgoCD, GetArgoCDStatus)
 }
 
 func GetArgoCDStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
