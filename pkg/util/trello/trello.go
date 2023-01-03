@@ -2,7 +2,6 @@ package trello
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/adlio/trello"
 )
@@ -16,9 +15,7 @@ type client struct {
 	*trello.Client
 }
 
-func NewClient() (TrelloAPI, error) {
-	apiKey := os.Getenv("TRELLO_API_KEY")
-	token := os.Getenv("TRELLO_TOKEN")
+func NewClient(apiKey, token string) (TrelloAPI, error) {
 	if apiKey == "" || token == "" {
 		const helpUrl = "https://docs.servicenow.com/bundle/quebec-it-asset-management/page/product/software-asset-management2/task/generate-trello-apikey-token.html"
 		return nil, fmt.Errorf("TRELLO_API_KEY and/or TRELLO_TOKEN are/is empty. see %s for more info", helpUrl)

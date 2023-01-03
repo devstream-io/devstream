@@ -24,6 +24,8 @@ type options struct {
 type board struct {
 	Name        string `mapstructure:"name"`
 	Description string `mapstructure:"description"`
+	APIKey      string `mapstructure:"apiKey"`
+	Token       string `mapstructure:"token"`
 }
 
 type boardIDInfo struct {

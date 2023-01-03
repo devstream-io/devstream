@@ -9,10 +9,13 @@ tools:
   options:
     # the repo's owner
     board:
-      # the Tello board name. If empty, use owner/name as the board's name.
+      # the Trello board name. If empty, use owner/name as the board's name.
       name: KANBAN_BOARD_NAME
-      # the Tello board description. If empty, use devstream's default description
+      # the Trello board description. If empty, use devstream's default description
       description: KANBAN_DESCRIPTION
+      # Trello apiKey and token, see https://docs.servicenow.com/bundle/quebec-it-asset-management/page/product/software-asset-management2/task/generate-trello-apikey-token.html for more information
+      apikey: [[ env TRELLO_API_KEY ]] # use environment variable "TRELLO_API_KEY" to set the value
+      token: [[ env TRELLO_TOKEN ]] # use environment variable "TRELLO_TOKEN" to set the value
     scm:
       name: YOUR_PROJECT_NAME
       owner: YOUR_REPO_OWNER
@@ -21,4 +24,4 @@ tools:
       # project branch
       branch: YOUR_PROJECT_BRANCH
       # scm repo token
-      token: YOUR_REPO_TOKEN
+      token: [[ env GITHUB_TOKEN ]] # use environment variable "GITHUB_TOKEN" to set the value
