@@ -101,16 +101,16 @@ For example, given config:
 ```yaml
 tools:
 - name: trello
-instanceID: default
-options:
-  board:
-    name: golang-demo-board
-    apikey: xxx
-    token: xxx
-  scm:
-    owner: IronCore864
-    repo: golang-demo
-    scmType: github
+  instanceID: default
+  options:
+    board:
+      name: golang-demo-board
+      apikey: xxx
+      token: xxx
+    scm:
+      owner: IronCore864
+      repo: golang-demo
+      scmType: github
  ```
 
 - `TOOL_NAME` is "trello"

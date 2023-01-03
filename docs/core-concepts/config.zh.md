@@ -108,7 +108,7 @@ tools:
       owner: IronCore864
       repo: golang-demo
       scmType: github
- ```
+```
 
 - `TOOL_NAME` 是 "trello"
 - `TOOL_INSTANCE_ID` 是 "default"
