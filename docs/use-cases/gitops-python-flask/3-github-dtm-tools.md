@@ -4,6 +4,15 @@ DevStream has two abstractions: [Tools](../../core-concepts/tools.md) and [Apps]
 
 [The previous use case](./2-github-dtm-apps.md) uses "Apps". We can also achieve the same result with "Tools", and here's how:
 
+## ENV Vars
+
+The following environment variables are required for this to work:
+
+```bash
+export GITHUB_TOKEN="YOUR_GITHUB_TOKEN_HERE"
+export IMAGE_REPO_PASSWORD="YOUR_DOCKERHUB_TOKEN_HERE"
+```
+
 ---
 
 ## Config File

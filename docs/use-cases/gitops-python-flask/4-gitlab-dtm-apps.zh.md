@@ -26,11 +26,11 @@
 
 DevStream 将使用下面的插件来实现[第 0 节](#)中描述的目标：
 
-1. [gitlab-ce-docker](../plugins/gitlab-ce-docker.md)：用于在 Docker 中安装 GitLab；
-2. [repo-scaffolding](../plugins/repo-scaffolding.md): 用于在 GitLab 上创建一个 Python Web 应用程序仓库；
-3. [gitlab-ci](../plugins/gitlab-ci.md)：用于为我们创建的仓库设置基本的 CI 流水线；
-4. [helm-installer](../plugins/helm-installer/helm-installer.md): 用于在 Kubernetes 集群中安装 Argo CD；
-5. [argocdapp](../plugins/argocdapp.md): 用于创建一个 Argo CD 应用程序，来部署第 1 步中生成的 Web 应用程序。
+1. [gitlab-ce-docker](../../plugins/gitlab-ce-docker.md)：用于在 Docker 中安装 GitLab；
+2. [repo-scaffolding](../../plugins/repo-scaffolding.md): 用于在 GitLab 上创建一个 Python Web 应用程序仓库；
+3. [gitlab-ci](../../plugins/gitlab-ci.md)：用于为我们创建的仓库设置基本的 CI 流水线；
+4. [helm-installer](../../plugins/helm-installer/helm-installer.md): 用于在 Kubernetes 集群中安装 Argo CD；
+5. [argocdapp](../../plugins/argocdapp.md): 用于创建一个 Argo CD 应用程序，来部署第 1 步中生成的 Web 应用程序。
 
 我们将分成两个步骤来完成这些目标：
 
@@ -58,7 +58,7 @@ sh -c "$(curl -fsSL https://download.devstream.io/download.sh)
 
 > 可选：你可以把 `dtm` 移动到 $PATH 环境变量中的某个目录下。例如：`mv dtm /usr/local/bin/`。这样，你就可以直接运行 `dtm` 而不需要再加上 `./` 前缀了。
 >
-> 更多安装方式详见[安装 dtm](../install.zh.md)。
+> 更多安装方式详见[安装 dtm](../../install.zh.md)。
 
 ## 2 安装 GitLab 和 Argo CD
 
