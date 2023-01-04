@@ -17,39 +17,9 @@
 
 ### 1.1、下载 dtm
 
-如果你的 PC 和服务器操作系统以及 CPU 架构一致，比如都是 Linux/amd64，那么你可以直接在 PC 上运行如下命令完成 dtm 的下载：
+你可以参考[这个文档](../../install.zh.md)下载 dtm。
 
-```shell
-sh -c "$(curl -fsSL https://download.devstream.io/download.sh)"
-```
-
-如果使用的 shell 不是 bash，可能会执行上述命令失败，这时候你也可以选择直接用 curl 下载 dtm。这时候你需要先访问 DevStream 的 [Release](https://github.com/devstream-io/devstream/releases/) 页面找到当前最新版本 `dtm`，然后找到和你的服务器匹配的版本。当前 `dtm` 提供了多个版本，分别是：
-
-1. Darwin/arm64
-2. Darwin/amd64
-3. Linux/amd64
-
-这时候，相信你可以很容易拼接出类似下面这个命令：
-
-```shell
-curl -o dtm https://download.devstream.io/v0.10.3/dtm-linux-amd64
-```
-
-注意：这里的版本、系统类型、CPU 架构等信息需要灵活调整。
-
-等 dtm 下载到你的 PC 后，你需要通过内网将其传输到某一台内部服务器上，移入包含在"$PATH"的目录里并赋予其可执行权限，比如在 Linux 上你可以执行如下命令完成这些操作：
-
-```shell
-chmod +x dtm
-mv dtm /usr/local/bin/
-```
-
-然后在服务器上你可以通过如下命令验证 dtm 的权限以及版本等是否正确：
-
-```shell
-$ dtm version
-0.10.3
-```
+唯一需要注意的是，下载完之后，请记得将 dtm 传输到你需要使用它的机器上。
 
 ### 1.2、下载 plugins
 
