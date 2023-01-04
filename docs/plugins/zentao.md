@@ -5,15 +5,15 @@ This plugin installs [ZenTao](https://zentao.net/) in an existing Kubernetes clu
 **Notes:**
 
 - ZenTao will be installed in K8s cluster, please prepare a K8s cluster before using ZenTao plugin.
-  For local build, you can use `hack/e2e/e2e-up.sh` to create a K8s cluster via `Kind`.
-- Currently, all fields list in the example config file below are required. You can modify them according to your needs.
+For the local build, you can use `hack/e2e/e2e-up.sh` to create a K8s cluster via `Kind`.
+- Currently, all fields listed in the example config file below are required. You can modify them according to your needs.
 - This plugin is not supported to run on `arm64` architecture now.
 
 ## Usage
 
 The following content is an example of the "tool file".
 
-For more information on the main config, the tool file and the var file of DevStream, see [Core Concepts Overview](../core-concepts/overview.md) and [DevStream Configuration](../core-concepts/config.md).
+For more information on the main config, the tool file, and the var file of DevStream, see [Core Concepts Overview](../core-concepts/overview.md) and [DevStream Configuration](../core-concepts/config.md).
 
 ```yaml
 config:

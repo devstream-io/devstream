@@ -2,31 +2,7 @@
 
 这个插件会基于一个脚手架仓库来初始化一个 Gihub 或者 GitLab 仓库。
 
-## 运行需求
-
-这个插件基于你使用的代码仓库类型需要设置以下配置：
-
-使用该插件前去要获取对应 Scm（Github/Gitlab） 的 token，如果你不知道如何去获取这个 token，可以查看以下不同的 Scm 的获取方式
-
-### GitHub
-
-- [Creating a personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)。
-
-### GitLab
-
-- [Personal access tokens](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html)。
-- `destinationRepo.baseUrl`：如果你使用的是自建的 GitLab 仓库，需要将该配置设置为自建 GItLab 的 URL 地址。
-- `destinationRepo.visibility`：此配置用于设置新建仓库的权限，支持的选项有 `public`, `private` 和 `internal`。
-
-*注意：*
-
-- 如果你执行 `dtm delete` 命令，这个仓库将会被删除。
-
-- 如果你执行 `dtm update` 命令,  这个仓库将会被删除然后重新创建。 
-
-- 对于 `repo-scaffolding` 插件，目前只需要 token 有 `repo`, `delete_repo` 权限即可。 
-
-## 使用方法
+## 用例
 
 下面的配置文件展示的是"tool file"的内容。
 
@@ -36,33 +12,16 @@
 --8<-- "repo-scaffolding.yaml"
 ```
 
-**请注意这里的设置参数都是大小写敏感的**
+**注意:**
 
-在配置文件中替换以下配置：
+- 如果你执行 `dtm delete` 命令，这个仓库将会被删除。
+- 如果你执行 `dtm update` 命令,  这个仓库将会被删除然后重新创建。
+- 对于 `repo-scaffolding` 插件，目前只需要 token 有 `repo`, `delete_repo` 权限即可。
+- `destinationRepo` 配置字段用于表示代码仓库的配置信息，具体配置可查看[SCM配置项](./scm-option.zh.md)。
+- `sourceRepo` 配置字段用于表示代码仓库的配置信息，具体配置可查看[SCM配置项](./scm-option.zh.md)。
+- `destinationRepo` 如果是 `gitlab`, 则支持配置 `destinationRepo.visibility`，此配置用于设置新建仓库的权限，支持的选项有 `public`, `private` 和 `internal`。
 
-### destinationRepo
-
-这个是目标仓库的配置，包括以下几个配置项：
-
-- `YOUR_DESTINATION_USERNAME`
-- `YOUR_DESTINATION_ORGANIZATION_NAME`
-- `YOUR_DESTINATION_REPO_NAME`
-- `YOUR_DESTINATION_REPO_MAIN_BRANCH`
-- `YOUR_DESTINATION_REPO_TYPE`
-
-`owner`，`org` 和 `repo` 目前是必填的，`branch` 的默认值是  "main"，`scmType` 配置目前支持 `gitlab` 和 `github`。
-
-### sourceRepo
-
-这个是源脚手架仓库的配置（目前只支持 Github），包括以下几个配置：
-
-- `YOUR_TEMPLATE_REPO_ORG`
-- `YOUR_TEMPLATE_REPO_NAME`
-- `YOUR_TEMPLATE_REPO_TYPE`
-
-目前这两个配置项都是必填的，`scmType` 配置目前只支持 `github`。
-
-### vars
+### 变量
 
 这个配置用于设置渲染源脚手架仓库时的变量，以下变量会默认设置：
 
@@ -84,7 +43,7 @@
 - `repo`
 - `repoURL`
 
-## 示例 
+## 示例
 
 ### 官方支持脚手架项目
 
@@ -95,7 +54,7 @@
 | Golang      | devstream-io  | dtm-scaffolding-golang     |
 | Golang      | devstream-io  | dtm-scaffolding-golang-cli |
 | Java Spring | spring-guides | gs-spring-boot             |
-
+| Python      | devstream-io  | dtm-repo-scaffolding-python-flask   |
 
 ### Golang
 

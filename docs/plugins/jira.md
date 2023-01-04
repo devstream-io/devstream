@@ -4,22 +4,6 @@ This plugin integrates Jira with your GitHub repo.
 
 ## Usage
 
-_Please confirm the preconditions:_
-
-- Jira language must be English
-- There should be an existing Jira project
-
-_This plugin depends on the following two config variables:_
-
-- jira.token
-- scm.token
-
-Set the values accordingly before using this plugin.
-
-If you don't know how to create these tokens, check out:
-- [Creating a personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
-- [Manage API tokens for your Atlassian account](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/).
-
 The following content is an example of the "tool file".
 
 For more information on the main config, the tool file and the var file of DevStream, see [Core Concepts Overview](../core-concepts/overview.md) and [DevStream Configuration](../core-concepts/config.md).
@@ -28,4 +12,9 @@ For more information on the main config, the tool file and the var file of DevSt
 --8<-- "jira.yaml"
 ```
 
-Currently, all the parameters in the example above are mandatory.
+**Notes:**
+
+- Jira language must be English
+- There should be an existing Jira project
+- `scm` config option represents codebase location; for more info, you can refer to [SCM Config](./scm-option.md).
+- `jira.token` should be created before using this plugin; you can refer to [Manage API tokens for your Atlassian account](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/).

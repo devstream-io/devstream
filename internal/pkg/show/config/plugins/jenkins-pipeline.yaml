@@ -22,18 +22,21 @@ tools:
       # it will use a local Jenkinsfile for jenkins-pipeline
       offline: false
     scm:
-      # url is the project repo location, this can be http address or git address
-      url: git@gitlab.com/root/test-exmaple.git
-      # apiURL is the api address of gitlab, if you use github, this field can be empty
-      apiURL: http://gitlab.example.com
-      # project branch, if your repo type is github, default branch will be main. if your repo type is gitlab, default branch will be master
-      branch: YOUR_PROJECT_BRANCH
-      # scm repo token
-      token: YOUR_REPO_TOKEN
+      # scm common field
+      branch: YOUR_REPO_BRANCH
+      token: YOUR_REPO_SCM_TOKEN
+      # you can directly use the url of repo (git@github.com/root/test-exmaple.git for example)
+      url: YOUR_REPO_URL
+      # or you can config detailed fields for this repo
+      owner: YOUR_REPO_OWNER
+      org: YOUR_REPO_ORG
+      name: YOUR_REPO_NAME
+      scmType: github
     pipeline:
       # jobName is jenkins's job name; <jobFolder/jobName> or <jobName>; e.g. jobs/test-job, test-job, jobs2/test-job
       jobName: test-job
-      # configLocation is the location describe how to get Jenkinsfile, it can be remote or local
+      # configLocation is the location of Jenkinsfile, it can be remote or local address
+      # if you don't config this field, devstream will use https://raw.githubusercontent.com/devstream-io/dtm-pipeline-templates/main/jenkins-pipeline/general/Jenkinsfile
       configLocation: https://raw.githubusercontent.com/devstream-io/devstream/main/staging/dtm-jenkins-pipeline-example/general/Jenkinsfile
       language:
         framework: # support gin/flask/spring for now
