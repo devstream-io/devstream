@@ -2,7 +2,7 @@
 
 ## 0 Goal
 
-In this tutorial, we will try to use DevStream's new feature "Apps" to achieve similar result to the [GitOps](./gitops-tools.md), but using much less configuration, to show the power of "Apps" in the config. If you haven't read the original GitOps best practice, click the above link first.
+In this tutorial, we will try to use DevStream's new feature "Apps" to achieve similar result to the [GitOps](./2-gitops-tools.md), but using much less configuration, to show the power of "Apps" in the config. If you haven't read the original GitOps best practice, click the above link first.
 
 Two applications will be created (one Python, one Golang), CI/CD pipelines will be set up for both, and both apps will be deployed via Argo CD, just like the GitOps best practice.
 
@@ -23,7 +23,7 @@ mkdir test
 cd test/
 ```
 
-Download dtm (see the [GitOps](./gitops-tools.md) best practice if you haven't).
+Download dtm (see the [GitOps](./2-gitops-tools.md) best practice if you haven't).
 
 Then generate the config file by running:
 
@@ -108,7 +108,7 @@ tiexin@mbp ~/work/devstream-io/test $ ./dtm apply -f config.yaml -y
 
 Let's continue to look at the results of the `apply` command.
 
-Similar to what we did in the [GitOps](./gitops-tools.md) best practice, we can check that repositories for two applications are created, CI pipelins are created for both apps too, Argo CD is installed, and both apps are deployed by Argo CD into our Kubernetes cluster.
+Similar to what we did in the [GitOps](./2-gitops-tools.md) best practice, we can check that repositories for two applications are created, CI pipelins are created for both apps too, Argo CD is installed, and both apps are deployed by Argo CD into our Kubernetes cluster.
 
 ---
 

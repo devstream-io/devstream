@@ -40,10 +40,10 @@
 
 DevStream 将使用下面的插件来实现[第 0 节](#)中描述的目标：
 
-1. [repo-scaffolding](../plugins/repo-scaffolding.md)
-2. [github-actions](../plugins/github-actions.md)
-3. [helm-installer](../plugins/helm-installer/helm-installer.md)
-4. [argocdapp](../plugins/argocdapp.md)
+1. [repo-scaffolding](../../plugins/repo-scaffolding.md)
+2. [github-actions](../../plugins/github-actions.md)
+3. [helm-installer](../../plugins/helm-installer/helm-installer.md)
+4. [argocdapp](../../plugins/argocdapp.md)
 
 不过，你不需要担心这些插件，因为 DevStream 会帮你自动管理它们。
 
@@ -113,7 +113,7 @@ Use "dtm [command] --help" for more information about a command.
 
 > 可选：你可以把 `dtm` 移动到 $PATH 环境变量中的某个目录下。例如：`mv dtm /usr/local/bin/`。这样，你就可以直接运行 `dtm` 而不需要再加上 `./` 前缀了。
 > 
-> 更多安装方式详见[安装 dtm](../install.zh.md)。
+> 更多安装方式详见[安装 dtm](../../install.zh.md)。
 
 ---
 
@@ -211,13 +211,13 @@ export IMAGE_REPO_PASSWORD="YOUR_DOCKERHUB_TOKEN_HERE"
 
 DevStream 已经通过 `repo-scaffolding` 插件自动创建了一个仓库：
 
-![](../images/gitops-a.png)
+![](../../images/gitops-a.png)
 
 ### 8.2 基于 GitHub Actions 的 CI 流水线
 
 GitHub Actions 流水线已经被创建并运行：
 
-![](../images/gitops-b.png)
+![](../../images/gitops-b.png)
 
 ### 8.3 Argo CD 的安装
 

@@ -40,10 +40,10 @@ However, if you are like us, who prefer to do things hands-on and get their hand
 
 DevStream will use the following plugins to achieve the goal described in [Section 0](#0-goal):
 
-1. [repo-scaffolding](../plugins/repo-scaffolding.md)
-2. [github-actions](../plugins/github-actions.md)
-3. [helm-installer](../plugins/helm-installer/helm-installer.md)
-4. [argocdapp](../plugins/argocdapp.md)
+1. [repo-scaffolding](../../plugins/repo-scaffolding.md)
+2. [github-actions](../../plugins/github-actions.md)
+3. [helm-installer](../../plugins/helm-installer/helm-installer.md)
+4. [argocdapp](../../plugins/argocdapp.md)
 
 However, you do not have to worry about these plugins because DevStream will manage them automatically for you.
 
@@ -113,7 +113,7 @@ Use "dtm [command] --help" for more information about a command.
 
 > Optional: you can move `dtm` to a directory which is in your $PATH. For example: `mv dtm /usr/local/bin/`. This will allow you to run `dtm` directly without having to prefix it with the dot and slash (`./dtm`).
 > 
-> For more methods on how to install DevStream, see [install dtm](../install.md).
+> For more methods on how to install DevStream, see [install dtm](../../install.md).
 
 ---
 
@@ -214,13 +214,13 @@ Let's continue to look at the results of the `apply` command.
 
 The repository is created automatically by DevStream with scaffolding code:
 
-![](../images/gitops-a.png)
+![](../../images/gitops-a.png)
 
 ### 8.2 CI Pipelines with GitHub Actions
 
 GitHub Actions pipelines are created and executed:
 
-![](../images/gitops-b.png)
+![](../../images/gitops-b.png)
 
 ### 8.3 Argo CD Installation
 
