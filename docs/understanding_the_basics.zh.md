@@ -36,4 +36,4 @@
 ## 让我们开始吧！
 
 - [快速入门](./quickstart.zh.md)
-- [用户场景 - GitOps 工具链](./use-cases/gitops/2-gitops-tools.zh.md)
+- [应用场景 - GitOps 工具链](./use-cases/gitops/2-gitops-tools.zh.md)
