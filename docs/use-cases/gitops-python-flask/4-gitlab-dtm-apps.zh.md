@@ -1,4 +1,4 @@
-# 用 DevStream 搭建 Gitlab CI + Argo CD 工具链，管理 Python Flask 项目(GitLab + GitLab CI with DTM Apps)
+# 用 DevStream 搭建 Gitlab CI + Argo CD 工具链，管理 Python Flask 项目
 
 ## 0 目标
 

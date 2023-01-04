@@ -1,6 +1,7 @@
 # GitOps
 
 ## 0 目标
+
 在本教程中，我们将尝试通过 DevStream 来实现以下目标：
 
 1. 创建一个 Python Web 应用程序仓库，基于 [Flask](https://flask.palletsprojects.com/en/2.2.x/) 框架；
