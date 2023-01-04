@@ -17,6 +17,7 @@ tools:
     pipeline:
       # workFlowfilePath is the location of workflows, it can be remote or local
       configLocation: https://raw.githubusercontent.com/devstream-io/devstream/main/staging/dtm-github-action-example/general
+      # language config is required
       language:
         framework: # support gin/flask/spring for now
         name: LANGUAGE # support go/java/nodejs/python for now

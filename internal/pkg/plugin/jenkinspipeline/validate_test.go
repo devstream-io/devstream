@@ -6,6 +6,8 @@ import (
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/util"
 )
 
 var _ = Describe("setDefault func", func() {
@@ -47,7 +49,8 @@ var _ = Describe("setDefault func", func() {
 		It("should set default value", func() {
 			newOptions, err := setJenkinsDefault(options)
 			Expect(err).Error().ShouldNot(HaveOccurred())
-			opts, err := newJobOptions(newOptions)
+			opts := new(jobOptions)
+			err = util.DecodePlugin(newOptions, opts)
 			Expect(err).Error().ShouldNot(HaveOccurred())
 			Expect(string(opts.JobName)).Should(Equal("spring-demo"))
 		})

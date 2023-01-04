@@ -35,7 +35,7 @@ func (c *Client) CreateRepo(org, defaultBranch string) error {
 	}
 
 	if org != "" {
-		log.Infof("Prepare to create an organization repository: %s/%s", org, repo.GetName())
+		log.Debugf("github prepare to create an organization repository: %s/%s", org, repo.GetName())
 	}
 	_, _, err := c.Repositories.Create(c.Context, org, repo)
 	if err != nil {
@@ -54,7 +54,7 @@ func (c *Client) DeleteRepo() error {
 	}
 
 	if response.StatusCode == http.StatusNotFound {
-		log.Infof("GitHub repo %s was not found. Nothing to does here.", c.Repo)
+		log.Warnf("GitHub repo %s was not found. Nothing to does here.", c.Repo)
 		return nil
 	}
 

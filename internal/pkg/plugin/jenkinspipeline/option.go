@@ -5,32 +5,16 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/mitchellh/mapstructure"
-
-	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci"
-	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/cifile/server"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/step"
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 	"github.com/devstream-io/devstream/pkg/util/log"
-)
-
-const (
-	ciType = server.CIServerType("jenkins")
 )
 
 type jobOptions struct {
 	Jenkins     jenkinsOption `mapstructure:"jenkins"`
 	ci.CIConfig `mapstructure:",squash"`
 	JobName     jenkinsJobName `mapstructure:"jobName"`
-}
-
-func newJobOptions(options configmanager.RawOptions) (*jobOptions, error) {
-	var opts jobOptions
-	if err := mapstructure.Decode(options, &opts); err != nil {
-		return nil, err
-	}
-	return &opts, nil
 }
 
 func (j *jobOptions) install(jenkinsClient jenkins.JenkinsAPI, secretToken string) error {

@@ -9,6 +9,7 @@ import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/step"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/util"
 	"github.com/devstream-io/devstream/pkg/util/downloader"
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
@@ -42,7 +43,8 @@ var _ = Describe("newJobOptions func", func() {
 
 	})
 	It("should work normal", func() {
-		job, err := newJobOptions(rawOptions)
+		job := new(jobOptions)
+		err := util.DecodePlugin(rawOptions, job)
 		Expect(err).Error().ShouldNot(HaveOccurred())
 		Expect(string(job.JobName)).Should(Equal(jobName))
 		Expect(job.Pipeline.ConfigLocation).Should(Equal(jenkinsFilePath))

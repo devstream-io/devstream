@@ -206,6 +206,8 @@ pipelineTemplates:
   - name: ci-pipeline
     type: gitlab-ci
     options:
+      runner:
+        enable: true
       imageRepo:
         user: [[ dockerhubUser ]]
         password: [[ env DOCKERHUB_TOKEN ]] # use "DOCKERHUB_TOKEN" env var

@@ -42,10 +42,11 @@ func (r *RepoInfo) SetDefault() error {
 		if err := r.updateFieldsFromURLField(); err != nil {
 			return err
 		}
-		// else build ScmURL from RepoInfo other fields
 	} else {
+		// else build ScmURL from RepoInfo other fields
 		r.CloneURL = r.buildScmURL()
 		r.Branch = r.getBranchWithDefault()
+		r.BaseURL = r.getBaseURL()
 	}
 	return r.checkValid()
 }
@@ -129,12 +130,7 @@ func (r *RepoInfo) buildScmURL() ScmURL {
 	case "github":
 		return ScmURL(fmt.Sprintf("https://github.com/%s/%s", r.GetRepoOwner(), r.Repo))
 	case "gitlab":
-		var gitlabURL string
-		if r.BaseURL != "" {
-			gitlabURL = r.BaseURL
-		} else {
-			gitlabURL = "https://gitlab.com"
-		}
+		gitlabURL := r.getBaseURL()
 		return ScmURL(fmt.Sprintf("%s/%s/%s.git", gitlabURL, r.GetRepoOwner(), r.Repo))
 	default:
 		log.Warnf("git repo buildScmURL get invalid repo type: %s", r.RepoType)
@@ -190,6 +186,17 @@ func (r *RepoInfo) checkValid() error {
 		return fmt.Errorf("git name field must be configured")
 	}
 	return nil
+}
+
+func (r *RepoInfo) getBaseURL() string {
+	if r.RepoType == "gitlab" {
+		if r.BaseURL != "" {
+			return r.BaseURL
+		} else {
+			return "https://gitlab.com"
+		}
+	}
+	return ""
 }
 
 // extractRepoOwnerAndName will get repoOwner and repoName from ScmURL

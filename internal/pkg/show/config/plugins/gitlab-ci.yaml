@@ -17,6 +17,7 @@ tools:
     pipeline:
       # workFlowfilePath is the location of workflows, it can be remote or local
       configLocation: .gitlabci.yml
+      # language config is required
       language:
         framework: # support gin/flask/spring for now
         name: LANGUAGE # support go/java/nodejs/python for now
@@ -27,3 +28,8 @@ tools:
         user: admin
         # image repo password
         password: YOUR_IMAGE_REPO_PASSWORD
+    # whether create gitlab runner for this project
+    # if runner.enable is true, devstream will use helm to install the project's runner
+    # and diable shared runner of this project
+    runner:
+      enable: false
