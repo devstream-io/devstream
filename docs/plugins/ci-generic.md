@@ -1,6 +1,6 @@
 # ci-generic Plugin
 
-This plugin installs ci script in GitLib/GitHub repo from local or remote url.
+This plugin installs `CI` script in `GitLib`/`GitHub` repo from a local or remote url.
 
 ## Usage
 
@@ -12,31 +12,16 @@ For more information on the main config, the tool file and the var file of DevSt
 --8<-- "ci-generic.yaml"
 ```
 
-### Field Configs
-
-| key                    | description                                                                                                      |
-| ----                   | ----                                                                                                             |
-| ci.localPath           | If your ci file is local, you can set the this field to the ci file location, which can be a directory or a file |
-| ci.remoteURL           | If your ci file is remote, you can set this field to url address                                                 |
-| ci.type                | ci type, support gitlab, github, jenkins for now                                                                 |
-| projectRepo.owner      | destination repo owner                                                                                           |
-| projectRepo.org        | destination repo org                                                                                             |
-| projectRepo.name       | destination repo name                                                                                            |
-| projectRepo.branch     | destination repo branch                                                                                          |
-| projectRepo.scmType    | destination repo type, support github/gitlab for now                                                             |
-| projectRepo.baseURL    | if you use self-build gitlab, you can set this field to gitlab address                                           |
-| projectRepo.visibility | if you use gitlab, you can set this field for repo permission                                                    |
-
 **Notes:**
 
+- `projectRepo` config option represents codebase location; for more info, you can refer to [SCM Config](./scm-option.md).
 - `ci.localPath` and `ci.remoteURL` can't be empty at the same time.
-- if you set both `ci.localPath` and `ci.remoteURL`, `ci.localPath` will be used.
-- if your `projectRepo.scmType` is `gitlab`, the `ci.type` is not allowed to be `github`.
-- if your `projectRepo.scmType` is `github`, the `ci.type` is not allowed to be `gitlab`.
+- if your `projectRepo.scmType` is `gitlab`, the `ci.type` is not allowed to be `github-actions`.
+- if your `projectRepo.scmType` is `github`, the `ci.type` is not allowed to be `gitlab-ci`.
 
-### Example
+## Example
 
-#### Local WorkFlows With Github
+### Local WorkFlows With Github
 
 ```yaml
 tools:
@@ -56,7 +41,7 @@ tools:
 
 This config will put local workflows directory to GitHub repo's .github/workflows directory.
 
-#### Remote Jenkinsfile With Gitlab
+### Remote Jenkinsfile With Gitlab
 
 ```yaml
 tools:
@@ -75,4 +60,4 @@ tools:
       baseURL: http://127.0.0.1:30000
 ```
 
-This config will put file from [remote](https://raw.githubusercontent.com/DeekshithSN/Jenkinsfile/inputTest/Jenkinsfile)  to GitLab repo.
+This config will put files from [remote](https://raw.githubusercontent.com/DeekshithSN/Jenkinsfile/inputTest/Jenkinsfile)](https://raw.githubusercontent.com/DeekshithSN/Jenkinsfile/inputTest/Jenkinsfile)  to GitLab repo.

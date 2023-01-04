@@ -1,6 +1,6 @@
 # jenkins-pipeline Plugin
 
-TODO(dtm): Add your document here.
+This plugin is used to create a `Jenkins Pipeline` for Github/Gitlab Repo.
 
 ## Usage
 
@@ -11,3 +11,9 @@ For more information on the main config, the tool file and the var file of DevSt
 ``` yaml
 --8<-- "jenkins-pipeline.yaml"
 ```
+
+**Notes:**
+
+- `scm` config option represents codebase location; for more info, you can refer to [SCM Config](./scm-option.md).
+- The `pipeline` config option controls `CI` stages; you can refer to [Pipeline Config](./pipeline.md) for more info.
+- `jenkins.token` is the password of `jenkins.user`.

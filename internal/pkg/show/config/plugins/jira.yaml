@@ -8,14 +8,16 @@ tools:
   # options for the plugin
   options:
     scm:
-      # the repo's owner
-      owner: YOUR_GITHUB_USERNAME
-      # the repo's org. If you set this property, then the new repo will be created under the org you're given, and the "owner" setting above will be ignored.
-      org: YOUR_ORGANIZATION_NAME
-      # the repo where you'd like to setup GitHub Actions
+      # scm common field
+      branch: YOUR_REPO_BRANCH
+      token: YOUR_REPO_SCM_TOKEN
+      # you can directly use the url of repo (git@github.com/root/test-exmaple.git for example)
+      url: YOUR_REPO_URL
+      # or you can config detailed fields for this repo
+      owner: YOUR_REPO_OWNER
+      org: YOUR_REPO_ORG
       name: YOUR_REPO_NAME
-      # main branch of the repo (to which branch the plugin will submit the workflows)
-      branch: main
+      scmType: github
     jira:
       # jira token
       token: JIRA_TOKEN

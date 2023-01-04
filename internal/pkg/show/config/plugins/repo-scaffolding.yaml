@@ -9,20 +9,30 @@ tools:
   options:
     # desinationRepo is the config for desination repo
     destinationRepo:
-      owner: YOUR_DESTINATION_USERNAME
-      org: YOUR_DESTINATION_ORGANIZATION_NAME
-      name: YOUR_DESTINATION_REPO_NAME
-      branch: YOUR_DESTINATION_REPO_MAIN_BRANCH
-      # scmType is the type of repo to push, support github|gitlab
-      scmType: YOUR_DESTINATION_REPO_TYPE
-      # scm repo token
-      token: YOUR_REPO_TOKEN
+      # scm common field
+      branch: YOUR_REPO_BRANCH
+      token: YOUR_REPO_SCM_TOKEN
+      # you can directly use the url of repo (git@gitlab.com/root/test-exmaple.git for example)
+      url: YOUR_REPO_URL
+      # or you can config detailed fields for this repo
+      owner: YOUR_REPO_OWNER
+      org: YOUR_REPO_ORG
+      name: YOUR_REPO_NAME
+      scmType: gitlab
+      # you can config this field if you are using self-host gitlab
+      baseURL: YOUR_SELF_HOST_GITLAB_URL
     # sourceRepo is the template repo location, support github only
     sourceRepo:
-      org: YOUR_TEMPLATE_REPO_ORG
-      name: YOUR_TEMPLATE_REPO_NAME
-      # scmType is the type of repo to get template, support github only
-      scmType: YOUR_TEMPLATE_REPO_TYPE
+      # scm common field
+      branch: YOUR_REPO_BRANCH
+      token: YOUR_REPO_SCM_TOKEN
+      # you can directly use the url of repo (git@github.com/root/test-exmaple.git for example)
+      url: YOUR_REPO_URL
+      # or you can config detailed fields for this repo
+      owner: YOUR_REPO_OWNER
+      org: YOUR_REPO_ORG
+      name: YOUR_REPO_NAME
+      scmType: github
     # this is used for template render
     vars:
       imageRepo: YOUR_DOCKERHUB_REPOSITORY
