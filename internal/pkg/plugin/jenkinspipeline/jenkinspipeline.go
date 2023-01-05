@@ -2,6 +2,7 @@ package jenkinspipeline
 
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/util"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/random"
 	"github.com/devstream-io/devstream/pkg/util/scm"
@@ -9,10 +10,11 @@ import (
 )
 
 func installPipeline(options configmanager.RawOptions) error {
-	opts, err := newJobOptions(options)
-	if err != nil {
+	opts := new(jobOptions)
+	if err := util.DecodePlugin(options, opts); err != nil {
 		return err
 	}
+
 	// 1. init jenkins Client
 	jenkinsClient, err := opts.Jenkins.newClient()
 	if err != nil {
@@ -38,10 +40,11 @@ func installPipeline(options configmanager.RawOptions) error {
 }
 
 func deletePipeline(options configmanager.RawOptions) error {
-	opts, err := newJobOptions(options)
-	if err != nil {
+	opts := new(jobOptions)
+	if err := util.DecodePlugin(options, opts); err != nil {
 		return err
 	}
+
 	// 1. delete jenkins job
 	client, err := opts.Jenkins.newClient()
 	if err != nil {

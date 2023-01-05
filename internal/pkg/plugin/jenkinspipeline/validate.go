@@ -5,6 +5,8 @@ import (
 
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/cifile"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/cifile/server"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/util"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/types"
 	"github.com/devstream-io/devstream/pkg/util/validator"
@@ -15,13 +17,9 @@ var offlineJenkinsScript string
 
 // setJenkinsDefault config default fields for usage
 func setJenkinsDefault(options configmanager.RawOptions) (configmanager.RawOptions, error) {
-	opts, err := newJobOptions(options)
-	if err != nil {
-		return nil, err
-	}
-
-	// set project default value
-	if err := opts.ProjectRepo.SetDefault(); err != nil {
+	const ciType = server.CIJenkinsType
+	opts := new(jobOptions)
+	if err := util.DecodePlugin(options, opts); err != nil {
 		return nil, err
 	}
 
@@ -35,6 +33,9 @@ func setJenkinsDefault(options configmanager.RawOptions) (configmanager.RawOptio
 			Vars: opts.Pipeline.GenerateCIFileVars(opts.ProjectRepo),
 		}
 	} else {
+		if opts.Pipeline.ConfigLocation == "" {
+			opts.Pipeline.ConfigLocation = "https://raw.githubusercontent.com/devstream-io/dtm-pipeline-templates/main/jenkins-pipeline/general/Jenkinsfile"
+		}
 		opts.CIFileConfig = opts.Pipeline.BuildCIFileConfig(ciType, opts.ProjectRepo)
 	}
 	// set field value if empty
@@ -49,12 +50,12 @@ func setJenkinsDefault(options configmanager.RawOptions) (configmanager.RawOptio
 
 // validateJenkins will validate jenkins jobName field and jenkins field
 func validateJenkins(options configmanager.RawOptions) (configmanager.RawOptions, error) {
-	opts, err := newJobOptions(options)
-	if err != nil {
+	opts := new(jobOptions)
+	if err := util.DecodePlugin(options, opts); err != nil {
 		return nil, err
 	}
 
-	if err = validator.CheckStructError(opts).Combine(); err != nil {
+	if err := validator.CheckStructError(opts).Combine(); err != nil {
 		return nil, err
 	}
 

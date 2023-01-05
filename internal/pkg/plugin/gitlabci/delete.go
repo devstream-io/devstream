@@ -3,18 +3,17 @@ package gitlabci
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer"
-	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/cifile"
-	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/cifile/server"
 )
 
 func Delete(options configmanager.RawOptions) (bool, error) {
 	operator := &installer.Operator{
 		PreExecuteOperations: installer.PreExecuteOperations{
-			ci.SetDefault(server.CIGitLabType),
+			setDefault,
 			validate,
 		},
 		ExecuteOperations: installer.ExecuteOperations{
+			//TODO(steinliber): delete gitlab runner if it exists
 			cifile.DeleteCIFiles,
 		},
 	}

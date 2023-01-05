@@ -2,9 +2,7 @@ package ci
 
 import (
 	"github.com/imdario/mergo"
-	"github.com/mitchellh/mapstructure"
 
-	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/cifile"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/cifile/server"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/config"
@@ -31,14 +29,6 @@ type CIConfig struct {
 
 	// used in package
 	CIFileConfig *cifile.CIFileConfig `mapstructure:"ci"`
-}
-
-func NewCIOptions(options configmanager.RawOptions) (*CIConfig, error) {
-	var opts CIConfig
-	if err := mapstructure.Decode(options, &opts); err != nil {
-		return nil, err
-	}
-	return &opts, nil
 }
 
 func (p *PipelineConfig) BuildCIFileConfig(ciType server.CIServerType, repoInfo *git.RepoInfo) *cifile.CIFileConfig {

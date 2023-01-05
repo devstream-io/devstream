@@ -18,7 +18,7 @@ func (c *Client) GetLastCommit() (*github.RepositoryCommit, error) {
 
 	if len(commits) == 0 {
 		msg := "no commits was found"
-		log.Info(msg)
+		log.Debug(msg)
 		return nil, fmt.Errorf(msg)
 	}
 

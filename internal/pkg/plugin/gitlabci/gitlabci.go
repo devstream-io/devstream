@@ -6,8 +6,8 @@ import (
 
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/helminstaller"
-	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/step"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/util"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
@@ -18,9 +18,9 @@ import (
 //go:embed tpl/helmValue.tpl.yaml
 var helmValueTpl string
 
-func preConfigGitlab(options configmanager.RawOptions) error {
-	opts, err := ci.NewCIOptions(options)
-	if err != nil {
+func preConfigGitlab(rawOptions configmanager.RawOptions) error {
+	opts := new(options)
+	if err := util.DecodePlugin(rawOptions, opts); err != nil {
 		return err
 	}
 
@@ -38,7 +38,11 @@ func preConfigGitlab(options configmanager.RawOptions) error {
 			return err
 		}
 	}
-	return createGitlabRunnerByHelm(opts.ProjectRepo)
+	// create runner in self-host gitlab
+	if opts.needCreateRunner() {
+		return createGitlabRunnerByHelm(opts.ProjectRepo)
+	}
+	return nil
 }
 
 // createGitlabRunnerByHelm will install gitlab runner if it's not exist
@@ -91,5 +95,10 @@ func createGitlabRunnerByHelm(repoInfo *git.RepoInfo) error {
 		},
 	}
 	_, err = helminstaller.Create(helmOptions)
-	return err
+	if err != nil {
+		log.Debugf("gitlab ci install runner by helm failed: %s", err)
+		return fmt.Errorf("gitlabci create runner by helm failed, please check your kubeneretes config")
+	}
+	// disable gitlab shared runner
+	return gitlabClient.DisableRepoSharedRunner()
 }

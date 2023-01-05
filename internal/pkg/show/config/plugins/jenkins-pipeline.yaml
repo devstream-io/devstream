@@ -38,6 +38,7 @@ tools:
       # configLocation is the location of Jenkinsfile, it can be remote or local address
       # if you don't config this field, devstream will use https://raw.githubusercontent.com/devstream-io/dtm-pipeline-templates/main/jenkins-pipeline/general/Jenkinsfile
       configLocation: https://raw.githubusercontent.com/devstream-io/devstream/main/staging/dtm-jenkins-pipeline-example/general/Jenkinsfile
+      # language config is required
       language:
         framework: # support gin/flask/spring for now
         name: LANGUAGE # support go/java/nodejs/python for now

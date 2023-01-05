@@ -22,6 +22,7 @@ tools:
       # configLocation is the location of workflows, it can be remote or local address
       # if you don't config this field, devstream will use https://raw.githubusercontent.com/devstream-io/dtm-pipeline-templates/main/github-actions/workflows/main.yml
       configLocation: https://raw.githubusercontent.com/devstream-io/devstream/main/staging/dtm-github-action-example/general
+      # language config is required
       language:
         framework: # support gin/flask/spring for now
         name: LANGUAGE # support go/java/nodejs/python for now

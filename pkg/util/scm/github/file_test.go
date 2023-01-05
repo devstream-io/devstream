@@ -11,7 +11,6 @@ import (
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/ghttp"
 
-	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm/git"
 	"github.com/devstream-io/devstream/pkg/util/scm/github"
 )
@@ -56,7 +55,6 @@ var _ = Describe("Github files methods", func() {
 				fileSHA = "s"
 				reqPath = fmt.Sprintf("%s/repos/test_owner/test_repo/contents/%s", basePath, testFile)
 				query := fmt.Sprintf("ref=%s", branch)
-				log.Infof("%s<->%s", reqPath, query)
 				mockRsp := map[string]string{
 					"type": "test",
 					"path": filePath,
@@ -83,7 +81,6 @@ var _ = Describe("Github files methods", func() {
 				fileSHA = "s"
 				reqPath = fmt.Sprintf("%s/repos/test_owner/test_repo/contents/%s", basePath, testFile)
 				query := fmt.Sprintf("ref=%s", branch)
-				log.Infof("%s<->%s", reqPath, query)
 				s.RouteToHandler("GET", reqPath, ghttp.CombineHandlers(
 					ghttp.VerifyRequest("GET", reqPath, query),
 					ghttp.RespondWithJSONEncoded(http.StatusNotFound, nil),

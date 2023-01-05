@@ -3,17 +3,15 @@ package general
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci"
-	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/cifile/server"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/step"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/util"
 	"github.com/devstream-io/devstream/pkg/util/log"
 	"github.com/devstream-io/devstream/pkg/util/scm"
 )
 
-var ciType = server.CIGithubType
-
 func preConfigGithub(options configmanager.RawOptions) error {
-	opts, err := ci.NewCIOptions(options)
-	if err != nil {
+	opts := new(ci.CIConfig)
+	if err := util.DecodePlugin(options, opts); err != nil {
 		return err
 	}
 

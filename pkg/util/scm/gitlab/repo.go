@@ -192,3 +192,15 @@ func (c *Client) ResetRepoRunnerToken() (string, error) {
 	}
 	return *token.Token, nil
 }
+
+func (c *Client) DisableRepoSharedRunner() error {
+	editOption := gitlab.EditProjectOptions{
+		Name:                 gitlab.String(c.Repo),
+		SharedRunnersEnabled: gitlab.Bool(false),
+	}
+	_, _, err := c.Projects.EditProject(c.GetRepoPath(), &editOption)
+	if err != nil && !pkgerror.CheckErrorMatchByMessage(err, errRepoNotFound, errRepoExist) {
+		return err
+	}
+	return nil
+}

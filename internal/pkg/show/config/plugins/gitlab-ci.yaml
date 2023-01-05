@@ -24,6 +24,7 @@ tools:
       # configLocation is the location of gitlab ci file, it can be remote or local address,
       # if you don't config this field, devstream will use https://raw.githubusercontent.com/devstream-io/dtm-pipeline-templates/main/gitlab-ci/.gitlab-ci.yml
       configLocation: .gitlabci.yml
+      # language config is required
       language:
         framework: # support gin/flask/spring for now
         name: LANGUAGE # support go/java/nodejs/python for now
@@ -34,3 +35,8 @@ tools:
         user: admin
         # image repo password
         password: YOUR_IMAGE_REPO_PASSWORD
+    # whether create gitlab runner for this project
+    # if runner.enable is true, devstream will use helm to install the project's runner
+    # and diable shared runner of this project
+    runner:
+      enable: false

@@ -3,13 +3,14 @@ package jenkinspipeline
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/cifile"
+	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/util"
 	"github.com/devstream-io/devstream/internal/pkg/statemanager"
 	"github.com/devstream-io/devstream/pkg/util/jenkins"
 )
 
 func getStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {
-	opts, err := newJobOptions(options)
-	if err != nil {
+	opts := new(jobOptions)
+	if err := util.DecodePlugin(options, opts); err != nil {
 		return nil, err
 	}
 

@@ -28,7 +28,7 @@ var (
 	}
 	gitlabGeneral = pipelineOption{
 		defaultConfigLocation: "https://raw.githubusercontent.com/devstream-io/dtm-pipeline-templates/main/gitlab-ci/.gitlab-ci.yml",
-		optionGeneratorFunc:   pipelineGeneralGenerator,
+		optionGeneratorFunc:   gitlabCIGenerator,
 	}
 	jenkinsGeneral = pipelineOption{
 		defaultConfigLocation: "https://raw.githubusercontent.com/devstream-io/dtm-pipeline-templates/main/jenkins-pipeline/general/Jenkinsfile",
@@ -46,6 +46,17 @@ func jenkinsGenerator(options RawOptions, globalVars *pipelineGlobalOption) RawO
 	jenkinsOptions, exist := options["jenkins"]
 	if exist {
 		newOptions["jenkins"] = jenkinsOptions
+	}
+	return newOptions
+}
+
+// gitlabGenerator generate gitlab ci config
+func gitlabCIGenerator(options RawOptions, globalVars *pipelineGlobalOption) RawOptions {
+	newOptions := pipelineGeneralGenerator(options, globalVars)
+	// extract jenkins config from options
+	gitlabRunnerOption, exist := options["runner"]
+	if exist {
+		newOptions["runner"] = gitlabRunnerOption
 	}
 	return newOptions
 }
