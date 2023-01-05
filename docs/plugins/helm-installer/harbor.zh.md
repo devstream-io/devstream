@@ -490,7 +490,7 @@ export IMAGE_REPO_ADDR=harbor.devstream.io
 ./image-pull-push.sh -f harbor-images.txt -r ${IMAGE_REPO_ADDR} -l -u
 ```
 
-如果你还没有一个私有镜像仓库，可以参考[这篇文章](../../use-cases/image-registry.zh.md)快速部署一个 Docker Registry。
+如果你还没有一个私有镜像仓库，可以参考[这篇文章](../../use-cases/reference/image-registry.zh.md)快速部署一个 Docker Registry。
 
 ### 5.3、参考配置
 

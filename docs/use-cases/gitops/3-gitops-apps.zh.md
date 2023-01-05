@@ -2,7 +2,7 @@
 
 ## 0 目标
 
-在本教程中，我们会使用 DevStream 的新特性 应用（Apps），来达到与 [GitOps](gitops.zh.md) 相似的效果。但它的配置更短，来展示 应用 的强大能力。如果你还没有读过原始的 GitOps 最佳实践，可以先点击前面的链接。
+在本教程中，我们会使用 DevStream 的新特性 应用（Apps），来达到与 [GitOps](2-gitops-tools.zh.md) 相似的效果。但它的配置更短，来展示 应用 的强大能力。如果你还没有读过原始的 GitOps 最佳实践，可以先点击前面的链接。
 
 我们会创建两个应用程序（一个基于 Python，另一个是 Go 语言），并且创建共用的 CI/CD 流水线，即两个应用程序都会通过 Argo CD 来部署，就像前面的 GitOps 做到的那样。
 
@@ -23,7 +23,7 @@ mkdir test
 cd test/
 ```
 
-下载 dtm（详见 [GitOps](./gitops.zh.md) 最佳实践，如果你还没有下载过的话）
+下载 dtm（详见 [GitOps](./2-gitops-tools.zh.md) 最佳实践，如果你还没有下载过的话）
 
 运行以下命令以生成配置文件：
 
@@ -106,7 +106,7 @@ tiexin@mbp ~/work/devstream-io/test $ ./dtm apply -f config.yaml -y
 
 让我们来继续看看 `apply` 命令的结果：
 
-与我们在[GitOps](./gitops.zh.md)最佳实践中所做的类似，我们可以检查 dtm 是否为两个应用程序创建了代码仓库并为其创建了 CI 流水线，同时安装了 Argo CD，而且两个应用程序都使用了 Argo CD 来部署到了 Kubernetes 集群中。
+与我们在[GitOps](./2-gitops-tools.zh.md)最佳实践中所做的类似，我们可以检查 dtm 是否为两个应用程序创建了代码仓库并为其创建了 CI 流水线，同时安装了 Argo CD，而且两个应用程序都使用了 Argo CD 来部署到了 Kubernetes 集群中。
 
 ---
 

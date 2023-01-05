@@ -1,78 +1,79 @@
 # GitOps
 
-## 0 目标
-在本教程中，我们将尝试通过 DevStream 来实现以下目标：
+## 0 Goal
 
-1. 创建一个 Python Web 应用程序仓库，基于 [Flask](https://flask.palletsprojects.com/en/2.2.x/) 框架；
-2. 使用 GitHub Actions 为我们创建的仓库设置基本的 CI 流水线；
-3. 在 _一个已有的 Kubernetes 集群_ 中安装 [Argo CD](https://argo-cd.readthedocs.io/en/stable/) 以实现 GitOps；
-4. 创建一个 Argo CD 应用程序，用于部署第 1 步中生成的 Web 应用程序。
+In this tutorial, we will try to use DevStream to achieve the following:
 
-> 注意：
+1. create a new repository for a Python web application written with [Flask](https://flask.palletsprojects.com/en/2.2.x/);
+2. setup basic CI pipelines for the repo we created with GitHub Actions;
+3. install [Argo CD](https://argo-cd.readthedocs.io/en/stable/) for GitOps in _an existing Kubernetes cluster_;
+4. create an Argo CD application that deploys the web application generated in step 1.
+
+> Note:
 > 
-> 在第 3 步中，Argo CD 安装在一个已有的 Kubernetes 集群中。DevStream 不配置基础设施，例如 Kubernetes 集群。
+> in step 3, Argo CD is installed in an existing Kubernetes cluster. Setting up infrastructure like a Kubernetes cluster is something DevStream chooses not to do.
 > 
-> 如果你想跟着本教程自己尝试一下，但不知道如何在本地启动和运行 Kubernetes 集群，下面的博客（也来自 DevStream）可能会有所帮助：
+> If you want to follow this tutorial and give it a try yourself but don't know how to get a Kubernetes cluster up and running locally, maybe the following blogs (also from DevStream) would help:
 > 
-> - [用 Kind 从零开始快速搭建本地 Kubernetes 测试环节](https://blog.devstream.io/posts/%E7%94%A8kind%E9%83%A8%E7%BD%B2k8s%E7%8E%AF%E5%A2%83/)
-> - [minikube结合阿里云镜像搭建本地开发测试环境](https://blog.devstream.io/posts/%E4%BD%BF%E7%94%A8minikube%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91%E9%95%9C%E5%83%8F%E5%AE%89%E8%A3%85k8s/)
+> - [Creating a Local Kubernetes Cluster from the Ground Up - a Tutorial of "Kind"](https://blog.devstream.io/posts/creating-a-local-k8s-cluster-with-kind/)
+> - [Getting Started with minikube](https://blog.devstream.io/posts/getting-started-with-minikube/)
 
 ---
 
-## 1 太长不看版：Demo 演示
+## 1 TL;DR: See It in Action
 
-如果你想看看 GitOps 的实际运行效果，可以看看下面的视频演示：
+If you prefer to see this GitOps doc in action, check out the video demo below:
 
 <iframe width="100%" height="500" src="https://www.youtube.com/embed/q7TK3vFr1kg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-这个演示录制于 DevStream 的旧版本，配置文件略有不同，但你还是能从中领略 DevStream GitOps 流程的魅力与要点。我们会尽快更新 DevStream 的最新版本的视频演示，敬请期待~
+It's from an older version of DevStream with slightly different configuration files, but you get the gist. We will update the video with the latest version of DevStream soon; bear with us for a little while.
 
-对于中文读者，可以看看这个：
+For Chinese readers, watch this one:
 
 <iframe src="//player.bilibili.com/player.html?aid=426762434&bvid=BV1W3411P7oW&cid=728576152&high_quality=1&danmaku=0" allowfullscreen="allowfullscreen" width="100%" height="500" scrolling="no" frameborder="0" sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts"></iframe>
 
-光看完全不尽兴吧？跟着后面的步骤一起试一试吧！
+However, if you are like us, who prefer to do things hands-on and get their hands dirty, read on, follow the steps, and have a go yourself!
 
 ---
 
-## 2 概览
+## 2 Overview
 
-DevStream 将使用下面的插件来实现[第 0 节](#)中描述的目标：
+DevStream will use the following plugins to achieve the goal described in [Section 0](#0-goal):
 
-1. [repo-scaffolding](../plugins/repo-scaffolding.md)
-2. [github-actions](../plugins/github-actions.md)
-3. [helm-installer](../plugins/helm-installer/helm-installer.md)
-4. [argocdapp](../plugins/argocdapp.md)
+1. [repo-scaffolding](../../plugins/repo-scaffolding.md)
+2. [github-actions](../../plugins/github-actions.md)
+3. [helm-installer](../../plugins/helm-installer/helm-installer.md)
+4. [argocdapp](../../plugins/argocdapp.md)
 
-不过，你不需要担心这些插件，因为 DevStream 会帮你自动管理它们。
+However, you do not have to worry about these plugins because DevStream will manage them automatically for you.
 
 ---
 
-## 3 启程：下载 DevStream (`dtm`)
+## 3 Getting Started: Download DevStream (`dtm`)
 
-为本教程创建一个临时工作目录：
+Create a temporary working directory for this tutorial:
 
 ```bash
 mkdir test
 cd test/
 ```
 
-接着，在新创建的目录下，运行下面的命令：
+Then, under the newly created directory, execute the following command:
 
 ```shell
 sh -c "$(curl -fsSL https://download.devstream.io/download.sh)
 ```
 
-这个脚本会根据你的操作系统来下载对应的 `dtm` 二进制文件。然后，赋予其可执行权限。
+This script checks your system and downloads the corresponding `dtm` binary. Then the binary will be granted execution permission.
 
-如果你执行 `ls` 命令，你会看到 `dtm` 二进制文件已经被下载下来了：
+If you do an `ls`, you can see the binary `dtm` has been downloaded:
 
 ```bash
 tiexin@mbp ~/work/devstream-io/test $ ls
 dtm
 ```
 
-然后，出于测试目的，我们可以尝试运行它，你会看到类似下面的输出：
+And as a test, try to execute it, and you will get similar output to the following:
 
 ```bash
 tiexin@mbp ~/work/devstream-io/test $ ./dtm
@@ -110,75 +111,78 @@ Flags:
 Use "dtm [command] --help" for more information about a command.
 ```
 
-> 可选：你可以把 `dtm` 移动到 $PATH 环境变量中的某个目录下。例如：`mv dtm /usr/local/bin/`。这样，你就可以直接运行 `dtm` 而不需要再加上 `./` 前缀了。
+> Optional: you can move `dtm` to a directory which is in your $PATH. For example: `mv dtm /usr/local/bin/`. This will allow you to run `dtm` directly without having to prefix it with the dot and slash (`./dtm`).
 > 
-> 更多安装方式详见[安装 dtm](../install.zh.md)。
+> For more methods on how to install DevStream, see [install dtm](../../install.md).
 
 ---
 
-## 4 配置文件
+## 4 Config File
 
-运行以下命令来生成 gitops 的模板配置文件 `config.yaml` 。
+Run command below to get a valid `config.yaml` file:
 
 ```shell
 ./dtm show config -t gitops > config.yaml
 ```
 
-按需修改 `config.yaml` 文件中的 `vars` 部分。记得修改 `githubUser` 和 `dockerUser` 的值为你自己的用户名。
+Then modify the `vars` section in the `config.yaml` file accordingly. Please update the values for `githubUser` and `dockerUser` to your real users.
 
-在上面的例子中，我把这些变量设置成了下面的值：
+In the example above, I set these vars like the following:
 
-| 变量        | 例子         | 说明                                |
-|------------|-------------|------------------------------------|
-| githubUser | IronCore864 | 大小写敏感，请改成你的 GitHub 用户名    |
-| dockerUser | ironcore864 | 大小写敏感，请改成你的 DockerHub 用户名 |
+| Variable   | Example     | Note                                                      |
+|------------|-------------|-----------------------------------------------------------|
+| githubUser | IronCore864 | case-sensitive, use your GitHub username strictly here    |
+| dockerUser | ironcore864 | case-sensitive, use your DockerHub username strictly here |
 
-## 5 环境变量
+## 5 Environment Variables
 
-我们还需要设置以下环境变量：
+The following environment variables are required for this to work:
 
 ```bash
 export GITHUB_TOKEN="YOUR_GITHUB_TOKEN_HERE"
 export IMAGE_REPO_PASSWORD="YOUR_DOCKERHUB_TOKEN_HERE"
 ```
 
-> 提示：
-> 如果你不知道如何创建这两个 token，可以参考：
+> Note:
 > 
-> - GITHUB_TOKEN：[Manage API tokens for your Atlassian account](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
-> - IMAGE_REPO_PASSWORD：[Manage access tokens](https://docs.docker.com/docker-hub/access-tokens/)
+> if you don't know how to create these two tokens, check out:
+> 
+> - GITHUB_TOKEN: [Manage API tokens for your Atlassian account](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+> - IMAGE_REPO_PASSWORD: [Manage access tokens](https://docs.docker.com/docker-hub/access-tokens/)
 
 ---
 
-## 6 初始化（Init）
+## 6 Init
 
-运行以下命令，以根据配置文件自动下载所需插件：
+Run:
 
 ```bash
 ./dtm init -f config.yaml
 ```
 
-你会看到类似下面的输出：
+This downloads the required plugins, according to the config file, automatically.
+
+You'll get some outputs similar to the following:
 
 ```bash
 2022-12-05 17:46:01 ℹ [INFO]  Using dir </Users/tiexin/.devstream/plugins> to store plugins.
-2022-12-05 17:46:01 ℹ [INFO]  -------------------- [  repo-scaffolding-darwin-arm64_0.10.1  ] --------------------
-... (略)
-... (略)
+2022-12-05 17:46:01 ℹ [INFO]  -------------------- [  repo-scaffolding-darwin-arm64_0.10.2  ] --------------------
+... (omitted)
+... (omitted)
 2022-12-05 17:46:51 ✔ [SUCCESS]  Initialize finished.
 ```
 
 ---
 
-## 7 应用（Apply）
+## 7 Apply
 
-运行：
+Run:
 
 ```bash
 ./dtm apply -f config.yaml -y
 ```
 
-你会看到类似下面的输出：
+You will see similar outputs as the following:
 
 ```
 2022-12-05 17:49:49 ℹ [INFO]  Apply started.
@@ -189,8 +193,8 @@ export IMAGE_REPO_PASSWORD="YOUR_DOCKERHUB_TOKEN_HERE"
 2022-12-05 17:49:49 ℹ [INFO]  Tool (argocdapp/default) found in config but doesn't exist in the state, will be created.
 2022-12-05 17:49:49 ℹ [INFO]  Start executing the plan.
 2022-12-05 17:49:49 ℹ [INFO]  Changes count: 4.
-... (略)
-... (略)
+... (omitted)
+... (omitted)
 2022-12-05 17:51:51 ℹ [INFO]  -------------------- [  Processing progress: 4/4.  ] --------------------
 2022-12-05 17:51:51 ℹ [INFO]  Processing: (argocdapp/default) -> Create ...
 2022-12-05 17:51:52 ℹ [INFO]  application.argoproj.io/helloworld created
@@ -202,25 +206,25 @@ export IMAGE_REPO_PASSWORD="YOUR_DOCKERHUB_TOKEN_HERE"
 
 ---
 
-## 8 查看结果
+## 8 Check the Results
 
-让我们来看看 `apply` 命令的结果。
+Let's continue to look at the results of the `apply` command.
 
-### 8.1 GitHub 仓库
+### 8.1 Repository
 
-DevStream 已经通过 `repo-scaffolding` 插件自动创建了一个仓库：
+The repository is created automatically by DevStream with scaffolding code:
 
-![](../images/gitops-a.png)
+![](../../images/gitops-a.png)
 
-### 8.2 基于 GitHub Actions 的 CI 流水线
+### 8.2 CI Pipelines with GitHub Actions
 
-GitHub Actions 流水线已经被创建并运行：
+GitHub Actions pipelines are created and executed:
 
-![](../images/gitops-b.png)
+![](../../images/gitops-b.png)
 
-### 8.3 Argo CD 的安装
+### 8.3 Argo CD Installation
 
-Argo CD 已经被安装到了 Kubernetes 集群中：
+Argo CD is installed in your Kubernetes cluster:
 
 ```bash
 tiexin@mbp ~/work/devstream-io/test $ kubectl get namespaces
@@ -242,9 +246,9 @@ argocd-repo-server-d4f5cc7cb-8gj24                 1/1     Running   0          
 argocd-server-5bb75c4bd9-g948r                     1/1     Running   0          5m43s
 ```
 
-### 8.4 使用 Argo CD 持续部署
+### 8.4 Continuous Deployment with Argo CD
 
-CI 流水线已经构建了一个 Docker 镜像并推送到了 Dockerhub，而 DevStream 创建的 Argo CD 应用也部署了这个应用：
+The CI pipelines build a Docker image and push it into Dockerhub, and an Argo CD application created by DevStream deploys the app already:
 
 ```bash
 tiexin@mbp ~/work/devstream-io/test $ kubectl get deployment -n default
@@ -259,25 +263,25 @@ helloworld   ClusterIP   10.96.73.97   <none>        80/TCP    5m27s
 kubernetes   ClusterIP   10.96.0.1     <none>        443/TCP   8m2s
 ```
 
-我们可以通过端口转发来访问这个应用：
+If you do a port-forwarding:
 
 ```bash
 kubectl port-forward -n default svc/helloworld 8080:80
 ```
 
-在浏览器中访问 `localhost:8080`，你可以看到应用返回了一个 "Hello, World!"。大功告成！
+And accesses `localhost:8080` in your browser, you can see the deployed app return a "Hello, World!" to you. Hooray!
 
 ---
 
-## 9 清理
+## 9 Clean Up
 
-运行：
+Run:
 
 ```bash
 ./dtm delete -f config.yaml -y
 ```
 
-你会看到如下的输出：
+And you will get similar outputs to the following:
 
 ```bash
 2022-12-05 17:59:25 ℹ [INFO]  Delete started.
@@ -288,14 +292,14 @@ kubectl port-forward -n default svc/helloworld 8080:80
 2022-12-05 17:59:26 ℹ [INFO]  Tool (helm-installer/argocd) will be deleted.
 2022-12-05 17:59:26 ℹ [INFO]  Start executing the plan.
 2022-12-05 17:59:26 ℹ [INFO]  Changes count: 4.
-... (略)
-... (略)
+... (omitted)
+... (omitted)
 2022-12-05 17:59:35 ℹ [INFO]  -------------------- [  Processing done.  ] --------------------
 2022-12-05 17:59:35 ✔ [SUCCESS]  All plugins deleted successfully.
 2022-12-05 17:59:35 ✔ [SUCCESS]  Delete finished.
 ```
 
-后面我们就能删除创建的所有文件了：
+Then you can delete what we created:
 
 ```bash
 cd ../

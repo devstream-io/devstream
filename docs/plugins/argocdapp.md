@@ -7,7 +7,7 @@ This plugin creates an [Argo CD Application](https://argo-cd.readthedocs.io/en/s
 - Argo CD itself must have been already installed before the usage of this plugin.
   To install Argo CD, use the [helm-installer plugin](./helm-installer/argocd.md).
   Or you can use both plugins(argocd+argocdapp) at the same time.
-  See [GitOps Toolchain](../use-cases/gitops.md) for more info.
+  See [GitOps Toolchain](../use-cases/gitops/2-gitops-tools.md) for more info.
 - Currently, only the Helm chart is supported when creating the Argo CD application.
 
 ## Usage

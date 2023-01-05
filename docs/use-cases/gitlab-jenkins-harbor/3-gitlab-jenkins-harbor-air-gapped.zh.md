@@ -62,7 +62,7 @@ curl -o image-pull-push.sh https://raw.githubusercontent.com/devstream-io/devstr
 chmod +x image-pull-push.sh
 ```
 
-如果你还没有一个私有镜像仓库，可以参考[这篇文章](../image-registry.zh.md)快速部署一个 Docker Registry。
+如果你还没有一个私有镜像仓库，可以参考[这篇文章](../reference/image-registry.zh.md)快速部署一个 Docker Registry。
 
 接下来，你就可以通过下述命令快速完成镜像的下载和上传了：
 
