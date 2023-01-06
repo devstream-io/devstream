@@ -61,7 +61,7 @@ cd test/
 接着，在新创建的目录下，运行下面的命令：
 
 ```shell
-sh -c "$(curl -fsSL https://download.devstream.io/download.sh)
+sh -c "$(curl -fsSL https://download.devstream.io/download.sh)"
 ```
 
 这个脚本会根据你的操作系统来下载对应的 `dtm` 二进制文件。然后，赋予其可执行权限。

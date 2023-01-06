@@ -61,7 +61,7 @@ cd test/
 Then, under the newly created directory, execute the following command:
 
 ```shell
-sh -c "$(curl -fsSL https://download.devstream.io/download.sh)
+sh -c "$(curl -fsSL https://download.devstream.io/download.sh)"
 ```
 
 This script checks your system and downloads the corresponding `dtm` binary. Then the binary will be granted execution permission.
