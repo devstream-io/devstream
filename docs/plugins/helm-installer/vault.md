@@ -1,5 +1,15 @@
 # Install Vault with DevStream
 
+## InstanceID Prefix
+
+The `instanceID` prefix must be `vault`, the minimum tools configuration example:
+
+```yaml
+tools:
+- name: helm-installer
+  instanceID: vault
+```
+
 ## Default Configs
 
 | key                | default value                       | description                                        |

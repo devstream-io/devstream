@@ -1,5 +1,15 @@
 # Install DevLake with DevStream
 
+## InstanceID Prefix
+
+The `instanceID` prefix must be `devlake`, the minimum tools configuration example:
+
+```yaml
+tools:
+- name: helm-installer
+  instanceID: devlake
+```
+
 ## Default Configs
 
 | key                | default value                        | description                                        |

@@ -1,5 +1,15 @@
 # 使用 DevStream 部署 Artifactory
 
+## 前缀匹配
+
+`instanceID` 的前缀需要是 `artifactory`，最小化 tools 配置示例：
+
+```yaml
+tools:
+- name: helm-installer
+  instanceID: artifactory
+```
+
 ## 默认配置
 
 | key                | default value           | description                                        |

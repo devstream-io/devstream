@@ -1,5 +1,15 @@
 # Install Argo CD with DevStream
 
+## InstanceID Prefix
+
+The `instanceID` prefix must be `argocd`, the minimum tools configuration example:
+
+```yaml
+tools:
+- name: helm-installer
+  instanceID: argocd
+```
+
 ## Default Configs
 
 | key                | default value                        | description                                        |

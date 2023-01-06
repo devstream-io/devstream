@@ -1,5 +1,15 @@
 # 使用 DevStream 部署 OpenLDAP
 
+## 前缀匹配
+
+`instanceID` 的前缀需要是 `openldap`，最小化 tools 配置示例：
+
+```yaml
+tools:
+- name: helm-installer
+  instanceID: openldap
+```
+
 ## 默认配置
 
 | 配置项              | 默认值                    | 描述                                 |

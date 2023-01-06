@@ -129,7 +129,8 @@ nav:
   - GitOps:
     - use-cases/gitops/*.md
   - Reference:
-    - use-cases/reference/*.md 
+    - use-cases/reference/*.md
+  - use-cases/helm-installer*.md
 - Plugins:
   - plugins/plugins-list*.md
   - Helm Installer:
