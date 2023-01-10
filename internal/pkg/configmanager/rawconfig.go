@@ -4,12 +4,13 @@ import (
 	"bytes"
 	"fmt"
 	"regexp"
+	"strings"
 	"unicode"
 
 	"gopkg.in/yaml.v3"
 )
 
-// rawConfig respent every valid config block for devstream
+// rawConfig represent every valid config block for devstream
 type rawConfig struct {
 	apps              []byte
 	pipelineTemplates []byte
@@ -77,9 +78,40 @@ func (c *rawConfig) validate() error {
 
 // getVars will generate variables from vars config
 func (c *rawConfig) getVars() (map[string]any, error) {
-	var globalVars map[string]any
-	err := yaml.Unmarshal(c.vars, &globalVars)
-	return globalVars, err
+	var (
+		globalVarsOrigin, globalVarsParsedNest map[string]any
+		err                                    error
+	)
+
+	// [[]] is array in yaml, replace them, or yaml.Unmarshal will return err
+	const (
+		leftOrigin, leftReplaced   = "[[", "【$【"
+		rightOrigin, rightReplaced = "]]", "】$】"
+	)
+	converter := strings.NewReplacer(leftOrigin, leftReplaced, rightOrigin, rightReplaced)
+	varsReplacedSquareBrackets := converter.Replace(string(c.vars))
+
+	// get origin vars from config
+	if err = yaml.Unmarshal([]byte(varsReplacedSquareBrackets), &globalVarsOrigin); err != nil {
+		return nil, err
+	}
+
+	// restore vars
+	restorer := strings.NewReplacer(leftReplaced, leftOrigin, rightReplaced, rightOrigin)
+	for k, v := range globalVarsOrigin {
+		switch value := v.(type) {
+		case string:
+			globalVarsOrigin[k] = restorer.Replace(value)
+		case []byte:
+			globalVarsOrigin[k] = restorer.Replace(string(value))
+		}
+	}
+
+	// parse nested vars
+	if globalVarsParsedNest, err = parseNestedVars(globalVarsOrigin); err != nil {
+		return nil, err
+	}
+	return globalVarsParsedNest, nil
 }
 
 // getToolsWithVars will generate Tools from tools config

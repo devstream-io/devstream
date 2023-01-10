@@ -22,6 +22,7 @@ config:
 vars:
   foo1: bar1
   foo2: 123
+  foo3: foo1+foo2=[[foo1]][[foo2 ]]!
   appName: service-a
   registryType: dockerhub
   argocdNamespace: argocd
@@ -68,6 +69,7 @@ tools:
   dependsOn: []
   options:
     foo1: [[ foo1 ]]
+    foo3: [[ foo3 ]]
 - name: plugin2
   instanceID: tluafed
   dependsOn: []
@@ -106,6 +108,7 @@ pipelineTemplates:
 			DependsOn:  []string{},
 			Options: RawOptions{
 				"foo1":       "bar1",
+				"foo3":       "foo1+foo2=bar1123!",
 				"instanceID": "default",
 			},
 		}
@@ -233,8 +236,10 @@ pipelineTemplates:
 				}))
 
 				// vars
-				Expect(len(cfg.Vars)).To(Equal(5))
+				Expect(len(cfg.Vars)).To(Equal(6))
 				Expect(cfg.Vars["foo1"]).To(Equal("bar1"))
+				Expect(cfg.Vars["foo2"]).To(Equal(123))
+				Expect(cfg.Vars["foo3"]).To(Equal("foo1+foo2=bar1123!"))
 
 				// tools
 				Expect(len(cfg.Tools)).To(Equal(5))
