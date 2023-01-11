@@ -38,7 +38,7 @@
 
 #### Linux
 
-**注：主要参考了 [Linux 上的 bash 自动补全](https://kubernetes.io/docs/tasks/tools/included/optional-kubectl-configs-bash-linux/)**
+**注：主要参考了 [Install and Set Up kubectl on Linux](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#enable-shell-autocompletion)**
 
 自动补全脚本依赖于 `bash-completion`, 需要提前安装：
 
@@ -71,7 +71,7 @@ source ~/.bashrc
 
 ```{admonition} Note
 :class: note
-主要参考了 [MacOS 上的 bash 自动补全](https://kubernetes.io/docs/tasks/tools/included/optional-kubectl-configs-bash-mac/)
+主要参考了 [Install and Set Up kubectl on macOS](https://kubernetes.io/docs/tasks/tools/install-kubectl-macos/#enable-shell-autocompletion)
 ```
 
 自动补全脚本依赖于 `bash-completion`, 需要提前安装：
