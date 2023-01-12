@@ -38,7 +38,7 @@ Once the installation is complete, you need to integrate the terminal you are us
 
 #### On Linux
 
-**Note: Main reference [bash auto-completion on Linux](https://kubernetes.io/docs/tasks/tools/included/optional-kubectl-configs-bash-linux/)**
+**Note: Main reference [bash auto-completion on Linux](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#enable-shell-autocompletion)**
 
 The completion script depends on `bash-completion`, So you have to install it first.
 
@@ -68,10 +68,8 @@ source ~/.bashrc
 After reloading your shell, dtm autocompletion should be working!
 #### On MacOS
 
-```{admonition} Note
-:class: note
-Main reference [bash auto-completion on macOS](https://kubernetes.io/docs/tasks/tools/included/optional-kubectl-configs-bash-mac/)
-```
+!!! note
+    Main reference [bash auto-completion on macOS](https://kubernetes.io/docs/tasks/tools/install-kubectl-macos/#enable-shell-autocompletion)
 
 The completion script depends on `bash-completion`, So you have to install it first.
 
