@@ -259,14 +259,14 @@ NAME                          READY   STATUS    RESTARTS   AGE
 helloworld-69b5586b94-wjwd9   1/1     Running   0          5m18s
 tiexin@mbp ~/work/devstream-io/test $ kubectl get services -n default
 NAME         TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)   AGE
-helloworld   ClusterIP   10.96.73.97   <none>        80/TCP    5m27s
+helloworld   ClusterIP   10.96.73.97   <none>        8080/TCP  5m27s
 kubernetes   ClusterIP   10.96.0.1     <none>        443/TCP   8m2s
 ```
 
 If you do a port-forwarding:
 
 ```bash
-kubectl port-forward -n default svc/helloworld 8080:80
+kubectl port-forward -n default svc/helloworld 8080:8080
 ```
 
 And accesses `localhost:8080` in your browser, you can see the deployed app return a "Hello, World!" to you. Hooray!
