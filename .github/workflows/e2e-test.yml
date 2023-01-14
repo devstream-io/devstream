@@ -94,12 +94,12 @@ jobs:
       - name: test 2 - check if pod is ready
         run: while [[ $(kubectl get pods -l app=dtm-e2e-go -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "pod not ready yet..."; sleep 3; done
         timeout-minutes: 10
-      - name: test 2 - check flask app can be reached
+      - name: test 2 - check gin app can be reached
         run: |
           # get cluster ip of the service created by the argocd
           clusterIP=$(kubectl get svc dtm-e2e-go -n default -o jsonpath='{.spec.clusterIP}')
-          # curl flask url and check if it returns "Hello, World!", if not, echo error and exit 1
-          curl -s http://$clusterIP:8080 | grep "Hello, World!" || (echo "failed to access to flask app"  && exit 1)
+          # curl gin url and check if it returns content which contains "Blue Train", if not, echo error and exit 1
+          curl -s http://$clusterIP:8080/albums/1 | grep "Blue Train" || (echo "failed to access to gin app"  && exit 1)
       - name: test 2 - clean
         run: ./dtm delete -f e2e-apps.yaml -y
       # test3 is gitlabci-argocd

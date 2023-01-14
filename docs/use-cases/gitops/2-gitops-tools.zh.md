@@ -256,14 +256,14 @@ NAME                          READY   STATUS    RESTARTS   AGE
 helloworld-69b5586b94-wjwd9   1/1     Running   0          5m18s
 tiexin@mbp ~/work/devstream-io/test $ kubectl get services -n default
 NAME         TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)   AGE
-helloworld   ClusterIP   10.96.73.97   <none>        80/TCP    5m27s
+helloworld   ClusterIP   10.96.73.97   <none>        8080/TCP  5m27s
 kubernetes   ClusterIP   10.96.0.1     <none>        443/TCP   8m2s
 ```
 
 我们可以通过端口转发来访问这个应用：
 
 ```bash
-kubectl port-forward -n default svc/helloworld 8080:80
+kubectl port-forward -n default svc/helloworld 8080:8080
 ```
 
 在浏览器中访问 `localhost:8080`，你可以看到应用返回了一个 "Hello, World!"。大功告成！
