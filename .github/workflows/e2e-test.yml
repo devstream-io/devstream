@@ -51,7 +51,7 @@ jobs:
           cache: true
       - name: Build
         run: |
-          apt-get install gcc automake autoconf libtool make -y
+          sudo apt-get install gcc automake autoconf libtool make -y
           make build -j8
       - name: Install AWS CLI v2
         run: |
