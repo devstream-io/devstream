@@ -8,6 +8,7 @@ import (
 	"time"
 
 	helmclient "github.com/mittwald/go-helm-client"
+	"github.com/spf13/viper"
 	"helm.sh/helm/v3/pkg/repo"
 
 	"github.com/devstream-io/devstream/pkg/util/log"
@@ -29,12 +30,17 @@ type Option func(*Helm)
 
 // NewHelm creates a new Helm
 func NewHelm(param *HelmParam, option ...Option) (*Helm, error) {
+	isDebugMode := viper.GetBool("debug")
+	if isDebugMode {
+		log.Info("Helm is running in debug mode.")
+	}
+
 	hClient, err := helmclient.New(
 		&helmclient.Options{
 			Namespace:        param.Chart.Namespace,
 			RepositoryCache:  repositoryCache,
 			RepositoryConfig: repositoryConfig,
-			Debug:            true,
+			Debug:            isDebugMode,
 		},
 	)
 	if err != nil {
@@ -155,7 +161,7 @@ func GetAnnotationName() string {
 	return "meta.helm.sh/release-name"
 }
 
-// GetAnnotationName will return label key for service created by helm
+// GetLabelName will return label key for service created by helm
 func GetLabelName() string {
 	return "app.kubernetes.io/instance"
 }

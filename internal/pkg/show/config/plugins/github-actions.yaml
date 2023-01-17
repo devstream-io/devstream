@@ -8,15 +8,21 @@ tools:
   # options for the plugin
   options:
     scm:
-      # url is the project repo location
-      url: git@github.com/root/test-exmaple.git
-      # project branch, default branch will be main
-      branch: YOUR_PROJECT_BRANCH
-      # scm repo token
-      token: YOUR_REPO_TOKEN
+      # scm common field
+      branch: YOUR_REPO_BRANCH
+      token: YOUR_REPO_SCM_TOKEN
+      # you can directly use the url of repo (git@github.com/root/test-exmaple.git for example)
+      url: YOUR_REPO_URL
+      # or you can config detailed fields for this repo
+      owner: YOUR_REPO_OWNER
+      org: YOUR_REPO_ORG
+      name: YOUR_REPO_NAME
+      scmType: github
     pipeline:
-      # workFlowfilePath is the location of workflows, it can be remote or local
+      # configLocation is the location of workflows, it can be remote or local address
+      # if you don't config this field, devstream will use https://raw.githubusercontent.com/devstream-io/dtm-pipeline-templates/main/github-actions/workflows/main.yml
       configLocation: https://raw.githubusercontent.com/devstream-io/devstream/main/staging/dtm-github-action-example/general
+      # language config is required
       language:
         framework: # support gin/flask/spring for now
         name: LANGUAGE # support go/java/nodejs/python for now

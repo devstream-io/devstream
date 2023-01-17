@@ -1,5 +1,15 @@
 # 使用 DevStream 部署 kube-prometheus
 
+## 前缀匹配
+
+`instanceID` 的前缀需要是 `kube-prometheus`，最小化 tools 配置示例：
+
+```yaml
+tools:
+- name: helm-installer
+  instanceID: kube-prometheus
+```
+
 ## 默认配置
 
 | 配置项              | 默认值                    | 描述                                 |

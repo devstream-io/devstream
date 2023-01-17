@@ -2,7 +2,7 @@
 
 这个插件可以基于本地或者远程的文件在 GitLab/GitHub 安装 CI 配置
 
-## 使用
+## 用例
 
 下面的配置文件展示的是"tool file"的内容。
 
@@ -12,29 +12,16 @@
 --8<-- "ci-generic.yaml"
 ```
 
-### 字段配置
-
-| key                    | description                                                                                                      |
-| ----                   | ----                                                                                                             |
-| ci.configLocation      | If your ci file is local or remote, you can set the this field to get ci file                                    |
-| ci.configContents      | If you want to config ci in devstream, you can config configContents directly                                    |
-| ci.type                | ci type, support gitlab, github, jenkins for now                                                                 |
-| projectRepo.owner      | destination repo owner                                                                                           |
-| projectRepo.org        | destination repo org                                                                                             |
-| projectRepo.name       | destination repo name                                                                                            |
-| projectRepo.branch     | destination repo branch                                                                                          |
-| projectRepo.scmType    | destination repo type, support github/gitlab for now                                                             |
-| projectRepo.baseURL    | if you use self-build gitlab, you can set this field to gitlab address                                           |
-| projectRepo.visibility | if you use gitlab, you can set this field for repo permission                                                    |
-
 **注意事项：**
 
+- `projectRepo` 配置字段用于表示代码仓库的配置信息，具体配置可查看[SCM配置项](./scm-option.zh.md)
 - `ci.configContents` 和 `ci.configLocation` 不能同时为空。
-- 如果你同时设置了 `ci.configLocation` 和 `ci.configContents`，`ci.configContents` 将会被优先使用。
+- 如果你配置了 `projectRepo.scmType` 为 `github`，那 `ci.type` 就不能是 `gitlab-ci`。
+- 如果你配置了 `projectRepo.scmType` 为 `gitlab`，那 `ci.type` 就不能是 `github-actions`。
 
-### 示例
+## 示例
 
-#### 使用本地的 Workflows 目录
+### 使用本地的 Workflows 目录
 
 ```yaml
 tools:
@@ -54,7 +41,7 @@ tools:
 
 这个配置将会把本地当前运行环境下的 workflows 目录放置于 GitHub 的 `.github/workflows` 目录。
 
-#### 使用 HTTP 获取远程的CI文件
+### 使用 HTTP 获取远程的CI文件
 
 ```yaml
 tools:
@@ -75,7 +62,7 @@ tools:
 
 这个配置将会把[URL](https://raw.githubusercontent.com/DeekshithSN/Jenkinsfile/inputTest/Jenkinsfile) 中的 Jenkinsfile 文件置于 GitLab 的仓库。
 
-#### 使用Github仓库中的CI文件
+### 使用Github仓库中的CI文件
 ```yaml
 tools:
 - name: ci-generic
@@ -95,7 +82,7 @@ tools:
 
 这个配置将会搜索[devstream 仓库](https://github.com/devstream-io/devstream)下的staging/dtm-jenkins-pipeline-example/general 目录，获取到目录下的 Jenkinsfile，置于 gitlab 仓库内。
 
-#### 在Devstream中直接配置CI文件
+### 在Devstream中直接配置CI文件
 
 ```yaml
 tools:

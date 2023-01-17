@@ -18,7 +18,7 @@ tools:
 ```
 
 在这个配置文件里，和插件相关的配置 name 和 instanceID，前者表示你将使用 `helm-installer` 插件，后者表示插件实例名。
-请注意这个 instanceID 使用了 "argocd-" 前缀，DevStream 会识别这个前缀，尝试寻找 Argo CD 应用对应的 Chart，并设置一系列默认值，然后开始部署。
+请注意这个 instanceID 使用了 "argocd" 前缀，DevStream 会识别这个前缀，尝试寻找 Argo CD 应用对应的 Chart，并设置一系列默认值，然后开始部署。
 
 你可以在 [Install Argo CD with DevStream](./argocd.zh.md) 中查看 DevStream 为你设置了哪些默认值。
 
@@ -47,6 +47,7 @@ tools:
       chartName: ""
       version: ""
       namespace: ""
+      releaseName: ""
       wait: true
       timeout: 10m
       upgradeCRDs: true
@@ -58,7 +59,7 @@ tools:
 ### 2.1、instanceID 使用技巧
 
 instanceID 的前缀如果能够匹配到某个已经被支持的工具（详见文末列表），那么 DevStream 会为你设置一系列的默认值。
-比如 "argocd-001" 的前缀 "argocd-" 能够匹配到 "argocd" + "-"，因此 Argo CD 的默认 Chart 配置会被应用，于是如下最小化配置：
+比如 "argocd-001" 的前缀 "argocd-" 能够匹配到 "argocd"，因此 Argo CD 的默认 Chart 配置会被应用，于是如下最小化配置：
 
 ```yaml
 tools:
@@ -74,13 +75,14 @@ tools:
   dependsOn: [ ]
   options:
     repo:
-      name: ""
-      url: ""
+      name: "argo"
+      url: "https://argoproj.github.io/argo-helm"
     chart:
       chartPath: ""
-      chartName: ""
+      chartName: "argo/argo-cd"
       version: ""
-      namespace: ""
+      namespace: "argocd"
+      releaseName: "argocd"
       wait: true
       timeout: 10m
       upgradeCRDs: true

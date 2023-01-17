@@ -1,0 +1,25 @@
+config:
+  state:
+    backend: local
+    options:
+      stateFile: devstream.state
+
+vars:
+  githubOrganization: devstream-io
+  repoName: dtm-e2e-go
+  kanbanBoardName: dtmKanbanTest
+
+tools:
+- name: trello
+  instanceID: default
+  dependsOn: [ ]
+  options:
+    scm:
+      org: [[ githubOrganization ]]
+      name: [[ repoName ]]
+      scmType: github
+      token: [[ env GITHUB_TOKEN ]]
+    board:
+      name: [[ kanbanBoardName ]]
+      apikey: [[ env TRELLO_API_KEY ]]
+      token: [[ env TRELLO_TOKEN ]]

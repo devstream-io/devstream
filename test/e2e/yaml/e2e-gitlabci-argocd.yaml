@@ -1,0 +1,41 @@
+config:
+  state:
+    backend: local
+    options:
+      stateFile: devstream-e2e-gitlabci-argocd.state
+
+vars:
+  appName: dtme2egitlabciargocd
+  gitlabURL: https://gitlab.com
+  gitlabUsername: aFlyBird
+  defaultBranch: main
+  dockerhubUser: dtme2etest
+
+tools:
+- name: helm-installer
+  instanceID: argocd
+apps:
+- name: [[ appName ]]
+  spec:
+    language: python
+    framework: flask
+  repo:
+    url: [[ gitlabURL ]]/[[ gitlabUsername ]]/[[ appName ]].git
+    branch: [[ defaultBranch ]]
+    token: [[ env GITLAB_TOKEN ]] # use "GITLAB_TOKEN" env var
+  repoTemplate:
+    url: https://github.com/devstream-io/dtm-repo-scaffolding-python-flask.git
+  ci:
+  - type: template
+    templateName: ci-pipeline
+  cd:
+  - type: argocdapp
+pipelineTemplates:
+- name: ci-pipeline
+  type: gitlab-ci
+  options:
+    imageRepo:
+      user: [[ dockerhubUser ]]
+      password: [[ env DOCKERHUB_TOKEN]]
+    runner:
+      enable: true

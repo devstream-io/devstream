@@ -1,6 +1,8 @@
 package upgrade
 
 import (
+	"io"
+	"net/http"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -9,10 +11,9 @@ import (
 	"github.com/Masterminds/semver"
 
 	"github.com/devstream-io/devstream/internal/pkg/version"
+	"github.com/devstream-io/devstream/pkg/util/downloader"
 	"github.com/devstream-io/devstream/pkg/util/interact"
 	"github.com/devstream-io/devstream/pkg/util/log"
-	"github.com/devstream-io/devstream/pkg/util/scm/git"
-	"github.com/devstream-io/devstream/pkg/util/scm/github"
 )
 
 const (
@@ -26,8 +27,8 @@ const (
 	assetName      = "dtm-" + runtime.GOOS + "-" + runtime.GOARCH
 	dtmTmpFileName = "dtm-tmp"
 	dtmBakFileName = "dtm-bak"
-	dtmOrg         = "devstream-io"
-	dtmRepo        = "devstream"
+	dtmDownloadUrl = "https://download.devstream.io/"
+	latestVersion  = "https://download.devstream.io/latest_version"
 )
 
 // since dtm file name can be changeable by user,so it should be a variable to get current dtm file name
@@ -57,33 +58,26 @@ func Upgrade(continueDirectly bool) error {
 	log.Debugf("Dtm upgrade: work path is : %v", workDir)
 
 	// 1. Get the latest release version
-	ghOptions := &git.RepoInfo{
-		Org:      dtmOrg,
-		Repo:     dtmRepo,
-		NeedAuth: false,
-		WorkPath: workDir,
-	}
-
-	ghClient, err := github.NewClient(ghOptions)
+	request, err := http.Get(latestVersion)
 	if err != nil {
 		return err
 	}
 
-	ltstReleaseTagName, err := ghClient.GetLatestReleaseTagName()
+	body, err := io.ReadAll(request.Body)
+	latestReleaseTagName := string(body[0 : len(body)-1])
 	if err != nil {
 		return err
 	}
-	log.Debugf("Dtm upgrade: got latest release version: %v", ltstReleaseTagName)
+	log.Debugf("Dtm upgrade: got latest release version: %v", latestReleaseTagName)
 
 	// 2. Check whether Upgrade is needed
-	// Use Semantic Version to judge. "https://semver.org/"
-	shouldUpgrade, err := checkUpgrade(version.Version, ltstReleaseTagName)
+	// To Use Semantic Version to judge. "https://semver.org/"
+	shouldUpgrade, err := checkUpgrade(version.Version, latestReleaseTagName)
 	if err != nil {
 		return err
 	}
-
 	if shouldUpgrade {
-		log.Infof("Dtm upgrade: new dtm version: %v is available.", ltstReleaseTagName)
+		log.Infof("Dtm upgrade: new dtm version: %v is available.", latestReleaseTagName)
 		if !continueDirectly {
 			continued := interact.AskUserIfContinue("Would you like to Upgrade? [y/n]")
 			if !continued {
@@ -93,10 +87,16 @@ func Upgrade(continueDirectly bool) error {
 
 		// 3. Download the latest release version of dtm
 		log.Info("Dtm upgrade: downloading the latest release version of dtm, please wait for a while.")
-		if err = ghClient.DownloadAsset(ltstReleaseTagName, assetName, dtmTmpFileName); err != nil {
-			log.Debugf("Failed to download dtm: %v-%v.", ltstReleaseTagName, assetName)
-			return err
+		var downloadURL strings.Builder
+		downloadURL.WriteString(dtmDownloadUrl)
+		downloadURL.WriteString(latestReleaseTagName + "/")
+		downloadURL.WriteString(assetName)
+		downloadSize, downloadError := downloader.New().WithProgressBar().Download(downloadURL.String(), dtmTmpFileName, workDir)
+		if downloadError != nil {
+			log.Debugf("Failed to download dtm: %v-%v.", latestReleaseTagName, assetName)
+			return downloadError
 		}
+		log.Debugf("Downloaded <%d> bytes.", downloadSize)
 
 		// 4. Replace old dtm with the latest one
 		if err = applyUpgrade(workDir); err != nil {

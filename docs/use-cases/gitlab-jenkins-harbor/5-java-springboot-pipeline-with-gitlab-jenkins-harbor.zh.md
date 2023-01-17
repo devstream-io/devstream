@@ -19,7 +19,11 @@
 2. DevStream 根据你给定配置，使用 CI 模板创建 CI 流程，过程中会涉及到 CI 工具的配置（比如调用 Jenkins API 完成一些 Jenkins 插件的安装等）；
 3. 最终 DevStream 完成全部配置后，如果你提交代码到 DevStream 为你创建的代码库中，GitLab 便会出发 Jenkins 执行相应的 CI 流程，Jenkins 上的流水线运行结果也会实时回显到 GitLab 上，并且这个过程中构建出来的容器镜像会被自动推送到 Harbor 上。
 
-## 2、准备配置文件
+## 2、安装 dtm
+
+你可以参考[这个文档](../../install.zh.md)完成 dtm 的下载与安装。
+
+## 3、准备配置文件
 
 DevStream 可以简单地以 **local** 作为[状态](../../core-concepts/state.zh.md) Backend，也就是将状态保存到本地文件。如果你在本地测试，可以选择使用这种方式；
 而企业 On premise 环境部署可能需要使用 **k8s** Backend 将状态通过 `kube-apiserver` 存入 etcd，两种方式配置分别如下：
@@ -85,6 +89,7 @@ apps:
   repo:
     url: [[ gitlabURL ]]/root/[[ appName ]].git
     branch: main
+    token: [[ env GITLAB_TOKEN ]]
   repoTemplate:
     url: https://github.com/devstream-io/dtm-repo-scaffolding-java-springboot.git
   ci:
@@ -99,18 +104,20 @@ pipelineTemplates:
       url: [[ jenkinsURL ]]
       user: admin
       enableRestart: true
+      password: [[ env JENKINS_PASSWORD ]]
     imageRepo:
       user: admin
       url: [[ harborURL ]]/library
+      password: [[ env IMAGE_REPO_PASSWORD ]]
 ```
 
 你可以将这个配置文件放到服务器上的某一个路径内，比如 `~/devstream-test/config-apps.yaml`。
 
-## 3、让配置生效
+## 4、让配置生效
 
 你还需要几个简单的步骤来让上述配置生效。
 
-### 3.1、准备 GitLab Token
+### 4.1、准备 GitLab Token
 
 你可以参考下图方式在 GitLab 上创建一个 token，这个 token 将给 DevStream 必要的权限用来在 GitLab 上创建项目脚手架等：
 
@@ -139,7 +146,7 @@ export JENKINS_PASSWORD=changeme
 
 你可以将这个配置文件放到服务器上同一个目录，比如 `~/devstream-test/`，然后在该目录下执行：
 
-### 3.2、开始执行
+### 4.2、开始执行
 
 首先你需要执行初始化命令：
 
@@ -198,7 +205,7 @@ root@dtm-realk8sdev:~# ./dtm apply -y -f config-apps.yaml
 2022-12-02 01:04:59 ✔ [SUCCESS]  Apply finished.
 ```
 
-## 4、查看执行结果
+## 5、查看执行结果
 
 这时候你可以在 GitLab 上看到 dtm 为你准备的 Java Spring Boot 项目脚手架：
 
@@ -230,7 +237,7 @@ root@dtm-realk8sdev:~# ./dtm apply -y -f config-apps.yaml
   <figcaption>Image in Harbor</figcaption>
 </figure>
 
-## 5、环境清理
+## 6、环境清理
 
 你可以通过如下命令清理环境：
 

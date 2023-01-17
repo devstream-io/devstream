@@ -1,5 +1,15 @@
 # Install OpenLDAP with DevStream
 
+## InstanceID Prefix
+
+The `instanceID` prefix must be `openldap`, the minimum tools configuration example:
+
+```yaml
+tools:
+- name: helm-installer
+  instanceID: openldap
+```
+
 ### Default Configs
 
 | key                | default value                             | description                                        |

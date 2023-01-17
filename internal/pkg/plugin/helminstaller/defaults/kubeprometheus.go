@@ -8,7 +8,7 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
-var toolKubePrometheus = "kube-prometheus"
+const toolKubePrometheus = "kube-prometheus"
 
 var DefaultConfigWithKubePrometheus = helm.Options{
 	Chart: helmCommon.Chart{
@@ -28,8 +28,7 @@ var DefaultConfigWithKubePrometheus = helm.Options{
 }
 
 func init() {
-	DefaultOptionsMap[toolKubePrometheus] = &DefaultConfigWithKubePrometheus
-	StatusGetterFuncMap[toolKubePrometheus] = GetKubePrometheusStatus
+	RegisterDefaultHelmAppInstance(toolKubePrometheus, &DefaultConfigWithKubePrometheus, GetKubePrometheusStatus)
 }
 
 func GetKubePrometheusStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {

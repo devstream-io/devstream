@@ -45,7 +45,7 @@
 
 - 在`/docs`文件夹中创建`doc_name.md`和`doc_name.zh.md`。如有必要，你可以将它们放在恰当的子文件夹下。参考当前目录结构来确定适合该文档的最佳路径。
 - 编写文档的内容。你可以选择只写英文文档或中文文档；你不必用两种语言编写文档；当然如果你希望展示你中英双语的实力的话，我们建议你两种语言的文档同时编写，一并提交。
-- 大多数情况下，你不需要考虑导航菜单，它是整个文档网站的目录。但是如果需要自定义导航菜单，可以参考[设置导航](https://github.com/devstream-io/devstream/blob/main/docs/development/mkdocs.md#setting-up-navigation)。
+- 大多数情况下，你不需要考虑导航菜单，它是整个文档网站的目录。但是如果需要自定义导航菜单，可以参考[设置导航](https://github.com/devstream-io/devstream/blob/main/docs/development/docs-contribution/mkdocs.md#setting-up-navigation)。
 
 ## 设置导航
 

@@ -1,5 +1,15 @@
 # Install Artifactory with DevStream
 
+## InstanceID Prefix
+
+The `instanceID` prefix must be `artifactory`, the minimum tools configuration example:
+
+```yaml
+tools:
+- name: helm-installer
+  instanceID: artifactory
+```
+
 ## Default Configs
 
 | key                | default value           | description                                        |

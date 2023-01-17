@@ -11,9 +11,10 @@ import (
 	"github.com/devstream-io/devstream/pkg/util/types"
 )
 
-const DevLakeSvcName = "devlake-lake"
-
-var toolDevLake = "devlake"
+const (
+	DevLakeSvcName = "devlake-lake"
+	toolDevLake    = "devlake"
+)
 
 var DefaultConfigWithDevLake = helm.Options{
 	Chart: helmCommon.Chart{
@@ -33,8 +34,7 @@ var DefaultConfigWithDevLake = helm.Options{
 }
 
 func init() {
-	DefaultOptionsMap[toolDevLake] = &DefaultConfigWithDevLake
-	StatusGetterFuncMap[toolDevLake] = GetDevLakeStatus
+	RegisterDefaultHelmAppInstance(toolDevLake, &DefaultConfigWithDevLake, GetDevLakeStatus)
 }
 
 func GetDevLakeStatus(options configmanager.RawOptions) (statemanager.ResourceStatus, error) {

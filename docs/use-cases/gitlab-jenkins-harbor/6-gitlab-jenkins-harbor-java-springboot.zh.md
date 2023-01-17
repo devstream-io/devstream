@@ -40,7 +40,11 @@
 
     这个图中的 GitLab 和 GitHub 可以随意互换，它们只是被当做保存项目脚手架模板库存放地址和脚手架模板渲染后的最终项目存放地址，DevStream 对 GitHub 和 GitLab 都支持。换言之，如果你将模板保存到 GitLab，最终项目也托管在 GitLab，便可以完全不依赖 GitHub 而使用 DevStream。
 
-### 1.2、相关插件概览
+### 1.2 安装 dtm
+
+你可以参考[这个文档](../../install.zh.md)完成 dtm 的下载与安装。
+
+### 1.3、相关插件概览
 
 当前工具链主要涉及如下 DevStream 插件：
 
@@ -56,7 +60,7 @@
     1. 上述插件不是必选集，你可以根据实际情况灵活调整。比如你本地已经有 GitLab 环境了，那么你可以果断忽略 `gitlab-ce-docker` 插件。
     2. 你不再需要关心 repo-scaffolding 和 jenkins-pipeline 这类“非工具部署”相关插件的配置，你只要定义好自己的“app”，剩下的工作 DevStream 会帮你完成。至于 app 如何定义，下文会详细介绍。
 
-### 1.3、部署流程介绍
+### 1.4、部署流程介绍
 
 你将分2步来完成这条工具链的搭建过程。
 
@@ -395,6 +399,7 @@ apps:
   repo:
     url: [[ gitlabURL ]]/root/[[ appName ]].git
     branch: main
+    token: [[ env GITLAB_TOKEN ]]
   repoTemplate:
     url: https://github.com/devstream-io/dtm-repo-scaffolding-java-springboot.git
   ci:
@@ -409,9 +414,11 @@ pipelineTemplates:
       url: [[ jenkinsURL ]]
       user: admin
       enableRestart: true
+      password: [[ env JENKINS_PASSWORD ]]
     imageRepo:
       user: admin
       url: [[ harborURL ]]/library
+      password: [[ env IMAGE_REPO_PASSWORD ]]
 ```
 
 可以看到这里的状态配置换成了 devstream-app.state，这里需要保证和前面 tools 所使用的状态文件不是同一个。

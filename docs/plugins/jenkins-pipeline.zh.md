@@ -39,17 +39,15 @@
 ```shell
 export IMAGE_REPO_PASSWORD=YOUR_IMAGE_REPO_PASSWORD
 export GITLAB_TOKEN=YOUR_GITLAB_TOKEN
-export GITLAB_SSHKEY=YOUR_REPO_PRIVATE_KEY
 ```
 
 !!! tip "提示"
 
     如果是 GitHub，则这里的环境变量改成：
-    
+
     ```shell
     export IMAGE_REPO_PASSWORD=YOUR_IMAGE_REPO_PASSWORD
     export GITHUB_TOKEN=YOUR_GITHUB_TOKEN
-    export GITHUB_SSHKEY=YOUR_REPO_PRIVATE_KEY
     ```
 
 然后准备 DevStream 插件配置：
@@ -70,6 +68,7 @@ tools:
       branch: master
       scmType: gitlab
       baseURL: YOUR_GITLAB_ADDR
+      token: [[ env GITLAB_TOKEN ]]
     sourceRepo:
       owner:  devstream-io
       name: dtm-repo-scaffolding-java-springboot
@@ -86,12 +85,14 @@ tools:
       url: git@YOUR_REPO_CLONE_ADDRESS/root/spring-demo
       branch: master
       apiURL: YOUR_JENKINS_ADDR
+      token: [[ env GITLAB_TOKEN ]]
     pipeline:
       jobName: test-job
       configLocation: https://raw.githubusercontent.com/devstream-io/dtm-jenkins-pipeline-example/main/springboot/Jenkinsfile
       imageRepo:
         url: YOUR_HARBOR_ADDR
         user: admin
+        password: [[ env IMAGE_REPO_PASSWORD ]]
 ```
 
 上述配置文件中使用的 GitLab、Jenkins 和 Harbor 访问地址需要替换成你的环境中实际地址。例如：
@@ -232,6 +233,7 @@ apps:
   repo:
     url: gitlab.com/root/test.git
     branch: main
+    token: [[ env GITLAB_TOKEN ]]
   repoTemplate:
     url: https://github.com/devstream-io/dtm-repo-scaffolding-java-springboot.git
   ci:
@@ -249,6 +251,7 @@ pipelineTemplates:
       offline: true # 在此处设置 offline 为 true， 即开启该 jenkins-pipeline 的离线模式
     imageRepo:
       user: repoUser
+      password: [[ env IMAGE_REPO_PASSWORD ]]
 ```
 
 使用该配置可得到以下输出：

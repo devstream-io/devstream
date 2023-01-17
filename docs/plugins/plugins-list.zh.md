@@ -1,14 +1,12 @@
 # 插件列表
 
-
 | Type                   | Plugin              | Note                            | Usage/Doc                               |
 | ---------------------- | ------------------- | ------------------------------- | --------------------------------------- |
-| Issue Tracking         | trello-github-integ | Trello/GitHub 整合              | [doc](trello-github-integ.md)           |
 | Issue Tracking         | trello              | Trello 配置                     | [doc](trello.md)                        |
-| Issue Tracking         | jira-github-integ   | Jira/GitHub 整合                | [doc](jira-github-integ.md)             |
+| Issue Tracking         | jira                | Jira 配置                       | [doc](jira.md)             |
 | Issue Tracking         | zentao              | Zentao 安装                     | [doc](zentao.md)                        |
-| Source Code Management | repo-scaffolding    | 应用仓库脚手架                  | [doc](repo-scaffolding.md)              |
-| Source Code Management | gitlab-ce-docker    | 使用 docker 安装 GitLab CE 版本 | [doc](gitlab-ce-docker.md)              |
+| Source Code Management | repo-scaffolding    | 应用仓库脚手架                    | [doc](repo-scaffolding.md)              |
+| Source Code Management | gitlab-ce-docker    | 使用 docker 安装 GitLab CE 版本  | [doc](gitlab-ce-docker.md)              |
 | CI                     | jenkins-pipeline    | 创建 Jenkins pipeline           | [doc](jenkins-pipeline.md)              |
 | CI                     | github-actions      | 创建 GitHub Actions             | [doc](github-actions.md)                |
 | CI                     | gitlab-ci           | 创建 GitLab CI                  | [doc](gitlab-ci.md)                     |
@@ -30,9 +28,8 @@ gitlab-ci
 harbor-docker
 helm-installer
 jenkins-pipeline
-jira-github-integ
+jira
 repo-scaffolding
 trello
-trello-github-integ
 zentao
 ```

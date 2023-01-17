@@ -1,5 +1,15 @@
 # Install Tekton with DevStream
 
+## InstanceID Prefix
+
+The `instanceID` prefix must be `tekton`, the minimum tools configuration example:
+
+```yaml
+tools:
+- name: helm-installer
+  instanceID: tekton
+```
+
 ## Default Configs
 
 | key                | default value                                   | description                                        |

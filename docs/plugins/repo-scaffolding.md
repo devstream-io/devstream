@@ -2,69 +2,29 @@
 
 This plugin bootstraps a GitHub or GitLab repo with scaffolding code for a web application.
 
-## Requirement
-
-This plugin need fllowing config base on your repo type:
-
-### GitHub
-
-- GITHUB_TOKEN: Set it before using this plugin.If you don't know how to create this token, check out [Creating a personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).
-
-### GitLab
-
-- GITLAB_TOKEN: Please set the environment variable before using the plugin. If you do not know how to create the token, Can view the document [Personal access tokens](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html).
-
-- `destinationRepo.baseUrl`: If you are using a self-built GitLab repository, set this configuration to the URL of the self-built GitLab.
-
-- `destinationRepo.visibility`: This configuration is used to set the permissions of the new repository. The options are `public`, `private`, and `internal`.
-
-*Tips:*
-
-- If you run `dtm delete`, the repo will be completely removed.
-
-- If the `Update` interface is called, the repo will be completely removed and recreated. 
-
-- For the  `repo-scaffolding` plugin, we only need `repo`, `delete_repo` permission for the token.
-
 ## Usage
 
 The following content is an example of the "tool file".
 
-For more information on the main config, the tool file and the var file of DevStream, see [Core Concepts Overview](../core-concepts/overview.md) and [DevStream Configuration](../core-concepts/config.md).
+For more information on the main config, the tool file, and the var file of DevStream, see [Core Concepts Overview](../core-concepts/overview.md) and [DevStream Configuration](../core-concepts/config.md).
 
 ```yaml
 --8<-- "repo-scaffolding.yaml"
 ```
 
-Replace the following from the config above:
+**Notes:**
 
-### destinationRepo
+- If you run `dtm delete`, the repo will be completely removed.
+- If the `Update` interface is called, the repo will be completely removed and recreated.
+- For the `repo-scaffolding` plugin, we only need `repo`, `delete_repo` permission for the token.
+- `destinationRepo` config option represents codebase location; for more info, you can refer to [SCM Config](./scm-option.md).
+- `sourceRepo` config option represents codebase location; for more info, you can refer to [SCM Config](./scm-option.md).
+- if `destinationRepo` type is `Gitlab`, then `Devstream` supports config `destinationRepo`.`visibility`. This configuration is used to set the permissions of the new repository. The options are `public`, `private`, and `internal`.
 
-This configuration is used for the target repo, it includes the following config.
-
-- `YOUR_DESTINATION_USERNAME`
-- `YOUR_DESTINATION_ORGANIZATION_NAME`
-- `YOUR_DESTINATION_REPO_NAME`
-- `YOUR_DESTINATION_REPO_MAIN_BRANCH`
-- `YOUR_DESTINATION_REPO_TYPE` 
-
-**Please note that all parameter is case-sensitive.**
-
-Currently, `owner`, `org`, and `repo` are mandatory, `branch` has the default value "main", `scmType` support  `gitlab` and `github` for now. 
-
-### sourceRepo
-
-This configuration is used for the source scaffolding repoI(only supports GitHub for now). It includes the following config.
-
-- `YOUR_TEMPLATE_REPO_ORG`
-- `YOUR_TEMPLATE_REPO_NAME`
-- `YOUR_TEMPLATE_REPO_TYPE`
-
-All the parameters in the example above are mandatory for now, `scmType` only support `github` for now. 
 
 ### vars
 
-This configuration is used for template render, It has default variables listed below:
+This configuration is used for template rendering, It has default variables listed below:
 
 ```json
 {
@@ -89,7 +49,7 @@ This plugin has three outputs:
 
 ### official scaffolding repo config
 
-These repos are official scaffolding repo to use for `sourceRepo` config, You can use these repo directly or just create one for yourself.
+These repositories are official scaffolding repo to use for `sourceRepo` config; You can use these repo directly or just create one for yourself.
 
 | language    | org           | repo                                |
 |-------------|---------------|-------------------------------------|
@@ -120,7 +80,7 @@ tools:
       imageRepo: dtm-test/golang-repo
 ```
 
-This config will create `dtm-test-golang` repo for user test_owner in GitHub, and the variable ImageRepo will be used for template render. 
+This config will create `dtm-test-golang` repo for user test_owner in GitHub, and the variable ImageRepo will be used for template rendering. 
 
 ### Golang CLI
 
@@ -164,4 +124,4 @@ tools:
       scmType: github
 ```
 
-this config will create `dtm-test-java` repo for user test_owner in GitHub.
+This config will create `dtm-test-java` repo for user test_owner in GitHub.

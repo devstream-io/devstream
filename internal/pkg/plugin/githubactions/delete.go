@@ -3,7 +3,6 @@ package general
 import (
 	"github.com/devstream-io/devstream/internal/pkg/configmanager"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer"
-	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci"
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/ci/cifile"
 )
 
@@ -11,7 +10,7 @@ func Delete(options map[string]interface{}) (bool, error) {
 	// Initialize Operator with Operations
 	operator := &installer.Operator{
 		PreExecuteOperations: installer.PreExecuteOperations{
-			ci.SetDefault(ciType),
+			setDefault,
 			validate,
 		},
 		ExecuteOperations: installer.ExecuteOperations{
