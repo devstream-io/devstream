@@ -5,6 +5,15 @@ import (
 	"time"
 )
 
+type Param struct {
+	GithubUsername    string
+	GithubToken       string
+	DockerhubUsername string
+	DockerhubToken    string
+	Language          string
+	Framework         string
+}
+
 func Create() error {
 	helloMsg := func() {
 		fmt.Println("I'll scaffold a new repository for you.")
@@ -16,26 +25,30 @@ func Create() error {
 	}
 	helloMsg()
 
-	lang, err := getLanguage()
+	params, err := getParams()
 	if err != nil {
 		return err
 	}
 
-	time.Sleep(time.Second)
-	fmt.Println("\nPlease choose a framework next.")
-	time.Sleep(time.Second)
+	return create(params)
+}
 
-	fram, err := getFramework()
+// TODO: @jf
+func create(params *Param) error {
+	err := createRepo(params)
 	if err != nil {
 		return err
 	}
 
-	return createRepo(lang, fram)
-	// TODO(daniel-hutao): cicd
+	return createApp(params)
 }
 
 // TODO(daniel-hutao): support python/flask first
-func createRepo(lang, fram string) error {
-	fmt.Printf("Lang: %s, Fram: %s\n", lang, fram)
+func createRepo(params *Param) error {
+	fmt.Printf("Lang: %s, Fram: %s\n", params.Language, params.Framework)
+	return nil
+}
+
+func createApp(params *Param) error {
 	return nil
 }
