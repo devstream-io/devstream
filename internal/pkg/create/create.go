@@ -3,16 +3,9 @@ package create
 import (
 	"fmt"
 	"time"
-)
 
-type Param struct {
-	GithubUsername    string
-	GithubToken       string
-	DockerhubUsername string
-	DockerhubToken    string
-	Language          string
-	Framework         string
-}
+	"github.com/devstream-io/devstream/internal/pkg/create/param"
+)
 
 func Create() error {
 	helloMsg := func() {
@@ -25,7 +18,7 @@ func Create() error {
 	}
 	helloMsg()
 
-	params, err := getParams()
+	params, err := param.GetParams()
 	if err != nil {
 		return err
 	}
@@ -34,7 +27,7 @@ func Create() error {
 }
 
 // TODO: @jf
-func create(params *Param) error {
+func create(params *param.Param) error {
 	err := createRepo(params)
 	if err != nil {
 		return err
@@ -44,11 +37,11 @@ func create(params *Param) error {
 }
 
 // TODO(daniel-hutao): support python/flask first
-func createRepo(params *Param) error {
+func createRepo(params *param.Param) error {
 	fmt.Printf("Lang: %s, Fram: %s\n", params.Language, params.Framework)
 	return nil
 }
 
-func createApp(params *Param) error {
+func createApp(params *param.Param) error {
 	return nil
 }
