@@ -1,10 +1,11 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/spf13/cobra"
 
 	"github.com/devstream-io/devstream/internal/pkg/start"
-	"github.com/devstream-io/devstream/pkg/util/log"
 )
 
 var startCMD = &cobra.Command{
@@ -16,7 +17,7 @@ var startCMD = &cobra.Command{
 
 func startCMDFunc(_ *cobra.Command, _ []string) {
 	err := start.Start()
-	if err != nil {
-		log.Fatal(err)
+	if err.Error() != "^C" {
+		fmt.Printf("Failed with error: %s", err)
 	}
 }

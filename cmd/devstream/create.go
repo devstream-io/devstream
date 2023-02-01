@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	"fmt"
 
 	"github.com/spf13/cobra"
 
@@ -17,7 +17,7 @@ var createCMD = &cobra.Command{
 
 func createCMDFunc(cmd *cobra.Command, args []string) {
 	err := create.Create()
-	if err != nil {
-		log.Panic(err)
+	if err.Error() != "^C" {
+		fmt.Printf("Failed with error: %s", err)
 	}
 }
