@@ -11,6 +11,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/config v1.15.5
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.26.9
 	github.com/bndr/gojenkins v1.1.0
+	github.com/briandowns/spinner v1.20.0
 	github.com/cenkalti/backoff v2.2.1+incompatible
 	github.com/cheggaaa/pb v1.0.29
 	github.com/deckarep/golang-set/v2 v2.1.0
@@ -36,7 +37,7 @@ require (
 	github.com/xanzy/go-gitlab v0.74.0
 	go.uber.org/multierr v1.6.0
 	golang.org/x/crypto v0.1.0
-	golang.org/x/exp v0.0.0-20221114191408-850992195362
+	golang.org/x/exp v0.0.0-20230131160201-f062dba9d201
 	golang.org/x/oauth2 v0.0.0-20220722155238-128564f6959c
 	gopkg.in/gookit/color.v1 v1.1.6
 	gopkg.in/yaml.v3 v3.0.1

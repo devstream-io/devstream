@@ -3,7 +3,6 @@ package param
 import (
 	"fmt"
 	"strings"
-	"time"
 
 	"github.com/manifoldco/promptui"
 )
@@ -27,9 +26,7 @@ func selectRepoScaffolding() (language, framework, url string, err error) {
 			return
 		}
 
-		time.Sleep(time.Second)
 		fmt.Println("\nPlease choose a framework next.")
-		time.Sleep(time.Second)
 
 		framework, url, err = selectFrameworks(languagesRepoMap[language])
 		if err != nil {
@@ -39,6 +36,8 @@ func selectRepoScaffolding() (language, framework, url string, err error) {
 			break
 		}
 	}
+	language = strings.ToLower(language)
+	framework = strings.ToLower(framework)
 
 	return language, framework, url, nil
 
@@ -72,8 +71,8 @@ func selectLanguage(languagesRepoMap map[string][]RepoScaffolding) (language str
 		Inactive: "  {{ .Language | cyan }}",
 		Selected: "🐰 Language: {{ .Language | blue | cyan }}",
 		Details: `
---------- Supported Frameworks ----------
-{{ .Language}}: {{ join .Frameworks ", " }}`,
+--------- Supported Frameworks For {{ .Language}} ----------
+{{ join .Frameworks ", " }}`,
 		FuncMap: combinedFuncMap,
 	}
 

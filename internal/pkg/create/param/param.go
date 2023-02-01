@@ -1,7 +1,5 @@
 package param
 
-import "github.com/devstream-io/devstream/pkg/util/log"
-
 type Param struct {
 	GithubUsername     string
 	GitHubRepo         string
@@ -24,7 +22,7 @@ func GetParams() (*Param, error) {
 		return nil, err
 	}
 
-	githubRepo, err := getGitHubRepo(lang, frame)
+	githubRepo, err := getGitHubRepo()
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +52,5 @@ func GetParams() (*Param, error) {
 		DockerhubUsername:  dockerhubUsername,
 		DockerhubToken:     dockerhubToken,
 	}
-	// TODO: change to debug level
-	log.Infof("param: %+v", param)
 	return param, nil
 }

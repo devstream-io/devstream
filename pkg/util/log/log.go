@@ -1,6 +1,9 @@
 package log
 
 import (
+	"io"
+	"os"
+
 	"github.com/sirupsen/logrus"
 )
 
@@ -13,6 +16,14 @@ var (
 	successLog   = &CliLoggerFormatter{showType: "success"}
 	separatorLog = &SeparatorFormatter{}
 )
+
+func RedirectOutput(writer io.Writer) {
+	logrus.SetOutput(writer)
+}
+
+func RecoverOutput() {
+	logrus.SetOutput(os.Stdout)
+}
 
 // Debugf log info with color,symbol and format for a notice
 func Debugf(format string, args ...interface{}) {

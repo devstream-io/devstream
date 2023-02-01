@@ -22,11 +22,11 @@ func getGitHubUsername() (string, error) {
 	return result, nil
 }
 
-func getGitHubRepo(language, framework string) (string, error) {
+func getGitHubRepo() (string, error) {
 	prompt := promptui.Prompt{
 		Label:    "What GitHub Repo You Want to Create",
 		Validate: validate,
-		Default:  fmt.Sprintf("%s-%s-%s", "first", language, framework),
+		Default:  "firstapp",
 	}
 
 	result, err := prompt.Run()
