@@ -24,7 +24,7 @@ func installToolsIfNotExist() error {
 				return err
 			}
 		}
-		if !t.Stopped() {
+		if t.Stopped != nil && !t.Stopped() {
 			if err := t.Start(); err != nil {
 				return err
 			}
