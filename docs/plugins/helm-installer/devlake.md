@@ -22,5 +22,5 @@ tools:
 | chart.releaseName  | devlake                              | helm release name                                  |
 | chart.namespace    | devlake                              | namespace where helm to deploy                     |
 | chart.wait         | true                                 | whether to wait until installation is complete     |
-| repo.url           | https://merico-dev.github.io/devlake-helm-chart | helm official repo address              |
+| repo.url           | https://apache.github.io/incubator-devlake-helm-chart | helm official repo address              |
 | repo.name          | devlake                              | helm repo name                                     |
