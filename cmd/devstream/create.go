@@ -17,7 +17,7 @@ var createCMD = &cobra.Command{
 
 func createCMDFunc(cmd *cobra.Command, args []string) {
 	err := create.Create()
-	if err.Error() != "^C" {
+	if err != nil && err.Error() != "^C" {
 		fmt.Printf("Failed with error: %s", err)
 	}
 }
