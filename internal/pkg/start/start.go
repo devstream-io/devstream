@@ -19,12 +19,12 @@ func Start() error {
 
 func installToolsIfNotExist() error {
 	for _, t := range tool.Tools {
-		if !t.Exists() {
+		if !t.IfExists() {
 			if err := t.Install(); err != nil {
 				return err
 			}
 		}
-		if t.Stopped != nil && !t.Stopped() {
+		if t.IfStopped != nil && !t.IfStopped() {
 			if err := t.Start(); err != nil {
 				return err
 			}

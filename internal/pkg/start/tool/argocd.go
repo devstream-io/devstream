@@ -4,7 +4,7 @@ import "fmt"
 
 var toolArgocd = tool{
 	Name: "Argo CD",
-	Exists: func() bool {
+	IfExists: func() bool {
 		// TODO(dh)
 		return false
 	},

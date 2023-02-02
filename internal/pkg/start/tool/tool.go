@@ -5,13 +5,13 @@ type stopedFunc func() bool
 type installFunc func() error
 type startFunc func() error
 type tool struct {
-	Name   string
-	Exists existsFunc
-	// Stopped can be nil if it is not needed.
-	// if Stopped != nil -> Start can't be nil too
-	Stopped stopedFunc
-	Install installFunc
-	Start   startFunc
+	Name     string
+	IfExists existsFunc
+	Install  installFunc
+	// IfStopped can be nil if it is not needed.
+	// if IfStopped != nil -> Start can't be nil too
+	IfStopped stopedFunc
+	Start     startFunc
 }
 
 var Tools []tool

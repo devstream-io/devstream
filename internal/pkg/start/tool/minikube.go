@@ -8,14 +8,9 @@ import (
 var toolMinikube = tool{
 	Name: "Minikube",
 
-	Exists: func() bool {
+	IfExists: func() bool {
 		_, err := exec.LookPath("minikube")
 		return err == nil
-	},
-
-	Stopped: func() bool {
-		cmd := exec.Command("minikube", "status")
-		return cmd.Run() != nil
 	},
 
 	Install: func() error {
@@ -27,6 +22,11 @@ var toolMinikube = tool{
 			return err
 		}
 		return nil
+	},
+
+	IfStopped: func() bool {
+		cmd := exec.Command("minikube", "status")
+		return cmd.Run() != nil
 	},
 
 	Start: func() error {

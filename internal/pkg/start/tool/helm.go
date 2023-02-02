@@ -8,7 +8,7 @@ import (
 var toolHelm = tool{
 	Name: "Helm",
 
-	Exists: func() bool {
+	IfExists: func() bool {
 		_, err := exec.LookPath("helm")
 		return err == nil
 	},

@@ -11,14 +11,9 @@ import (
 var toolDocker = tool{
 	Name: "Docker",
 
-	Exists: func() bool {
+	IfExists: func() bool {
 		_, err := exec.LookPath("docker")
 		return err == nil
-	},
-
-	Stopped: func() bool {
-		cmd := exec.Command("docker", "version")
-		return cmd.Run() != nil
 	},
 
 	Install: func() error {
@@ -30,6 +25,11 @@ var toolDocker = tool{
 			return err
 		}
 		return nil
+	},
+
+	IfStopped: func() bool {
+		cmd := exec.Command("docker", "version")
+		return cmd.Run() != nil
 	},
 
 	Start: func() error {
