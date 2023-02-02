@@ -21,10 +21,10 @@ func Create() error {
 	return create(params)
 }
 
-// create will do folling three things:
+// create will do following three things:
 // 1. create repo by repoScaffolding
-// 2. config github actions for this repo
-// 3. create argocd application for this repo
+// 2. config GitHub actions for this repo
+// 3. create Argo CD application for this repo
 func create(params *param.Param) error {
 	if err := createRepo(params); err != nil {
 		return err
@@ -53,6 +53,7 @@ func createRepo(params *param.Param) error {
 		"scmType": "github",
 		"token":   params.GithubToken,
 	}
+
 	// 1.create repo
 	status := cli.StatusForPlugin()
 	repoScaffoldingOptions := configmanager.RawOptions{
@@ -67,6 +68,7 @@ func createRepo(params *param.Param) error {
 	if err != nil {
 		return err
 	}
+
 	// 2.config ci
 	ciOptions := configmanager.RawOptions{
 		"scm": repoOptions,
@@ -85,12 +87,13 @@ func createRepo(params *param.Param) error {
 	_, err = general.Create(ciOptions)
 	status.End(err)
 	status.Start("Waiting for github action finished 🐎")
+
 	// 3.wait repo ci finished
 	waitCIFinished()
 	status.End(err)
 	return err
-
 }
+
 func createApp(params *param.Param) error {
 	status := cli.StatusForPlugin()
 	argocdAppOption := configmanager.RawOptions{

@@ -17,7 +17,7 @@ var startCMD = &cobra.Command{
 
 func startCMDFunc(_ *cobra.Command, _ []string) {
 	err := start.Start()
-	if err.Error() != "^C" {
+	if err != nil && err.Error() != "^C" {
 		fmt.Printf("Failed with error: %s", err)
 	}
 }

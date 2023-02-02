@@ -2,6 +2,9 @@ package start
 
 import (
 	"fmt"
+	"os"
+	"os/exec"
+	"time"
 
 	"github.com/manifoldco/promptui"
 )
@@ -52,13 +55,13 @@ func dockerExists() bool {
 }
 
 func minikubeExists() bool {
-	// TODO(daniel-hutao)
-	return false
+	_, err := exec.LookPath("minikube")
+	return err == nil
 }
 
 func helmExists() bool {
-	// TODO(daniel-hutao)
-	return false
+	_, err := exec.LookPath("helm")
+	return err == nil
 }
 
 func argocdExists() bool {
@@ -75,12 +78,42 @@ func installDocker() error {
 	_, err := prompt.Run()
 	if err != nil {
 		fmt.Println("Docker must be installed. Quit now.")
-		return nil
+		return err
 	}
 
-	// TODO(daniel-hutao): install Docker
-	fmt.Println("Docker installing...")
-	fmt.Println("Docker installed.")
+	cmd := exec.Command("brew", "install", "docker", "--cask")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if err = cmd.Run(); err != nil {
+		fmt.Printf("Failed to install Docker. Error: %s", err)
+	}
+
+	cmd = exec.Command("open", "-a", "Docker")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if err = cmd.Run(); err != nil {
+		fmt.Printf("Failed to start up Docker. Error: %s", err)
+		return err
+	}
+
+	return waitForDockerRun()
+}
+
+func waitForDockerRun() error {
+	fmt.Println("\nPlease make sure your docker has been started. The OS may ask you to authorize it manually.")
+	fmt.Println()
+	time.Sleep(time.Second)
+	prompt := promptui.Prompt{
+		Label:     "I've verified that Docker is running properly by using the `docker version` command.",
+		IsConfirm: true,
+	}
+
+	_, err := prompt.Run()
+	if err != nil {
+		fmt.Println("Please make sure docker starts properly first.")
+		return err
+	}
+
 	return nil
 }
 
@@ -93,12 +126,16 @@ func installMinikube() error {
 	_, err := prompt.Run()
 	if err != nil {
 		fmt.Println("Minikube must be installed. Quit now.")
-		return nil
+		return err
 	}
 
-	// TODO(daniel-hutao): install Minikube
-	fmt.Println("Minikube installing...")
-	fmt.Println("Minikube installed.")
+	cmd := exec.Command("brew", "install", "minikube")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if err = cmd.Run(); err != nil {
+		fmt.Printf("Failed to install Minikube. Error: %s", err)
+		return err
+	}
 	return nil
 }
 
@@ -111,12 +148,16 @@ func installHelm() error {
 	_, err := prompt.Run()
 	if err != nil {
 		fmt.Println("Helm must be installed. Quit now.")
-		return nil
+		return err
 	}
 
-	// TODO(daniel-hutao): install Helm
-	fmt.Println("Helm installing...")
-	fmt.Println("Helm installed.")
+	cmd := exec.Command("brew", "install", "helm")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if err = cmd.Run(); err != nil {
+		fmt.Printf("Failed to install Helm. Error: %s", err)
+		return err
+	}
 	return nil
 }
 
@@ -129,11 +170,23 @@ func installArgocd() error {
 	_, err := prompt.Run()
 	if err != nil {
 		fmt.Println("Argo CD must be installed. Quit now.")
-		return nil
+		return err
 	}
 
-	// TODO(daniel-hutao): install Argo CD
-	fmt.Println("Argo CD installing...")
-	fmt.Println("Argo CD installed.")
+	cmd := exec.Command("helm", "repo", "add", "argo", "https://argoproj.github.io/argo-helm")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if err = cmd.Run(); err != nil {
+		fmt.Printf("Failed to add Helm repo. Error: %s", err)
+		return err
+	}
+
+	cmd = exec.Command("helm", "install", "argo/argo-cd", "-n", "argocd", "--create-namespace")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if err = cmd.Run(); err != nil {
+		fmt.Printf("Failed to install Argo CD. Error: %s", err)
+		return err
+	}
 	return nil
 }
