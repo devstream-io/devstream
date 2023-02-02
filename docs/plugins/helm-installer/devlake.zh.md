@@ -22,5 +22,5 @@ tools:
 | chart.releaseName  | devlake                   | helm 发布名称                         |
 | chart.namespace    | devlake                   | 部署的命名空间                         |
 | chart.wait         | true                     | 是否等待部署完成                       |
-| repo.url           | https://merico-dev.github.io/devlake-helm-chart | helm 仓库地址   |
+| repo.url           | https://apache.github.io/incubator-devlake-helm-chart | helm 仓库地址   |
 | repo.name          | devlake                   | helm 仓库名                           |
