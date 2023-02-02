@@ -39,8 +39,9 @@ func create(params *param.Param) error {
 
   kubectl port-forward service/%s 8080:8080 -n default
 
-Then you can visit this app by http://127.0.0.1:8080 in browser
-Thanks for using DevStream! 😊
+Then you can visit this app by http://127.0.0.1:8080 in your browser.
+
+Happy Hacking! 😊
 `
 	fmt.Printf(finalMessage, params.GitHubRepo)
 	return nil

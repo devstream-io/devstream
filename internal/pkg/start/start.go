@@ -8,7 +8,9 @@ import (
 )
 
 func Start() error {
-	fmt.Println("I'll prepare some tools for you.")
+	fmt.Println("I'll give some tools for you.")
+	time.Sleep(time.Second)
+	fmt.Println("Are you ready?")
 	time.Sleep(time.Second)
 	fmt.Println("Let's get started.")
 	fmt.Println()

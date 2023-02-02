@@ -10,7 +10,7 @@ import (
 
 func confirm(name string) bool {
 	prompt := promptui.Prompt{
-		Label:     fmt.Sprintf("Install %s now.", name),
+		Label:     fmt.Sprintf("Install %s now", name),
 		IsConfirm: true,
 	}
 

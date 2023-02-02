@@ -43,7 +43,7 @@ var toolArgocd = tool{
 			return err
 		}
 
-		if err = execCommand([]string{"helm", "install", argocdChartReleaseName, argocdChartName, "-n", argocdNamespace}); err != nil {
+		if err = execCommand([]string{"helm", "install", argocdChartReleaseName, argocdChartName, "-n", argocdNamespace, "--wait", "--create-namespace"}); err != nil {
 			return err
 		}
 
