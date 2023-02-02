@@ -48,10 +48,10 @@ jobs:
         uses: actions/setup-[[ .language.name ]]@v3
         with:
           [[ .language.name ]]-version: [[ .language.version ]]
-  [[- if eq .language.name "java" -]]
+  [[ if eq .language.name "java" ]]
           cache: maven
           distribution: adopt
-  [[- end ]]
+  [[ end ]]
       - name: Test
         run: |
           [[ range .test.command ]]
