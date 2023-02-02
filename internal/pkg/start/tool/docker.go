@@ -42,7 +42,11 @@ var toolDocker = tool{
 }
 
 func waitForDockerRun() error {
-	fmt.Println("\nPlease make sure your docker has been started. The OS may ask you to authorize it manually.")
+	fmt.Println("\nI've tried to start Docker for you.")
+	time.Sleep(time.Second)
+	fmt.Println("But the OS may ask you to authorize it manually.")
+	time.Sleep(time.Second)
+	fmt.Println("Please make sure your docker has been started.")
 	fmt.Println()
 	time.Sleep(time.Second)
 	prompt := promptui.Prompt{
