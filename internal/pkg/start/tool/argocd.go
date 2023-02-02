@@ -3,18 +3,23 @@ package tool
 import (
 	"fmt"
 	"os/exec"
+	"strings"
 
-	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/helm"
-	helmCommon "github.com/devstream-io/devstream/pkg/util/helm"
-	helmUtil "github.com/devstream-io/devstream/pkg/util/helm"
 	"github.com/devstream-io/devstream/pkg/util/k8s"
-	"github.com/devstream-io/devstream/pkg/util/types"
+)
+
+const (
+	argocdRepoName         = "argo"
+	argocdRepoURL          = "https://argoproj.github.io/argo-helm"
+	argocdNamespace        = "argocd"
+	argocdChartReleaseName = "argocd"
+	argocdChartName        = argocdRepoName + "/" + "argo-cd"
 )
 
 var toolArgocd = tool{
 	Name: "Argo CD",
 	IfExists: func() bool {
-		cmd := exec.Command("helm", "status", "argocd", "-n", "argocd")
+		cmd := exec.Command("helm", "status", argocdChartReleaseName, "-n", argocdNamespace)
 		return cmd.Run() == nil
 	},
 
@@ -28,32 +33,17 @@ var toolArgocd = tool{
 		if err != nil {
 			return err
 		}
-		if err = kubeClient.UpsertNameSpace("argocd"); err != nil {
+		if err = kubeClient.UpsertNameSpace(argocdNamespace); err != nil {
 			return err
 		}
 
 		// install argocd by helm
-		argocdHelmOpts := &helm.Options{
-			Chart: helmCommon.Chart{
-				ChartPath:   "",
-				ChartName:   "argo/argo-cd",
-				Version:     "",
-				Timeout:     "10m",
-				Wait:        types.Bool(true),
-				UpgradeCRDs: types.Bool(true),
-				ReleaseName: "argocd",
-				Namespace:   "argocd",
-			},
-			Repo: helmCommon.Repo{
-				URL:  "https://argoproj.github.io/argo-helm",
-				Name: "argo",
-			},
-		}
-		h, err := helmUtil.NewHelm(argocdHelmOpts.GetHelmParam())
-		if err != nil {
+		err = execCommand([]string{"helm", "repo", "add", argocdRepoName, argocdRepoURL})
+		if err != nil && !strings.Contains(err.Error(), "already exists") {
 			return err
 		}
-		if err = h.InstallOrUpgradeChart(); err != nil {
+
+		if err = execCommand([]string{"helm", "install", argocdChartReleaseName, argocdChartName, "-n", argocdNamespace}); err != nil {
 			return err
 		}
 
