@@ -28,7 +28,7 @@ var DefaultConfigWithDevLake = helm.Options{
 		Namespace:   "devlake",
 	},
 	Repo: helmCommon.Repo{
-		URL:  "https://merico-dev.github.io/devlake-helm-chart",
+		URL:  "https://apache.github.io/incubator-devlake-helm-chart",
 		Name: "devlake",
 	},
 }
