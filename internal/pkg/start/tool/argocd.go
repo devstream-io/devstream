@@ -14,7 +14,7 @@ import (
 var toolArgocd = tool{
 	Name: "Argo CD",
 	IfExists: func() bool {
-		cmd := exec.Command("kubectl", "get", "ns", "argocd")
+		cmd := exec.Command("helm", "status", "argocd", "-n", "argocd")
 		return cmd.Run() == nil
 	},
 
