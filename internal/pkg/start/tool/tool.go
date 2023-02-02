@@ -14,8 +14,6 @@ type tool struct {
 	Start     startFunc
 }
 
-var Tools []tool
-
-func init() {
-	Tools = []tool{toolDocker, toolMinikube, toolHelm, toolArgocd}
+func GetTools() []tool {
+	return []tool{toolDocker, toolMinikube, toolHelm, toolArgocd}
 }
