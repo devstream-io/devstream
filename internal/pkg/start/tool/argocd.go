@@ -2,20 +2,20 @@ package tool
 
 import (
 	"fmt"
+	"os/exec"
 
 	"github.com/devstream-io/devstream/internal/pkg/plugin/installer/helm"
 	helmCommon "github.com/devstream-io/devstream/pkg/util/helm"
+	helmUtil "github.com/devstream-io/devstream/pkg/util/helm"
 	"github.com/devstream-io/devstream/pkg/util/k8s"
 	"github.com/devstream-io/devstream/pkg/util/types"
-
-	helmUtil "github.com/devstream-io/devstream/pkg/util/helm"
 )
 
 var toolArgocd = tool{
 	Name: "Argo CD",
 	IfExists: func() bool {
-		// TODO(dh)
-		return false
+		cmd := exec.Command("kubectl", "get", "ns", "argocd")
+		return cmd.Run() == nil
 	},
 
 	Install: func() error {

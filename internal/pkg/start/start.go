@@ -2,19 +2,24 @@ package start
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/devstream-io/devstream/internal/pkg/start/tool"
 )
 
 func Start() error {
+	fmt.Println("I'll prepare some tools for you.")
+	time.Sleep(time.Second)
 	fmt.Println("Let's get started.")
+	fmt.Println()
 
 	err := installToolsIfNotExist()
 	if err != nil {
 		return err
 	}
 
-	fmt.Println("Enjoy it!☺️")
+	fmt.Println("\nEverything is going well now.\nEnjoy it!☺️")
+	fmt.Println()
 	return nil
 }
 
@@ -30,6 +35,7 @@ func installToolsIfNotExist() error {
 				return err
 			}
 		}
+		fmt.Printf("✅ %s is ready.\n", t.Name)
 	}
 	return nil
 }
