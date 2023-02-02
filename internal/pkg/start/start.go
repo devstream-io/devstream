@@ -2,6 +2,7 @@ package start
 
 import (
 	"fmt"
+	"github.com/devstream-io/devstream/internal/pkg/start/tool"
 )
 
 func Start() error {
@@ -17,9 +18,14 @@ func Start() error {
 }
 
 func installToolsIfNotExist() error {
-	for _, t := range tools {
+	for _, t := range tool.Tools {
 		if !t.Exists() {
 			if err := t.Install(); err != nil {
+				return err
+			}
+		}
+		if !t.Stopped() {
+			if err := t.Start(); err != nil {
 				return err
 			}
 		}
