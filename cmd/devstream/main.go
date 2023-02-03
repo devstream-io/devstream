@@ -45,6 +45,9 @@ func init() {
 	rootCMD.AddCommand(listCMD)
 	rootCMD.AddCommand(showCMD)
 	rootCMD.AddCommand(upgradeCMD)
+
+	rootCMD.AddCommand(startCMD)
+	rootCMD.AddCommand(createCMD)
 }
 
 func initConfig() {
