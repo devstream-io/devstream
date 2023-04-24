@@ -1,8 +1,9 @@
 package cmd
 
 import (
-	"github.com/devstream-io/devstream/internal/pkg/github"
 	"github.com/spf13/cobra"
+
+	"github.com/devstream-io/devstream/internal/pkg/github"
 )
 
 // githubCmd represents the github command

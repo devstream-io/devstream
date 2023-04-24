@@ -1,8 +1,9 @@
 package cmd
 
 import (
-	"github.com/devstream-io/devstream/internal/pkg/osx"
 	"github.com/spf13/cobra"
+
+	"github.com/devstream-io/devstream/internal/pkg/osx"
 )
 
 // osCmd represents the os command
