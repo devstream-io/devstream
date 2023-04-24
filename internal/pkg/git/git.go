@@ -2,6 +2,6 @@ package git
 
 import "fmt"
 
-func Run() {
-	fmt.Println("git called")
+func Execute(cmdStr string) {
+	fmt.Println(cmdStr)
 }
