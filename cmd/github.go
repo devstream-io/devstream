@@ -1,0 +1,20 @@
+package cmd
+
+import (
+	"github.com/devstream-io/devstream/internal/pkg/github"
+	"github.com/spf13/cobra"
+)
+
+// githubCmd represents the github command
+var githubCmd = &cobra.Command{
+	Use:   "github",
+	Short: "github is used to execute github operations",
+	Long:  `github is used to execute github operations`,
+	Run: func(cmd *cobra.Command, args []string) {
+		github.Run()
+	},
+}
+
+func init() {
+	rootCmd.AddCommand(githubCmd)
+}
