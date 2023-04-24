@@ -1,4 +1,0 @@
-mkdocs
-mkdocs-material
-mkdocs-i18n
-mkdocs-literate-nav
