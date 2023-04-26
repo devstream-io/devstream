@@ -39,7 +39,7 @@ e.g.
 			r.Print(OutputFormat)
 			os.Exit(1)
 		}
-		r := response.New(response.StatusError, response.MessageOK, "")
+		r := response.New(response.StatusOK, response.MessageOK, "")
 		r.Print(OutputFormat)
 	},
 }
