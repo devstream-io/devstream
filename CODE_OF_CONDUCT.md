@@ -16,7 +16,7 @@ Private harassment is also unacceptable. No matter who you are, if you feel you 
 
 Any spamming, trolling, flaming, baiting, or other attention-stealing behavior is not welcome.
 
-[Email The Moderation Team](mailto:tiexin.guo@merico.dev)
+[Email The Moderation Team](mailto:tao.hu@merico.dev)
 
 ## Moderation
 

@@ -7,14 +7,8 @@
 *.so
 *.dylib
 
-# build
+# Build
 dtm
-dtm-darwin*
-dtm-linux*
-smoke
-build/output
-build/working_dir
-docs/build
 
 # Test binary, build with `go test -c`
 *.test
@@ -25,35 +19,6 @@ docs/build
 # Project-local glide cache, RE: https://github.com/Masterminds/glide/issues/736
 .glide/
 
-# YAML for testings
-config*.yaml*
-variables*.yaml
-variables*.yaml.bak
-tools*.yaml
-tools*.yaml.bak
-e2e-test-local.yaml
-
 # IDE
 .idea/
 .vscode/
-
-# .devstream
-.devstream/
-*.state
-# do not ignore this file
-!/test/state/test_drifted.state
-
-# e2e
-testbin/
-
-# plugins
-.github-*
-
-# terraform
-.terraform
-
-# test
-cov
-
-# md
-README_when_create_plugin.md

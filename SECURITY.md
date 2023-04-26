@@ -1,6 +1,6 @@
 # DevStream Security Policy
 
-Version: **v0.1 (2022-02-28)**
+Version: **v0.12 (2023-04-24)**
 
 ## Overview
 
@@ -20,7 +20,6 @@ In some cases, where a security fix needs complex re-design of a feature or is o
 
 Please report vulnerabilities by e-mail to the following address: 
 
-- tiexin.guo@merico.dev
 - tao.hu@merico.dev
 
 If you find a security-related bug in DevStream, we kindly ask you to disclose responsibly and give us appropriate time to react to mitigate the vulnerability.
