@@ -4,7 +4,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/devstream-io/devstream/cmd"
+	"github.com/devstream-io/devstream/internal/option"
 	"github.com/sirupsen/logrus"
 )
 
@@ -22,7 +22,7 @@ func RedirectOutput(writer io.Writer) {
 }
 
 func RecoverOutput() {
-	if cmd.OutputFormat != "" {
+	if option.Silence {
 		return
 	}
 	logrus.SetOutput(os.Stdout)

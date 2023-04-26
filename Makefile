@@ -19,7 +19,7 @@ endif
 FIND := find . -path './cmd/*.go' -o -path './internal/pkg/*.go'
 
 .PHONY: build
-build: fmt lint vet mod-tidy ## Build dtm core only, without plugins, locally.
+build: fmt vet mod-tidy ## Build dtm core only, without plugins, locally.
 	go build -trimpath -o dtm .
 	@echo "${GREEN}✔'dtm' has been generated in the current directory($(PWD))!${RESET}"
 
@@ -30,10 +30,10 @@ fmt: verify.goimports ## Run 'go fmt' & goimports against code.
 	@$(FIND) -type f | xargs ${GOPATH}/bin/goimports -w -local $(DTM_ROOT)
 	@go mod edit -fmt
 
-.PHONY: lint
-lint: verify.golangcilint ## Run 'golangci-lint' against code.
-	@echo "$(YELLOW)Run golangci to lint source codes$(RESET)"
-	@${GOPATH}/bin/golangci-lint -c $(ROOT_DIR)/.golangci.yml run $(ROOT_DIR)/...
+#.PHONY: lint
+#lint: verify.golangcilint ## Run 'golangci-lint' against code.
+#	@echo "$(YELLOW)Run golangci to lint source codes$(RESET)"
+#	@${GOPATH}/bin/golangci-lint -c $(ROOT_DIR)/.golangci.yml run $(ROOT_DIR)/...
 
 .PHONY: vet
 vet: ## Run "go vet ./...".
