@@ -1,6 +1,6 @@
 module github.com/devstream-io/devstream
 
-go 1.19
+go 1.20
 
 require (
 	github.com/onsi/ginkgo v1.16.5
