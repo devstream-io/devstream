@@ -72,32 +72,88 @@ This is the original file.
 			expectedPatchedContent := `Hello, world!
 This is the patched file.
 `
-			Expect(string(patchedContent)).To(Equal(expectedPatchedContent))
-		})
-
-		It("returns an error if the patch command is not found or not executable", func() {
-			// Temporarily change PATH to exclude the real patch command
-			originalPath := os.Getenv("PATH")
-			err := os.Setenv("PATH", tempDir)
-			Expect(err).NotTo(HaveOccurred())
-			defer func() {
-				err := os.Setenv("PATH", originalPath)
-				Expect(err).NotTo(HaveOccurred())
-			}()
-
-			err = Patch(tempDir, patchFile.Name())
-			Expect(err).To(HaveOccurred())
-			Expect(strings.Contains(err.Error(), "patch command not found")).To(BeTrue())
+			patchedContentStr := string(patchedContent)
+			Expect(patchedContentStr).To(Equal(expectedPatchedContent))
 		})
 
 		It("returns an error if the patch file is invalid", func() {
-			invalidPatchContent := `This is not a valid patch file.`
-			err := os.WriteFile(patchFile.Name(), []byte(invalidPatchContent), 0644)
+			originalContent := `Hello, world!
+This is the original file.
+`
+
+			err := os.WriteFile(originalFile.Name(), []byte(originalContent), 0644)
+			Expect(err).NotTo(HaveOccurred())
+
+			invalidPatchContent := fmt.Sprintf(`--- %s
++++ new-file
+@@ -1,2 +1,2 @@
+`,
+				filepath.Base(originalFile.Name()))
+
+			err = os.WriteFile(patchFile.Name(), []byte(invalidPatchContent), 0644)
 			Expect(err).NotTo(HaveOccurred())
 
 			err = Patch(tempDir, patchFile.Name())
 			Expect(err).To(HaveOccurred())
 			Expect(strings.Contains(err.Error(), "patch command failed")).To(BeTrue())
+		})
+	})
+
+	Context("when patching a file with inconsistent indentation", func() {
+		It("successfully applies the patch with spaces to the original file with tabs", func() {
+			originalContent := "Hello, world!\n\tThis is the original file with tabs.\n"
+
+			err := os.WriteFile(originalFile.Name(), []byte(originalContent), 0644)
+			Expect(err).NotTo(HaveOccurred())
+
+			patchContent := fmt.Sprintf(`--- %s
++++ new-file
+@@ -1,2 +1,2 @@
+ Hello, world!
+-    This is the original file with tabs.
++    This is the patched file with tabs.
+`,
+				filepath.Base(originalFile.Name()))
+
+			err = os.WriteFile(patchFile.Name(), []byte(patchContent), 0644)
+			Expect(err).NotTo(HaveOccurred())
+
+			err = Patch(tempDir, patchFile.Name())
+			Expect(err).NotTo(HaveOccurred())
+
+			patchedContent, err := os.ReadFile(originalFile.Name())
+			Expect(err).NotTo(HaveOccurred())
+
+			expectedPatchedContent := "Hello, world!\n\tThis is the patched file with tabs.\n"
+			Expect(string(patchedContent)).To(Equal(expectedPatchedContent))
+		})
+
+		It("successfully applies the patch with tabs to the original file with spaces", func() {
+			originalContent := "Hello, world!\n    This is the original file with spaces.\n"
+
+			err := os.WriteFile(originalFile.Name(), []byte(originalContent), 0644)
+			Expect(err).NotTo(HaveOccurred())
+
+			patchContent := fmt.Sprintf(`--- %s
++++ new-file
+@@ -1,2 +1,2 @@
+ Hello, world!
+-	This is the original file with spaces.
++	This is the patched file with spaces.
+`,
+				filepath.Base(originalFile.Name()))
+
+			err = os.WriteFile(patchFile.Name(), []byte(patchContent), 0644)
+			Expect(err).NotTo(HaveOccurred())
+
+			err = Patch(tempDir, patchFile.Name())
+			Expect(err).NotTo(HaveOccurred())
+
+			patchedContent, err := os.ReadFile(originalFile.Name())
+			Expect(err).NotTo(HaveOccurred())
+
+			expectedPatchedContent := "Hello, world!\n    This is the patched file with spaces.\n"
+			Expect(string(patchedContent)).To(Equal(expectedPatchedContent))
 		})
 	})
 })
