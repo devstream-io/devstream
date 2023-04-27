@@ -26,10 +26,16 @@ var _ = Describe("Patcher", func() {
 	)
 
 	BeforeEach(func() {
+		// 1. Create a temporary directory
 		var err error
 		tempDir, err = os.MkdirTemp("", "patcher-tests")
 		Expect(err).NotTo(HaveOccurred())
 
+		// 2. Change the working directory to the temporary directory
+		err = os.Chdir(tempDir)
+		Expect(err).NotTo(HaveOccurred())
+
+		// 3. Create the original file and the patch file
 		originalFile, err = os.CreateTemp(tempDir, "original-*")
 		Expect(err).NotTo(HaveOccurred())
 
@@ -63,7 +69,7 @@ This is the original file.
 			err = os.WriteFile(patchFile.Name(), []byte(patchContent), 0644)
 			Expect(err).NotTo(HaveOccurred())
 
-			err = Patch(tempDir, patchFile.Name())
+			err = Patch(patchFile.Name())
 			Expect(err).NotTo(HaveOccurred())
 
 			patchedContent, err := os.ReadFile(originalFile.Name())
@@ -93,7 +99,7 @@ This is the original file.
 			err = os.WriteFile(patchFile.Name(), []byte(invalidPatchContent), 0644)
 			Expect(err).NotTo(HaveOccurred())
 
-			err = Patch(tempDir, patchFile.Name())
+			err = Patch(patchFile.Name())
 			Expect(err).To(HaveOccurred())
 			Expect(strings.Contains(err.Error(), "patch command failed")).To(BeTrue())
 		})
@@ -118,7 +124,7 @@ This is the original file.
 			err = os.WriteFile(patchFile.Name(), []byte(patchContent), 0644)
 			Expect(err).NotTo(HaveOccurred())
 
-			err = Patch(tempDir, patchFile.Name())
+			err = Patch(patchFile.Name())
 			Expect(err).NotTo(HaveOccurred())
 
 			patchedContent, err := os.ReadFile(originalFile.Name())
@@ -146,7 +152,7 @@ This is the original file.
 			err = os.WriteFile(patchFile.Name(), []byte(patchContent), 0644)
 			Expect(err).NotTo(HaveOccurred())
 
-			err = Patch(tempDir, patchFile.Name())
+			err = Patch(patchFile.Name())
 			Expect(err).NotTo(HaveOccurred())
 
 			patchedContent, err := os.ReadFile(originalFile.Name())
