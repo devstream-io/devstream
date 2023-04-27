@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"regexp"
 	"strings"
 
@@ -20,24 +19,23 @@ const (
 type ProcessOption string
 
 // Patch calls the patch command to apply a diff file to an original
-func Patch(workDir, patchFile string) error {
+func Patch(patchFile string) error {
 	log.Infof("Patching file: %s", patchFile)
 
 	// Fix patch file if it mixed tab and space indentation
-	err := fixPatchFile(workDir, patchFile)
+	err := fixPatchFile(patchFile)
 	if err != nil {
 		return fmt.Errorf("patch file fix failed: %w", err)
 	}
 
-	// Check if the patch command exists and is executable
-	err = checkPatchCommand()
+	// Check if the patch command exists
+	patchPath, err := exec.LookPath("patch")
 	if err != nil {
-		return fmt.Errorf("patch command check failed: %w", err)
+		return fmt.Errorf("patch command not found: %w", err)
 	}
 
 	// Use the patch tool to apply the patch
-	cmd := exec.Command("patch", "-i", patchFile, "-t", "-p0")
-	cmd.Dir = workDir
+	cmd := exec.Command(patchPath, "-i", patchFile, "-t", "-p0")
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("patch command failed: %w\nOutput: %s", err, string(output))
@@ -73,10 +71,9 @@ func checkPatchCommand() error {
 // The original file path is contained in the patch file, so we can use the fix the patch file by using the original file.
 // If the original file uses tab indentation, we replace all spaces with tabs in the patch file.
 // If the original file uses space indentation, we replace all tabs with spaces in the patch file.
-func fixPatchFile(workDir, patchFile string) error {
+func fixPatchFile(patchFile string) error {
 	// Read the original file path from the patch file
 	originalFilePath, err := extractOriginalFilePathFromPatchFile(patchFile)
-	originalFilePath = filepath.Join(workDir, originalFilePath)
 
 	if err != nil {
 		return fmt.Errorf("failed to extract original file path from patch string: %w", err)
@@ -118,7 +115,6 @@ func fixPatchFile(workDir, patchFile string) error {
 	}
 
 	return nil
-
 }
 
 // ExtractOriginalFilePathFromPatchString extracts the original file path from a patch string

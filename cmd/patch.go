@@ -1,6 +1,3 @@
-/*
-Copyright © 2023 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -32,15 +29,15 @@ e.g.
 			log.Error("Incorrect number of arguments")
 			os.Exit(1)
 		}
-		err := patch.Patch(".", args[0])
+		err := patch.Patch(args[0])
 		if err != nil {
-			log.Error(err)
+			log.Errorf("patch error: %v", err)
 			r := response.New(response.StatusError, response.MessageError, err.Error())
 			r.Print(OutputFormat)
-			os.Exit(1)
+		} else {
+			r := response.New(response.StatusOK, response.MessageOK, "")
+			r.Print(OutputFormat)
 		}
-		r := response.New(response.StatusOK, response.MessageOK, "")
-		r.Print(OutputFormat)
 	},
 }
 
