@@ -4,12 +4,14 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 
 	"github.com/devstream-io/devstream/internal/log"
 	"github.com/devstream-io/devstream/internal/pkg/commit"
 	"github.com/devstream-io/devstream/internal/response"
 )
+
+// commit message got from the command line by -m flag
+var message string
 
 // commitCmd represents the commit command
 var commitCmd = &cobra.Command{
@@ -22,9 +24,11 @@ e.g.
 1. dtm commit -m "commit message"
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		message := viper.GetString("message")
 		if message == "" {
-			log.Error("message is required")
+			errStr := "message is required"
+			log.Error(errStr)
+			r := response.New(response.StatusError, response.MessageError, errStr)
+			r.Print(OutputFormat)
 			os.Exit(1)
 		}
 		err := commit.Commit(message)
@@ -41,5 +45,5 @@ e.g.
 
 func init() {
 	rootCmd.AddCommand(commitCmd)
-	commitCmd.Flags().StringP("message", "m", "", "commit message")
+	commitCmd.Flags().StringVarP(&message, "message", "m", "", "commit message")
 }

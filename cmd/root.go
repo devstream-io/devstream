@@ -5,12 +5,10 @@ import (
 	"os"
 
 	"github.com/sirupsen/logrus"
-
-	"github.com/devstream-io/devstream/internal/log"
-
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
+	"github.com/devstream-io/devstream/internal/log"
 	"github.com/devstream-io/devstream/internal/option"
 )
 
