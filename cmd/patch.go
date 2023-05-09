@@ -26,7 +26,10 @@ e.g.
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) != 1 {
-			log.Error("Incorrect number of arguments")
+			errMsg := "Incorrect number of arguments"
+			log.Error(errMsg)
+			r := response.New(response.StatusError, response.MessageError, errMsg)
+			r.Print(OutputFormat)
 			os.Exit(1)
 		}
 		err := patch.Patch(args[0])
