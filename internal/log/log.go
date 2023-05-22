@@ -8,6 +8,8 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// Commit is used to execute git commit operations
+// what is meaning
 var (
 	debugLog   = &CliLoggerFormatter{showType: "debug"}
 	infoLog    = &CliLoggerFormatter{showType: "info"}
