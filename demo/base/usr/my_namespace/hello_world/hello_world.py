@@ -2,7 +2,7 @@ import sys
 
 
 def main():
-    print("Hello world from chatflow demo.")
+    print("Hello world from devstream demo.")
     if len(sys.argv) > 1:
         print(f"User input: {sys.argv[1]}")
     else:

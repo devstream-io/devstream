@@ -1,6 +1,6 @@
 import os
 
-from .env_vars import CHATFLOW_BASE
+from .env_vars import DEVSTREAM_BASE
 
 # -------------------------------
 # devchat basic paths
@@ -14,7 +14,7 @@ DEVCHAT_WORKFLOWS_BASE_NAME = "scripts"
 # -------------------------------
 # workflow paths
 # -------------------------------
-WORKFLOWS_BASE = CHATFLOW_BASE or os.path.join(CHAT_DIR, DEVCHAT_WORKFLOWS_BASE_NAME)
+WORKFLOWS_BASE = DEVSTREAM_BASE or os.path.join(CHAT_DIR, DEVCHAT_WORKFLOWS_BASE_NAME)
 
 SYS_WORKFLOWS = os.path.join(WORKFLOWS_BASE, "sys")
 COMMUNITY_WORKFLOWS = os.path.join(WORKFLOWS_BASE, "comm")
