@@ -1,2 +1,2 @@
 environments:
-  myenv: "/Users/kgm/.pyenv/versions/3.10.15/envs/cf/bin/python"
+  myenv: "/path/to/python/bin"
