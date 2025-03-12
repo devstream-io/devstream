@@ -17,6 +17,8 @@
 
 </div>
 
+> We are gonna revive this project recently.
+
 ## DevStream, What Is It Anyway?
 
 TL;DR: DevStream (CLI tool named `dtm`) is an open-source DevOps toolchain manager.

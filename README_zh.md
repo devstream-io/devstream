@@ -17,6 +17,8 @@
 
 </div>
 
+> We are gonna revive this project recently.
+
 ## DevStream 是什么？
 TL;DR: DevStream（CLI工具名为`dtm`）是一个开源的DevOps工具链管理器。
 
