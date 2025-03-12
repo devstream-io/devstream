@@ -1,2 +1,0 @@
-##harbor-images
-gitlab/gitlab-ce:rc
