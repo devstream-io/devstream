@@ -1,0 +1,14 @@
+description: a hello-world demo
+
+help:
+  - en: README.md
+  - zh: README.zh.md
+
+parameters:
+  __input__: required
+
+runtime:
+  id: shell-python
+  venv: myenv
+  run: 
+    - $__python__ $__idir__/hello_world.py $__input__
